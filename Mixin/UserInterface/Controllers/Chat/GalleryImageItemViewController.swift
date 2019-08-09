@@ -109,7 +109,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         }
         
         if let url = item.url {
-            imageView.sd_setImage(with: url) { [weak self] (image, error, cacheType, url) in
+            imageView.sd_setImage(with: url, placeholderImage: imageView.image, context: localImageContext, progress: nil) { [weak self] (image, error, cacheType, url) in
                 guard let image = image, let weakSelf = self, weakSelf.item == item else {
                     return
                 }

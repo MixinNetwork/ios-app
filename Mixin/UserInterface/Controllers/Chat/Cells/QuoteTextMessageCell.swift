@@ -34,10 +34,14 @@ class QuoteTextMessageCell: TextMessageCell {
                 quoteSubtitleLabel.text = quote.subtitle
                 if let image = quote.image {
                     switch image {
-                    case let .url(url):
+                    case let .local(url):
                         quoteImageView.isHidden = false
                         quoteAvatarImageView.isHidden = true
-                        quoteImageView.sd_setImage(with: url, completed: nil)
+                        quoteImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
+                    case let .remote(url):
+                        quoteImageView.isHidden = false
+                        quoteAvatarImageView.isHidden = true
+                        quoteImageView.sd_setImage(with: url)
                     case let .user(url, userId, name):
                         quoteImageView.isHidden = true
                         quoteAvatarImageView.isHidden = false

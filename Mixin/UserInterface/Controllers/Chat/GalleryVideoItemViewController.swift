@@ -158,7 +158,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .image(let image):
             videoView.coverImageView.image = image
         case .url(let url):
-            videoView.coverImageView.sd_setImage(with: url, completed: nil)
+            videoView.coverImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
         case .none:
             break
         }

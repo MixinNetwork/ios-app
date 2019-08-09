@@ -21,7 +21,7 @@ class StickerAddViewController: UIViewController {
             if mediaUrl.hasSuffix(".webp") || mediaUrl.hasSuffix(".gif") {
                 animateURL = url
             }
-            stickerImageView.sd_setImage(with: url)
+            stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
         } else if let asset = self.asset {
             if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.firstIndex(of: "."), startIndex < filename.endIndex {
                 let fileExtension = String(filename[startIndex..<filename.endIndex])
@@ -32,7 +32,7 @@ class StickerAddViewController: UIViewController {
                         do {
                             try data?.write(to: tempUrl)
                             self?.animateURL = tempUrl
-                            self?.stickerImageView.sd_setImage(with: tempUrl)
+                            self?.stickerImageView.sd_setImage(with: tempUrl, placeholderImage: nil, context: localImageContext)
                         } catch {
                             self?.requestAssetImage(asset: asset)
                         }

@@ -76,6 +76,8 @@
 		7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */; };
 		7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
+		7B14DFFC22F9AE3F009CCC45 /* LocalImageLoadToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */; };
+		7B14DFFE22F9AE79009CCC45 /* LocalImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */; };
 		7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */; };
 		7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */; };
 		7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */; };
@@ -140,6 +142,7 @@
 		7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
 		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
+		7B46843322FC069300A8D03C /* ImageManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46843222FC069300A8D03C /* ImageManagers.swift */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
@@ -800,6 +803,8 @@
 		7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceInputAccessoryView.swift; sourceTree = "<group>"; };
 		7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceInputAccessoryView.xib; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
+		7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoadToken.swift; sourceTree = "<group>"; };
+		7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoader.swift; sourceTree = "<group>"; };
 		7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionViewController.swift; sourceTree = "<group>"; };
 		7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionSwitch.swift; sourceTree = "<group>"; };
 		7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewController.swift; sourceTree = "<group>"; };
@@ -863,6 +868,7 @@
 		7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberStringLocalizable.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
+		7B46843222FC069300A8D03C /* ImageManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManagers.swift; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
@@ -1790,6 +1796,9 @@
 				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
 				7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
+				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
+				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
+				7B46843222FC069300A8D03C /* ImageManagers.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3210,6 +3219,7 @@
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
 				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
+				7B14DFFC22F9AE3F009CCC45 /* LocalImageLoadToken.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BB3855021E74DA60070FF8F /* JSONCoderExtension.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
@@ -3621,6 +3631,7 @@
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
+				7B14DFFE22F9AE79009CCC45 /* LocalImageLoader.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
@@ -3633,6 +3644,7 @@
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
+				7B46843322FC069300A8D03C /* ImageManagers.swift in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,

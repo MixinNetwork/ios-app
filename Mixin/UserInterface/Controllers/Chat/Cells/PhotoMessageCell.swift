@@ -22,7 +22,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
             let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
-            contentImageView.sd_setImage(with: url, placeholderImage: viewModel.thumbnail)
+            contentImageView.sd_setImage(with: url, placeholderImage: viewModel.thumbnail, context: localImageContext)
         } else {
             contentImageView.image = viewModel.thumbnail
         }

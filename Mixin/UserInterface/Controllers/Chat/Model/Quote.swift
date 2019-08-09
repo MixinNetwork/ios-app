@@ -8,7 +8,8 @@ struct Quote {
     }
     
     enum Image {
-        case url(URL)
+        case local(URL)
+        case remote(URL)
         case user(urlString: String, userId: String, name: String)
         case thumbnail(UIImage)
     }
@@ -40,16 +41,16 @@ struct Quote {
             if message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
                     let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
-                    image = .url(url)
+                    image = .local(url)
                 } else if message.category.hasSuffix("_VIDEO"), let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
                     let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
                     let url = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-                    image = .url(url)
+                    image = .local(url)
                 }
             } else if message.category.hasSuffix("_LIVE"), let urlString = message.thumbUrl, let url = URL(string: urlString) {
-                image = .url(url)
+                image = .remote(url)
             } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
-                image = .url(url)
+                image = .remote(url)
             } else if message.category.hasSuffix("_CONTACT") {
                 image = .user(urlString: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
             }

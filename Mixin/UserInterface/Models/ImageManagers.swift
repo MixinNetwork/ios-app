@@ -22,11 +22,3 @@ let persistentStickerImageManager = SDWebImageManager(cache: persistentStickerCa
 let persistentStickerContext: [SDWebImageContextOption: Any] = [
     .customManager: persistentStickerImageManager
 ]
-
-func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
-    if let category = category, !category.isEmpty {
-        return persistentStickerContext
-    } else {
-        return nil
-    }
-}

@@ -1,5 +1,6 @@
 import Foundation
 import WCDBSwift
+import SDWebImage
 
 struct StickerItem: TableCodable, BaseCodable {
     
@@ -15,6 +16,14 @@ struct StickerItem: TableCodable, BaseCodable {
     
     let category: String?
     
+    var shouldCachePersistently: Bool {
+        return shouldCacheStickerWithCategoryPersistently(category: category)
+    }
+    
+    var imageLoadContext: [SDWebImageContextOption: Any]? {
+        return stickerLoadContext(persistent: shouldCachePersistently)
+    }
+    
     enum CodingKeys: String, CodingTableKey {
         typealias Root = StickerItem
         static var objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -29,4 +38,21 @@ struct StickerItem: TableCodable, BaseCodable {
         case category
     }
     
+}
+
+@inlinable func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
+    if let category = category {
+        return !category.isEmpty
+    } else {
+        return false
+    }
+}
+
+func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: Any]? {
+    return persistent ? persistentStickerContext : nil
+}
+
+func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
+    let persistent = shouldCacheStickerWithCategoryPersistently(category: category)
+    return stickerLoadContext(persistent: persistent)
 }

@@ -37,8 +37,7 @@ class FavoriteStickersViewController: StickersViewController {
         } else {
             let sticker = stickers[indexPath.row - 1]
             if let url = URL(string: sticker.assetUrl) {
-                let context = stickerLoadContext(category: sticker.category)
-                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: sticker.imageLoadContext)
             }
         }
         return cell

@@ -572,6 +572,11 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
 "setting_auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
+"setting_contacts_title" = "手机通讯录";
+"setting_contacts_delete" = "删除已同步的通讯录";
+"setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
+"setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
+"setting_contacts_upload" = "上传手机通讯录";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

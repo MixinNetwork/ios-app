@@ -56,12 +56,14 @@ final class PrivacyViewController: UITableViewController {
             }
         case 2:
             vc = AuthorizationsViewController.instance()
-        default:
+        case 3:
             if AccountAPI.shared.account?.has_pin ?? false {
                 vc = EmergencyContactViewController.instance()
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
             }
+        default:
+            vc = ContactSettingViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

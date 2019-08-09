@@ -62,6 +62,9 @@ class CommonUserDefault {
     private var keyAutoDownloadFiles: String {
         return "auto_download_files_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyUploadContacts: String {
+        return "auto_upload_contacts_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     enum BackupCategory: String {
         case daily
@@ -88,6 +91,19 @@ class CommonUserDefault {
     }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
+
+    var isUploadContacts: Bool {
+        get {
+            if session.object(forKey: keyUploadContacts) != nil {
+                return session.bool(forKey: keyUploadContacts)
+            } else {
+                return ContactsManager.shared.authorization == .authorized
+            }
+        }
+        set {
+            session.set(newValue, forKey: keyUploadContacts)
+        }
+    }
     
     var isRecallTips: Bool {
         get {
@@ -234,16 +250,20 @@ class CommonUserDefault {
     func checkUpdateOrInstallVersion() {
         let lastVersion = lastUpdateOrInstallVersion
         if lastVersion != Bundle.main.bundleVersion {
-            if AccountAPI.shared.didLogin {
+            if AccountAPI.shared.didLogin && !(lastVersion?.isEmpty ?? true) {
+                let previousUpdateOrInstallTime = CommonUserDefault.shared.lastUpdateOrInstallTime
                 DispatchQueue.global().async {
                     let sessionCount = SessionDAO.shared.getCount()
                     let identityCount = IdentityDAO.shared.getCount()
                     if sessionCount == 0 || identityCount == 0 {
                         FileManager.default.writeLog(log: "[AppUpgrade]sessionCount:\(sessionCount)...identityCount:\(identityCount)")
-                        var userInfo = UIApplication.getTrackUserInfo()
+                        var userInfo = [String: Any]()
+                        userInfo["didLogin"] = AccountAPI.shared.didLogin
+                        userInfo["previousUpdateOrInstallTime"] = previousUpdateOrInstallTime
+                        userInfo["newUpdateOrInstallTime"] = Date().toUTCString()
                         userInfo["sessionCount"] = "\(sessionCount)"
                         userInfo["identityCount"] = "\(identityCount)"
-                        userInfo["lastUpdateOrInstallVersion"] = lastVersion ?? ""
+                        userInfo["oldVersion"] = lastVersion ?? ""
                         userInfo["newVersion"] = Bundle.main.bundleVersion
                         UIApplication.traceError(code: ReportErrorCode.appUpgradeError, userInfo: userInfo)
                     }

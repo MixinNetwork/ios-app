@@ -1246,7 +1246,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="ic_emergency_contact" translatesAutoresizingMaskIntoConstraints="NO" id="mIX-cW-6a3">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="ic_mobile_contact" translatesAutoresizingMaskIntoConstraints="NO" id="mIX-cW-6a3">
                                     <rect key="frame" x="142.5" y="50" width="90" height="110.5"/>
                                 </imageView>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJy-ak-X20" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
@@ -2042,6 +2042,7 @@
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_emergency" width="140" height="162"/>
         <image name="ic_emergency_contact" width="90" height="90"/>
+        <image name="ic_mobile_contact" width="90" height="90"/>
         <image name="ic_place_holder" width="38" height="38"/>
     </resources>
 </document>

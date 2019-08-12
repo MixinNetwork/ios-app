@@ -14,7 +14,6 @@ extension SDImageCacheConfig {
     static let persistent: SDImageCacheConfig = {
         let config = SDImageCacheConfig()
         config.maxDiskAge = -1
-        config.diskCacheExpireType = .accessDate
         return config
     }()
     

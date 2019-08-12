@@ -345,7 +345,7 @@
 "wallet_hide_asset_empty" = "没有需要隐藏的资产";
 "wallet_send_amount" = "数量";
 "wallet_send_memo" = "备注";
-"wallet_send_tag" = "Tag (可选)";
+"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "点击添加地址";
 "wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
 "wallet_password_address_tips" = "通过密码修改";

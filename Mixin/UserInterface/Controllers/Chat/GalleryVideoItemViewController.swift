@@ -11,7 +11,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var panRecognizer: UIPanGestureRecognizer!
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
-    private var rateObserver: NSKeyValueObservation?
+    private var timeControlObserver: NSKeyValueObservation?
     private var sliderObserver: Any?
     private var timeLabelObserver: Any?
     private var isSeeking = false
@@ -65,7 +65,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if !isFocused {
                 player.pause()
                 if isPlayable {
-                    controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: false)
+                    updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
                 }
             }
         }
@@ -127,7 +127,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         isPipMode = false
         controlView.style.remove(.loading)
         controlView.playControlStyle = .play
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+        updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
         videoView.coverImageView.image = nil
         videoView.bringCoverToFront()
@@ -166,7 +166,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override func load(item: GalleryItem?) {
         super.load(item: item)
-        updateControlView()
+        updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
         updateSliderPosition(time: .zero)
         guard let item = item else {
             return
@@ -203,13 +203,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override func willBeginInteractiveDismissal() {
         super.willBeginInteractiveDismissal()
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
+        updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: true)
     }
     
     override func didCancelInteractiveDismissal() {
         super.didCancelInteractiveDismissal()
         if player.timeControlStatus != .playing {
-            controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: true)
+            updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: true)
         }
     }
     
@@ -227,7 +227,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             galleryViewController?.show(itemViewController: self)
         }
         if player.timeControlStatus == .playing {
-            controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         }
         let isPipMode = self.isPipMode
         animate(animations: {
@@ -274,7 +274,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         playerDidFailedToPlay = false
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+        updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         if item.category == .video || player.currentItem != nil {
             AudioManager.shared.pause()
             if playerDidReachEnd {
@@ -313,14 +313,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
         if player.timeControlStatus == .playing {
             let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
-            controlView.set(playControlsHidden: isShowingPlayControl,
-                            otherControlsHidden: isShowingPlayControl,
-                            animated: true)
+            updateControlView(playControlsHidden: isShowingPlayControl,
+                              otherControlsHidden: isShowingPlayControl,
+                              animated: true)
         } else if controlView.style.contains(.loading) {
             let isShowingVisualControl = controlView.visualControlWrapperView.alpha > 0
-            controlView.set(playControlsHidden: true,
-                            otherControlsHidden: isShowingVisualControl,
-                            animated: true)
+            updateControlView(playControlsHidden: true,
+                              otherControlsHidden: isShowingVisualControl,
+                              animated: true)
         }
     }
     
@@ -334,7 +334,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else if item.category == .live {
             controlView.playControlStyle = .reload
         }
-        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
     }
     
@@ -342,7 +342,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         playerDidFailedToPlay = true
         controlView.playControlStyle = .reload
         controlView.style.remove(.loading)
-        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
     }
     
@@ -438,7 +438,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                                                name: .AVPlayerItemFailedToPlayToEndTime,
                                                object: item)
         
-        rateObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
+        timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()
             self?.bringPlayerToFrontIfPlaying()
         })
@@ -459,13 +459,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play
             }
-            controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+            updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         case .waitingToPlayAtSpecifiedRate:
             if item?.category == .live {
                 controlView.style.insert(.loading)
             }
         @unknown default:
-            controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+            updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
     }
     
@@ -537,8 +537,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private func removeAllObservers() {
         removeTimeObservers()
         itemStatusObserver?.invalidate()
-        rateObserver?.invalidate()
+        timeControlObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func updateControlView(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
+        let hidePlayControls = playControlsHidden || !isPlayable
+        let hideOtherControls = otherControlsHidden || !isPlayable || !isFocused
+        controlView.set(playControlsHidden: hidePlayControls, otherControlsHidden: hideOtherControls, animated: animated)
     }
     
 }

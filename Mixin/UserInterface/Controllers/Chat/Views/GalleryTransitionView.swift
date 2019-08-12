@@ -30,6 +30,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         }
         frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
+        imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode
         imageWrapperView.aspectRatio = cell.contentImageWrapperView.aspectRatio
         imageWrapperView.position = cell.contentImageWrapperView.position
         imageWrapperView.frame = bounds
@@ -57,9 +58,15 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         
         let size: CGSize
         if let image = imageView.image {
-            size = CGSize(width: image.size.width, height: image.size.height)
+            let imageRatio = image.size.width / image.size.height
+            let imageWrapperRatio = imageWrapperView.frame.width / imageWrapperView.frame.height
+            if imageRatio < imageWrapperRatio {
+                size = image.size
+            } else {
+                size = imageWrapperView.frame.size
+            }
         } else {
-            size = CGSize(width: imageWrapperView.frame.width, height: imageWrapperView.frame.height)
+            size = imageWrapperView.frame.size
         }
         
         if GalleryItem.shouldLayoutImageOfRatioAsAriticle(size) {
@@ -128,6 +135,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
     }
     
     func transition(to cell: PhotoRepresentableMessageCell) {
+        imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }

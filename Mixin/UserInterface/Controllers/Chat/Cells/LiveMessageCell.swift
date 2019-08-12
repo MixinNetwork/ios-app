@@ -24,6 +24,7 @@ class LiveMessageCell: PhotoRepresentableMessageCell {
         playButton.sizeToFit()
         playButton.isUserInteractionEnabled = false
         contentView.addSubview(playButton)
+        contentImageWrapperView.imageView.contentMode = .scaleAspectFill
     }
     
 }

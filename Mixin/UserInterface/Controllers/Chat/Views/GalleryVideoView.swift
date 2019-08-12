@@ -188,7 +188,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         contentView.clipsToBounds = true
         contentView.backgroundColor = .clear
         
-        coverImageView.contentMode = .scaleAspectFit
+        coverImageView.contentMode = .scaleAspectFill
         
         playerView.backgroundColor = .black
         playerView.layer.videoGravity = .resize

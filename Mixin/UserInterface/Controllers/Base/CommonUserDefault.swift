@@ -253,16 +253,13 @@ class CommonUserDefault {
             if AccountAPI.shared.didLogin && !(lastVersion?.isEmpty ?? true) {
                 let previousUpdateOrInstallTime = CommonUserDefault.shared.lastUpdateOrInstallTime
                 DispatchQueue.global().async {
-                    let sessionCount = SessionDAO.shared.getCount()
-                    let identityCount = IdentityDAO.shared.getCount()
-                    if sessionCount == 0 || identityCount == 0 {
-                        FileManager.default.writeLog(log: "[AppUpgrade]sessionCount:\(sessionCount)...identityCount:\(identityCount)")
+                    if IdentityDAO.shared.getCount() == 0 {
+                        FileManager.default.writeLog(log: "[AppUpgrade]sessionCount:\(SessionDAO.shared.getCount())...identityCount:0")
                         var userInfo = [String: Any]()
                         userInfo["didLogin"] = AccountAPI.shared.didLogin
                         userInfo["previousUpdateOrInstallTime"] = previousUpdateOrInstallTime
                         userInfo["newUpdateOrInstallTime"] = Date().toUTCString()
-                        userInfo["sessionCount"] = "\(sessionCount)"
-                        userInfo["identityCount"] = "\(identityCount)"
+                        userInfo["identityCount"] = "0"
                         userInfo["oldVersion"] = lastVersion ?? ""
                         userInfo["newVersion"] = Bundle.main.bundleVersion
                         UIApplication.traceError(code: ReportErrorCode.appUpgradeError, userInfo: userInfo)

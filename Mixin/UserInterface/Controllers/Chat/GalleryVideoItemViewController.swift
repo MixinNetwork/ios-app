@@ -6,7 +6,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     static var currentPipController: GalleryVideoItemViewController?
     
-    private let videoView = GalleryVideoView()
+    let videoView = GalleryVideoView()
     
     private var panRecognizer: UIPanGestureRecognizer!
     private var tapRecognizer: UITapGestureRecognizer!

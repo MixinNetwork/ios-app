@@ -10,6 +10,8 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
     private let statusImageView = UIImageView()
     private let maskLayer = BubbleLayer()
     
+    private var contentSize: CGSize?
+    
     private var imageView: YYAnimatedImageView {
         return imageWrapperView.imageView
     }
@@ -27,6 +29,11 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
     func load(cell: PhotoRepresentableMessageCell) {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
+        }
+        if let width = viewModel.message.mediaWidth, let height = viewModel.message.mediaHeight {
+            contentSize = CGSize(width: width, height: height)
+        } else {
+            contentSize = nil
         }
         frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
@@ -57,7 +64,9 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         let bubbleFrame: CGRect
         
         let size: CGSize
-        if let image = imageView.image {
+        if let contentSize = contentSize {
+            size = contentSize
+        } else if let image = imageView.image {
             let imageRatio = image.size.width / image.size.height
             let imageWrapperRatio = imageWrapperView.frame.width / imageWrapperView.frame.height
             if imageRatio < imageWrapperRatio {
@@ -124,6 +133,10 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
                 transform = transform.concatenating(offset)
             }
             self.transform = transform
+        } else if let controller = viewController as? GalleryVideoItemViewController {
+            frame = controller.videoView.contentView.frame
+            imageWrapperView.frame = bounds
+            imageWrapperView.position = .center
         } else {
             frame = viewController.view.bounds
             imageWrapperView.frame = bounds
@@ -178,6 +191,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         timeLabel.textColor = .white
         statusImageView.contentMode = .left
         shadowImageView.frame.size = shadowImageView.image?.size ?? .zero
+        imageWrapperView.backgroundColor = .black
         addSubview(imageWrapperView)
         accessoryContainerView.addSubview(shadowImageView)
         accessoryContainerView.addSubview(timeLabel)

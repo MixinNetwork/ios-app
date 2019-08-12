@@ -6,11 +6,11 @@ class MixinIdentityKeyStore: IdentityKeyStore {
     private let lock = NSLock()
 
     func identityKeyPair() -> KeyPair? {
-        return IdentityDao.shared.getLocalIdentity()?.getIdentityKeyPair()
+        return IdentityDAO.shared.getLocalIdentity()?.getIdentityKeyPair()
     }
 
     func localRegistrationId() -> UInt32? {
-        guard let registrationId = IdentityDao.shared.getLocalIdentity()?.registrationId else {
+        guard let registrationId = IdentityDAO.shared.getLocalIdentity()?.registrationId else {
             return nil
         }
         return UInt32(registrationId)
@@ -32,7 +32,7 @@ class MixinIdentityKeyStore: IdentityKeyStore {
             return false
         }
         FileManager.default.writeLog(log: "Saved new identity for: \(address.name)")
-        IdentityDao.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
+        IdentityDAO.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         return true
     }
 }

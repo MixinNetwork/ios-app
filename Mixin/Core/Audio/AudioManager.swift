@@ -48,6 +48,11 @@ class AudioManager {
             }
         }
         
+        if let controller = GalleryVideoItemViewController.currentPipController {
+            controller.pauseAction(self)
+            controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
+        
         cells[node.message.messageId]?.object?.style = .playing
         
         if node.message.messageId == playingNode?.message.messageId, let player = player {
@@ -64,7 +69,7 @@ class AudioManager {
         
         queue.async {
             do {
-                if node.message.mediaStatus != MediaStatus.READ.rawValue {
+                if node.message.mediaStatus != MediaStatus.READ.rawValue && node.message.userId != AccountAPI.shared.accountUserId {
                     MessageDAO.shared.updateMediaStatus(messageId: node.message.messageId,
                                                         status: .READ,
                                                         conversationId: node.message.conversationId)
@@ -162,10 +167,14 @@ class AudioManager {
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
+        let pause = {
+            DispatchQueue.main.async(execute: self.pause)
+        }
         let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
         let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
         if previousOutput?.portType == .headphones, output?.portType != .headphones {
             pause()
+            return
         }
         guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
             return
@@ -201,7 +210,7 @@ class AudioManager {
                 DispatchQueue.main.sync {
                     cells[playingNode.message.messageId]?.object?.style = .stopped
                 }
-                if let nextNode = self.node(nextTo: playingNode) {
+                if let nextNode = self.playableNode(nextTo: playingNode) {
                     DispatchQueue.main.sync {
                         let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
                                         AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
@@ -223,11 +232,14 @@ class AudioManager {
         }
     }
     
-    private func node(nextTo node: Node) -> Node? {
+    private func playableNode(nextTo node: Node) -> Node? {
         guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
             return nil
         }
         guard nextMessage.category.hasSuffix("_AUDIO"), let filename = nextMessage.mediaUrl else {
+            return nil
+        }
+        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
             return nil
         }
         let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path
@@ -242,7 +254,7 @@ class AudioManager {
             return
         }
         let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
-        AudioJobQueue.shared.addJob(job: job)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
 }

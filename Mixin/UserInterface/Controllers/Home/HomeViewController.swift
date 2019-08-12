@@ -25,7 +25,7 @@ class HomeViewController: UIViewController {
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
-    
+
     private var conversations = [ConversationItem]()
     private var needRefresh = true
     private var refreshing = false

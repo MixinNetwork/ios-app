@@ -20,6 +20,8 @@ class WebSocketService: NSObject {
     private var recoverJobs = false
     private let websocketDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
     private let sendDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.send")
+    private let rotateSignedPrekeyInterval: TimeInterval = 3600 * 24 * 2
+    private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
 
     private var reconnectWorkItem: DispatchWorkItem?
     private var timer: Timer?
@@ -149,12 +151,34 @@ extension WebSocketService: SRWebSocketDelegate {
         ReceiveMessageService.shared.processReceiveMessages()
         sendPendingMessage()
         resumeAllJob()
-        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
         pingRunnable()
+        refreshJobs()
+    }
+
+    private func refreshJobs() {
+        let cur = Date().timeIntervalSince1970
+        let lastSignedPrekey = CryptoUserDefault.shared.rotateSignedPrekey
+        if lastSignedPrekey < 1 {
+            CryptoUserDefault.shared.rotateSignedPrekey = cur
+        } else if cur - lastSignedPrekey > rotateSignedPrekeyInterval {
+            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
+            CryptoUserDefault.shared.rotateSignedPrekey = cur
+        }
+
+        let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
+        if lastOneTimePreKey < 1 {
+            CryptoUserDefault.shared.refreshOneTimePreKey = cur
+        } else if cur - lastOneTimePreKey > refreshOneTimePreKeyInterval {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
+            CryptoUserDefault.shared.refreshOneTimePreKey = cur
+        }
 
         if CommonUserDefault.shared.backupCategory != .off && NetworkManager.shared.isReachableOnWiFi {
             BackupJobQueue.shared.addJob(job: BackupJob())
         }
+
+        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
@@ -285,18 +309,6 @@ extension WebSocketService {
         ConcurrentJobQueue.shared.cancelAllOperations()
     }
 
-    func lanuchInit() {
-        ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
-        let cur = Date().timeIntervalSince1970
-        let last = CryptoUserDefault.shared.rotateSignedPrekey
-        if last < 1 {
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        } else if cur - last > 60 * 60 * 24 * 2 {
-            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        }
-    }
-
     func sendPendingMessage() {
         let message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
         let transaction = SendJobTransaction(callback: { (result) in
@@ -315,8 +327,6 @@ extension WebSocketService {
 
                 SendMessageService.shared.restoreJobs()
                 ConcurrentJobQueue.shared.restoreJobs()
-
-                WebSocketService.shared.lanuchInit()
             }
         })
         transactions[message.id] = transaction

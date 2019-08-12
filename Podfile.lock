@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (4.8.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - Bugsnag (5.22.3)
+  - Bugsnag (5.22.4)
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - DeviceGuru (5.1.4)
@@ -137,8 +137,10 @@ PODS:
   - R.swift (5.0.3):
     - R.swift.Library (~> 5.0.0)
   - R.swift.Library (5.0.1)
-  - RSKImageCropper (2.2.2)
-  - SDWebImage/Core (5.0.6)
+  - RSKImageCropper (2.2.3)
+  - SDWebImage (5.1.0):
+    - SDWebImage/Core (= 5.1.0)
+  - SDWebImage/Core (5.1.0)
   - SDWebImageYYPlugin/YYImage (0.2.1):
     - SDWebImage/Core (~> 5.0)
     - YYImage/Core
@@ -174,6 +176,7 @@ DEPENDENCIES:
   - PhoneNumberKit (from `https://github.com/wuyuehyang/PhoneNumberKit.git`, branch `swift5`)
   - R.swift
   - RSKImageCropper
+  - SDWebImage
   - SDWebImageYYPlugin/YYImage
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit
@@ -254,7 +257,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  Bugsnag: ba9fec5ebe711cb2e1da5225d89654d72e7254e3
+  Bugsnag: a33cbceeb161449a1bb5faf65647ade9dbcbb54c
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   DeviceGuru: 76fbfd16d5241bc292730cd38190d52a3b8820fc
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
@@ -282,8 +285,8 @@ SPEC CHECKSUMS:
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
-  RSKImageCropper: 05e3b82a18da83ea3c2b7bffa7f2199a621d6802
-  SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
+  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
+  SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
   SDWebImageYYPlugin: aa90aee687988821ac83260c443f2e05f2eb20f6
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
@@ -294,6 +297,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: ce4eb37aed2b8ab04ccfbdf525edb404a3a008b3
+PODFILE CHECKSUM: d41fba61e14ffbfac81ac1086195f471676e7c24
 
 COCOAPODS: 1.7.5

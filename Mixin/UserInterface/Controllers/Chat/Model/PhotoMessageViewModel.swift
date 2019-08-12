@@ -40,24 +40,20 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-        let job: BaseJob
         if shouldUpload {
-            let msg = Message.createMessage(message: message)
-            job = ImageUploadJob(message: msg)
+            UploaderQueue.shared.addJob(job: ImageUploadJob(message: Message.createMessage(message: message)))
         } else {
-            job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
         }
-        ConcurrentJobQueue.shared.addJob(job: job)
+
         isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
         if shouldUpload {
-            let jobId = ImageUploadJob.jobId(messageId: message.messageId)
-            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+            UploaderQueue.shared.cancelJob(jobId: ImageUploadJob.jobId(messageId: message.messageId))
         } else {
-            let jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
-            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(messageId: message.messageId))
         }
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)

@@ -18,22 +18,14 @@ class SignalProtocol {
 
     func initSignal() {
         let localRegistrationId = try! Signal.generateRegistrationId()
-
-        UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.LOCAL_REGISTRATION_ID)
-
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
-        let block = {
-            _ = IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
-        }
-        if FileManager.default.fileExists(atPath: MixinFile.signalDatabasePath) {
-            SignalDatabase.shared.logout(onClosed: block)
-        } else {
-            block()
-        }
+
+        UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.localRegistrationId)
+        IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
     }
 
     func getRegistrationId() -> UInt32 {
-        let registrationId = UserDefaults.standard.value(forKey: PreKeyUtil.LOCAL_REGISTRATION_ID) as! UInt32
+        let registrationId = UserDefaults.standard.value(forKey: PreKeyUtil.localRegistrationId) as! UInt32
         return registrationId
     }
 
@@ -109,7 +101,15 @@ class SignalProtocol {
         do {
             cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
         } catch {
-            UIApplication.traceError(error)
+            if let err = error as? SignalError {
+                if err != SignalError.noSession {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["signalErrorCode"] = err.rawValue
+                    UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: userInfo)
+                }
+            } else {
+                UIApplication.traceError(error)
+            }
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: resendMessageId))
         return data

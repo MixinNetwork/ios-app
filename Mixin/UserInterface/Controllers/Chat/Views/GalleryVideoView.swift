@@ -1,22 +1,39 @@
-import Foundation
-import AVKit
+import UIKit
+import AVFoundation
 
-class GalleryVideoView: UIView {
+final class GalleryVideoView: UIView, GalleryAnimatable {
     
-    override static var layerClass: AnyClass {
-        return AVPlayerLayer.self
-    }
-    
-    override var layer: AVPlayerLayer {
-        return super.layer as! AVPlayerLayer
-    }
-    
+    let contentView = UIView()
+    let coverImageView = UIImageView()
     let player = AVPlayer()
-    private let unplayableHintImageView = UIImageView(image: #imageLiteral(resourceName: "ic_file_expired"))
-    private let thumbnailImageView = UIImageView()
-    private let playableKey = "playable"
+    let playerView = PlayerView()
+    let controlView = R.nib.galleryVideoControlView(owner: nil)!
     
-    private var url: URL?
+    var videoRatio: CGFloat = 1
+    
+    private let stickToEdgeVelocityLimit: CGFloat = 800
+    private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    private let pipModeDefaultTopMargin: CGFloat = 61
+    
+    private var isPipMode = false
+    
+    private var adjustedSafeAreaInsets: UIEdgeInsets {
+        let insets = superview?.safeAreaInsets ?? .zero
+        return UIEdgeInsets(top: max(20, insets.top),
+                            left: insets.left,
+                            bottom: max(5, insets.bottom),
+                            right: insets.right)
+    }
+    
+    private var contentSubviewIndices: (cover: Int, player: Int)? {
+        guard let cover = contentView.subviews.firstIndex(of: coverImageView) else {
+            return nil
+        }
+        guard let player = contentView.subviews.firstIndex(of: playerView) else {
+            return nil
+        }
+        return (cover, player)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -28,101 +45,161 @@ class GalleryVideoView: UIView {
         prepare()
     }
     
+    convenience init() {
+        self.init(frame: CGRect(x: 0, y: 0, width: 375, height: 240))
+        backgroundColor = .clear
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        unplayableHintImageView.center = center
-        thumbnailImageView.frame = bounds
+        contentView.bounds.size = CGSize(width: bounds.width , height: ceil(bounds.width / videoRatio))
+        contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        for view in [coverImageView, playerView] {
+            view.frame = contentView.bounds
+        }
+        layoutControlView()
     }
-
-    func loadVideo(asset: AVAsset, thumbnail: UIImage?) {
-        let item = AVPlayerItem(asset: asset)
-        if item.asset.statusOfValue(forKey: playableKey, error: nil) == .loaded {
-            loadItem(item, playAfterLoaded: false, thumbnail: thumbnail)
+    
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        layoutControlView()
+    }
+    
+    func bringCoverToFront() {
+        guard let (cover, player) = contentSubviewIndices else {
+            return
+        }
+        guard cover < player else {
+            return
+        }
+        contentView.exchangeSubview(at: cover, withSubviewAt: player)
+    }
+    
+    func bringPlayerToFront() {
+        guard let (cover, player) = contentSubviewIndices else {
+            return
+        }
+        guard cover > player else {
+            return
+        }
+        contentView.exchangeSubview(at: cover, withSubviewAt: player)
+    }
+    
+    func stickToSuperviewEdge(horizontalVelocity: CGFloat) {
+        guard let superview = superview else {
+            return
+        }
+        let x: CGFloat
+        let shouldStickToRightEdge = center.x > superview.bounds.midX && horizontalVelocity > -stickToEdgeVelocityLimit
+            || center.x < superview.bounds.midX && horizontalVelocity > stickToEdgeVelocityLimit
+        if shouldStickToRightEdge {
+            x = superview.bounds.width - pipModeMinInsets.right - frame.size.width / 2
         } else {
-            item.asset.loadValuesAsynchronously(forKeys: [playableKey], completionHandler: {
-                DispatchQueue.main.async {
-                    self.loadItem(item, playAfterLoaded: false, thumbnail: thumbnail)
-                }
-            })
+            x = pipModeMinInsets.left + frame.size.width / 2
+        }
+        let y: CGFloat = {
+            let halfHeight = frame.size.height / 2
+            let minY = adjustedSafeAreaInsets.top + pipModeMinInsets.top + halfHeight
+            let maxY = superview.bounds.height - adjustedSafeAreaInsets.bottom - pipModeMinInsets.bottom - halfHeight
+            return min(maxY, max(minY, center.y))
+        }()
+        UIView.animate(withDuration: 0.3) {
+            self.center = CGPoint(x: x, y: y)
         }
     }
     
-    func loadVideo(url: URL, playAfterLoaded: Bool, thumbnail: UIImage?) {
-        if url != self.url {
-            self.url = url
-            let item = AVPlayerItem(url: url)
-            if item.asset.statusOfValue(forKey: playableKey, error: nil) == .loaded {
-                loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
-            } else {
-                item.asset.loadValuesAsynchronously(forKeys: [playableKey], completionHandler: {
-                    guard url == self.url else {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        guard url == self.url else {
-                            return
-                        }
-                        self.loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
-                    }
-                })
-            }
-        } else {
-            if playAfterLoaded, player.timeControlStatus != .playing, let item = player.currentItem, item.asset.isPlayable {
-                AudioManager.shared.pause()
-                player.play()
-            }
+    func layoutFullsized() {
+        isPipMode = false
+        controlView.style.remove(.pip)
+        if let superview = superview {
+            frame = superview.bounds
         }
+        setNeedsLayout()
+        layoutIfNeeded()
+        updateCornerRadiusAndShadow()
+    }
+    
+    func layoutPip() {
+        isPipMode = true
+        controlView.style.insert(.pip)
+        if let superview = superview {
+            var size: CGSize
+            if videoRatio > 1 {
+                let width = superview.bounds.width * (2 / 3)
+                size = CGSize(width: width, height: width / videoRatio)
+            } else {
+                let height = superview.bounds.height / 3
+                let width = height * videoRatio
+                if width <= superview.bounds.width / 2 {
+                    size = CGSize(width: width, height: height)
+                } else {
+                    let width = superview.bounds.width / 2
+                    let height = width / videoRatio
+                    size = CGSize(width: width, height: height)
+                }
+            }
+            size = ceil(size)
+            frame.size = size
+            center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
+                             y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)
+        }
+        setNeedsLayout()
+        layoutIfNeeded()
+        updateCornerRadiusAndShadow()
+    }
+    
+    private func layoutControlView() {
+        if isPipMode || safeAreaInsets.top <= 20 {
+            controlView.frame = bounds
+        } else {
+            controlView.frame = bounds.inset(by: safeAreaInsets)
+        }
+    }
+    
+    private func updateCornerRadiusAndShadow() {
+        let fromCornerRadius = contentView.layer.cornerRadius
+        let toCornerRadius: CGFloat = isPipMode ? 6 : 0
+        contentView.layer.cornerRadius = toCornerRadius
+        let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerRadiusAnimation.fromValue = fromCornerRadius
+        cornerRadiusAnimation.toValue = toCornerRadius
+        cornerRadiusAnimation.duration = animationDuration
+        
+        let toShadowOpacity: Float = isPipMode ? 0.14 : 0
+        let fromShadowOpacity = layer.shadowOpacity
+        layer.shadowOpacity = toShadowOpacity
+        let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
+        shadowOpacityAnimation.fromValue = fromShadowOpacity
+        shadowOpacityAnimation.toValue = toShadowOpacity
+        shadowOpacityAnimation.duration = animationDuration
+        
+        contentView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
+        layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
     }
     
     private func prepare() {
-        layer.player = player
-        addSubview(thumbnailImageView)
-        unplayableHintImageView.isHidden = true
-        addSubview(unplayableHintImageView)
+        // TODO: Use explicit shadowPath
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 4
+        layer.shadowOpacity = 0
+        
+        contentView.frame = bounds
+        contentView.clipsToBounds = true
+        contentView.backgroundColor = .clear
+        
+        coverImageView.contentMode = .scaleAspectFit
+        
+        playerView.backgroundColor = .black
+        playerView.layer.videoGravity = .resize
+        playerView.layer.player = player
+        
+        contentView.addSubview(coverImageView)
+        contentView.addSubview(playerView)
+        addSubview(contentView)
+        
+        controlView.frame = bounds
+        addSubview(controlView)
     }
     
-    private func loadItem(_ item: AVPlayerItem, playAfterLoaded: Bool, thumbnail: UIImage?) {
-        let isPlayable = item.asset.isPlayable
-        unplayableHintImageView.isHidden = isPlayable
-        thumbnailImageView.isHidden = isPlayable
-        if isPlayable {
-            player.replaceCurrentItem(with: item)
-            if playAfterLoaded {
-                AudioManager.shared.pause()
-                player.play()
-            }
-        } else {
-            thumbnailImageView.image = thumbnail
-        }
-    }
-
-    func pause() {
-        guard player.currentItem != nil else {
-            return
-        }
-        player.pause()
-    }
-
-    func play() {
-        guard player.currentItem != nil, player.status == .readyToPlay else {
-            return
-        }
-        AudioManager.shared.pause()
-        player.play()
-    }
-
-    func isPlaying() -> Bool {
-        guard player.currentItem != nil, player.status == .readyToPlay else {
-            return false
-        }
-        return player.rate > 0
-    }
-
-    func seek(to: CMTime) {
-        guard player.currentItem != nil, player.status == .readyToPlay else {
-            return
-        }
-        player.seek(to: to)
-    }
 }

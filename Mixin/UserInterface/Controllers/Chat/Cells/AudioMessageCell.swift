@@ -8,10 +8,8 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         case stopped
     }
     
-    private static let playImage = UIImage(named: "ic_play")
-    private static let stopImage = UIImage(named: "ic_file_cancel")
-
     @IBOutlet weak var operationButton: NetworkOperationButton!
+    @IBOutlet weak var playbackStateWrapperView: UIView!
     @IBOutlet weak var playbackStateImageView: UIImageView!
     @IBOutlet weak var waveformView: WaveformView!
     @IBOutlet weak var highlightedWaveformView: WaveformView!
@@ -31,17 +29,17 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             timer = nil
             switch style {
             case .playing:
-                playbackStateImageView.image = AudioMessageCell.stopImage
+                playbackStateImageView.image = R.image.ic_file_cancel()
                 updateWaveformProgress()
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .common)
             case .stopped:
-                playbackStateImageView.image = AudioMessageCell.playImage
+                playbackStateImageView.image = R.image.ic_play()
                 waveformMaskView.frame = .zero
             case .paused:
-                playbackStateImageView.image = AudioMessageCell.playImage
+                playbackStateImageView.image = R.image.ic_play()
                 updateWaveformProgress()
             }
         }
@@ -84,7 +82,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             highlightedWaveformView.waveform = viewModel.waveform
             updateOperationButtonStyle()
             operationButton.isHidden = viewModel.operationButtonIsHidden
-            playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
+            playbackStateWrapperView.isHidden = viewModel.playbackStateIsHidden
             duration = Float64(viewModel.message.mediaDuration ?? 0)
             updateUnreadStyle()
         }
@@ -101,7 +99,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         }
         operationButton.style = viewModel.operationButtonStyle
         operationButton.isHidden = viewModel.operationButtonIsHidden
-        playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
+        playbackStateWrapperView.isHidden = viewModel.playbackStateIsHidden
     }
     
     func updateUnreadStyle() {

@@ -19,6 +19,7 @@ class RefreshOffsetJob: BaseJob {
                 }
                 for data in blazeMessages {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
+                    SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: data.messageId, status: data.status)
                     CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
                 }
                 if lastStatusOffset == statusOffset {

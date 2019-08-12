@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 
-class FileJobQueue: JobQueue {
+class UploaderQueue: JobQueue {
 
-    static let shared = FileJobQueue()
+    static let shared = UploaderQueue()
 
     init() {
         super.init(maxConcurrentOperationCount: 1)

@@ -89,18 +89,20 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                     weakSelf.alertSettings(R.string.localizable.permission_denied_network())
                     weakSelf.continueButton.isBusy = false
                 } else {
-                    var userInfo = [String: Any]()
-                    userInfo["errorCode"] = error.code
-                    userInfo["errorDescription"] = error.description
-                    if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
-                        userInfo["requestId"] = requestId
+                    if error.status != NSURLErrorTimedOut {
+                        var userInfo = [String: Any]()
+                        userInfo["errorCode"] = error.code
+                        userInfo["errorDescription"] = error.description
+                        if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
+                            userInfo["requestId"] = requestId
+                        }
+                        if let statusCode = weakSelf.request?.response?.statusCode {
+                            userInfo["statusCode"] = "\(statusCode)"
+                        }
+                        userInfo["phone"] = ctx.mobileNumber
+                        userInfo["phoneCountryCode"] = ctx.callingCode
+                        UIApplication.traceError(code: ReportErrorCode.sendCodeByLoginError, userInfo: userInfo)
                     }
-                    if let statusCode = weakSelf.request?.response?.statusCode {
-                        userInfo["statusCode"] = "\(statusCode)"
-                    }
-                    userInfo["phone"] = ctx.mobileNumber
-                    userInfo["phoneCountryCode"] = ctx.callingCode
-                    UIApplication.traceError(code: ReportErrorCode.sendCodeByLoginError, userInfo: userInfo)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

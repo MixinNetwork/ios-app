@@ -238,6 +238,13 @@ class SendViewController: KeyboardBasedLayoutViewController {
         }
     }
     
+    @IBAction func scanMemoAction(_ sender: Any) {
+        let vc = CameraViewController.instance()
+        vc.delegate = self
+        vc.scanQrCodeOnly = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @objc func fillBalanceAction(_ sender: Any) {
         amountTextField.text = asset?.balance
         amountEditingChanged(sender)
@@ -442,6 +449,16 @@ extension SendViewController: TransferTypeViewControllerDelegate {
             amountEditingChanged(amountTextField)
         }
         updateAssetUI()
+    }
+    
+}
+
+extension SendViewController: CameraViewControllerDelegate {
+    
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+        memoTextField.text = string
+        navigationController?.popViewController(animated: true)
+        return false
     }
     
 }

@@ -8,7 +8,6 @@ class ConversationViewController: UIViewController {
     static var positions = [String: Position]()
     
     @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
@@ -37,11 +36,6 @@ class ConversationViewController: UIViewController {
             setNeedsStatusBarAppearanceUpdate()
         }
     }
-    var homeIndicatorAutoHidden = false {
-        didSet {
-            setNeedsUpdateOfHomeIndicatorAutoHidden()
-        }
-    }
     
     private let minInputWrapperTopMargin: CGFloat = 112 // Margin to navigation title bar
     private let showScrollToBottomButtonThreshold: CGFloat = 150
@@ -67,17 +61,6 @@ class ConversationViewController: UIViewController {
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     
-    private lazy var galleryViewController: GalleryViewController = {
-        let controller = GalleryViewController.instance(conversationId: conversationId)
-        controller.delegate = self
-        addChild(controller)
-        galleryWrapperView.addSubview(controller.view)
-        controller.view.snp.makeConstraints({ (make) in
-            make.edges.equalToSuperview()
-        })
-        controller.didMove(toParent: self)
-        return controller
-    }()
     private lazy var strangerTipsView: StrangerTipsView = {
         let view = StrangerTipsView()
         view.frame.size.height = StrangerTipsView.height
@@ -152,10 +135,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
-    }
-    
-    override var prefersHomeIndicatorAutoHidden: Bool {
-        return homeIndicatorAutoHidden
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -381,6 +360,8 @@ class ConversationViewController: UIViewController {
         }
         if let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = dataSource?.viewModel(for: indexPath) {
             let message = viewModel.message
+            let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
+            let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
             if message.category.hasSuffix("_TEXT"), let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
@@ -403,20 +384,18 @@ class ConversationViewController: UIViewController {
                     let node = AudioManager.Node(message: message, path: url.path)
                     AudioManager.shared.play(node: node)
                 }
-            } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let item = GalleryItem(message: message) {
+            } else if (isImageOrVideo && mediaStatusIsReady) || message.category.hasSuffix("_LIVE"), let item = GalleryItem(message: message), let cell = cell as? PhotoRepresentableMessageCell {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                view.bringSubviewToFront(galleryWrapperView)
-                if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
-                    galleryViewController.show(item: item, offset: offset)
-                } else {
-                    galleryViewController.show(item: item, offset: 0)
+                if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {
+                    galleryViewController.conversationId = conversationId
+                    galleryViewController.show(item: item, from: cell)
                 }
-                homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
+                    GalleryVideoItemViewController.currentPipController?.pauseAction(self)
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
@@ -636,8 +615,6 @@ class ConversationViewController: UIViewController {
             previewDocumentController?.dismissMenu(animated: true)
             previewDocumentController = nil
             previewDocumentMessageId = nil
-        } else {
-            galleryViewController.handleMessageRecalling(messageId: messageId)
         }
     }
     
@@ -783,6 +760,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
+            conversationInputViewController.textView.resignFirstResponder()
             (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
                 AudioManager.shared.stop()
@@ -1051,67 +1029,35 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - GalleryViewControllerDelegate
 extension ConversationViewController: GalleryViewControllerDelegate {
     
-    func galleryViewController(_ viewController: GalleryViewController, showContextForItemOfMessageId id: String) -> GalleryViewController.ShowContext? {
-        guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel, let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
-            return nil
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell? {
+        return visiblePhotoRepresentableCell(of: item.messageId)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
+        if let offset = relativeOffset, let indexPath = dataSource?.indexPath(where: { $0.messageId == item.messageId }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+            (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
+            cell.contentImageView.position = .relativeOffset(offset)
+            cell.contentImageView.layoutIfNeeded()
         }
-        return GalleryViewController.ShowContext(sourceFrame: frameOfPhotoRepresentableCell(cell),
-                                                 placeholder: cell.contentImageView.image,
-                                                 viewModel: viewModel,
-                                                 statusSnapshot: cell.statusSnapshot())
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, dismissContextForItemOfMessageId id: String) -> GalleryViewController.DismissContext? {
-        guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
-            return nil
-        }
-        var frame: CGRect?
-        var snapshot: UIImage?
-        if let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            frame = frameOfPhotoRepresentableCell(cell)
-            snapshot = cell.statusSnapshot()
-        }
-        return GalleryViewController.DismissContext(sourceFrame: frame, viewModel: viewModel, statusSnapshot: snapshot)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: true)
-        statusBarHidden = true
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: false)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat) {
-        guard let id = id, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
-            return
-        }
-        (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
-        cell.contentImageView.position = .relativeOffset(offset)
-        cell.contentImageView.layoutIfNeeded()
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: true)
-        statusBarHidden = false
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: false)
-        view.sendSubviewToBack(galleryWrapperView)
-        statusBarHidden = false
-        homeIndicatorAutoHidden = false
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: true)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didCancelInteractivelyDismissingForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: false)
-    }
-
 }
 
 // MARK: - PhotoAssetPickerDelegate
@@ -1205,7 +1151,6 @@ extension ConversationViewController {
     private func updateAccessoryButtons(animated: Bool) {
         let position = tableView.contentSize.height - tableView.contentOffset.y - tableView.bounds.height
         let didReachThreshold = position > showScrollToBottomButtonThreshold
-            && tableView.contentOffset.y > tableView.contentInset.top
         let shouldShowScrollToBottomButton = didReachThreshold || !dataSource.didLoadLatestMessage
         if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
@@ -1284,22 +1229,24 @@ extension ConversationViewController {
     }
     
     private func setCell(ofMessageId id: String?, contentViewHidden hidden: Bool) {
-        guard let id = id, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) else {
+        guard let id = id, let cell = visiblePhotoRepresentableCell(of: id) else {
             return
         }
-        var contentViews = [UIView]()
-        let cell = tableView.cellForRow(at: indexPath)
-        if let cell = cell as? PhotoRepresentableMessageCell {
-            contentViews = [cell.contentImageView,
-                            cell.shadowImageView,
-                            cell.timeLabel,
-                            cell.statusImageView]
-        }
+        var contentViews = [
+            cell.contentImageView,
+            cell.shadowImageView,
+            cell.timeLabel,
+            cell.statusImageView
+        ]
         if let cell = cell as? AttachmentExpirationHintingMessageCell {
             contentViews.append(cell.operationButton)
         }
         if let cell = cell as? VideoMessageCell {
             contentViews.append(cell.lengthLabel)
+        }
+        if let cell = cell as? LiveMessageCell {
+            contentViews.append(cell.badgeView)
+            contentViews.append(cell.playButton)
         }
         contentViews.forEach {
             $0.isHidden = hidden
@@ -1312,6 +1259,15 @@ extension ConversationViewController {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
+    }
+    
+    private func visiblePhotoRepresentableCell(of messageId: String) -> PhotoRepresentableMessageCell? {
+        for case let cell as PhotoRepresentableMessageCell in tableView.visibleCells {
+            if cell.viewModel?.message.messageId == messageId {
+                return cell
+            }
+        }
+        return nil
     }
     
 }

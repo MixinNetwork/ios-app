@@ -115,8 +115,8 @@ class LoginView: UIView {
                 weakSelf.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
                 weakSelf.superView?.dismissPopupControllerAnimated()
-                if UIApplication.rootNavigationController()?.viewControllers.last is CameraViewController {
-                    UIApplication.rootNavigationController()?.popViewController(animated: true)
+                if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
+                    UIApplication.homeNavigationController?.popViewController(animated: true)
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):

@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import FirebaseMLVision
 
 extension NSNotification.Name {
 
@@ -55,21 +56,69 @@ enum NotificationRequestIdentifier {
     static let call = "call"
 }
 
-enum ReportErrorCode {
-    static let logoutError = 100000
-    static let sendMessengerError = 100001
-    static let sendCodeByLoginError = 100002
-    static let recaptchaUnrecognized = 100003
-    static let databaseRemoveFailed = 100004
-    static let databaseSQLError = 100005
-    static let attachmentUploadError = 100006
-    static let attachmentDownloadError = 100007
-    static let pinError = 100008
-    static let callVoiceError = 100009
-    static let callVideoError = 100010
-    static let keyError = 100011
-    static let signalError = 100012
-    static let receiveMessageError = 100013
+enum ReportErrorCode: Int {
+    case logoutError = 100000
+    case sendMessengerError = 100001
+    case sendCodeByLoginError = 100002
+    case recaptchaUnrecognized = 100003
+    case databaseRemoveFailed = 100004
+    case databaseError = 100005
+    case attachmentUploadError = 100006
+    case attachmentDownloadError = 100007
+    case pinError = 100008
+    case callVoiceError = 100009
+    case callVideoError = 100010
+    case keyError = 100011
+    case signalError = 100012
+    case receiveMessageError = 100013
+    case decryptMessageError = 100014
+    case jobError = 100015
+    case signalDatabaseResetFailed = 100016
+    case databaseCorrupted = 100017
+    case appUpgradeError = 100020
+
+    var errorName: String {
+        switch self {
+        case .logoutError:
+            return "logoutError"
+        case .sendMessengerError:
+            return "sendMessengerError"
+        case .sendCodeByLoginError:
+            return "sendCodeByLoginError"
+        case .recaptchaUnrecognized:
+            return "recaptchaUnrecognized"
+        case .databaseRemoveFailed:
+            return "databaseRemoveFailed"
+        case .databaseError:
+            return "databaseError"
+        case .attachmentUploadError:
+            return "attachmentUploadError"
+        case .attachmentDownloadError:
+            return "attachmentDownloadError"
+        case .pinError:
+            return "pinError"
+        case .callVoiceError:
+            return "callVoiceError"
+        case .callVideoError:
+            return "callVideoError"
+        case .keyError:
+            return "keyError"
+        case .signalError:
+            return "signalError"
+        case .receiveMessageError:
+            return "receiveMessageError"
+        case .decryptMessageError:
+            return "decryptMessageError"
+        case .jobError:
+            return "jobError"
+        case .signalDatabaseResetFailed:
+            return "signalDatabaseResetFailed"
+        case .databaseCorrupted:
+            return "databaseCorrupted"
+        case .appUpgradeError:
+            return "appUpgradeError"
+        }
+    }
 }
 
 struct ConversationChange {
@@ -270,3 +319,8 @@ enum StatusBarHeight {
 let currentDecimalSeparator = Locale.current.decimalSeparator ?? "."
 
 let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
+
+let qrCodeDetector: VisionBarcodeDetector = {
+    let options = VisionBarcodeDetectorOptions(formats: .qrCode)
+    return Vision.vision().barcodeDetector(options: options)
+}()

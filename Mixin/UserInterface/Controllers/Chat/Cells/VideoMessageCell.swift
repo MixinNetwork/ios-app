@@ -4,7 +4,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
     
-    let operationButton: NetworkOperationButton! = NetworkOperationButton(type: .custom)
+    let operationButton: NetworkOperationButton! = ModernNetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
     let lengthLabel = InsetLabel()
     
@@ -23,7 +23,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     }
     
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
-        contentImageView.image = viewModel.thumbnail
+        contentImageView.set(thumbnail: viewModel.thumbnail, ratio: viewModel.aspectRatio)
         if let viewModel = viewModel as? VideoMessageViewModel, viewModel.duration != nil || viewModel.fileSize != nil {
             let length = viewModel.message.mediaStatus == MediaStatus.DONE.rawValue || viewModel.message.mediaStatus == MediaStatus.READ.rawValue
                 ? (viewModel.duration ?? viewModel.fileSize)

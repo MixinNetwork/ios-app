@@ -22,6 +22,7 @@ class MessageItem: TableCodable {
     var mediaWaveform: Data? = nil
     var mediaLocalIdentifier: String? = nil
     var thumbImage: String? = nil
+    var thumbUrl: String? = nil
     var status: String = ""
     var participantId: String? = nil
     var snapshotId: String? = nil
@@ -86,6 +87,8 @@ class MessageItem: TableCodable {
             return Localized.CHAT_QUOTE_TYPE_PHOTO
         } else if category.hasSuffix("_VIDEO") {
             return Localized.CHAT_QUOTE_TYPE_VIDEO
+        } else if category.hasSuffix("_LIVE") {
+            return R.string.localizable.chat_quote_type_live()
         } else if category.hasSuffix("_AUDIO") {
             if let duration = mediaDuration {
                 return mediaDurationFormatter.string(from: TimeInterval(Double(duration) / millisecondsPerSecond)) ?? ""
@@ -139,6 +142,7 @@ class MessageItem: TableCodable {
         case mediaWaveform = "media_waveform"
         case mediaLocalIdentifier = "media_local_id"
         case thumbImage = "thumb_image"
+        case thumbUrl = "thumb_url"
         case status
         case participantId = "participant_id"
         case snapshotId = "snapshot_id"
@@ -210,14 +214,8 @@ extension MessageItem {
         guard userId == AccountAPI.shared.accountUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }
-        guard category.hasSuffix("_TEXT") ||
-            category.hasSuffix("_STICKER") ||
-            category.hasSuffix("_CONTACT") ||
-            category.hasSuffix("_IMAGE") ||
-            category.hasSuffix("_DATA") ||
-            category.hasSuffix("_AUDIO") ||
-            category.hasSuffix("_VIDEO") else {
-                return false
+        guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
+            return false
         }
         guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {
             return false

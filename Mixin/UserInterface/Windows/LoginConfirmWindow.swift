@@ -24,11 +24,11 @@ class LoginConfirmWindow: BottomSheetView {
         dismissView()
         showAutoHiddenHud(style: .notification, text: Localized.TOAST_LOGINED)
 
-        if let viewController = UIApplication.rootNavigationController()?.viewControllers.first(where: { ($0 as? ContainerViewController)?.viewController is DesktopViewController }), let desktopVC =  (viewController as? ContainerViewController)?.viewController as? DesktopViewController {
+        if let viewController = UIApplication.homeNavigationController?.viewControllers.first(where: { ($0 as? ContainerViewController)?.viewController is DesktopViewController }), let desktopVC =  (viewController as? ContainerViewController)?.viewController as? DesktopViewController {
             desktopVC.layoutForIsLoading(false)
             desktopVC.updateLabels(isDesktopLoggedIn: true)
         }
-        UIApplication.rootNavigationController()?.popViewController(animated: true)
+        UIApplication.homeNavigationController?.popViewController(animated: true)
     }
 
 

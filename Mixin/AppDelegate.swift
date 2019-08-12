@@ -36,6 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
             Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
             Crashlytics.sharedInstance().setUserName(account.full_name)
+            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
+            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
         CommonUserDefault.shared.checkUpdateOrInstallVersion()
         NetworkManager.shared.startListening()
@@ -140,7 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.backgroundColor = .black
         if AccountAPI.shared.didLogin {
             window.rootViewController = makeInitialViewController()
-            if ContactsManager.shared.authorization == .authorized {
+            if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
                 })
@@ -220,7 +222,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 return
             }
             DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
+                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
             }
         }
         UNUserNotificationCenter.current().removeAllNotifications()

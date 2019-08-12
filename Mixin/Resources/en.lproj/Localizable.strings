@@ -27,6 +27,7 @@
 "action_send" = "Send";
 "action_hide" = "Hide";
 "action_show" = "Show";
+"action_unhide" = "Unhide";
 "action_apply" = "Apply";
 "action_filter" = "Filter";
 "action_skip" = "Skip";
@@ -221,12 +222,14 @@
 "chat_quote_type_sticker" = "Sticker";
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
+"chat_quote_type_live" = "Live";
 "chat_search_giphy" = "Search GIPHY";
 "chat_restore" = "Restore";
 "chat_restore_title" = "Restore your\nchat history from iCloud";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
 "chat_stranger_tip" = "This sender is not in your contacts";
 "chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger in this chat.";
+"chat_badge_live" = "LIVE";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
@@ -339,8 +342,8 @@
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
 "wallet_send_amount" = "Amount";
-"wallet_send_memo" = "Memo (Optional)";
-"wallet_send_tag" = "Tag (Optional)";
+"wallet_send_memo" = "Memo";
+"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Save by PIN";
@@ -357,6 +360,7 @@
 "wallet_pin_confirm_subtitle" = "If lost, there is no way to recover your wallet.";
 "wallet_pin_confirm_again_title" = "Please confirm your 6 digit PIN again";
 "wallet_pin_confirm_again_subtitle" = "It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
+"wallet_pin_title" = "Set PIN";
 "wallet_pin_new_title" = "Set a new PIN";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
 "wallet_pin_too_simple" = "The PIN is too simple and insecure.";
@@ -381,6 +385,7 @@
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
 "withdrawal_amount_too_small" = "Withdraw amount too small";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
+"withdrawal_memo_format_incorrect" = "Withdrawal memo format incorrect";
 "transactions_filter_sort_by" = "Sort by";
 "transactions_filter_sort_by_time" = "Time";
 "transactions_filter_sort_by_amount" = "Amount";
@@ -392,6 +397,8 @@
 "wallet_asset_chain" = "Chain";
 "wallet_asset_key" = "Asset Key";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
+"wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
+"wallet_asset_is_unhidden" = "Unhidden";
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -579,6 +586,12 @@
 "setting_auto_download_wifi" = "Wi-Fi";
 "setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
 "setting_auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded";
+"setting_contacts_title" = "Mobile Contacts";
+"setting_contacts_delete" = "Delete Synced Contacts";
+"setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
+"setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
+"setting_contacts_upload" = "Upload Mobile Contacts";
+
 
 // Notifications
 "notification_reply" = "Reply";
@@ -594,12 +607,14 @@
 "notification_content_withdrawal" = "[Withdrawal]";
 "notification_content_rebate" = "[Rebate]";
 "notification_content_video" = "[Video]";
+"notification_content_live" = "[Live]";
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";
 "alert_key_group_video_message" = "%@ send a video";
+"alert_key_group_live_message" = "%@ send a live stream";
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
@@ -608,6 +623,7 @@
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
 "alert_key_contact_video_message" = "send you a video";
+"alert_key_contact_live_message" = "send you a live stream";
 "alert_key_contact_transfer_message" = "send you a transfer";
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";

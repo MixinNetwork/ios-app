@@ -41,24 +41,20 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-        let job: UploadOrDownloadJob
         if shouldUpload {
-            job = FileUploadJob(message: Message.createMessage(message: message))
+            UploaderQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
         } else {
-            job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            ConcurrentJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
         }
-        FileJobQueue.shared.addJob(job: job)
         isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
-        let jobId: String
         if shouldUpload {
-            jobId = FileUploadJob.jobId(messageId: message.messageId)
+            UploaderQueue.shared.cancelJob(jobId: FileUploadJob.jobId(messageId: message.messageId))
         } else {
-            jobId = FileDownloadJob.jobId(messageId: message.messageId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: message.messageId))
         }
-        FileJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }

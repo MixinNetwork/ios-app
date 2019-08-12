@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,19 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Mixin Navigation Controller-->
-        <scene sceneID="qAV-Lg-xFU">
-            <objects>
-                <navigationController storyboardIdentifier="navigation" navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="FRb-qT-qP6">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                    </navigationBar>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cq4-TF-sA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1632" y="-276"/>
-        </scene>
         <!--Home View Controller-->
         <scene sceneID="YIH-fQ-ORs">
             <objects>
@@ -238,12 +225,13 @@
                             <constraint firstItem="i5D-40-ldq" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="XID-fV-hz4"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="height" secondItem="J91-yj-SMd" secondAttribute="height" id="bvr-h4-wti"/>
                             <constraint firstItem="i5D-40-ldq" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="cSc-X1-1De"/>
+                            <constraint firstItem="JkM-gn-X6q" firstAttribute="top" relation="greaterThanOrEqual" secondItem="J91-yj-SMd" secondAttribute="top" constant="20" id="cSz-Lz-eN8"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lic-EF-P70"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" constant="-28" id="o6R-WF-m77"/>
                             <constraint firstItem="i5D-40-ldq" firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="bottom" priority="750" id="pTL-Be-PuM"/>
                             <constraint firstItem="BAu-gi-TQg" firstAttribute="height" secondItem="2PV-tA-eIh" secondAttribute="height" id="swY-bH-tag"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="tuS-El-9K3"/>
-                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="top" secondItem="JkM-gn-X6q" secondAttribute="top" id="vPl-Uf-b9R"/>
+                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="top" secondItem="JkM-gn-X6q" secondAttribute="top" priority="999" id="vPl-Uf-b9R"/>
                             <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" id="w6d-O5-5g8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5mk-Fk-SFN"/>

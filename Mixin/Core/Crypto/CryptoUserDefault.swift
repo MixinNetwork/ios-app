@@ -7,6 +7,7 @@ class CryptoUserDefault {
 
     private let keyIsLoaded = "prekey_is_loaded"
     private let keyRotateSignedPrekey = "rotate_signed_pre_key"
+    private let keyRefreshOneTimePreKey = "refresh_one_time_pre_key"
     private let keyStatusOffset = "status_offset"
     private let keyNextPrekeyID = "next_prekey_id"
     private let keyNextSignedPrekeyID = "next_signed_prekey_id"
@@ -29,6 +30,15 @@ class CryptoUserDefault {
         }
         set {
             session.set(newValue, forKey: keyRotateSignedPrekey)
+        }
+    }
+
+    var refreshOneTimePreKey: TimeInterval {
+        get {
+            return session.double(forKey: keyRefreshOneTimePreKey)
+        }
+        set {
+            session.set(newValue, forKey: keyRefreshOneTimePreKey)
         }
     }
 
@@ -71,6 +81,7 @@ class CryptoUserDefault {
     func reset() {
         session.removeObject(forKey: keyIsLoaded)
         session.removeObject(forKey: keyRotateSignedPrekey)
+        session.removeObject(forKey: keyRefreshOneTimePreKey)
         session.removeObject(forKey: keyNextPrekeyID)
         session.removeObject(forKey: keyNextSignedPrekeyID)
         session.removeObject(forKey: keyStatusOffset)

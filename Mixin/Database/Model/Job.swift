@@ -16,7 +16,6 @@ struct Job: BaseCodable {
     let blazeMessage: Data?
     let conversationId: String?
     let resendMessageId: String?
-    var runCount: Int = 0
     var isSessionMessage: Bool
     var messageId: String?
     var status: String?
@@ -33,7 +32,6 @@ struct Job: BaseCodable {
         case conversationId = "conversation_id"
         case userId = "user_id"
         case resendMessageId = "resend_message_id"
-        case runCount = "run_count"
         case isSessionMessage = "is_session_message"
         case messageId = "message_id"
         case status

@@ -9,10 +9,21 @@ extension SDWebImageManager {
     
 }
 
+extension SDImageCacheConfig {
+    
+    static let persistent: SDImageCacheConfig = {
+        let config = SDImageCacheConfig()
+        config.maxDiskAge = -1
+        config.diskCacheExpireType = .accessDate
+        return config
+    }()
+    
+}
+
 extension SDImageCache {
     
-    static let assetIcon = SDImageCache(namespace: "AssetIcon", diskCacheDirectory: documentPath)
-    static let persistentSticker = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath)
+    static let assetIcon = SDImageCache(namespace: "AssetIcon", diskCacheDirectory: documentPath, config: .persistent)
+    static let persistentSticker = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath, config: .persistent)
     
     private static let documentPath = (try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true))?.path
     

@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
+        updateSharedImageCacheConfig()
         CommonUserDefault.shared.checkUpdateOrInstallVersion()
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
@@ -115,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        SDImageCache.shared.clearMemory()
+        
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -149,6 +150,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         window.makeKeyAndVisible()
         self.window = window
+    }
+    
+    private func updateSharedImageCacheConfig() {
+        SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
+        SDImageCacheConfig.default.maxDiskAge = -1
+        SDImageCacheConfig.default.diskCacheExpireType = .accessDate
     }
     
 }

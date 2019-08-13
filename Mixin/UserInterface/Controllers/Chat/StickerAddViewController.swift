@@ -100,9 +100,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    if let data = Data(base64Encoded: stickerBase64), let image = UIImage(data: data) {
-                        SDWebImageManager.shared.imageCache.store(image, imageData: data, forKey: sticker.assetUrl, cacheType: .disk, completion: nil)
-                    }
+                    StickerPrefetcher.persistentPrefetcher.prefetchURLs([URL(string: sticker.assetUrl)!])
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
@@ -110,8 +108,9 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                             self?.navigationController?.popViewController(animated: true)
                         }
                     }
-                case .failure:
-                    failedBlock()
+                case let .failure(error):
+                    self?.container?.rightButton.isBusy = false
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             })
         }

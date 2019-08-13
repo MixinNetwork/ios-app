@@ -107,7 +107,7 @@
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
-                                                <rect key="frame" x="32" y="32" width="16" height="16"/>
+                                                <rect key="frame" x="31" y="31.5" width="18" height="17"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -673,7 +673,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="CZJ-hH-T5C">
-                                <rect key="frame" x="179.5" y="114" width="16" height="16"/>
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
                                 <rect key="frame" x="0.0" y="502" width="375" height="45"/>
@@ -698,7 +698,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages between users are protected with an end- to-end encryption" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YgL-nK-KrB">
-                                <rect key="frame" x="36" y="146" width="303" height="38.5"/>
+                                <rect key="frame" x="36" y="210" width="303" height="38.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -743,6 +743,97 @@
             </objects>
             <point key="canvasLocation" x="-919" y="-277"/>
         </scene>
+        <!--Database Upgrade View Controller-->
+        <scene sceneID="jB8-BK-M5z">
+            <objects>
+                <viewController storyboardIdentifier="database" id="mZy-9Z-x2w" customClass="DatabaseUpgradeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="T7S-1z-u0S">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_database" translatesAutoresizingMaskIntoConstraints="NO" id="Mzf-e5-QdM">
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upgrade Database" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4dz-RN-RRL">
+                                <rect key="frame" x="36" y="244" width="303" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_explain"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The database is being upgraded, please do not kill this App." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OH0-Ix-HFF">
+                                <rect key="frame" x="36" y="295.5" width="303" height="33.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_explain"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zly-v7-b85">
+                                <rect key="frame" x="0.0" y="562" width="375" height="45"/>
+                                <subviews>
+                                    <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="aSa-Ak-RDz" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="177.5" y="0.0" width="20" height="20"/>
+                                        <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upgrading" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4EI-aO-sXG">
+                                        <rect key="frame" x="153.5" y="28" width="68" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="OH0-Ix-HFF" firstAttribute="leading" secondItem="ocm-7p-Och" secondAttribute="leading" constant="36" id="6hF-NE-hwA"/>
+                            <constraint firstItem="Mzf-e5-QdM" firstAttribute="top" secondItem="ocm-7p-Och" secondAttribute="top" constant="94" id="ADp-g9-Vzu" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="ocm-7p-Och" firstAttribute="trailing" secondItem="OH0-Ix-HFF" secondAttribute="trailing" constant="36" id="BKA-uE-3JL"/>
+                            <constraint firstItem="4dz-RN-RRL" firstAttribute="top" secondItem="Mzf-e5-QdM" secondAttribute="bottom" constant="50" id="GtB-Wz-Ngf"/>
+                            <constraint firstItem="ocm-7p-Och" firstAttribute="trailing" secondItem="Zly-v7-b85" secondAttribute="trailing" id="RVh-Cf-SNM"/>
+                            <constraint firstItem="ocm-7p-Och" firstAttribute="trailing" secondItem="4dz-RN-RRL" secondAttribute="trailing" constant="36" id="SRj-RP-LcP"/>
+                            <constraint firstItem="Mzf-e5-QdM" firstAttribute="centerX" secondItem="ocm-7p-Och" secondAttribute="centerX" id="Udg-qQ-dI1"/>
+                            <constraint firstItem="Zly-v7-b85" firstAttribute="leading" secondItem="ocm-7p-Och" secondAttribute="leading" id="VWY-0a-Fgy"/>
+                            <constraint firstItem="ocm-7p-Och" firstAttribute="bottom" secondItem="Zly-v7-b85" secondAttribute="bottom" constant="60" id="Vp1-9v-wYt" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="4dz-RN-RRL" firstAttribute="leading" secondItem="ocm-7p-Och" secondAttribute="leading" constant="36" id="lau-Hp-iK5"/>
+                            <constraint firstItem="OH0-Ix-HFF" firstAttribute="top" secondItem="4dz-RN-RRL" secondAttribute="bottom" constant="30" id="x0x-yQ-SjY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ocm-7p-Och"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WlD-N5-bdH" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-196" y="414"/>
+        </scene>
         <!--Clock Skew View Controller-->
         <scene sceneID="cpN-Ov-8nc">
             <objects>
@@ -752,10 +843,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_clock_skew" translatesAutoresizingMaskIntoConstraints="NO" id="hmp-73-im2">
-                                <rect key="frame" x="179.5" y="114" width="16" height="16"/>
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="System time is unusual" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tou-53-uta">
-                                <rect key="frame" x="50" y="180" width="275" height="21.5"/>
+                                <rect key="frame" x="50" y="244" width="275" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -777,7 +868,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Please continue to use again after correction. Settings &gt; General &gt; Date &amp; Time &gt; Turn on Set Automatically" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gh-oY-fRs">
-                                <rect key="frame" x="36" y="231.5" width="303" height="50.5"/>
+                                <rect key="frame" x="36" y="295.5" width="303" height="50.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -946,6 +1037,7 @@ chat history from icloud</string>
         <image name="Setting/ic_about_app" width="80" height="80"/>
         <image name="bg_home_bottom" width="375" height="140"/>
         <image name="ic_clock_skew" width="80" height="80"/>
+        <image name="ic_database" width="80" height="80"/>
         <image name="ic_home_camera" width="42" height="42"/>
         <image name="ic_home_qrcode" width="18" height="17"/>
         <image name="ic_restore" width="85" height="80"/>

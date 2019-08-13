@@ -650,6 +650,7 @@
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
 		DFD1FBC522FD809700C570D4 /* ContactSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */; };
+		DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */; };
 		DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */; };
 		DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294361FA6EF4500FADAAD /* DateExtension.swift */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
@@ -1397,6 +1398,7 @@
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
 		DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSettingViewController.swift; sourceTree = "<group>"; };
+		DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUpgradeViewController.swift; sourceTree = "<group>"; };
 		DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		DFD294361FA6EF4500FADAAD /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
@@ -2451,6 +2453,7 @@
 				7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
+				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 			);
 			path = Home;
@@ -3428,6 +3431,7 @@
 				7BD69C431FF2753E00758D7C /* GroupView.swift in Sources */,
 				DF503D3A1FECFA5800C008E7 /* SignedPreKeyDAO.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
+				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
 				DF5D9F261F9C79E10036D5FD /* StringExtension.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				273FACBC205FB9A800513327 /* IdentityKeyStore.swift in Sources */,

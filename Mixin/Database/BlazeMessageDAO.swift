@@ -7,22 +7,22 @@ final class BlazeMessageDAO {
     private let jsonDecoder = JSONDecoder()
 
     func isExist(data: BlazeMessageData) -> Bool {
-        return MixinDatabase.shared.isExist(type: MessageBlaze.self, condition: MessageBlaze.Properties.messageId == data.messageId)
+        return JobDatabase.getIntance().isExist(type: MessageBlaze.self, condition: MessageBlaze.Properties.messageId == data.messageId)
     }
 
     func insertOrReplace(messageId: String, data: String?, createdAt: String) -> Bool {
         guard let data = data?.data(using: .utf8) else {
             return false
         }
-        return MixinDatabase.shared.insertOrReplace(objects: [MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)])
+        return JobDatabase.getIntance().insertOrReplace(objects: [MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)])
     }
 
     func getCount() -> Int {
-        return MixinDatabase.shared.getCount(on: MessageBlaze.Properties.messageId.count(), fromTable: MessageBlaze.tableName)
+        return JobDatabase.getIntance().getCount(on: MessageBlaze.Properties.messageId.count(), fromTable: MessageBlaze.tableName)
     }
 
     func getBlazeMessageData(limit: Int) -> [BlazeMessageData] {
-        return MixinDatabase.shared.getCodables(on: [MessageBlaze.Properties.message], fromTable: MessageBlaze.tableName, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: limit) { (rows) -> [BlazeMessageData] in
+        return JobDatabase.getIntance().getCodables(on: [MessageBlaze.Properties.message], fromTable: MessageBlaze.tableName, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: limit) { (rows) -> [BlazeMessageData] in
             var result = [BlazeMessageData]()
             for row in rows {
                 guard let data = (try? jsonDecoder.decode(BlazeMessageData.self, from: row[0].dataValue)) else {
@@ -35,7 +35,7 @@ final class BlazeMessageDAO {
     }
 
     func delete(data: BlazeMessageData) {
-        MixinDatabase.shared.delete(table: MessageBlaze.tableName, condition: MessageBlaze.Properties.messageId == data.messageId)
+        JobDatabase.getIntance().delete(table: MessageBlaze.tableName, condition: MessageBlaze.Properties.messageId == data.messageId)
     }
 }
 

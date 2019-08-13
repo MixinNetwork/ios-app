@@ -36,4 +36,7 @@ class JobDatabase: BaseDatabase {
         database.close()
     }
 
+    static func getIntance() -> BaseDatabase {
+        return JobDatabase.shared
+    }
 }

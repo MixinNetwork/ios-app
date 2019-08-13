@@ -16,8 +16,30 @@ class DatabaseUserDefault {
     private var keyUpgradeStickers: String {
         return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyDatabaseVersion: String {
+        return "key_database_version_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
+    let currentDatabaseVersion = 1
+
+    var databaseVersion: Int {
+        get {
+            return session.integer(forKey: keyDatabaseVersion)
+        }
+        set {
+            session.set(newValue, forKey: keyDatabaseVersion)
+            session.synchronize()
+        }
+    }
+
+    func hasUpgradeDatabase() -> Bool {
+        guard mixinDatabaseVersion > 0 else {
+            databaseVersion = currentDatabaseVersion
+            return false
+        }
+        return databaseVersion != currentDatabaseVersion
+    }
 
     var mixinDatabaseVersion: Int {
         get {

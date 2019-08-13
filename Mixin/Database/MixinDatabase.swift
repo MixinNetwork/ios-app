@@ -29,8 +29,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Sticker.self)
                 try database.create(of: StickerRelationship.self)
                 try database.create(of: Album.self)
-                try database.create(of: MessageBlaze.self)
-                try database.create(of: MessageHistory.self)
                 try database.create(of: SentSenderKey.self)
                 try database.create(of: App.self)
 
@@ -40,8 +38,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Participant.self)
                 
                 try database.create(of: Address.self)
-                try database.create(of: Job.self)
-                try database.create(of: ResendMessage.self)
 
                 try self.createAfter(database: database, currentVersion: currentVersion)
 

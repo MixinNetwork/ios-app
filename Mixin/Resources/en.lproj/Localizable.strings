@@ -524,6 +524,11 @@
 "emergency_change_number_tip" = "Do you want to change your mobile number now?";
 "enable_emergency_contact" = "Enable Emergency Contact";
 
+// Database
+"database_upgrade" = "Upgrade Database";
+"database_upgrade_tips" = "The database is being upgraded, please do not close this App.";
+"database_upgrade_progress" = "Upgrading";
+
 // Setting
 "setting_title" = "Setting";
 "setting_notification" = "Notifications";

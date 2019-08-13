@@ -208,7 +208,7 @@ extension UIImage {
                 }
             } else {
                 let colorIndex = participant.userId.positiveHashCode() % 24 + 1
-                if let image = UIImage(named: "color\(colorIndex)"), let firstLetter = participant.userFullName.first {
+                if let image = UIImage(named: "AvatarBackground/color\(colorIndex)"), let firstLetter = participant.userFullName.first {
                     let text = String([firstLetter]).uppercased()
                     let textSize = CGSize(width: relativeTextSize[index].width * image.size.width,
                                           height: relativeTextSize[index].height * image.size.height)

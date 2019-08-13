@@ -31,7 +31,7 @@ class RefreshGroupIconJob: AsynchronousJob {
         }
 
         do {
-            if let groupImage = UIImage.makeGroupImage(participants: participants) {
+            if let groupImage = GroupIconMaker.make(participants: participants) {
                 try? FileManager.default.removeItem(atPath: imageUrl.path)
                 if let data = groupImage.pngData() {
                     try data.write(to: imageUrl)

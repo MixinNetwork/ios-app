@@ -180,6 +180,7 @@
 		7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595352226736BD00D59DB4 /* SearchHeaderView.swift */; };
 		7B595358226749A100D59DB4 /* PeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595356226749A100D59DB4 /* PeerCell.swift */; };
 		7B595359226749A100D59DB4 /* PeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B595357226749A100D59DB4 /* PeerCell.xib */; };
+		7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5A748E230274E200C6107E /* GroupIconMaker.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -908,6 +909,7 @@
 		7B595352226736BD00D59DB4 /* SearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeaderView.swift; sourceTree = "<group>"; };
 		7B595356226749A100D59DB4 /* PeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerCell.swift; sourceTree = "<group>"; };
 		7B595357226749A100D59DB4 /* PeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerCell.xib; sourceTree = "<group>"; };
+		7B5A748E230274E200C6107E /* GroupIconMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconMaker.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1804,6 +1806,7 @@
 				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
+				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3470,6 +3473,7 @@
 				27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */,
 				7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */,
 				7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */,
+				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,

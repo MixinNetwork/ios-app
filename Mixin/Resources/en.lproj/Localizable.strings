@@ -523,6 +523,7 @@
 "emergency_pin_protection_hint" = "Your emergency contact is protected by PIN";
 "emergency_change_number_tip" = "Do you want to change your mobile number now?";
 "enable_emergency_contact" = "Enable Emergency Contact";
+"emergency_confirm" = "Confirm to set Mixin ID %@ as your emergency contact? Please note that the other party must add you as a contact to set up successfully.";
 
 // Setting
 "setting_title" = "Setting";

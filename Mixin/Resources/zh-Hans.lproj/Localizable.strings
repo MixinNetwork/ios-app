@@ -593,6 +593,7 @@
 "emergency_change_number_tip" = "立即更换手机号？";
 "emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
 "enable_emergency_contact" = "启用紧急联系人";
+"emergency_confirm" = "确认设置 Mixin Id %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
 
 // Notifications
 "notification_reply" = "回复";

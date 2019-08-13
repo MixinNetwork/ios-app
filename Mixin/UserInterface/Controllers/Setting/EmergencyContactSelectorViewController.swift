@@ -26,12 +26,22 @@ class EmergencyContactSelectorViewController: UserItemPeerViewController<PeerCel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let identityNumber = user(at: indexPath).identityNumber
+        let alert = UIAlertController(title: R.string.localizable.emergency_confirm(identityNumber), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .default, handler: { (_) in
+            self.setEmergencyContact(identityNumber: identityNumber)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func setEmergencyContact(identityNumber: String) {
         guard let navigationController = navigationController else {
             return
         }
         let hud = self.hud
         hud.show(style: .busy, text: "", on: navigationController.view)
-        let identityNumber = user(at: indexPath).identityNumber
         EmergencyAPI.shared.createContact(identityNumber: identityNumber) { [weak self] (result) in
             switch result {
             case .success(let response):

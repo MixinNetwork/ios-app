@@ -9,7 +9,7 @@ class ContactMessageCell: CardMessageCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        avatarImageView.sd_cancelCurrentImageLoad()
+        avatarImageView.prepareForReuse()
     }
     
     override func render(viewModel: MessageViewModel) {

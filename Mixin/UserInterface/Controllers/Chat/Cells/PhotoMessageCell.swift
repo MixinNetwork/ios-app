@@ -10,7 +10,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.cancelCurrentImageLoad()
+        contentImageView.sd_cancelCurrentImageLoad()
     }
     
     override func prepare() {
@@ -22,9 +22,9 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
             let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
-            contentImageView.setImage(with: url, placeholder: viewModel.thumbnail, ratio: viewModel.aspectRatio)
+            contentImageView.sd_setImage(with: url, placeholderImage: viewModel.thumbnail, context: localImageContext)
         } else {
-            contentImageView.set(thumbnail: viewModel.thumbnail, ratio: viewModel.aspectRatio)
+            contentImageView.image = viewModel.thumbnail
         }
     }
     

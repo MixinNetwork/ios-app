@@ -23,11 +23,12 @@ class RefreshStickerJob: BaseJob {
             let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
             switch StickerAPI.shared.albums() {
             case let .success(albums):
+                let icons = albums.compactMap({ URL(string: $0.iconUrl) })
+                StickerPrefetcher.persistentPrefetcher.prefetchURLs(icons)
                 for album in albums {
                     guard stickerAlbums[album.albumId] != album.updatedAt else {
                         continue
                     }
-                    RefreshStickerJob.cacheImage(album.iconUrl)
                     try RefreshStickerJob.cacheStickers(albumId: album.albumId)
                     AlbumDAO.shared.insertOrUpdateAblum(album: album)
                 }
@@ -46,19 +47,12 @@ class RefreshStickerJob: BaseJob {
         switch StickerAPI.shared.stickers(albumId: albumId) {
         case let .success(stickers):
             StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-            for sticker in stickers {
-                cacheImage(sticker.assetUrl)
-            }
+            let stickers = StickerDAO.shared.getStickers(albumId: albumId)
+            StickerPrefetcher.prefetch(stickers: stickers)
         case let .failure(error):
             throw error
         }
     }
-
-    private static func cacheImage(_ urlString: String) {
-        guard let url = URL(string: urlString) else {
-            return
-        }
-        SDWebImagePrefetcher.shared.prefetchURLs([url])
-    }
+    
 }
 

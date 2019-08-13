@@ -1,16 +1,15 @@
 import UIKit
 
 class QuotePreviewView: UIView, XibDesignable {
-
+    
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var contentImageWrapperView: UIView!
-    @IBOutlet weak var contentImageView: AvatarImageView!
+    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var dismissButton: UIButton!
-    
-    private let contentImageViewNormalCornerRadius: CGFloat = 4
     
     private var isXibLoaded = false
     
@@ -26,39 +25,55 @@ class QuotePreviewView: UIView, XibDesignable {
             isXibLoaded = true
             dismissButton.imageView?.contentMode = .center
         }
+        avatarImageView.prepareForReuse()
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
         let tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         indicatorView.backgroundColor = tintColor
-        contentImageView.sd_cancelCurrentImageLoad()
-        contentImageView.image = nil
-        contentImageView.titleLabel.text = nil
-        contentImageView.layer.cornerRadius = contentImageViewNormalCornerRadius
-        contentImageView.contentMode = .scaleAspectFill
         titleLabel.text = message.userFullName
         titleLabel.textColor = tintColor
         subtitleLabel.text = message.quoteSubtitle
+        
+        if message.category.hasSuffix("_CONTACT") {
+            contentImageWrapperView.isHidden = false
+            avatarImageView.isHidden = false
+            imageView.isHidden = true
+        } else if ["_STICKER", "_IMAGE", "_VIDEO", "_LIVE"].contains(where: message.category.hasSuffix) {
+            contentImageWrapperView.isHidden = false
+            avatarImageView.isHidden = true
+            imageView.isHidden = false
+            if message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_LIVE") {
+                imageView.contentMode = .scaleAspectFit
+            } else {
+                imageView.contentMode = .scaleAspectFill
+            }
+        } else {
+            contentImageWrapperView.isHidden = true
+        }
+        
         if message.category.hasSuffix("_STICKER") {
             if let assetUrl = message.assetUrl {
-                contentImageView.contentMode = .scaleAspectFit
-                contentImageView.sd_setImage(with: URL(string: assetUrl), completed: nil)
+                let url = URL(string: assetUrl)
+                let context = stickerLoadContext(category: message.assetCategory)
+                imageView.sd_setImage(with: url, placeholderImage: contentImageThumbnail, context: context)
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-                contentImageView.sd_setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl))
+                let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                imageView.sd_setImage(with: url, placeholderImage: contentImageThumbnail, context: localImageContext)
             } else {
-                contentImageView.image = contentImageThumbnail
+                imageView.image = contentImageThumbnail
             }
         } else if message.category.hasSuffix("_VIDEO") {
-            contentImageView.image = contentImageThumbnail
+            imageView.image = contentImageThumbnail
         } else if message.category.hasSuffix("_LIVE") {
             if let thumbUrl = message.thumbUrl {
-                contentImageView.contentMode = .scaleAspectFit
-                contentImageView.sd_setImage(with: URL(string: thumbUrl), completed: nil)
+                imageView.sd_setImage(with: URL(string: thumbUrl))
             }
         } else if message.category.hasSuffix("_CONTACT") {
-            contentImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
+            avatarImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
         }
         UIView.performWithoutAnimation {
-            contentImageWrapperView.isHidden = (contentImageView.image == nil && contentImageView.sd_imageURL == nil)
             iconImageView.image = MessageCategory.iconImage(forMessageCategoryString: message.category)
             iconImageView.isHidden = (iconImageView.image == nil)
         }

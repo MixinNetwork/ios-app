@@ -46,9 +46,11 @@ class MessageItem: TableCodable {
 
     var assetUrl: String? = nil
     var assetSymbol: String? = nil
+    
     var assetIcon: String? = nil
     var assetWidth: Int? = nil
     var assetHeight: Int? = nil
+    var assetCategory: String? = nil
 
     var sharedUserId: String? = nil
     var sharedUserFullName: String = ""
@@ -164,10 +166,12 @@ class MessageItem: TableCodable {
 
         case assetSymbol
         case assetIcon
+        
         case assetWidth
         case assetHeight
         case assetUrl
-
+        case assetCategory
+        
         case actionName
 
         case sharedUserId

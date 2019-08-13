@@ -47,6 +47,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         iconView.addGestureRecognizer(tapRecognizer)
         iconView.frame.size = iconView.intrinsicContentSize
         iconView.isUserInteractionEnabled = true
+        iconView.hasShadow = true
         let rightButton = UIBarButtonItem(customView: iconView)
         rightButton.width = 44
         navigationItem.title = " "

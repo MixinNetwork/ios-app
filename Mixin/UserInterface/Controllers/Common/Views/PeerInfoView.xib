@@ -24,12 +24,15 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R81-tG-vlH" customClass="AvatarShadowIconView" customModule="Mixin" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R81-tG-vlH" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="R81-tG-vlH" secondAttribute="height" id="cAP-OA-Fcv"/>
                     </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasShadow" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="fiT-t8-Xjt">
                     <rect key="frame" x="66" y="5.5" width="309" height="39"/>

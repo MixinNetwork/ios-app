@@ -46,7 +46,7 @@
                                 </label>
                             </subviews>
                         </stackView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-vg-56w" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-vg-56w" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="20" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="30" id="DSC-w1-m76"/>
@@ -57,7 +57,7 @@
                                     <real key="value" value="15"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
-                        </imageView>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>

@@ -1171,7 +1171,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FaS-Hc-TI7">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="296"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iq-4M-Kbs" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                            <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iq-4M-Kbs" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="172" y="16" width="70" height="70"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="70" id="U0O-MM-GZ9" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -1191,7 +1191,7 @@
                                                         <real key="value" value="35"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
-                                            </imageView>
+                                            </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="aDo-Kz-cwh">
                                                 <rect key="frame" x="20" y="98" width="374" height="198"/>
                                                 <subviews>

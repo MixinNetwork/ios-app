@@ -567,7 +567,7 @@ extension ConversationDataSource {
                     showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                 }
             }
-        } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
+        } else if type == .SIGNAL_STICKER, let sticker = value as? StickerItem {
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId

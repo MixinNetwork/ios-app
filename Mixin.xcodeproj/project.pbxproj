@@ -76,6 +76,8 @@
 		7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */; };
 		7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
+		7B14DFFC22F9AE3F009CCC45 /* LocalImageLoadToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */; };
+		7B14DFFE22F9AE79009CCC45 /* LocalImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */; };
 		7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */; };
 		7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */; };
 		7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */; };
@@ -140,6 +142,7 @@
 		7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
 		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
+		7B46843322FC069300A8D03C /* ImageManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46843222FC069300A8D03C /* ImageManagers.swift */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
@@ -374,6 +377,8 @@
 		7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */; };
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
+		7BE1109022FD60FD0017BA06 /* StickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1108F22FD60FD0017BA06 /* StickerItem.swift */; };
+		7BE1109422FD986C0017BA06 /* StickerPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
 		7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */; };
 		7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB423522EAD209003B4479 /* ModernNetworkOperationButton.swift */; };
@@ -437,7 +442,6 @@
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
 		DF06D91F222FAE1400FE7FBC /* SendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D91E222FAE1300FE7FBC /* SendViewController.swift */; };
-		DF06D923222FAE7200FE7FBC /* AvatarShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */; };
 		DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */; };
 		DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */; };
 		DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */; };
@@ -803,6 +807,8 @@
 		7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceInputAccessoryView.swift; sourceTree = "<group>"; };
 		7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceInputAccessoryView.xib; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
+		7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoadToken.swift; sourceTree = "<group>"; };
+		7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoader.swift; sourceTree = "<group>"; };
 		7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionViewController.swift; sourceTree = "<group>"; };
 		7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionSwitch.swift; sourceTree = "<group>"; };
 		7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewController.swift; sourceTree = "<group>"; };
@@ -866,6 +872,7 @@
 		7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberStringLocalizable.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
+		7B46843222FC069300A8D03C /* ImageManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManagers.swift; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
@@ -1113,6 +1120,8 @@
 		7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
+		7BE1108F22FD60FD0017BA06 /* StickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerItem.swift; sourceTree = "<group>"; };
+		7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerPrefetcher.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
 		7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputViewController.swift; sourceTree = "<group>"; };
 		7BEB423522EAD209003B4479 /* ModernNetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernNetworkOperationButton.swift; sourceTree = "<group>"; };
@@ -1177,7 +1186,6 @@
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
 		DF06D91E222FAE1300FE7FBC /* SendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendViewController.swift; sourceTree = "<group>"; };
-		DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarShadowImageView.swift; sourceTree = "<group>"; };
 		DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginConfirmWindow.xib; sourceTree = "<group>"; };
 		DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConfirmWindow.swift; sourceTree = "<group>"; };
@@ -1796,6 +1804,10 @@
 				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
 				7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
+				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
+				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
+				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
+				7B46843222FC069300A8D03C /* ImageManagers.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2313,7 +2325,6 @@
 				7BA1F8AA221ED35200DBFCE2 /* Hud.swift */,
 				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
 				DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */,
-				DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */,
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
@@ -2787,6 +2798,7 @@
 				DFF353111FEEB72C00058453 /* Snapshot.swift */,
 				DF17B51620526050006447C2 /* SnapshotItem.swift */,
 				DF2A3CD72016DC860095F024 /* Sticker.swift */,
+				7BE1108F22FD60FD0017BA06 /* StickerItem.swift */,
 				7B97BA092019D42C0013D58F /* StickerRelationship.swift */,
 				DFF3B68920E25CB500DC82D9 /* Album.swift */,
 				DF191193208F104800BD415D /* Job.swift */,
@@ -3219,6 +3231,7 @@
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
 				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
+				7B14DFFC22F9AE3F009CCC45 /* LocalImageLoadToken.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BB3855021E74DA60070FF8F /* JSONCoderExtension.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
@@ -3595,6 +3608,7 @@
 				DF138975200493C300869685 /* QRCodeResponse.swift in Sources */,
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
+				7BE1109022FD60FD0017BA06 /* StickerItem.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,
 				7B7264F0209C56E500F234BE /* CollapsingLabel.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
@@ -3632,6 +3646,7 @@
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
+				7B14DFFE22F9AE79009CCC45 /* LocalImageLoader.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
@@ -3644,6 +3659,7 @@
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
+				7B46843322FC069300A8D03C /* ImageManagers.swift in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
@@ -3703,6 +3719,7 @@
 				DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationSettingsViewController.swift in Sources */,
+				7BE1109422FD986C0017BA06 /* StickerPrefetcher.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */,
 				DF503D381FECF98900C008E7 /* SignedPreKey.swift in Sources */,
 				7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */,
@@ -3719,7 +3736,6 @@
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				273FACC9205FB9A800513327 /* SenderKeyStoreWrapper.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
-				DF06D923222FAE7200FE7FBC /* AvatarShadowImageView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,

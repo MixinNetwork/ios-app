@@ -21,7 +21,7 @@ class StickerAddViewController: UIViewController {
             if mediaUrl.hasSuffix(".webp") || mediaUrl.hasSuffix(".gif") {
                 animateURL = url
             }
-            stickerImageView.sd_setImage(with: url)
+            stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
         } else if let asset = self.asset {
             if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.firstIndex(of: "."), startIndex < filename.endIndex {
                 let fileExtension = String(filename[startIndex..<filename.endIndex])
@@ -32,7 +32,7 @@ class StickerAddViewController: UIViewController {
                         do {
                             try data?.write(to: tempUrl)
                             self?.animateURL = tempUrl
-                            self?.stickerImageView.sd_setImage(with: tempUrl)
+                            self?.stickerImageView.sd_setImage(with: tempUrl, placeholderImage: nil, context: localImageContext)
                         } catch {
                             self?.requestAssetImage(asset: asset)
                         }
@@ -100,9 +100,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    if let data = Data(base64Encoded: stickerBase64), let image = UIImage(data: data) {
-                        SDWebImageManager.shared.imageCache.store(image, imageData: data, forKey: sticker.assetUrl, cacheType: .disk, completion: nil)
-                    }
+                    StickerPrefetcher.persistentPrefetcher.prefetchURLs([URL(string: sticker.assetUrl)!])
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
@@ -110,8 +108,9 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                             self?.navigationController?.popViewController(animated: true)
                         }
                     }
-                case .failure:
-                    failedBlock()
+                case let .failure(error):
+                    self?.container?.rightButton.isBusy = false
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             })
         }

@@ -448,13 +448,13 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="cpt-LH-e2O">
                                                     <rect key="frame" x="36" y="0.0" width="303" height="80"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kl2-Ng-MO9" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kl2-Ng-MO9" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="15" width="50" height="50"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Kl2-Ng-MO9" secondAttribute="height" multiplier="1:1" id="5XG-q2-MVz"/>
                                                                 <constraint firstAttribute="width" constant="50" id="xNC-TH-cqa"/>
                                                             </constraints>
-                                                        </imageView>
+                                                        </view>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="nlN-sg-Adq">
                                                             <rect key="frame" x="65" y="19.5" width="238" height="41.5"/>
                                                             <subviews>
@@ -536,7 +536,7 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="gfG-2B-Fdn">
                                             <rect key="frame" x="36" y="8" width="297" height="64"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="riJ-hy-GZO" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="riJ-hy-GZO" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="7" width="50" height="50"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -548,7 +548,7 @@
                                                             <real key="value" value="25"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
-                                                </imageView>
+                                                </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="MyC-CK-7v5">
                                                     <rect key="frame" x="66" y="11.5" width="231" height="41.5"/>
                                                     <subviews>
@@ -850,7 +850,7 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="1ym-tr-Z1R">
                                                     <rect key="frame" x="36" y="0.0" width="303" height="80"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="ddN-Sf-ok7" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="ddN-Sf-ok7" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="20" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="dX2-Ey-SW7"/>
@@ -861,7 +861,7 @@
                                                                     <real key="value" value="20"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
-                                                        </imageView>
+                                                        </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpW-mD-8Ia">
                                                             <rect key="frame" x="56" y="30.5" width="247" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -1958,7 +1958,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2a-Mp-pEf">
                                 <rect key="frame" x="0.0" y="20" width="375" height="239"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6zk-Vb-EO5" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6zk-Vb-EO5" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="142.5" y="50" width="90" height="90"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="90" id="E2d-LR-p4z"/>
@@ -1972,7 +1972,7 @@
                                                 <real key="value" value="36"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                    </imageView>
+                                    </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Uz2-gj-C4K">
                                         <rect key="frame" x="16" y="150" width="343" height="40"/>
                                         <subviews>

@@ -64,7 +64,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         } else {
             cell.imageView.contentMode = .scaleAspectFill
             let url = images[indexPath.row - 1].previewUrl
-            cell.imageView.sd_setImage(with: url, completed: nil)
+            cell.imageView.sd_setImage(with: url)
         }
         return cell
     }

@@ -87,7 +87,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             do {
                                 try data?.write(to: tempUrl)
                                 self?.animateURL = tempUrl
-                                self?.photoImageView.sd_setImage(with: tempUrl, completed: { (image, _, _, _) in
+                                self?.photoImageView.sd_setImage(with: tempUrl, placeholderImage: nil, context: localImageContext, progress: nil, completed: { (image, _, _, _) in
                                     guard let image = image, let weakSelf = self, weakSelf.detectsQrCode else {
                                         return
                                     }

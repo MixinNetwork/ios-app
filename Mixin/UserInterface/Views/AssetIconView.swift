@@ -51,10 +51,11 @@ class AssetIconView: UIView {
     }
     
     func setIcon(asset: AssetItem) {
-        iconImageView.sd_setImage(with: URL(string: asset.iconUrl), completed: nil)
+        let url = URL(string: asset.iconUrl)
+        iconImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
         let shouldHideChainIcon: Bool
         if let str = asset.chainIconUrl, let url = URL(string: str) {
-            chainImageView.sd_setImage(with: url, completed: nil)
+            chainImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
             shouldHideChainIcon = false
         } else {
             shouldHideChainIcon = true
@@ -74,7 +75,7 @@ class AssetIconView: UIView {
         addSubview(chainBackgroundView)
         addSubview(chainImageView)
         updateShadowPath(chainIconIsHidden: false)
-        layer.shadowColor = UIColor(rgbValue: 0x888888).cgColor
+        layer.shadowColor = R.color.shadow()!.cgColor
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 6
     }

@@ -64,7 +64,6 @@ class SendViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        opponentImageView.cornerRadius = opponentImageViewWidthConstraint.constant / 2
         switch opponent! {
         case .contact(let user):
             targetUser = user

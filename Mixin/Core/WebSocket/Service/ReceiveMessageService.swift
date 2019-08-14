@@ -436,8 +436,8 @@ class ReceiveMessageService: MixinService {
                 switch StickerAPI.shared.sticker(stickerId: stickerId) {
                 case let .success(sticker):
                     StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
-                    if let stickerUrl = URL(string: sticker.assetUrl) {
-                        SDWebImagePrefetcher.shared.prefetchURLs([stickerUrl])
+                    if let sticker = StickerDAO.shared.getSticker(stickerId: sticker.stickerId) {
+                        StickerPrefetcher.prefetch(stickers: [sticker])
                     }
                     return transferStickerData
                 case let .failure(error):

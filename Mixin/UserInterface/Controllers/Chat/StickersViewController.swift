@@ -2,19 +2,19 @@ import UIKit
 
 class StickersViewController: StickersCollectionViewController, ConversationInputAccessible {
     
-    var stickers = [Sticker]()
+    var stickers = [StickerItem]()
     
     override var isEmpty: Bool {
         return stickers.isEmpty
     }
     
-    func load(stickers: [Sticker]) {
+    func load(stickers: [StickerItem]) {
         self.stickers = stickers
         collectionView.reloadData()
         collectionView.setContentOffset(.zero, animated: false)
     }
     
-    func send(sticker: Sticker) {
+    func send(sticker: StickerItem) {
         dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {
@@ -33,8 +33,9 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
-        if let url = URL(string: stickers[indexPath.row].assetUrl) {
-            cell.imageView.sd_setImage(with: url, completed: nil)
+        let sticker = stickers[indexPath.row]
+        if let url = URL(string: sticker.assetUrl) {
+            cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: sticker.imageLoadContext)
         }
         return cell
     }

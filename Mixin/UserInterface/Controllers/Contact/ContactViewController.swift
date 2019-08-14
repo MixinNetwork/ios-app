@@ -11,7 +11,7 @@ class ContactViewController: UITableViewController {
         static let footer = "footer"
     }
     
-    @IBOutlet weak var accountAvatarView: AvatarShadowIconView!
+    @IBOutlet weak var accountAvatarView: AvatarImageView!
     @IBOutlet weak var accountNameLabel: UILabel!
     @IBOutlet weak var accountIdLabel: UILabel!
     

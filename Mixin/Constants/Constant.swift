@@ -324,3 +324,5 @@ let qrCodeDetector: VisionBarcodeDetector = {
     let options = VisionBarcodeDetectorOptions(formats: .qrCode)
     return Vision.vision().barcodeDetector(options: options)
 }()
+
+let bytesPerMegaByte: UInt = 1024 * 1024

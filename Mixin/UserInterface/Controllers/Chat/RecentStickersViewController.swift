@@ -17,7 +17,7 @@ class RecentStickersViewController: StickersViewController {
     }
     
     @objc func stickerUsedAtDidUpdate(_ notification: Notification) {
-        guard let sticker = notification.object as? Sticker else {
+        guard let sticker = notification.object as? StickerItem else {
             return
         }
         if let index = stickers.firstIndex(where: { $0.stickerId == sticker.stickerId }) {

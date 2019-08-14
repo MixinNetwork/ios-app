@@ -27,7 +27,7 @@
                         <action selector="dismissAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="IJS-R9-2W4"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="9f1-By-myT" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="9f1-By-myT" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="147.5" y="70" width="90" height="90"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="90" id="nde-tu-eTb"/>
@@ -38,7 +38,7 @@
                             <real key="value" value="45"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                </imageView>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="eCR-rs-Cgf">
                     <rect key="frame" x="30" y="170" width="325" height="43"/>
                     <subviews>

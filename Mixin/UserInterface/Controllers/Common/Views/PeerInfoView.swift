@@ -2,7 +2,7 @@ import UIKit
 
 class PeerInfoView: UIView, XibDesignable {
     
-    @IBOutlet weak var avatarImageView: AvatarShadowIconView!
+    @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var superscriptLabel: UILabel!
@@ -25,7 +25,7 @@ class PeerInfoView: UIView, XibDesignable {
     }
     
     func prepareForReuse() {
-        avatarImageView.iconImageView.sd_setImage(with: nil, completed: nil)
+        avatarImageView.prepareForReuse()
         titleLabel.text = nil
         titleLabel.font = defaultTitleFont
         titleLabel.textColor = defaultTitleColor

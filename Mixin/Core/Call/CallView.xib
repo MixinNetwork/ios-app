@@ -32,7 +32,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sAs-iM-Hyw" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sAs-iM-Hyw" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="122.5" y="80" width="130" height="130"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="sAs-iM-Hyw" secondAttribute="height" id="XNs-dj-Tsb"/>
@@ -46,7 +46,7 @@
                             <real key="value" value="65"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                </imageView>
+                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QvV-rQ-HY4">
                     <rect key="frame" x="20" y="229" width="335" height="31.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="26"/>

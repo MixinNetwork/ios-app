@@ -525,6 +525,10 @@
 "enable_emergency_contact" = "Enable Emergency Contact";
 "emergency_confirm" = "Confirm to set Mixin ID %@ as your emergency contact? Please note that the other party must add you as a contact to set up successfully.";
 
+"database_repair_title" = "Repair Database";
+"database_repair_tips" = "Trying to repair a corrupted database, please do not kill the app.";
+"database_repairing" = "Repairing";
+
 // Setting
 "setting_title" = "Setting";
 "setting_notification" = "Notifications";

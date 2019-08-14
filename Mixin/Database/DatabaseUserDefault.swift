@@ -13,8 +13,20 @@ class DatabaseUserDefault {
     private var keyUpgradeStickers: String {
         return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyRecoverMixinDatabaseVersion: String {
+        return "key_recover_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
+
+    var hasRecoverMixinDatabaseVersion: Bool {
+        get {
+            return session.bool(forKey: keyRecoverMixinDatabaseVersion)
+        }
+        set {
+            session.set(newValue, forKey: keyRecoverMixinDatabaseVersion)
+        }
+    }
 
     var mixinDatabaseVersion: Int {
         get {

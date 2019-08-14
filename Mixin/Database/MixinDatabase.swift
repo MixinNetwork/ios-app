@@ -12,6 +12,12 @@ class MixinDatabase: BaseDatabase {
         set { }
     }
 
+    func recover() throws {
+        let recoverDB = Database(withPath: MixinFile.rootDirectory.appendingPathComponent("mixin-recover.db").path)
+        try recoverDB.recover(fromPath: MixinFile.databaseURL.path)
+
+    }
+
     override func configure(reset: Bool = false) {
         if MixinFile.databaseURL.path != _database.path {
             _database.close()

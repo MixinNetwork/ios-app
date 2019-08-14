@@ -513,6 +513,10 @@
 "profile_toast_muted" = "已静音至 %@";
 "profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
 
+"database_repair_title" = "修复数据库";
+"database_repair_tips" = "正在尝试修复已损坏的数据库，请不要关闭应用程序";
+"database_repairing" = "修复中";
+
 // Setting
 "setting_title" = "设置";
 "setting_notification" = "通知";

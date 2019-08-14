@@ -544,6 +544,7 @@
 		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
+		DF5691612303E6B9003D7E74 /* RepairDatabaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5691602303E6B9003D7E74 /* RepairDatabaseViewController.swift */; };
 		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
@@ -1286,6 +1287,7 @@
 		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
+		DF5691602303E6B9003D7E74 /* RepairDatabaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepairDatabaseViewController.swift; sourceTree = "<group>"; };
 		DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHeaderView.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
@@ -2460,6 +2462,7 @@
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
+				DF5691602303E6B9003D7E74 /* RepairDatabaseViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -3544,6 +3547,7 @@
 				7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
+				DF5691612303E6B9003D7E74 /* RepairDatabaseViewController.swift in Sources */,
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,

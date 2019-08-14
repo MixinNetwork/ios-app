@@ -88,9 +88,7 @@ class ContactViewController: UITableViewController {
                     return
                 }
                 weakSelf.contacts = contacts
-                UIView.performWithoutAnimation {
-                    weakSelf.tableView.reloadSections(IndexSet(integer: 0), with: .none)
-                }
+                weakSelf.tableView.reloadData()
                 weakSelf.reloadPhoneContacts()
             }
         }

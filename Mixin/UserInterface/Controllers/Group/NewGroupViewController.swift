@@ -55,8 +55,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             }
             switch result {
             case let .success(response):
-                weakSelf.saveGroupImage()
-                weakSelf.saveConversation(conversation: response)
+                weakSelf.saveConversation(response: response)
             case let .failure(error):
                 if !NetworkManager.shared.isReachable {
                     weakSelf.saveOfflineConversation()
@@ -87,33 +86,34 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    private func saveGroupImage() {
+    private func saveGroupImage(conversationId: String, participants: [ParticipantUser]) -> String? {
         guard let groupImage = groupImageView.image else {
-            return
+            return nil
         }
         
-        var participantIds: [String] = members.map { (member) in
-            if member.avatarUrl.isEmpty {
-                return String(member.fullName.prefix(1))
+        let participantIds: [String] = participants.map { (participant) in
+            if participant.userAvatarUrl.isEmpty {
+                return String(participant.userFullName.prefix(1))
             } else {
-                return member.avatarUrl
+                return participant.userAvatarUrl
             }
         }
-        participantIds.insert(AccountAPI.shared.accountUserId, at: 0)
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
         let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
-        
+
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
-            return
+            return imageFile
         }
-        
         do {
             if let data = groupImage.pngData() {
                 try data.write(to: imageUrl)
+                ConversationDAO.shared.updateIconUrl(conversationId: conversationId, iconUrl: imageFile)
+                return imageFile
             }
         } catch {
             UIApplication.traceError(error)
         }
+        return nil
     }
     
     private func saveOfflineConversation() {
@@ -132,20 +132,15 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    private func saveConversation(conversation: ConversationResponse) {
+    private func saveConversation(response: ConversationResponse) {
         DispatchQueue.global().async { [weak self] in
-            guard ConversationDAO.shared.createConversation(conversation: conversation, targetStatus: .SUCCESS) else {
-                DispatchQueue.main.async {
-                    self?.createButton.isBusy = false
-                }
-                return
-            }
-            guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversation.conversationId) else {
-                return
-            }
+            let (conversation, participantUsers) = ConversationDAO.shared.createNewConversation(response: response)
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
+                }
+                if let iconUrl = weakSelf.saveGroupImage(conversationId: conversation.conversationId, participants: participantUsers) {
+                    conversation.iconUrl = iconUrl
                 }
                 weakSelf.shouldLayoutByKeyboard = false
                 weakSelf.nameTextField.resignFirstResponder()

@@ -297,6 +297,24 @@ final class ConversationDAO {
         }
     }
 
+    func createNewConversation(response: ConversationResponse) -> (ConversationItem, [ParticipantUser]) {
+        let conversationId = response.conversationId
+        var conversation: ConversationItem!
+        var participantUsers = [ParticipantUser]()
+
+        MixinDatabase.shared.transaction { (db) in
+            try db.insert(objects: Conversation.createConversation(from: response, ownerId: AccountAPI.shared.accountUserId, status: .SUCCESS), intoTable: Conversation.tableName)
+
+            let participants = response.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.SUCCESS.rawValue, createdAt: $0.createdAt) }
+            try db.insert(objects: participants, intoTable: Participant.tableName)
+
+            conversation = try db.prepareSelectSQL(on: ConversationItem.Properties.all, sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).allObjects().first
+            participantUsers = try db.prepareSelectSQL(on: ParticipantUser.Properties.all, sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId]).allObjects()
+        }
+
+        return (conversation, participantUsers)
+    }
+
     @discardableResult
     func createConversation(conversation: ConversationResponse, targetStatus: ConversationStatus) -> Bool {
         var ownerId = conversation.creatorId
@@ -316,9 +334,7 @@ final class ConversationDAO {
 
         return MixinDatabase.shared.transaction { (db) in
             if oldStatus == nil {
-                var targetConversation = Conversation.createConversation(from: conversation)
-                targetConversation.status = targetStatus.rawValue
-                targetConversation.ownerId = ownerId
+                let targetConversation = Conversation.createConversation(from: conversation, ownerId: ownerId, status: targetStatus)
                 try db.insert(objects: targetConversation, intoTable: Conversation.tableName)
             } else {
                 try db.update(table: Conversation.tableName, on: [Conversation.Properties.ownerId, Conversation.Properties.category, Conversation.Properties.name, Conversation.Properties.announcement, Conversation.Properties.status, Conversation.Properties.muteUntil, Conversation.Properties.codeUrl], with: [ownerId, conversation.category, conversation.name, conversation.announcement, targetStatus.rawValue, conversation.muteUntil, conversation.codeUrl], where: Conversation.Properties.conversationId == conversationId)

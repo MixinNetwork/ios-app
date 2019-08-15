@@ -1,11 +1,11 @@
 import Foundation
 import SDWebImage
 
-struct GroupIconMaker {
+enum GroupIconMaker {
     
-    enum Avatar {
+    private enum AvatarRepresentation {
         case image(UIImage)
-        case generated(background: UIImage, name: String)
+        case composed(background: UIImage, name: String)
     }
     
     //    Multiple avatars is arranged by index like this
@@ -17,7 +17,7 @@ struct GroupIconMaker {
     //    | /         |  |     |     |  | /   3   \ |
     //    +-----------+  +-----------+  +-----------+
     static func make(participants: [ParticipantUser]) -> UIImage? {
-        var avatars = [Avatar]()
+        var avatars = [AvatarRepresentation]()
         let semaphore = DispatchSemaphore(value: 0)
         for participant in participants {
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
@@ -32,7 +32,7 @@ struct GroupIconMaker {
                 let colorIndex = participant.userId.positiveHashCode() % 24 + 1
                 if let background = UIImage(named: "AvatarBackground/color\(colorIndex)"), let firstLetter = participant.userFullName.first {
                     let name = String([firstLetter]).uppercased()
-                    avatars.append(.generated(background: background, name: name))
+                    avatars.append(.composed(background: background, name: name))
                 }
             }
             if avatars.count == 4 {
@@ -47,7 +47,7 @@ struct GroupIconMaker {
             switch avatar {
             case let .image(image):
                 return iconFragment(from: image, index: index, of: avatars.count)
-            case let .generated(background, name):
+            case let .composed(background, name):
                 return iconFragment(name: name, background: background, index: index, of: avatars.count)
             }
         }

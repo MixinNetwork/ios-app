@@ -282,6 +282,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 player.seek(to: .zero)
             }
             addTimeObservers()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         } else if let url = item.url {
             loadAssetIfPlayable(url: url, playAfterLoaded: true)
@@ -446,6 +447,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         player.replaceCurrentItem(with: item)
         if playAfterLoaded {
             AudioManager.shared.pause()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         }
     }

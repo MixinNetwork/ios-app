@@ -20,6 +20,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var playerDidFailedToPlay = false
     private var isPipMode = false
     
+    var hidePlayControlAfterPlaybackBegins = false
+    
     var isPlayable: Bool {
         if let item = item {
             return item.mediaStatus == .DONE
@@ -132,6 +134,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         videoView.coverImageView.image = nil
         videoView.bringCoverToFront()
         player.replaceCurrentItem(with: nil)
+        hidePlayControlAfterPlaybackBegins = false
     }
     
     override func beginDownload() {
@@ -457,6 +460,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .playing:
             controlView.playControlStyle = .pause
             controlView.style.remove(.loading)
+            if hidePlayControlAfterPlaybackBegins {
+                hidePlayControlAfterPlaybackBegins = false
+                updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            }
         case .paused:
             if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play

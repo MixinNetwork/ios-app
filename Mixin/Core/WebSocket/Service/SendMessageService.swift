@@ -224,7 +224,7 @@ class SendMessageService: MixinService {
 
         saveDispatchQueue.async {
             MixinDatabase.shared.transaction(callback: { (database) in
-                try database.insert(objects: jobs, intoTable: Job.tableName)
+                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
                 try database.insertOrReplace(objects: resendMessages, intoTable: ResendMessage.tableName)
             })
             SendMessageService.shared.processMessages()
@@ -271,6 +271,7 @@ class SendMessageService: MixinService {
                     }
 
                     MixinDatabase.shared.transaction { (database) in
+                        try database.insert(objects: jobs, intoTable: Job.tableName)
                         try database.prepareUpdateSQL(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?").execute(with: [conversationId, MessageStatus.DELIVERED.rawValue, AccountAPI.shared.accountUserId, lastRowID])
                         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     }

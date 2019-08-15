@@ -8,11 +8,14 @@ struct GroupIconMaker {
         case generated(background: UIImage, name: String)
     }
     
-    enum ImageRelativeRect {
-        static let binary = CGRect(x: CGFloat(1) / 4, y: 0, width: 1/2, height: 1)
-        static let ternary = CGRect(x: CGFloat(1) / 3, y: 0, width: 1/3, height: 1)
-    }
-    
+    //    Multiple avatars is arranged by index like this
+    //    +-----------+  +-----------+  +-----------+
+    //    |         / |  | \   0   / |  | \   0   / |
+    //    |  0    /   |  |   \   /   |  |   \   /   |
+    //    |     /     |  |     |     |  | 1   X   2 |
+    //    |   /   1   |  |  1  |  2  |  |   /   \   |
+    //    | /         |  |     |     |  | /   3   \ |
+    //    +-----------+  +-----------+  +-----------+
     static func make(participants: [ParticipantUser]) -> UIImage? {
         var avatars = [Avatar]()
         let semaphore = DispatchSemaphore(value: 0)
@@ -32,7 +35,7 @@ struct GroupIconMaker {
                     avatars.append(.generated(background: background, name: name))
                 }
             }
-            if avatars.count == 3 {
+            if avatars.count == 4 {
                 break
             }
         }
@@ -43,27 +46,9 @@ struct GroupIconMaker {
         let fragments = avatars.enumerated().map { (index, avatar) -> UIImage in
             switch avatar {
             case let .image(image):
-                switch avatars.count {
-                case 1:
-                    return image
-                case 2:
-                    return self.image(withImage: image, relativeRect: ImageRelativeRect.binary)
-                default:
-                    return self.image(withImage: image, relativeRect: ImageRelativeRect.ternary)
-                }
+                return iconFragment(from: image, index: index, of: avatars.count)
             case let .generated(background, name):
-                switch avatars.count {
-                case 1:
-                    return draw(text: name, fontSize: 17, on: background)
-                case 2:
-                    let rect = relativeRect(index: index, numberOfPieces: avatars.count)
-                    let background = self.image(withImage: background, relativeRect: rect)
-                    return draw(text: name, fontSize: 15, on: background)
-                default:
-                    let rect = relativeRect(index: index, numberOfPieces: avatars.count)
-                    let background = self.image(withImage: background, relativeRect: rect)
-                    return draw(text: name, fontSize: 12, on: background)
-                }
+                return iconFragment(name: name, background: background, index: index, of: avatars.count)
             }
         }
         
@@ -72,132 +57,231 @@ struct GroupIconMaker {
         }
         let canvasSize = CGSize(width: 512, height: 512)
         let canvasRect = CGRect(origin: .zero, size: canvasSize)
-        let fragmentSize = CGSize(width: canvasSize.width / CGFloat(fragments.count), height: canvasSize.height)
-        let separatorLineSize = CGSize(width: 4 * UIScreen.main.scale, height: canvasSize.height)
-        let colors = [UIColor.white.withAlphaComponent(0).cgColor,
-                      UIColor.white.withAlphaComponent(0.9).cgColor,
-                      UIColor.white.withAlphaComponent(0).cgColor] as CFArray
-        let locations: [CGFloat] = [0, 0.5, 1]
-        let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors, locations: locations)
-        UIGraphicsBeginImageContext(canvasSize)
-        UIBezierPath(roundedRect: canvasRect, cornerRadius: canvasSize.width / 2).addClip()
-        
-        func drawLine(in rect: CGRect) {
-            guard let ctx = UIGraphicsGetCurrentContext(), let gradient = gradient else {
-                return
+        let renderer = UIGraphicsImageRenderer(size: canvasSize)
+        return renderer.image(actions: { (ctx) in
+            for fragment in fragments {
+                fragment.draw(in: canvasRect)
             }
-            let path = UIBezierPath(rect: rect)
+            drawSeparatorLine(number: avatars.count)
+        })
+    }
+    
+    private static func iconFragment(from source: UIImage, index: Int, of numberOfPieces: Int) -> UIImage {
+        guard numberOfPieces > 1 else {
+            return source
+        }
+        let canvasSize = source.size
+        let renderer = UIGraphicsImageRenderer(size: canvasSize)
+        let origin: CGPoint
+        if numberOfPieces > 2, let faceRect = self.faceRect(in: source) {
+            if numberOfPieces == 3 {
+                switch index {
+                case 0:
+                    origin = CGPoint(x: 0, y: -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2)
+                case 1:
+                    origin = CGPoint(x: -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2,
+                                     y: -faceRect.origin.y + canvasSize.height / 3 * 2)
+                default:
+                    origin = CGPoint(x: canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 2,
+                                     y: -faceRect.origin.y + canvasSize.height / 3 * 2)
+                }
+            } else {
+                switch index {
+                case 0:
+                    origin = CGPoint(x: 0, y: -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2)
+                case 1:
+                    origin = CGPoint(x: -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 3, y: -faceRect.origin.y + canvasSize.height / 2)
+                case 2:
+                    origin = CGPoint(x: canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 3, y: -faceRect.origin.y + canvasSize.height / 2)
+                default:
+                    origin = CGPoint(x: 0, y: faceRect.origin.y )
+                }
+            }
+        } else {
+            origin = .zero
+        }
+        return renderer.image { (ctx) in
+            let path = self.path(size: canvasSize, index: index, of: numberOfPieces)
             path.addClip()
-            let start = CGPoint(x: rect.midX, y: rect.minY)
-            let end = CGPoint(x: rect.midX, y: rect.maxY)
-            ctx.drawLinearGradient(gradient, start: start, end: end, options: [])
+            source.draw(at: origin)
         }
+    }
+    
+    private static func iconFragment(name: String, background: UIImage, index: Int, of numberOfPieces: Int) -> UIImage {
+        let canvasSize = background.size
         
-        if fragments.count == 2 {
-            let fragmentOrigins = [CGPoint(x: 0, y: 0),
-                                   CGPoint(x: fragmentSize.width, y: 0)]
-            fragments[0].draw(in: CGRect(origin: fragmentOrigins[0], size: fragmentSize))
-            fragments[1].draw(in: CGRect(origin: fragmentOrigins[1], size: fragmentSize))
-            let separatorOrigin = CGPoint(x: (canvasSize.width - separatorLineSize.width) / 2, y: 0)
-            let rect = CGRect(origin: separatorOrigin, size: separatorLineSize)
-            drawLine(in: rect)
-        } else {
-            let fragmentOrigins = [CGPoint(x: 0, y: 0),
-                                   CGPoint(x: fragmentSize.width, y: 0),
-                                   CGPoint(x: fragmentSize.width * 2, y: 0)]
-            fragments[0].draw(in: CGRect(origin: fragmentOrigins[0], size: fragmentSize))
-            fragments[1].draw(in: CGRect(origin: fragmentOrigins[1], size: fragmentSize))
-            fragments[2].draw(in: CGRect(origin: fragmentOrigins[2], size: fragmentSize))
-            if let ctx = UIGraphicsGetCurrentContext() {
-                ctx.saveGState()
-                let origin1 = CGPoint(x: fragmentOrigins[1].x - separatorLineSize.width, y: 0)
-                let rect1 = CGRect(origin: origin1, size: separatorLineSize)
-                drawLine(in: rect1)
-                ctx.restoreGState()
-                
-                let origin2 = CGPoint(x: fragmentOrigins[2].x - separatorLineSize.width, y: 0)
-                let rect2 = CGRect(origin: origin2, size: separatorLineSize)
-                drawLine(in: rect2)
-            }
-        }
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
-    }
-    
-    private static func image(withImage source: UIImage, relativeRect rect: CGRect) -> UIImage {
-        let absoluteRect = CGRect(x: rect.origin.x * source.size.width,
-                                  y: rect.origin.y * source.size.height,
-                                  width: rect.width * source.size.width,
-                                  height: rect.height * source.size.height)
-        return image(withImage: source, rect: absoluteRect)
-    }
-    
-    private static func image(withImage source: UIImage, rect: CGRect) -> UIImage {
-        guard let cgImage = source.cgImage else {
-            return source
-        }
-        let croppingRect = CGRect(x: rect.origin.x * source.scale,
-                                  y: rect.origin.y * source.scale,
-                                  width: rect.width * source.scale,
-                                  height: rect.height * source.scale)
-        if let cropped = cgImage.cropping(to: croppingRect) {
-            return UIImage(cgImage: cropped, scale: source.scale, orientation: source.imageOrientation)
-        } else {
-            return source
-        }
-    }
-    
-    private static func draw(text: String, fontSize: CGFloat, on image: UIImage) -> UIImage {
-        guard !text.isEmpty else {
-            return image
-        }
-        let targetWidth = image.size.width
-        let targetHeight = image.size.height
-        let textColor = UIColor.white
-        let textFont = UIFont.systemFont(ofSize: fontSize)
-        let textFontAttributes = [NSAttributedString.Key.font: textFont,
-                                  NSAttributedString.Key.foregroundColor: textColor]
-        let string = text as NSString
-        let stringSize = string.size(withAttributes: textFontAttributes)
-        let textRect = CGRect(x: (targetWidth - stringSize.width) / 2,
-                              y: (targetHeight - stringSize.height) / 2,
-                              width: stringSize.width,
-                              height: stringSize.height)
-        UIGraphicsBeginImageContextWithOptions(image.size, false, UIScreen.main.scale)
-        image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
-        string.draw(in: textRect, withAttributes: textFontAttributes)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else {
-            return image
-        }
-        return newImage
-    }
-    
-    private static func relativeRect(index: Int, numberOfPieces: Int) -> CGRect {
+        let fontSize: CGFloat
         switch numberOfPieces {
         case 1:
-            return CGRect(x: 0, y: 0, width: 1, height: 1)
+            fontSize = 17
         case 2:
+            fontSize = 15
+        case 3:
+            fontSize = 13
+        default:
+            fontSize = 12
+        }
+        
+        let font = UIFont.systemFont(ofSize: fontSize)
+        let attributes = [NSAttributedString.Key.font: font,
+                          NSAttributedString.Key.foregroundColor: UIColor.white]
+        let nameSize = name.size(withAttributes: attributes)
+        
+        let origin: CGPoint
+        switch numberOfPieces {
+        case 1:
+            origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
+                             y: (canvasSize.height - nameSize.height) / 2)
+        case 2:
+            if index == 0 {
+                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width / 2) / 2,
+                                 y: (canvasSize.height / 2 - nameSize.height / 2) / 2)
+            } else {
+                origin = CGPoint(x: canvasSize.width / 2,
+                                 y: canvasSize.height / 2)
+            }
+        case 3:
             switch index {
             case 0:
-                return CGRect(x: 0, y: 0, width: 0.5, height: 1)
+                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
+                                 y: (canvasSize.height / 2 - nameSize.height) / 2)
+            case 1:
+                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 + 2,
+                                 y: canvasSize.height / 2)
             default:
-                return CGRect(x: 0.5, y: 0, width: 0.5, height: 1)
+                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 - 2 + canvasSize.width / 2,
+                                 y: canvasSize.height / 2)
             }
         default:
-            let width: CGFloat = 1 / 3
             switch index {
             case 0:
-                return CGRect(x: 0, y: 0, width: width, height: 1)
+                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
+                                 y: (canvasSize.height / 2 - nameSize.height) / 2 - 1)
             case 1:
-                return CGRect(x: width, y: 0, width: width, height: 1)
+                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 - 1,
+                                 y: (canvasSize.height - nameSize.height) / 2)
+            case 2:
+                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 + canvasSize.width / 2 + 1,
+                                 y: (canvasSize.height - nameSize.height) / 2)
             default:
-                return CGRect(x: width * 2, y: 0, width: width, height: 1)
+                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
+                                 y: (canvasSize.height / 2 - nameSize.height) / 2 + canvasSize.height / 2 + 1)
             }
         }
+        
+        let path = self.path(size: canvasSize, index: index, of: numberOfPieces)
+        let renderer = UIGraphicsImageRenderer(size: canvasSize)
+        return renderer.image { (ctx) in
+            path.addClip()
+            background.draw(in: CGRect(origin: .zero, size: canvasSize))
+            (name as NSString).draw(at: origin, withAttributes: attributes)
+        }
+    }
+    
+    private static func path(size: CGSize, index: Int, of numberOfPieces: Int) -> UIBezierPath {
+        let path = UIBezierPath()
+        let topLeft = CGPoint.zero
+        let topRight = CGPoint(x: size.width, y: 0)
+        let bottomLeft = CGPoint(x: 0, y: size.height)
+        let bottomRight = CGPoint(x: size.width, y: size.height)
+        let middle = CGPoint(x: size.width / 2, y: size.height / 2)
+        switch numberOfPieces {
+        case 2:
+            if index == 0 {
+                path.move(to: topLeft)
+                path.addLine(to: topRight)
+                path.addLine(to: bottomLeft)
+                path.addLine(to: topLeft)
+            } else {
+                path.move(to: topRight)
+                path.addLine(to: bottomRight)
+                path.addLine(to: bottomLeft)
+                path.addLine(to: topRight)
+            }
+        case 3:
+            let p = (1 - tan(.pi / 6)) * size.height / 2
+            let leftP = CGPoint(x: 0, y: p)
+            let rightP = CGPoint(x: size.width, y: p)
+            let bottomCenter = CGPoint(x: size.width / 2, y: size.height)
+            switch index {
+            case 0:
+                path.move(to: .zero)
+                path.addLine(to: topRight)
+                path.addLine(to: rightP)
+                path.addLine(to: middle)
+                path.addLine(to: leftP)
+                path.addLine(to: .zero)
+            case 1:
+                path.move(to: middle)
+                path.addLine(to: bottomCenter)
+                path.addLine(to: bottomLeft)
+                path.addLine(to: leftP)
+                path.addLine(to: middle)
+            default:
+                path.move(to: middle)
+                path.addLine(to: rightP)
+                path.addLine(to: bottomRight)
+                path.addLine(to: bottomCenter)
+                path.addLine(to: middle)
+            }
+        default:
+            switch index {
+            case 0:
+                path.move(to: topLeft)
+                path.addLine(to: topRight)
+                path.addLine(to: middle)
+                path.addLine(to: topLeft)
+            case 1:
+                path.move(to: topLeft)
+                path.addLine(to: middle)
+                path.addLine(to: bottomLeft)
+                path.addLine(to: topLeft)
+            case 2:
+                path.move(to: topRight)
+                path.addLine(to: bottomRight)
+                path.addLine(to: middle)
+                path.addLine(to: topRight)
+            default:
+                path.move(to: middle)
+                path.addLine(to: bottomRight)
+                path.addLine(to: bottomLeft)
+                path.addLine(to: middle)
+            }
+        }
+        path.close()
+        return path
+    }
+    
+    private static func faceRect(in image: UIImage) -> CGRect? {
+        guard let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: nil) else {
+            return nil
+        }
+        guard let image = CIImage(image: image) else {
+            return nil
+        }
+        var options = [String: Any]()
+        if let orientation = image.properties[kCGImagePropertyOrientation as String] {
+            options[CIDetectorImageOrientation] = orientation
+        }
+        let features = detector.features(in: image, options: options)
+        let faces = features.compactMap({ $0 as? CIFaceFeature })
+        guard faces.count == 1 else {
+            return nil
+        }
+        return faces[0].bounds
+    }
+    
+    private static func drawSeparatorLine(number: Int) {
+        guard [2, 3, 4].contains(number) else {
+            return
+        }
+        guard let url = Bundle.main.url(forResource: "separator_\(number)", withExtension: "png") else {
+            return
+        }
+        guard let image = UIImage(contentsOfFile: url.path) else {
+            return
+        }
+        image.draw(at: .zero)
     }
     
 }

@@ -50,6 +50,9 @@
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
+		7B03987D230403D500D365FD /* separator_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B03987A230403D400D365FD /* separator_3.png */; };
+		7B0398822304094200D365FD /* separator_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B0398802304094200D365FD /* separator_2.png */; };
+		7B0398832304094200D365FD /* separator_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B0398812304094200D365FD /* separator_4.png */; };
 		7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB722684242004F8F04 /* AssetSearchResult.swift */; };
 		7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB922684F51004F8F04 /* SearchResult.swift */; };
 		7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */; };
@@ -780,6 +783,9 @@
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
+		7B03987A230403D400D365FD /* separator_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_3.png; sourceTree = "<group>"; };
+		7B0398802304094200D365FD /* separator_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_2.png; sourceTree = "<group>"; };
+		7B0398812304094200D365FD /* separator_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_4.png; sourceTree = "<group>"; };
 		7B04FAB722684242004F8F04 /* AssetSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSearchResult.swift; sourceTree = "<group>"; };
 		7B04FAB922684F51004F8F04 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputViewController.swift; sourceTree = "<group>"; };
@@ -2414,6 +2420,9 @@
 				DF8CECFF1FC58DBD00E40064 /* InfoPlist.strings */,
 				7B833E9A22C4AEB90063929D /* ic_app_loading@2x.webp */,
 				7B833E9B22C4AEB90063929D /* ic_app_loading@3x.webp */,
+				7B0398802304094200D365FD /* separator_2.png */,
+				7B03987A230403D400D365FD /* separator_3.png */,
+				7B0398812304094200D365FD /* separator_4.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2932,6 +2941,7 @@
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
+				7B0398822304094200D365FD /* separator_2.png in Resources */,
 				DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
@@ -2952,6 +2962,7 @@
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
+				7B0398832304094200D365FD /* separator_4.png in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
@@ -2968,6 +2979,7 @@
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
+				7B03987D230403D500D365FD /* separator_3.png in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,

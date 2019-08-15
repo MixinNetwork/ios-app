@@ -74,27 +74,106 @@ struct GroupIconMaker {
         let renderer = UIGraphicsImageRenderer(size: canvasSize)
         let origin: CGPoint
         if numberOfPieces > 2, let faceRect = self.faceRect(in: source) {
+            // fanMargin            fanMargin
+            //  |←⎯⎯⎯⎯⎯→|               |←⎯⎯⎯⎯⎯→|
+            //  ............................
+            //    .  |   .   .   .   |   .
+            //      .| .     .     . | .
+            //        .  fan . fan   .
+            //          .    .     .
+            //            .  .  .
+            //              ...
             if numberOfPieces == 3 {
                 switch index {
                 case 0:
-                    origin = CGPoint(x: 0, y: -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2)
+                    let fanMargin = (1 - cos(.pi / 6)) * (faceRect.width / 2)
+                    let minX = -fanMargin
+                    let maxX = fanMargin
+                    var x = -faceRect.origin.x + fanMargin + (canvasSize.width - 2 * fanMargin - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -canvasSize.height / 2
+                    let maxY: CGFloat = 0
+                    var y = -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2
+                    y = max(minY, min(maxY, y))
+                    origin = CGPoint(x: x, y: y)
                 case 1:
-                    origin = CGPoint(x: -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2,
-                                     y: -faceRect.origin.y + canvasSize.height / 3 * 2)
+                    let minX = -canvasSize.width / 2
+                    let maxX: CGFloat = 0
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY: CGFloat = 0
+                    let maxY = canvasSize.height / 2 * sin(.pi / 6)
+                    var y = -faceRect.origin.y + canvasSize.height / 3 * 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 default:
-                    origin = CGPoint(x: canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 2,
-                                     y: -faceRect.origin.y + canvasSize.height / 3 * 2)
+                    let minX: CGFloat = 0
+                    let maxX = canvasSize.width / 2
+                    var x = canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY: CGFloat = 0
+                    let maxY = canvasSize.height / 2 * sin(.pi / 6)
+                    var y = -faceRect.origin.y + canvasSize.height / 3 * 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 }
             } else {
+                let horizontalFanMargin = (sqrt(2) - 1) / sqrt(2) * (canvasSize.width / 2)
+                let verticalFanMargin = (sqrt(2) - 1) / sqrt(2) * (canvasSize.height / 2)
                 switch index {
                 case 0:
-                    origin = CGPoint(x: 0, y: -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2)
+                    let minX = -horizontalFanMargin
+                    let maxX = horizontalFanMargin
+                    var x = -faceRect.origin.x + horizontalFanMargin + (canvasSize.width - 2 * horizontalFanMargin - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -canvasSize.height / 2
+                    let maxY: CGFloat = 0
+                    var y = -faceRect.origin.y - (canvasSize.width / 2 - faceRect.width / 2) / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 case 1:
-                    origin = CGPoint(x: -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 3, y: -faceRect.origin.y + canvasSize.height / 2)
+                    let minX = -canvasSize.width / 2
+                    let maxX: CGFloat = 0
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 3
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -verticalFanMargin
+                    let maxY = verticalFanMargin
+                    var y = -faceRect.origin.y + canvasSize.height / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 case 2:
-                    origin = CGPoint(x: canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 3, y: -faceRect.origin.y + canvasSize.height / 2)
+                    let minX: CGFloat = 0
+                    let maxX = canvasSize.width / 2
+                    var x = canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 3
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -verticalFanMargin
+                    let maxY = verticalFanMargin
+                    var y = -faceRect.origin.y + canvasSize.height / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 default:
-                    origin = CGPoint(x: 0, y: faceRect.origin.y )
+                    let minX = -horizontalFanMargin
+                    let maxX = horizontalFanMargin
+                    var x = -faceRect.origin.x + horizontalFanMargin + (canvasSize.width - 2 * horizontalFanMargin - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY: CGFloat = 0
+                    let maxY = canvasSize.height / 2
+                    var y = faceRect.origin.y
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
                 }
             }
         } else {

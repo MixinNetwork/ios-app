@@ -117,8 +117,8 @@ class SendMessageService: MixinService {
 
             let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.quoteMessageId == messageId)
 
-            JobDAO.shared.addJobs(jobs: jobs)
             MixinDatabase.shared.transaction { (database) in
+                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
                 try MessageDAO.shared.recallMessage(database: database, messageId: messageId, conversationId: conversationId, category: category, status: status, quoteMessageIds: quoteMessageIds)
             }
             SendMessageService.shared.processMessages()
@@ -223,8 +223,8 @@ class SendMessageService: MixinService {
         }
 
         saveDispatchQueue.async {
-            JobDatabase.getIntance().transaction(callback: { (database) in
-                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
+            MixinDatabase.shared.transaction(callback: { (database) in
+                try database.insert(objects: jobs, intoTable: Job.tableName)
                 try database.insertOrReplace(objects: resendMessages, intoTable: ResendMessage.tableName)
             })
             SendMessageService.shared.processMessages()
@@ -270,7 +270,6 @@ class SendMessageService: MixinService {
                         }
                     }
 
-                    JobDAO.shared.addJobs(jobs: jobs)
                     MixinDatabase.shared.transaction { (database) in
                         try database.prepareUpdateSQL(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?").execute(with: [conversationId, MessageStatus.DELIVERED.rawValue, AccountAPI.shared.accountUserId, lastRowID])
                         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
@@ -301,7 +300,6 @@ class SendMessageService: MixinService {
                     jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
                 }
 
-                JobDAO.shared.addJobs(jobs: jobs)
                 MixinDatabase.shared.transaction(callback: { (database) in
                     let updateStatment = try database.prepareUpdate(table: Message.tableName, on: Message.Properties.status).where(Message.Properties.messageId == messageId && Message.Properties.status == MessageStatus.DELIVERED.rawValue)
                     try updateStatment.execute(with: [MessageStatus.READ.rawValue])
@@ -309,6 +307,7 @@ class SendMessageService: MixinService {
                         return
                     }
                     try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                    try database.insert(objects: jobs, intoTable: Job.tableName)
                 })
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 ConversationDAO.shared.showBadgeNumber()

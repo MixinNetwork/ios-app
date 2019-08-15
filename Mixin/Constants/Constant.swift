@@ -223,8 +223,8 @@ struct MixinFile {
         return rootDirectory.appendingPathComponent("mixin.db")
     }
 
-    static var jobDatabaseURL: URL {
-        return rootDirectory.appendingPathComponent("job.db")
+    static var taskDatabaseURL: URL {
+        return rootDirectory.appendingPathComponent("task.db")
     }
 
     static var signalDatabasePath: String {

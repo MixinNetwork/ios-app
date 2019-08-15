@@ -451,7 +451,7 @@
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
 		DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10709A2049BC3F00E20047 /* MixinDatabase.swift */; };
-		DF10B9DB22E9B7F9005632A5 /* JobDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10B9DA22E9B7F9005632A5 /* JobDatabase.swift */; };
+		DF10B9DB22E9B7F9005632A5 /* TaskDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */; };
 		DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1148461FED45E200023CAF /* AssetAPI.swift */; };
 		DF114B062020551900EA8F9C /* AppDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B052020551900EA8F9C /* AppDAO.swift */; };
 		DF114B0A20206D3300EA8F9C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B0920206D3300EA8F9C /* App.swift */; };
@@ -1195,7 +1195,7 @@
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
 		DF10709A2049BC3F00E20047 /* MixinDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinDatabase.swift; sourceTree = "<group>"; };
-		DF10B9DA22E9B7F9005632A5 /* JobDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDatabase.swift; sourceTree = "<group>"; };
+		DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDatabase.swift; sourceTree = "<group>"; };
 		DF1148461FED45E200023CAF /* AssetAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAPI.swift; sourceTree = "<group>"; };
 		DF114B052020551900EA8F9C /* AppDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDAO.swift; sourceTree = "<group>"; };
 		DF114B0920206D3300EA8F9C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -2121,7 +2121,7 @@
 				DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */,
 				DFD659C520501858000696B0 /* BaseDatabase.swift */,
 				DF10709A2049BC3F00E20047 /* MixinDatabase.swift */,
-				DF10B9DA22E9B7F9005632A5 /* JobDatabase.swift */,
+				DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */,
 				7B4D112B205BC9160074BF60 /* AddressDAO.swift */,
 				DFF353011FEE532300058453 /* AssetDAO.swift */,
 				7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */,
@@ -3589,7 +3589,7 @@
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
-				DF10B9DB22E9B7F9005632A5 /* JobDatabase.swift in Sources */,
+				DF10B9DB22E9B7F9005632A5 /* TaskDatabase.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */,

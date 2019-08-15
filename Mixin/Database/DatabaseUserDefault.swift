@@ -10,8 +10,8 @@ class DatabaseUserDefault {
     private var keyMixinDatabaseVersion: String {
         return "key_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyJobDatabaseVersion: String {
-        return "key_database_job_version_\(AccountAPI.shared.accountIdentityNumber)"
+    private var keyTaskDatabaseVersion: String {
+        return "key_database_task_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
     private var keyUpgradeStickers: String {
         return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"
@@ -51,12 +51,12 @@ class DatabaseUserDefault {
         }
     }
 
-    var jobDatabaseVersion: Int {
+    var taskDatabaseVersion: Int {
         get {
-            return session.integer(forKey: keyJobDatabaseVersion)
+            return session.integer(forKey: keyTaskDatabaseVersion)
         }
         set {
-            session.set(newValue, forKey: keyJobDatabaseVersion)
+            session.set(newValue, forKey: keyTaskDatabaseVersion)
             session.synchronize()
         }
     }

@@ -61,9 +61,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     }
     
     func set(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self,
-                                               selector: #selector(hideControls),
-                                               object: nil)
         self.playControlsHidden = playControlsHidden
         self.otherControlsHidden = otherControlsHidden
         if animated {
@@ -74,10 +71,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         if animated {
             UIView.commitAnimations()
         }
-    }
-    
-    func scheduleControlsAutoHiddden() {
-        perform(#selector(hideControls), with: nil, afterDelay: 2)
     }
     
     @objc private func hideControls() {

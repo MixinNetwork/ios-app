@@ -52,14 +52,16 @@ class RestoreViewController: UIViewController {
                 return
             }
 
+            MixinDatabase.shared.close()
             do {
                 self.updateProgressLabel(progress: 0.01)
                 try self.restoreDatabase(backupDir: backupDir)
                 self.updateProgressLabel(progress: 0.3)
                 try self.restorePhotosAndAudios(backupDir: backupDir)
+
+                MixinDatabase.shared.initDatabase()
                 AccountUserDefault.shared.hasRestoreChat = false
                 DispatchQueue.main.async {
-                    MixinDatabase.shared.configure(reset: true)
                     AppDelegate.current.window?.rootViewController = makeInitialViewController()
                 }
             } catch {

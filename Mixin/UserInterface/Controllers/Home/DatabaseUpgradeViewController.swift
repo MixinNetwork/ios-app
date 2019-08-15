@@ -14,7 +14,7 @@ class DatabaseUpgradeViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let currentVersion = DatabaseUserDefault.shared.databaseVersion
             if currentVersion < 1 {
-                try! TaskDatabase.shared.initDatabase()
+                TaskDatabase.shared.initDatabase()
             }
 
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion

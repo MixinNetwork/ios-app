@@ -11,11 +11,15 @@ class SignalLoadingViewController: UIViewController {
         FileManager.default.writeLog(log: "SignalLoadingView...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
+            try! SignalDatabase.shared.initDatabase()
+            IdentityDAO.shared.saveLocalIdentity()
+
+            MixinDatabase.shared.deleteAll(table: SentSenderKey.tableName)
+
             repeat {
                 switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
                 case .success:
                     CryptoUserDefault.shared.isLoaded = true
-                    MixinDatabase.shared.deleteAll(table: SentSenderKey.tableName)
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
                             return

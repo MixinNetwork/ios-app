@@ -7,11 +7,6 @@ class BaseDatabase {
 
     internal init() {
         trace()
-        configure()
-    }
-
-    func configure(reset: Bool = false) {
-
     }
 
     func close() {

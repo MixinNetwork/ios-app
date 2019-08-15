@@ -12,11 +12,18 @@ class TaskDatabase: BaseDatabase {
         set { }
     }
 
-    func initDatabase() throws {
+    func initDatabase() {
+        _database = Database(withPath: MixinFile.taskDatabaseURL.path)
         database.setSynchronous(isFull: true)
-        try database.run(transaction: {
-            try database.create(of: MessageBlaze.self)
-            DatabaseUserDefault.shared.taskDatabaseVersion = TaskDatabase.databaseVersion
-        })
+        do {
+            try database.run(transaction: {
+                try database.create(of: MessageBlaze.self)
+                DatabaseUserDefault.shared.taskDatabaseVersion = TaskDatabase.databaseVersion
+            })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
+        } catch {
+            UIApplication.traceError(error)
+        }
     }
 }

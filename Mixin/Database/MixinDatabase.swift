@@ -12,39 +12,47 @@ class MixinDatabase: BaseDatabase {
         set { }
     }
 
-    func initDatabase() throws {
+    func initDatabase() {
+        _database = Database(withPath: MixinFile.databaseURL.path)
         database.setSynchronous(isFull: true)
-        try database.run(transaction: {
-            let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
-            try self.createBefore(database: database, currentVersion: currentVersion)
+        
+        do {
+            try database.run(transaction: {
+                let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                try self.createBefore(database: database, currentVersion: currentVersion)
 
-            try database.create(of: Asset.self)
-            try database.create(table: Asset.topAssetsTableName, of: Asset.self)
-            try database.create(of: Snapshot.self)
-            try database.create(of: Sticker.self)
-            try database.create(of: StickerRelationship.self)
-            try database.create(of: Album.self)
-            try database.create(of: MessageHistory.self)
-            try database.create(of: SentSenderKey.self)
-            try database.create(of: App.self)
+                try database.create(of: Asset.self)
+                try database.create(table: Asset.topAssetsTableName, of: Asset.self)
+                try database.create(of: Snapshot.self)
+                try database.create(of: Sticker.self)
+                try database.create(of: StickerRelationship.self)
+                try database.create(of: Album.self)
+                try database.create(of: MessageHistory.self)
+                try database.create(of: SentSenderKey.self)
+                try database.create(of: App.self)
 
-            try database.create(of: User.self)
-            try database.create(of: Conversation.self)
-            try database.create(of: Message.self)
-            try database.create(of: Participant.self)
+                try database.create(of: User.self)
+                try database.create(of: Conversation.self)
+                try database.create(of: Message.self)
+                try database.create(of: Participant.self)
 
-            try database.create(of: Address.self)
-            try database.create(of: Job.self)
-            try database.create(of: ResendMessage.self)
+                try database.create(of: Address.self)
+                try database.create(of: Job.self)
+                try database.create(of: ResendMessage.self)
 
-            try self.createAfter(database: database, currentVersion: currentVersion)
+                try self.createAfter(database: database, currentVersion: currentVersion)
 
-            try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
-            try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
-            try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
+                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
+                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
+                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
-            DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
-        })
+                DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
+            })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
+        } catch {
+            UIApplication.traceError(error)
+        }
     }
 
     private func createBefore(database: Database, currentVersion: Int) throws {

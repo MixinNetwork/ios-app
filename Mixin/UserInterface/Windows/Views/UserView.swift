@@ -300,12 +300,12 @@ class UserView: CornerView {
     }
 
     @IBAction func previewAvatarAction(_ sender: Any) {
-        guard !user.avatarUrl.isEmpty, avatarImageView.sd_imageProgress.isFinished, let superView = superView as? UserWindow else {
+        guard !user.avatarUrl.isEmpty, let image = avatarImageView.image, let superView = superView as? UserWindow else {
             return
         }
         let frame = avatarImageView.convert(avatarImageView.bounds, to: superView)
         let avatarPreviewImageView = AvatarPreviewImageView(frame: frame)
-        avatarPreviewImageView.image = avatarImageView.image
+        avatarPreviewImageView.image = image
         avatarPreviewImageView.layer.cornerRadius = avatarImageView.layer.cornerRadius
         avatarPreviewImageView.clipsToBounds = true
         avatarImageView.isHidden = true

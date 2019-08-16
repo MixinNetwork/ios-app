@@ -125,7 +125,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             self.pageViewController.view.alpha = 1
             self.transitionView.removeFromSuperview()
             self.delegate?.galleryViewController(self, didShow: item)
-            (viewController as? GalleryVideoItemViewController)?.playAction(self)
+            if let vc = viewController as? GalleryVideoItemViewController {
+                vc.hidePlayControlAfterPlaybackBegins = true
+                vc.playAction(self)
+            }
         })
     }
     

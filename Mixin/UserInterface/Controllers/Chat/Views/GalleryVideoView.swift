@@ -9,6 +9,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     let playerView = PlayerView()
     let controlView = R.nib.galleryVideoControlView(owner: nil)!
     
+    var coverRatio: CGFloat = 1
     var videoRatio: CGFloat = 1
     
     private let stickToEdgeVelocityLimit: CGFloat = 800
@@ -54,35 +55,17 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         super.layoutSubviews()
         contentView.bounds.size = CGSize(width: bounds.width , height: ceil(bounds.width / videoRatio))
         contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        for view in [coverImageView, playerView] {
-            view.frame = contentView.bounds
-        }
+        playerView.frame = contentView.bounds
+        coverImageView.bounds.size = CGSize(width: contentView.bounds.width,
+                                            height: ceil(contentView.bounds.width / coverRatio))
+        coverImageView.center = CGPoint(x: contentView.bounds.midX,
+                                        y: contentView.bounds.midY)
         layoutControlView()
     }
     
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         layoutControlView()
-    }
-    
-    func bringCoverToFront() {
-        guard let (cover, player) = contentSubviewIndices else {
-            return
-        }
-        guard cover < player else {
-            return
-        }
-        contentView.exchangeSubview(at: cover, withSubviewAt: player)
-    }
-    
-    func bringPlayerToFront() {
-        guard let (cover, player) = contentSubviewIndices else {
-            return
-        }
-        guard cover > player else {
-            return
-        }
-        contentView.exchangeSubview(at: cover, withSubviewAt: player)
     }
     
     func stickToSuperviewEdge(horizontalVelocity: CGFloat) {
@@ -190,8 +173,8 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         
         coverImageView.contentMode = .scaleAspectFill
         
-        playerView.backgroundColor = .black
-        playerView.layer.videoGravity = .resize
+        playerView.backgroundColor = .clear
+        playerView.layer.videoGravity = .resizeAspect
         playerView.layer.player = player
         
         contentView.addSubview(coverImageView)

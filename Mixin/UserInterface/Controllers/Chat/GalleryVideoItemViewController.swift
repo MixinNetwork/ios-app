@@ -12,6 +12,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
+    private var itemPresentationSizeObserver: NSKeyValueObservation?
     private var sliderObserver: Any?
     private var timeLabelObserver: Any?
     private var isSeeking = false
@@ -19,6 +20,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var playerDidReachEnd = false
     private var playerDidFailedToPlay = false
     private var isPipMode = false
+    
+    var hidePlayControlAfterPlaybackBegins = false
     
     var isPlayable: Bool {
         if let item = item {
@@ -130,8 +133,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
         videoView.coverImageView.image = nil
-        videoView.bringCoverToFront()
+        videoView.coverImageView.isHidden = false
         player.replaceCurrentItem(with: nil)
+        hidePlayControlAfterPlaybackBegins = false
     }
     
     override func beginDownload() {
@@ -171,7 +175,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
-        videoView.videoRatio = item.size.width / item.size.height
+        let ratio = item.size.width / item.size.height
+        videoView.coverRatio = ratio
+        videoView.videoRatio = ratio
         videoView.layoutFullsized()
         if item.category == .video {
             controlView.style.remove(.liveStream)
@@ -282,6 +288,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 player.seek(to: .zero)
             }
             addTimeObservers()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         } else if let url = item.url {
             loadAssetIfPlayable(url: url, playAfterLoaded: true)
@@ -428,6 +435,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             // 'change' are always nil here
             self?.updateControlView()
         }
+        itemPresentationSizeObserver = item.observe(\.presentationSize) { [weak self] (item, _) in
+            self?.updateVideoViewSize(with: item)
+        }
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(playerItemDidReachEnd(_:)),
@@ -440,12 +450,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()
-            self?.bringPlayerToFrontIfPlaying()
+            self?.hideCoverIfPlaying()
         })
         
         player.replaceCurrentItem(with: item)
         if playAfterLoaded {
             AudioManager.shared.pause()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         }
     }
@@ -455,6 +466,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .playing:
             controlView.playControlStyle = .pause
             controlView.style.remove(.loading)
+            if hidePlayControlAfterPlaybackBegins {
+                hidePlayControlAfterPlaybackBegins = false
+                updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            }
         case .paused:
             if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play
@@ -469,11 +484,20 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    private func bringPlayerToFrontIfPlaying() {
+    private func hideCoverIfPlaying() {
         guard player.timeControlStatus == .playing else {
             return
         }
-        videoView.bringPlayerToFront()
+        videoView.coverImageView.isHidden = true
+    }
+    
+    private func updateVideoViewSize(with item: AVPlayerItem) {
+        videoView.videoRatio = item.presentationSize.width / item.presentationSize.height
+        if isPipMode {
+            videoView.layoutPip()
+        } else {
+            videoView.layoutFullsized()
+        }
     }
     
     private func updateSliderPosition(time: CMTime) {
@@ -537,6 +561,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private func removeAllObservers() {
         removeTimeObservers()
         itemStatusObserver?.invalidate()
+        itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }

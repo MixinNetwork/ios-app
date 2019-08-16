@@ -2873,6 +2873,7 @@
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */,
 				DF1BD0B42292AF2900EBDC22 /* Fabric */,
+				776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3020,6 +3021,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleMobileVision/GoogleMVFaceDetectorResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A4B665A98EE2333D67BFCC9D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3085,7 +3104,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

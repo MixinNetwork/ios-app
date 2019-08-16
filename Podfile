@@ -15,6 +15,7 @@ target 'Mixin' do
   pod 'Firebase/Analytics'
   pod 'Firebase/MLVision'
   pod 'Firebase/MLVisionBarcodeModel'
+  pod 'Firebase/MLVisionFaceModel'
   pod 'Firebase/Performance'
   pod 'SDWebImage'
   pod 'SDWebImageYYPlugin/YYImage'

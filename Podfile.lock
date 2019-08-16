@@ -19,6 +19,9 @@ PODS:
   - Firebase/MLVisionBarcodeModel (6.5.0):
     - Firebase/CoreOnly
     - FirebaseMLVisionBarcodeModel (~> 0.17.0)
+  - Firebase/MLVisionFaceModel (6.5.0):
+    - Firebase/CoreOnly
+    - FirebaseMLVisionFaceModel (~> 0.17.0)
   - Firebase/Performance (6.5.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 3.1.1)
@@ -54,6 +57,8 @@ PODS:
     - GoogleMobileVision/Detector (~> 1.4)
   - FirebaseMLVisionBarcodeModel (0.17.0):
     - GoogleMobileVision/BarcodeDetector (~> 1.4)
+  - FirebaseMLVisionFaceModel (0.17.0):
+    - GoogleMobileVision/FaceDetector (~> 1.4)
   - FirebasePerformance (3.1.1):
     - FirebaseCore (~> 6.0)
     - FirebaseInstanceID (~> 4.2)
@@ -91,6 +96,8 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.1)
+  - GoogleMobileVision/FaceDetector (1.6.0):
+    - GoogleMobileVision/Detector (~> 1.6)
   - GoogleToolboxForMac/Defines (2.2.1)
   - GoogleToolboxForMac/Logger (2.2.1):
     - GoogleToolboxForMac/Defines (= 2.2.1)
@@ -169,6 +176,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/MLVision
   - Firebase/MLVisionBarcodeModel
+  - Firebase/MLVisionFaceModel
   - Firebase/Performance
   - GiphyCoreSDK
   - GoogleWebRTC
@@ -201,6 +209,7 @@ SPEC REPOS:
     - FirebaseMLCommon
     - FirebaseMLVision
     - FirebaseMLVisionBarcodeModel
+    - FirebaseMLVisionFaceModel
     - FirebasePerformance
     - FirebaseRemoteConfig
     - GiphyCoreSDK
@@ -269,6 +278,7 @@ SPEC CHECKSUMS:
   FirebaseMLCommon: b236f9bc8a020d4c36744d6e402b2fb9d6fe3f6d
   FirebaseMLVision: ff6a597d10017c5dfe1cc6d24293b77f84808060
   FirebaseMLVisionBarcodeModel: 4ac90a8ed5a92e1ed8d9278b92d794230a01dd16
+  FirebaseMLVisionFaceModel: 14dc2ae87fac3108b993739e4bfafab7316019e5
   FirebasePerformance: bd3666700af4d43caf2a13b93718f3b532b8a5ff
   FirebaseRemoteConfig: ed74d16d7e5b19e77a4c3e3eee4fe363039b0834
   GiphyCoreSDK: 1a89e03e55dc6b636b9d40fde76107867dbb9da5
@@ -297,6 +307,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: d41fba61e14ffbfac81ac1086195f471676e7c24
+PODFILE CHECKSUM: 90ddbd3e45b7e65969a0d11a63acd2c137ea73cd
 
 COCOAPODS: 1.7.5

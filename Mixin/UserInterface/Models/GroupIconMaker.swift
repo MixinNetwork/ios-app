@@ -1,9 +1,16 @@
 import Foundation
 import SDWebImage
+import Firebase
 
 enum GroupIconMaker {
     
     static let fallback = R.image.ic_conversation_group()!
+    
+    private static let faceDetector: VisionFaceDetector = {
+        let options = VisionFaceDetectorOptions()
+        let vision = Vision.vision()
+        return vision.faceDetector()
+    }()
     
     private enum AvatarRepresentation {
         case image(UIImage)
@@ -341,22 +348,17 @@ enum GroupIconMaker {
     }
     
     private static func faceRect(in image: UIImage) -> CGRect? {
-        guard let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: nil) else {
-            return nil
+        let visionImage = VisionImage(image: image)
+        let sema = DispatchSemaphore(value: 0)
+        var face: VisionFace?
+        faceDetector.process(visionImage) { (faces, error) in
+            if let faces = faces, faces.count == 1 {
+                face = faces[0]
+            }
+            sema.signal()
         }
-        guard let image = CIImage(image: image) else {
-            return nil
-        }
-        var options = [String: Any]()
-        if let orientation = image.properties[kCGImagePropertyOrientation as String] {
-            options[CIDetectorImageOrientation] = orientation
-        }
-        let features = detector.features(in: image, options: options)
-        let faces = features.compactMap({ $0 as? CIFaceFeature })
-        guard faces.count == 1 else {
-            return nil
-        }
-        return faces[0].bounds
+        sema.wait()
+        return face?.frame
     }
     
     private static func drawSeparatorLine(number: Int, in rect: CGRect) {

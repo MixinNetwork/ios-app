@@ -88,6 +88,9 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AccountUserDefault.shared.storePinToken(pinToken: pinToken)
             AccountUserDefault.shared.storeToken(token: privateKeyPem)
             AccountAPI.shared.account = account
+            MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
+            TaskDatabase.shared.initDatabase()
+            DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
 
             if account.full_name.isEmpty {
                 UIApplication.logEvent(eventName: AnalyticsEventSignUp)
@@ -112,7 +115,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             sema.wait()
             if CommonUserDefault.shared.hasForceLogout || !backupExist {
                 CommonUserDefault.shared.hasForceLogout = false
-                MixinDatabase.shared.configure(reset: true)
                 UserDAO.shared.updateAccount(account: account)
                 DispatchQueue.main.sync {
                     if account.full_name.isEmpty {

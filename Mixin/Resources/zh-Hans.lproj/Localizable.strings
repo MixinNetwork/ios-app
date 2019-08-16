@@ -513,6 +513,25 @@
 "profile_toast_muted" = "已静音至 %@";
 "profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
 
+// Emergency
+"emergency_view" = "查看紧急联系人";
+"emergency_change" = "修改紧急联系人";
+"emergency_remove" = "删除紧急联系人";
+"emergency_tip_remove" = "确定删除紧急联系人？";
+"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
+"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
+"emergency_tip_link" = "紧急联系人";
+"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
+"emergency_change_number_tip" = "立即更换手机号？";
+"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
+"enable_emergency_contact" = "启用紧急联系人";
+"emergency_confirm" = "确认设置 Mixin ID %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
+
+// Database
+"database_upgrade" = "数据库升级";
+"database_upgrade_tips" = "正在进行数据库升级，请不要强制关闭应用。";
+"database_upgrade_progress" = "升级中...";
+
 // Setting
 "setting_title" = "设置";
 "setting_notification" = "通知";
@@ -580,20 +599,6 @@
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
 "setting_contacts_upload" = "上传手机通讯录";
-
-// Emergency
-"emergency_view" = "查看紧急联系人";
-"emergency_change" = "修改紧急联系人";
-"emergency_remove" = "删除紧急联系人";
-"emergency_tip_remove" = "确定删除紧急联系人？";
-"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
-"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
-"emergency_tip_link" = "紧急联系人";
-"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
-"emergency_change_number_tip" = "立即更换手机号？";
-"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
-"enable_emergency_contact" = "启用紧急联系人";
-"emergency_confirm" = "确认设置 Mixin Id %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
 
 // Notifications
 "notification_reply" = "回复";

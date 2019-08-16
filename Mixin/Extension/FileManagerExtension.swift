@@ -217,7 +217,6 @@ extension FileManager {
 extension FileManager {
 
     private static let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.log")
-    private static var conversations = [String: Conversation]()
 
     func writeLog(log: String, newSection: Bool = false) {
         guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
@@ -236,6 +235,9 @@ extension FileManager {
     }
 
     func writeLog(conversationId: String, log: String, newSection: Bool = false) {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
         guard !conversationId.isEmpty else {
             return
         }

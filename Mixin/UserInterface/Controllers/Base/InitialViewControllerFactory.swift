@@ -17,6 +17,8 @@ func makeInitialViewController() -> UIViewController {
         return RestoreViewController.instance()
     } else if !CryptoUserDefault.shared.isLoaded {
         return SignalLoadingViewController.instance()
+    } else if DatabaseUserDefault.shared.hasUpgradeDatabase() {
+        return DatabaseUpgradeViewController.instance()
     } else {
         return HomeContainerViewController()
     }

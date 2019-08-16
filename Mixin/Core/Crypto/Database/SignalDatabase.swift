@@ -13,23 +13,17 @@ class SignalDatabase: BaseDatabase {
         set { }
     }
 
-    override func configure(reset: Bool = false) {
-        do {
-            database.setSynchronous(isFull: true)
-            try database.run(transaction: {
-                try database.create(of: Identity.self)
-                try database.create(of: PreKey.self)
-                try database.create(of: RatchetSenderKey.self)
-                try database.create(of: SenderKey.self)
-                try database.create(of: Session.self)
-                try database.create(of: SignedPreKey.self)
-                DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
-            })
-        } catch let err as WCDBSwift.Error {
-            UIApplication.traceWCDBError(err)
-        } catch {
-            UIApplication.traceError(error)
-        }
+    func initDatabase() throws {
+        database.setSynchronous(isFull: true)
+        try database.run(transaction: {
+            try database.create(of: Identity.self)
+            try database.create(of: PreKey.self)
+            try database.create(of: RatchetSenderKey.self)
+            try database.create(of: SenderKey.self)
+            try database.create(of: Session.self)
+            try database.create(of: SignedPreKey.self)
+            DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
+        })
     }
 
     func logout() {

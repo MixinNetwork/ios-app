@@ -455,6 +455,7 @@
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
 		DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10709A2049BC3F00E20047 /* MixinDatabase.swift */; };
+		DF10B9DB22E9B7F9005632A5 /* TaskDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */; };
 		DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1148461FED45E200023CAF /* AssetAPI.swift */; };
 		DF114B062020551900EA8F9C /* AppDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B052020551900EA8F9C /* AppDAO.swift */; };
 		DF114B0A20206D3300EA8F9C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B0920206D3300EA8F9C /* App.swift */; };
@@ -657,6 +658,7 @@
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
 		DFD1FBC522FD809700C570D4 /* ContactSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */; };
+		DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */; };
 		DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */; };
 		DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294361FA6EF4500FADAAD /* DateExtension.swift */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
@@ -1201,6 +1203,7 @@
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
 		DF10709A2049BC3F00E20047 /* MixinDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinDatabase.swift; sourceTree = "<group>"; };
+		DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDatabase.swift; sourceTree = "<group>"; };
 		DF1148461FED45E200023CAF /* AssetAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAPI.swift; sourceTree = "<group>"; };
 		DF114B052020551900EA8F9C /* AppDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDAO.swift; sourceTree = "<group>"; };
 		DF114B0920206D3300EA8F9C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -1411,6 +1414,7 @@
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
 		DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSettingViewController.swift; sourceTree = "<group>"; };
+		DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUpgradeViewController.swift; sourceTree = "<group>"; };
 		DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		DFD294361FA6EF4500FADAAD /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
@@ -2126,6 +2130,7 @@
 				DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */,
 				DFD659C520501858000696B0 /* BaseDatabase.swift */,
 				DF10709A2049BC3F00E20047 /* MixinDatabase.swift */,
+				DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */,
 				7B4D112B205BC9160074BF60 /* AddressDAO.swift */,
 				DFF353011FEE532300058453 /* AssetDAO.swift */,
 				7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */,
@@ -2471,6 +2476,7 @@
 				7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
+				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 			);
 			path = Home;
@@ -3472,6 +3478,7 @@
 				7BD69C431FF2753E00758D7C /* GroupView.swift in Sources */,
 				DF503D3A1FECFA5800C008E7 /* SignedPreKeyDAO.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
+				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
 				DF5D9F261F9C79E10036D5FD /* StringExtension.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				273FACBC205FB9A800513327 /* IdentityKeyStore.swift in Sources */,
@@ -3617,6 +3624,7 @@
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
+				DF10B9DB22E9B7F9005632A5 /* TaskDatabase.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */,

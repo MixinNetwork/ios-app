@@ -7,11 +7,6 @@ class BaseDatabase {
 
     internal init() {
         trace()
-        configure()
-    }
-
-    func configure(reset: Bool = false) {
-
     }
 
     func close() {
@@ -83,6 +78,10 @@ class BaseDatabase {
     
     func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = []) -> [T] {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
+    }
+
+    func getCodables<T: BaseCodable>(offset: Offset, limit: Limit) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, limit: limit, offset: offset)
     }
     
     func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {

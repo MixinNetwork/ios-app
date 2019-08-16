@@ -70,7 +70,7 @@ enum GroupIconMaker {
             for fragment in fragments {
                 fragment.draw(in: canvasRect)
             }
-            drawSeparatorLine(number: avatars.count)
+            drawSeparatorLine(number: avatars.count, in: canvasRect)
         })
     }
     
@@ -358,7 +358,7 @@ enum GroupIconMaker {
         return faces[0].bounds
     }
     
-    private static func drawSeparatorLine(number: Int) {
+    private static func drawSeparatorLine(number: Int, in rect: CGRect) {
         guard [2, 3, 4].contains(number) else {
             return
         }
@@ -368,7 +368,7 @@ enum GroupIconMaker {
         guard let image = UIImage(contentsOfFile: url.path) else {
             return
         }
-        image.draw(at: .zero)
+        image.draw(in: rect)
     }
     
 }

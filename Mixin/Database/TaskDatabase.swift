@@ -14,7 +14,6 @@ class TaskDatabase: BaseDatabase {
 
     func initDatabase() {
         _database = Database(withPath: MixinFile.taskDatabaseURL.path)
-        database.setSynchronous(isFull: true)
         do {
             try database.run(transaction: {
                 try database.create(of: MessageBlaze.self)

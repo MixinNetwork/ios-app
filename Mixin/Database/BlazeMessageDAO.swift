@@ -10,11 +10,8 @@ final class BlazeMessageDAO {
         return TaskDatabase.shared.isExist(type: MessageBlaze.self, condition: MessageBlaze.Properties.messageId == data.messageId)
     }
 
-    func insertOrReplace(messageId: String, data: String?, createdAt: String) -> Bool {
-        guard let data = data?.data(using: .utf8) else {
-            return false
-        }
-        return TaskDatabase.shared.insertOrReplace(objects: [MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)])
+    func insertOrReplace(messageId: String, conversationId: String, data: Data, createdAt: String) -> Bool {
+        return TaskDatabase.shared.insertOrReplace(objects: [MessageBlaze(messageId: messageId, conversationId: conversationId, message: data, createdAt: createdAt)])
     }
 
     func getCount() -> Int {

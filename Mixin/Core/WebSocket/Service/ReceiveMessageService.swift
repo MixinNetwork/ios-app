@@ -16,37 +16,39 @@ class ReceiveMessageService: MixinService {
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
 
-    func receiveMessage(blazeMessage: BlazeMessage, rawData: Data) {
+    func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
-            guard let data = blazeMessage.toBlazeMessageData() else {
+            guard let data = blazeMessage.data?.data(using: .utf8), let blazeMessageData = try? self.jsonDecoder.decode(BlazeMessageData.self, from: data) else {
                 return
             }
+            let messageId = blazeMessageData.messageId
+            let status = blazeMessageData.status
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
-                MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: data.messageId, status: data.status)
-                CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
+                MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status)
+                SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: status)
+                CryptoUserDefault.shared.statusOffset = blazeMessageData.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
-                if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
-                    MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                    SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: data.messageId, status: data.status)
+                if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty {
+                    MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status)
+                    SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: status)
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
+                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
             } else if blazeMessage.action == BlazeMessageAction.createSessionMessage.rawValue {
-                if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty && data.sessionId == AccountAPI.shared.accountSessionId {
+                if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty && blazeMessageData.sessionId == AccountAPI.shared.accountSessionId {
 
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
+                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
             } else {
-                ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+                ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: messageId, status: .READ)
             }
         }
     }

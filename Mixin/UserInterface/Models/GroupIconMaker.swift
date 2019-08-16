@@ -22,10 +22,12 @@ enum GroupIconMaker {
         var avatars = [AvatarRepresentation]()
         let semaphore = DispatchSemaphore(value: 0)
         for participant in participants {
+            var isSucceed = false
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
                 SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil, completed: { (image, _, error, _, _, _) in
-                    if let image = image {
+                    if error == nil, let image = image {
                         avatars.append(.image(image))
+                        isSucceed = true
                     }
                     semaphore.signal()
                 })
@@ -35,7 +37,11 @@ enum GroupIconMaker {
                 if let background = UIImage(named: "AvatarBackground/color\(colorIndex)"), let firstLetter = participant.userFullName.first {
                     let name = String([firstLetter]).uppercased()
                     avatars.append(.composed(background: background, name: name))
+                    isSucceed = true
                 }
+            }
+            if !isSucceed {
+                return nil
             }
             if avatars.count == 4 {
                 break

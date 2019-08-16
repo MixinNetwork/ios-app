@@ -34,7 +34,7 @@ final class ParticipantDAO {
     WHERE p.conversation_id = ?
     ORDER BY p.created_at DESC
     """
-    private static let sqlQueryGroupIconParticipants = """
+    static let sqlQueryGroupIconParticipants = """
     SELECT u.user_id as userId, u.identity_number as userIdentityNumber, u.full_name as userFullName, u.avatar_url as userAvatarUrl, p.role, p.conversation_id as conversationId
     FROM participants p
     INNER JOIN users u ON u.user_id = p.user_id

@@ -76,7 +76,8 @@ enum ReportErrorCode: Int {
     case signalDatabaseResetFailed = 100016
     case databaseCorrupted = 100017
     case appUpgradeError = 100020
-
+    case loadAvatar = 100021
+    
     var errorName: String {
         switch self {
         case .logoutError:
@@ -117,6 +118,8 @@ enum ReportErrorCode: Int {
             return "databaseCorrupted"
         case .appUpgradeError:
             return "appUpgradeError"
+        case .loadAvatar:
+            return "loadAvatar"
         }
     }
 }

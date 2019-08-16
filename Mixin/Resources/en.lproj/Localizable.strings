@@ -99,7 +99,7 @@
 "clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
 
 // Login
-"navigation_title_select_country" = "Select a Country";
+"navigation_title_select_country" = "Select a Country or Region";
 "navigation_title_enter_mobile_number" = "Enter your phone number";
 "navigation_title_enter_verification_code" = "Enter the 4-digit code sent to you at %@";
 "navigation_title_enter_name" = "What's your name?";

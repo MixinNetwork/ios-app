@@ -99,7 +99,7 @@
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // Login
-"navigation_title_select_country" = "选择一个国家";
+"navigation_title_select_country" = "选择一个国家或地区";
 "navigation_title_enter_mobile_number" = "输入你的手机号码";
 "navigation_title_enter_verification_code" = "请输入发送至以下号码的4位验证码： %@";
 "navigation_title_enter_name" = "名字";

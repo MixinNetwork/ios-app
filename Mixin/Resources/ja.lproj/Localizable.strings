@@ -95,7 +95,7 @@
 "clock_skew_tips" = "修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
 
 // Login
-"navigation_title_select_country" = "国を選択";
+"navigation_title_select_country" = "国または地域を選択";
 "navigation_title_enter_mobile_number" = "電話番号を入力してください";
 "navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください";
 "navigation_title_enter_name" = "お名前は何ですか？";

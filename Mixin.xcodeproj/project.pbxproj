@@ -50,6 +50,9 @@
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
+		7B03987D230403D500D365FD /* separator_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B03987A230403D400D365FD /* separator_3.png */; };
+		7B0398822304094200D365FD /* separator_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B0398802304094200D365FD /* separator_2.png */; };
+		7B0398832304094200D365FD /* separator_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B0398812304094200D365FD /* separator_4.png */; };
 		7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB722684242004F8F04 /* AssetSearchResult.swift */; };
 		7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB922684F51004F8F04 /* SearchResult.swift */; };
 		7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */; };
@@ -180,6 +183,7 @@
 		7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595352226736BD00D59DB4 /* SearchHeaderView.swift */; };
 		7B595358226749A100D59DB4 /* PeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595356226749A100D59DB4 /* PeerCell.swift */; };
 		7B595359226749A100D59DB4 /* PeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B595357226749A100D59DB4 /* PeerCell.xib */; };
+		7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5A748E230274E200C6107E /* GroupIconMaker.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -779,6 +783,9 @@
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
+		7B03987A230403D400D365FD /* separator_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_3.png; sourceTree = "<group>"; };
+		7B0398802304094200D365FD /* separator_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_2.png; sourceTree = "<group>"; };
+		7B0398812304094200D365FD /* separator_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator_4.png; sourceTree = "<group>"; };
 		7B04FAB722684242004F8F04 /* AssetSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSearchResult.swift; sourceTree = "<group>"; };
 		7B04FAB922684F51004F8F04 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputViewController.swift; sourceTree = "<group>"; };
@@ -908,6 +915,7 @@
 		7B595352226736BD00D59DB4 /* SearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeaderView.swift; sourceTree = "<group>"; };
 		7B595356226749A100D59DB4 /* PeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerCell.swift; sourceTree = "<group>"; };
 		7B595357226749A100D59DB4 /* PeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerCell.xib; sourceTree = "<group>"; };
+		7B5A748E230274E200C6107E /* GroupIconMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconMaker.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1804,6 +1812,7 @@
 				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
+				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2411,6 +2420,9 @@
 				DF8CECFF1FC58DBD00E40064 /* InfoPlist.strings */,
 				7B833E9A22C4AEB90063929D /* ic_app_loading@2x.webp */,
 				7B833E9B22C4AEB90063929D /* ic_app_loading@3x.webp */,
+				7B0398802304094200D365FD /* separator_2.png */,
+				7B03987A230403D400D365FD /* separator_3.png */,
+				7B0398812304094200D365FD /* separator_4.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2861,6 +2873,7 @@
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */,
 				DF1BD0B42292AF2900EBDC22 /* Fabric */,
+				776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2929,6 +2942,7 @@
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
+				7B0398822304094200D365FD /* separator_2.png in Resources */,
 				DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
@@ -2949,6 +2963,7 @@
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
+				7B0398832304094200D365FD /* separator_4.png in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
@@ -2965,6 +2980,7 @@
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
+				7B03987D230403D500D365FD /* separator_3.png in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
@@ -3005,6 +3021,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleMobileVision/GoogleMVFaceDetectorResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A4B665A98EE2333D67BFCC9D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3070,7 +3104,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3470,6 +3504,7 @@
 				27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */,
 				7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */,
 				7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */,
+				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,

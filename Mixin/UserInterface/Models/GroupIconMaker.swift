@@ -35,6 +35,10 @@ enum GroupIconMaker {
                     if error == nil, let image = image {
                         avatars.append(.image(image))
                         isSucceed = true
+                    } else {
+                        let userInfo = ["url": url.absoluteString,
+                                        "error": error?.localizedDescription ?? "(null)"]
+                        UIApplication.traceError(code: .loadAvatar, userInfo: userInfo)
                     }
                     semaphore.signal()
                 })

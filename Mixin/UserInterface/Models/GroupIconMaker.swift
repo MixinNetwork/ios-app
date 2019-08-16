@@ -3,6 +3,8 @@ import SDWebImage
 
 enum GroupIconMaker {
     
+    static let fallback = R.image.ic_conversation_group()!
+    
     private enum AvatarRepresentation {
         case image(UIImage)
         case composed(background: UIImage, name: String)

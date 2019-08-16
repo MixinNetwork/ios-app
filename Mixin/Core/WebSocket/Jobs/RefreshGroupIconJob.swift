@@ -31,12 +31,11 @@ class RefreshGroupIconJob: AsynchronousJob {
         }
 
         do {
-            if let groupImage = GroupIconMaker.make(participants: participants) {
-                try? FileManager.default.removeItem(atPath: imageUrl.path)
-                if let data = groupImage.pngData() {
-                    try data.write(to: imageUrl)
-                    updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
-                }
+            let groupImage = GroupIconMaker.make(participants: participants) ?? GroupIconMaker.fallback
+            try? FileManager.default.removeItem(atPath: imageUrl.path)
+            if let data = groupImage.pngData() {
+                try data.write(to: imageUrl)
+                updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             }
         } catch {
             UIApplication.traceError(error)

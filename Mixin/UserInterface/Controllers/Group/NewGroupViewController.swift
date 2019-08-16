@@ -76,10 +76,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
         }
         participants.insert(ParticipantUser.createParticipantUser(conversationId: conversationId, account: account), at: 0)
         DispatchQueue.global().async { [weak self] in
-            guard let groupImage = GroupIconMaker.make(participants: participants) else {
-                return
-            }
-            
+            let groupImage = GroupIconMaker.make(participants: participants) ?? GroupIconMaker.fallback
             DispatchQueue.main.async {
                 self?.groupImageView.image = groupImage
             }

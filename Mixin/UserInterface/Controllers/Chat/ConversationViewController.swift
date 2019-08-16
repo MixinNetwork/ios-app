@@ -931,8 +931,7 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
             return
         }
         let appButton = appButtons[index]
-        let action = appButton.action.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? appButton.action
-        if let url = URL(string: action) {
+        if !appButton.action.isEmpty, let url = URL(string: appButton.action) {
             open(url: url)
         }
     }

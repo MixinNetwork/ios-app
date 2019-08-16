@@ -29,12 +29,11 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyDatabaseVersion)
-            session.synchronize()
         }
     }
 
     func hasUpgradeDatabase() -> Bool {
-        guard mixinDatabaseVersion > 0 else {
+        guard mixinDatabaseVersion > 0 || databaseVersion > 0 else {
             databaseVersion = currentDatabaseVersion
             return false
         }
@@ -47,7 +46,6 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyMixinDatabaseVersion)
-            session.synchronize()
         }
     }
 
@@ -57,7 +55,6 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyTaskDatabaseVersion)
-            session.synchronize()
         }
     }
 
@@ -67,7 +64,6 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keySignalDatabaseVersion)
-            session.synchronize()
         }
     }
 
@@ -77,7 +73,6 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyUpgradeStickers)
-            session.synchronize()
         }
     }
 

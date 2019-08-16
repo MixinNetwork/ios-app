@@ -12,10 +12,8 @@ class MixinDatabase: BaseDatabase {
         set { }
     }
 
-    func initDatabase() {
+    func initDatabase(clearSentSenderKey: Bool = false) {
         _database = Database(withPath: MixinFile.databaseURL.path)
-        database.setSynchronous(isFull: true)
-        
         do {
             try database.run(transaction: {
                 let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
@@ -46,6 +44,9 @@ class MixinDatabase: BaseDatabase {
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
+                if clearSentSenderKey {
+                    try database.delete(fromTable: SentSenderKey.tableName)
+                }
                 DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
             })
         } catch let err as WCDBSwift.Error {

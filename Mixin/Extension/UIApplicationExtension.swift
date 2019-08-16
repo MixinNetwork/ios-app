@@ -55,6 +55,9 @@ extension UIApplication {
     }
 
     static func traceWCDBError(_ error: WCDBSwift.Error) {
+        #if DEBUG
+        print(error)
+        #endif
         var userInfo = [String: Any]()
         userInfo["operationValue"] = error.operationValue ?? ""
         userInfo["extendedCode"] = error.extendedCode ?? ""

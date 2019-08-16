@@ -88,8 +88,9 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AccountUserDefault.shared.storePinToken(pinToken: pinToken)
             AccountUserDefault.shared.storeToken(token: privateKeyPem)
             AccountAPI.shared.account = account
-            MixinDatabase.shared.initDatabase()
+            MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
             TaskDatabase.shared.initDatabase()
+            DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
 
             if account.full_name.isEmpty {
                 UIApplication.logEvent(eventName: AnalyticsEventSignUp)

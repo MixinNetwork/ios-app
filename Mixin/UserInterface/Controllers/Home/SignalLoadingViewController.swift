@@ -14,7 +14,7 @@ class SignalLoadingViewController: UIViewController {
             try! SignalDatabase.shared.initDatabase()
             IdentityDAO.shared.saveLocalIdentity()
 
-            MixinDatabase.shared.deleteAll(table: SentSenderKey.tableName)
+            
 
             repeat {
                 switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {

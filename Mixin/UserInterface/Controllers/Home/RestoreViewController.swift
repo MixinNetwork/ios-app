@@ -59,7 +59,7 @@ class RestoreViewController: UIViewController {
                 self.updateProgressLabel(progress: 0.3)
                 try self.restorePhotosAndAudios(backupDir: backupDir)
 
-                MixinDatabase.shared.initDatabase()
+                MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
                 AccountUserDefault.shared.hasRestoreChat = false
                 DispatchQueue.main.async {
                     AppDelegate.current.window?.rootViewController = makeInitialViewController()

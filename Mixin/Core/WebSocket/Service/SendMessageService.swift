@@ -40,33 +40,27 @@ class SendMessageService: MixinService {
         msg.userId = account.user_id
         msg.status = MessageStatus.SENDING.rawValue
 
+        var isSignalMessage = isGroupMessage
         if !isGroupMessage {
-            if let user = ownerUser {
-                if user.isBot {
-                    switch msg.category {
-                    case MessageCategory.SIGNAL_TEXT.rawValue:
-                        msg.category = MessageCategory.PLAIN_TEXT.rawValue
-                    case MessageCategory.SIGNAL_DATA.rawValue:
-                        msg.category = MessageCategory.PLAIN_DATA.rawValue
-                    case MessageCategory.SIGNAL_IMAGE.rawValue:
-                        msg.category = MessageCategory.PLAIN_IMAGE.rawValue
-                    case MessageCategory.SIGNAL_STICKER.rawValue:
-                        msg.category = MessageCategory.PLAIN_STICKER.rawValue
-                    case MessageCategory.SIGNAL_CONTACT.rawValue:
-                        msg.category = MessageCategory.PLAIN_CONTACT.rawValue
-                    case MessageCategory.SIGNAL_VIDEO.rawValue:
-                        msg.category = MessageCategory.PLAIN_VIDEO.rawValue
-                    case MessageCategory.SIGNAL_LIVE.rawValue:
-                        msg.category = MessageCategory.PLAIN_LIVE.rawValue
-                    case MessageCategory.SIGNAL_AUDIO.rawValue:
-                        msg.category = MessageCategory.PLAIN_AUDIO.rawValue
-                    default:
-                        break
-                    }
-                }
-            } else {
-                UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: ["error": "owner is nil"])
-            }
+            isSignalMessage = !(ownerUser?.isBot ?? true)
+        }
+
+        if msg.category.hasSuffix("_TEXT") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_TEXT.rawValue :  MessageCategory.PLAIN_TEXT.rawValue
+        } else if msg.category.hasSuffix("_IMAGE") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue :  MessageCategory.PLAIN_IMAGE.rawValue
+        } else if msg.category.hasSuffix("_VIDEO") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_VIDEO.rawValue :  MessageCategory.PLAIN_VIDEO.rawValue
+        } else if msg.category.hasSuffix("_DATA") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue :  MessageCategory.PLAIN_DATA.rawValue
+        } else if msg.category.hasSuffix("_STICKER") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_STICKER.rawValue :  MessageCategory.PLAIN_STICKER.rawValue
+        } else if msg.category.hasSuffix("_CONTACT") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_CONTACT.rawValue :  MessageCategory.PLAIN_CONTACT.rawValue
+        } else if msg.category.hasSuffix("_AUDIO") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue :  MessageCategory.PLAIN_AUDIO.rawValue
+        } else if msg.category.hasSuffix("_LIVE") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_LIVE.rawValue :  MessageCategory.PLAIN_LIVE.rawValue
         }
 
         if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {

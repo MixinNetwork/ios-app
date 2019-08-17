@@ -230,7 +230,7 @@ class SendMessageService: MixinService {
             guard UIApplication.shared.applicationState == .active else {
                 return
             }
-            DispatchQueue.global().async {
+            SendMessageService.shared.saveDispatchQueue.async {
                 let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0
                 let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000

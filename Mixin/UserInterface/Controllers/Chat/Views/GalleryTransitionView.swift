@@ -103,6 +103,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         guard let item = viewController.item, let superview = superview else {
             return
         }
+        imageWrapperView.aspectRatio = item.size
         imageView.image = viewController.image
         if let controller = viewController as? GalleryImageItemViewController {
             var size = controller.imageView.bounds.size

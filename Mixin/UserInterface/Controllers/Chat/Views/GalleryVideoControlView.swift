@@ -16,6 +16,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     }
     
     @IBOutlet weak var visualControlWrapperView: UIView!
+    @IBOutlet weak var visualControlBackgroundImageView: UIImageView!
     @IBOutlet weak var pipButton: UIButton!
     @IBOutlet weak var liveBadgeView: UIImageView!
     @IBOutlet weak var closeButton: UIButton!
@@ -101,6 +102,8 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
             || style.contains(.pip)
             || style.contains(.liveStream)
         timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
+        
+        visualControlBackgroundImageView.alpha = style.contains(.pip) ? 0 : 1
         
         let constraints = [
             visualControlLeadingConstraint,

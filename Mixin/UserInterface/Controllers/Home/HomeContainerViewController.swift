@@ -2,6 +2,8 @@ import UIKit
 
 class HomeContainerViewController: UIViewController {
     
+    var pipController: GalleryVideoItemViewController?
+    
     let homeNavigationController: HomeNavigationController = {
         let home = R.storyboard.home.home()!
         return HomeNavigationController(rootViewController: home)
@@ -21,13 +23,13 @@ class HomeContainerViewController: UIViewController {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
+    private(set) var isShowingGallery = false
+    
     private var galleryIsOnTopMost: Bool {
         return isShowingGallery
             && galleryViewController.parent != nil
             && galleryViewController.parent == homeNavigationController.viewControllers.last
     }
-    
-    private var isShowingGallery = false
     
     override func viewDidLoad() {
         super.viewDidLoad()

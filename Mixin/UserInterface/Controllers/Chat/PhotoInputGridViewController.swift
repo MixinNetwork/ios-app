@@ -129,7 +129,7 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         if firstCellIsCamera && indexPath.item == 0 {
-            GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+            UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
             conversationViewController?.imagePickerController.presentCamera()
         } else if let asset = asset(at: indexPath) {
             let vc = R.storyboard.chat.media_preview()!

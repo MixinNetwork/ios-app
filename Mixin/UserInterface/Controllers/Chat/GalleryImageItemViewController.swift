@@ -44,6 +44,10 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         return imageView.image
     }
     
+    override var isReusable: Bool {
+        return parent == nil
+    }
+    
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
     }

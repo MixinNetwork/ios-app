@@ -6,10 +6,15 @@ class MixinDatabase: BaseDatabase {
 
     static let shared = MixinDatabase()
 
-    private lazy var _database = Database(withPath: MixinFile.databaseURL.path)
+    private var _database = Database(withPath: MixinFile.databaseURL.path)
     override var database: Database! {
         get { return _database }
         set { }
+    }
+
+    override init() {
+        super.init()
+        database.setTokenizes(.WCDB)
     }
 
     func initDatabase(clearSentSenderKey: Bool = false) {

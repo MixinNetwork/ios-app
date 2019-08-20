@@ -14,7 +14,9 @@ class MixinDatabase: BaseDatabase {
 
     func initDatabase(clearSentSenderKey: Bool = false) {
         _database = Database(withPath: MixinFile.databaseURL.path)
+        database.setTokenizes(.WCDB)
         do {
+            try database.create(virtualTable: MessageFTS.tableName, of: MessageFTS.self)
             try database.run(transaction: {
                 let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
                 try self.createBefore(database: database, currentVersion: currentVersion)

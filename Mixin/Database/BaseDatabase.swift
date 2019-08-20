@@ -80,8 +80,8 @@ class BaseDatabase {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
 
-    func getCodables<T: BaseCodable>(offset: Offset, limit: Limit) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, limit: limit, offset: offset)
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset, limit: Limit) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, limit: limit, offset: offset)
     }
     
     func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {

@@ -489,6 +489,7 @@
 		DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */; };
 		DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF2081B12005FF3500B87DB0 /* Camera.storyboard */; };
 		DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22092F1FFFE96500D470EF /* SessionRequest.swift */; };
+		DF22650F230A4E3F00FEF1D6 /* MessageFTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22650E230A4E3F00FEF1D6 /* MessageFTS.swift */; };
 		DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */; };
 		DF22D94D1FDE500500243CAE /* SystemConversationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94C1FDE500500243CAE /* SystemConversationData.swift */; };
 		DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF233CE02202F5BE005F2FD1 /* UserSession.swift */; };
@@ -1237,6 +1238,7 @@
 		DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJobQueue.swift; sourceTree = "<group>"; };
 		DF2081B12005FF3500B87DB0 /* Camera.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		DF22092F1FFFE96500D470EF /* SessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
+		DF22650E230A4E3F00FEF1D6 /* MessageFTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageFTS.swift; sourceTree = "<group>"; };
 		DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlainData.swift; sourceTree = "<group>"; };
 		DF22D94C1FDE500500243CAE /* SystemConversationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemConversationData.swift; sourceTree = "<group>"; };
 		DF233CE02202F5BE005F2FD1 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
@@ -2792,6 +2794,7 @@
 				DFF352FF1FEE516F00058453 /* Asset.swift */,
 				DFF70F612079FC4900A5FA8B /* AssetItem.swift */,
 				DF3C474F1FA18EE900A07C71 /* Message.swift */,
+				DF22650E230A4E3F00FEF1D6 /* MessageFTS.swift */,
 				DF65AAF2205122A3004E3459 /* MessageBlaze.swift */,
 				DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */,
 				DF17B50B2052433B006447C2 /* MessageItem.swift */,
@@ -3110,7 +3113,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3623,6 +3626,7 @@
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
+				DF22650F230A4E3F00FEF1D6 /* MessageFTS.swift in Sources */,
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
 				DF10B9DB22E9B7F9005632A5 /* TaskDatabase.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,

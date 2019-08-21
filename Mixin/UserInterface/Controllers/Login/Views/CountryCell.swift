@@ -1,13 +1,8 @@
 import UIKit
 
-class CountryCell: UITableViewCell {
+class CountryCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var flagImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
-    }
     
 }

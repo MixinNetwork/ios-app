@@ -2,20 +2,19 @@ import UIKit
 
 class ConversationSettingViewController: UITableViewController {
     
-    @IBOutlet weak var messageSourceEverybodyCell: UITableViewCell!
+    @IBOutlet weak var messageSourceEverybodyCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var messageSourceEverybodyIndicator: ActivityIndicatorView!
     @IBOutlet weak var messageSourceEverybodyCheckmarkView: CheckmarkView!
-    @IBOutlet weak var messageSourceContactsCell: UITableViewCell!
+    @IBOutlet weak var messageSourceContactsCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var messageSourceContactsIndicator: ActivityIndicatorView!
     @IBOutlet weak var messageSourceContactsCheckmarkView: CheckmarkView!
-    @IBOutlet weak var conversationSourceEverybodyCell: UITableViewCell!
+    @IBOutlet weak var conversationSourceEverybodyCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var conversationSourceEverybodyIndicator: ActivityIndicatorView!
     @IBOutlet weak var conversationSourceEverybodyCheckmarkView: CheckmarkView!
-    @IBOutlet weak var conversationSourceContactsCell: UITableViewCell!
+    @IBOutlet weak var conversationSourceContactsCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var conversationSourceContactsIndicator: ActivityIndicatorView!
     @IBOutlet weak var conversationSourceContactsCheckmarkView: CheckmarkView!
     
-    @IBOutlet var cells: [UITableViewCell]!
     @IBOutlet var checkmarkViews: [CheckmarkView]!
     
     private let footerReuseId = "footer"
@@ -27,9 +26,6 @@ class ConversationSettingViewController: UITableViewController {
         checkmarkViews.forEach {
             $0.status = .selected
             $0.alpha = 0
-        }
-        cells.forEach {
-            $0.selectedBackgroundView = UIView.createSelectedBackgroundView()
         }
         if let account = AccountAPI.shared.account {
             switch account.receive_message_source {

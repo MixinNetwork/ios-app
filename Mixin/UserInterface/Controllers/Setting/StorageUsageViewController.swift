@@ -1,16 +1,11 @@
 import Foundation
 import UIKit
 
-class StorageUsageCell: UITableViewCell {
+class StorageUsageCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sizeLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
-    }
     
 }
 

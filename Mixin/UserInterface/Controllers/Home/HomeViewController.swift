@@ -90,17 +90,8 @@ class HomeViewController: UIViewController {
         }
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
-
-        DispatchQueue.global().async {
-            MixinDatabase.shared.initDatabase()
-            MixinDatabase.shared.transaction(callback: { (db) in
-                let s1 = try db.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(message_id, user_id, conversation_id, content) SELECT id, user_id, conversation_id, content FROM messages WHERE category like '%_TEXT' AND status != 'FAILED'")
-
-                let s2 = try db.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(message_id, user_id, conversation_id, name) SELECT id, user_id, conversation_id, name FROM messages WHERE category like '%_DATA' AND status != 'FAILED'")
-
-                try s1.execute()
-                try s2.execute()
-            })
+        if !DatabaseUserDefault.shared.initiatedFTS {
+            ConcurrentJobQueue.shared.addJob(job: FTSJob())
         }
     }
     

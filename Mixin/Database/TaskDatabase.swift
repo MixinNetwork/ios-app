@@ -17,7 +17,7 @@ class TaskDatabase: BaseDatabase {
         do {
             try database.run(transaction: {
                 try database.create(of: MessageBlaze.self)
-                DatabaseUserDefault.shared.taskDatabaseVersion = TaskDatabase.databaseVersion
+                try database.setDatabaseVersion(version: TaskDatabase.databaseVersion)
             })
         } catch let err as WCDBSwift.Error {
             UIApplication.traceWCDBError(err)

@@ -105,7 +105,7 @@ final class MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m
         LEFT JOIN users u ON m.user_id = u.user_id
-        WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND content MATCH ? OR name MATCH ?)
+        WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND (content MATCH ? OR name MATCH ?))
     """
     
     static let sqlQueryGalleryItem = """
@@ -138,6 +138,8 @@ final class MessageDAO {
                           on: [Conversation.Properties.unseenMessageCount],
                           with: [0],
                           where: Conversation.Properties.conversationId == conversationId)
+            try db.delete(fromTable: MessageFTS.tableName,
+                          where: MessageFTS.Properties.conversationId == conversationId)
         }
         if autoNotification {
             let change = ConversationChange(conversationId: conversationId, action: .reload)
@@ -438,7 +440,11 @@ final class MessageDAO {
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
-        
+
+        if message.status != MessageStatus.FAILED.rawValue {
+            try insertMessageFTS(database: database, messageId: message.messageId, category: message.category)
+        }
+
         guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
             return
         }
@@ -464,6 +470,11 @@ final class MessageDAO {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
+
+        if category.hasSuffix("_TEXT") || category.hasSuffix("_DATA") {
+            try removeMessageFTS(database: database, messageId: messageId)
+        }
+
         if category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
@@ -515,7 +526,15 @@ final class MessageDAO {
     
     @discardableResult
     func deleteMessage(id: String) -> Bool {
-        return MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.messageId == id) > 0
+        var deleteCount = 0
+        MixinDatabase.shared.transaction { (db) in
+            try self.removeMessageFTS(database: db, messageId: id)
+
+            let delete = try db.prepareDelete(fromTable: Message.tableName).where(Message.Properties.messageId == id)
+            try delete.execute()
+            deleteCount = delete.changes ?? 0
+        }
+        return deleteCount > 0
     }
 
     func hasSentMessage(toUserId userId: String) -> Bool {
@@ -546,7 +565,7 @@ final class MessageDAO {
 
 extension MessageDAO {
 
-    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
@@ -554,6 +573,8 @@ extension MessageDAO {
             guard updateStatment.changes ?? 0 > 0 else {
                 return
             }
+
+            try self.insertMessageFTS(database: database, messageId: messageId, category: category)
 
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
@@ -571,11 +592,11 @@ extension MessageDAO {
         }
     }
 
-    func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateMessageContentAndStatus(content: String, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
 
-    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
+    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, category: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
         updateRedecryptMessage(keys: [
             Message.Properties.content,
             Message.Properties.mediaMimeType,
@@ -604,10 +625,10 @@ extension MessageDAO {
             mediaData.waveform,
             mediaData.name,
             status
-        ], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+            ], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
     
-    func updateLiveMessage(liveData: TransferLiveData, status: String, messageId: String, conversationId: String, messageSource: String) {
+    func updateLiveMessage(liveData: TransferLiveData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
         let keys = [
             Message.Properties.mediaWidth,
             Message.Properties.mediaHeight,
@@ -622,15 +643,30 @@ extension MessageDAO {
             liveData.thumbUrl,
             status
         ]
-        updateRedecryptMessage(keys: keys, values: values, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: keys, values: values, messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
     
-    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
 
-    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
+    }
+
+}
+
+extension MessageDAO {
+
+    func insertMessageFTS(database: Database, messageId: String, category: String) throws {
+        guard category.hasSuffix("_TEXT") || category.hasSuffix("_DATA") else {
+            return
+        }
+        try database.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(docid, message_id, conversation_id, content, name) SELECT rowid, id, conversation_id, content, name FROM messages WHERE id = ?").execute(with: [messageId])
+    }
+
+    func removeMessageFTS(database: Database, messageId: String) throws {
+        try database.prepareUpdateSQL(sql: "DELETE FROM fts_messages WHERE docid = (SELECT ROWID FROM messages WHERE id = ?)").execute(with: [messageId])
     }
 
 }

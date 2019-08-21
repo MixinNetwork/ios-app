@@ -13,8 +13,12 @@ class DatabaseUpgradeViewController: UIViewController {
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
             let currentVersion = DatabaseUserDefault.shared.databaseVersion
-            if currentVersion < 1 {
+            if currentVersion < 2 {
                 TaskDatabase.shared.initDatabase()
+                MixinDatabase.shared.initDatabase()
+
+                DatabaseUserDefault.shared.initiatedFTS = false
+                ConcurrentJobQueue.shared.addJob(job: FTSJob())
             }
 
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion

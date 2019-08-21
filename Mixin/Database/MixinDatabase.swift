@@ -23,8 +23,12 @@ class MixinDatabase: BaseDatabase {
         do {
             try database.create(virtualTable: MessageFTS.tableName, of: MessageFTS.self)
             try database.run(transaction: {
-                let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                var currentVersion = try database.getDatabaseVersion()
+                if currentVersion == 0 {
+                    currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                }
                 try self.createBefore(database: database, currentVersion: currentVersion)
+                try self.prepareFTS(database: database, currentVersion: currentVersion)
 
                 try database.create(of: Asset.self)
                 try database.create(table: Asset.topAssetsTableName, of: Asset.self)
@@ -54,12 +58,20 @@ class MixinDatabase: BaseDatabase {
                 if clearSentSenderKey {
                     try database.delete(fromTable: SentSenderKey.tableName)
                 }
-                DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
+                try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
         } catch let err as WCDBSwift.Error {
             UIApplication.traceWCDBError(err)
         } catch {
             UIApplication.traceError(error)
+        }
+    }
+
+    private func prepareFTS(database: Database, currentVersion: Int) throws {
+        if currentVersion == 0 {
+            DatabaseUserDefault.shared.initiatedFTS = true
+        } else if !(try database.isTableExists(Message.tableName)) {
+            DatabaseUserDefault.shared.initiatedFTS = true
         }
     }
 

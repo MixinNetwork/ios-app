@@ -22,7 +22,7 @@ class SignalDatabase: BaseDatabase {
             try database.create(of: SenderKey.self)
             try database.create(of: Session.self)
             try database.create(of: SignedPreKey.self)
-            DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
+            try database.setDatabaseVersion(version: SignalDatabase.databaseVersion)
         })
     }
 

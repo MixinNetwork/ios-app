@@ -14,8 +14,6 @@ class SignalLoadingViewController: UIViewController {
             try! SignalDatabase.shared.initDatabase()
             IdentityDAO.shared.saveLocalIdentity()
 
-            
-
             repeat {
                 switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
                 case .success:

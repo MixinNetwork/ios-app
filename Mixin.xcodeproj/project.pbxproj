@@ -2664,7 +2664,6 @@
 				DF06D91E222FAE1300FE7FBC /* SendViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
-				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 			);
@@ -2780,6 +2779,7 @@
 				7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */,
 				7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */,
 				DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */,
+				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";

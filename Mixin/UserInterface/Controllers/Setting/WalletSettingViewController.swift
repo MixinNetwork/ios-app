@@ -11,7 +11,7 @@ class WalletSettingViewController: UITableViewController {
     private let footerReuseId = "footer"
 
     class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
+        let vc = R.storyboard.setting.wallet()!
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.wallet_setting())
         return container
     }

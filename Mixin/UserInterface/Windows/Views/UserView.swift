@@ -49,6 +49,7 @@ class UserView: CornerView {
     }()
     private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
     private lazy var qrcodeWindow = QrcodeWindow.instance()
+    private lazy var hud = Hud()
     
     override var canBecomeFirstResponder: Bool {
         return true
@@ -652,7 +653,8 @@ extension UserView: ImagePickerControllerDelegate {
             UIApplication.currentActivity()?.alert(Localized.CONTACT_ERROR_COMPOSE_AVATAR)
             return
         }
-
+        let hud = self.hud
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window!)
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
@@ -660,10 +662,11 @@ extension UserView: ImagePickerControllerDelegate {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-                showAutoHiddenHud(style: .notification, text: Localized.TOAST_CHANGED)
+                hud.set(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                hud.set(style: .error, text: error.localizedDescription)
             }
+            hud.scheduleAutoHidden()
         })
     }
 

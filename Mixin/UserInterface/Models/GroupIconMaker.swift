@@ -143,7 +143,7 @@ enum GroupIconMaker {
                 case 0:
                     let minX = -canvasSize.width / 2
                     let maxX: CGFloat = 0
-                    var x = -faceRect.origin.x + (canvasSize.width - faceRect.width) / 2
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
                     x = max(minX, min(maxX, x))
                     
                     let minY = -canvasSize.height / 2

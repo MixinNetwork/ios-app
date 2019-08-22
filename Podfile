@@ -28,7 +28,7 @@ target 'Mixin' do
   pod 'DeviceGuru'
   pod 'Zip', '~> 1.1.0'
   pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
-  pod 'WCDB.swift', :git => 'git@github.com:MixinNetwork/wcdb.git', :branch => 'swift5'
+  pod 'WCDB.swift', :git => 'git@github.com:MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
   pod 'GiphyCoreSDK'
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'

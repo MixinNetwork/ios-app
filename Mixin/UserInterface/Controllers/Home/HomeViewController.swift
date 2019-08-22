@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import StoreKit
 import UserNotifications
+import WCDBSwift
 
 class HomeViewController: UIViewController {
     
@@ -89,6 +90,9 @@ class HomeViewController: UIViewController {
         }
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+        if !DatabaseUserDefault.shared.initiatedFTS {
+            ConcurrentJobQueue.shared.addJob(job: FTSJob())
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

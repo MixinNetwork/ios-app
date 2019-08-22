@@ -50,6 +50,19 @@ final class ConversationDAO {
         WHERE muteUntil < ?
     )
     """
+    private static let sqlSearchMessages = """
+    SELECT m.conversation_id, c.category,
+    CASE c.category WHEN 'CONTACT' THEN u.full_name ELSE c.name END,
+    CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
+    CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
+    u.is_verified, u.app_id, COUNT(m.conversation_id)
+    FROM messages m
+    LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
+    LEFT JOIN users u ON c.owner_id = u.user_id
+    WHERE m.id in (SELECT message_id FROM fts_messages WHERE content MATCH ? OR name MATCH ?)
+    GROUP BY m.conversation_id
+    ORDER BY c.pin_time DESC, c.last_message_created_at DESC
+    """
 
     func showBadgeNumber() {
         DispatchQueue.global().async {
@@ -166,54 +179,16 @@ final class ConversationDAO {
     }
     
     func getConversation(withMessageLike keyword: String, limit: Int?) -> [MessagesWithinConversationSearchResult] {
-        let keyword = "%\(keyword.sqlEscaped)%"
-        let name = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
-                                   [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
-                                    then: User.Properties.fullName.in(table: User.tableName))],
-                                   else: Conversation.Properties.name.in(table: Conversation.tableName))
-        let iconUrl = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
-                                      [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
-                                        then: User.Properties.avatarUrl.in(table: User.tableName))],
-                                      else: Conversation.Properties.iconUrl.in(table: Conversation.tableName))
-        let userId = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
-                                     [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
-                                        then: User.Properties.userId.in(table: User.tableName))],
-                                     else: LiteralValue(nil))
-        let properties: [ColumnResultConvertible] = [
-            Conversation.Properties.conversationId.in(table: Conversation.tableName),
-            Conversation.Properties.category.in(table: Conversation.tableName),
-            name, iconUrl, userId,
-            User.Properties.isVerified.in(table: User.tableName),
-            User.Properties.appId.in(table: User.tableName),
-            Conversation.Properties.conversationId.in(table: Conversation.tableName).count()
-        ]
-        let joinClause = JoinClause(with: Message.tableName)
-            .join(Conversation.tableName, with: .left)
-            .on(Message.Properties.conversationId.in(table: Message.tableName)
-                == Conversation.Properties.conversationId.in(table: Conversation.tableName))
-            .join(User.tableName, with: .left)
-            .on(Conversation.Properties.ownerId.in(table: Conversation.tableName)
-                == User.Properties.userId.in(table: User.tableName))
-        let messageIsDecrypted = Message.Properties.status.in(table: Message.tableName) != MessageStatus.FAILED.rawValue
-        let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
-            && Message.Properties.content.in(table: Message.tableName).like(keyword, escape: "/")
-        let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
-            && Message.Properties.name.in(table: Message.tableName).like(keyword, escape: "/")
-        let condition = messageIsDecrypted && (textMessageContainsKeyword || dataMessageContainsKeyword)
-        let order = [Conversation.Properties.pinTime.in(table: Conversation.tableName).asOrder(by: .descending),
-                     Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName).asOrder(by: .descending)]
-        var stmt = StatementSelect()
-            .select(properties)
-            .from(joinClause)
-            .where(condition)
-            .group(by: Message.Properties.conversationId.in(table: Message.tableName))
-            .order(by: order)
+        var sql = ConversationDAO.sqlSearchMessages
         if let limit = limit {
-            stmt = stmt.limit(limit)
+            sql += " LIMIT \(limit)"
         }
+        let stmt = StatementSelectSQL(sql: sql)
         return MixinDatabase.shared.getCodables(callback: { (db) -> [MessagesWithinConversationSearchResult] in
             var items = [MessagesWithinConversationSearchResult]()
             let cs = try db.prepare(stmt)
+            cs.bind(keyword, toIndex: 0)
+            cs.bind(keyword, toIndex: 1)
             while try cs.step() {
                 var i = -1
                 var autoIncrement: Int {

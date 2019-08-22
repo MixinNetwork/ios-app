@@ -189,7 +189,7 @@ DEPENDENCIES:
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit
   - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
-  - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `swift5`)"
+  - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `bugfix/fts`)"
   - YYImage/WebP
   - Zip (~> 1.1.0)
 
@@ -245,7 +245,7 @@ EXTERNAL SOURCES:
     :branch: feature/request
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :branch: swift5
+    :branch: bugfix/fts
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 CHECKOUT OPTIONS:
@@ -260,7 +260,7 @@ CHECKOUT OPTIONS:
     :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :commit: d185cfb974326bf301ead1a535a6548ba43c8e08
+    :commit: 41d73ad99ec684f1b505ca27f3e6ce17ba2b0314
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:
@@ -307,6 +307,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 90ddbd3e45b7e65969a0d11a63acd2c137ea73cd
+PODFILE CHECKSUM: a048c20c732d8b5ccf64cb64757ae694b0ff4d80
 
 COCOAPODS: 1.7.5

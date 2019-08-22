@@ -17,6 +17,10 @@ class BaseDatabase {
         try database.backup(withFile: path, progress: progress)
     }
 
+    func getDatabaseVersion() -> Int {
+        return try! database.getDatabaseVersion()
+    }
+
     func trace() {
         guard !BaseDatabase.isTraced else {
             return
@@ -25,7 +29,7 @@ class BaseDatabase {
         #if DEBUG
             Database.globalTrace(ofPerformance: { (tag, sqls, cost) in
                 let millisecond = UInt64(cost) / NSEC_PER_MSEC
-                if millisecond > 100 {
+                if millisecond > 200 {
                     sqls.forEach({ (arg) in
                         print("[WCDB][Performance]SQL: \(arg.key)")
                     })
@@ -80,8 +84,8 @@ class BaseDatabase {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
 
-    func getCodables<T: BaseCodable>(offset: Offset, limit: Limit) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, limit: limit, offset: offset)
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset, limit: Limit) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, limit: limit, offset: offset)
     }
     
     func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
@@ -209,6 +213,18 @@ extension Database {
 
     func isColumnExist(tableName: String, columnName: String) throws -> Bool {
         return try getValue(on: Master.Properties.sql, fromTable: Master.builtinTableName, where: Master.Properties.tableName == tableName && Master.Properties.type == "table").stringValue.contains(columnName)
+    }
+
+}
+
+extension Database {
+
+    func setDatabaseVersion(version: Int) throws {
+        try prepareUpdateSQL(sql: "PRAGMA user_version = \(version)").execute()
+    }
+
+    func getDatabaseVersion() throws -> Int  {
+        return Int(try prepareSelectSQL(sql: "PRAGMA user_version").getValue().int32Value)
     }
 
 }

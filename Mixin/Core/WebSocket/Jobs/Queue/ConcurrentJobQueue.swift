@@ -6,7 +6,7 @@ class ConcurrentJobQueue: JobQueue {
     static let shared = ConcurrentJobQueue()
 
     init() {
-        super.init(maxConcurrentOperationCount: 5)
+        super.init(maxConcurrentOperationCount: 6)
     }
 
     func restoreJobs() {

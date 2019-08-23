@@ -12,14 +12,19 @@ class FTSJob: BaseJob {
         }
 
         var isFinished = false
+        var rowid = MixinDatabase.shared.scalar(sql: "SELECT MIN(rowid) FROM messages WHERE category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA') AND status != 'FAILED' AND rowid not in (SELECT docid FROM fts_messages)").int64Value
 
         repeat {
+            guard !isCancelled else {
+                return
+            }
             MixinDatabase.shared.transaction(callback: { (db) in
-                let docid = MixinDatabase.shared.scalar(sql: "SELECT MAX(docid) FROM fts_messages").int64Value
-                let stmt = try db.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(docid, message_id, conversation_id, content, name) SELECT rowid, id, conversation_id, content, name FROM messages WHERE rowid > ? AND category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA') AND status != 'FAILED' LIMIT 2000")
-                try stmt.execute(with: [docid])
-                if stmt.changes ?? 0 < 2000 {
+                let stmt = try db.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(docid, message_id, conversation_id, content, name) SELECT rowid, id, conversation_id, content, name FROM messages WHERE rowid >= ? AND category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA') AND status != 'FAILED' ORDER BY rowid ASC LIMIT 1000")
+                try stmt.execute(with: [rowid])
+                if stmt.changes ?? 0 < 1000 {
                     isFinished = true
+                } else {
+                    rowid = rowid + 1000
                 }
             })
             Thread.sleep(forTimeInterval: 0.1)

@@ -212,6 +212,9 @@
 		7B75F50E22B775C400619588 /* EmergencySessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
+		7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */; };
+		7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */; };
+		7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */; };
 		7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */; };
 		7B7E7144217D87860052C7DD /* CallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7E7143217D87860052C7DD /* CallView.xib */; };
 		7B7E7146217D89790052C7DD /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E7145217D89790052C7DD /* CallView.swift */; };
@@ -947,6 +950,9 @@
 		7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencySessionRequest.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
+		7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSearchableTableViewController.swift; sourceTree = "<group>"; };
+		7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSearchableTableView.xib; sourceTree = "<group>"; };
+		7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeCell.xib; sourceTree = "<group>"; };
 		7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputViewController.swift; sourceTree = "<group>"; };
 		7B7E7143217D87860052C7DD /* CallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallView.xib; sourceTree = "<group>"; };
 		7B7E7145217D89790052C7DD /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
@@ -1737,6 +1743,7 @@
 				7BFE47E42284530200FC4379 /* PeerHeaderView.swift */,
 				7B2A116022C20F5F00AD029C /* PlayerView.swift */,
 				7B2A115E22C1ECB100AD029C /* RoundedBlurButton.swift */,
+				7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1876,6 +1883,7 @@
 				7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */,
 				7BB6111922BA4179000E758C /* PinValidationView.xib */,
 				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
+				7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2528,6 +2536,7 @@
 		DF8CECF51FC5704D00E40064 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */,
 				DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */,
 				7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */,
 				7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */,
@@ -2973,6 +2982,7 @@
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
+				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
@@ -3018,6 +3028,7 @@
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
+				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
@@ -3797,6 +3808,7 @@
 				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
+				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,

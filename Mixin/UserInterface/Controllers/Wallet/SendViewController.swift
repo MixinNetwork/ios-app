@@ -217,12 +217,10 @@ class SendViewController: KeyboardBasedLayoutViewController {
         guard !assetSwitchImageView.isHidden else {
             return
         }
-        let vc = R.storyboard.chat.transferType()!
+        let vc = TransferTypeViewController()
         vc.delegate = self
         vc.assets = availableAssets
         vc.asset = asset
-        vc.transitioningDelegate = PopupPresentationManager.shared
-        vc.modalPresentationStyle = .custom
         present(vc, animated: true, completion: nil)
     }
     

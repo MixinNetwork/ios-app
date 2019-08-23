@@ -4,38 +4,24 @@ protocol TransferTypeViewControllerDelegate: class {
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
 }
 
-class TransferTypeViewController: UIViewController {
-    
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBoxView: SearchBoxView!
+class TransferTypeViewController: PopupSearchableTableViewController {
     
     weak var delegate: TransferTypeViewControllerDelegate?
     
     var assets = [AssetItem]()
     var asset: AssetItem?
     
-    private let cellReuseId = "transfer_type"
-    
     private var searchResults = [AssetItem]()
-    private var lastKeyword = ""
     
-    private var keywordTextField: UITextField {
-        return searchBoxView.textField
-    }
-    
-    private var keyword: String {
-        return (keywordTextField.text ?? "")
-            .lowercased()
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    private var isSearching: Bool {
-        return !keyword.isEmpty
+    convenience init() {
+        self.init(nib: R.nib.popupSearchableTableView)
+        transitioningDelegate = PopupPresentationManager.shared
+        modalPresentationStyle = .custom
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePreferredContentSizeHeight()
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
         if let assetId = asset?.assetId, let index = assets.firstIndex(where: { $0.assetId == assetId }) {
             var reordered = assets
             let selected = reordered.remove(at: index)
@@ -46,49 +32,17 @@ class TransferTypeViewController: UIViewController {
         self.assets = self.assets.filter({ (asset) -> Bool in
             return hiddenAssets[asset.assetId] == nil
         })
-        tableView.tableFooterView = UIView()
+        tableView.register(R.nib.transferTypeCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
-        keywordTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updatePreferredContentSizeHeight()
-    }
-    
-    @IBAction func cancelAction(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func searchAction(_ sender: Any) {
-        let keyword = self.keyword
-        guard keywordTextField.markedTextRange == nil else {
-            if tableView.isDragging {
-                tableView.reloadData()
-            }
-            return
-        }
-        guard !keyword.isEmpty else {
-            tableView.reloadData()
-            lastKeyword = ""
-            return
-        }
-        guard keyword != lastKeyword else {
-            return
-        }
-        lastKeyword = keyword
+    override func updateSearchResults(keyword: String) {
         searchResults = assets.filter({ (asset) -> Bool in
             asset.symbol.lowercased().contains(keyword)
                 || asset.name.lowercased().contains(keyword)
         })
-        tableView.reloadData()
-    }
-    
-    private func updatePreferredContentSizeHeight() {
-        let window = AppDelegate.current.window
-        preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
     }
     
 }
@@ -100,7 +54,7 @@ extension TransferTypeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! TransferTypeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.transfer_type, for: indexPath)!
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
         if asset.assetId == self.asset?.assetId {
             cell.checkmarkView.status = .selected

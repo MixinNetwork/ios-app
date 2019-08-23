@@ -88,17 +88,15 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if GalleryVideoItemViewController.currentPipController == nil {
-            currentItemViewController?.isFocused = false
-        }
+        currentItemViewController?.isFocused = false
     }
     
     func show(item: GalleryItem, from cell: PhotoRepresentableMessageCell) {
-        if let controller = GalleryVideoItemViewController.currentPipController {
+        if let controller = UIApplication.homeContainerViewController?.pipController {
             if controller.item == item {
                 controller.pipAction()
                 return
-            } else {
+            } else if item.category == .video || item.category == .live {
                 controller.closeAction()
             }
         }
@@ -137,17 +135,24 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             return
         }
         UIApplication.shared.keyWindow?.endEditing(true)
-        delegate?.galleryViewController(self, willShow: item)
-        backgroundView.alpha = 0
-        pageViewController.view.alpha = 0
+        var viewControllerToHide: GalleryItemViewController?
+        if let homeContainer = UIApplication.homeContainerViewController, homeContainer.isShowingGallery {
+            viewControllerToHide = currentItemViewController
+        } else {
+            delegate?.galleryViewController(self, willShow: item)
+            backgroundView.alpha = 0
+            pageViewController.view.alpha = 0
+        }
         animate(animations: {
+            viewControllerToHide?.view.alpha = 0
             self.backgroundView.alpha = 1
         }, completion: {
-            self.pageViewController.view.alpha = 1
             self.delegate?.galleryViewController(self, didShow: item)
+            self.pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+            self.pageViewController.view.alpha = 1
+            viewController.isFocused = true
+            viewControllerToHide?.view.alpha = 1
         })
-        viewController.isFocused = true
-        pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
     }
     
     func dismiss(transitionViewInitialOffsetY: CGFloat) {
@@ -183,10 +188,16 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         })
     }
     
-    func dismissForPip() {
-        guard let item = currentItemViewController?.item else {
+    func dismiss(pipController: GalleryVideoItemViewController) {
+        guard let item = pipController.item, let container = UIApplication.homeContainerViewController else {
             return
         }
+        pageViewController.setViewControllers([UIViewController()], direction: .forward, animated: false, completion: nil)
+        
+        container.addChild(pipController)
+        container.view.addSubview(pipController.view)
+        pipController.didMove(toParent: container)
+        
         animate(animations: {
             self.backgroundView.alpha = 0
         }, completion: {

@@ -27,7 +27,11 @@ class GalleryItemViewController: UIViewController {
     }
     
     var galleryViewController: GalleryViewController? {
-        return parent?.parent as? GalleryViewController
+        return UIApplication.homeContainerViewController?.galleryViewController
+    }
+    
+    var isReusable: Bool {
+        return parent == nil
     }
     
     override func viewDidLoad() {
@@ -41,14 +45,6 @@ class GalleryItemViewController: UIViewController {
         view.addSubview(mediaStatusView)
         mediaStatusView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-        }
-    }
-    
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if parent == nil {
-            item = nil
-            isFocused = false
         }
     }
     

@@ -395,7 +395,7 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
-                    GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+                    UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
@@ -1033,6 +1033,9 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
+        guard UIApplication.homeContainerViewController?.pipController?.item != item else {
+            return
+        }
         setCell(ofMessageId: item.messageId, contentViewHidden: true)
     }
     

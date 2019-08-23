@@ -58,7 +58,7 @@ final class GalleryItemModelController: NSObject {
         
         switch item.category {
         case .image:
-            if let vc = reusableImageViewControllers.first(where: { $0.parent == nil }) {
+            if let vc = reusableImageViewControllers.first(where: { $0.isReusable }) {
                 viewController = vc
             } else {
                 let vc = GalleryImageItemViewController()
@@ -66,7 +66,7 @@ final class GalleryItemModelController: NSObject {
                 viewController = vc
             }
         case .video, .live:
-            if let vc = reusableVideoViewControllers.first(where: { $0.parent == nil && $0 != GalleryVideoItemViewController.currentPipController }) {
+            if let vc = reusableVideoViewControllers.first(where: { $0.isReusable }) {
                 viewController = vc
             } else {
                 let vc = GalleryVideoItemViewController()
@@ -81,7 +81,25 @@ final class GalleryItemModelController: NSObject {
         return viewController
     }
     
-    func fetchMoreItemsBefore() {
+    @objc func conversationDidChange(_ notification: Notification) {
+        guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
+            return
+        }
+        switch change.action {
+        case .updateMessage(let messageId):
+            updateMessage(messageId: messageId)
+        case .updateDownloadProgress(let messageId, let progress):
+            updateDownloadProgress(messageId: messageId, progress: progress)
+        case .updateMediaStatus(let messageId, let mediaStatus):
+            updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
+        case .recallMessage(let messageId):
+            removeItem(messageId: messageId)
+        default:
+            break
+        }
+    }
+    
+    private func fetchMoreItemsBefore() {
         guard !didLoadEarliestItem && !isLoadingBefore else {
             return
         }
@@ -104,7 +122,7 @@ final class GalleryItemModelController: NSObject {
         }
     }
     
-    func fetchMoreItemsAfter() {
+    private func fetchMoreItemsAfter() {
         guard !didLoadLatestItem && !isLoadingAfter else {
             return
         }
@@ -124,24 +142,6 @@ final class GalleryItemModelController: NSObject {
                 weakSelf.didLoadLatestItem = items.count < fetchItemsCount
                 weakSelf.isLoadingAfter = false
             }
-        }
-    }
-    
-    @objc func conversationDidChange(_ notification: Notification) {
-        guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
-            return
-        }
-        switch change.action {
-        case .updateMessage(let messageId):
-            updateMessage(messageId: messageId)
-        case .updateDownloadProgress(let messageId, let progress):
-            updateDownloadProgress(messageId: messageId, progress: progress)
-        case .updateMediaStatus(let messageId, let mediaStatus):
-            updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
-        case .recallMessage(let messageId):
-            removeItem(messageId: messageId)
-        default:
-            break
         }
     }
     

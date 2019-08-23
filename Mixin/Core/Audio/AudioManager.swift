@@ -48,7 +48,7 @@ class AudioManager {
             }
         }
         
-        if let controller = GalleryVideoItemViewController.currentPipController {
+        if let controller = UIApplication.homeContainerViewController?.pipController {
             controller.pauseAction(self)
             controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }

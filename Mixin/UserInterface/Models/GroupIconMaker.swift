@@ -17,14 +17,6 @@ enum GroupIconMaker {
         case composed(background: UIImage, name: String)
     }
     
-    //    Multiple avatars is arranged by index like this
-    //    +-----------+  +-----------+  +-----------+
-    //    |         / |  | \   0   / |  | \   0   / |
-    //    |  0    /   |  |   \   /   |  |   \   /   |
-    //    |     /     |  |     |     |  | 1   X   2 |
-    //    |   /   1   |  |  1  |  2  |  |   /   \   |
-    //    | /         |  |     |     |  | /   3   \ |
-    //    +-----------+  +-----------+  +-----------+
     static func make(participants: [ParticipantUser]) -> UIImage? {
         var avatars = [AvatarRepresentation]()
         let semaphore = DispatchSemaphore(value: 0)
@@ -91,24 +83,67 @@ enum GroupIconMaker {
         }
         let canvasSize = source.size
         let renderer = UIGraphicsImageRenderer(size: canvasSize)
-        let origin: CGPoint
-        if numberOfPieces > 2, let faceRect = self.faceRect(in: source) {
-            // fanMargin            fanMargin
-            //  |←⎯⎯⎯⎯⎯→|               |←⎯⎯⎯⎯⎯→|
-            //  ............................
-            //    .  |   .   .   .   |   .
-            //      .| .     .     . | .
-            //        .  fan . fan   .
-            //          .    .     .
-            //            .  .  .
-            //              ...
-            if numberOfPieces == 3 {
+        let rect: CGRect
+        if let faceRect = self.faceRect(in: source) {
+            let origin: CGPoint
+            switch numberOfPieces {
+            case 2:
                 switch index {
                 case 0:
-                    let fanMargin = (1 - cos(.pi / 6)) * (faceRect.width / 2)
-                    let minX = -fanMargin
-                    let maxX = fanMargin
-                    var x = -faceRect.origin.x + fanMargin + (canvasSize.width - 2 * fanMargin - faceRect.width) / 2
+                    let minX = -canvasSize.width / 2
+                    let maxX: CGFloat = 0
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    origin = CGPoint(x: x, y: 0)
+                default:
+                    let minX: CGFloat = 0
+                    let maxX = canvasSize.width / 2
+                    var x = canvasSize.width / 2 - faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    origin = CGPoint(x: x, y: 0)
+                }
+            case 3:
+                switch index {
+                case 0:
+                    let minX = -canvasSize.width / 2
+                    let maxX: CGFloat = 0
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    origin = CGPoint(x: x, y: 0)
+                case 1:
+                    let minX = -canvasSize.width / 2
+                    let maxX = canvasSize.width / 2
+                    var x = canvasSize.width / 2 - faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -canvasSize.height / 2
+                    let maxY: CGFloat = 0
+                    var y = -faceRect.origin.y + (canvasSize.height / 2 - faceRect.height) / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
+                default:
+                    let minX = -canvasSize.width / 2
+                    let maxX = canvasSize.width / 2
+                    var x = canvasSize.width / 2 - faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY: CGFloat = 0
+                    let maxY = canvasSize.height / 2
+                    var y = canvasSize.height / 2 - faceRect.origin.y + (canvasSize.height / 2 - faceRect.height) / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
+                }
+            default:
+                switch index {
+                case 0:
+                    let minX = -canvasSize.width / 2
+                    let maxX: CGFloat = 0
+                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
                     x = max(minX, min(maxX, x))
                     
                     let minY = -canvasSize.height / 2
@@ -118,74 +153,33 @@ enum GroupIconMaker {
                     
                     origin = CGPoint(x: x, y: y)
                 case 1:
+                    let minX: CGFloat = 0
+                    let maxX = canvasSize.height / 2
+                    var x = canvasSize.width / 2 - faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
+                    x = max(minX, min(maxX, x))
+                    
+                    let minY = -canvasSize.height / 2
+                    let maxY: CGFloat = 0
+                    var y = -faceRect.origin.y + (canvasSize.height / 2 - faceRect.height) / 2
+                    y = max(minY, min(maxY, y))
+                    
+                    origin = CGPoint(x: x, y: y)
+                case 2:
                     let minX = -canvasSize.width / 2
                     let maxX: CGFloat = 0
                     var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
                     x = max(minX, min(maxX, x))
                     
                     let minY: CGFloat = 0
-                    let maxY = canvasSize.height / 2 * sin(.pi / 6)
-                    var y = -faceRect.origin.y + canvasSize.height / 3 * 2
+                    let maxY = canvasSize.height / 2
+                    var y = canvasSize.height / 2 - faceRect.origin.y + (canvasSize.height / 2 - faceRect.height) / 2
                     y = max(minY, min(maxY, y))
                     
                     origin = CGPoint(x: x, y: y)
                 default:
                     let minX: CGFloat = 0
-                    let maxX = canvasSize.width / 2
-                    var x = canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 2
-                    x = max(minX, min(maxX, x))
-                    
-                    let minY: CGFloat = 0
-                    let maxY = canvasSize.height / 2 * sin(.pi / 6)
-                    var y = -faceRect.origin.y + canvasSize.height / 3 * 2
-                    y = max(minY, min(maxY, y))
-                    
-                    origin = CGPoint(x: x, y: y)
-                }
-            } else {
-                let horizontalFanMargin = (sqrt(2) - 1) / sqrt(2) * (canvasSize.width / 2)
-                let verticalFanMargin = (sqrt(2) - 1) / sqrt(2) * (canvasSize.height / 2)
-                switch index {
-                case 0:
-                    let minX = -horizontalFanMargin
-                    let maxX = horizontalFanMargin
-                    var x = -faceRect.origin.x + horizontalFanMargin + (canvasSize.width - 2 * horizontalFanMargin - faceRect.width) / 2
-                    x = max(minX, min(maxX, x))
-                    
-                    let minY = -canvasSize.height / 2
-                    let maxY: CGFloat = 0
-                    var y = -faceRect.origin.y + (canvasSize.height / 2 - faceRect.height) / 2
-                    y = max(minY, min(maxY, y))
-                    
-                    origin = CGPoint(x: x, y: y)
-                case 1:
-                    let minX = -canvasSize.width / 2
-                    let maxX: CGFloat = 0
-                    var x = -faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 3
-                    x = max(minX, min(maxX, x))
-                    
-                    let minY = -verticalFanMargin
-                    let maxY = verticalFanMargin
-                    var y = -faceRect.origin.y + canvasSize.height / 2
-                    y = max(minY, min(maxY, y))
-                    
-                    origin = CGPoint(x: x, y: y)
-                case 2:
-                    let minX: CGFloat = 0
-                    let maxX = canvasSize.width / 2
-                    var x = canvasSize.width - faceRect.maxX - (canvasSize.width / 2 - faceRect.width) / 3
-                    x = max(minX, min(maxX, x))
-                    
-                    let minY = -verticalFanMargin
-                    let maxY = verticalFanMargin
-                    var y = -faceRect.origin.y + canvasSize.height / 2
-                    y = max(minY, min(maxY, y))
-                    
-                    origin = CGPoint(x: x, y: y)
-                default:
-                    let minX = -horizontalFanMargin
-                    let maxX = horizontalFanMargin
-                    var x = -faceRect.origin.x + horizontalFanMargin + (canvasSize.width - 2 * horizontalFanMargin - faceRect.width) / 2
+                    let maxX = canvasSize.height / 2
+                    var x = canvasSize.width / 2 - faceRect.origin.x + (canvasSize.width / 2 - faceRect.width) / 2
                     x = max(minX, min(maxX, x))
                     
                     let minY: CGFloat = 0
@@ -196,13 +190,45 @@ enum GroupIconMaker {
                     origin = CGPoint(x: x, y: y)
                 }
             }
+            rect = CGRect(origin: origin, size: canvasSize)
         } else {
-            origin = .zero
+            switch numberOfPieces {
+            case 2:
+                switch index {
+                case 0:
+                    rect = CGRect(x: -canvasSize.width / 4, y: 0, width: canvasSize.width, height: canvasSize.height)
+                default:
+                    rect = CGRect(x: canvasSize.width / 4, y: 0, width: canvasSize.width, height: canvasSize.height)
+                }
+            case 3:
+                switch index {
+                case 0:
+                    rect = CGRect(x: -canvasSize.width / 4, y: 0, width: canvasSize.width, height: canvasSize.height)
+                case 1:
+                    rect = CGRect(x: canvasSize.width / 2, y: 0, width: canvasSize.width / 2, height: canvasSize.height / 2)
+                default:
+                    rect = CGRect(x: canvasSize.width / 2, y: canvasSize.height / 2, width: canvasSize.width / 2, height: canvasSize.height / 2)
+                }
+            default:
+                let size = CGSize(width: canvasSize.width / 2, height: canvasSize.height / 2)
+                let origin: CGPoint
+                switch index {
+                case 0:
+                    origin = CGPoint(x: 0, y: 0)
+                case 1:
+                    origin = CGPoint(x: canvasSize.width / 2, y: 0)
+                case 2:
+                    origin = CGPoint(x: 0, y: canvasSize.height / 2)
+                default:
+                    origin = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
+                }
+                rect = CGRect(origin: origin, size: size)
+            }
         }
         return renderer.image { (ctx) in
             let path = self.path(size: canvasSize, index: index, of: numberOfPieces)
             path.addClip()
-            source.draw(at: origin)
+            source.draw(in: rect)
         }
     }
     
@@ -227,44 +253,48 @@ enum GroupIconMaker {
         let nameSize = name.size(withAttributes: attributes)
         
         let origin: CGPoint
+        let offset: CGFloat = 2
         switch numberOfPieces {
         case 1:
             origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
                              y: (canvasSize.height - nameSize.height) / 2)
         case 2:
+            let nameMargin = (canvasSize.width / 2 - nameSize.width) / 2
+            let y = (canvasSize.height - nameSize.height) / 2
             if index == 0 {
-                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width / 2) / 2,
-                                 y: (canvasSize.height / 2 - nameSize.height / 2) / 2)
+                origin = CGPoint(x: nameMargin + offset, y: y)
             } else {
-                origin = CGPoint(x: canvasSize.width / 2,
-                                 y: canvasSize.height / 2)
+                origin = CGPoint(x: canvasSize.width / 2 + nameMargin - offset, y: y)
             }
         case 3:
+            let nameMargin = (canvasSize.width / 2 - nameSize.width) / 2
             switch index {
             case 0:
-                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
-                                 y: (canvasSize.height / 2 - nameSize.height) / 2)
+                origin = CGPoint(x: nameMargin + offset,
+                                 y: (canvasSize.height - nameSize.height) / 2)
             case 1:
-                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 + 2,
-                                 y: canvasSize.height / 2)
+                origin = CGPoint(x: canvasSize.width / 2 + nameMargin - offset,
+                                 y: (canvasSize.height / 2 - nameSize.height) / 2 + offset)
             default:
-                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 - 2 + canvasSize.width / 2,
-                                 y: canvasSize.height / 2)
+                origin = CGPoint(x: canvasSize.width / 2 + nameMargin - offset,
+                                 y: canvasSize.height / 2 + (canvasSize.height / 2 - nameSize.height) / 2 - offset)
             }
         default:
+            let horizontalNameMargin = (canvasSize.width / 2 - nameSize.width) / 2
+            let verticalNameMargin = (canvasSize.height / 2 - nameSize.height) / 2
             switch index {
             case 0:
-                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
-                                 y: (canvasSize.height / 2 - nameSize.height) / 2 - 1)
+                origin = CGPoint(x: horizontalNameMargin + offset,
+                                 y: verticalNameMargin + offset)
             case 1:
-                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 - 1,
-                                 y: (canvasSize.height - nameSize.height) / 2)
+                origin = CGPoint(x: canvasSize.width / 2 + horizontalNameMargin - offset,
+                                 y: verticalNameMargin + offset)
             case 2:
-                origin = CGPoint(x: (canvasSize.width / 2 - nameSize.width) / 2 + canvasSize.width / 2 + 1,
-                                 y: (canvasSize.height - nameSize.height) / 2)
+                origin = CGPoint(x: horizontalNameMargin + offset,
+                                 y: canvasSize.height / 2 + verticalNameMargin - offset)
             default:
-                origin = CGPoint(x: (canvasSize.width - nameSize.width) / 2,
-                                 y: (canvasSize.height / 2 - nameSize.height) / 2 + canvasSize.height / 2 + 1)
+                origin = CGPoint(x: canvasSize.width / 2 + horizontalNameMargin - offset,
+                                 y: canvasSize.height / 2 + verticalNameMargin - offset)
             }
         }
         
@@ -278,77 +308,40 @@ enum GroupIconMaker {
     }
     
     private static func path(size: CGSize, index: Int, of numberOfPieces: Int) -> UIBezierPath {
-        let path = UIBezierPath()
-        let topLeft = CGPoint.zero
-        let topRight = CGPoint(x: size.width, y: 0)
-        let bottomLeft = CGPoint(x: 0, y: size.height)
-        let bottomRight = CGPoint(x: size.width, y: size.height)
-        let middle = CGPoint(x: size.width / 2, y: size.height / 2)
+        let rect: CGRect
+        let halfWidth = size.width / 2
+        let halfHeight = size.height / 2
         switch numberOfPieces {
+        case 1:
+            rect = CGRect(origin: .zero, size: size)
         case 2:
             if index == 0 {
-                path.move(to: topLeft)
-                path.addLine(to: topRight)
-                path.addLine(to: bottomLeft)
-                path.addLine(to: topLeft)
+                rect = CGRect(x: 0, y: 0, width: halfWidth, height: size.height)
             } else {
-                path.move(to: topRight)
-                path.addLine(to: bottomRight)
-                path.addLine(to: bottomLeft)
-                path.addLine(to: topRight)
+                rect = CGRect(x: halfWidth, y: 0, width: halfWidth, height: size.height)
             }
         case 3:
-            let p = (1 - tan(.pi / 6)) * size.height / 2
-            let leftP = CGPoint(x: 0, y: p)
-            let rightP = CGPoint(x: size.width, y: p)
-            let bottomCenter = CGPoint(x: size.width / 2, y: size.height)
             switch index {
             case 0:
-                path.move(to: .zero)
-                path.addLine(to: topRight)
-                path.addLine(to: rightP)
-                path.addLine(to: middle)
-                path.addLine(to: leftP)
-                path.addLine(to: .zero)
+                rect = CGRect(x: 0, y: 0, width: halfWidth, height: size.height)
             case 1:
-                path.move(to: middle)
-                path.addLine(to: bottomCenter)
-                path.addLine(to: bottomLeft)
-                path.addLine(to: leftP)
-                path.addLine(to: middle)
+                rect = CGRect(x: halfWidth, y: 0, width: halfWidth, height: halfHeight)
             default:
-                path.move(to: middle)
-                path.addLine(to: rightP)
-                path.addLine(to: bottomRight)
-                path.addLine(to: bottomCenter)
-                path.addLine(to: middle)
+                rect = CGRect(x: halfWidth, y: halfHeight, width: halfWidth, height: halfHeight)
             }
         default:
             switch index {
             case 0:
-                path.move(to: topLeft)
-                path.addLine(to: topRight)
-                path.addLine(to: middle)
-                path.addLine(to: topLeft)
+                rect = CGRect(x: 0, y: 0, width: halfWidth, height: halfHeight)
             case 1:
-                path.move(to: topLeft)
-                path.addLine(to: middle)
-                path.addLine(to: bottomLeft)
-                path.addLine(to: topLeft)
+                rect = CGRect(x: halfWidth, y: 0, width: halfWidth, height: halfHeight)
             case 2:
-                path.move(to: topRight)
-                path.addLine(to: bottomRight)
-                path.addLine(to: middle)
-                path.addLine(to: topRight)
+                rect = CGRect(x: 0, y: halfHeight, width: halfWidth, height: halfHeight)
             default:
-                path.move(to: middle)
-                path.addLine(to: bottomRight)
-                path.addLine(to: bottomLeft)
-                path.addLine(to: middle)
+                rect = CGRect(x: halfWidth, y: halfHeight, width: halfWidth, height: halfHeight)
             }
         }
-        path.close()
-        return path
+        return UIBezierPath(rect: rect)
     }
     
     private static func faceRect(in image: UIImage) -> CGRect? {
@@ -369,7 +362,7 @@ enum GroupIconMaker {
         guard [2, 3, 4].contains(number) else {
             return
         }
-        guard let url = Bundle.main.url(forResource: "separator_\(number)", withExtension: "png") else {
+        guard let url = Bundle.main.url(forResource: "group_separator_\(number)", withExtension: "png") else {
             return
         }
         guard let image = UIImage(contentsOfFile: url.path) else {

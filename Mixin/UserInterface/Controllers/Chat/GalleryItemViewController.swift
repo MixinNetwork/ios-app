@@ -34,6 +34,10 @@ class GalleryItemViewController: UIViewController {
         return parent == nil
     }
     
+    var respondsToLongPress: Bool {
+        return false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         operationButton.addTarget(self, action: #selector(attachmentAction(_:)), for: .touchUpInside)

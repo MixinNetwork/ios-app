@@ -48,6 +48,10 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         return parent == nil
     }
     
+    override var respondsToLongPress: Bool {
+        return true
+    }
+    
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
     }

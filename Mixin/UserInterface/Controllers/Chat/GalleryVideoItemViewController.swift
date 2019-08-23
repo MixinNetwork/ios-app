@@ -82,6 +82,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         return parent == nil && UIApplication.homeContainerViewController?.pipController != self
     }
     
+    override var respondsToLongPress: Bool {
+        return item?.category == .video
+    }
+    
     private var player: AVPlayer {
         return videoView.player
     }

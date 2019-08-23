@@ -246,7 +246,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     @objc func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard recognizer.state == .began, let itemViewController = currentItemViewController else {
+        guard recognizer.state == .began, let itemViewController = currentItemViewController, itemViewController.respondsToLongPress else {
             return
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

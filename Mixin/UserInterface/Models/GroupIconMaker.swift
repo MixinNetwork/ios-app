@@ -4,8 +4,6 @@ import Firebase
 
 enum GroupIconMaker {
     
-    static let fallback = R.image.ic_conversation_group()!
-    
     private static let faceDetector: VisionFaceDetector = {
         let options = VisionFaceDetectorOptions()
         let vision = Vision.vision()

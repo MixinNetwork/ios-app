@@ -29,9 +29,11 @@ class RefreshGroupIconJob: AsynchronousJob {
             updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             return false
         }
+        guard let groupImage = GroupIconMaker.make(participants: participants) else {
+            return false
+        }
 
         do {
-            let groupImage = GroupIconMaker.make(participants: participants) ?? GroupIconMaker.fallback
             try? FileManager.default.removeItem(atPath: imageUrl.path)
             if let data = groupImage.pngData() {
                 try data.write(to: imageUrl)

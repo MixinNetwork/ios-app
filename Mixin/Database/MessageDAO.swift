@@ -105,7 +105,8 @@ final class MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m
         LEFT JOIN users u ON m.user_id = u.user_id
-        WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND (content MATCH ? OR name MATCH ?))
+        WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA')
+        AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
     """
     
     static let sqlQueryGalleryItem = """
@@ -138,8 +139,6 @@ final class MessageDAO {
                           on: [Conversation.Properties.unseenMessageCount],
                           with: [0],
                           where: Conversation.Properties.conversationId == conversationId)
-            try db.delete(fromTable: MessageFTS.tableName,
-                          where: MessageFTS.Properties.conversationId == conversationId)
         }
         if autoNotification {
             let change = ConversationChange(conversationId: conversationId, action: .reload)
@@ -340,9 +339,10 @@ final class MessageDAO {
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
             let bindingCounter = Counter(value: 0)
+            let wildcardedKeyword = "%\(keyword.sqlEscaped)%"
             cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
-            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
-            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
             
             while try cs.step() {
                 let counter = Counter(value: -1)
@@ -441,10 +441,6 @@ final class MessageDAO {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
 
-        if message.status != MessageStatus.FAILED.rawValue {
-            try insertMessageFTS(database: database, messageId: message.messageId, category: message.category)
-        }
-
         guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
             return
         }
@@ -470,10 +466,6 @@ final class MessageDAO {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
-
-        if category.hasSuffix("_TEXT") || category.hasSuffix("_DATA") {
-            try removeMessageFTS(database: database, messageId: messageId)
-        }
 
         if category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
@@ -528,8 +520,6 @@ final class MessageDAO {
     func deleteMessage(id: String) -> Bool {
         var deleteCount = 0
         MixinDatabase.shared.transaction { (db) in
-            try self.removeMessageFTS(database: db, messageId: id)
-
             let delete = try db.prepareDelete(fromTable: Message.tableName).where(Message.Properties.messageId == id)
             try delete.execute()
             deleteCount = delete.changes ?? 0
@@ -573,8 +563,6 @@ extension MessageDAO {
             guard updateStatment.changes ?? 0 > 0 else {
                 return
             }
-
-            try self.insertMessageFTS(database: database, messageId: messageId, category: category)
 
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
@@ -652,21 +640,6 @@ extension MessageDAO {
 
     func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
         updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
-    }
-
-}
-
-extension MessageDAO {
-
-    func insertMessageFTS(database: Database, messageId: String, category: String) throws {
-        guard category.hasSuffix("_TEXT") || category.hasSuffix("_DATA") else {
-            return
-        }
-        try database.prepareUpdateSQL(sql: "INSERT OR REPLACE INTO fts_messages(docid, message_id, conversation_id, content, name) SELECT rowid, id, conversation_id, content, name FROM messages WHERE id = ?").execute(with: [messageId])
-    }
-
-    func removeMessageFTS(database: Database, messageId: String) throws {
-        try database.prepareUpdateSQL(sql: "DELETE FROM fts_messages WHERE docid = (SELECT ROWID FROM messages WHERE id = ?)").execute(with: [messageId])
     }
 
 }

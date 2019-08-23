@@ -90,9 +90,6 @@ class HomeViewController: UIViewController {
         }
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
-        if !DatabaseUserDefault.shared.initiatedFTS {
-            ConcurrentJobQueue.shared.addJob(job: FTSJob())
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -13,9 +13,6 @@ class DatabaseUserDefault {
     private var keyDatabaseVersion: String {
         return "key_database_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyInitiatedFTS: String {
-        return "key_initiated_fts_\(AccountAPI.shared.accountIdentityNumber)"
-    }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
     let currentDatabaseVersion = 2
@@ -43,15 +40,6 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyUpgradeStickers)
-        }
-    }
-
-    var initiatedFTS: Bool {
-        get {
-            return session.bool(forKey: keyInitiatedFTS)
-        }
-        set {
-            session.set(newValue, forKey: keyInitiatedFTS)
         }
     }
 

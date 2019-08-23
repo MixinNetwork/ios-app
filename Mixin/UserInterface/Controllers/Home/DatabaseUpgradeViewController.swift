@@ -16,9 +16,6 @@ class DatabaseUpgradeViewController: UIViewController {
             if currentVersion < 2 {
                 TaskDatabase.shared.initDatabase()
                 MixinDatabase.shared.initDatabase()
-
-                DatabaseUserDefault.shared.initiatedFTS = false
-                ConcurrentJobQueue.shared.addJob(job: FTSJob())
             }
 
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion

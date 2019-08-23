@@ -59,7 +59,8 @@ final class ConversationDAO {
     FROM messages m
     LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
     LEFT JOIN users u ON c.owner_id = u.user_id
-    WHERE m.id in (SELECT message_id FROM fts_messages WHERE content MATCH ? OR name MATCH ?)
+    WHERE m.category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA') AND m.status != 'FAILED'
+    AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
     GROUP BY m.conversation_id
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
@@ -183,6 +184,7 @@ final class ConversationDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
+        let keyword = "%\(keyword.sqlEscaped)%"
         let stmt = StatementSelectSQL(sql: sql)
         return MixinDatabase.shared.getCodables(callback: { (db) -> [MessagesWithinConversationSearchResult] in
             var items = [MessagesWithinConversationSearchResult]()

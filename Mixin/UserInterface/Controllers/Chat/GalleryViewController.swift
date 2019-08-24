@@ -185,6 +185,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }, completion: {
             self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
             self.pageViewController.view.alpha = 1
+            self.transitionView.alpha = 0
         })
     }
     

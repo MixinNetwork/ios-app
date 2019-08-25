@@ -127,11 +127,11 @@ extension ConversationSettingViewController {
             self?.tableView.isUserInteractionEnabled = true
             self?.messageSourceEverybodyCheckmarkView.alpha = 1
             switch result {
-            case .success:
+            case .success(let account):
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
-                if let old = AccountAPI.shared.account {
-                    let newAccount = Account(withAccount: old, receiveMessageSource: .everybody)
-                    AccountAPI.shared.account = newAccount
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
                 }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -154,11 +154,11 @@ extension ConversationSettingViewController {
             self?.messageSourceContactsCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
             switch result {
-            case .success:
+            case .success(let account):
                 self?.messageSourceContactsCheckmarkView.alpha = 1
-                if let old = AccountAPI.shared.account {
-                    let newAccount = Account(withAccount: old, receiveMessageSource: .contacts)
-                    AccountAPI.shared.account = newAccount
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
                 }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -181,11 +181,11 @@ extension ConversationSettingViewController {
             self?.conversationSourceEverybodyCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
             switch result {
-            case .success:
+            case .success(let account):
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1
-                if let old = AccountAPI.shared.account {
-                    let newAccount = Account(withAccount: old, acceptConversationSource: .everybody)
-                    AccountAPI.shared.account = newAccount
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
                 }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -208,11 +208,11 @@ extension ConversationSettingViewController {
             self?.tableView.isUserInteractionEnabled = true
             self?.conversationSourceContactsCheckmarkView.alpha = 1
             switch result {
-            case .success:
+            case .success(let account):
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
-                if let old = AccountAPI.shared.account {
-                    let newAccount = Account(withAccount: old, acceptConversationSource: .contacts)
-                    AccountAPI.shared.account = newAccount
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
                 }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

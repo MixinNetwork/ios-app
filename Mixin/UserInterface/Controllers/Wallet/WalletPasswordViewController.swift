@@ -207,6 +207,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     case .success(let account):
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                         AccountAPI.shared.account = account
+                        DispatchQueue.global().async {
+                            UserDAO.shared.updateAccount(account: account)
+                        }
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
                         self?.alert(error.localizedDescription)
@@ -263,6 +266,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         WalletUserDefault.shared.checkPinInterval = WalletUserDefault.shared.checkMinInterval
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                         AccountAPI.shared.account = account
+                        DispatchQueue.global().async {
+                            UserDAO.shared.updateAccount(account: account)
+                        }
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
                         self?.alert(error.localizedDescription)

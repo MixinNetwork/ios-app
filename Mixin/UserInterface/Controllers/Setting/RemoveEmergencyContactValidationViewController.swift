@@ -22,6 +22,9 @@ class RemoveEmergencyContactValidationViewController: PinValidationViewControlle
             switch result {
             case .success(let account):
                 AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
+                }
                 weakSelf.dismiss(animated: true, completion: nil)
             case .failure(let error):
                 weakSelf.handle(error: error)

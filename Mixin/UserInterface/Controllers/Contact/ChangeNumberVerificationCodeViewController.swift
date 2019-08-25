@@ -36,10 +36,10 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 return
             }
             switch result {
-            case .success:
-                if let old = AccountAPI.shared.account {
-                    let new = Account(withAccount: old, phone: context.newNumber)
-                    AccountAPI.shared.account = new
+            case .success(let account):
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
                 }
                 weakSelf.verificationCodeField.resignFirstResponder()
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in

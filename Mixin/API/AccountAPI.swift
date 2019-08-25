@@ -81,7 +81,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
     }
     
-    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
         let pin = accountRequest.pin!
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             var parameters = accountRequest
@@ -116,7 +116,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func preferences(userRequest: UserRequest, completion: @escaping (APIResult<UserResponse>) -> Void) {
+    func preferences(userRequest: UserRequest, completion: @escaping (APIResult<Account>) -> Void) {
         request(method: .post, url: url.preferences, parameters: userRequest.toParameters(), encoding: EncodableParameterEncoding<UserRequest>(), completion: completion)
     }
 

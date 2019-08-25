@@ -62,6 +62,9 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
             switch result {
             case .success(let account):
                 AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
+                }
                 self?.showSuccessAlert()
             case .failure(let error):
                 self?.handleVerificationCodeError(error)

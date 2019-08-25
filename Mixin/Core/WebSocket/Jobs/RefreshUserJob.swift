@@ -22,15 +22,16 @@ class RefreshUserJob: BaseJob {
         }
 
         if userIds.count == 1 {
-            guard !userIds[0].isEmpty else {
+            let userId = userIds[0]
+            guard !userId.isEmpty && UUID(uuidString: userId) != nil else {
                 return
             }
-            switch UserAPI.shared.showUser(userId: userIds[0]) {
+            switch UserAPI.shared.showUser(userId: userId) {
                 case let .success(response):
                     UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
                 case let .failure(error):
-                    guard error.code != 401 else {
-                        processNotFoundUser(userId: userIds[0])
+                    guard error.code != 404 else {
+                        processNotFoundUser(userId: userId)
                         return
                     }
                     throw error

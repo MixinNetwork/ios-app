@@ -258,12 +258,12 @@ class UserView: CornerView {
         default:
             break
         }
-        alc.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (action) in
-            self.reportAction()
-        }))
         if !isMe {
             alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
                 self.clearChatAction()
+            }))
+            alc.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (action) in
+                self.reportAction()
             }))
         }
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

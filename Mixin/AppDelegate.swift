@@ -120,11 +120,6 @@ extension AppDelegate: PKPushRegistryDelegate {
         }
     }
     
-    @available(iOS, introduced: 8.0, deprecated: 11.0)
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
-        checkServerData(isPushKit: true)
-    }
-    
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         checkServerData(isPushKit: true)
     }

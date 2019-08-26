@@ -54,6 +54,8 @@
 		<string>tmall</string>
 		<string>zhihu</string>
 		<string>alipay</string>
+		<string>foxone</string>
+		<string>exin</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

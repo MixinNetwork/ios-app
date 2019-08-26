@@ -120,6 +120,7 @@
 "placeholder_mobile_number" = "電話番号";
 "init_signal" = "初期化中";
 "init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化で保護されています";
+"init_protected_data_unavailable" = "Mixin Messenger's protected data is currently unavailable. Try unlock your iPhone or contact your device manager";
 "toast_recaptcha_timed_out" = "検証がタイムアウトしました";
 "toast_recaptcha_invalid" = "確認コードが無効です。";
 "toast_update_tips" = "App Store から Mixin をアップデートしてサービスを継続してください。";

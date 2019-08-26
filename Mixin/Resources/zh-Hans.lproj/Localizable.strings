@@ -126,6 +126,7 @@
 "placeholder_mobile_number" = "手机号码";
 "init_signal" = "正在初始化";
 "init_explain" = "用户之间的消息将受到端对端加密保护";
+"init_protected_data_unavailable" = "Mixin Messenger 加密存储暂时不可用。请尝试解锁 iPhone 或联系您的设备管理员";
 "toast_recaptcha_timed_out" = "验证超时";
 "toast_recaptcha_invalid" = "验证失败";
 "toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";

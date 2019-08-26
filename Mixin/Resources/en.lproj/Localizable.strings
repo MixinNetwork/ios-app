@@ -126,6 +126,7 @@
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
 "init_explain" = "Messages between users are protected with an end-to-end encryption";
+"init_protected_data_unavailable" = "Mixin Messenger's protected data is currently unavailable. Try unlock your iPhone or contact your device manager";
 "toast_recaptcha_timed_out" = "Validation timed out";
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "toast_update_tips" = "Please update Mixin from App Store to continue use the service.";

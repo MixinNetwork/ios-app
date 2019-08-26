@@ -19,45 +19,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private(set) var voipToken = ""
     
+    private let pushRegistry = PKPushRegistry(queue: DispatchQueue.main)
+    
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private var didUpdateCommonUserDefaults = false
+    private var didRegisterAnalytics = false
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        #if RELEASE
-        if let key = MixinKeys.bugsnag {
-            Bugsnag.start(withApiKey: key)
-        }
-        #endif
-        FirebaseApp.configure()
-        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
-        if let account = AccountAPI.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
-        }
         updateSharedImageCacheConfig()
-        CommonUserDefault.shared.checkUpdateOrInstallVersion()
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
-        UNUserNotificationCenter.current().delegate = self
-        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
-        pkpushRegistry.delegate = self
-        pkpushRegistry.desiredPushTypes = [.voIP]
+        pushRegistry.desiredPushTypes = [.voIP]
         
         window.backgroundColor = .black
-        checkLogin()
+        updateWithProtectedDataAvailable(UIApplication.shared.isProtectedDataAvailable)
         window.makeKeyAndVisible()
         
-        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         if UIDevice.isJailbreak {
             Keychain.shared.clearPIN()
         }
         if let key = MixinKeys.giphy {
             GiphyCore.configure(apiKey: key)
         }
+        
+        if UIApplication.shared.isProtectedDataAvailable {
+            FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin))...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        }
+        
+        uploadContactsIfNeeded()
         return true
     }
     
@@ -106,6 +97,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    }
+    
+    func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) {
+        updateWithProtectedDataAvailable(false)
+    }
+    
+    func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
+        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...applicationProtectedDataDidBecomeAvailable...didLogin:\(AccountAPI.shared.didLogin))...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        updateWithProtectedDataAvailable(true)
     }
     
 }
@@ -247,25 +247,68 @@ extension AppDelegate {
         }
     }
     
-    private func checkLogin() {
-        if AccountAPI.shared.didLogin {
-            window.rootViewController = makeInitialViewController()
-            if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
-                DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
-                    PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
-                })
-            }
-        } else {
-            let vc = LoginMobileNumberViewController()
-            let navigationController = LoginNavigationController(rootViewController: vc)
-            window.rootViewController = navigationController
-        }
-    }
-    
     private func updateSharedImageCacheConfig() {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
+    }
+    
+    private func updateCommonUserDefaultsIfNeeded() {
+        guard !didUpdateCommonUserDefaults else {
+            return
+        }
+        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
+        CommonUserDefault.shared.checkUpdateOrInstallVersion()
+        didUpdateCommonUserDefaults = true
+    }
+    
+    private func registerAnalyticsIfNeeded() {
+        guard !didRegisterAnalytics else {
+            return
+        }
+        #if RELEASE
+        if let key = MixinKeys.bugsnag {
+            Bugsnag.start(withApiKey: key)
+        }
+        #endif
+        FirebaseApp.configure()
+        if let account = AccountAPI.shared.account {
+            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
+            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
+            Crashlytics.sharedInstance().setUserName(account.full_name)
+            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
+            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+        }
+        didRegisterAnalytics = true
+    }
+    
+    private func uploadContactsIfNeeded() {
+        guard UIApplication.shared.isProtectedDataAvailable && AccountAPI.shared.didLogin else {
+            return
+        }
+        guard ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts else  {
+            return
+        }
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
+            PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
+        })
+    }
+    
+    private func updateWithProtectedDataAvailable(_ isAvailable: Bool) {
+        if isAvailable {
+            AccountAPI.shared.account = AccountUserDefault.shared.getAccount() // This can be removed if it's guranteed that AccountAPI.shared.account will not be accessed when protected data is unavailable
+            registerAnalyticsIfNeeded()
+            updateCommonUserDefaultsIfNeeded()
+            UNUserNotificationCenter.current().delegate = self
+            pushRegistry.delegate = self
+            window.rootViewController = makeInitialViewController()
+            WebSocketService.shared.connect()
+        } else {
+            WebSocketService.shared.disconnect()
+            UNUserNotificationCenter.current().delegate = nil
+            pushRegistry.delegate = nil
+            window.rootViewController = R.storyboard.home.protected_data_unavailable()!
+        }
     }
     
 }

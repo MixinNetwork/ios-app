@@ -1032,6 +1032,51 @@ chat history from icloud</string>
             </objects>
             <point key="canvasLocation" x="-919" y="415"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="9I5-dO-QkJ">
+            <objects>
+                <viewController storyboardIdentifier="protected_data_unavailable" id="VLm-Aw-HJg" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eeh-iT-4hX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="hmJ-Gw-ItH">
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Messenger's protected data is currently unavailable. Try unlock your iPhone or contact your device manager" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fj-e7-Wi8">
+                                <rect key="frame" x="36" y="210" width="303" height="57.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_protected_data_unavailable"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6fj-e7-Wi8" firstAttribute="top" secondItem="hmJ-Gw-ItH" secondAttribute="bottom" constant="16" id="PKz-mQ-bpn"/>
+                            <constraint firstItem="hmJ-Gw-ItH" firstAttribute="top" secondItem="Isx-wC-kXw" secondAttribute="top" constant="94" id="Wif-WG-UpX" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="Isx-wC-kXw" firstAttribute="trailing" secondItem="6fj-e7-Wi8" secondAttribute="trailing" constant="36" id="Yd9-lv-Dwd"/>
+                            <constraint firstItem="hmJ-Gw-ItH" firstAttribute="centerX" secondItem="Isx-wC-kXw" secondAttribute="centerX" id="kVF-z5-rbN"/>
+                            <constraint firstItem="6fj-e7-Wi8" firstAttribute="leading" secondItem="Isx-wC-kXw" secondAttribute="leading" constant="36" id="vCJ-zS-2Za"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Isx-wC-kXw"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gox-CP-kTQ" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1634" y="-278"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>

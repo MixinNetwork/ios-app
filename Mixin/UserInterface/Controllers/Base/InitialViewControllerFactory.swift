@@ -1,6 +1,9 @@
 import UIKit
 
 func makeInitialViewController() -> UIViewController {
+    guard AccountAPI.shared.didLogin else {
+        return LoginNavigationController.instance()
+    }
     if AccountUserDefault.shared.hasClockSkew {
         if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()

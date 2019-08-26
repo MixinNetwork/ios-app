@@ -196,7 +196,7 @@ class UserView: CornerView {
                 menuDismissResponder = MenuDismissResponder()
                 self.menuDismissResponder = menuDismissResponder
             }
-            AppDelegate.current.window?.addSubview(menuDismissResponder)
+            AppDelegate.current.window.addSubview(menuDismissResponder)
         }
     }
     
@@ -623,7 +623,7 @@ extension UserView {
     class MenuDismissResponder: UIButton {
         
         convenience init() {
-            let frame = AppDelegate.current.window!.bounds
+            let frame = AppDelegate.current.window.bounds
             self.init(frame: frame)
             backgroundColor = .clear
             addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
@@ -654,7 +654,7 @@ extension UserView: ImagePickerControllerDelegate {
             return
         }
         let hud = self.hud
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window!)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):

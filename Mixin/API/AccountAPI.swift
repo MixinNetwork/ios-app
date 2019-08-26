@@ -170,8 +170,8 @@ final class AccountAPI: BaseAPI {
                 UIApplication.shared.unregisterForRemoteNotifications()
 
                 MixinWebView.clearCookies()
-                let oldRootViewController = AppDelegate.current.window?.rootViewController
-                AppDelegate.current.window?.rootViewController = LoginNavigationController.instance()
+                let oldRootViewController = AppDelegate.current.window.rootViewController
+                AppDelegate.current.window.rootViewController = LoginNavigationController.instance()
                 oldRootViewController?.navigationController?.removeFromParent()
             }
         }

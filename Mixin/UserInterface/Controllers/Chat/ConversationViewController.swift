@@ -80,7 +80,7 @@ class ConversationViewController: UIViewController {
     }
     
     private var maxInputWrapperHeight: CGFloat {
-        return AppDelegate.current.window!.frame.height
+        return AppDelegate.current.window.frame.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
     }

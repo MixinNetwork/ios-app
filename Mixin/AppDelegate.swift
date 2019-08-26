@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UIApplication.shared.delegate as! AppDelegate
     }
 
-    var window: UIWindow?
+    let window = UIWindow(frame: UIScreen.main.bounds)
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
@@ -134,8 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func checkLogin() {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.backgroundColor = .black
+        window.backgroundColor = .white
         if AccountAPI.shared.didLogin {
             window.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
@@ -149,7 +148,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window.rootViewController = navigationController
         }
         window.makeKeyAndVisible()
-        self.window = window
     }
     
     private func updateSharedImageCacheConfig() {

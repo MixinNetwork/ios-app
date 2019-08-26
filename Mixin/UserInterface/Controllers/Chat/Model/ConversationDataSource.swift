@@ -15,7 +15,7 @@ class ConversationDataSource {
     var firstUnreadMessageId: String?
     weak var tableView: ConversationTableView?
     
-    private let windowRect = AppDelegate.current.window!.bounds
+    private let windowRect = AppDelegate.current.window.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = AccountAPI.shared.account!

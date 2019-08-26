@@ -12,7 +12,7 @@ class NotificationController: NSObject {
     private var isPresenting = false
     
     private var presentingViewFrameY: CGFloat {
-        return AppDelegate.current.window?.safeAreaInsets.top ?? 0
+        return AppDelegate.current.window.safeAreaInsets.top
     }
     
     override init() {
@@ -99,9 +99,6 @@ class NotificationController: NSObject {
     }
     
     private func present(text: String) {
-        guard let window = AppDelegate.current.window else {
-            return
-        }
         view.subtitleLabel.text = text
         if isPresenting {
             UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: .beginFromCurrentState, animations: {
@@ -114,6 +111,7 @@ class NotificationController: NSObject {
             }, completion: nil)
         } else {
             isPresenting = true
+            let window = AppDelegate.current.window
             view.frame = CGRect(x: window.safeAreaInsets.left,
                                 y: -view.frame.height,
                                 width: window.bounds.width - window.safeAreaInsets.horizontal,

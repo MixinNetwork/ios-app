@@ -395,16 +395,16 @@ extension CallManager {
     private func alertNetworkFailureOrLineBusy() {
         DispatchQueue.main.async {
             if !WebSocketService.shared.connected {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_NO_NETWORK)
+                AppDelegate.current.window.rootViewController?.alert(Localized.CALL_NO_NETWORK)
             } else if !self.lineIsIdle {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
+                AppDelegate.current.window.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
             }
         }
     }
     
     private func alertNoMicrophonePermission() {
         DispatchQueue.main.async {
-            AppDelegate.current.window?.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
+            AppDelegate.current.window.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
         }
     }
     

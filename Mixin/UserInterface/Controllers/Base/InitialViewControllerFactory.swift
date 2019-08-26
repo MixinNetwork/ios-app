@@ -2,7 +2,7 @@ import UIKit
 
 func makeInitialViewController() -> UIViewController {
     if AccountUserDefault.shared.hasClockSkew {
-        if let viewController = AppDelegate.current.window?.rootViewController as? ClockSkewViewController {
+        if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
             return viewController
         } else {

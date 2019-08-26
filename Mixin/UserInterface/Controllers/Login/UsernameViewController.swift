@@ -21,7 +21,7 @@ class UsernameViewController: LoginInfoInputViewController {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-                AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
                 UIApplication.traceError(error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

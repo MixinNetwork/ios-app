@@ -135,7 +135,7 @@ class BaseAPI {
                                     AccountUserDefault.shared.hasClockSkew = true
                                     DispatchQueue.main.async {
                                         WebSocketService.shared.disconnect()
-                                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                                        AppDelegate.current.window.rootViewController = makeInitialViewController()
                                     }
                                     return
                                 }
@@ -238,7 +238,7 @@ extension BaseAPI {
                         AccountUserDefault.shared.hasClockSkew = true
                         DispatchQueue.main.async {
                             WebSocketService.shared.disconnect()
-                            AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                            AppDelegate.current.window.rootViewController = makeInitialViewController()
                         }
                         return result
                     }

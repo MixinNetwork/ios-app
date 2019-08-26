@@ -87,9 +87,7 @@ class TransferTypeViewController: UIViewController {
     }
     
     private func updatePreferredContentSizeHeight() {
-        guard let window = AppDelegate.current.window else {
-            return
-        }
+        let window = AppDelegate.current.window
         preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
     }
     

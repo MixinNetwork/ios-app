@@ -62,7 +62,7 @@ class RestoreViewController: UIViewController {
                 MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
                 AccountUserDefault.shared.hasRestoreChat = false
                 DispatchQueue.main.async {
-                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                    AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             } catch {
                 #if DEBUG
@@ -81,7 +81,7 @@ class RestoreViewController: UIViewController {
     @IBAction func skipAction(_ sender: Any) {
         AccountUserDefault.shared.hasRestoreChat = false
         AccountUserDefault.shared.hasRestoreFilesAndVideos = false
-        AppDelegate.current.window?.rootViewController =
+        AppDelegate.current.window.rootViewController =
             makeInitialViewController()
     }
 

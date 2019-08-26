@@ -34,7 +34,7 @@ class DatabaseUpgradeViewController: UIViewController {
     }
 
     private func dismiss() {
-        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+        AppDelegate.current.window.rootViewController = makeInitialViewController()
     }
 
 }

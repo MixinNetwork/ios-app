@@ -122,14 +122,14 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         self.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         ContactAPI.shared.syncContacts()
-                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                        AppDelegate.current.window.rootViewController = makeInitialViewController()
                     }
                 }
             } else {
                 DispatchQueue.main.sync {
                     AccountUserDefault.shared.hasRestoreChat = true
                     AccountUserDefault.shared.hasRestoreFilesAndVideos = true
-                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                    AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }
         case let .failure(error):

@@ -121,7 +121,7 @@ class AddAssetViewController: UIViewController {
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
+        let windowHeight = AppDelegate.current.window.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
         UIView.performWithoutAnimation {
             self.view.layoutIfNeeded()

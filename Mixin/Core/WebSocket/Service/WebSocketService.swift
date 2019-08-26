@@ -138,7 +138,7 @@ extension WebSocketService: SRWebSocketDelegate {
                     AccountUserDefault.shared.hasClockSkew = true
                     DispatchQueue.main.async {
                         WebSocketService.shared.disconnect()
-                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                        AppDelegate.current.window.rootViewController = makeInitialViewController()
                     }
                 }
                 return

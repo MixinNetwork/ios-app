@@ -24,7 +24,7 @@ class InteractiveDismissResponder: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        let width = AppDelegate.current.window!.bounds.width
+        let width = AppDelegate.current.window.bounds.width
         return CGSize(width: width, height: height)
     }
         

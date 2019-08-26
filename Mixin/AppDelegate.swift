@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UIApplication.shared.delegate as! AppDelegate
     }
     
-    var window: UIWindow?
+    let window = UIWindow(frame: UIScreen.main.bounds)
     
     private(set) var voipToken = ""
     
@@ -46,7 +46,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
         pkpushRegistry.delegate = self
         pkpushRegistry.desiredPushTypes = [.voIP]
+        
+        window.backgroundColor = .black
         checkLogin()
+        window.makeKeyAndVisible()
+        
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         if UIDevice.isJailbreak {
             Keychain.shared.clearPIN()
@@ -249,8 +253,6 @@ extension AppDelegate {
     }
     
     private func checkLogin() {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.backgroundColor = .black
         if AccountAPI.shared.didLogin {
             window.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
@@ -263,8 +265,6 @@ extension AppDelegate {
             let navigationController = LoginNavigationController(rootViewController: vc)
             window.rootViewController = navigationController
         }
-        window.makeKeyAndVisible()
-        self.window = window
     }
     
     private func updateSharedImageCacheConfig() {

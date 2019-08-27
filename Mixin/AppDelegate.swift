@@ -26,16 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initBugsnag()
         #endif
         FirebaseApp.configure()
-        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
-        if let account = AccountAPI.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
-        }
         updateSharedImageCacheConfig()
-        CommonUserDefault.shared.checkUpdateOrInstallVersion()
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
@@ -43,12 +34,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         pkpushRegistry.delegate = self
         pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
-        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
+        configAnalytics()
         if let key = MixinKeys.giphy {
             GiphyCore.configure(apiKey: key)
         }
+        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
+    }
+
+    private func configAnalytics() {
+        guard UIApplication.shared.isProtectedDataAvailable else {
+            return
+        }
+
+        if let account = AccountAPI.shared.account {
+            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
+            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
+            Crashlytics.sharedInstance().setUserName(account.full_name)
+            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
+            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+        }
+
+        CommonUserDefault.shared.checkUpdateOrInstallVersion()
+        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
+    }
+
+    func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
+        guard AccountAPI.shared.account == nil else {
+            return
+        }
+        guard let account = AccountUserDefault.shared.getAccount() else {
+            return
+        }
+
+        AccountAPI.shared.account = account
+        configAnalytics()
+        if AccountAPI.shared.didLogin && window.rootViewController is LoginNavigationController {
+            checkLogin()
+        }
     }
 
     private func checkJailbreak() {
@@ -143,9 +167,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 })
             }
         } else {
-            let vc = LoginMobileNumberViewController()
-            let navigationController = LoginNavigationController(rootViewController: vc)
-            window.rootViewController = navigationController
+            window.rootViewController = LoginNavigationController.instance()
         }
         window.makeKeyAndVisible()
     }

@@ -10,6 +10,10 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
 
     private var buttonViews = [UIView]()
     
+    override var contentFrame: CGRect {
+        return (viewModel as? AppButtonGroupViewModel)?.buttonGroupFrame ?? .zero
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? AppButtonGroupViewModel, let appButtons = viewModel.message.appButtons {

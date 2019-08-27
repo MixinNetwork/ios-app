@@ -230,7 +230,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
     }
 
-    @available(iOS 10.0, *)
     func handerQuickAction(_ response: UNNotificationResponse) -> Bool {
         let categoryIdentifier = response.notification.request.content.categoryIdentifier
         let actionIdentifier = response.actionIdentifier
@@ -260,8 +259,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
             var newMsg = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue, conversationId: conversationId, createdAt: Date().toUTCString(), userId: AccountAPI.shared.accountUserId)
             newMsg.content = text
+            newMsg.quoteMessageId = userInfo["message_id"] as? String
             DispatchQueue.global().async {
                 SendMessageService.shared.sendMessage(message: newMsg, ownerUser: ownerUser, isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
+                SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
             }
         default:
             return false

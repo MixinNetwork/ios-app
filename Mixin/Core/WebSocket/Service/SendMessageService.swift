@@ -225,9 +225,9 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendReadMessages(conversationId: String) {
+    func sendReadMessages(conversationId: String, force: Bool = false) {
         DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
+            guard force || UIApplication.shared.applicationState == .active else {
                 return
             }
             SendMessageService.shared.saveDispatchQueue.async {
@@ -277,35 +277,6 @@ class SendMessageService: MixinService {
                 }
                 ConversationDAO.shared.showBadgeNumber()
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
-                SendMessageService.shared.processMessages()
-            }
-        }
-    }
-
-    func sendReadMessage(conversationId: String, messageId: String) {
-        DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
-                return
-            }
-            SendMessageService.shared.saveDispatchQueue.async {
-                let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-                var jobs = [Job]()
-                jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
-                if AccountUserDefault.shared.isDesktopLoggedIn {
-                    jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
-                }
-
-                MixinDatabase.shared.transaction(callback: { (database) in
-                    let updateStatment = try database.prepareUpdate(table: Message.tableName, on: Message.Properties.status).where(Message.Properties.messageId == messageId && Message.Properties.status == MessageStatus.DELIVERED.rawValue)
-                    try updateStatment.execute(with: [MessageStatus.READ.rawValue])
-                    guard updateStatment.changes ?? 0 > 0 else {
-                        return
-                    }
-                    try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
-                    try database.insert(objects: jobs, intoTable: Job.tableName)
-                })
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
-                ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.processMessages()
             }
         }

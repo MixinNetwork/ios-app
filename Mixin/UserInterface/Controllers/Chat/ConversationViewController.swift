@@ -193,6 +193,7 @@ class ConversationViewController: UIViewController {
         if parent == nil {
             dataSource?.cancelMessageProcessing()
         }
+        SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
     }
     
     @available(iOS 11.0, *)

@@ -423,9 +423,6 @@ extension ConversationDataSource {
                 cell.updateOperationButtonStyle()
             }
         }
-        if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, let cell = cell as? PhotoRepresentableMessageCell {
-            cell.reloadMedia(viewModel: viewModel)
-        }
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
         }

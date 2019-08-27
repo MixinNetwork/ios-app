@@ -50,9 +50,13 @@ final class AccountAPI: BaseAPI {
         return account?.identity_number ?? "00000"
     }
     
-    var account: Account? = AccountUserDefault.shared.getAccount() {
-        didSet {
-            AccountUserDefault.shared.storeAccount(account: account)
+    var account = AccountUserDefault.shared.getAccount()
+
+    func updateAccount(account: Account) {
+        self.account = account
+        AccountUserDefault.shared.storeAccount(account: account)
+        DispatchQueue.global().async {
+            UserDAO.shared.updateAccount(account: account)
         }
     }
 

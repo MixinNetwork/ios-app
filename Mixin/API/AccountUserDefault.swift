@@ -20,11 +20,10 @@ class AccountUserDefault {
             if let data = try? JSONEncoder().encode(account) {
                 session.setValue(data, forKey: keyAccount)
             }
+            NotificationCenter.default.post(name: .AccountDidChange, object: nil)
         } else {
             session.removeObject(forKey: keyAccount)
         }
-        session.synchronize()
-        NotificationCenter.default.post(name: .AccountDidChange, object: nil)
     }
 
     func getAccount() -> Account? {

@@ -438,10 +438,7 @@ class UserView: CornerView {
                     if let weakSelf = self {
                         weakSelf.updateUser(user: UserItem.createUser(from: account), animated: true, refreshUser: false, superView: weakSelf.superView)
                     }
-                    AccountAPI.shared.account = account
-                    DispatchQueue.global().async {
-                        UserDAO.shared.updateAccount(account: account)
-                    }
+                    AccountAPI.shared.updateAccount(account: account)
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -658,10 +655,7 @@ extension UserView: ImagePickerControllerDelegate {
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
                 hud.set(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)

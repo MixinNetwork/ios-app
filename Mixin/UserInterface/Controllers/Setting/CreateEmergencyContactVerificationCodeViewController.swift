@@ -61,10 +61,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         EmergencyAPI.shared.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
                 self?.showSuccessAlert()
             case .failure(let error):
                 self?.handleVerificationCodeError(error)

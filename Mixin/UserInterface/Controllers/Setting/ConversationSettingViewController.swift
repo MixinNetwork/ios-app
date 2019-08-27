@@ -129,10 +129,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceContactsCheckmarkView.alpha = 1
@@ -156,10 +153,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.messageSourceContactsCheckmarkView.alpha = 1
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
@@ -183,10 +177,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
@@ -210,10 +201,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
+                AccountAPI.shared.updateAccount(account: account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1

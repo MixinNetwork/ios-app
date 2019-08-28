@@ -284,7 +284,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
-        if let controller = UIApplication.homeContainerViewController?.pipController {
+        if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
                 controller.pipAction()
                 return

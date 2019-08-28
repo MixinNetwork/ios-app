@@ -136,7 +136,9 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
             self.transform = transform
         } else if let controller = viewController as? GalleryVideoItemViewController {
             frame = controller.videoView.contentView.frame
-            imageWrapperView.frame = bounds
+            let wrapperWidth = bounds.height / item.size.height * item.size.width
+            imageWrapperView.bounds.size = CGSize(width: wrapperWidth, height: bounds.height)
+            imageWrapperView.center = CGPoint(x: bounds.midX, y: bounds.midY)
             imageWrapperView.position = .center
         } else {
             frame = viewController.view.bounds

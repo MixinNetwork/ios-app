@@ -50,7 +50,7 @@ class VerticalPositioningImageView: UIView {
     }
     
     private func prepare() {
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         clipsToBounds = true
     }

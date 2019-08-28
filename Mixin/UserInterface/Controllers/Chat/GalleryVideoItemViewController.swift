@@ -191,7 +191,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         videoRatio = item.size.width / item.size.height
-        videoView.coverRatio = videoRatio
+        videoView.coverSize = item.size
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
         layoutFullsized()

@@ -123,7 +123,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 }
                 let visionImage = VisionImage(image: image)
                 qrCodeDetector.detect(in: visionImage, completion: { (features, error) in
-                    guard let urlString = features?.first?.url?.url else {
+                    guard let urlString = features?.first?.rawValue else {
                         return
                     }
                     guard let weakSelf = self, weakSelf.item == item else {

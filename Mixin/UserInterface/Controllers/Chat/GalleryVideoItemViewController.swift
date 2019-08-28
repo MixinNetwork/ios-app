@@ -191,7 +191,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         videoRatio = item.size.width / item.size.height
-        videoView.coverRatio = videoRatio
+        videoView.coverSize = item.size
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
         layoutFullsized()
@@ -284,7 +284,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
-        if let controller = UIApplication.homeContainerViewController?.pipController {
+        if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
                 controller.pipAction()
                 return

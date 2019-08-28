@@ -9,7 +9,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     let playerView = PlayerView()
     let controlView = R.nib.galleryVideoControlView(owner: nil)!
     
-    var coverRatio: CGFloat = 1
+    var coverSize = CGSize(width: 1, height: 1)
     var videoRatio: CGFloat = 1
     var isPipMode = false {
         didSet {
@@ -41,13 +41,15 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.bounds.size = CGSize(width: bounds.width , height: ceil(bounds.width / videoRatio))
+        
+        let contentHeight = min(bounds.height, ceil(bounds.width / videoRatio))
+        contentView.bounds.size = CGSize(width: bounds.width , height: contentHeight)
         contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        
         playerView.frame = contentView.bounds
-        coverImageView.bounds.size = CGSize(width: contentView.bounds.width,
-                                            height: ceil(contentView.bounds.width / coverRatio))
-        coverImageView.center = CGPoint(x: contentView.bounds.midX,
-                                        y: contentView.bounds.midY)
+        
+        coverImageView.frame = coverSize.rect(fittingSize: contentView.bounds.size)
+        
         layoutControlView()
     }
     

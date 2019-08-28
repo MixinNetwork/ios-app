@@ -19,7 +19,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_video_visual_control" translatesAutoresizingMaskIntoConstraints="NO" id="2mC-M8-6Y5">
-                            <rect key="frame" x="0.0" y="-44" width="414" height="88"/>
+                            <rect key="frame" x="0.0" y="-56" width="414" height="88"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-05-TmK">
                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -43,7 +43,7 @@
                     <constraints>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="leading" secondItem="HPi-eF-W69" secondAttribute="leading" id="6fv-sK-AcP"/>
                         <constraint firstItem="OSM-5H-FgV" firstAttribute="centerX" secondItem="HPi-eF-W69" secondAttribute="centerX" id="Mgy-CF-54O"/>
-                        <constraint firstAttribute="bottom" secondItem="2mC-M8-6Y5" secondAttribute="bottom" id="adl-kf-IhN"/>
+                        <constraint firstAttribute="bottom" secondItem="2mC-M8-6Y5" secondAttribute="bottom" constant="12" id="adl-kf-IhN"/>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="top" secondItem="HPi-eF-W69" secondAttribute="top" id="flc-7m-1k2"/>
                         <constraint firstAttribute="bottom" secondItem="ykM-27-EvN" secondAttribute="bottom" id="g7H-Vk-jge"/>
                         <constraint firstAttribute="height" constant="44" id="hVG-22-m5p"/>

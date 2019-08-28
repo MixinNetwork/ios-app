@@ -167,7 +167,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 })
             }
         } else {
-            window.rootViewController = LoginNavigationController.instance()
+            if UIApplication.shared.isProtectedDataAvailable {
+                window.rootViewController = LoginNavigationController.instance()
+            } else {
+                window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
+            }
         }
         window.makeKeyAndVisible()
     }

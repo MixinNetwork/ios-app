@@ -59,6 +59,7 @@
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
 "search_placeholder_asset" = "名称, 符号";
+"search_placeholder_currency" = "货币代码";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
 "search_related_messages_count" = "条相关消息";

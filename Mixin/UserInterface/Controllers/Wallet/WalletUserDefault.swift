@@ -34,6 +34,9 @@ class WalletUserDefault {
     private var keyWithdrawalTip: String {
         return "asset_withdrawal_tip_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyCurrencyCode: String {
+        return "currency_code_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     let session = UserDefaults(suiteName: SuiteName.wallet)!
     let checkMaxInterval: Double = 60 * 60 * 24
@@ -148,6 +151,15 @@ class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyAssetTransactionOffset)
+        }
+    }
+    
+    var currencyCode: String? {
+        get {
+            return session.string(forKey: keyCurrencyCode)
+        }
+        set {
+            session.set(newValue, forKey: keyCurrencyCode)
         }
     }
     

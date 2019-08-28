@@ -45,6 +45,14 @@ class RefreshAssetsJob: BaseJob {
                 throw error
             }
         }
+        switch AssetAPI.shared.fiats() {
+        case let .success(fiatMonies):
+            DispatchQueue.main.async {
+                Currency.updateRate(with: fiatMonies)
+            }
+        case let .failure(error):
+            UIApplication.traceError(error)
+        }
     }
 
     private func updateSnapshots(assetId: String) {

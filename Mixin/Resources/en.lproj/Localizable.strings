@@ -59,6 +59,7 @@
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_placeholder_address" = "Label";
 "search_placeholder_asset" = "Name, Symbol";
+"search_placeholder_currency" = "Code";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_related_messages_count" = " related messages";

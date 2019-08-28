@@ -7,7 +7,7 @@ class TransactionViewController: UIViewController {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
-    @IBOutlet weak var usdValueLabel: UILabel!
+    @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
     @IBOutlet weak var avatarImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     
@@ -34,11 +34,11 @@ class TransactionViewController: UIViewController {
         } else {
             amountLabel.textColor = .walletGreen
         }
-        let usdBalance = asset.priceUsd.doubleValue * snapshot.amount.doubleValue
-        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            usdValueLabel.text = "≈ $" + localizedUSDBalance
+        let fiatMoneyValue = snapshot.amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+        if let value = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) {
+            fiatMoneyValueLabel.text = "≈ " + Currency.current.symbol + value
         } else {
-            usdValueLabel.text = nil
+            fiatMoneyValueLabel.text = nil
         }
         symbolLabel.text = snapshot.assetSymbol
         makeContents()

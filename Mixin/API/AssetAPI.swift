@@ -45,6 +45,8 @@ final class AssetAPI: BaseAPI {
         }
         static let top = "network/assets/top"
         
+        static let fiats = "fiats"
+        
     }
 
     func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
@@ -110,6 +112,10 @@ final class AssetAPI: BaseAPI {
     
     func topAssets() -> APIResult<[Asset]> {
         return request(method: .get, url: url.top)
+    }
+    
+    func fiats() -> APIResult<[FiatMoney]> {
+        return request(method: .get, url: url.fiats)
     }
     
 }

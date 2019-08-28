@@ -6,6 +6,7 @@ class WalletSettingViewController: UITableViewController {
     @IBOutlet weak var payTitleLabel: UILabel!
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
+    @IBOutlet weak var currencySymbolLabel: UILabel!
     
     private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
     private let footerReuseId = "footer"
@@ -25,6 +26,11 @@ class WalletSettingViewController: UITableViewController {
             biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
             payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
         }
+        updateCurrencySymbolLabel()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateCurrencySymbolLabel),
+                                               name: Currency.currentCurrencyDidChangeNotification,
+                                               object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,11 +105,17 @@ extension WalletSettingViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 1 {
-            pinIntervalAction()
-        } else if indexPath.section == 1 {
+        switch indexPath.section {
+        case 0:
+            if indexPath.row == 1 {
+                pinIntervalAction()
+            }
+        case 1:
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
+        default:
+            let vc = CurrencySelectorViewController()
+            present(vc, animated: true, completion: nil)
         }
     }
     
@@ -153,6 +165,11 @@ extension WalletSettingViewController {
         } else {
             pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_HOURS(pinInterval).lowercased()
         }
+    }
+    
+    @objc private func updateCurrencySymbolLabel() {
+        let currency = Currency.current
+        currencySymbolLabel.text = currency.code + " (" + currency.symbol + ")"
     }
     
 }

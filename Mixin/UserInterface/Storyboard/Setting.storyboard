@@ -2135,6 +2135,57 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="dXd-gC-IsC">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="v9t-o4-jm4" customClass="ModernSelectedBackgroundCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="298" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="v9t-o4-jm4" id="pDn-KY-iXy">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Nda-BI-DSp">
+                                                    <rect key="frame" x="20" y="0.0" width="313" height="64"/>
+                                                    <subviews>
+                                                        <label opaque="NO" contentMode="scaleToFill" text="Currency" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UUe-0P-mqR">
+                                                            <rect key="frame" x="0.0" y="0.0" width="259" height="64"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_currency"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD ($)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfj-jI-PLy">
+                                                            <rect key="frame" x="267" y="0.0" width="46" height="64"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <color key="textColor" red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="YfA-A1-XcD">
+                                                    <rect key="frame" x="333" y="0.0" width="42" height="64"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="yL8-1a-Hed"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="Nda-BI-DSp" firstAttribute="top" secondItem="pDn-KY-iXy" secondAttribute="top" id="EJr-Vx-Sb2"/>
+                                                <constraint firstAttribute="bottom" secondItem="YfA-A1-XcD" secondAttribute="bottom" id="HzN-fZ-Vy7"/>
+                                                <constraint firstItem="YfA-A1-XcD" firstAttribute="top" secondItem="pDn-KY-iXy" secondAttribute="top" id="MPw-6N-M7a"/>
+                                                <constraint firstItem="Nda-BI-DSp" firstAttribute="leading" secondItem="pDn-KY-iXy" secondAttribute="leading" constant="20" id="djt-6J-IvL"/>
+                                                <constraint firstAttribute="bottom" secondItem="Nda-BI-DSp" secondAttribute="bottom" id="g4x-6O-enB"/>
+                                                <constraint firstAttribute="trailing" secondItem="YfA-A1-XcD" secondAttribute="trailing" id="oNM-PN-GXu"/>
+                                                <constraint firstItem="YfA-A1-XcD" firstAttribute="leading" secondItem="Nda-BI-DSp" secondAttribute="trailing" id="tXD-Yd-bUA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="h0v-jb-TZN" id="TlL-u4-HIE"/>
@@ -2143,6 +2194,7 @@
                     </tableView>
                     <connections>
                         <outlet property="biometricsPaySwitch" destination="u34-vg-lzh" id="DW8-fZ-0kL"/>
+                        <outlet property="currencySymbolLabel" destination="hfj-jI-PLy" id="vVu-Qb-xy6"/>
                         <outlet property="payTitleLabel" destination="Tuh-GW-tc5" id="sl4-tx-erl"/>
                         <outlet property="pinIntervalLabel" destination="aZK-hB-ftp" id="x07-hf-GCb"/>
                     </connections>

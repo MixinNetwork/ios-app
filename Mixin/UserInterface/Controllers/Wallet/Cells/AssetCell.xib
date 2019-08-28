@@ -107,10 +107,10 @@
                 <outlet property="assetIconView" destination="LEC-GX-KUU" id="303-hb-VpS"/>
                 <outlet property="balanceLabel" destination="UYd-p5-0iv" id="uyx-tC-7Ri"/>
                 <outlet property="changeLabel" destination="esD-bh-haj" id="cje-aA-wlb"/>
-                <outlet property="noUSDPriceIndicatorLabel" destination="g77-7K-eGQ" id="LE2-in-eqK"/>
+                <outlet property="fiatMoneyBalanceLabel" destination="gzb-Zt-1Oo" id="ieB-nh-RfT"/>
+                <outlet property="fiatMoneyPriceLabel" destination="XoA-aw-3R3" id="LNn-uG-f3V"/>
+                <outlet property="noFiatMoneyPriceIndicatorLabel" destination="g77-7K-eGQ" id="LE2-in-eqK"/>
                 <outlet property="symbolLabel" destination="Ks7-rU-07m" id="07e-F2-0aW"/>
-                <outlet property="usdBalanceLabel" destination="gzb-Zt-1Oo" id="ieB-nh-RfT"/>
-                <outlet property="usdPriceLabel" destination="XoA-aw-3R3" id="LNn-uG-f3V"/>
             </connections>
         </tableViewCell>
     </objects>

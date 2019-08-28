@@ -293,6 +293,8 @@
                                         <outlet property="assetChartView" destination="VuY-Uo-TGR" id="0sY-mx-MT0"/>
                                         <outlet property="assetChartWrapperView" destination="Y25-bj-M31" id="Qav-Si-efh"/>
                                         <outlet property="btcValueLabel" destination="7s3-8d-IEj" id="h9n-hD-GLH"/>
+                                        <outlet property="fiatMoneySymbolLabel" destination="Rtr-Z3-phX" id="13M-dB-Gav"/>
+                                        <outlet property="fiatMoneyValueLabel" destination="eGd-qQ-SHD" id="jiK-m0-S7P"/>
                                         <outlet property="leftAssetPercentLabel" destination="Tnh-04-JMO" id="yXX-OA-Y1S"/>
                                         <outlet property="leftAssetSymbolLabel" destination="77V-eY-DVx" id="810-BD-aOn"/>
                                         <outlet property="leftAssetWrapperView" destination="chb-gd-S2I" id="tGx-Wn-BSk"/>
@@ -302,7 +304,6 @@
                                         <outlet property="rightAssetPercentLabel" destination="Bdz-eK-Rbu" id="QUF-md-uQw"/>
                                         <outlet property="rightAssetSymbolLabel" destination="laD-AH-fHv" id="xiL-Na-eLL"/>
                                         <outlet property="rightAssetWrapperView" destination="ZVj-xN-Q6p" id="1RB-Sd-da7"/>
-                                        <outlet property="usdValueLabel" destination="eGd-qQ-SHD" id="jiK-m0-S7P"/>
                                     </connections>
                                 </view>
                                 <prototypes>
@@ -564,10 +565,10 @@
                         <outlet property="amountLabel" destination="hy0-UM-G0M" id="sDe-VT-obR"/>
                         <outlet property="assetIconView" destination="0iU-Qh-8sq" id="JYV-ll-5cc"/>
                         <outlet property="avatarImageViewWidthConstraint" destination="2CV-rN-gIY" id="bv8-HB-pRw"/>
+                        <outlet property="fiatMoneyValueLabel" destination="35Q-tB-pB9" id="I8E-Pt-pfZ"/>
                         <outlet property="headerContentStackView" destination="X9m-wq-bBJ" id="Sud-Ho-ph3"/>
                         <outlet property="symbolLabel" destination="Ptc-MK-Zp1" id="wTk-bs-OjE"/>
                         <outlet property="tableView" destination="n3U-Zp-vXX" id="9Zs-Ac-nU6"/>
-                        <outlet property="usdValueLabel" destination="35Q-tB-pB9" id="I8E-Pt-pfZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kzn-0f-7y0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -895,11 +896,11 @@
                                         <outlet property="assetIconView" destination="OIb-Ux-chy" id="qqe-Ve-o95"/>
                                         <outlet property="assetIconViewWidthConstraint" destination="QDW-FL-FgG" id="k4i-3R-pZe"/>
                                         <outlet property="depositButton" destination="lD1-P5-OTx" id="KGh-DF-fCr"/>
+                                        <outlet property="fiatMoneyValueLabel" destination="t3B-IR-dY1" id="U8E-GO-JUy"/>
                                         <outlet property="infoStackView" destination="FZF-Lv-pQL" id="Det-OR-vmR"/>
                                         <outlet property="infoStackViewLeadingConstraint" destination="HKY-eI-b6H" id="M4L-Ac-lWO"/>
                                         <outlet property="infoStackViewTrailingConstraint" destination="bWE-T6-5jd" id="2jG-T5-YhH"/>
                                         <outlet property="transactionsHeaderView" destination="GD6-mT-59f" id="7IN-NZ-6OK"/>
-                                        <outlet property="usdValueLabel" destination="t3B-IR-dY1" id="U8E-GO-JUy"/>
                                     </connections>
                                 </view>
                             </tableView>

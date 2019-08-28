@@ -2,7 +2,8 @@ import UIKit
 
 class WalletHeaderView: InfiniteTopView {
     
-    @IBOutlet weak var usdValueLabel: InsetLabel!
+    @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
+    @IBOutlet weak var fiatMoneyValueLabel: InsetLabel!
     @IBOutlet weak var btcValueLabel: UILabel!
     
     @IBOutlet weak var assetChartWrapperView: UIView!
@@ -20,7 +21,7 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    private let usdBalanceAttributes = [
+    private let fiatMoneyBalanceAttributes = [
         NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
     ]
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
@@ -32,7 +33,7 @@ class WalletHeaderView: InfiniteTopView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        usdValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+        fiatMoneyValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -40,6 +41,7 @@ class WalletHeaderView: InfiniteTopView {
     }
     
     func render(assets: [AssetItem]) {
+        fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
         var usdTotalBalance: Double = 0
@@ -61,7 +63,7 @@ class WalletHeaderView: InfiniteTopView {
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
         contentHeight = usdBalanceIsMoreThanZero ? 159 : 107
-        usdValueLabel.attributedText = attributedString(usdBalance: usdTotalBalance)
+        fiatMoneyValueLabel.attributedText = attributedString(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
         btcValueLabel.attributedText = attributedBTCValue
@@ -116,9 +118,9 @@ extension WalletHeaderView {
     private func attributedString(usdBalance: Double) -> NSAttributedString? {
         if usdBalance == 0 {
             let str = "0" + currentDecimalSeparator + "00"
-            return NSAttributedString(string: str, attributes: usdBalanceAttributes)
-        } else if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            return NSAttributedString(string: localizedUSDBalance, attributes: usdBalanceAttributes)
+            return NSAttributedString(string: str, attributes: fiatMoneyBalanceAttributes)
+        } else if let localizedFiatMoneyBalance = CurrencyFormatter.localizedString(from: usdBalance * Currency.current.rate, format: .fiatMoney, sign: .never) {
+            return NSAttributedString(string: localizedFiatMoneyBalance, attributes: fiatMoneyBalanceAttributes)
         } else {
             return nil
         }

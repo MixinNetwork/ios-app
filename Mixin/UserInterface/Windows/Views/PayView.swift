@@ -71,7 +71,7 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, fromWebWithdrawal: Bool = false, amountUsd: String? = nil, superView: BottomSheetView) {
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, fromWebWithdrawal: Bool = false, fiatMoneyAmount: String? = nil, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -103,12 +103,13 @@ class PayView: UIStackView {
         memoLabel.text = memo
 
         let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
-        if let amountUsd = amountUsd {
-            amountLabel.text = amountUsd
+        if let fiatMoneyAmount = fiatMoneyAmount {
+            amountLabel.text = fiatMoneyAmount
             amountExchangeLabel.text = amountToken
         } else {
             amountLabel.text = amountToken
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
+            let value = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         }
 
         dismissButton.isEnabled = true

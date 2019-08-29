@@ -44,6 +44,12 @@ class TransactionViewController: UIViewController {
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self
+        updateTableViewContentInsetBottom()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInsetBottom()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -125,6 +131,14 @@ extension TransactionViewController: UITableViewDelegate {
 }
 
 extension TransactionViewController {
+    
+    private func updateTableViewContentInsetBottom() {
+        if view.safeAreaInsets.bottom > 20 {
+            tableView.contentInset.bottom = 0
+        } else {
+            tableView.contentInset.bottom = 20
+        }
+    }
     
     private func makeContents() {
         contents = []

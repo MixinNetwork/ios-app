@@ -238,11 +238,7 @@ class ConversationViewController: UIViewController {
             blinkCellBackground(at: indexPath)
         } else if let quotingMessageId = quotingMessageId, MessageDAO.shared.hasMessage(id: quotingMessageId) {
             self.quotingMessageId = nil
-            dataSource?.scrollToBottomAndReload(initialMessageId: quotingMessageId, completion: {
-                if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
-                    self.blinkCellBackground(at: indexPath)
-                }
-            })
+            reloadWithMessageIdAndBlinkTheCell(quotingMessageId, upwards: true)
         } else {
             dataSource?.scrollToFirstUnreadMessageOrBottom()
         }
@@ -370,11 +366,7 @@ class ConversationViewController: UIViewController {
                     blinkCellBackground(at: indexPath)
                 } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                     quotingMessageId = message.messageId
-                    dataSource?.scrollToTopAndReload(initialMessageId: quoteMessageId, completion: {
-                        if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
-                            self.blinkCellBackground(at: indexPath)
-                        }
-                    })
+                    reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let filename = message.mediaUrl {
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
@@ -1370,6 +1362,27 @@ extension ConversationViewController {
                 }
             }
         }
+    }
+    
+    private func reloadWithMessageIdAndBlinkTheCell(_ messageId: String, upwards: Bool) {
+        let scroll = upwards ? dataSource.scrollToBottomAndReload : dataSource.scrollToTopAndReload
+        scroll(messageId, {
+            guard let indexPath = self.dataSource?.indexPath(where: { $0.messageId == messageId }) else {
+                return
+            }
+            if upwards {
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+            } else {
+                self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+            }
+            UIView.animate(withDuration: 0.3, animations: {
+                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+            }, completion: { (_) in
+                if let indexPath = self.dataSource.indexPath(where: { $0.messageId == messageId }) {
+                    self.blinkCellBackground(at: indexPath)
+                }
+            })
+        })
     }
     
 }

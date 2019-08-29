@@ -417,7 +417,6 @@ public class Localized {
     public static let WALLET_PIN_TOO_SIMPLE = LocalizedString("wallet_pin_too_simple", comment: "The PIN is too simple and insecure.")
     public static let WALLET_PIN_REMEMBER_DESCRIPTION = LocalizedString("wallet_pin_remember_description", comment: "You'll be asked for it periodically to help you remember it.")
     public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
-    public static let WALLET_SETTING = LocalizedString("wallet_setting", comment: "Wallet Setting")
     public static let WALLET_PIN_TOUCH_ID_PROMPT = LocalizedString("wallet_pin_touch_id_prompt", comment: "Confirm PIN to enable Touch Pay")
     public static let WALLET_PIN_FACE_ID_PROMPT = LocalizedString("wallet_pin_face_id_prompt", comment: "Confirm PIN to enable Face Pay")
     public static let WALLET_TOUCH_ID = LocalizedString("wallet_touch_id", comment: "Touch ID")

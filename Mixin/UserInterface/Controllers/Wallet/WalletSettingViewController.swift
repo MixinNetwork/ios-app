@@ -12,7 +12,7 @@ class WalletSettingViewController: UITableViewController {
 
     class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.wallet_setting())
         return container
     }
     

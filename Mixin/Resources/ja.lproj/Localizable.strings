@@ -357,7 +357,7 @@
 "wallet_all_transactions_title" = "全取引";
 "wallet_pin_touch_id_prompt" = "Touch Payを有効にするにはPINを確認してください";
 "wallet_pin_face_id_prompt" = "Face Pay を有効にするにはPINを確認してください";
-"wallet_setting" = "ウォレットの設定";
+"wallet_setting" = "ウォレット";
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = " %@ で支払う";

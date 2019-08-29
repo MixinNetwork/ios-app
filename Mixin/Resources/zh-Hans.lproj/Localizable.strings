@@ -371,7 +371,7 @@
 "wallet_all_transactions_title" = "所有交易记录";
 "wallet_pin_touch_id_prompt" = "确认钱包密码启用指纹支付";
 "wallet_pin_face_id_prompt" = "确认钱包密码启用面容支付";
-"wallet_setting" = "钱包设置";
+"wallet_setting" = "钱包";
 "wallet_touch_id" = "指纹";
 "wallet_face_id" = "面容";
 "wallet_enable_biometric_pay_title" = "%@支付";

@@ -96,7 +96,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         
         contentView.frame = bounds
         contentView.clipsToBounds = true
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .black
         
         coverImageView.contentMode = .scaleAspectFill
         

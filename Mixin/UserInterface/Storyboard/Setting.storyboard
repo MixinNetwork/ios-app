@@ -850,7 +850,7 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="1ym-tr-Z1R">
                                                     <rect key="frame" x="36" y="0.0" width="303" height="80"/>
                                                     <subviews>
-                                                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="ddN-Sf-ok7" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ddN-Sf-ok7" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="20" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="dX2-Ey-SW7"/>
@@ -1574,46 +1574,10 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection id="JB3-xy-Ayi">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Hek-SB-oWh">
-                                        <rect key="frame" x="0.0" y="128" width="375" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Hek-SB-oWh" id="9zn-cO-lOA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Tmk-Oy-EXC">
-                                                    <rect key="frame" x="20" y="23" width="339" height="18"/>
-                                                    <subviews>
-                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="750" insetsLayoutMarginsFromSafeArea="NO" text="Wallet setting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sOZ-ts-cDk">
-                                                            <rect key="frame" x="0.0" y="0.0" width="325" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_setting"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="xnW-bU-uod">
-                                                            <rect key="frame" x="333" y="4" width="6" height="10"/>
-                                                        </imageView>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Tmk-Oy-EXC" secondAttribute="trailing" constant="16" id="9Zb-Ui-eRV"/>
-                                                <constraint firstItem="Tmk-Oy-EXC" firstAttribute="leading" secondItem="9zn-cO-lOA" secondAttribute="leading" constant="20" id="Idf-K4-Qw0"/>
-                                                <constraint firstItem="Tmk-Oy-EXC" firstAttribute="centerY" secondItem="9zn-cO-lOA" secondAttribute="centerY" id="PWt-v4-c9n"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                             <tableViewSection id="d6U-cv-OOO">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="I84-dX-gSJ">
-                                        <rect key="frame" x="0.0" y="192" width="375" height="64"/>
+                                        <rect key="frame" x="0.0" y="128" width="375" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="I84-dX-gSJ" id="FBt-jc-KEt">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
@@ -1649,7 +1613,7 @@
                             <tableViewSection id="IJR-Nm-Wud">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="yZn-h2-JL9">
-                                        <rect key="frame" x="0.0" y="256" width="375" height="64"/>
+                                        <rect key="frame" x="0.0" y="192" width="375" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yZn-h2-JL9" id="6og-gh-Ofr">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
@@ -1691,7 +1655,7 @@
                             <tableViewSection id="xPf-EW-Pgl">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="HMK-IK-zZA">
-                                        <rect key="frame" x="0.0" y="320" width="375" height="64"/>
+                                        <rect key="frame" x="0.0" y="256" width="375" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HMK-IK-zZA" id="X5A-y5-xgX">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
@@ -1739,7 +1703,6 @@
                     <connections>
                         <outlet property="blockLabel" destination="xXs-fD-pqa" id="jiF-xP-6dr"/>
                         <outlet property="emergencyLabel" destination="oJw-oe-hef" id="jiA-73-O39"/>
-                        <outlet property="passwordLabel" destination="sOZ-ts-cDk" id="nve-n4-jxJ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p6J-0F-Qts" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2043,6 +2006,5 @@
         <image name="ic_emergency" width="140" height="162"/>
         <image name="ic_emergency_contact" width="90" height="90"/>
         <image name="ic_mobile_contact" width="90" height="90"/>
-        <image name="ic_place_holder" width="38" height="38"/>
     </resources>
 </document>

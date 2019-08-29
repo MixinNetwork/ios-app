@@ -253,7 +253,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         animate(animations: {
             self.videoView.isPipMode = isPipMode
             if isPipMode {
-                self.layoutPip()
+                self.layoutPip(updateViewCenter: true)
             } else {
                 self.layoutFullsized()
             }
@@ -432,7 +432,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    func layoutPip() {
+    func layoutPip(updateViewCenter: Bool) {
         guard let parentView = parent?.view else {
             return
         }
@@ -452,8 +452,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             }
         }
         view.frame.size = ceil(size)
-        view.center = CGPoint(x: parentView.bounds.width - pipModeMinInsets.right - size.width / 2,
-                              y: pipModeLayoutInsets.top + pipModeDefaultTopMargin + size.height / 2)
+        if updateViewCenter {
+            view.center = CGPoint(x: parentView.bounds.width - pipModeMinInsets.right - size.width / 2,
+                                  y: pipModeLayoutInsets.top + pipModeDefaultTopMargin + size.height / 2)
+        }
     }
     
     func layoutFullsized() {
@@ -565,7 +567,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         videoView.videoRatio = item.presentationSize.width / item.presentationSize.height
         videoView.setNeedsLayout()
         if isPipMode {
-            layoutPip()
+            layoutPip(updateViewCenter: false)
         } else {
             layoutFullsized()
         }

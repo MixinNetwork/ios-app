@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         AccountAPI.shared.account = account
         configAnalytics()
-        if AccountAPI.shared.didLogin && window.rootViewController is LoginNavigationController {
+        if AccountAPI.shared.didLogin && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()
         }
     }

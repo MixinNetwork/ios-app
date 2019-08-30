@@ -42,7 +42,7 @@ extension CurrencySelectorViewController: UITableViewDataSource {
         cell.render(currency: currency)
         
         let isSelected = currency.code == Currency.current.code
-        cell.checkmarkView.status = isSelected ? .selected : .unselected
+        cell.checkmarkView.status = isSelected ? .selected : .hidden
         
         return cell
     }

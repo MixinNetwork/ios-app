@@ -48,7 +48,7 @@ class AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
     
     lazy var localizedFiatMoneyPrice: String = {
         let value = priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: value, format: .precision, sign: .never) ?? ""
+        return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never) ?? ""
     }()
     
     lazy var localizedFiatMoneyBalance: String = {

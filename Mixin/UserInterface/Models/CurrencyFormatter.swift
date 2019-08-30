@@ -4,13 +4,13 @@ struct CurrencyFormatter {
     
     static let precisionFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8, roundingMode: .down, locale: .current)
     static let prettyFormatter = NumberFormatter(numberStyle: .decimal, roundingMode: .down, locale: .current)
-    static let legalTenderFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2, roundingMode: .down, locale: .current)
+    static let fiatMoneyFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2, roundingMode: .down, locale: .current)
     static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
     
     enum Format {
         case precision
         case pretty
-        case legalTender
+        case fiatMoney
     }
     
     enum SignBehavior {
@@ -21,7 +21,7 @@ struct CurrencyFormatter {
     
     enum Symbol {
         case btc
-        case usd
+        case currentCurrency
         case custom(String)
     }
     
@@ -43,8 +43,8 @@ struct CurrencyFormatter {
             precisionFormatter.locale = .current
         case .pretty:
             prettyFormatter.locale = .current
-        case .legalTender:
-            legalTenderFormatter.locale = .current
+        case .fiatMoney:
+            fiatMoneyFormatter.locale = .current
         }
         return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
@@ -70,17 +70,17 @@ struct CurrencyFormatter {
                 prettyFormatter.maximumFractionDigits = 0
             }
             str = prettyFormatter.string(from: number) ?? ""
-        case .legalTender:
-            setSignBehavior(sign, for: legalTenderFormatter)
-            str = legalTenderFormatter.string(from: number) ?? ""
+        case .fiatMoney:
+            setSignBehavior(sign, for: fiatMoneyFormatter)
+            str = fiatMoneyFormatter.string(from: number) ?? ""
         }
         
         if let symbol = symbol {
             switch symbol {
             case .btc:
                 str += " BTC"
-            case .usd:
-                str += " USD"
+            case .currentCurrency:
+                str += " " + Currency.current.code
             case .custom(let symbol):
                 str += " " + symbol
             }

@@ -212,6 +212,10 @@
 		7B75F50E22B775C400619588 /* EmergencySessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
+		7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */; };
+		7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */; };
+		7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */; };
+		7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */; };
 		7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */; };
 		7B7E7144217D87860052C7DD /* CallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7E7143217D87860052C7DD /* CallView.xib */; };
 		7B7E7146217D89790052C7DD /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E7145217D89790052C7DD /* CallView.swift */; };
@@ -332,9 +336,14 @@
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
 		7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */; };
 		7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */ = {isa = PBXBuildFile; fileRef = 7BBD8A3220C1D51C00DF2735 /* recaptcha.html */; };
+		7BBDF3DD230D4B2300079979 /* FiatMoney.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDF3DC230D4B2300079979 /* FiatMoney.swift */; };
+		7BBDF3E2230D6CBA00079979 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDF3E1230D6CBA00079979 /* Currency.swift */; };
 		7BBF395E205A624F00390712 /* Fee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBF395D205A624F00390712 /* Fee.swift */; };
 		7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */; };
 		7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */; };
+		7BC1466D230D12680060FE19 /* CurrencySelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */; };
+		7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC1466E230D12B70060FE19 /* CurrencyCell.swift */; };
+		7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */; };
 		7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC26533207B595500EA7DFF /* ContactMessageCell.swift */; };
 		7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */; };
 		7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */; };
@@ -439,7 +448,7 @@
 		DF03C8631FF2C24300C1ED6B /* RatchetSenderKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C8621FF2C24300C1ED6B /* RatchetSenderKey.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
-		DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */; };
+		DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */; };
 		DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */; };
 		DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */; };
 		DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0111FE5598300F98479 /* ExitConversationJob.swift */; };
@@ -946,6 +955,10 @@
 		7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencySessionRequest.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
+		7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSearchableTableViewController.swift; sourceTree = "<group>"; };
+		7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSearchableTableView.xib; sourceTree = "<group>"; };
+		7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeCell.xib; sourceTree = "<group>"; };
+		7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyCell.xib; sourceTree = "<group>"; };
 		7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputViewController.swift; sourceTree = "<group>"; };
 		7B7E7143217D87860052C7DD /* CallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallView.xib; sourceTree = "<group>"; };
 		7B7E7145217D89790052C7DD /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
@@ -1066,9 +1079,14 @@
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
 		7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckmarkView.swift; sourceTree = "<group>"; };
 		7BBD8A3220C1D51C00DF2735 /* recaptcha.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = recaptcha.html; sourceTree = "<group>"; };
+		7BBDF3DC230D4B2300079979 /* FiatMoney.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatMoney.swift; sourceTree = "<group>"; };
+		7BBDF3E1230D6CBA00079979 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		7BBF395D205A624F00390712 /* Fee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fee.swift; sourceTree = "<group>"; };
 		7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
 		7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationTableViewCell.swift; sourceTree = "<group>"; };
+		7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorViewController.swift; sourceTree = "<group>"; };
+		7BC1466E230D12B70060FE19 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCellBackgroundView.swift; sourceTree = "<group>"; };
 		7BC26533207B595500EA7DFF /* ContactMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCell.swift; sourceTree = "<group>"; };
 		7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
 		7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragDownIndicator.swift; sourceTree = "<group>"; };
@@ -1187,7 +1205,7 @@
 		DF03C8621FF2C24300C1ED6B /* RatchetSenderKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatchetSenderKey.swift; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
-		DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedTableViewCell.swift; sourceTree = "<group>"; };
+		DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSelectedBackgroundCell.swift; sourceTree = "<group>"; };
 		DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineHeightLabel.swift; sourceTree = "<group>"; };
 		DF05F0111FE5598300F98479 /* ExitConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitConversationJob.swift; sourceTree = "<group>"; };
@@ -1728,13 +1746,14 @@
 				7B595356226749A100D59DB4 /* PeerCell.swift */,
 				7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */,
 				7BFE47E02284394000FC4379 /* CheckmarkPeerCell.swift */,
-				DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */,
+				DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */,
 				7BD639C92282B17B00B7B3A6 /* PeerView.xib */,
 				7BFE47DC228432A600FC4379 /* PeerInfoView.xib */,
 				7BFE47DE228432C800FC4379 /* PeerInfoView.swift */,
 				7BFE47E42284530200FC4379 /* PeerHeaderView.swift */,
 				7B2A116022C20F5F00AD029C /* PlayerView.swift */,
 				7B2A115E22C1ECB100AD029C /* RoundedBlurButton.swift */,
+				7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1817,6 +1836,7 @@
 				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
+				7BBDF3E1230D6CBA00079979 /* Currency.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1874,6 +1894,7 @@
 				7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */,
 				7BB6111922BA4179000E758C /* PinValidationView.xib */,
 				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
+				7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2377,6 +2398,7 @@
 				7B59534E2267215B00D59DB4 /* BottomShadowView.swift */,
 				7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */,
 				7B311BA922B9EAFE00C16652 /* IntroTextView.swift */,
+				7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2439,6 +2461,7 @@
 				7BBF395D205A624F00390712 /* Fee.swift */,
 				7B5843442175D3EC0053332F /* PendingDeposit.swift */,
 				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
+				7BBDF3DC230D4B2300079979 /* FiatMoney.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2518,6 +2541,8 @@
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
 				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
+				7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */,
+				7BC1466E230D12B70060FE19 /* CurrencyCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2525,6 +2550,7 @@
 		DF8CECF51FC5704D00E40064 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7B7B5DB4230EBEBA00D0F463 /* TransferTypeCell.xib */,
 				DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */,
 				7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */,
 				7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */,
@@ -2664,7 +2690,6 @@
 				DF06D91E222FAE1300FE7FBC /* SendViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
-				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 			);
@@ -2780,6 +2805,8 @@
 				7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */,
 				7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */,
 				DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */,
+				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
+				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -2970,6 +2997,7 @@
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
+				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
@@ -3009,12 +3037,14 @@
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
 				7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */,
+				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
+				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
@@ -3323,7 +3353,9 @@
 				DF503D2A1FECEACB00C008E7 /* Identity.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */,
+				7BBDF3DD230D4B2300079979 /* FiatMoney.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
+				7BBDF3E2230D6CBA00079979 /* Currency.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
@@ -3417,6 +3449,7 @@
 				7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
+				7BC1466D230D12680060FE19 /* CurrencySelectorViewController.swift in Sources */,
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
 				7B402F88214692C300383687 /* BubbleLayer.swift in Sources */,
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
@@ -3426,7 +3459,7 @@
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
-				DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */,
+				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B66E51522B373F500FC25F8 /* JWT.swift in Sources */,
@@ -3592,6 +3625,7 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
+				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
@@ -3685,6 +3719,7 @@
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
+				7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */,
 				7B894CD820D25ABA004FA5A8 /* RecorderLongPressHintView.swift in Sources */,
@@ -3793,6 +3828,7 @@
 				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
+				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,

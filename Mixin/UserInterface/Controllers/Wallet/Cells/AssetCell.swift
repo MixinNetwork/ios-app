@@ -17,9 +17,9 @@ class AssetCell: UITableViewCell {
     @IBOutlet weak var balanceLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var changeLabel: InsetLabel!
-    @IBOutlet weak var usdPriceLabel: UILabel!
-    @IBOutlet weak var usdBalanceLabel: UILabel!
-    @IBOutlet weak var noUSDPriceIndicatorLabel: UILabel!
+    @IBOutlet weak var fiatMoneyPriceLabel: UILabel!
+    @IBOutlet weak var fiatMoneyBalanceLabel: UILabel!
+    @IBOutlet weak var noFiatMoneyPriceIndicatorLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -50,24 +50,24 @@ class AssetCell: UITableViewCell {
             symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
         }
         if asset.priceUsd.doubleValue > 0 {
-            changeLabel.text = " \(asset.localizedUSDChange)%"
+            changeLabel.text = " \(asset.localizedUsdChange)%"
             if asset.changeUsd.doubleValue > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed
             }
-            usdPriceLabel.text = "$\(asset.localizedPriceUsd)"
+            fiatMoneyPriceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
             changeLabel.alpha = 1
-            usdPriceLabel.alpha = 1
-            noUSDPriceIndicatorLabel.alpha = 0
+            fiatMoneyPriceLabel.alpha = 1
+            noFiatMoneyPriceIndicatorLabel.alpha = 0
         } else {
             changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
-            usdPriceLabel.text = nil
+            fiatMoneyPriceLabel.text = nil
             changeLabel.alpha = 0
-            usdPriceLabel.alpha = 0
-            noUSDPriceIndicatorLabel.alpha = 1
+            fiatMoneyPriceLabel.alpha = 0
+            noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        usdBalanceLabel.text = asset.localizedUSDBalance
+        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
     }
 
 }

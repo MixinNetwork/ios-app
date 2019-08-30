@@ -38,7 +38,7 @@ class PeerCell: UITableViewCell {
     }
     
     func makeSelectedBackgroundView() -> UIView? {
-        return UIView.createSelectedBackgroundView()
+        return SelectedCellBackgroundView()
     }
     
 }

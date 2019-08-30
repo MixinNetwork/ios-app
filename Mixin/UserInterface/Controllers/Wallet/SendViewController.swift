@@ -64,6 +64,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent! {
         case .contact(let user):
             targetUser = user
@@ -112,17 +113,22 @@ class SendViewController: KeyboardBasedLayoutViewController {
         let amountText = amountTextField.text ?? ""
         amountTextField.font = amountText.isEmpty ? placeHolderFont : amountFont
         guard amountText.isNumeric else {
-            amountExchangeLabel.text = isInputAssetAmount ? "0\(currentDecimalSeparator)00 USD" : "0 " + asset.symbol
+            if isInputAssetAmount {
+                amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
+            } else {
+                amountExchangeLabel.text = "0 " + asset.symbol
+            }
             amountSymbolLabel.isHidden = true
             continueButton.isEnabled = false
             return
         }
         
+        let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
         if isInputAssetAmount {
-            let usdAmount = amountText.doubleValue * asset.priceUsd.doubleValue
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: usdAmount, format: .legalTender, sign: .never, symbol: .usd)
+            let fiatMoneyAmount = amountText.doubleValue * fiatMoneyPrice
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         } else {
-            let assetAmount = amountText.doubleValue / asset.priceUsd.doubleValue
+            let assetAmount = amountText.doubleValue / fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
         
@@ -157,7 +163,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
 
         let amountText = amountTextField.text ?? ""
         if isInputAssetAmount {
-            return amountText.doubleValue * asset.priceUsd.doubleValue > 10
+            return amountText.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10
         } else {
             return amountText.doubleValue > 10
         }
@@ -170,15 +176,17 @@ class SendViewController: KeyboardBasedLayoutViewController {
         
         let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        var amountUsd: String? = nil
+        var fiatMoneyAmount: String? = nil
         if !isInputAssetAmount {
-            amountUsd = amount + " USD"
+            fiatMoneyAmount = amount + " " + Currency.current.code
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
             formatter.usesGroupingSeparator = false
             formatter.maximumFractionDigits = 8
             formatter.roundingMode = .down
-            amount = formatter.string(from: NSNumber(value: amount.doubleValue / asset.priceUsd.doubleValue)) ?? ""
+            let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
+            let number = NSNumber(value: amount.doubleValue / fiatMoneyPrice)
+            amount = formatter.string(from: number) ?? ""
         }
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
@@ -188,7 +196,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
         }
         switch opponent! {
         case .contact(let user):
-            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, amountUsd: amountUsd, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField)
         case .address(let address):
             guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                 showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
@@ -201,7 +209,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
                         return
                     }
                     if isContinue {
-                        payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: weakSelf.tranceId, amountUsd: amountUsd, textfield: weakSelf.amountTextField)
+                        payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: weakSelf.tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField)
                     } else {
                         weakSelf.amountTextField.becomeFirstResponder()
                     }
@@ -209,7 +217,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
                 return
             }
 
-            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, amountUsd: amountUsd, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField)
         }
     }
     
@@ -217,12 +225,10 @@ class SendViewController: KeyboardBasedLayoutViewController {
         guard !assetSwitchImageView.isHidden else {
             return
         }
-        let vc = R.storyboard.chat.transferType()!
+        let vc = TransferTypeViewController()
         vc.delegate = self
         vc.assets = availableAssets
         vc.asset = asset
-        vc.transitioningDelegate = PopupPresentationManager.shared
-        vc.modalPresentationStyle = .custom
         present(vc, animated: true, completion: nil)
     }
     
@@ -231,7 +237,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
             return
         }
         isInputAssetAmount = !isInputAssetAmount
-        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
+        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
         if let amountTextField = amountTextField {
             amountEditingChanged(amountTextField)
         }
@@ -307,7 +313,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
                 memoView.isHidden = false
             }
         }
-        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
+        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
     
     private func checkAmount(_ amount: String, isGreaterThanOrEqualToDust dust: String) -> Bool {

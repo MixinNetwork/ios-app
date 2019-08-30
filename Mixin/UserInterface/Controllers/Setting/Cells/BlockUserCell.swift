@@ -1,14 +1,9 @@
 import UIKit
 
-class BlockUserCell: UITableViewCell {
+class BlockUserCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
-    }
     
     func render(user: UserItem) {
         avatarImageView.setImage(with: user)

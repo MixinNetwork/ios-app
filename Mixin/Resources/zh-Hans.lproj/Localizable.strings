@@ -59,6 +59,7 @@
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
 "search_placeholder_asset" = "名称, 符号";
+"search_placeholder_currency" = "货币代码";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
 "search_related_messages_count" = "条相关消息";
@@ -385,6 +386,7 @@
 "wallet_pin_pay_interval" = "支付密码使用间隔";
 "wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
 "wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
+"wallet_currency" = "货币";
 "withdrawal_amount_too_small" = "提现金额太少了";
 "withdrawal_minimum_amount" = "提现金额最小 %@ %@";
 "withdrawal_memo_format_incorrect" = "提现备注格式不正确";

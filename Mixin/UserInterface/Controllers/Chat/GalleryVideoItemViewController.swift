@@ -564,7 +564,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     private func updateVideoViewSize(with item: AVPlayerItem) {
-        videoView.videoRatio = item.presentationSize.width / item.presentationSize.height
+        let videoRatio = item.presentationSize.width / item.presentationSize.height
+        self.videoRatio = videoRatio
+        videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
         if isPipMode {
             layoutPip(updateViewCenter: false)

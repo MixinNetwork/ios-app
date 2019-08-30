@@ -64,6 +64,7 @@ extension CurrencySelectorViewController: UITableViewDelegate {
         if Currency.current.code != currency.code {
             Currency.current = currency
         }
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_saved())
         dismiss(animated: true, completion: nil)
     }
     

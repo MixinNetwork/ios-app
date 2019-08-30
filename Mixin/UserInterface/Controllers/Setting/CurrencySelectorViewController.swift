@@ -2,7 +2,14 @@ import UIKit
 
 class CurrencySelectorViewController: PopupSearchableTableViewController {
     
-    private let currencies = Currency.all
+    private let currencies: [Currency] = {
+        var currencies = Currency.all
+        if let index = currencies.firstIndex(where: { $0.code == Currency.current.code }) {
+            let selected = currencies.remove(at: index)
+            currencies.insert(selected, at: 0)
+        }
+        return currencies
+    }()
     
     private var searchResults = [Currency]()
     

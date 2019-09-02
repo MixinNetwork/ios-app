@@ -50,6 +50,7 @@ final class Hud: NSObject {
             activityIndicator.startAnimating()
         }
         label.text = text
+        containerView.isUserInteractionEnabled = style == .busy
     }
     
     func scheduleAutoHidden() {

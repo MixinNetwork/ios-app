@@ -196,6 +196,7 @@
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
+		7B658520231D08FF00896059 /* DepositFieldCopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B65851F231D08FF00896059 /* DepositFieldCopyButton.swift */; };
 		7B66E51522B373F500FC25F8 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66E51422B373F500FC25F8 /* JWT.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
 		7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */; };
@@ -939,6 +940,7 @@
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
+		7B65851F231D08FF00896059 /* DepositFieldCopyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldCopyButton.swift; sourceTree = "<group>"; };
 		7B66E51422B373F500FC25F8 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
 		7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverViewController.swift; sourceTree = "<group>"; };
@@ -2085,6 +2087,7 @@
 				7B63C49021A4334C0044C4BF /* DepositFieldView.swift */,
 				7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */,
 				7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */,
+				7B65851F231D08FF00896059 /* DepositFieldCopyButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3623,6 +3626,7 @@
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
+				7B658520231D08FF00896059 /* DepositFieldCopyButton.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,

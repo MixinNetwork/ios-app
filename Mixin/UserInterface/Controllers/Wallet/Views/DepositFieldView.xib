@@ -48,7 +48,7 @@
                                             <rect key="frame" x="0.0" y="96.5" width="50" height="34.5"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w6l-cN-ErJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w6l-cN-ErJ" customClass="DepositFieldCopyButton" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="136" width="60" height="27"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <inset key="contentEdgeInsets" minX="15" minY="6" maxX="15" maxY="6"/>

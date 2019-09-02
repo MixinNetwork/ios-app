@@ -103,6 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard AccountAPI.shared.didLogin else {
             return
         }
+        guard !DatabaseUserDefault.shared.hasUpgradeDatabase() else {
+            return
+        }
         WebSocketService.shared.checkConnectStatus()
 
         cancelBackgroundTask()

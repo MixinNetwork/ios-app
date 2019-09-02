@@ -356,7 +356,7 @@
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
-"wallet_blockchian_not_in_sync" = "区块链同步异常";
+"wallet_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "wallet_no_price" = "暂无价格";
 "wallet_pin_create_title" = "设置 6 位数字支付密码创建你的第一个数字钱包";
 "wallet_pin_confirm_title" = "确认 6 位数字支付密码并牢记它";

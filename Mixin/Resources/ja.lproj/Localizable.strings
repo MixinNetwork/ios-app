@@ -343,7 +343,7 @@
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
 "wallet_withdrawal_reserve" = "%@ には最低 %@ の予約要件があります。";
-"wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。";
+"wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。しばらくしてからもう一度お試しください。";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "あなたの最初のデジタルウォレットを作成するために6桁のウォレットPINを設定してください";
 "wallet_pin_confirm_title" = "6桁のPINを確認して覚えておいてください";

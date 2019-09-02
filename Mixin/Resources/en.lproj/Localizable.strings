@@ -354,7 +354,7 @@
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
-"wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
+"wallet_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "Set a 6 digit PIN to create your first digital wallet";
 "wallet_pin_confirm_title" = "Please confirm the 6 digit PIN and remember it";

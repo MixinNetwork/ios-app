@@ -40,13 +40,15 @@ extension Currency {
     private(set) static var all: [Currency] = {
         let currencies = [
             Currency(code: "USD", symbol: "$", rate: 1),
-            Currency(code: "CNY", symbol: "¥", rate: 7.07989978790283),
-            Currency(code: "JPY", symbol: "¥", rate: 106.619453430176),
-            Currency(code: "EUR", symbol: "€", rate: 0.90420001745224),
-            Currency(code: "KRW", symbol: "₩", rate: 1210.20495605469),
-            Currency(code: "HKD", symbol: "HK$", rate: 7.84223985671997),
-            Currency(code: "GBP", symbol: "£", rate: 0.819242000579834),
-            Currency(code: "AUD", symbol: "A$", rate: 1.47973895072937)
+            Currency(code: "CNY", symbol: "¥", rate: 7.159817),
+            Currency(code: "JPY", symbol: "¥", rate: 106.1796608),
+            Currency(code: "EUR", symbol: "€", rate: 0.909926),
+            Currency(code: "KRW", symbol: "₩", rate: 1210.86),
+            Currency(code: "HKD", symbol: "HK$", rate: 7.842744),
+            Currency(code: "GBP", symbol: "£", rate: 0.821636),
+            Currency(code: "AUD", symbol: "A$", rate: 1.485802),
+            Currency(code: "SGD", symbol: "S$", rate: 1.389179),
+            Currency(code: "MYR", symbol: "RM", rate: 4.205481)
         ]
         if let rates = UserDefaults.standard.dictionary(forKey: UserDefaultsKey.rates) as? [String: Double] {
             for currency in currencies {

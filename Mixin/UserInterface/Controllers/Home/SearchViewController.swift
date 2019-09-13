@@ -1,6 +1,7 @@
 import UIKit
 import PhoneNumberKit
 import Alamofire
+import WCDBSwift
 
 class SearchViewController: UIViewController, SearchableViewController {
     
@@ -31,6 +32,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
     private var lastSearchFieldText: String?
+    private var statement: CoreStatement?
     
     private lazy var userWindow = UserWindow.instance()
     
@@ -82,16 +84,22 @@ class SearchViewController: UIViewController, SearchableViewController {
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         lastSearchFieldText = searchTextField.text
     }
+
+    private func cancelOperation() {
+        statement?.interrupt()
+        statement = nil
+        queue.cancelAllOperations()
+    }
     
     @IBAction func searchAction(_ sender: Any) {
         guard let keyword = trimmedLowercaseKeyword else {
             showRecentApps()
             lastKeyword = nil
-            queue.cancelAllOperations()
+            cancelOperation()
             navigationSearchBoxView.isBusy = false
             return
         }
-        queue.cancelAllOperations()
+        cancelOperation()
         guard keyword != lastKeyword else {
             navigationSearchBoxView.isBusy = false
             return
@@ -128,8 +136,13 @@ class SearchViewController: UIViewController, SearchableViewController {
             guard !op.isCancelled else {
                 return
             }
-            
-            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit)
+
+            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit, callback: { (statement) in
+                guard !op.isCancelled else {
+                    return
+                }
+                self.statement = statement
+            })
             guard !op.isCancelled else {
                 return
             }
@@ -148,7 +161,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     }
     
     func prepareForReuse() {
-        queue.cancelAllOperations()
+        cancelOperation()
         showRecentApps()
         assets = []
         users = []

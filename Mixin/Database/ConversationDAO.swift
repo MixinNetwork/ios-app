@@ -179,19 +179,19 @@ final class ConversationDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword])
     }
     
-    func getConversation(withMessageLike keyword: String, limit: Int?) -> [MessagesWithinConversationSearchResult] {
+    func getConversation(withMessageLike keyword: String, limit: Int?, callback: (CoreStatement) -> Void) -> [MessagesWithinConversationSearchResult] {
         var sql = ConversationDAO.sqlSearchMessages
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
         let keyword = "%\(keyword.sqlEscaped)%"
         let stmt = StatementSelectSQL(sql: sql)
-        return MixinDatabase.shared.getCodables(callback: { (db) -> [MessagesWithinConversationSearchResult] in
-            var items = [MessagesWithinConversationSearchResult]()
-            let cs = try db.prepare(stmt)
-            cs.bind(keyword, toIndex: 0)
-            cs.bind(keyword, toIndex: 1)
-            while try cs.step() {
+        var items = [MessagesWithinConversationSearchResult]()
+        let cs = try! MixinDatabase.shared.database.prepare(stmt)
+        callback(cs)
+        cs.bind(keyword, toIndex: 0)
+        cs.bind(keyword, toIndex: 1)
+            while (try? cs.step()) ?? false {
                 var i = -1
                 var autoIncrement: Int {
                     i += 1
@@ -228,8 +228,7 @@ final class ConversationDAO {
                 }
                 items.append(item)
             }
-            return items
-        })
+        return items
     }
 
     func getOriginalConversation(conversationId: String) -> Conversation? {

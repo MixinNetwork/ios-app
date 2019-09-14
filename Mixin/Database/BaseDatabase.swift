@@ -41,8 +41,12 @@ class BaseDatabase {
         Database.globalTrace(ofError: {(error) in
             switch error.type {
             case .warning, .sqliteGlobal:
-                break
+                return
             default:
+                if error.type == .sqlite && error.code.value == 9 {
+                    // interrupted
+                    return
+                }
                 UIApplication.traceWCDBError(error)
             }
         })

@@ -116,8 +116,16 @@ class SearchViewController: UIViewController, SearchableViewController {
             
             let assets = AssetDAO.shared.getAssets(keyword: keyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }
+            guard !op.isCancelled else {
+                return
+            }
+
             let users = UserDAO.shared.getUsers(keyword: keyword, limit: limit)
                 .map { UserSearchResult(user: $0, keyword: keyword) }
+            guard !op.isCancelled else {
+                return
+            }
+
             let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: limit)
                 .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             guard !op.isCancelled else {
@@ -132,9 +140,6 @@ class SearchViewController: UIViewController, SearchableViewController {
                 self.tableView.reloadData()
                 self.showSearchResults()
                 self.lastKeyword = keyword
-            }
-            guard !op.isCancelled else {
-                return
             }
 
             let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit, callback: { (statement) in

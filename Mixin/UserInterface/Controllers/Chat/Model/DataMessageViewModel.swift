@@ -4,28 +4,27 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
 
     var isLoading = false
     var progress: Double?
-    var showPlayIconAfterFinished: Bool = false
+    var showPlayIconOnMediaStatusDone: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
+    var downloadIsTriggeredByUser = false
     
     override var size: CGSize {
         return CGSize(width: 280, height: 72)
     }
     
-    var automaticallyLoadsAttachment: Bool {
-        let shouldAutoDownload: Bool
+    var shouldAutoDownload: Bool {
         switch CommonUserDefault.shared.autoDownloadFiles {
         case .never:
-            shouldAutoDownload = false
+            return false
         case .wifi:
-            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+            return NetworkManager.shared.isReachableOnWiFi
         case .wifiAndCellular:
-            shouldAutoDownload = true
+            return true
         }
-        return !shouldUpload && shouldAutoDownload
     }
     
-    var automaticallyCancelAttachmentLoading: Bool {
-        return true
+    var automaticallyLoadsAttachment: Bool {
+        return !shouldUpload && shouldAutoDownload
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
@@ -33,11 +32,12 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateOperationButtonStyle()
     }
     
-    func beginAttachmentLoading() {
+    func beginAttachmentLoading(isTriggeredByUser: Bool) {
+        downloadIsTriggeredByUser = isTriggeredByUser
         defer {
             updateOperationButtonStyle()
         }
-        guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
+        guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
@@ -49,13 +49,16 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         isLoading = true
     }
     
-    func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
+    func cancelAttachmentLoading(isTriggeredByUser: Bool) {
+        guard isTriggeredByUser || !downloadIsTriggeredByUser else {
+            return
+        }
         if shouldUpload {
             UploaderQueue.shared.cancelJob(jobId: FileUploadJob.jobId(messageId: message.messageId))
         } else {
             ConcurrentJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: message.messageId))
         }
-        if markMediaStatusCancelled {
+        if isTriggeredByUser {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }
     }

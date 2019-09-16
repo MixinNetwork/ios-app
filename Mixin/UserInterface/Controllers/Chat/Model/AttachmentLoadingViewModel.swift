@@ -3,15 +3,16 @@ import Foundation
 protocol AttachmentLoadingViewModel: class {
     var isLoading: Bool { get set }
     var progress: Double? { get set }
-    var showPlayIconAfterFinished: Bool { get }
+    var showPlayIconOnMediaStatusDone: Bool { get }
     var operationButtonStyle: NetworkOperationButton.Style { get set }
     var shouldUpload: Bool { get } // false if should download
     var automaticallyLoadsAttachment: Bool { get }
-    var automaticallyCancelAttachmentLoading: Bool { get }
     var mediaStatus: String? { get set }
     var sizeRepresentation: String { get }
-    func beginAttachmentLoading()
-    func cancelAttachmentLoading(markMediaStatusCancelled: Bool)
+    var shouldAutoDownload: Bool { get }
+    func beginAttachmentLoading(isTriggeredByUser: Bool)
+    func cancelAttachmentLoading(isTriggeredByUser: Bool)
+    func shouldBeginAttachmentLoading(isTriggeredByUser: Bool) -> Bool
 }
 
 enum ProgressUnit {
@@ -83,15 +84,21 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
                     operationButtonStyle = .download
                 }
             case MediaStatus.DONE.rawValue, MediaStatus.READ.rawValue:
-                operationButtonStyle = .finished(showPlayIcon: showPlayIconAfterFinished)
+                operationButtonStyle = .finished(showPlayIcon: showPlayIconOnMediaStatusDone)
             case MediaStatus.EXPIRED.rawValue:
                 operationButtonStyle = .expired
             default:
                 break
             }
         } else {
-            operationButtonStyle = .finished(showPlayIcon: showPlayIconAfterFinished)
+            operationButtonStyle = .finished(showPlayIcon: showPlayIconOnMediaStatusDone)
         }
+    }
+    
+    func shouldBeginAttachmentLoading(isTriggeredByUser: Bool) -> Bool {
+        let mediaStatusIsPendingOrCancelled = message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue
+        return (message.mediaStatus == MediaStatus.PENDING.rawValue && shouldAutoDownload)
+            || (mediaStatusIsPendingOrCancelled && isTriggeredByUser)
     }
     
     private func sizeRepresentation(ofSizeInBytes size: Int64, unit: ProgressUnit) -> String {

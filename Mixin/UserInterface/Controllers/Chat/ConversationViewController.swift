@@ -762,7 +762,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
         case .delete:
             conversationInputViewController.textView.resignFirstResponder()
-            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
+            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
                 AudioManager.shared.stop()
             }
@@ -866,7 +866,7 @@ extension ConversationViewController: UITableViewDelegate {
             quotingMessageId = nil
         }
         if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
-            viewModel.beginAttachmentLoading()
+            viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
     }
@@ -875,8 +875,8 @@ extension ConversationViewController: UITableViewDelegate {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
-        if let viewModel = viewModel as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment, !viewModel.automaticallyCancelAttachmentLoading {
-            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: false)
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
+            viewModel.cancelAttachmentLoading(isTriggeredByUser: false)
         }
         if viewModel.message.messageId == quotingMessageId, let lastVisibleIndexPath = tableView.indexPathsForVisibleRows?.last, lastVisibleIndexPath.section > indexPath.section || (lastVisibleIndexPath.section == indexPath.section && lastVisibleIndexPath.row > indexPath.row) {
             quotingMessageId = nil
@@ -948,9 +948,9 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
         }
         switch viewModel.operationButtonStyle {
         case .download, .upload:
-            viewModel.beginAttachmentLoading()
+            viewModel.beginAttachmentLoading(isTriggeredByUser: true)
         case .busy:
-            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
+            viewModel.cancelAttachmentLoading(isTriggeredByUser: true)
         case .expired, .finished:
             break
         }

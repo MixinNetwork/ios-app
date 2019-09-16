@@ -177,6 +177,11 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         })
     }
     
+    override func layout(mediaStatus: MediaStatus) {
+        super.layout(mediaStatus: mediaStatus)
+        scrollView.isScrollEnabled = mediaStatus == .DONE || mediaStatus == .READ
+    }
+    
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
         galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
     }

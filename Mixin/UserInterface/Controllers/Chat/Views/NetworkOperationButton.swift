@@ -24,6 +24,10 @@ class NetworkOperationButton: UIButton {
         return view
     }()
     
+    override var intrinsicContentSize: CGSize {
+        return backgroundSize
+    }
+    
     var style = Style.finished(showPlayIcon: false) {
         didSet {
             update(with: style, oldStyle: oldValue)

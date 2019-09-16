@@ -38,7 +38,8 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     private let transitionView = GalleryTransitionView()
     
     private var longPressRecognizer: UILongPressGestureRecognizer!
-    private var panRecognizer: UIPanGestureRecognizer!
+    
+    private(set) var panRecognizer: UIPanGestureRecognizer!
     
     private var currentItemViewController: GalleryItemViewController? {
         return pageViewController.viewControllers?.first as? GalleryItemViewController
@@ -292,6 +293,7 @@ extension GalleryViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return panRecognizer.velocity(in: view).y > 0
             && abs(panRecognizer.velocity(in: view).y) > abs(panRecognizer.velocity(in: view).x)
+            && (currentItemViewController?.canPerformInteractiveDismissal ?? true)
     }
     
 }

@@ -45,8 +45,9 @@ final class MessageDAO {
     LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
     LEFT JOIN assets a ON s.asset_id = a.asset_id
     LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
-    LEFT JOIN sticker_relationships sr on m.sticker_id = sr.sticker_id
-    LEFT JOIN albums alb ON sr.album_id = alb.album_id
+    LEFT JOIN albums alb ON alb.album_id = (
+        SELECT album_id FROM sticker_relationships sr WHERE sr.sticker_id = m.sticker_id LIMIT 1
+    )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     """
     private static let sqlQueryFirstNMessages = """

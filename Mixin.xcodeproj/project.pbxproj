@@ -649,6 +649,9 @@
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
 		DFA606312013AA4F0006EEE4 /* UploaderQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA606302013AA4F0006EEE4 /* UploaderQueue.swift */; };
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
+		DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */; };
+		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
+		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
@@ -1414,6 +1417,9 @@
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		DFA606302013AA4F0006EEE4 /* UploaderQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploaderQueue.swift; sourceTree = "<group>"; };
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementView.xib; sourceTree = "<group>"; };
+		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
+		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
@@ -1884,6 +1890,8 @@
 				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
 				7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */,
 				7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */,
+				DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */,
+				DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */,
 				7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */,
 				7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */,
 				7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */,
@@ -2719,6 +2727,7 @@
 				7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */,
 				7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */,
 				7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */,
+				DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
@@ -3027,6 +3036,7 @@
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
+				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,
@@ -3295,6 +3305,7 @@
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
 				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
+				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
 				7B14DFFC22F9AE3F009CCC45 /* LocalImageLoadToken.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BB3855021E74DA60070FF8F /* JSONCoderExtension.swift in Sources */,
@@ -3347,6 +3358,7 @@
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				273FACC0205FB9A800513327 /* SessionCipher.swift in Sources */,
+				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
 				7B97BA0A2019D42C0013D58F /* StickerRelationship.swift in Sources */,

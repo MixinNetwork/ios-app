@@ -5,7 +5,7 @@ final class UserDAO {
     static let shared = UserDAO()
 
     private static let sqlQueryColumns = """
-    SELECT u.user_id, u.full_name, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, a.creator_id as appCreatorId
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """

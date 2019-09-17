@@ -121,15 +121,19 @@ class UserView: CornerView {
         }
         
         layoutIfNeeded()
-        if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
-            descriptionLabel.text = appDescription
-            descriptionScrollViewBottomConstraint.constant = 14
-            descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
-            descriptionLabel.isHidden = false
-        } else {
+        var biography = user.biography
+        if biography.isEmpty && user.isBot && !(user.appDescription?.isEmpty ?? true) {
+            biography = user.appDescription ?? ""
+        }
+        if biography.isEmpty {
             descriptionScrollViewBottomConstraint.constant = 8
             descriptionScrollViewHeightConstraint.constant = 0
             descriptionLabel.isHidden = true
+        } else {
+            descriptionLabel.text = biography
+            descriptionScrollViewBottomConstraint.constant = 14
+            descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
+            descriptionLabel.isHidden = false
         }
 
         if isMe {
@@ -215,6 +219,9 @@ class UserView: CornerView {
         if isMe {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { (action) in
                 self.editName()
+            }))
+            alc.addAction(UIAlertAction(title: R.string.localizable.profile_edit_biography(), style: .default, handler: { (action) in
+                self.editBiography()
             }))
             alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_AVATAR, style: .default, handler: { (action) in
                 self.changeProfilePhoto()
@@ -512,6 +519,10 @@ class UserView: CornerView {
     private func editName() {
         editAliasNameController.textFields?.first?.text = user.fullName
         UIApplication.currentActivity()?.present(editAliasNameController, animated: true, completion: nil)
+    }
+
+    private func editBiography() {
+        UIApplication.homeNavigationController?.pushViewController(BiographyViewController.instance(user: user), animated: true)
     }
 
     private func removeAction() {

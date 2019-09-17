@@ -15,6 +15,8 @@ class DatabaseUpgradeViewController: UIViewController {
             let currentVersion = DatabaseUserDefault.shared.databaseVersion
             if currentVersion < 2 {
                 TaskDatabase.shared.initDatabase()
+            }
+            if currentVersion < 3 {
                 MixinDatabase.shared.initDatabase()
             }
 

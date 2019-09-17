@@ -43,12 +43,7 @@ extension ViewEmergencyContactViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
         let userWindow = UserWindow.instance()
-        let item = UserItem.createUser(userId: user.userId,
-                                       fullName: user.fullName ?? "",
-                                       identityNumber: user.identityNumber,
-                                       avatarUrl: user.avatarUrl ?? "",
-                                       appId: user.appId)
-        userWindow.updateUser(user: item)
+        userWindow.updateUser(user: UserItem.createUser(from: user))
         userWindow.presentView()
     }
     

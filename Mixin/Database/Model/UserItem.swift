@@ -7,6 +7,7 @@ struct UserItem: BaseCodable {
 
     let userId: String
     var fullName = ""
+    var biography = ""
     let identityNumber: String
     var avatarUrl = ""
     var phone: String? = nil
@@ -24,6 +25,7 @@ struct UserItem: BaseCodable {
         typealias Root = UserItem
         case userId = "user_id"
         case fullName = "full_name"
+        case biography = "biography"
         case identityNumber = "identity_number"
         case avatarUrl = "avatar_url"
         case phone
@@ -76,15 +78,19 @@ struct UserItem: BaseCodable {
 extension UserItem {
 
     static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
-        return UserItem(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: appId, createdAt: nil, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
+        return UserItem(userId: userId, fullName: fullName, biography: "", identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: appId, createdAt: nil, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
     }
 
     static func createUser(from user: UserResponse) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appDescription: user.app?.description, appCreatorId: user.app?.creatorId)
+        return UserItem(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appDescription: user.app?.description, appCreatorId: user.app?.creatorId)
+    }
+
+    static func createUser(from user: User) -> UserItem {
+        return UserItem(userId: user.userId, fullName: user.fullName ?? "", biography: user.biography ?? "", identityNumber: user.identityNumber, avatarUrl: user.avatarUrl ?? "", phone: user.phone, isVerified: user.isVerified ?? false, muteUntil: user.muteUntil, appId: user.appId ?? "", createdAt: user.createdAt, relationship: user.relationship, role: "", appDescription: user.app?.description, appCreatorId: user.app?.creatorId)
     }
 
     static func createUser(from account: Account) -> UserItem {
-        return UserItem(userId: account.user_id, fullName: account.full_name, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
+        return UserItem(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
     }
 
 }

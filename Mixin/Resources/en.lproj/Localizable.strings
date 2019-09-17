@@ -503,6 +503,7 @@
 "profile_reputation_score" = "Reputation Score: %@";
 "profile_invitation_code_consumed_count" = "You have invited a total of %@ people.";
 "profile_edit_name" = "Edit Name";
+"profile_edit_biography" = "Edit Biography";
 "profile_add_contact_fail" = "Failed to add contact";
 "profile_remove_contact_fail" = "Failed to remove contact";
 "profile_mute_duration_8h" = "8 hours";

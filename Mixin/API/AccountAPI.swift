@@ -94,14 +94,17 @@ final class AccountAPI: BaseAPI {
         }
     }
     
-    func update(fullName: String?, avatarBase64: String? = nil, completion: @escaping (APIResult<Account>) -> Void) {
-        guard fullName != nil || avatarBase64 != nil else {
+    func update(fullName: String? = nil, biography: String? = nil, avatarBase64: String? = nil, completion: @escaping (APIResult<Account>) -> Void) {
+        guard fullName != nil || avatarBase64 != nil || biography != nil else {
             assertionFailure("nothing to update")
             return
         }
         var param = [String: String]()
         if let fullName = fullName {
             param["full_name"] = fullName
+        }
+        if let biography = biography {
+            param["biography"] = biography
         }
         if let avatarBase64 = avatarBase64 {
             param["avatar_base64"] = avatarBase64

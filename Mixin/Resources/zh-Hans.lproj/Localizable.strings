@@ -505,6 +505,7 @@
 "profile_reputation_score" = "荣誉值: %@";
 "profile_invitation_code_consumed_count" = "你总共邀请了 %@ 好友。";
 "profile_edit_name" = "编辑名称";
+"profile_edit_biography" = "编辑个人简介";
 "profile_add_contact_fail" = "添加联系人失败，请稍后重试";
 "profile_remove_contact_fail" = "删除联系人失败，请稍后重试";
 "profile_mute_duration_8h" = "8 小时";

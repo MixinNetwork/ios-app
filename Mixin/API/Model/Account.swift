@@ -7,6 +7,7 @@ struct Account: Encodable {
     let type: String
     let identity_number: String
     let full_name: String
+    let biography: String
     let avatar_url: String
     let phone: String
     let authentication_token: String
@@ -28,6 +29,7 @@ struct Account: Encodable {
         self.type = old.type
         self.identity_number = old.identity_number
         self.full_name = old.full_name
+        self.biography = old.biography
         self.avatar_url = old.avatar_url
         self.phone = old.phone
         self.authentication_token = old.authentication_token
@@ -50,6 +52,7 @@ struct Account: Encodable {
         self.type = old.type
         self.identity_number = old.identity_number
         self.full_name = old.full_name
+        self.biography = old.biography
         self.avatar_url = old.avatar_url
         self.phone = old.phone
         self.authentication_token = old.authentication_token
@@ -72,6 +75,7 @@ struct Account: Encodable {
         self.type = old.type
         self.identity_number = old.identity_number
         self.full_name = old.full_name
+        self.biography = old.biography
         self.avatar_url = old.avatar_url
         self.phone = phone
         self.authentication_token = old.authentication_token
@@ -99,6 +103,7 @@ extension Account: Decodable {
         identity_number = try container.decode(String.self, forKey: .identity_number)
         type = container.getString(key: .type)
         full_name = container.getString(key: .full_name)
+        biography = container.getString(key: .biography)
         avatar_url = container.getString(key: .avatar_url)
         phone = container.getString(key: .phone)
         authentication_token = container.getString(key: .authentication_token)

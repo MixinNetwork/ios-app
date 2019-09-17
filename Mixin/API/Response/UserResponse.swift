@@ -4,6 +4,7 @@ struct UserResponse: Codable {
 
     let userId: String
     let fullName: String
+    let biography: String
     let relationship: Relationship
     let identityNumber: String
     let avatarUrl: String
@@ -16,6 +17,7 @@ struct UserResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case fullName = "full_name"
+        case biography = "biography"
         case relationship
         case identityNumber = "identity_number"
         case avatarUrl = "avatar_url"

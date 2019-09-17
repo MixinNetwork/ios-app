@@ -72,6 +72,7 @@ extension UNUserNotificationCenter {
         userInfo["conversation_category"] = conversation.category
         if let user = ownerUser {
             userInfo["userFullName"] = user.fullName
+            userInfo["userBiography"] = user.biography
             userInfo["userAvatarUrl"] = user.avatarUrl
             userInfo["userIdentityNumber"] = user.identityNumber
             userInfo["userAppId"] = user.appId

@@ -12,6 +12,7 @@ extension DateFormatter {
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
     static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")
+    static let log = DateFormatter(dateFormat: "yyyy/MM/dd, hh:mm a")
     static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + Localized.DATE_FORMAT_DAY)
     static let dateAndTime = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE + " " + Localized.DATE_FORMAT_DAY)
     
@@ -68,6 +69,10 @@ extension Date {
     func nanosecond() -> Int64 {
         let nanosecond: Int64 = Int64(Calendar.current.dateComponents([.nanosecond], from: self).nanosecond ?? 0)
         return Int64(self.timeIntervalSince1970 * 1000000000) + nanosecond
+    }
+
+    func logDatetime() -> String {
+        return DateFormatter.log.string(from: self)
     }
 
     func timeAgo() -> String {

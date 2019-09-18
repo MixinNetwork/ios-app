@@ -943,6 +943,26 @@
             </objects>
             <point key="canvasLocation" x="1074" y="1416"/>
         </scene>
+        <!--Log View Controller-->
+        <scene sceneID="apW-fN-She">
+            <objects>
+                <tableViewController storyboardIdentifier="pin_logs" automaticallyAdjustsScrollViewInsets="NO" id="5Pm-sU-iS3" customClass="PINLogViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="71" estimatedRowHeight="71" sectionHeaderHeight="28" sectionFooterHeight="28" id="DpJ-IP-6LF">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="5Pm-sU-iS3" id="HeB-bP-3ay"/>
+                            <outlet property="delegate" destination="5Pm-sU-iS3" id="hr5-52-CQc"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aPw-ku-nOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1735" y="1415"/>
+        </scene>
         <!--Deposit View Controller-->
         <scene sceneID="oWt-lb-ba4">
             <objects>

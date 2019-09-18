@@ -22,6 +22,13 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
+        static func pinLogs(offset: String? = nil) -> String {
+            var url = "pin_logs"
+            if let offset = offset {
+                url += "?offset=\(offset)"
+            }
+            return url
+        }
 
         static let sessions = "sessions/fetch"
     }
@@ -153,7 +160,11 @@ final class AccountAPI: BaseAPI {
         param["pin"] = encryptedNewPin
         request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
-    
+
+    func pinLogs(offset: String? = nil, completion: @escaping (APIResult<[PINLogResponse]>) -> Void) {
+        request(method: .get, url: url.pinLogs(offset: offset), completion: completion)
+    }
+
     func logoutSession(sessionId: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
     }

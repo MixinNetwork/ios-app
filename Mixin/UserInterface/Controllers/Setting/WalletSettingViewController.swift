@@ -111,7 +111,12 @@ extension WalletSettingViewController {
                 pinIntervalAction()
             }
         case 1:
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            let vc: UIViewController
+            if indexPath.row == 0 {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            } else {
+                vc = PINLogViewController.instance()
+            }
             navigationController?.pushViewController(vc, animated: true)
         default:
             let vc = CurrencySelectorViewController()

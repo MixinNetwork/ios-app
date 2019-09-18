@@ -243,7 +243,7 @@ extension WebWindow: WKUIDelegate {
 
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
         if prompt == "MixinContext.getContext()" {
-            completionHandler("{\"conversation_id\":\"\(conversationId)\"}")
+            completionHandler("{\"app_version\":\"\(Bundle.main.shortVersion)\", \"conversation_id\":\"\(conversationId)\"}")
         } else {
             completionHandler("")
         }

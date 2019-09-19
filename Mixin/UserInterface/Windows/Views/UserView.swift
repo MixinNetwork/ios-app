@@ -291,8 +291,8 @@ class UserView: CornerView {
             switch UserAPI.shared.reportUser(userId: userId) {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-            case .failure:
-                break
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
             ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
             MixinFile.cleanAllChatDirectories()

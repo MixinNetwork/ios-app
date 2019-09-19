@@ -171,12 +171,16 @@ extension AddressViewController {
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
         let assetId = asset.assetId
-        WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { (result) in
+        WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { [weak self](result) in
             switch result {
             case .success:
                 AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                if error.code == 429 {
+                    self?.alert(R.string.localizable.wallet_password_too_many_requests())
+                } else {
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
             }
         }
     }

@@ -117,7 +117,11 @@ extension AddressView: PinFieldDelegate {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    if error.code == 429 {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.wallet_password_too_many_requests())
+                    } else {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
                     self?.superView?.dismissPopupControllerAnimated()
                 }
             }
@@ -135,7 +139,11 @@ extension AddressView: PinFieldDelegate {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    if error.code == 429 {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.wallet_password_too_many_requests())
+                    } else {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
                     self?.superView?.dismissPopupControllerAnimated()
                 }
             }

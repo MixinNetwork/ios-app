@@ -63,12 +63,10 @@ extension AuthorizationsViewController {
     private func reload() {
         AuthorizeAPI.shared.authorizations { [weak self] (result) in
             switch result {
-            case .success(let response):
+            case let .success(response):
                 self?.load(authorizations: response)
-            case .failure:
-                DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
-                    self?.reload()
-                })
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -97,9 +95,16 @@ extension AuthorizationsViewController {
     }
     
     private func removeAuthorization(at indexPath: IndexPath) {
-        let auth = authorizations.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        AuthorizeAPI.shared.cancel(clientId: auth.app.appId) { (_) in }
+        let auth = authorizations[indexPath.row]
+        AuthorizeAPI.shared.cancel(clientId: auth.app.appId) { [weak self](result) in
+            switch result {
+            case .success:
+                self?.authorizations.remove(at: indexPath.row)
+                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        }
     }
     
 }

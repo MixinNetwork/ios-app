@@ -144,11 +144,6 @@ class BaseAPI {
                         UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
                         AccountAPI.shared.logout(from: "AsyncRequest")
                         return
-                    case 429:
-                        if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
-                            UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
-                            return
-                        }
                     default:
                         break
                     }

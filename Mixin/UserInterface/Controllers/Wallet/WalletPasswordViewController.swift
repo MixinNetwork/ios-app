@@ -209,7 +209,11 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AccountAPI.shared.updateAccount(account: account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
-                        self?.alert(error.localizedDescription)
+                        if error.code == 429 {
+                            self?.alert(R.string.localizable.wallet_password_too_many_requests())
+                        } else {
+                            self?.alert(error.localizedDescription)
+                        }
                     }
                 })
             } else {
@@ -265,7 +269,11 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AccountAPI.shared.updateAccount(account: account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
-                        self?.alert(error.localizedDescription)
+                        if error.code == 429 {
+                            self?.alert(R.string.localizable.wallet_password_too_many_requests())
+                        } else {
+                            self?.alert(error.localizedDescription)
+                        }
                     }
                 })
             } else {

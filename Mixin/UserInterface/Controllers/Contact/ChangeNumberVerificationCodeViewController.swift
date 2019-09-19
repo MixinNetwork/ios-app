@@ -45,7 +45,11 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case let .failure(error):
                 weakSelf.isBusy = false
                 weakSelf.verificationCodeField.clear()
-                weakSelf.alert(error.localizedDescription)
+                if error.code == 429 {
+                    weakSelf.alert(R.string.localizable.wallet_password_too_many_requests())
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                }
             }
         })
     }

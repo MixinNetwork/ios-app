@@ -482,7 +482,7 @@ class SendMessageService: MixinService {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                             UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
-                            AccountAPI.shared.logout()
+                            AccountAPI.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }

@@ -24,7 +24,7 @@ class RotateSignedPreKeyJob: BaseJob {
                 userInfo["signedNewPrekeyOffset"] = "\(CryptoUserDefault.shared.signedPrekeyOffset)"
                 userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                 UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
-                AccountAPI.shared.logout()
+                AccountAPI.shared.logout(from: "RotateSignedPreKeyJob")
             } else {
                 UIApplication.traceError(error)
             }

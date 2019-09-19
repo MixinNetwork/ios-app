@@ -98,7 +98,7 @@ extension WebSocketService: SRWebSocketDelegate {
             }
             if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
                 if !AccountUserDefault.shared.hasClockSkew {
-                    AccountAPI.shared.logout()
+                    AccountAPI.shared.logout(from: "WebSocketService")
                 }
             }
         } else {

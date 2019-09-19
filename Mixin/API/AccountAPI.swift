@@ -169,10 +169,11 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     
-    func logout() {
+    func logout(from: String) {
         guard account != nil else {
             return
         }
+        FileManager.default.writeLog(log: "===========logout...from:\(from)")
         CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {
             self.account = nil

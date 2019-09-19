@@ -142,7 +142,7 @@ class BaseAPI {
                             }
                         }
                         UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
-                        AccountAPI.shared.logout()
+                        AccountAPI.shared.logout(from: "AsyncRequest")
                         return
                     case 429:
                         if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
@@ -245,7 +245,7 @@ extension BaseAPI {
                 }
             }
             UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
-            AccountAPI.shared.logout()
+            AccountAPI.shared.logout(from: "SyncRequest")
         }
         return result
     }

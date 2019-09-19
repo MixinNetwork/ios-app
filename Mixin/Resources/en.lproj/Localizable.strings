@@ -333,6 +333,7 @@
 "wallet_password_too_many_requests" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
 "wallet_change_password" = "Change PIN";
 "wallet_pin_logs" = "PIN Incorrect Logs";
+"wallet_pin_logs_empty" = "No logs";
 "wallet_change_password_success" = "Change PIN successfully";
 "wallet_set_password_success" = "Set PIN successfully";
 "wallet_snapshot_from" = "From %@";

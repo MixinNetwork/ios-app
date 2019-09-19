@@ -335,6 +335,7 @@
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
 "wallet_change_password" = "修改支付密码";
 "wallet_pin_logs" = "支付密码错误日志";
+"wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改支付密码成功";
 "wallet_set_password_success" = "设置支付密码成功";
 "wallet_snapshot_from" = "转账来自%@";

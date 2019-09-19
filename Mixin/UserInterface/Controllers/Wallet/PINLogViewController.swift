@@ -30,6 +30,7 @@ class PINLogViewController: UITableViewController {
                 }
                 weakSelf.logs += logs
                 weakSelf.tableView.reloadData()
+                weakSelf.tableView.checkEmpty(dataCount: weakSelf.logs.count, text: R.string.localizable.wallet_pin_logs_empty(), photo: R.image.wallet.ic_no_transaction()!)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }

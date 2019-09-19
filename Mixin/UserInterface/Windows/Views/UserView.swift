@@ -121,16 +121,12 @@ class UserView: CornerView {
         }
         
         layoutIfNeeded()
-        var biography = user.biography
-        if biography.isEmpty && user.isBot && !(user.appDescription?.isEmpty ?? true) {
-            biography = user.appDescription ?? ""
-        }
-        if biography.isEmpty {
+        if user.biography.isEmpty {
             descriptionScrollViewBottomConstraint.constant = 8
             descriptionScrollViewHeightConstraint.constant = 0
             descriptionLabel.isHidden = true
         } else {
-            descriptionLabel.text = biography
+            descriptionLabel.text = user.biography
             descriptionScrollViewBottomConstraint.constant = 14
             descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
             descriptionLabel.isHidden = false

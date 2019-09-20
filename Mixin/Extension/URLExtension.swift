@@ -2,6 +2,7 @@ import Foundation
 
 extension URL {
     
+    static let blank = URL(string: "about:blank")!
     static let terms = URL(string: "https://mixin.one/pages/terms")!
     static let privacy = URL(string: "https://mixin.one/pages/privacy")!
     static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!

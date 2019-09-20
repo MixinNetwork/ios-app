@@ -399,6 +399,9 @@ class UserView: CornerView {
     }
     
     private func openApp() {
+        guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+            return
+        }
         let userId = user.userId
         let conversationId: String
         if let vc = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController {
@@ -407,12 +410,12 @@ class UserView: CornerView {
             conversationId = self.conversationId
         }
         DispatchQueue.global().async {
-            guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
+            guard let app = AppDAO.shared.getApp(ofUserId: userId) else {
                 return
             }
             UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UserWindow", "identityNumber": app.appNumber])
             DispatchQueue.main.async {
-                WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
+                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
             }
         }
     }
@@ -596,12 +599,15 @@ class UserView: CornerView {
 extension UserView: CollapsingLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+            return
+        }
         guard !openUrlOutsideApplication(url) else {
             return
         }
         dismissAction(self)
         if !UrlWindow.checkUrl(url: url) {
-            WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+            WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: parent)
         }
     }
     

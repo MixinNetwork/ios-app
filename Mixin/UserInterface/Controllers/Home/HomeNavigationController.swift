@@ -7,6 +7,29 @@ class HomeNavigationController: UINavigationController {
     
     private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
     
+    override var childForStatusBarStyle: UIViewController? {
+        if let web = activeWebViewController {
+            return web
+        } else {
+            return super.childForStatusBarStyle
+        }
+    }
+    
+    override var childForStatusBarHidden: UIViewController? {
+        if let web = activeWebViewController {
+            return web
+        } else {
+            return super.childForStatusBarStyle
+        }
+    }
+    
+    private var activeWebViewController: WebViewController? {
+        return visibleViewController?.children
+            .compactMap({ $0 as? WebViewController })
+            .filter({ !$0.isBeingDismissedAsChild })
+            .last
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.interactivePopGestureRecognizer?.isEnabled = true

@@ -118,7 +118,10 @@ class ConversationDataSource {
             guard !self.messageProcessingIsCancelled else {
                 return
             }
-            self.reload(initialMessageId: initialMessageId, completion: completion)
+            self.reload(initialMessageId: initialMessageId, animatedReloading: false)
+            DispatchQueue.main.async {
+                completion?()
+            }
         }
     }
     

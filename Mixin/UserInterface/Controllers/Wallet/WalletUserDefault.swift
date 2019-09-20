@@ -158,9 +158,6 @@ class WalletUserDefault {
         get {
             return session.string(forKey: keyCurrencyCode)
         }
-        set {
-            session.set(newValue, forKey: keyCurrencyCode)
-        }
     }
-    
+
 }

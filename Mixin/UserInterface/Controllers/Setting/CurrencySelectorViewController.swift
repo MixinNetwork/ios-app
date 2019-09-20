@@ -12,6 +12,7 @@ class CurrencySelectorViewController: PopupSearchableTableViewController {
     }()
     
     private var searchResults = [Currency]()
+    private lazy var hud = Hud()
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
@@ -61,11 +62,20 @@ extension CurrencySelectorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
-        if Currency.current.code != currency.code {
-            Currency.current = currency
-        }
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_saved())
-        dismiss(animated: true, completion: nil)
+        hud.show(style: .busy, text: "", on: self.view)
+
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
+            switch result {
+            case .success(let account):
+                AccountAPI.shared.updateAccount(account: account)
+                Currency.refreshCurrentCurrency()
+                self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                self?.dismiss(animated: true, completion: nil)
+            case let .failure(error):
+                self?.hud.set(style: .error, text: error.localizedDescription)
+            }
+            self?.hud.scheduleAutoHidden()
+        })
     }
     
 }

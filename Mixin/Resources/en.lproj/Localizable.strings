@@ -590,6 +590,9 @@
 "setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
+"setting_notification_transfer" = "Transfer Notifications";
+"setting_notification_transfer_amount" = "Transfer Amount(%@)";
+"setting_notification_transfer_summary" = "Show notifications when receiving a transfer greater than or equal to %@.";
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";

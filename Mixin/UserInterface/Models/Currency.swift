@@ -30,9 +30,8 @@ extension Currency {
     
     static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.ios.current.currency.did.change")
     
-    static var current = currentCurrencyStorage {
+    private(set) static var current = currentCurrencyStorage {
         didSet {
-            currentCurrencyStorage = current
             NotificationCenter.default.post(name: currentCurrencyDidChangeNotification, object: nil)
         }
     }
@@ -63,16 +62,15 @@ extension Currency {
     
     private static var map = [String: Currency](uniqueKeysWithValues: all.map({ ($0.code, $0) }))
     private static var currentCurrencyStorage: Currency {
-        get {
-            if let code = WalletUserDefault.shared.currencyCode, let currency = map[code] {
-                return currency
-            } else {
-                return all[0] // USD for default
-            }
+        if let code = AccountAPI.shared.account?.fiat_currency, let currency = map[code] {
+            return currency
+        } else {
+            return all[0] // USD for default
         }
-        set {
-            WalletUserDefault.shared.currencyCode = newValue.code
-        }
+    }
+
+    static func refreshCurrentCurrency() {
+        current = currentCurrencyStorage
     }
     
     static func updateRate(with monies: [FiatMoney]) {

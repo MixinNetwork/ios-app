@@ -592,6 +592,9 @@
 "setting_change_emergency_contact_success" = "成功设置紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
+"setting_notification_transfer" = "转账通知";
+"setting_notification_transfer_amount" = "转账金额（%@）";
+"setting_notification_transfer_summary" = "当收到不少于 %@ 转账时显示通知";
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";

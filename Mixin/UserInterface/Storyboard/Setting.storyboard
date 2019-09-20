@@ -981,6 +981,53 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="czl-NP-ea0">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Mur-G5-ASO" customClass="ModernSelectedBackgroundCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="64" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Mur-G5-ASO" id="3ic-3b-W38">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" contentMode="scaleToFill" text="Transfer Notifications" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k53-EO-HiT">
+                                                    <rect key="frame" x="16" y="23" width="147" height="18"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_transfer"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MBW-AV-oEB">
+                                                    <rect key="frame" x="317.5" y="24.5" width="15.5" height="15"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="weY-N5-jGt">
+                                                    <rect key="frame" x="333" y="0.0" width="42" height="64"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="06i-vJ-hJ2"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="weY-N5-jGt" secondAttribute="trailing" id="3mV-D5-Uv4"/>
+                                                <constraint firstItem="weY-N5-jGt" firstAttribute="leading" secondItem="MBW-AV-oEB" secondAttribute="trailing" id="7GU-kn-5fg"/>
+                                                <constraint firstItem="k53-EO-HiT" firstAttribute="leading" secondItem="3ic-3b-W38" secondAttribute="leadingMargin" id="KHD-tg-Ifg"/>
+                                                <constraint firstItem="MBW-AV-oEB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="k53-EO-HiT" secondAttribute="trailing" id="MNp-bI-09b"/>
+                                                <constraint firstItem="k53-EO-HiT" firstAttribute="centerY" secondItem="3ic-3b-W38" secondAttribute="centerY" id="fy1-TX-qWK"/>
+                                                <constraint firstItem="weY-N5-jGt" firstAttribute="top" secondItem="3ic-3b-W38" secondAttribute="top" id="kwG-I2-6gO"/>
+                                                <constraint firstItem="MBW-AV-oEB" firstAttribute="centerY" secondItem="3ic-3b-W38" secondAttribute="centerY" id="rhn-H8-k1t"/>
+                                                <constraint firstAttribute="bottom" secondItem="weY-N5-jGt" secondAttribute="bottom" id="yzc-Rj-Rel"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="TsT-pu-fb1" id="2fD-Ms-vHN"/>
@@ -989,6 +1036,7 @@
                     </tableView>
                     <connections>
                         <outlet property="messagePreviewSwitch" destination="ccq-vy-TTE" id="k3I-ha-sV0"/>
+                        <outlet property="thresholdLabel" destination="MBW-AV-oEB" id="p6H-Bb-KnE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ha2-XG-uOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>

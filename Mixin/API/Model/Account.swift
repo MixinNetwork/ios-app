@@ -20,6 +20,8 @@ struct Account: Encodable {
     let has_pin: Bool
     var has_emergency_contact: Bool
     let pin_token: String
+    let fiat_currency: String
+    let transfer_notification_threshold: Double
 }
 
 extension Account: Decodable {
@@ -44,6 +46,8 @@ extension Account: Decodable {
         has_emergency_contact = container.getBool(key: .has_emergency_contact)
         code_url = container.getString(key: .code_url)
         pin_token = container.getString(key: .pin_token)
+        fiat_currency = container.getString(key: .fiat_currency)
+        transfer_notification_threshold = container.getDouble(key: .transfer_notification_threshold)
     }
 
 }

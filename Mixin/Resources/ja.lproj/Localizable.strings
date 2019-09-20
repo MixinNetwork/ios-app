@@ -475,7 +475,6 @@
 "profile_photo" = "プロフィール写真";
 "profile_full_name" = "名前";
 "profile_my_qrcode" = "私のQRコード";
-"profile_my_invitation_code" = "私の招待コード";
 "profile_change_number" = "変更電話番号";
 "profile_change_avatar" = "プロフィール写真の変更";
 "profile_change_number_confirmation" = "電話番号を変更しますか？";
@@ -484,7 +483,6 @@
 "profile_change_number_new_number" = "新しい電話番号を入力してください";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "評判スコア: %@";
-"profile_invitation_code_consumed_count" = "あなたは合計 %@ 人を招待しました。";
 "profile_edit_name" = "名前を編集";
 "profile_add_contact_fail" = "連絡先を追加できませんでした";
 "profile_remove_contact_fail" = "連絡先を削除できませんでした";

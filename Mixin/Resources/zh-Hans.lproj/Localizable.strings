@@ -509,7 +509,6 @@
 "profile_photo" = "个人头像";
 "profile_full_name" = "名称";
 "profile_my_qrcode" = "我的二维码";
-"profile_my_invitation_code" = "我的邀请码";
 "profile_change_number" = "更换手机号";
 "profile_change_avatar" = "更改头像";
 "profile_change_number_confirmation" = "是否更换手机号？";
@@ -518,7 +517,6 @@
 "profile_change_number_new_number" = "请输入新号码";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "荣誉值: %@";
-"profile_invitation_code_consumed_count" = "你总共邀请了 %@ 好友。";
 "profile_edit_name" = "编辑名称";
 "profile_edit_biography" = "编辑个人简介";
 "profile_add_contact_fail" = "添加联系人失败，请稍后重试";

@@ -507,7 +507,6 @@
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
-"profile_my_invitation_code" = "My Invitation Code";
 "profile_change_avatar" = "Change Profile Photo";
 "profile_change_number" = "Change Phone Number";
 "profile_change_number_confirmation" = "Do you want to change the phone number?";
@@ -516,7 +515,6 @@
 "profile_change_number_new_number" = "Enter your new phone number";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "Reputation Score: %@";
-"profile_invitation_code_consumed_count" = "You have invited a total of %@ people.";
 "profile_edit_name" = "Edit Name";
 "profile_edit_biography" = "Edit Biography";
 "profile_add_contact_fail" = "Failed to add contact";

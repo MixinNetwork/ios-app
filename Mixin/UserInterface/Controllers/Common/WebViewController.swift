@@ -123,7 +123,6 @@ class WebViewController: UIViewController {
         }))
         controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
             UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
-            self.dismiss()
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
@@ -138,14 +137,13 @@ class WebViewController: UIViewController {
         case .began:
             if view.safeAreaInsets.top > 20 {
                 contentView.layer.cornerRadius = 39
+            } else {
+                contentView.layer.cornerRadius = 20
             }
         case .changed:
             let scale = 1 - 0.2 * recognizer.fractionComplete
             contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
         case .ended:
-            UIView.animate(withDuration: 0.25, animations: {
-                self.contentView.transform = .identity
-            })
             dismiss()
         case .cancelled:
             UIView.animate(withDuration: 0.25, animations: {

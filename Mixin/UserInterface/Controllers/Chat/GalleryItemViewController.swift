@@ -38,6 +38,10 @@ class GalleryItemViewController: UIViewController {
         return false
     }
     
+    var canPerformInteractiveDismissal: Bool {
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         operationButton.addTarget(self, action: #selector(attachmentAction(_:)), for: .touchUpInside)

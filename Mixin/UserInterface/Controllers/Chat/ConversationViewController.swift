@@ -596,15 +596,14 @@ class ConversationViewController: UIViewController {
     }
     
     func openOpponentApp(_ app: App) {
-        guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
+        guard !conversationId.isEmpty else {
             return
         }
         if let appUser = ownerUser {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appUser.userId]))
         }
         UIApplication.logEvent(eventName: "open_app", parameters: ["source": "Conversation", "identityNumber": app.appNumber])
-        let window = WebWindow.instance(conversationId: conversationId, app: app)
-        window.presentPopupControllerAnimated(url: url)
+        WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
     }
     
     func handleMessageRecalling(messageId: String) {
@@ -1324,8 +1323,7 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        let window = WebWindow.instance(conversationId: conversationId)
-        window.presentPopupControllerAnimated(url: url)
+        WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
     }
     
     private func report(conversationId: String) {

@@ -126,5 +126,14 @@ extension UIColor {
         UIGraphicsEndImageContext()
         return image
     }
-
+    
+    // https://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+    var w3cLightness: CGFloat {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: nil)
+        return 0.299 * r + 0.587 * g + 0.114 * b
+    }
+    
 }

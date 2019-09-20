@@ -56,6 +56,7 @@ extension UILayoutPriority {
 
 extension UIVisualEffect {
     
+    static let extraLightBlur = UIBlurEffect(style: .extraLight)
     static let lightBlur = UIBlurEffect(style: .light)
     static let darkBlur = UIBlurEffect(style: .dark)
     

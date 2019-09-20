@@ -12,7 +12,6 @@ class LoginView: UIView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var loginSuccess = false
-    private var backgroundWindow: WebWindow?
     
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
@@ -68,9 +67,6 @@ class LoginView: UIView {
         self.assets = assets
         self.superView = superView
         
-        if let webWindow = UIApplication.shared.keyWindow?.subviews.first(where: { $0 is WebWindow }) as? WebWindow {
-            self.backgroundWindow = webWindow
-        }
         superView.layoutIfNeeded()
 
         titleLabel.text = authInfo.app.name

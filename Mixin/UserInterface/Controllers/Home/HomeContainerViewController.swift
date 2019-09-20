@@ -19,6 +19,10 @@ class HomeContainerViewController: UIViewController {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
+    override var childForStatusBarStyle: UIViewController? {
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+    }
+    
     override var childForHomeIndicatorAutoHidden: UIViewController? {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }

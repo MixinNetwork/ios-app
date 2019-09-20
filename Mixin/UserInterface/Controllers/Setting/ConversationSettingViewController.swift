@@ -113,12 +113,7 @@ extension ConversationSettingViewController {
         messageSourceContactsCheckmarkView.alpha = 0
         messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceEverybodyIndicator.startAnimating()
-        let userRequest = UserRequest(full_name: nil,
-                                      avatar_base64: nil,
-                                      notification_token: nil,
-                                      receive_message_source: ReceiveMessageSource.everybody.rawValue,
-                                      accept_conversation_source: nil)
-        AccountAPI.shared.preferences(userRequest: userRequest, completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue), completion: { [weak self] (result) in
             self?.messageSourceEverybodyIndicator.stopAnimating()
             self?.tableView.isUserInteractionEnabled = true
             self?.messageSourceEverybodyCheckmarkView.alpha = 1
@@ -137,12 +132,7 @@ extension ConversationSettingViewController {
         messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceContactsCheckmarkView.alpha = 0
         messageSourceContactsIndicator.startAnimating()
-        let userRequest = UserRequest(full_name: nil,
-                                      avatar_base64: nil,
-                                      notification_token: nil,
-                                      receive_message_source: ReceiveMessageSource.contacts.rawValue,
-                                      accept_conversation_source: nil)
-        AccountAPI.shared.preferences(userRequest: userRequest, completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue), completion: { [weak self] (result) in
             self?.messageSourceContactsIndicator.stopAnimating()
             self?.messageSourceContactsCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
@@ -161,12 +151,7 @@ extension ConversationSettingViewController {
         conversationSourceContactsCheckmarkView.alpha = 0
         conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceEverybodyIndicator.startAnimating()
-        let userRequest = UserRequest(full_name: nil,
-                                      avatar_base64: nil,
-                                      notification_token: nil,
-                                      receive_message_source: nil,
-                                      accept_conversation_source: AcceptConversationSource.everybody.rawValue)
-        AccountAPI.shared.preferences(userRequest: userRequest, completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue), completion: { [weak self] (result) in
             self?.conversationSourceEverybodyIndicator.stopAnimating()
             self?.conversationSourceEverybodyCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
@@ -185,12 +170,7 @@ extension ConversationSettingViewController {
         conversationSourceContactsIndicator.startAnimating()
         conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceContactsCheckmarkView.alpha = 0
-        let userRequest = UserRequest(full_name: nil,
-                                      avatar_base64: nil,
-                                      notification_token: nil,
-                                      receive_message_source: nil,
-                                      accept_conversation_source: AcceptConversationSource.contacts.rawValue)
-        AccountAPI.shared.preferences(userRequest: userRequest, completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue), completion: { [weak self] (result) in
             self?.conversationSourceContactsIndicator.stopAnimating()
             self?.tableView.isUserInteractionEnabled = true
             self?.conversationSourceContactsCheckmarkView.alpha = 1

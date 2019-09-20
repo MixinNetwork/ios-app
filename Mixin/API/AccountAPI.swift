@@ -130,8 +130,8 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func preferences(userRequest: UserRequest, completion: @escaping (APIResult<Account>) -> Void) {
-        request(method: .post, url: url.preferences, parameters: userRequest.toParameters(), encoding: EncodableParameterEncoding<UserRequest>(), completion: completion)
+    func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (APIResult<Account>) -> Void) {
+        request(method: .post, url: url.preferences, parameters: preferenceRequest.toParameters(), encoding: EncodableParameterEncoding<UserPreferenceRequest>(), completion: completion)
     }
 
     func verify(pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {

@@ -588,6 +588,7 @@ extension ConversationInputViewController: UITextViewDelegate {
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }
+        conversationViewController.inputTextViewDidChange(textView)
     }
     
 }

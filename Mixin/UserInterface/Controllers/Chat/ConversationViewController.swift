@@ -60,6 +60,7 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
+    private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     
     private lazy var strangerTipsView: StrangerTipsView = {
         let view = StrangerTipsView()
@@ -196,7 +197,6 @@ class ConversationViewController: UIViewController {
         SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateNavigationBarHeightAndTableViewTopInset()
@@ -543,6 +543,10 @@ class ConversationViewController: UIViewController {
         if animated {
             UIView.commitAnimations()
         }
+    }
+    
+    func inputTextViewDidChange(_ textView: UITextView) {
+        
     }
     
     func documentAction() {
@@ -1279,6 +1283,10 @@ extension ConversationViewController {
         
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
+        if dataSource.category == .group {
+            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
+            userHandleViewController.users = users
+        }
         hideLoading()
     }
     

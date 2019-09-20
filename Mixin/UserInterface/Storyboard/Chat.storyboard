@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1356,6 +1357,83 @@
             </objects>
             <point key="canvasLocation" x="3142" y="1180"/>
         </scene>
+        <!--User Handle View Controller-->
+        <scene sceneID="JyD-2v-BR8">
+            <objects>
+                <tableViewController storyboardIdentifier="user_handle" id="kCM-CZ-yct" customClass="UserHandleViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="52" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="neZ-O6-7Wz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="240"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="user_handle" rowHeight="52" id="t5n-SY-bXR" customClass="UserHandleCell" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="52"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="t5n-SY-bXR" id="yzb-ty-DqI">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gA8-EG-juZ" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="7" width="38" height="38"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="38" id="1Zo-0N-MXH"/>
+                                                <constraint firstAttribute="width" secondItem="gA8-EG-juZ" secondAttribute="height" id="Y3x-Ah-ksy"/>
+                                            </constraints>
+                                        </view>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2ui-1P-Jut">
+                                            <rect key="frame" x="74" y="9" width="285" height="34"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="TMD-7Z-E08">
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="19.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Latin Poems" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9u-Oj-cdT">
+                                                            <rect key="frame" x="0.0" y="0.0" width="89" height="19.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" name="dark_text"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="c9C-SK-bFF">
+                                                            <rect key="frame" x="93" y="0.0" width="192" height="19.5"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000101986" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuN-iN-kAk">
+                                                    <rect key="frame" x="0.0" y="19.5" width="285" height="14.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="2ui-1P-Jut" firstAttribute="centerY" secondItem="yzb-ty-DqI" secondAttribute="centerY" id="7Z9-P7-bb8"/>
+                                        <constraint firstItem="2ui-1P-Jut" firstAttribute="leading" secondItem="gA8-EG-juZ" secondAttribute="trailing" constant="16" id="QeE-l1-79R"/>
+                                        <constraint firstItem="gA8-EG-juZ" firstAttribute="leading" secondItem="yzb-ty-DqI" secondAttribute="leading" constant="20" id="Ygm-PN-ojr"/>
+                                        <constraint firstItem="gA8-EG-juZ" firstAttribute="centerY" secondItem="yzb-ty-DqI" secondAttribute="centerY" id="ag3-mM-Wdf"/>
+                                        <constraint firstAttribute="trailing" secondItem="2ui-1P-Jut" secondAttribute="trailing" constant="16" id="xrt-qj-yoa"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="avatarImageView" destination="gA8-EG-juZ" id="amX-9l-MTF"/>
+                                    <outlet property="badgeImageView" destination="c9C-SK-bFF" id="ySk-tT-zgO"/>
+                                    <outlet property="identityNumberLabel" destination="zuN-iN-kAk" id="K65-Jh-Whc"/>
+                                    <outlet property="nameLabel" destination="g9u-Oj-cdT" id="F7m-ta-rvy"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="kCM-CZ-yct" id="g7p-cn-Bk5"/>
+                            <outlet property="delegate" destination="kCM-CZ-yct" id="99D-7E-8iF"/>
+                        </connections>
+                    </tableView>
+                    <size key="freeformSize" width="375" height="240"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b1f-mn-Lr4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1572" y="63"/>
+        </scene>
         <!--Audio Input View Controller-->
         <scene sceneID="afv-rk-oR6">
             <objects>
@@ -2109,6 +2187,10 @@
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>
         <image name="ic_title_back" width="9" height="17"/>
+        <image name="ic_user_bot" width="14" height="11"/>
         <image name="ic_user_verified" width="14" height="14"/>
+        <namedColor name="dark_text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

@@ -366,6 +366,8 @@
 		7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532920A435D300C36F69 /* CoreTextExtension.swift */; };
 		7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD127FB22D8892200BB5316 /* GalleryViewController.swift */; };
 		7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */; };
+		7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */; };
+		7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344082334CE12005C26E3 /* UserHandleCell.swift */; };
 		7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B5F20BEA03200D06E5C /* WaveformView.swift */; };
 		7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */; };
 		7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A889233228D900DD4E9A /* WebViewController.swift */; };
@@ -1131,6 +1133,8 @@
 		7BD0532920A435D300C36F69 /* CoreTextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextExtension.swift; sourceTree = "<group>"; };
 		7BD127FB22D8892200BB5316 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCoreSDKExtension.swift; sourceTree = "<group>"; };
+		7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleViewController.swift; sourceTree = "<group>"; };
+		7BD344082334CE12005C26E3 /* UserHandleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleCell.swift; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
 		7BD5A889233228D900DD4E9A /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -2011,6 +2015,7 @@
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
 				7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */,
 				7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */,
+				7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */,
 				7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */,
 				7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */,
 				7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */,
@@ -2783,6 +2788,7 @@
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
 				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
 				7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */,
+				7BD344082334CE12005C26E3 /* UserHandleCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3315,6 +3321,7 @@
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
+				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
 				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
@@ -3796,6 +3803,7 @@
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				273FACBF205FB9A800513327 /* SessionSignedPreKey.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
+				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,
 				DF503D251FECE54100C008E7 /* IdentityDAO.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,

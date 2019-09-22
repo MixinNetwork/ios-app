@@ -711,39 +711,6 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         }
         return message.allowedActions.contains(action)
     }
-
-    private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
-        dataSource?.queue.async { [weak self] in
-            if MessageDAO.shared.deleteMessage(id: message.messageId) {
-                ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
-            }
-            DispatchQueue.main.sync {
-                guard let weakSelf = self else {
-                    return
-                }
-                _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
-                weakSelf.tableView.reloadData()
-                weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
-            }
-        }
-    }
-
-    private func deleteForEveryone(message: MessageItem) {
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status, sendToSession: true)
-    }
-
-    private func showRecallTips(message: MessageItem) {
-        let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
-        alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
-        }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
-            self.deleteForEveryone(message: message)
-        }))
-        present(alc, animated: true, completion: nil)
-    }
     
     func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
@@ -1368,6 +1335,39 @@ extension ConversationViewController {
                 }
             }
         }
+    }
+    
+    private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
+        dataSource?.queue.async { [weak self] in
+            if MessageDAO.shared.deleteMessage(id: message.messageId) {
+                ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+            }
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
+                }
+                _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
+                weakSelf.tableView.reloadData()
+                weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+            }
+        }
+    }
+
+    private func deleteForEveryone(message: MessageItem) {
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status, sendToSession: true)
+    }
+
+    private func showRecallTips(message: MessageItem) {
+        let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
+            self.deleteForEveryone(message: message)
+        }))
+        present(alc, animated: true, completion: nil)
     }
     
     private func reloadWithMessageIdAndBlinkTheCell(_ messageId: String, upwards: Bool) {

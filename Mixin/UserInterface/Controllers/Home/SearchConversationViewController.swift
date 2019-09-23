@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchConversationViewController: UIViewController, SearchableViewController {
+class SearchConversationViewController: UIViewController, HomeSearchViewController {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!

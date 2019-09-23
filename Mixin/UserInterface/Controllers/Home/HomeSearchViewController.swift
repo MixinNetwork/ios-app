@@ -1,12 +1,12 @@
 import UIKit
 
-protocol SearchableViewController {
+protocol HomeSearchViewController {
     var searchTextField: UITextField! { get }
     var wantsNavigationSearchBox: Bool { get }
     var navigationSearchBoxInsets: UIEdgeInsets { get }
 }
 
-extension SearchableViewController where Self: UIViewController {
+extension HomeSearchViewController where Self: UIViewController {
     
     var trimmedLowercaseKeyword: String? {
         guard let text = searchTextField.text else {

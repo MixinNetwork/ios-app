@@ -1,7 +1,7 @@
 import UIKit
 import WCDBSwift
 
-class SearchCategoryViewController: UIViewController, SearchableViewController {
+class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     
     enum Category {
         case asset

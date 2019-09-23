@@ -3,7 +3,7 @@ import PhoneNumberKit
 import Alamofire
 import WCDBSwift
 
-class SearchViewController: UIViewController, SearchableViewController {
+class SearchViewController: UIViewController, HomeSearchViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentAppsContainerView: UIView!

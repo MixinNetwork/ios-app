@@ -16,6 +16,9 @@ class RefreshGroupIconJob: AsynchronousJob {
 
     override func execute() -> Bool {
         let participants = ParticipantDAO.shared.getGroupIconParticipants(conversationId: conversationId)
+        guard participants.count >= 4 || participants.count == ParticipantDAO.shared.getParticipantCount(conversationId: conversationId) else {
+            return false
+        }
         let participantIds: [String] = participants.map { (participant) in
             if participant.userAvatarUrl.isEmpty {
                 return String(participant.userFullName.prefix(1))

@@ -389,7 +389,9 @@
 		7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6D22363E82006220DF /* SettingCell.swift */; };
 		7BDBDE7022365017006220DF /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6F22365017006220DF /* SettingCell.xib */; };
 		7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */; };
+		7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */; };
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
+		7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE1109022FD60FD0017BA06 /* StickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1108F22FD60FD0017BA06 /* StickerItem.swift */; };
 		7BE1109422FD986C0017BA06 /* StickerPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */; };
@@ -1156,7 +1158,9 @@
 		7BDBDE6D22363E82006220DF /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		7BDBDE6F22365017006220DF /* SettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = "<group>"; };
 		7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryActivityIndicatorView.swift; sourceTree = "<group>"; };
+		7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderBypassTableView.swift; sourceTree = "<group>"; };
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleTableHeaderView.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE1108F22FD60FD0017BA06 /* StickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerItem.swift; sourceTree = "<group>"; };
 		7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerPrefetcher.swift; sourceTree = "<group>"; };
@@ -2603,6 +2607,8 @@
 				7B34A19E22C0E73D00665F41 /* GalleryVideoView.swift */,
 				7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */,
 				7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */,
+				7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */,
+				7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3590,6 +3596,7 @@
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
+				7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */,
 				DF503D2E1FECF18800C008E7 /* PreKey.swift in Sources */,
 				7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */,
 				7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */,
@@ -3699,6 +3706,7 @@
 				DF6175C3222398BB00624609 /* MixinURL.swift in Sources */,
 				7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
+				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,

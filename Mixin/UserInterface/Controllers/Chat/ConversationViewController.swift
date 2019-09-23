@@ -16,6 +16,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
     @IBOutlet weak var inputWrapperView: UIView!
+    @IBOutlet weak var inputWrapperTopShadowView: TopShadowView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
@@ -546,7 +547,17 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidChange(_ textView: UITextView) {
-        
+        if textView.text.hasPrefix("@") {
+            userHandleViewController.keyword = textView.text
+            setUserHandleHidden(!userHandleViewController.hasContent)
+        } else {
+            setUserHandleHidden(true)
+        }
+    }
+    
+    func inputUserHandle(with user: User) {
+        conversationInputViewController.textView.text = "@" + user.identityNumber + " "
+        setUserHandleHidden(true)
     }
     
     func documentAction() {
@@ -1235,6 +1246,33 @@ extension ConversationViewController {
         return nil
     }
     
+    private func loadUserHandleAsChildIfNeeded() {
+        guard userHandleViewController.parent == nil else {
+            return
+        }
+        addChild(userHandleViewController)
+        view.insertSubview(userHandleViewController.view, belowSubview: inputWrapperView)
+        userHandleViewController.view.snp.makeConstraints { (make) in
+            make.top.equalTo(navigationBarView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(inputWrapperView.snp.top)
+        }
+        userHandleViewController.didMove(toParent: self)
+    }
+    
+    private func setUserHandleHidden(_ hidden: Bool) {
+        if hidden {
+            if userHandleViewController.isViewLoaded {
+                userHandleViewController.view.isHidden = true
+            }
+            inputWrapperTopShadowView.alpha = 0
+        } else {
+            loadUserHandleAsChildIfNeeded()
+            userHandleViewController.view.isHidden = false
+            inputWrapperTopShadowView.alpha = 1
+        }
+    }
+    
 }
 
 // MARK: - Helpers
@@ -1253,6 +1291,7 @@ extension ConversationViewController {
         if dataSource.category == .group {
             let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
             userHandleViewController.users = users
+            setUserHandleHidden(!userHandleViewController.hasContent)
         }
         hideLoading()
     }

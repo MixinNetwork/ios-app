@@ -119,7 +119,7 @@ class RestoreViewController: UIViewController {
             return
         }
 
-        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent)
+        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
         try downloadFromCloud(url: cloudURL)
 
         guard FileManager.default.fileExists(atPath: cloudURL.path) else {

@@ -82,22 +82,9 @@ class BackupJob: BaseJob {
     }
 
     private func backupDatabase(backupDir: URL) throws -> Int64 {
-        let localURL = MixinFile.backupDatabase
-        let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
-
-        try? FileManager.default.removeItem(at: localURL)
-        try MixinDatabase.shared.backup(path: localURL.path) { (remaining, pagecount) in
-            guard let job = BackupJobQueue.shared.backupJob else {
-                return
-            }
-            job.progress.currentJobProgress = Float(pagecount - remaining) / Float(pagecount)
-        }
-
-        let db = Database(withFileURL: localURL)
-        try? db.delete(fromTable: SentSenderKey.tableName)
-        try db.close {
-            try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
-        }
+        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+        try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+        try FileManager.default.saveToCloud(from: MixinFile.databaseURL, to: cloudURL)
         progress.completeCurrentJob()
         return FileManager.default.fileSize(cloudURL.path)
     }

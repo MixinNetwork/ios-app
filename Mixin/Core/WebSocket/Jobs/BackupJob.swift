@@ -84,7 +84,8 @@ class BackupJob: BaseJob {
     private func backupDatabase(backupDir: URL) throws -> Int64 {
         let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
         try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
-        try FileManager.default.saveToCloud(from: MixinFile.databaseURL, to: cloudURL)
+
+        try FileManager.default.saveToCloud(from: MixinFile.databaseURL, to: cloudURL, removeFromFile: false)
         progress.completeCurrentJob()
         return FileManager.default.fileSize(cloudURL.path)
     }
@@ -152,7 +153,7 @@ class BackupJob: BaseJob {
 
             if FileManager.default.fileExists(atPath: cloudURL.path) {
                 if FileManager.default.fileSize(cloudURL.path) != FileManager.default.fileSize(localURL.path) {
-                    try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+                    try FileManager.default.saveToCloud(from: localURL, to: cloudURL, removeFromFile: false)
                 }
             } else {
                 try FileManager.default.saveToCloud(from: localURL, to: cloudURL)

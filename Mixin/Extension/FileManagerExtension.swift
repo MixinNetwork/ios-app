@@ -11,9 +11,17 @@ extension FileManager {
         return fileSize.int64Value
     }
 
-    func saveToCloud(from: URL, to: URL) throws {
+    func saveToCloud(from: URL, to: URL, removeFromFile: Bool = true) throws {
         if FileManager.default.fileExists(atPath: to.path) {
-            _ = try FileManager.default.replaceItemAt(to, withItemAt: from)
+            if removeFromFile {
+                _ = try FileManager.default.replaceItemAt(to, withItemAt: from)
+            } else {
+                let tempToURL = to.appendingPathExtension("tmp")
+                try? FileManager.default.removeItem(at: tempToURL)
+                try FileManager.default.copyItem(at: from, to: tempToURL)
+                
+                _ = try FileManager.default.replaceItemAt(to, withItemAt: tempToURL)
+            }
         } else {
             try FileManager.default.copyItem(at: from, to: to)
         }

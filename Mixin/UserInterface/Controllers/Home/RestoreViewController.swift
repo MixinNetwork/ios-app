@@ -52,6 +52,7 @@ class RestoreViewController: UIViewController {
                 return
             }
 
+            DatabaseUserDefault.shared.forceUpgradeDatabase = true
             MixinDatabase.shared.close()
             do {
                 self.updateProgressLabel(progress: 0.01)

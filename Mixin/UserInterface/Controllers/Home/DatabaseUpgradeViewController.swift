@@ -13,11 +13,11 @@ class DatabaseUpgradeViewController: UIViewController {
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
             let currentVersion = DatabaseUserDefault.shared.databaseVersion
-            if currentVersion < 2 {
-                TaskDatabase.shared.initDatabase()
-            }
+
+            TaskDatabase.shared.initDatabase()
+            MixinDatabase.shared.initDatabase()
+
             if currentVersion < 3 {
-                MixinDatabase.shared.initDatabase()
                 if let currency = WalletUserDefault.shared.currencyCode, !currency.isEmpty {
                     AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency), completion: {  (result) in
                         if case let .success(account) = result {
@@ -28,6 +28,7 @@ class DatabaseUpgradeViewController: UIViewController {
                 }
             }
 
+            DatabaseUserDefault.shared.forceUpgradeDatabase = false
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
             
             let time = Date().timeIntervalSince(startTime)

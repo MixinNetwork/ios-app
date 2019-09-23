@@ -31,22 +31,10 @@ final class GalleryItemModelController: NSObject {
     }
     
     func dequeueReusableViewController(with item: GalleryItem) -> GalleryItemViewController {
-        let index: Int
-        if let idx = items.firstIndex(of: item) {
-            index = idx
-            if index >= items.count - 2 {
-                fetchMoreItemsAfter()
-            }
-            if index <= 1 {
-                fetchMoreItemsBefore()
-            }
-        } else {
-            items = [item]
-            index = 0
-            fetchMoreItemsAfter()
-            fetchMoreItemsBefore()
-        }
-        return dequeueReusableViewController(of: index)!
+        items = [item]
+        fetchMoreItemsAfter()
+        fetchMoreItemsBefore()
+        return dequeueReusableViewController(of: 0)!
     }
     
     func dequeueReusableViewController(of index: Int) -> GalleryItemViewController? {

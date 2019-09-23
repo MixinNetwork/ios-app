@@ -1,12 +1,12 @@
 import UIKit
 
-protocol SearchableViewController {
+protocol HomeSearchViewController {
     var searchTextField: UITextField! { get }
     var wantsNavigationSearchBox: Bool { get }
     var navigationSearchBoxInsets: UIEdgeInsets { get }
 }
 
-extension SearchableViewController where Self: UIViewController {
+extension HomeSearchViewController where Self: UIViewController {
     
     var trimmedLowercaseKeyword: String? {
         guard let text = searchTextField.text else {
@@ -56,7 +56,7 @@ extension SearchableViewController where Self: UIViewController {
             let vc = ConversationViewController.instance(conversation: result.conversation)
             homeNavigationController?.pushViewController(vc, animated: true)
         case let result as MessagesWithinConversationSearchResult:
-            let vc = R.storyboard.home.search_conversation()!
+            let vc = SearchConversationViewController()
             vc.load(searchResult: result)
             vc.inheritedKeyword = keyword
             searchNavigationController?.pushViewController(vc, animated: true)

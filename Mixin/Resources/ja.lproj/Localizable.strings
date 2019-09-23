@@ -465,6 +465,7 @@
 "profile_title" = "情報";
 "profile_send_message" = "メッセージを送る";
 "profile_share_card" = "共有する";
+"profile_search_conversation" = "メッセージ履歴を検索する";
 "profile_transactions" = "取引履歴";
 "profile_open_bot" = "アプリを開く";
 "profile_notification" = "通知";

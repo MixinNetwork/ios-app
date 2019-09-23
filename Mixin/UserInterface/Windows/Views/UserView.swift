@@ -229,6 +229,9 @@ class UserView: CornerView {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { (action) in
                 self.shareAction()
             }))
+            alc.addAction(UIAlertAction(title: R.string.localizable.profile_search_conversation(), style: .default, handler: { (action) in
+                self.searchConversationAction()
+            }))
 
             if user.isSelfBot {
                 alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { (action) in
@@ -332,7 +335,14 @@ class UserView: CornerView {
         let vc = MessageReceiverViewController.instance(content: .contact(user.userId))
         UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
-    
+
+    func searchConversationAction() {
+        let vc = InConversationSearchViewController()
+        vc.load(user: user, conversationId: conversationId)
+        let container = ContainerViewController.instance(viewController: vc, title: user.fullName)
+        UIApplication.homeNavigationController?.pushViewController(container, animated: true)
+    }
+
     @IBAction func transferAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
 

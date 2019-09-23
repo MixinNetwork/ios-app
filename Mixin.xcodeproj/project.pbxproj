@@ -299,7 +299,7 @@
 		7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */; };
 		7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */; };
 		7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */; };
-		7BA9D9EE226F114700255943 /* SearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9ED226F114700255943 /* SearchableViewController.swift */; };
+		7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */; };
 		7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */; };
 		7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */; };
 		7BAB5D4020C5213C009F4EE6 /* AudioDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */; };
@@ -391,6 +391,8 @@
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE1109022FD60FD0017BA06 /* StickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1108F22FD60FD0017BA06 /* StickerItem.swift */; };
 		7BE1109422FD986C0017BA06 /* StickerPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */; };
+		7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */; };
+		7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
 		7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */; };
 		7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */; };
@@ -1049,7 +1051,7 @@
 		7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategoryViewController.swift; sourceTree = "<group>"; };
 		7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConversationViewController.swift; sourceTree = "<group>"; };
 		7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAvatarIconView.swift; sourceTree = "<group>"; };
-		7BA9D9ED226F114700255943 /* SearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableViewController.swift; sourceTree = "<group>"; };
+		7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchViewController.swift; sourceTree = "<group>"; };
 		7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationBar.swift; sourceTree = "<group>"; };
 		7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploadJob.swift; sourceTree = "<group>"; };
 		7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadJob.swift; sourceTree = "<group>"; };
@@ -1154,6 +1156,8 @@
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE1108F22FD60FD0017BA06 /* StickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerItem.swift; sourceTree = "<group>"; };
 		7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerPrefetcher.swift; sourceTree = "<group>"; };
+		7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InConversationSearchViewController.swift; sourceTree = "<group>"; };
+		7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchConversationView.xib; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
 		7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_separator_3.png; sourceTree = "<group>"; };
 		7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_separator_4.png; sourceTree = "<group>"; };
@@ -1857,6 +1861,7 @@
 				7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */,
 				7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
+				7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2032,6 +2037,7 @@
 				7BF42E3222DC860E005066E6 /* GalleryItemViewController.swift */,
 				7BF42E3022DC85E8005066E6 /* GalleryImageItemViewController.swift */,
 				7BF42E3422DCAC93005066E6 /* GalleryVideoItemViewController.swift */,
+				7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2500,7 +2506,7 @@
 				DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
-				7BA9D9ED226F114700255943 /* SearchableViewController.swift */,
+				7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
 				7B5281732265D7E30023616D /* RecentAppsViewController.swift */,
 				7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */,
@@ -3005,6 +3011,7 @@
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
+				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
@@ -3563,6 +3570,7 @@
 				27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */,
 				7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */,
 				7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */,
+				7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */,
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
@@ -3832,7 +3840,7 @@
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */,
-				7BA9D9EE226F114700255943 /* SearchableViewController.swift in Sources */,
+				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,
 				DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */,

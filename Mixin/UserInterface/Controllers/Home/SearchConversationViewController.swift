@@ -1,16 +1,18 @@
 import UIKit
 
-class SearchConversationViewController: UIViewController, SearchableViewController {
+class SearchConversationViewController: UIViewController, HomeSearchViewController {
     
-    @IBOutlet weak var navigationTitleLabel: UILabel!
-    @IBOutlet weak var navigationSubtitleLabel: UILabel!
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     
     let iconView = NavigationAvatarIconView()
     
+    var conversationId = ""
+    var conversation: ConversationItem?
     var inheritedKeyword: String?
     var lastKeyword: String?
+    
+    lazy var navigationTitleLabel: UILabel? = UILabel()
     
     var searchTextField: UITextField! {
         return searchBoxView.textField
@@ -29,13 +31,15 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     private let loadMoreMessageThreshold = 5 // Distance to bottom
     private let loadConversationOp = BlockOperation()
     
-    private var conversationId = ""
-    private var conversation: ConversationItem?
     private var user: UserItem?
     private var messages = [[MessageSearchResult]]()
     private var didLoadAllMessages = false
     
     private lazy var userWindow = UserWindow.instance()
+    
+    convenience init() {
+        self.init(nib: R.nib.searchConversationView)
+    }
     
     deinit {
         queue.cancelAllOperations()
@@ -43,37 +47,37 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        queue.maxConcurrentOperationCount = 1
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
         iconView.addGestureRecognizer(tapRecognizer)
         iconView.frame.size = iconView.intrinsicContentSize
         iconView.isUserInteractionEnabled = true
         iconView.hasShadow = true
-        let rightButton = UIBarButtonItem(customView: iconView)
-        rightButton.width = 44
-        navigationItem.title = " "
-        navigationItem.rightBarButtonItem = rightButton
+        prepareNavigationBar()
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         tableView.register(R.nib.peerCell)
         tableView.dataSource = self
         tableView.delegate = self
-        let conversationId = self.conversationId
-        loadConversationOp.addExecutionBlock { [weak self] in
-            let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
-            var user: UserItem?
-            if let id = conversation?.ownerId, !id.isEmpty {
-                user = UserDAO.shared.getUser(userId: id)
-            }
-            DispatchQueue.main.sync {
-                guard let weakSelf = self else {
-                    return
+        if conversation == nil {
+            let conversationId = self.conversationId
+            loadConversationOp.addExecutionBlock { [weak self] in
+                let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+                var user: UserItem?
+                if let id = conversation?.ownerId, !id.isEmpty {
+                    user = UserDAO.shared.getUser(userId: id)
                 }
-                weakSelf.conversation = conversation
-                weakSelf.user = user
+                DispatchQueue.main.sync {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.conversation = conversation
+                    weakSelf.user = user
+                }
             }
+            queue.addOperation(loadConversationOp)
         }
-        queue.addOperation(loadConversationOp)
         if let keyword = inheritedKeyword {
             reloadMessages(keyword: keyword)
         }
@@ -82,6 +86,20 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         searchTextField.resignFirstResponder()
+    }
+    
+    func prepareNavigationBar() {
+        navigationTitleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        navigationTitleLabel?.textColor = .darkText
+        let rightButton = UIBarButtonItem(customView: iconView)
+        rightButton.width = 44
+        navigationItem.title = " "
+        navigationItem.titleView = navigationTitleLabel
+        navigationItem.rightBarButtonItem = rightButton
+    }
+    
+    func pushConversation(viewController: ConversationViewController) {
+        homeNavigationController?.pushViewController(viewController, animated: true)
     }
     
     func load(searchResult: SearchResult) {
@@ -94,8 +112,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         default:
             break
         }
-        navigationTitleLabel.text = searchResult.title?.string
-        navigationSubtitleLabel.text = searchResult.description?.string
+        navigationTitleLabel?.text = searchResult.title?.string
     }
     
     @objc func searchAction(_ sender: Any) {
@@ -146,7 +163,6 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
                 weakSelf.searchBoxView.isBusy = false
             }
         }
-        op.addDependency(loadConversationOp)
         searchBoxView.isBusy = true
         queue.addOperation(op)
     }
@@ -216,7 +232,6 @@ extension SearchConversationViewController: UITableViewDelegate {
                 weakSelf.tableView.insertSections(section, with: .automatic)
             }
         }
-        op.addDependency(loadConversationOp)
         queue.addOperation(op)
     }
     
@@ -231,7 +246,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         let messageId = messages[indexPath.section][indexPath.row].messageId
         let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: messageId)
         let vc = ConversationViewController.instance(conversation: conversation, highlight: highlight)
-        homeNavigationController?.pushViewController(vc, animated: true)
+        pushConversation(viewController: vc)
     }
     
 }

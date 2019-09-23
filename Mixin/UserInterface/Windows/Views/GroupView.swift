@@ -114,6 +114,9 @@ class GroupView: CornerView {
         alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_PARTICIPANTS, style: .default, handler: { (action) in
             self.showParticipantsAction(alc)
         }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.profile_search_conversation(), style: .default, handler: { (action) in
+            self.searchConversationAction()
+        }))
         if isAdmin {
             alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_ANNOUNCEMENT, style: .default, handler: { (action) in
                 self.editAnnouncementAction()
@@ -233,7 +236,14 @@ extension GroupView {
             }
         }
     }
-
+    
+    func searchConversationAction() {
+        let vc = InConversationSearchViewController()
+        vc.load(group: conversation)
+        let container = ContainerViewController.instance(viewController: vc, title: conversation.name)
+        UIApplication.homeNavigationController?.pushViewController(container, animated: true)
+    }
+    
     private func exitGroupAction() {
         let conversationId = conversation.conversationId
         DispatchQueue.global().async {

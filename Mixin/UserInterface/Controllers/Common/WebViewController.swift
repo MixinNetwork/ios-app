@@ -94,7 +94,7 @@ class WebViewController: UIViewController {
             webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
                 self?.titleLabel.text = webView.title
             })
-        case let .app(appId, title, iconUrl):
+        case let .app(_, title, iconUrl):
             titleLabel.text = title
             if let iconUrl = iconUrl {
                 titleImageView.isHidden = false

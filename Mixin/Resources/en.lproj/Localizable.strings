@@ -376,6 +376,7 @@
 "wallet_pin_confirm_subtitle" = "If lost, there is no way to recover your wallet.";
 "wallet_pin_confirm_again_title" = "Please confirm your 6 digit PIN again";
 "wallet_pin_confirm_again_subtitle" = "It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
+"wallet_pin_more_confirm" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "wallet_pin_title" = "Set PIN";
 "wallet_pin_new_title" = "Set a new PIN";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";

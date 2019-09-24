@@ -11,10 +11,12 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case initPinStep1
         case initPinStep2(previous: String)
         case initPinStep3(previous: String)
+        case initPinStep4(previous: String)
         case changePinStep1
         case changePinStep2(old: String)
         case changePinStep3(old: String, previous: String)
         case changePinStep4(old: String, previous: String)
+        case changePinStep5(old: String, previous: String)
     }
 
     enum DismissTarget {
@@ -51,6 +53,10 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case .initPinStep3, .changePinStep4:
             titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_SUBTITLE
+            backButton.setImage(R.image.ic_title_back(), for: .normal)
+        case .initPinStep4, .changePinStep5:
+            titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            subtitleLabel.text = R.string.localizable.wallet_pin_more_confirm()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
             titleLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
@@ -200,6 +206,15 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .initPinStep3(let previous):
             if previous == pin {
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep4(previous: pin), dismissTarget: dismissTarget)
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                    self?.popToFirstInitController()
+                })
+            }
+        case .initPinStep4(let previous):
+            if previous == pin {
                 isBusy = true
                 AccountAPI.shared.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
                     self?.isBusy = false
@@ -255,6 +270,15 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 })
             }
         case .changePinStep4(let old, let previous):
+            if previous == pin {
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep5(old: old, previous: pin), dismissTarget: dismissTarget)
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                    self?.popToFirstInitController()
+                })
+            }
+        case .changePinStep5(let old, let previous):
             if previous == pin {
                 isBusy = true
                 AccountAPI.shared.updatePin(old: old, new: pin, completion: { [weak self] (result) in

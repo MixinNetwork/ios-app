@@ -350,6 +350,7 @@
 "wallet_pin_confirm_subtitle" = "紛失した場合、財布を取り戻す方法はありません。";
 "wallet_pin_confirm_again_title" = "6桁のPINをもう一度確認してください";
 "wallet_pin_confirm_again_subtitle" = "再度表示されることはありませんので、紛失した場合、PINは元に戻せません。";
+"wallet_pin_confirm_again_subtitle" = "はい、これが最後のPIN確認です。これは、PINを忘れないようにするための最後の確認です。 紛失した場合、PINは回復不能です。";
 "wallet_pin_new_title" = "新しい6桁のPINを設定してください";
 "wallet_pin_inconsistency" = "PINは同じではありません、それをリセットしてください";
 "wallet_pin_too_simple" = "暗証番号は単純すぎて安全ではありません。";

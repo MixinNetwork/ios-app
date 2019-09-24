@@ -87,8 +87,11 @@ class GroupView: CornerView {
         }
         moreButton.isHidden = !alreadyInTheGroup
         viewButton.isHidden = !alreadyInTheGroup
-        
-        avatarImageView.setGroupImage(with: conversation.iconUrl)
+        if conversation.iconUrl.isEmpty {
+            loadGroupIcon()
+        } else {
+            avatarImageView.setGroupImage(with: conversation.iconUrl)
+        }
         nameLabel.text = conversation.name
         announcementLabel.text = conversation.announcement
         announcementLabel.mode = initialAnnouncementMode
@@ -101,6 +104,26 @@ class GroupView: CornerView {
             showJoinGroupConstraint.constant = 12
             announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
             announcementScrollViewTopConstraint.constant = 14
+        }
+    }
+
+    private func loadGroupIcon() {
+        avatarImageView.image = R.image.ic_conversation_group()
+        
+        let conversationId = conversation.conversationId
+        let participantIds = conversationResponse.participants.prefix(4).map { $0.userId }
+
+        DispatchQueue.global().async { [weak self] in
+            switch UserAPI.shared.showUsers(userIds: participantIds) {
+            case let .success(users):
+                let participants = users.map { ParticipantUser(conversationId: conversationId, role: "", userId: $0.userId, userFullName: $0.fullName, userAvatarUrl: $0.avatarUrl, userIdentityNumber: $0.identityNumber) }
+                let groupImage = GroupIconMaker.make(participants: participants) ?? R.image.ic_conversation_group()
+                DispatchQueue.main.async {
+                    self?.avatarImageView.image = groupImage
+                }
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
         }
     }
     

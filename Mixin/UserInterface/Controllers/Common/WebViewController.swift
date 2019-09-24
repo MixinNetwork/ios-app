@@ -94,7 +94,7 @@ class WebViewController: UIViewController {
             webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
                 self?.titleLabel.text = webView.title
             })
-        case let .app(title, iconUrl):
+        case let .app(appId, title, iconUrl):
             titleLabel.text = title
             if let iconUrl = iconUrl {
                 titleImageView.isHidden = false
@@ -115,6 +115,11 @@ class WebViewController: UIViewController {
     @IBAction func moreAction(_ sender: Any) {
         let currentUrl = webView.url ?? .blank
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+            self.forwardAction(currentUrl: currentUrl)
+        }))
+
         controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
             let request = URLRequest(url: currentUrl,
                                      cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -126,6 +131,17 @@ class WebViewController: UIViewController {
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
+    }
+
+    private func forwardAction(currentUrl: URL) {
+        let vc: UIViewController
+        switch context.style {
+        case .webPage:
+            vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
+        case let .app(appId, _, _):
+            vc = MessageReceiverViewController.instance(content: .contact(appId))
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -364,7 +380,7 @@ extension WebViewController {
         
         enum Style {
             case webPage
-            case app(title: String, iconUrl: URL?)
+            case app(appId: String, title: String, iconUrl: URL?)
         }
         
         let conversationId: String
@@ -387,7 +403,7 @@ extension WebViewController {
         
         init(conversationId: String, app: App) {
             self.conversationId = conversationId
-            style = .app(title: app.name, iconUrl: URL(string: app.iconUrl))
+            style = .app(appId: app.appId, title: app.name, iconUrl: URL(string: app.iconUrl))
             initialUrl = URL(string: app.homeUri) ?? .blank
             isImmersive = app.capabilites?.contains("IMMERSIVE") ?? false
         }

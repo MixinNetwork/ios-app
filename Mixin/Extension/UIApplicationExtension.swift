@@ -116,3 +116,37 @@ extension UIApplication {
     }
     
 }
+
+extension UIApplication {
+    
+    func setShortcutItemsEnabled(_ enabled: Bool) {
+        DispatchQueue.main.async {
+            if enabled {
+                UIApplication.shared.shortcutItems = [.scanQrCode, .wallet]
+            } else {
+                UIApplication.shared.shortcutItems = nil
+            }
+        }
+    }
+    
+}
+
+extension UIApplicationShortcutItem {
+    
+    enum ItemType: String {
+        case scanQrCode
+        case wallet
+    }
+    
+    static let scanQrCode = UIApplicationShortcutItem(type: ItemType.scanQrCode.rawValue,
+                                                      localizedTitle: R.string.localizable.shortcut_title_scan_qr_code(),
+                                                      localizedSubtitle: nil,
+                                                      icon: .init(templateImageName: "ic_shortcut_scan_qr_code"),
+                                                      userInfo: nil)
+    static let wallet = UIApplicationShortcutItem(type: ItemType.wallet.rawValue,
+                                                  localizedTitle: R.string.localizable.shortcut_title_wallet(),
+                                                  localizedSubtitle: nil,
+                                                  icon: .init(templateImageName: "ic_shortcut_wallet"),
+                                                  userInfo: nil)
+    
+}

@@ -133,6 +133,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }
+            UIApplication.shared.setShortcutItemsEnabled(true)
         case let .failure(error):
             DispatchQueue.main.sync {
                 self.handleVerificationCodeError(error)

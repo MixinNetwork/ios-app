@@ -55,6 +55,9 @@
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
+"shortcut_title_scan_qr_code" = "Scan QR code";
+"shortcut_title_wallet" = "Wallet";
+
 // Search
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_placeholder_address" = "Label";

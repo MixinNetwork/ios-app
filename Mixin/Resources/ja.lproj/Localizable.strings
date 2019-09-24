@@ -51,6 +51,9 @@
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
+"shortcut_title_scan_qr_code" = "QRコードを読み取る";
+"shortcut_title_wallet" = "財布";
+
 // Search
 "search_placeholder_number" = "Mixin IDか電話番号を検索: ";
 "search_placeholder_address" = "ラベル";

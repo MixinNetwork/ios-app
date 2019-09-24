@@ -7,6 +7,7 @@ import YYImage
 import GiphyCoreSDK
 import PushKit
 import Crashlytics
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private var pendingShortcutItem: UIApplicationShortcutItem?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
@@ -41,12 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let key = MixinKeys.giphy {
             GiphyCore.configure(apiKey: key)
         }
+        pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
         AudioManager.shared.pause()
+    }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        pendingShortcutItem = shortcutItem
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -67,6 +74,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if let conversationId = UIApplication.currentConversationId() {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
+        }
+        
+        if let item = pendingShortcutItem {
+            switch item {
+            case .scanQrCode:
+                pushCameraViewController()
+            case .wallet:
+                pushWalletViewController()
+            default:
+                break
+            }
+            pendingShortcutItem = nil
         }
     }
     
@@ -218,6 +237,7 @@ extension AppDelegate {
                 window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
             }
         }
+        UIApplication.shared.setShortcutItemsEnabled(AccountAPI.shared.didLogin)
         window.makeKeyAndVisible()
     }
     
@@ -303,6 +323,48 @@ extension AppDelegate {
             }
         }
         UNUserNotificationCenter.current().removeAllNotifications()
+    }
+    
+    private func pushCameraViewController() {
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        
+        func push() {
+            if navigationController.viewControllers.last is CameraViewController {
+                navigationController.popViewController(animated: false)
+            }
+            let vc = CameraViewController.instance()
+            navigationController.pushViewController(vc, animated: true)
+        }
+        
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            push()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    push()
+                }
+            })
+        case .denied, .restricted:
+            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        @unknown default:
+            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        }
+    }
+    
+    private func pushWalletViewController() {
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        navigationController.dismiss(animated: true, completion: nil)
+        navigationController.popToRootViewController(animated: false)
+        let vc = WalletViewController.instance()
+        navigationController.pushViewController(vc, animated: true)
     }
     
 }

@@ -55,6 +55,9 @@
 "date_format_month" = "MM月d日 E";
 "date_format_transation" = "MM月d日 HH:mm";
 
+"shortcut_title_scan_qr_code" = "识别二维码";
+"shortcut_title_wallet" = "钱包";
+
 // Search
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";

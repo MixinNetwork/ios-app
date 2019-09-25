@@ -100,6 +100,9 @@ extension String {
 
     func hashCode() -> Int32 {
         let components = self.split(separator: "-")
+        guard components.count >= 5 else {
+            return 0
+        }
 
         var mostSigBits = Int64(components[0], radix: 16)!
         mostSigBits <<= 16

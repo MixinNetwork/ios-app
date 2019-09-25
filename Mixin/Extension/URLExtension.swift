@@ -19,15 +19,12 @@ extension URL {
     }
 
     func cloudExist() -> Bool {
-        do {
-            return try resourceValues(forKeys: [.isUbiquitousItemKey]).isUbiquitousItem ?? false
-        } catch {
-            return false
-        }
+        // Returns a Boolean indicating whether the item is targeted for storage in iCloud.
+        return FileManager.default.isUbiquitousItem(at: self)
     }
 
     func cloudDownloaded() throws -> Bool {
-        //A local copy of this item exists and is the most up-to-date version known to the device.
+        // A local copy of this item exists and is the most up-to-date version known to the device.
         return try resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current
     }
 

@@ -2,16 +2,15 @@ import UIKit
 
 class UnknownMessageViewModel: TextMessageViewModel {
     
-    override class var textColor: UIColor {
-        return .white
-    }
-    
     override class var bubbleImageProvider: BubbleImageProvider.Type {
         return UnknownBubbleImageProvider.self
     }
     
+    override var rawContent: String {
+        return Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
+    }
+    
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        message.content = Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
         super.init(message: message, style: style, fits: layoutWidth)
         statusImage = nil
     }

@@ -51,7 +51,7 @@
 "connection_hint_progress" = "Syncing %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "dd/MM/yyyy";
+"date_format_date" = "MMM dd, yyyy";
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
@@ -244,6 +244,11 @@
 "chat_stranger_tip" = "This sender is not in your contacts";
 "chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger in this chat.";
 "chat_badge_live" = "LIVE";
+"chat_shared_media" = "Shared Media";
+"chat_media_category_media" = "Media";
+"chat_media_category_audio" = "Audio";
+"chat_media_category_link" = "Link";
+"chat_media_category_file" = "File";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

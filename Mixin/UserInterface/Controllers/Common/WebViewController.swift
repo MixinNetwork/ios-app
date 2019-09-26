@@ -119,18 +119,36 @@ class WebViewController: UIViewController {
         controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
             self.forwardAction(currentUrl: currentUrl)
         }))
+        switch context.style {
+        case .app:
+            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
+                let request = URLRequest(url: currentUrl,
+                                         cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                         timeoutInterval: 10)
+                self.webView.load(request)
+            }))
+        case .webPage:
+            controller.addAction(UIAlertAction(title: R.string.localizable.group_button_title_copy_link(), style: .default, handler: { (_) in
+                self.copyAction(currentUrl: currentUrl)
+            }))
+            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
+                let request = URLRequest(url: currentUrl,
+                                         cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                         timeoutInterval: 10)
+                self.webView.load(request)
+            }))
+            controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
+                UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
+            }))
+        }
 
-        controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-            let request = URLRequest(url: currentUrl,
-                                     cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                     timeoutInterval: 10)
-            self.webView.load(request)
-        }))
-        controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
-            UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
-        }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
+    }
+
+    private func copyAction(currentUrl: URL) {
+        UIPasteboard.general.string = currentUrl.absoluteString
+        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
     }
 
     private func forwardAction(currentUrl: URL) {

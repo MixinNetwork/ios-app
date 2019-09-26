@@ -547,7 +547,7 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidChange(_ textView: UITextView) {
-        if textView.text.hasPrefix("@") {
+        if textView.text.hasPrefix("@700") {
             userHandleViewController.keyword = textView.text
             setUserHandleHidden(!userHandleViewController.hasContent)
         } else {

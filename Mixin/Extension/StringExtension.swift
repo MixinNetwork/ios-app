@@ -196,3 +196,13 @@ extension NSMutableAttributedString {
     
 }
 
+extension Substring {
+
+    func dropFirstAndLast() -> String {
+        let text = String(self)
+        let start = text.index(text.startIndex, offsetBy: 1)
+        let end = text.index(text.endIndex, offsetBy: -1)
+        return String(text[start..<end])
+    }
+
+}

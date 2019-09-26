@@ -582,6 +582,13 @@ extension SendMessageService {
             blazeMessage.params?.quoteMessageId = message.quoteMessageId
         }
 
+        if conversation.category == ConversationCategory.GROUP.rawValue,  message.category.hasSuffix("_TEXT"), let text = message.content, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
+            let identityNumber = text[botNumberRange].dropFirstAndLast()
+            if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+                blazeMessage.params?.recipientId = recipientId
+            }
+        }
+
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             try requestCreateConversation(conversation: conversation)
             if blazeMessage.params?.data == nil {

@@ -419,7 +419,7 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
                 conversationInputViewController.dismiss()
-                open(url: action)
+                openAction(action: action.absoluteString)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -904,10 +904,7 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let appButtons = dataSource?.viewModel(for: indexPath)?.message.appButtons, index < appButtons.count else {
             return
         }
-        let appButton = appButtons[index]
-        if !appButton.action.isEmpty, let url = URL(string: appButton.action) {
-            open(url: url)
-        }
+        openAction(action: appButtons[index].action)
     }
     
 }
@@ -1321,7 +1318,26 @@ extension ConversationViewController {
         loadingView.stopAnimating()
         titleStackView.isHidden = false
     }
-    
+
+    private func openAction(action: String) {
+        guard !action.isEmpty else {
+            return
+        }
+        guard action.hasPrefix("input:"), action.count > 6 else {
+            if let url = URL(string: action) {
+                open(url: url)
+            }
+            return
+        }
+
+        let inputAction = String(action.suffix(action.count - 6))
+        if !inputAction.isEmpty {
+            dataSource.sendMessage(type: .SIGNAL_TEXT,
+                                   quoteMessageId: nil,
+                                   value: inputAction)
+        }
+    }
+
     private func open(url: URL) {
         guard !UrlWindow.checkUrl(url: url, checkLastWindow: false) else {
             return

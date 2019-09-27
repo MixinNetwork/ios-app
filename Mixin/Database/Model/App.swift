@@ -9,7 +9,7 @@ struct App: BaseCodable {
     let redirectUri: String
     let name: String
     let iconUrl: String
-    var capabilites: [String]?
+    var capabilities: [String]?
     let appSecret: String
     let homeUri: String
     let creatorId: String
@@ -21,7 +21,7 @@ struct App: BaseCodable {
         case redirectUri = "redirect_uri"
         case name
         case iconUrl = "icon_url"
-        case capabilites
+        case capabilities = "capabilites"
         case appSecret = "app_secret"
         case homeUri = "home_uri"
         case creatorId = "creator_id"

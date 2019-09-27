@@ -75,6 +75,7 @@ enum ReportErrorCode: Int {
     case jobError = 100015
     case signalDatabaseResetFailed = 100016
     case databaseCorrupted = 100017
+    case databaseNoSuchTable = 100018
     case appUpgradeError = 100020
     case loadAvatar = 100021
     
@@ -116,6 +117,8 @@ enum ReportErrorCode: Int {
             return "signalDatabaseResetFailed"
         case .databaseCorrupted:
             return "databaseCorrupted"
+        case .databaseNoSuchTable:
+            return "databaseNoSuchTable"
         case .appUpgradeError:
             return "appUpgradeError"
         case .loadAvatar:

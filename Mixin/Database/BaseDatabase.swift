@@ -42,6 +42,11 @@ class BaseDatabase {
                 if error.type == .sqlite && error.code.value == 9 {
                     // interrupted
                     return
+                } else if error.type == .sqlite && error.operationValue == 3 {
+                    // no such table
+                    UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
+                    DatabaseUserDefault.shared.forceUpgradeDatabase = true
+                    return
                 }
                 UIApplication.traceWCDBError(error)
             }

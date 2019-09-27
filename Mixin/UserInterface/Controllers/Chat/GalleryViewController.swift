@@ -51,6 +51,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                                                   navigationOrientation: .horizontal,
                                                   options: [.interPageSpacing: spacing])
         super.init(nibName: nil, bundle: nil)
+        modelController.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -294,6 +295,24 @@ extension GalleryViewController: UIGestureRecognizerDelegate {
         return panRecognizer.velocity(in: view).y > 0
             && abs(panRecognizer.velocity(in: view).y) > abs(panRecognizer.velocity(in: view).x)
             && (currentItemViewController?.canPerformInteractiveDismissal ?? true)
+    }
+    
+}
+
+extension GalleryViewController: GalleryItemModelControllerDelegate {
+    
+    func modelController(_ controller: GalleryItemModelController, didLoadItemsBefore location: GalleryItem) {
+        guard let current = currentItemViewController, location == current.item else {
+            return
+        }
+        pageViewController.setViewControllers([current], direction: .forward, animated: false, completion: nil)
+    }
+    
+    func modelController(_ controller: GalleryItemModelController, didLoadItemsAfter location: GalleryItem) {
+        guard let current = currentItemViewController, location == current.item else {
+            return
+        }
+        pageViewController.setViewControllers([current], direction: .forward, animated: false, completion: nil)
     }
     
 }

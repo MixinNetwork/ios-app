@@ -438,7 +438,7 @@ extension ConversationInputViewController {
             return
         }
         DispatchQueue.global().async {
-            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             DispatchQueue.main.sync {
                 self.extensionViewController.apps = apps
             }

@@ -8,7 +8,7 @@ class UserHandleCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var identityNumberLabel: UILabel!
     @IBOutlet weak var keywordLabel: UILabel!
     
-    func render(user: User, keyword: String) {
+    func render(user: User, keyword: String?) {
         avatarImageView.setImage(with: user)
         nameLabel.text = user.fullName
         if user.isVerified ?? false {

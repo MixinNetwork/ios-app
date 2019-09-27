@@ -547,17 +547,17 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidChange(_ textView: UITextView) {
-        if textView.text.hasPrefix("@700") {
-            userHandleViewController.keyword = textView.text
-            setUserHandleHidden(!userHandleViewController.hasContent)
-        } else {
-            setUserHandleHidden(true)
+        userHandleViewController.reload(with: textView.text) { (hasContent) in
+            self.setUserHandleHidden(!hasContent)
         }
     }
     
     func inputUserHandle(with user: User) {
-        conversationInputViewController.textView.text = "@" + user.identityNumber + " "
-        setUserHandleHidden(true)
+        let text = "@" + user.identityNumber + " "
+        conversationInputViewController.textView.text = text
+        userHandleViewController.reload(with: text) { (hasContent) in
+            self.setUserHandleHidden(true)
+        }
     }
     
     func documentAction() {
@@ -1288,7 +1288,10 @@ extension ConversationViewController {
         if dataSource.category == .group {
             let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
             userHandleViewController.users = users
-            setUserHandleHidden(!userHandleViewController.hasContent)
+            let keyword: String = conversationInputViewController.textView.text
+            userHandleViewController.reload(with: keyword) { (hasContent) in
+                self.setUserHandleHidden(!hasContent)
+            }
         }
         hideLoading()
     }

@@ -2,25 +2,11 @@ import UIKit
 
 class UserHandleViewController: UITableViewController, ConversationAccessible {
     
-    var users = [User]() {
-        didSet {
-            if !users.isEmpty && !keyword.isEmpty {
-                reloadTableViewIfViewIsLoaded()
-            }
-        }
-    }
-    
-    var keyword = "" {
-        didSet {
-            reloadTableViewIfViewIsLoaded()
-        }
-    }
-    
-    var hasContent: Bool {
-        return !filteredUsers.isEmpty
-    }
+    var users = [User]()
     
     private var filteredUsers = [User]()
+    private var keyword: String?
+    private var onScrollingAnimationEnd: (() -> ())?
     
     private lazy var tableHeaderView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 100)
@@ -79,13 +65,56 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         conversationViewController?.inputUserHandle(with: user)
     }
     
-    private func reloadTableViewIfViewIsLoaded() {
-        let identityNumber = keyword[keyword.index(after: keyword.startIndex)...]
-        filteredUsers = users.filter({
-            $0.identityNumber.hasPrefix(identityNumber)
-        })
-        if isViewLoaded {
+    override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        onScrollingAnimationEnd?()
+        onScrollingAnimationEnd = nil
+    }
+    
+    func reload(with keyword: String, completion: ((Bool) -> ())?) {
+        if keyword.hasPrefix("@700") {
+            self.keyword = keyword
+        } else {
+            self.keyword = nil
+        }
+        let hadContent = !filteredUsers.isEmpty
+        let filteredUsers: [User]
+        if let keyword = self.keyword {
+            let identityNumber = keyword[keyword.index(after: keyword.startIndex)...]
+            filteredUsers = users.filter({
+                $0.identityNumber.hasPrefix(identityNumber)
+            })
+        } else {
+            filteredUsers = []
+        }
+        let hasContent = !filteredUsers.isEmpty
+        if !hadContent && hasContent {
+            loadViewIfNeeded()
+            self.filteredUsers = filteredUsers
             tableView.reloadData()
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            let diff = view.frame.height - tableHeaderView.frame.height
+            tableView.contentOffset.y = -diff
+            completion?(true)
+            onScrollingAnimationEnd = nil
+            self.tableView.setContentOffset(.zero, animated: true)
+        } else if filteredUsers.isEmpty {
+            let diff = view.frame.height - tableHeaderView.frame.height
+            let offset = CGPoint(x: 0, y: -diff)
+            onScrollingAnimationEnd = { [weak self] in
+                if let weakSelf = self {
+                    weakSelf.filteredUsers = filteredUsers
+                    weakSelf.tableView.reloadData()
+                }
+                completion?(hasContent)
+            }
+            self.tableView.setContentOffset(offset, animated: true)
+        } else {
+            self.filteredUsers = filteredUsers
+            onScrollingAnimationEnd = nil
+            tableView.reloadData()
+            tableView.setContentOffset(.zero, animated: false)
+            completion?(hasContent)
         }
     }
     

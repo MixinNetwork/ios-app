@@ -20,7 +20,6 @@ class WebSocketService: NSObject {
     private var recoverJobs = false
     private let websocketDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
     private let sendDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.send")
-    private let rotateSignedPrekeyInterval: TimeInterval = 3600 * 24 * 2
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
 
     private var reconnectWorkItem: DispatchWorkItem?
@@ -157,14 +156,6 @@ extension WebSocketService: SRWebSocketDelegate {
 
     private func refreshJobs() {
         let cur = Date().timeIntervalSince1970
-        let lastSignedPrekey = CryptoUserDefault.shared.rotateSignedPrekey
-        if lastSignedPrekey < 1 {
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        } else if cur - lastSignedPrekey > rotateSignedPrekeyInterval {
-            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        }
-
         let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
         if lastOneTimePreKey < 1 {
             CryptoUserDefault.shared.refreshOneTimePreKey = cur

@@ -568,11 +568,20 @@ extension SendMessageService {
 
     private func sendMessage(blazeMessage: BlazeMessage) throws {
         var blazeMessage = blazeMessage
-        guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+        guard let messageId = blazeMessage.params?.messageId, var message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
+        }
+
+        if conversation.category == ConversationCategory.GROUP.rawValue,  message.category.hasSuffix("_TEXT"), let text = message.content, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
+            let identityNumber = text[botNumberRange].dropFirstAndLast()
+            if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+                message.category = MessageCategory.PLAIN_TEXT.rawValue
+                blazeMessage.params?.recipientId = recipientId
+                blazeMessage.params?.data = nil
+            }
         }
 
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {

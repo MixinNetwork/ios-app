@@ -43,8 +43,19 @@ final class ParticipantDAO {
     LIMIT 4
     """
 
+    static let sqlQueryParticipantId = """
+    SELECT u.user_id FROM users u
+    INNER JOIN participants p ON p.user_id = u.user_id
+    WHERE p.conversation_id = ? AND u.identity_number = ?
+    """
+
     func isAdmin(conversationId: String, userId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId && (Participant.Properties.role == ParticipantRole.ADMIN.rawValue || Participant.Properties.role == ParticipantRole.OWNER.rawValue))
+    }
+
+    func getParticipantId(conversationId: String, identityNumber: String) -> String? {
+        let value = MixinDatabase.shared.scalar(sql: ParticipantDAO.sqlQueryParticipantId, values: [conversationId, identityNumber])
+        return value.type == .null ? nil : value.stringValue
     }
 
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {

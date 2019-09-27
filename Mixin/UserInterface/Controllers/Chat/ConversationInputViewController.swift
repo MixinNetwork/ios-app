@@ -438,7 +438,7 @@ extension ConversationInputViewController {
             return
         }
         DispatchQueue.global().async {
-            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             DispatchQueue.main.sync {
                 self.extensionViewController.apps = apps
             }
@@ -587,6 +587,9 @@ extension ConversationInputViewController: UITextViewDelegate {
             textViewHeightConstraint.constant = newHeight
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
+        }
+        if dataSource.category == .group {
+            conversationViewController.inputTextViewDidChange(textView)
         }
     }
     

@@ -16,7 +16,7 @@ final class AppDAO {
 
     func getConversationBots(conversationId: String) -> [App] {
         return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryApps, values: [conversationId]).filter({ (app) -> Bool in
-            return app.capabilites?.contains(ConversationCategory.GROUP.rawValue) ?? false
+            return app.capabilities?.contains(ConversationCategory.GROUP.rawValue) ?? false
         })
     }
 

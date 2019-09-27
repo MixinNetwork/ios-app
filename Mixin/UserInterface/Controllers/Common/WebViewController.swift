@@ -423,7 +423,7 @@ extension WebViewController {
             self.conversationId = conversationId
             style = .app(appId: app.appId, title: app.name, iconUrl: URL(string: app.iconUrl))
             initialUrl = URL(string: app.homeUri) ?? .blank
-            isImmersive = app.capabilites?.contains("IMMERSIVE") ?? false
+            isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
         
         init(conversationId: String, initialUrl: URL) {

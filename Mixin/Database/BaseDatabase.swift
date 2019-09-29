@@ -42,7 +42,7 @@ class BaseDatabase {
                 if error.type == .sqlite && error.code.value == 9 {
                     // interrupted
                     return
-                } else if error.type == .sqlite && error.operationValue == 3 {
+                } else if error.type == .sqlite && error.operationValue == 3 && AccountAPI.shared.didLogin {
                     // no such table
                     UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
                     DatabaseUserDefault.shared.forceUpgradeDatabase = true

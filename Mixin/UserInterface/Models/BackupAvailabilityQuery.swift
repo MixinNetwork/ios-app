@@ -13,6 +13,10 @@ class BackupAvailabilityQuery {
     }
     
     func fileExist(callback: @escaping Callback) {
+        guard FileManager.default.ubiquityIdentityToken != nil else {
+            callback(false)
+            return
+        }
         guard let url = MixinFile.iCloudBackupDirectory else {
             callback(false)
             return

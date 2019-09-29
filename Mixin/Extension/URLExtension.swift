@@ -18,14 +18,16 @@ extension URL {
         return results
     }
 
-    func cloudExist() -> Bool {
-        // Returns a Boolean indicating whether the item is targeted for storage in iCloud.
+    var fileExists: Bool {
+        return (try? self.checkResourceIsReachable()) ?? false
+    }
+
+    var cloudExist: Bool {
         return FileManager.default.isUbiquitousItem(at: self)
     }
 
-    func cloudDownloaded() throws -> Bool {
-        // A local copy of this item exists and is the most up-to-date version known to the device.
-        return try resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current
+    var fileSize: Int64 {
+        return (try? self.resourceValues(forKeys: [.fileSizeKey]))?.allValues[.fileSizeKey] as? Int64 ?? -1
     }
 
     static func createTempUrl(fileExtension: String) -> URL {

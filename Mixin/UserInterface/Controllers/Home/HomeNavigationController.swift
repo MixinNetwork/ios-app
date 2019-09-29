@@ -109,7 +109,7 @@ extension HomeNavigationController {
             Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
-        if AccountUserDefault.shared.hasRestoreFilesAndVideos {
+        if AccountUserDefault.shared.hasRestoreMedia {
             BackupJobQueue.shared.addJob(job: RestoreJob())
         }
     }

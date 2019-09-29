@@ -27,6 +27,12 @@ class DatabaseUpgradeViewController: UIViewController {
                     })
                 }
             }
+            if currentVersion < 4 {
+                if AccountUserDefault.shared.hasRestoreFilesAndVideos {
+                    AccountUserDefault.shared.hasRestoreMedia = true
+                    AccountUserDefault.shared.hasRestoreFilesAndVideos = false
+                }
+            }
 
             DatabaseUserDefault.shared.forceUpgradeDatabase = false
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion

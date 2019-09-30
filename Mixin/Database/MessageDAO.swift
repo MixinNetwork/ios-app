@@ -112,7 +112,7 @@ final class MessageDAO {
     
     static let sqlQueryGalleryItem = """
     SELECT m.conversation_id, m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
-           m.media_height, m.media_status, m.thumb_image, m.thumb_url, m.created_at
+           m.media_height, m.media_status, m.media_duration, m.thumb_image, m.thumb_url, m.created_at
     FROM messages m
     WHERE conversation_id = ?
         AND ((category LIKE '%_IMAGE' OR category LIKE '%_VIDEO') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
@@ -376,17 +376,21 @@ final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
+    func getGalleryItems(conversationId: String, location: GalleryItem?, count: Int) -> [GalleryItem] {
         assert(count != 0)
         var items = [GalleryItem]()
-        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                  condition: Message.Properties.messageId == location.messageId)
-        
         var sql = MessageDAO.sqlQueryGalleryItem
-        if count > 0 {
-            sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            if count > 0 {
+                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+            } else {
+                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+            }
         } else {
-            sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+            assert(count > 0)
+            sql += " ORDER BY created_at DESC LIMIT \(count)"
         }
         
         do {
@@ -407,6 +411,7 @@ final class MessageDAO {
                                        mediaWidth: cs.value(atIndex: counter.advancedValue),
                                        mediaHeight: cs.value(atIndex: counter.advancedValue),
                                        mediaStatus: cs.value(atIndex: counter.advancedValue),
+                                       mediaDuration: cs.value(atIndex: counter.advancedValue),
                                        thumbImage: cs.value(atIndex: counter.advancedValue),
                                        thumbUrl: cs.value(atIndex: counter.advancedValue),
                                        createdAt: cs.value(atIndex: counter.advancedValue) ?? "")

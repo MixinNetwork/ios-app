@@ -64,6 +64,22 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
 }
 
+extension PhotoRepresentableMessageCell: GalleryTransitionSource {
+    
+    var imageWrapperView: VerticalPositioningImageView! {
+        return contentImageWrapperView
+    }
+    
+    var transitionViewType: GalleryTransitionView.Type {
+        return GalleryTransitionFromMessageCellView.self
+    }
+    
+    var direction: GalleryItemModelController.Direction {
+        return .forward
+    }
+    
+}
+
 extension PhotoRepresentableMessageCell {
     
     class SelectedOverlapView: UIView {

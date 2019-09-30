@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MediaTypeOverlayView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="backgroundImageView" destination="6rQ-iO-4X7" id="QsG-eT-JVL"/>
+                <outlet property="gifFileTypeView" destination="gij-Qy-OLD" id="yua-D2-pUz"/>
+                <outlet property="videoDurationLabel" destination="zbB-m9-QhJ" id="CA5-7P-dgw"/>
+                <outlet property="videoTypeView" destination="57M-0I-RuD" id="qLu-48-dBC"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="HLT-LJ-4Vj">
+            <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="107.00000000000003" translatesAutoresizingMaskIntoConstraints="NO" id="6rQ-iO-4X7">
+                    <rect key="frame" x="0.0" y="-9" width="98" height="107"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ufi-jV-5Cw">
+                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gij-Qy-OLD">
+                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="57M-0I-RuD">
+                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="7Zo-Od-YF4">
+                                    <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-m9-QhJ">
+                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="gij-Qy-OLD" firstAttribute="leading" secondItem="Ufi-jV-5Cw" secondAttribute="leading" id="6yB-Rx-wWQ"/>
+                        <constraint firstAttribute="bottom" secondItem="57M-0I-RuD" secondAttribute="bottom" id="9xi-0W-SHV"/>
+                        <constraint firstAttribute="trailing" secondItem="57M-0I-RuD" secondAttribute="trailing" id="R9T-JD-EE5"/>
+                        <constraint firstAttribute="bottom" secondItem="gij-Qy-OLD" secondAttribute="bottom" id="XdF-TQ-FSe"/>
+                        <constraint firstItem="57M-0I-RuD" firstAttribute="top" secondItem="Ufi-jV-5Cw" secondAttribute="top" id="ZaX-2A-u8O"/>
+                        <constraint firstItem="gij-Qy-OLD" firstAttribute="top" secondItem="Ufi-jV-5Cw" secondAttribute="top" id="dt2-Oj-RrP"/>
+                        <constraint firstAttribute="trailing" secondItem="gij-Qy-OLD" secondAttribute="trailing" id="osW-o8-vly"/>
+                        <constraint firstItem="57M-0I-RuD" firstAttribute="leading" secondItem="Ufi-jV-5Cw" secondAttribute="leading" id="zUd-0A-W79"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="6rQ-iO-4X7" secondAttribute="bottom" id="BTG-gx-Uzb"/>
+                <constraint firstAttribute="trailing" secondItem="6rQ-iO-4X7" secondAttribute="trailing" id="LuN-pv-VUJ"/>
+                <constraint firstItem="Ufi-jV-5Cw" firstAttribute="leading" secondItem="HLT-LJ-4Vj" secondAttribute="leading" constant="10" id="QeU-CF-xPE"/>
+                <constraint firstAttribute="bottom" secondItem="Ufi-jV-5Cw" secondAttribute="bottom" constant="8" id="jcR-n7-AOZ"/>
+                <constraint firstAttribute="trailing" secondItem="Ufi-jV-5Cw" secondAttribute="trailing" constant="10" id="ls5-6v-rJi"/>
+                <constraint firstItem="6rQ-iO-4X7" firstAttribute="leading" secondItem="HLT-LJ-4Vj" secondAttribute="leading" id="v2g-tA-1yU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="143" y="154"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Conversation/ic_video" width="14" height="10"/>
+    </resources>
+</document>

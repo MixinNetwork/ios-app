@@ -42,11 +42,13 @@ class BaseDatabase {
                 if error.type == .sqlite && error.code.value == 9 {
                     // interrupted
                     return
-                } else if error.type == .sqlite && error.operationValue == 3 && AccountAPI.shared.didLogin {
-                    // no such table
-                    UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
-                    DatabaseUserDefault.shared.forceUpgradeDatabase = true
-                    return
+                } else if error.type == .sqlite && error.operationValue == 3 {
+                    if AccountAPI.shared.didLogin && (error.path?.hasSuffix("mixin.db") ?? false) {
+                        // no such table
+                        UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
+                        DatabaseUserDefault.shared.forceUpgradeDatabase = true
+                        return
+                    }
                 }
                 UIApplication.traceWCDBError(error)
             }

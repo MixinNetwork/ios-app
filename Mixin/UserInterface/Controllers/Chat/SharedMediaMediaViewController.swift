@@ -13,7 +13,7 @@ class SharedMediaMediaViewController: UIViewController, SharedMediaContentViewCo
         }
     }
     
-    private var dataSource = SharedMediaDataSource<ItemType>()
+    private let dataSource = SharedMediaDataSource<ItemType, SharedMediaCategorizer<ItemType>>()
     
     private let numberOfCellPerLine: CGFloat = 4
     
@@ -55,7 +55,8 @@ class SharedMediaMediaViewController: UIViewController, SharedMediaContentViewCo
 
 extension SharedMediaMediaViewController: SharedMediaDataSourceDelegate {
     
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
+    func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
+        let count = location == nil ? count : -count
         var items = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: location, count: count)
         if location != nil {
             items = Array(items.reversed())
@@ -63,23 +64,23 @@ extension SharedMediaMediaViewController: SharedMediaDataSourceDelegate {
         return items
     }
     
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, itemForMessageId messageId: String) -> ItemType? {
+    func sharedMediaDataSource(_ dataSource: AnyObject, itemForMessageId messageId: String) -> ItemType? {
         guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return nil
         }
         return GalleryItem(message: message)
     }
     
-    func sharedMediaDataSourceDidReload(_ dataSource: SharedMediaDataSource<ItemType>) {
+    func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {
         collectionView.reloadData()
     }
     
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, didUpdateItemAt indexPath: IndexPath) {
+    func sharedMediaDataSource(_ dataSource: AnyObject, didUpdateItemAt indexPath: IndexPath) {
         collectionView.reloadItems(at: [indexPath])
     }
     
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, didRemoveItemAt indexPath: IndexPath) {
-        if dataSource.numberOfItems(in: indexPath.section) == 1 {
+    func sharedMediaDataSource(_ dataSource: AnyObject, didRemoveItemAt indexPath: IndexPath) {
+        if self.dataSource.numberOfItems(in: indexPath.section) == 1 {
             collectionView.deleteSections(IndexSet(integer: indexPath.section))
         } else {
             collectionView.deleteItems(at: [indexPath])

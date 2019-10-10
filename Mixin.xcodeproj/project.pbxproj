@@ -257,6 +257,7 @@
 		7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */; };
 		7B894CD820D25ABA004FA5A8 /* RecorderLongPressHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD720D25ABA004FA5A8 /* RecorderLongPressHintView.swift */; };
 		7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */; };
+		7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */; };
 		7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */; };
 		7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */; };
@@ -1023,6 +1024,7 @@
 		7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLockView.swift; sourceTree = "<group>"; };
 		7B894CD720D25ABA004FA5A8 /* RecorderLongPressHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLongPressHintView.swift; sourceTree = "<group>"; };
 		7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataSource.swift; sourceTree = "<group>"; };
+		7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaCategorizer.swift; sourceTree = "<group>"; };
 		7B8BB58F234F36C000991ACB /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageViewModel.swift; sourceTree = "<group>"; };
 		7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageCell.swift; sourceTree = "<group>"; };
@@ -1783,6 +1785,7 @@
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
 				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
+				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3652,6 +3655,7 @@
 				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
+				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,

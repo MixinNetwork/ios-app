@@ -5,27 +5,26 @@ protocol SharedMediaItem {
     var createdAt: String { get }
 }
 
-extension Message: SharedMediaItem { }
-
+extension MessageItem: SharedMediaItem { }
 extension GalleryItem: SharedMediaItem {  }
 
 protocol SharedMediaDataSourceDelegate: class {
     associatedtype ItemType: SharedMediaItem
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType]
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, itemForMessageId messageId: String) -> ItemType?
-    func sharedMediaDataSourceDidReload(_ dataSource: SharedMediaDataSource<ItemType>)
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, didUpdateItemAt indexPath: IndexPath)
-    func sharedMediaDataSource(_ dataSource: SharedMediaDataSource<ItemType>, didRemoveItemAt indexPath: IndexPath)
+    func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType]
+    func sharedMediaDataSource(_ dataSource: AnyObject, itemForMessageId messageId: String) -> ItemType?
+    func sharedMediaDataSourceDidReload(_ dataSource: AnyObject)
+    func sharedMediaDataSource(_ dataSource: AnyObject, didUpdateItemAt indexPath: IndexPath)
+    func sharedMediaDataSource(_ dataSource: AnyObject, didRemoveItemAt indexPath: IndexPath)
 }
 
-class SharedMediaDataSource<ItemType: SharedMediaItem> {
+class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMediaCategorizer<ItemType>> {
     
     var conversationId: String! {
         didSet {
             dates = []
             items = [:]
             loadedMessageIds = Set()
-            isLoadingEarlier = false
+            isLoading = false
             didLoadEarliest = false
         }
     }
@@ -41,7 +40,7 @@ class SharedMediaDataSource<ItemType: SharedMediaItem> {
     private(set) var items = [String: [ItemType]]()
     
     private var loadedMessageIds = Set<String>()
-    private var isLoadingEarlier = false
+    private var isLoading = false
     private var didLoadEarliest = false
     
     private var getItems: ((_ conversationId: String, _ location: ItemType?, _ count: Int) -> [ItemType]) = { (_, _, _) in [] }
@@ -82,18 +81,31 @@ class SharedMediaDataSource<ItemType: SharedMediaItem> {
     func reload() {
         let count = numberOfItemsPerFetch
         let conversationId = self.conversationId!
+        isLoading = true
         queue.async { [weak self] in
-            guard let weakSelf = self else {
+            guard let weakSelf = self, weakSelf.conversationId == conversationId else {
                 return
             }
-            let items = weakSelf.getItems(conversationId, nil, count)
-            let (dates, map) = weakSelf.categorizedItems(items: items)
-            let loadedMessageIds = Set(items.map({ $0.messageId }))
+            let categorizer = CategorizerType.init()
+            var didLoadEarliest = false
+            var location: ItemType? = nil
+            while !didLoadEarliest, categorizer.wantsMoreInput {
+                let items = weakSelf.getItems(conversationId, location, count)
+                didLoadEarliest = items.count < count
+                categorizer.input(items: items, didLoadEarliest: didLoadEarliest)
+                location = items.last
+            }
+            let loadedMessageIds = Set(categorizer.categorizedItems.map({ $0.messageId }))
             DispatchQueue.main.async {
-                weakSelf.dates = dates
-                weakSelf.items = map
+                guard let weakSelf = self, weakSelf.conversationId == conversationId else {
+                    return
+                }
+                weakSelf.dates = categorizer.dates
+                weakSelf.items = categorizer.itemGroups
                 weakSelf.loadedMessageIds = loadedMessageIds
                 weakSelf.onReload()
+                weakSelf.isLoading = false
+                weakSelf.didLoadEarliest = didLoadEarliest
             }
         }
     }
@@ -112,42 +124,54 @@ class SharedMediaDataSource<ItemType: SharedMediaItem> {
     }
     
     func loadMoreEarlierItemsIfNeeded(location: IndexPath) {
-        guard !didLoadEarliest, !isLoadingEarlier else {
+        guard !didLoadEarliest, !isLoading else {
             return
         }
-        guard location.section == dates.count - 1, let lastDate = dates.last, let lastItems = items[lastDate], location.row >= lastItems.count - 10, let lastItem = lastItems.last else {
+        guard location.section == dates.count - 1, let lastDate = dates.last, let lastItems = items[lastDate], location.row >= lastItems.count - 10, var lastItem = lastItems.last else {
             return
         }
-        isLoadingEarlier = true
+        isLoading = true
         let conversationId = self.conversationId!
         let count = numberOfItemsPerFetch
         var loadedMessageIds = self.loadedMessageIds
         queue.async { [weak self] in
-            guard let weakSelf = self else {
+            guard let weakSelf = self, weakSelf.conversationId == conversationId else {
                 return
             }
-            let items = weakSelf.getItems(conversationId, lastItem, -count)
-            guard !items.isEmpty else {
-                return
+            let categorizer = CategorizerType.init()
+            var didLoadEarliest = false
+            while categorizer.wantsMoreInput {
+                let items = weakSelf.getItems(conversationId, lastItem, count)
+                didLoadEarliest = items.count < count
+                categorizer.input(items: items, didLoadEarliest: didLoadEarliest)
+                if !didLoadEarliest, let last = items.last {
+                    lastItem = last
+                } else {
+                    break
+                }
             }
-            var (dates, map) = weakSelf.categorizedItems(items: items)
-            let messageIds = items.map({ $0.messageId })
+            let messageIds = categorizer.categorizedItems.map({ $0.messageId })
             loadedMessageIds.formUnion(messageIds)
+            var dates = categorizer.dates
+            let itemGroups = categorizer.itemGroups
             DispatchQueue.main.sync {
+                guard let weakSelf = self, weakSelf.conversationId == conversationId else {
+                    return
+                }
                 if let lastCurrentDate = weakSelf.dates.last, lastCurrentDate == dates.first {
                     dates.removeFirst()
-                    if let items = map[lastDate] {
+                    if let items = itemGroups[lastDate] {
                         weakSelf.items[lastDate]?.append(contentsOf: items)
                     }
                 }
                 weakSelf.dates.append(contentsOf: dates)
                 for date in dates {
-                    weakSelf.items[date] = map[date]
+                    weakSelf.items[date] = itemGroups[date]
                 }
                 weakSelf.loadedMessageIds = loadedMessageIds
                 weakSelf.onReload()
-                weakSelf.isLoadingEarlier = false
-                weakSelf.didLoadEarliest = items.count < count
+                weakSelf.didLoadEarliest = didLoadEarliest
+                weakSelf.isLoading = false
             }
         }
     }
@@ -164,22 +188,6 @@ class SharedMediaDataSource<ItemType: SharedMediaItem> {
         default:
             break
         }
-    }
-    
-    private func categorizedItems(items: [ItemType]) -> (dates: [String], map: [String: [ItemType]]) {
-        var dates = [String]()
-        var map = [String: [ItemType]]()
-        for item in items {
-            let date = item.createdAt.toUTCDate()
-            let title = DateFormatter.dateSimple.string(from: date)
-            if map[title] != nil {
-                map[title]!.append(item)
-            } else {
-                dates.append(title)
-                map[title] = [item]
-            }
-        }
-        return (dates, map)
     }
     
     private func updateMessage(with messageId: String) {

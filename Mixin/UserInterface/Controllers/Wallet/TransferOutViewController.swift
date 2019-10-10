@@ -1,6 +1,6 @@
 import UIKit
 
-class SendViewController: KeyboardBasedLayoutViewController {
+class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     enum Opponent {
         case contact(UserItem)
@@ -288,7 +288,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
             return
         }
         if case .address = opponent! {
-            if asset.assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27" {
+            if asset.isUseTag {
                 memoTextField.placeholder = R.string.localizable.wallet_send_tag()
             } else {
                 memoTextField.placeholder = R.string.localizable.wallet_send_memo()
@@ -303,15 +303,9 @@ class SendViewController: KeyboardBasedLayoutViewController {
         assetIconView.setIcon(asset: asset)
         
         if let address = self.targetAddress {
-            if asset.isAccount {
-                container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.accountName ?? "")
-                container?.setSubtitle(subtitle: address.accountTag?.toSimpleKey())
-                memoView.isHidden = true
-            } else {
-                container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.label ?? "")
-                container?.setSubtitle(subtitle: address.publicKey?.toSimpleKey())
-                memoView.isHidden = false
-            }
+            container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + address.label
+            container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
+            memoView.isHidden = true
         }
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
@@ -403,7 +397,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "send") as! SendViewController
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "send") as! TransferOutViewController
         vc.opponent = type
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: "")
@@ -412,7 +406,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension SendViewController: UITextFieldDelegate {
+extension TransferOutViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField == amountTextField else {
@@ -444,7 +438,7 @@ extension SendViewController: UITextFieldDelegate {
     
 }
 
-extension SendViewController: TransferTypeViewControllerDelegate {
+extension TransferOutViewController: TransferTypeViewControllerDelegate {
     
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
         self.asset = asset
@@ -458,7 +452,7 @@ extension SendViewController: TransferTypeViewControllerDelegate {
     
 }
 
-extension SendViewController: CameraViewControllerDelegate {
+extension TransferOutViewController: CameraViewControllerDelegate {
     
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
         memoTextField.text = string

@@ -440,7 +440,7 @@
 "address_book_title" = "%@ 地址簿";
 "address_book_add_address" = "添加地址";
 "address_list_title" = "地址";
-"address_new_placeholder_label" = "标签";
+"address_new_placeholder_label" = "地址名称，例如 OceanONE ";
 "address_new_placeholder_address" = "地址";
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";

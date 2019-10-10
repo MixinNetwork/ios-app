@@ -11,10 +11,9 @@ struct Address: BaseCodable {
     let updatedAt: String
     let fee: String
     let reserve: String
-    let publicKey: String?
-    let label: String?
-    let accountName: String?
-    let accountTag: String?
+    let publicKey: String
+    let label: String
+    let tag: String
     let dust: String
     
     enum CodingKeys: String, CodingTableKey {
@@ -27,8 +26,7 @@ struct Address: BaseCodable {
         case updatedAt = "updated_at"
         case fee
         case reserve
-        case accountName = "account_name"
-        case accountTag = "account_tag"
+        case tag
         case dust
         
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -39,4 +37,12 @@ struct Address: BaseCodable {
         }
     }
     
+}
+
+extension Address {
+
+    var fullAddress: String {
+        return tag.isEmpty ? publicKey : "\(publicKey):\(tag)"
+    }
+
 }

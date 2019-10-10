@@ -438,8 +438,10 @@
 "address_book_title" = "%@ Address Book";
 "address_book_add_address" = "Add address";
 "address_list_title" = "Address";
-"address_new_placeholder_label" = "Label";
+"address_new_placeholder_label" = "Label (e.g. exchanges, wallets, etc.)";
 "address_new_placeholder_address" = "Address";
+"address_no_memo" = "Destination Tag or ID Number or notes. If not, you can set it No Memo.";
+"address_add_memo" = "If you are required to fill in Destination Tag or ID Number or notes, you can Add Memo.";
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";

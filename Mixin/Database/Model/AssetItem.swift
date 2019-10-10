@@ -113,3 +113,11 @@ extension AssetItem {
     }
     
 }
+
+extension AssetItem {
+
+    var isUseTag: Bool {
+        return assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
+    }
+
+}

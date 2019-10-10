@@ -48,7 +48,7 @@ class SegmentedControl: UIControl {
                               options: .transitionCrossDissolve,
                               animations: { button.isSelected = button == sender },
                               completion: nil)
-            if button.isSelected != wasSelected {
+            if button == sender && button.isSelected != wasSelected {
                 selectedSegmentIndex = button.tag
                 sendActions(for: .valueChanged)
             }

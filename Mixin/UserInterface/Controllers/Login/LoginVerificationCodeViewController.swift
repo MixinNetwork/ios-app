@@ -4,9 +4,7 @@ import Firebase
 class LoginVerificationCodeViewController: VerificationCodeViewController {
     
     var context: LoginContext!
-    
-    private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
-    
+
     deinit {
         ReCaptchaManager.shared.clean()
     }
@@ -100,20 +98,19 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             } else {
                 UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "normal"])
             }
-            
-            let sema = DispatchSemaphore(value: 0)
-            var backupExist = false
+
             DispatchQueue.main.sync {
                 let voipToken = UIApplication.appDelegate().voipToken
                 if !voipToken.isEmpty {
                     AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
                 }
-                self.backupAvailabilityQuery.fileExist(callback: { (exist) in
-                    backupExist = exist
-                    sema.signal()
-                })
             }
-            sema.wait()
+
+            var backupExist = false
+            if let backupFile = MixinFile.iCloudBackupDirectory {
+                backupExist = CloudFile(url: backupFile).isStoredCloud()
+            }
+
             if CommonUserDefault.shared.hasForceLogout || !backupExist {
                 CommonUserDefault.shared.hasForceLogout = false
                 UserDAO.shared.updateAccount(account: account)

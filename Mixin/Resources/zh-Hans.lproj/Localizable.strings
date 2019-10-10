@@ -600,6 +600,7 @@
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";
+"setting_restoring" = "正在恢复...";
 "setting_backup_auto" = "自动备份";
 "setting_backup_files" = "包含文件";
 "setting_backup_videos" = "包含视频";

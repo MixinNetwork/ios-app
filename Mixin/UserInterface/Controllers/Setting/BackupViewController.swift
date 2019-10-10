@@ -12,7 +12,6 @@ class BackupViewController: UITableViewController {
     private let footerReuseId = "footer"
     
     private lazy var actionSectionFooterView = SeparatorShadowFooterView()
-    private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
     private lazy var autoBackupFrequencyController: UIAlertController = {
         let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
@@ -58,15 +57,14 @@ class BackupViewController: UITableViewController {
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
         updateUIOfBackupFrequency()
         reloadActionSectionFooterLabel()
+
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
-        if BackupJobQueue.shared.isBackingUp {
+        if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
             backingUI()
-        } else {
-            backupAvailabilityQuery.fileExist() { (exist) in
-                if !exist {
-                    CommonUserDefault.shared.lastBackupTime = 0
-                    CommonUserDefault.shared.lastBackupSize = 0
-                }
+        } else if let backupFile = MixinFile.iCloudBackupDirectory {
+            if !CloudFile(url: backupFile).isStoredCloud() {
+                CommonUserDefault.shared.lastBackupTime = 0
+                CommonUserDefault.shared.lastBackupSize = 0
             }
         }
     }
@@ -79,7 +77,6 @@ class BackupViewController: UITableViewController {
     @objc func backupChanged() {
         timer?.invalidate()
         timer = nil
-        reloadActionSectionFooterLabel(progress: 1)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.reloadActionSectionFooterLabel()
             self.backupIndicatorView.stopAnimating()
@@ -100,7 +97,7 @@ class BackupViewController: UITableViewController {
 
     private func backingUI() {
         backupIndicatorView.startAnimating()
-        backupLabel.text = Localized.SETTING_BACKING
+        backupLabel.text = BackupJobQueue.shared.isBackingUp ? R.string.localizable.setting_backing() : R.string.localizable.setting_restoring()
         switchIncludeFiles.isEnabled = false
         switchIncludeVideos.isEnabled = false
         reloadActionSectionFooterLabel()
@@ -110,12 +107,16 @@ class BackupViewController: UITableViewController {
         })
     }
     
-    private func reloadActionSectionFooterLabel(progress: Float? = nil) {
+    private func reloadActionSectionFooterLabel() {
         let text: String?
-        if let progress = progress ?? BackupJobQueue.shared.backupJob?.progress.fractionCompleted {
-            let number = NSNumber(value: progress)
+        if let backupProgress = BackupJobQueue.shared.backupJob?.progress {
+            let number = NSNumber(value: backupProgress)
             let percentage = NumberFormatter.simplePercentage.string(from: number)
             text = Localized.SETTING_BACKUP_PROGRESS(progress: percentage ?? "")
+        } else if let restoreProgress = BackupJobQueue.shared.restoreJob?.progress {
+            let number = NSNumber(value: restoreProgress)
+            let percentage = NumberFormatter.simplePercentage.string(from: number)
+            text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
         } else {
             let time = CommonUserDefault.shared.lastBackupTime
             if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {

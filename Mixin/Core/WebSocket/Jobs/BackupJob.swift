@@ -6,18 +6,10 @@ class BackupJob: BaseJob {
     
     static let sharedId = "backup"
     
-    let progress = Progress()
+    private(set) var progress: Float = 0
     
     private let immediatelyBackup: Bool
-    
-    private var shouldBackupFiles: Bool {
-        return CommonUserDefault.shared.hasBackupFiles
-    }
-    
-    private var shouldBackupVideos: Bool {
-        return CommonUserDefault.shared.hasBackupVideos
-    }
-    
+
     init(immediatelyBackup: Bool = false) {
         self.immediatelyBackup = immediatelyBackup
         super.init()
@@ -56,22 +48,74 @@ class BackupJob: BaseJob {
             }
         }
 
+        let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
+
+        var totalFileSize: Int64 = 0
+        var backupFileSize: Int64 = 0
+        var needUploadFileSize: Int64 = 0
+
         do {
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
-            
-            if !shouldBackupFiles && !shouldBackupVideos {
-                progress.remainingJobCount = 3
-            } else {
-                progress.remainingJobCount = 4
+
+            var categories: [MixinFile.ChatDirectory] = [.photos, .audios]
+            if CommonUserDefault.shared.hasBackupFiles {
+                categories.append(.files)
             }
-            
-            var fileSize: Int64 = 0
-            fileSize += try backupDatabase(backupDir: backupDir)
-            fileSize += try backupPhotosAndAudios(backupDir: backupDir)
-            fileSize += try backupFilesAndVideos(backupDir: backupDir)
-            
+            if CommonUserDefault.shared.hasBackupVideos {
+                categories.append(.videos)
+            }
+
+            try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+
+
+            var localPaths = Set<String>()
+            var cloudPaths = Set<String>()
+
+            for category in categories {
+                let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
+                let cloudDir = backupDir.appendingPathComponent(category.rawValue)
+
+                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).map { "\(category.rawValue)/\($0)" })
+                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).map { "\(category.rawValue)/\($0)" })
+            }
+
+            for path in cloudPaths {
+                if !localPaths.contains(path) {
+                    try FileManager.default.removeItem(at: backupDir.appendingPathComponent(path))
+                }
+            }
+
+            let paths: [String] = localPaths.compactMap {
+                let localURL = chatDir.appendingPathComponent($0)
+                let cloudURL = backupDir.appendingPathComponent($0)
+
+                guard !FileManager.default.fileExists(atPath: cloudURL.path) || FileManager.default.fileSize(cloudURL.path) != FileManager.default.fileSize(localURL.path) else {
+                    return nil
+                }
+
+                return $0
+            }
+
+            totalFileSize += MixinFile.databaseURL.fileSize
+            totalFileSize += localPaths.map { chatDir.appendingPathComponent($0).fileSize }.reduce(0, +)
+            needUploadFileSize += paths.map { chatDir.appendingPathComponent($0).fileSize }.reduce(0, +)
+
+            for path in paths {
+                let localURL = chatDir.appendingPathComponent(path)
+                let cloudURL = backupDir.appendingPathComponent(path)
+                let fileSize = localURL.fileSize
+
+                try CloudFile(url: localURL).startUpload(destination: cloudURL) { [weak self](progress) in
+                    guard let weakSelf = self, !weakSelf.isCancelled else {
+                        return
+                    }
+                    weakSelf.progress = (Float(backupFileSize) + Float(fileSize) * progress) / Float(needUploadFileSize)
+                }
+                backupFileSize += fileSize
+            }
+
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
-            CommonUserDefault.shared.lastBackupSize = fileSize
+            CommonUserDefault.shared.lastBackupSize = totalFileSize
         } catch {
             #if DEBUG
             print(error)
@@ -79,120 +123,6 @@ class BackupJob: BaseJob {
             UIApplication.traceError(error)
         }
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
-    }
-
-    private func backupDatabase(backupDir: URL) throws -> Int64 {
-        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
-        try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
-
-        try FileManager.default.saveToCloud(from: MixinFile.databaseURL, to: cloudURL, removeFromFile: false)
-        progress.completeCurrentJob()
-        return FileManager.default.fileSize(cloudURL.path)
-    }
-
-    private func backupPhotosAndAudios(backupDir: URL) throws -> Int64 {
-        let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
-        var fileSize: Int64 = 0
-        for category in categories {
-            let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
-            let paths = try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ localDir.appendingPathComponent($0) }
-            if paths.isEmpty {
-                progress.completeCurrentJob()
-            } else {
-                let localURL = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())", progress: { (progress) in
-                    self.progress.currentJobProgress = Float(progress)
-                })
-                let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
-                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
-                fileSize += FileManager.default.fileSize(cloudURL.path)
-                progress.completeCurrentJob()
-            }
-        }
-        return fileSize
-    }
-
-    private func backupFilesAndVideos(backupDir: URL) throws -> Int64 {
-        var categories = [MixinFile.ChatDirectory]()
-        var localPaths = Set<String>()
-        var cloudPaths = Set<String>()
-
-        if shouldBackupFiles {
-            categories.append(.files)
-            try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
-        } else {
-            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
-        }
-
-        if shouldBackupVideos {
-            categories.append(.videos)
-            try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
-        } else {
-            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
-        }
-
-        for category in categories {
-            let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
-            let cloudDir = backupDir.appendingPathComponent(category.rawValue)
-
-            localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ "\(category.rawValue)/\($0)" })
-            cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).compactMap{ "\(category.rawValue)/\($0)" })
-        }
-
-        for path in cloudPaths {
-            if !localPaths.contains(path) {
-                try FileManager.default.removeItem(at: backupDir.appendingPathComponent(path))
-            }
-        }
-
-        var fileSize: Int64 = 0
-        let pathCount = Float(localPaths.count)
-        for (index, path) in localPaths.enumerated() {
-            progress.currentJobProgress = Float(index + 1) / pathCount
-            let localURL = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
-            let cloudURL = backupDir.appendingPathComponent(path)
-
-            if FileManager.default.fileExists(atPath: cloudURL.path) {
-                if FileManager.default.fileSize(cloudURL.path) != FileManager.default.fileSize(localURL.path) {
-                    try FileManager.default.saveToCloud(from: localURL, to: cloudURL, removeFromFile: false)
-                }
-            } else {
-                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
-            }
-            fileSize += FileManager.default.fileSize(cloudURL.path)
-        }
-        progress.completeCurrentJob()
-        return fileSize
-    }
-    
-}
-
-extension BackupJob {
-    
-    class Progress {
-        
-        var completedJobCount = 0
-        var remainingJobCount = 0
-        
-        var currentJobProgress: Float = 0
-        
-        var fractionCompleted: Float {
-            let totalCount = completedJobCount + remainingJobCount
-            guard totalCount > 0 else {
-                return 0
-            }
-            if remainingJobCount > 0 {
-                return (Float(completedJobCount) + currentJobProgress) / Float(totalCount)
-            } else {
-                return 1
-            }
-        }
-        
-        func completeCurrentJob() {
-            completedJobCount += 1
-            remainingJobCount -= 1
-            currentJobProgress = 0
-        }
-        
     }
     
 }

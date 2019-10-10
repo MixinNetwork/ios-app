@@ -3,34 +3,41 @@ import Foundation
 class CloudFile {
 
     private let url: URL
-    private let query = NSMetadataQuery()
-
-    private var observer: NSObjectProtocol?
 
     init(url: URL) {
         self.url = url
-        self.query.predicate = NSPredicate(format: "%K LIKE %@", NSMetadataItemPathKey, url.path)
-        self.query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-    }
-
-    deinit {
-        removeObserver()
-    }
-
-    func exist() -> Bool {
-        return FileManager.default.isUbiquitousItem(at: url)
     }
 
     func isDownloaded() -> Bool {
         return (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current) ?? false
     }
 
-    func startDownload(progress: @escaping (Float, Bool) -> Void) throws {
+    func isUploaded() -> Bool {
+        return (try? url.resourceValues(forKeys: [.ubiquitousItemIsUploadedKey]).ubiquitousItemIsUploaded) ?? false
+    }
+
+    func isStoredCloud() -> Bool {
+        return FileManager.default.isUbiquitousItem(at: url)
+    }
+
+    func remove() throws {
+        try FileManager.default.removeItem(at: url)
+    }
+
+    func startDownload(progress: @escaping (Float) -> Void) throws {
+        guard !isDownloaded() else {
+            return
+        }
         try FileManager.default.startDownloadingUbiquitousItem(at: url)
 
+        let query = NSMetadataQuery()
+        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+        query.predicate = NSPredicate(format: "%K LIKE %@", NSMetadataItemPathKey, url.path)
         query.valueListAttributes = [NSMetadataUbiquitousItemPercentDownloadedKey,
                                      NSMetadataUbiquitousItemDownloadingStatusKey]
-        observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { [weak self](notification) in
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { (notification) in
 
             guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
                 return
@@ -42,7 +49,7 @@ class CloudFile {
                     guard let percent = metadataItem.value(forAttribute: attrName) as? NSNumber else {
                         return
                     }
-                    progress(percent.floatValue / 100, false)
+                    progress(percent.floatValue / 100)
                 case NSMetadataUbiquitousItemDownloadingStatusKey:
                     guard let status = metadataItem.value(forAttribute: attrName) as? String else {
                         return
@@ -50,64 +57,88 @@ class CloudFile {
                     guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded else {
                         return
                     }
-                    progress(1, true)
-                    self?.removeObserver()
+                    query.stop()
+                    semaphore.signal()
                 default:
                     break
                 }
             }
         }
         query.start()
+        semaphore.wait()
+        NotificationCenter.default.removeObserver(observer)
     }
 
-    func startUpload(destination: URL, progress: @escaping (Float, Bool) -> Void) {
+    func startUpload(destination: URL, progress: @escaping (Float) -> Void) throws {
         let tmpFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-
-
         do {
             try FileManager.default.copyItem(at: url, to: tmpFile)
-            try FileManager.default.setUbiquitous(true, itemAt: url, destinationURL: destination)
-
-            query.valueListAttributes = [NSMetadataUbiquitousItemPercentUploadedKey,
-                                         NSMetadataUbiquitousItemIsUploadedKey]
-            observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { [weak self](notification) in
-
-                guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
-                    return
-                }
-
-                for attrName in metadataItem.attributes {
-                    switch attrName {
-                    case NSMetadataUbiquitousItemPercentUploadedKey:
-                        guard let percent = metadataItem.value(forAttribute: attrName) as? NSNumber else {
-                            return
-                        }
-                        progress(percent.floatValue / 100, false)
-                    case NSMetadataUbiquitousItemIsUploadedKey:
-                        guard let status = metadataItem.value(forAttribute: attrName) as? NSNumber, status.boolValue else {
-                            return
-                        }
-                        progress(1, true)
-                        self?.removeObserver()
-                    default:
-                        break
-                    }
-                }
-            }
-            query.start()
+            try FileManager.default.setUbiquitous(true, itemAt: tmpFile, destinationURL: destination)
         } catch {
             if tmpFile.fileExists {
                 try? FileManager.default.removeItem(at: tmpFile)
             }
+            throw error
         }
+
+        let query = NSMetadataQuery()
+        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+        query.predicate = NSPredicate(format: "%K LIKE %@", NSMetadataItemPathKey, url.path)
+        query.valueListAttributes = [NSMetadataUbiquitousItemPercentUploadedKey,
+                                     NSMetadataUbiquitousItemIsUploadedKey]
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { (notification) in
+
+            guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
+                return
+            }
+
+            for attrName in metadataItem.attributes {
+                switch attrName {
+                case NSMetadataUbiquitousItemPercentUploadedKey:
+                    guard let percent = metadataItem.value(forAttribute: attrName) as? NSNumber else {
+                        return
+                    }
+                    progress(percent.floatValue / 100)
+                case NSMetadataUbiquitousItemIsUploadedKey:
+                    guard let status = metadataItem.value(forAttribute: attrName) as? NSNumber, status.boolValue else {
+                        return
+                    }
+                    query.stop()
+                    semaphore.signal()
+                default:
+                    break
+                }
+            }
+        }
+        query.start()
+        semaphore.wait()
+        NotificationCenter.default.removeObserver(observer)
     }
 
-    private func removeObserver() {
-        guard let observer = self.observer else {
-            return
-        }
-        query.stop()
-        NotificationCenter.default.removeObserver(observer)
-        self.observer = nil
-    }
+
+    //    func cloudExist() -> Bool {
+    //        guard FileManager.default.ubiquityIdentityToken != nil else {
+    //            return false
+    //        }
+    //
+    //        var result = false
+    //
+    //        let query = NSMetadataQuery()
+    //        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+    //        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, url.path)
+    //
+    //        let semaphore = DispatchSemaphore(value: 0)
+    //        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidFinishGathering, object: nil, queue: .main) { (notification) in
+    //            query.stop()
+    //            result = query.resultCount > 0
+    //            semaphore.signal()
+    //        }
+    //        query.start()
+    //        semaphore.wait()
+    //        NotificationCenter.default.removeObserver(observer)
+    //
+    //        return result
+    //    }
 }

@@ -11,6 +11,7 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var progressLabel: UILabel!
     
     private var stopDownload = false
+    private let query = NSMetadataQuery()
 
     class func instance() -> UIViewController {
         return Storyboard.home.instantiateViewController(withIdentifier: "restore")
@@ -43,7 +44,6 @@ class RestoreViewController: UIViewController {
         restoreButton.isBusy = true
         skipButton.isHidden = true
         progressLabel.isHidden = false
-        updateProgressLabel(progress: 0)
         DispatchQueue.global().async {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
@@ -54,126 +54,64 @@ class RestoreViewController: UIViewController {
 
             DatabaseUserDefault.shared.forceUpgradeDatabase = true
             MixinDatabase.shared.close()
-            do {
-                self.updateProgressLabel(progress: 0.01)
-                try self.restoreDatabase(backupDir: backupDir)
-                self.updateProgressLabel(progress: 0.3)
-                try self.restorePhotosAndAudios(backupDir: backupDir)
 
-                MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
-                AccountUserDefault.shared.hasRestoreChat = false
-                DispatchQueue.main.async {
-                    AppDelegate.current.window.rootViewController = makeInitialViewController()
+            let localURL = MixinFile.databaseURL
+            self.removeDatabase(databaseURL: localURL, completion: {
+                let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+                let backupFile = CloudFile(url: cloudURL)
+
+                do {
+                    if !backupFile.isDownloaded() {
+                        try backupFile.startDownload { (progress) in
+                            self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
+                        }
+                    }
+                    try FileManager.default.copyItem(at: cloudURL, to: localURL)
+
+                    MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
+                    AccountUserDefault.shared.hasRestoreChat = false
+                    DispatchQueue.main.async {
+                        AppDelegate.current.window.rootViewController = makeInitialViewController()
+                    }
+                } catch {
+                    self.restoreFailed(error: error)
                 }
-            } catch {
-                #if DEBUG
-                print(error)
-                #endif
-                DispatchQueue.main.async {
-                    self.restoreButton.isBusy = false
-                    self.skipButton.isHidden = false
-                    self.progressLabel.isHidden = true
-                }
-                UIApplication.traceError(error)
-            }
+            })
         }
     }
 
     @IBAction func skipAction(_ sender: Any) {
         AccountUserDefault.shared.hasRestoreChat = false
-        AccountUserDefault.shared.hasRestoreFilesAndVideos = false
+        AccountUserDefault.shared.hasRestoreMedia = false
         AppDelegate.current.window.rootViewController =
             makeInitialViewController()
     }
 
-    private func downloadFromCloud(url: URL) throws {
-        guard url.cloudExist() else {
-            return
-        }
-
-        if try url.cloudDownloaded() {
-            return
-        }
-
-        try FileManager.default.startDownloadingUbiquitousItem(at: url)
-        repeat {
-            Thread.sleep(forTimeInterval: 1)
-
-            if stopDownload {
-                return
-            } else if try url.cloudDownloaded() {
-                return
-            } else if FileManager.default.fileExists(atPath: url.path) && FileManager.default.fileSize(url.path) > 0 {
-                return
+    private func removeDatabase(databaseURL: URL, completion: () -> Void) {
+        do {
+            if FileManager.default.fileExists(atPath: databaseURL.path) {
+                try Database(withPath: databaseURL.path).close {
+                    try FileManager.default.removeItem(at: databaseURL)
+                    completion()
+                }
+            } else {
+                completion()
             }
-        } while true
+        } catch {
+            restoreFailed(error: error)
+        }
     }
 
-    private func restoreDatabase(backupDir: URL) throws {
-        let localURL = MixinFile.databaseURL
-        if FileManager.default.fileExists(atPath: localURL.path) {
-            try Database(withPath: localURL.path).close {
-                try FileManager.default.removeItem(at: localURL)
-                try self.restoreDatabase(backupDir: backupDir)
-            }
-            return
-        }
+    private func restoreFailed(error: Swift.Error) {
+        #if DEBUG
+        print(error)
+        #endif
 
-        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
-        try downloadFromCloud(url: cloudURL)
-
-        guard FileManager.default.fileExists(atPath: cloudURL.path) else {
-            return
+        DispatchQueue.main.async {
+            self.restoreButton.isBusy = false
+            self.skipButton.isHidden = false
+            self.progressLabel.isHidden = true
         }
-        
-        try? FileManager.default.removeItem(at: localURL)
-        try FileManager.default.copyItem(at: cloudURL, to: localURL)
+        UIApplication.traceError(error)
     }
-
-    private func restorePhotosAndAudios(backupDir: URL) throws {
-        let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
-        let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
-
-        try FileManager.default.createDirectoryIfNeeded(dir: chatDir)
-        
-        var totalProgress: Float = 0.3
-        for category in categories {
-            let cloudURL = backupDir.appendingPathComponent("mixin.\(category.rawValue.lowercased()).zip")
-
-            try downloadFromCloud(url: cloudURL)
-
-            guard FileManager.default.fileExists(atPath: cloudURL.path) else {
-                continue
-            }
-
-            let localZip = chatDir.appendingPathComponent("\(category.rawValue).zip")
-
-            try? FileManager.default.removeItem(at: localZip)
-            try FileManager.default.copyItem(at: cloudURL, to: localZip)
-
-            let localDir = chatDir.appendingPathComponent(category.rawValue)
-
-            do {
-                try Zip.unzipFile(localZip, destination: localDir, overwrite: true, password: nil, progress: { (progress) in
-                    self.updateProgressLabel(progress: totalProgress + Float(progress) * 0.35)
-                })
-            } catch {
-                #if DEBUG
-                print(error)
-                #endif
-                UIApplication.traceError(error)
-            }
-            try? FileManager.default.removeItem(at: localZip)
-            totalProgress += 0.35
-        }
-    }
-    
-    private func updateProgressLabel(progress: Float) {
-        performSynchronouslyOnMainThread {
-            let number = NSNumber(value: progress)
-            let percentage = NumberFormatter.simplePercentage.string(from: number)
-            progressLabel.text = percentage
-        }
-    }
-    
 }

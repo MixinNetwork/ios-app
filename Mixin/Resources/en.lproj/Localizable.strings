@@ -598,6 +598,7 @@
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";
+"setting_restoring" = "Restoring...";
 "setting_backup_auto" = "Auto Backup";
 "setting_backup_files" = "Include Files";
 "setting_backup_videos" = "Include Videos";

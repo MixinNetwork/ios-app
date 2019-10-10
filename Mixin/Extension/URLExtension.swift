@@ -21,11 +21,7 @@ extension URL {
     var fileExists: Bool {
         return (try? self.checkResourceIsReachable()) ?? false
     }
-
-    var cloudExist: Bool {
-        return FileManager.default.isUbiquitousItem(at: self)
-    }
-
+    
     var fileSize: Int64 {
         return (try? self.resourceValues(forKeys: [.fileSizeKey]))?.allValues[.fileSizeKey] as? Int64 ?? -1
     }

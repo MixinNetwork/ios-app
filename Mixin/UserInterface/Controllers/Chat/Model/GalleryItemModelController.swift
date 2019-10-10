@@ -1,6 +1,13 @@
 import UIKit
 
+protocol GalleryItemModelControllerDelegate: class {
+    func modelController(_ controller: GalleryItemModelController, didLoadItemsBefore location: GalleryItem)
+    func modelController(_ controller: GalleryItemModelController, didLoadItemsAfter location: GalleryItem)
+}
+
 final class GalleryItemModelController: NSObject {
+    
+    weak var delegate: GalleryItemModelControllerDelegate?
     
     var conversationId = "" {
         didSet {
@@ -106,6 +113,7 @@ final class GalleryItemModelController: NSObject {
                 weakSelf.items.insert(contentsOf: items, at: 0)
                 weakSelf.didLoadEarliestItem = items.count < fetchItemsCount
                 weakSelf.isLoadingBefore = false
+                weakSelf.delegate?.modelController(weakSelf, didLoadItemsBefore: location)
             }
         }
     }
@@ -129,6 +137,7 @@ final class GalleryItemModelController: NSObject {
                 weakSelf.items.append(contentsOf: items)
                 weakSelf.didLoadLatestItem = items.count < fetchItemsCount
                 weakSelf.isLoadingAfter = false
+                weakSelf.delegate?.modelController(weakSelf, didLoadItemsAfter: location)
             }
         }
     }

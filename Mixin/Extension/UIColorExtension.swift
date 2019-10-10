@@ -16,7 +16,7 @@ extension UIColor {
     static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
     static let darkText = R.color.dark_text()!
     static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
-    static let highlightedText = UIColor(displayP3RgbValue: 0x3D75E3)
+    static let highlightedText = R.color.highlighted_text()!
     static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
     static let shadow = UIColor(rgbValue: 0xC3C3C3)
     

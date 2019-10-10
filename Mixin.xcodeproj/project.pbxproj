@@ -256,6 +256,7 @@
 		7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */; };
 		7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */; };
 		7B894CD820D25ABA004FA5A8 /* RecorderLongPressHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD720D25ABA004FA5A8 /* RecorderLongPressHintView.swift */; };
+		7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */; };
 		7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */; };
 		7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */; };
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
@@ -1020,6 +1021,7 @@
 		7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddressViewController.swift; sourceTree = "<group>"; };
 		7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLockView.swift; sourceTree = "<group>"; };
 		7B894CD720D25ABA004FA5A8 /* RecorderLongPressHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLongPressHintView.swift; sourceTree = "<group>"; };
+		7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataSource.swift; sourceTree = "<group>"; };
 		7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageViewModel.swift; sourceTree = "<group>"; };
 		7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageCell.swift; sourceTree = "<group>"; };
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
@@ -1777,6 +1779,7 @@
 				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
+				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3303,6 +3306,7 @@
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
+				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,

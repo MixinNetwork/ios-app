@@ -385,8 +385,6 @@ public class Localized {
     }
     public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
     public static let WALLET_ADDRESS = LocalizedString("wallet_address", comment: "Address")
-    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name (Address)")
-    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo (Tag)")
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")
@@ -504,11 +502,6 @@ public class Localized {
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     
     // Transfer
-    public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")
-    public static func TRANSFER_TITLE_TO_RECEIVER(fullName: String) -> String {
-        return String(format: LocalizedString("transfer_title_to_receiver", comment: "to %@"), fullName)
-    }
-    public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
     public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "This payment link has already been paid by someone, you can not make a duplicate payment.")
     public static let TRANSFER_PAY_PASSWORD = LocalizedString("transfer_pay_password", comment: "Pay with PIN")

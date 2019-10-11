@@ -74,6 +74,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .address(let address):
             targetAddress = address
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
+            container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + address.label
+            container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
+            memoView.isHidden = true
             reloadTransactionFeeHint(addressId: address.addressId)
         }
         
@@ -243,13 +246,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    @IBAction func scanMemoAction(_ sender: Any) {
-        let vc = CameraViewController.instance()
-        vc.delegate = self
-        vc.scanQrCodeOnly = true
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
     @objc func fillBalanceAction(_ sender: Any) {
         amountTextField.text = asset?.balance
         amountEditingChanged(sender)
@@ -287,26 +283,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard let asset = self.asset else {
             return
         }
-        if case .address = opponent! {
-            if asset.isUseTag {
-                memoTextField.placeholder = R.string.localizable.wallet_send_tag()
-            } else {
-                memoTextField.placeholder = R.string.localizable.wallet_send_memo()
-            }
-        }
-        
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
         nameLabel.text = asset.name
         let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
             ?? asset.localizedBalance
         balanceLabel.text = balance + " " + asset.symbol
         assetIconView.setIcon(asset: asset)
-        
-        if let address = self.targetAddress {
-            container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + address.label
-            container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
-            memoView.isHidden = true
-        }
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
     
@@ -448,16 +430,6 @@ extension TransferOutViewController: TransferTypeViewControllerDelegate {
             amountEditingChanged(amountTextField)
         }
         updateAssetUI()
-    }
-    
-}
-
-extension TransferOutViewController: CameraViewControllerDelegate {
-    
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
-        memoTextField.text = string
-        navigationController?.popViewController(animated: true)
-        return false
     }
     
 }

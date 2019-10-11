@@ -27,6 +27,9 @@ class DatabaseUpgradeViewController: UIViewController {
                     })
                 }
             }
+            if currentVersion < 4 {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            }
 
             DatabaseUserDefault.shared.forceUpgradeDatabase = false
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion

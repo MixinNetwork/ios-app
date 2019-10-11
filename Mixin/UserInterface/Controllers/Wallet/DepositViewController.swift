@@ -15,34 +15,29 @@ class DepositViewController: UIViewController {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
-        if asset.isAccount, let name = asset.accountName, let memo = asset.accountTag {
-            upperDepositFieldView.titleLabel.text = Localized.WALLET_ACCOUNT_NAME
-            upperDepositFieldView.contentLabel.text = name
-            let nameImage = UIImage(qrcode: name, size: upperDepositFieldView.qrCodeImageView.bounds.size)
-            upperDepositFieldView.qrCodeImageView.image = nameImage
-            upperDepositFieldView.assetIconView.setIcon(asset: asset)
-            upperDepositFieldView.shadowView.hasLowerShadow = true
-            upperDepositFieldView.delegate = self
-            
-            lowerDepositFieldView.titleLabel.text = Localized.WALLET_ACCOUNT_MEMO
-            lowerDepositFieldView.contentLabel.text = memo
-            let memoImage = UIImage(qrcode: memo, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+
+        upperDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_destination()
+        upperDepositFieldView.contentLabel.text = asset.destination
+        let nameImage = UIImage(qrcode: asset.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+        upperDepositFieldView.qrCodeImageView.image = nameImage
+        upperDepositFieldView.assetIconView.setIcon(asset: asset)
+        upperDepositFieldView.shadowView.hasLowerShadow = true
+        upperDepositFieldView.delegate = self
+
+        if asset.isAccount {
+            if asset.isUseTag {
+                lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_tag()
+            } else {
+                lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_memo()
+            }
+            lowerDepositFieldView.contentLabel.text = asset.tag
+            let memoImage = UIImage(qrcode: asset.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
             lowerDepositFieldView.qrCodeImageView.image = memoImage
             upperDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
-        } else if let publicKey = asset.publicKey, !publicKey.isEmpty {
-            upperDepositFieldView.titleLabel.text = Localized.WALLET_ADDRESS
-            upperDepositFieldView.contentLabel.text = publicKey
-            let image = UIImage(qrcode: publicKey, size: upperDepositFieldView.qrCodeImageView.bounds.size)
-            upperDepositFieldView.qrCodeImageView.image = image
-            upperDepositFieldView.assetIconView.setIcon(asset: asset)
-            upperDepositFieldView.shadowView.hasLowerShadow = false
-            upperDepositFieldView.delegate = self
-            
-            lowerDepositFieldView.isHidden = true
         } else {
-            scrollView.isHidden = true
+            lowerDepositFieldView.isHidden = true
         }
 
         hintLabel.text = asset.depositTips
@@ -98,21 +93,9 @@ extension DepositViewController: DepositFieldViewDelegate {
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {
-        if asset.isAccount {
-            if view == upperDepositFieldView {
-                depositWindow.render(title: Localized.WALLET_ACCOUNT_NAME,
-                                     content: asset.accountName ?? "",
-                                     asset: asset)
-            } else {
-                depositWindow.render(title: Localized.WALLET_ACCOUNT_MEMO,
-                                     content: asset.accountTag ?? "",
-                                     asset: asset)
-            }
-        } else {
-            depositWindow.render(title: Localized.WALLET_ADDRESS,
-                                 content: asset.publicKey ?? "",
-                                 asset: asset)
-        }
+        depositWindow.render(title: upperDepositFieldView.titleLabel.text ?? "",
+                             content: upperDepositFieldView.contentLabel.text ?? "",
+                             asset: asset)
         depositWindow.presentView()
     }
 }

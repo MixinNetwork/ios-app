@@ -349,8 +349,9 @@
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
 "wallet_address" = "Address";
-"wallet_account_name" = "Address";
-"wallet_account_memo" = "Memo";
+"wallet_address_destination" = "Address";
+"wallet_address_tag" = "Tag";
+"wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
 "wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
@@ -358,8 +359,6 @@
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
 "wallet_send_amount" = "Amount";
-"wallet_send_memo" = "Memo";
-"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Save by PIN";
@@ -451,13 +450,8 @@
 
 // Transfer
 "transfer_title" = "Transfer";
-"transfer_title_to" = "Transfer to";
-"transfer_title_to_receiver" = "to %@";
 "transfer_balance" = "Balance";
-"transfer_transactions" = "TRANSACTIONS";
-"transfer_transfer_type" = "Transfer Type";
-"transfer_transfer_amount" = "Transfer Amount";
-"transfer_transfer_memo" = "Memo (optional)";
+"transfer_memo" = "Memo (optional)";
 "transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
 "transfer_error_balance_insufficient" = "Insufficient balance";
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";

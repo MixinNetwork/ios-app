@@ -11,7 +11,7 @@ struct Address: BaseCodable {
     let updatedAt: String
     let fee: String
     let reserve: String
-    let publicKey: String
+    let destination: String
     let label: String
     let tag: String
     let dust: String
@@ -21,7 +21,7 @@ struct Address: BaseCodable {
         case type
         case addressId = "address_id"
         case assetId = "asset_id"
-        case publicKey = "public_key"
+        case destination
         case label
         case updatedAt = "updated_at"
         case fee
@@ -42,7 +42,7 @@ struct Address: BaseCodable {
 extension Address {
 
     var fullAddress: String {
-        return tag.isEmpty ? publicKey : "\(publicKey):\(tag)"
+        return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
 
 }

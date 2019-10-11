@@ -46,7 +46,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         assetView.setIcon(asset: asset)
         if let address = address {
             labelTextField.text = address.label
-            addressTextView.text = address.publicKey
+            addressTextView.text = address.destination
             memoTextView.text = address.tag
             checkLabelAndAddressAction(self)
             view.layoutIfNeeded()
@@ -55,10 +55,10 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         }
 
         if asset.isUseTag {
-            memoTextView.placeholder = R.string.localizable.wallet_send_tag()
+            memoTextView.placeholder = R.string.localizable.wallet_address_tag()
             hintLabel.text = ""
         } else {
-            memoTextView.placeholder = R.string.localizable.wallet_send_memo()
+            memoTextView.placeholder = R.string.localizable.wallet_address_memo()
             hintLabel.text = ""
         }
     }
@@ -107,7 +107,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         }
         shouldLayoutWithKeyboard = false
         let assetId = asset.assetId
-        let requestAddress = AddressRequest(assetId: assetId, publicKey: addressValue, tag: memoValue, label: labelValue, pin: "")
+        let requestAddress = AddressRequest(assetId: assetId, destination: addressValue, tag: memoValue, label: labelValue, pin: "")
         AddressWindow.instance().presentPopupControllerAnimated(action: address == nil ? .add : .update, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
             guard let weakSelf = self else {
                 return

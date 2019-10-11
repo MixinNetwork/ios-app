@@ -164,11 +164,7 @@ extension TransactionViewController {
         // 3
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
-            if asset.isAccount {
-                contents.append((title: Localized.WALLET_ACCOUNT_NAME, subtitle: snapshot.sender))
-            } else {
-                contents.append((title: Localized.TRANSACTION_SENDER, subtitle: snapshot.sender))
-            }
+            contents.append((title: Localized.TRANSACTION_SENDER, subtitle: snapshot.sender))
         case SnapshotType.transfer.rawValue:
             if snapshot.amount.doubleValue > 0 {
                 contents.append((title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), subtitle: snapshot.opponentUserFullName))
@@ -191,20 +187,12 @@ extension TransactionViewController {
                 contents.append((title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), subtitle: snapshot.opponentUserFullName))
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-            if asset.isAccount {
-                contents.append((title: Localized.WALLET_ACCOUNT_NAME, subtitle: snapshot.receiver))
-            } else {
-                contents.append((title: Localized.TRANSACTION_RECEIVER, subtitle: snapshot.receiver))
-            }
+            contents.append((title: Localized.TRANSACTION_RECEIVER, subtitle: snapshot.receiver))
         default:
             break
         }
         // 5
-        if asset.isAccount && (snapshot.type == SnapshotType.deposit.rawValue || snapshot.type == SnapshotType.withdrawal.rawValue || snapshot.type == SnapshotType.fee.rawValue || snapshot.type == SnapshotType.rebate.rawValue) {
-            contents.append((title: Localized.WALLET_ACCOUNT_MEMO, subtitle: snapshot.memo))
-        } else {
-            contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
-        }
+        contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
         // 6
         contents.append((title: Localized.TRANSACTION_DATE, subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
     }

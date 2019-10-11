@@ -369,14 +369,14 @@ extension UrlWindow {
                     }
                 }
             } else {
-                guard let label = query["label"], let publicKey = query["public_key"], !label.isEmpty, !publicKey.isEmpty else {
+                guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
                     return
                 }
 
                 let tag = query["tag"] ?? ""
 
-                addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, tag: tag, label: label, pin: "")
-                address = AddressDAO.shared.getAddress(assetId: assetId, publicKey: publicKey, tag: tag)
+                addressRequest = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: label, pin: "")
+                address = AddressDAO.shared.getAddress(assetId: assetId, destination: destination, tag: tag)
                 addressAction = address == nil ? .add : .update
             }
 

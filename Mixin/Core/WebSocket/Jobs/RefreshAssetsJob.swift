@@ -18,15 +18,15 @@ class RefreshAssetsJob: BaseJob {
             switch AssetAPI.shared.asset(assetId: assetId) {
             case let .success(asset):
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-                if asset.isAddress, let key = asset.publicKey {
-                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, publicKey: key) {
+                if asset.isAddress {
+                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, destination: asset.destination) {
                     case let .success(deposits):
                         SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
                     case let .failure(error):
                         UIApplication.traceError(error)
                     }
-                } else if asset.isAccount, let name = asset.accountName, let tag = asset.accountTag {
-                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, accountName: name, accountTag: tag) {
+                } else if asset.isAccount {
+                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, destination: asset.destination, tag: asset.tag) {
                     case let .success(deposits):
                         SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
                     case let .failure(error):

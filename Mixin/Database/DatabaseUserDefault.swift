@@ -18,7 +18,7 @@ class DatabaseUserDefault {
     }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
-    let currentDatabaseVersion = 3
+    let currentDatabaseVersion = 4
 
     var databaseVersion: Int {
         get {

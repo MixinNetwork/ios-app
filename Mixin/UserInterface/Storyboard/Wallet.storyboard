@@ -1354,8 +1354,8 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BeX-wN-FHz" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="132" width="374" height="56"/>
                                                         <subviews>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Memo" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Teg-Ls-XtU">
-                                                                <rect key="frame" x="16" y="6" width="298" height="44"/>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Memo (Optional)" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Teg-Ls-XtU">
+                                                                <rect key="frame" x="15.999999999999993" y="6" width="126.33333333333331" height="44"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="44" id="nsu-2k-UdD"/>
                                                                 </constraints>
@@ -1363,28 +1363,15 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                                 <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="wallet_send_memo"/>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="transfer_memo"/>
                                                                 </userDefinedRuntimeAttributes>
                                                             </textField>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8L-pt-Kqb">
-                                                                <rect key="frame" x="330" y="6" width="44" height="44"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="44" id="Fn8-HG-BLU"/>
-                                                                    <constraint firstAttribute="width" constant="44" id="Q63-Cq-IS0"/>
-                                                                </constraints>
-                                                                <state key="normal" image="ic_scan_address"/>
-                                                                <connections>
-                                                                    <action selector="scanMemoAction:" destination="Vz8-zS-KVr" eventType="touchUpInside" id="5eG-X9-Afr"/>
-                                                                </connections>
-                                                            </button>
                                                         </subviews>
                                                         <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                         <constraints>
-                                                            <constraint firstItem="k8L-pt-Kqb" firstAttribute="leading" secondItem="Teg-Ls-XtU" secondAttribute="trailing" constant="16" id="5pa-nN-DI3"/>
-                                                            <constraint firstItem="k8L-pt-Kqb" firstAttribute="centerY" secondItem="BeX-wN-FHz" secondAttribute="centerY" id="9ge-6I-WZl"/>
                                                             <constraint firstItem="Teg-Ls-XtU" firstAttribute="leading" secondItem="BeX-wN-FHz" secondAttribute="leading" constant="16" id="9xF-Kf-hiG"/>
                                                             <constraint firstItem="Teg-Ls-XtU" firstAttribute="centerY" secondItem="BeX-wN-FHz" secondAttribute="centerY" id="Hju-Xd-aHy"/>
-                                                            <constraint firstAttribute="trailing" secondItem="k8L-pt-Kqb" secondAttribute="trailing" id="mgk-cu-vxh"/>
+                                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Teg-Ls-XtU" secondAttribute="trailing" constant="16" id="sbj-09-UIr"/>
                                                             <constraint firstAttribute="height" constant="56" id="zmV-iB-Ssh"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>

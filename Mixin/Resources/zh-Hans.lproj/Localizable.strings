@@ -442,6 +442,12 @@
 "address_list_title" = "地址";
 "address_new_placeholder_label" = "地址名称，例如 OceanONE ";
 "address_new_placeholder_address" = "地址";
+"address_memo_no" = "地址标签、数字 ID 或备注。如果没有，点击%@。";
+"address_memo_add" = "如果你需要填写地址标签、数字 ID 或备注，点击%@。";
+"address_add_memo" = "添加标签（Memo）";
+"address_add_tag" = "添加标签（Tag）";
+"address_no_tag" = "不使用标签（Tag）";
+"address_no_memo" = "不使用标签（Memo）";
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";

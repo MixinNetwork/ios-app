@@ -439,8 +439,12 @@
 "address_list_title" = "Address";
 "address_new_placeholder_label" = "Label (e.g. exchanges, wallets, etc.)";
 "address_new_placeholder_address" = "Address";
-"address_no_memo" = "Destination Tag or ID Number or notes. If not, you can set it No Memo.";
-"address_add_memo" = "If you are required to fill in Destination Tag or ID Number or notes, you can Add Memo.";
+"address_memo_no" = "Destination Tag or ID Number or notes. If not, you can set it %@.";
+"address_memo_add" = "If you are required to fill in Destination Tag or ID Number or notes, you can %@.";
+"address_add_memo" = "Add Memo";
+"address_add_tag" = "Add Tag";
+"address_no_tag" = "No Tag";
+"address_no_memo" = "No Memo";
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";

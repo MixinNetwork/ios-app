@@ -9,8 +9,9 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var memoScanButton: UIButton!
     @IBOutlet weak var saveButton: RoundedButton!
     @IBOutlet weak var assetView: AssetIconView!
-    @IBOutlet weak var hintLabel: UILabel!
+    @IBOutlet weak var memoHintTextView: IntroTextView!
     @IBOutlet weak var continueWrapperView: UIView!
+    @IBOutlet weak var memoView: CornerView!
 
     @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
@@ -39,6 +40,9 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
+        memoTextView.delegate = self
+        memoTextView.textContainerInset = .zero
+        memoTextView.textContainer.lineFragmentPadding = 0
         if ScreenSize.current >= .inch6_1 {
             assetView.chainIconWidth = 28
             assetView.chainIconOutlineWidth = 4
@@ -48,6 +52,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             labelTextField.text = address.label
             addressTextView.text = address.destination
             memoTextView.text = address.tag
+            noMemo = address.tag.isEmpty
             checkLabelAndAddressAction(self)
             view.layoutIfNeeded()
             textViewDidChange(addressTextView)
@@ -56,11 +61,50 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
 
         if asset.isUseTag {
             memoTextView.placeholder = R.string.localizable.wallet_address_tag()
-            hintLabel.text = ""
         } else {
             memoTextView.placeholder = R.string.localizable.wallet_address_memo()
-            hintLabel.text = ""
         }
+        memoHintTextView.delegate = self
+        updateMemoTips()
+    }
+
+    private func updateMemoTips() {
+        var hint: String
+        var action: String
+        if noMemo {
+            if asset.isUseTag {
+                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_tag())
+                action = R.string.localizable.address_add_tag()
+            } else {
+                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_memo())
+                action = R.string.localizable.address_add_memo()
+            }
+            memoView.isHidden = true
+        } else {
+            if asset.isUseTag {
+                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_tag())
+                action = R.string.localizable.address_no_tag()
+            } else {
+                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_memo())
+                action = R.string.localizable.address_no_memo()
+            }
+            memoView.isHidden = false
+        }
+
+        let nsIntro = hint as NSString
+        let fullRange = NSRange(location: 0, length: nsIntro.length)
+        let actionRange = nsIntro.range(of: action)
+        let attributedText = NSMutableAttributedString(string: hint)
+        let paragraphSytle = NSMutableParagraphStyle()
+        paragraphSytle.alignment = .left
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14),
+            .paragraphStyle: paragraphSytle,
+            .foregroundColor: UIColor.accessoryText
+        ]
+        attributedText.setAttributes(attrs, range: fullRange)
+        attributedText.addAttributes([NSAttributedString.Key.link: ""], range: actionRange)
+        memoHintTextView.attributedText = attributedText
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +123,13 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         if !viewHasAppeared, ScreenSize.current <= .inch4 {
             scrollView.contentOffset.y = assetView.frame.maxY
         }
+    }
+
+    override func keyboardWillChangeFrame(_ notification: Notification) {
+        guard shouldLayoutWithKeyboard else {
+            return
+        }
+        super.keyboardWillChangeFrame(notification)
     }
     
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
@@ -138,14 +189,29 @@ extension NewAddressViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        guard textView != memoHintTextView else {
+            return
+        }
         checkLabelAndAddressAction(textView)
         view.layoutIfNeeded()
-        let sizeToFit = CGSize(width: addressTextView.bounds.width,
+        let sizeToFit = CGSize(width: textView.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
-        let contentSize = addressTextView.sizeThatFits(sizeToFit)
-        addressTextView.isScrollEnabled = contentSize.height > addressTextView.frame.height
+        let contentSize = textView.sizeThatFits(sizeToFit)
+        textView.isScrollEnabled = contentSize.height > textView.frame.height
     }
-    
+
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        guard textView == memoHintTextView else {
+            return true
+        }
+        noMemo = !noMemo
+        if noMemo {
+            memoTextView.text = ""
+        }
+        updateMemoTips()
+        return false
+    }
+
 }
 
 extension NewAddressViewController: CameraViewControllerDelegate {

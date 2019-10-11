@@ -12,5 +12,8 @@ final class IntroTextView: UITextView {
         let startIndex = offset(from: beginningOfDocument, to: range.start)
         return attributedText.attribute(.link, at: startIndex, effectiveRange: nil) != nil
     }
-    
+
+    override func becomeFirstResponder() -> Bool {
+        return false
+    }
 }

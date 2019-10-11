@@ -116,7 +116,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     }
     
     private func updateWaveformProgress() {
-        guard let player = AudioManager.shared.player, AudioManager.shared.playingNode?.message.messageId == viewModel?.message.messageId else {
+        guard let player = AudioManager.shared.player, AudioManager.shared.playingMessage?.messageId == viewModel?.message.messageId else {
             return
         }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)

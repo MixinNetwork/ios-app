@@ -370,7 +370,6 @@ class ConversationViewController: UIViewController {
                     reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let filename = message.mediaUrl {
-                let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
                 if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
                     AudioManager.shared.pause()
                 } else {

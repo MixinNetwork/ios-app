@@ -6,7 +6,7 @@ protocol SharedMediaItem {
 }
 
 extension MessageItem: SharedMediaItem { }
-extension GalleryItem: SharedMediaItem {  }
+extension GalleryItem: SharedMediaItem { }
 
 protocol SharedMediaDataSourceDelegate: class {
     associatedtype ItemType: SharedMediaItem
@@ -21,6 +21,9 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
     
     var conversationId: String! {
         didSet {
+            guard conversationId != oldValue else {
+                return
+            }
             dates = []
             items = [:]
             loadedMessageIds = Set()
@@ -219,6 +222,9 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
     }
     
     private func removeItem(with messageId: String) {
+        guard loadedMessageIds.contains(messageId) else {
+            return
+        }
         loadedMessageIds.remove(messageId)
         for (date, var items) in self.items {
             guard let row = items.firstIndex(where: { $0.messageId == messageId }) else {

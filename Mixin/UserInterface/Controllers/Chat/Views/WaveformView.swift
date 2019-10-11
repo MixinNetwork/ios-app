@@ -2,6 +2,16 @@ import UIKit
 
 class WaveformView: UIView {
     
+    class var barWidth: CGFloat { 2 }
+    class var layoutHeight: CGFloat { 20 }
+    
+    private class var barCornerRadius: CGFloat { barWidth / 2 }
+    private class var yPositionSlope: CGFloat { (layoutHeight - 2 * barCornerRadius) / CGFloat(maxLevel) }
+    private class var yPositionIntercept: CGFloat { 2 * barCornerRadius }
+    
+    private class var minLevel: UInt8 { 0 }
+    private class var maxLevel: UInt8 { .max }
+    
     override var tintColor: UIColor! {
         didSet {
             guard tintColor != oldValue else {
@@ -15,6 +25,14 @@ class WaveformView: UIView {
         }
     }
     
+    override var intrinsicContentSize: CGSize {
+        guard let lastBarLayer = barLayers.last else {
+            return .zero
+        }
+        return CGSize(width: lastBarLayer.frame.maxX,
+                      height: Self.layoutHeight)
+    }
+    
     var waveform: Waveform? {
         didSet {
             guard waveform != oldValue else {
@@ -24,30 +42,21 @@ class WaveformView: UIView {
         }
     }
     
-    private static let barWidth: CGFloat = 2
-    private static let barCornerRadius = barWidth / 2
-    private static let layoutHeight: CGFloat = 20
-    private static let yPositionSlope = (layoutHeight - 2 * barCornerRadius) / CGFloat(maxLevel)
-    private static let yPositionIntercept = 2 * barCornerRadius
-    
-    private static let minLevel = 0
-    private static let maxLevel = UInt8.max
-    
     private var barLayers = [CAShapeLayer]()
     
     private func makeBarLayer(forBarAtIndex index: Int, atLevel level: UInt8) -> CAShapeLayer {
-        let size = CGSize(width: WaveformView.barWidth, height: WaveformView.layoutHeight)
+        let size = CGSize(width: Self.barWidth, height: Self.layoutHeight)
         let layer = CAShapeLayer()
-        let layerOrigin = CGPoint(x: (1.5 * CGFloat(index) + 0.5) * WaveformView.barWidth, y: 0)
+        let layerOrigin = CGPoint(x: (1.5 * CGFloat(index) + 0.5) * Self.barWidth, y: 0)
         layer.frame = CGRect(origin: layerOrigin, size: size)
-        let barHeight = CGFloat(level) * WaveformView.yPositionSlope + WaveformView.yPositionIntercept
+        let barHeight = CGFloat(level) * Self.yPositionSlope + Self.yPositionIntercept
         let pathRect = CGRect(x: 0,
-                              y: WaveformView.layoutHeight - barHeight,
-                              width: WaveformView.barWidth,
+                              y: Self.layoutHeight - barHeight,
+                              width: Self.barWidth,
                               height: barHeight)
         let path = CGPath(roundedRect: pathRect,
-                          cornerWidth: WaveformView.barCornerRadius,
-                          cornerHeight: WaveformView.barCornerRadius,
+                          cornerWidth: Self.barCornerRadius,
+                          cornerHeight: Self.barCornerRadius,
                           transform: nil)
         layer.fillColor = tintColor.cgColor
         layer.path = path

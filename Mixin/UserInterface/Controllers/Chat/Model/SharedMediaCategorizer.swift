@@ -11,11 +11,15 @@ class SharedMediaCategorizer<ItemType: SharedMediaItem> {
         
     }
     
+    static func groupTitle(for item: ItemType) -> String {
+        let date = item.createdAt.toUTCDate()
+        return DateFormatter.dateSimple.string(from: date)
+    }
+    
     func input(items: [ItemType], didLoadEarliest: Bool) {
         self.categorizedItems = items
         for item in items {
-            let date = item.createdAt.toUTCDate()
-            let title = DateFormatter.dateSimple.string(from: date)
+            let title = Self.groupTitle(for: item)
             if itemGroups[title] != nil {
                 itemGroups[title]!.append(item)
             } else {

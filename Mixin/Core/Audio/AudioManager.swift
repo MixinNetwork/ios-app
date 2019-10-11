@@ -3,6 +3,10 @@ import AVFoundation
 
 class AudioManager {
     
+    struct WeakCellBox {
+        weak var cell: AudioCell?
+    }
+    
     static let shared = AudioManager()
     static let willPlayNextNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
     static let conversationIdUserInfoKey = "conversation_id"
@@ -14,7 +18,7 @@ class AudioManager {
     private let queue = DispatchQueue(label: "one.mixin.messenger.audio_manager")
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     
-    private var cells = [String: WeakBox<AudioMessageCell>]()
+    private var cells = [String: WeakCellBox]()
     
     init() {
         queue.setSpecific(key: queueSpecificKey, value: ())
@@ -27,7 +31,7 @@ class AudioManager {
         
         func handle(error: Error) {
             DispatchQueue.main.sync {
-                self.cells[message.messageId]?.object?.style = .stopped
+                self.cells[message.messageId]?.cell?.style = .stopped
             }
             NotificationCenter.default.removeObserver(self)
         }
@@ -47,7 +51,7 @@ class AudioManager {
             controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
         
-        cells[message.messageId]?.object?.style = .playing
+        cells[message.messageId]?.cell?.style = .playing
         
         if message.messageId == playingMessage?.messageId, let player = player {
             queue.async {
@@ -58,7 +62,7 @@ class AudioManager {
         }
         
         if let playingMessageId = playingMessage?.messageId {
-            cells[playingMessageId]?.object?.style = .stopped
+            cells[playingMessageId]?.cell?.style = .stopped
         }
         
         queue.async {
@@ -107,7 +111,7 @@ class AudioManager {
         guard let playingMessage = playingMessage else {
             return
         }
-        cells[playingMessage.messageId]?.object?.style = .paused
+        cells[playingMessage.messageId]?.cell?.style = .paused
         queue.async {
             self.player?.pause()
         }
@@ -123,7 +127,7 @@ class AudioManager {
             }
             if let playingMessage = self.playingMessage {
                 DispatchQueue.main.sync {
-                    self.cells[playingMessage.messageId]?.object?.style = .stopped
+                    self.cells[playingMessage.messageId]?.cell?.style = .stopped
                 }
                 self.playingMessage = nil
             }
@@ -133,8 +137,8 @@ class AudioManager {
         }
     }
     
-    func register(cell: AudioMessageCell, forMessageId messageId: String) {
-        cells[messageId] = WeakBox(object: cell)
+    func register(cell: AudioCell, forMessageId messageId: String) {
+        cells[messageId] = WeakCellBox(cell: cell)
         if messageId == playingMessage?.messageId, let player = player {
             switch player.status {
             case .playing:
@@ -149,8 +153,32 @@ class AudioManager {
         }
     }
     
-    func unregister(cell: AudioMessageCell, forMessageId messageId: String) {
+    func unregister(cell: AudioCell, forMessageId messageId: String) {
         cells[messageId] = nil
+    }
+    
+    func playableMessage(nextTo message: MessageItem) -> MessageItem? {
+        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
+            return nil
+        }
+        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.mediaUrl != nil else {
+            return nil
+        }
+        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
+            return nil
+        }
+        return nextMessage
+    }
+    
+    func preloadAudio(nextTo message: MessageItem) {
+        guard let next = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
+            return
+        }
+        guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
+            return
+        }
+        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {
@@ -204,13 +232,13 @@ class AudioManager {
             }
             if player.status == .didReachEnd, let playingMessage = playingMessage {
                 DispatchQueue.main.sync {
-                    cells[playingMessage.messageId]?.object?.style = .stopped
+                    cells[playingMessage.messageId]?.cell?.style = .stopped
                 }
                 if let next = self.playableMessage(nextTo: playingMessage) {
                     DispatchQueue.main.sync {
                         let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
                                         AudioManager.messageIdUserInfoKey: next.messageId]
-                        NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: nil, userInfo: userInfo)
+                        NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
                         play(message: next)
                     }
                 } else {
@@ -226,30 +254,6 @@ class AudioManager {
         } else {
             handleStatusChange()
         }
-    }
-    
-    private func playableMessage(nextTo message: MessageItem) -> MessageItem? {
-        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
-            return nil
-        }
-        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.mediaUrl != nil else {
-            return nil
-        }
-        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
-            return nil
-        }
-        return nextMessage
-    }
-    
-    private func preloadAudio(nextTo message: MessageItem) {
-        guard let next = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
-            return
-        }
-        guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
-            return
-        }
-        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
-        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
 }

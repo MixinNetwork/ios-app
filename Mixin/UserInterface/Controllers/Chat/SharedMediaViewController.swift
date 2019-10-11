@@ -12,6 +12,7 @@ class SharedMediaViewController: UIViewController {
     var conversationId: String?
     
     private lazy var mediaViewController = R.storyboard.chat.shared_media_media()!
+    private lazy var audioViewController = SharedMediaAudioTableViewController()
     
     private var contentViewController: UIViewController?
     
@@ -20,7 +21,6 @@ class SharedMediaViewController: UIViewController {
         segmentedControl.itemTitles = [
             R.string.localizable.chat_media_category_media(),
             R.string.localizable.chat_media_category_audio(),
-            R.string.localizable.chat_media_category_link(),
             R.string.localizable.chat_media_category_file()
         ]
         load(child: mediaViewController)
@@ -30,6 +30,8 @@ class SharedMediaViewController: UIViewController {
         switch segmentedControl.selectedSegmentIndex {
         case 0:
             load(child: mediaViewController)
+        case 1:
+            load(child: audioViewController)
         default:
             break
         }
@@ -46,6 +48,7 @@ class SharedMediaViewController: UIViewController {
         containerView.addSubview(child.view)
         child.view.snp.makeEdgesEqualToSuperview()
         child.didMove(toParent: self)
+        contentViewController = child
     }
     
 }

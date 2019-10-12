@@ -107,7 +107,14 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         shouldLayoutWithKeyboard = true
-        labelTextField.becomeFirstResponder()
+
+        if labelValue.isEmpty {
+            labelTextField.becomeFirstResponder()
+        } else if addressValue.isEmpty || noMemo {
+            addressTextView.becomeFirstResponder()
+        } else {
+            memoTextView.becomeFirstResponder()
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {

@@ -905,7 +905,7 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 // MARK: - AttachmentLoadingMessageCellDelegate
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
-    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
+    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell) {
         guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }

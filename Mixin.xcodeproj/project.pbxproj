@@ -384,6 +384,9 @@
 		7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */; };
 		7BCB8C8422BB56B8002A13CC /* DataStorageUsageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */; };
 		7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE296521AC132E00B1A507 /* SnapshotCell.xib */; };
+		7BCEAA762350A20600F07635 /* SharedMediaDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */; };
+		7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */; };
+		7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */; };
 		7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532720A41F6A00C36F69 /* RangeExtension.swift */; };
 		7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532920A435D300C36F69 /* CoreTextExtension.swift */; };
 		7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD127FB22D8892200BB5316 /* GalleryViewController.swift */; };
@@ -1174,6 +1177,9 @@
 		7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageUsageViewController.swift; sourceTree = "<group>"; };
 		7BCE296521AC132E00B1A507 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
+		7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataTableViewController.swift; sourceTree = "<group>"; };
+		7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharedMediaDataCell.xib; sourceTree = "<group>"; };
+		7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataCell.swift; sourceTree = "<group>"; };
 		7BD0532720A41F6A00C36F69 /* RangeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeExtension.swift; sourceTree = "<group>"; };
 		7BD0532920A435D300C36F69 /* CoreTextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextExtension.swift; sourceTree = "<group>"; };
 		7BD127FB22D8892200BB5316 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
@@ -2100,6 +2106,7 @@
 				7B36920F233B4FC6007321A7 /* SharedMediaMediaViewController.swift */,
 				7BC28336234DCCF300005628 /* SharedMediaTableViewController.swift */,
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
+				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2859,6 +2866,8 @@
 				7B369211233B5153007321A7 /* SharedMediaCell.swift */,
 				7B8BB58D234F34FE00991ACB /* SharedMediaAudioCell.xib */,
 				7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */,
+				7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */,
+				7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3112,6 +3121,7 @@
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
+				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
@@ -3740,6 +3750,7 @@
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
+				7BCEAA762350A20600F07635 /* SharedMediaDataTableViewController.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
@@ -3772,6 +3783,7 @@
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
+				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,

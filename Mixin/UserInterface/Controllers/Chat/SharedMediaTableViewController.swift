@@ -12,6 +12,9 @@ class SharedMediaTableViewController: UIViewController, SharedMediaContentViewCo
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.register(SharedMediaTableHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
+        tableView.rowHeight = 90
+        tableView.sectionHeaderHeight = 40
+        tableView.separatorStyle = .none
     }
     
 }

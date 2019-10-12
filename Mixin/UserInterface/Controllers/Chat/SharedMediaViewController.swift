@@ -13,6 +13,7 @@ class SharedMediaViewController: UIViewController {
     
     private lazy var mediaViewController = R.storyboard.chat.shared_media_media()!
     private lazy var audioViewController = SharedMediaAudioTableViewController()
+    private lazy var dataViewController = SharedMediaDataTableViewController()
     
     private var contentViewController: UIViewController?
     
@@ -33,7 +34,7 @@ class SharedMediaViewController: UIViewController {
         case 1:
             load(child: audioViewController)
         default:
-            break
+            load(child: dataViewController)
         }
     }
     

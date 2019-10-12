@@ -78,6 +78,10 @@ final class MessageDAO {
     \(sqlQueryFullMessage)
     WHERE m.conversation_id = ? AND m.category in ('SIGNAL_AUDIO', 'PLAIN_AUDIO')
     """
+    static let sqlQueryFullDataMessages = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_DATA', 'PLAIN_DATA')
+    """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryPendingMessages = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
@@ -297,6 +301,18 @@ final class MessageDAO {
                                                   condition: Message.Properties.messageId == location.messageId)
         let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterRowId,
                                                                        values: [conversationId, rowId, count])
+        return messages
+    }
+    
+    func getDataMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
+        var sql = Self.sqlQueryFullDataMessages
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            sql += " AND m.ROWID < \(rowId)"
+        }
+        sql += " ORDER BY m.created_at DESC LIMIT ?"
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])
         return messages
     }
     

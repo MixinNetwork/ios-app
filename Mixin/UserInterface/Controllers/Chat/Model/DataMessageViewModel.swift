@@ -67,3 +67,15 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
 }
+
+extension DataMessageViewModel: SharedMediaItem {
+    
+    var messageId: String {
+        message.messageId
+    }
+    
+    var createdAt: String {
+        message.createdAt
+    }
+    
+}

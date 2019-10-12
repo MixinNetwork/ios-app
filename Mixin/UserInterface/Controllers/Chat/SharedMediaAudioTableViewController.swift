@@ -22,9 +22,6 @@ class SharedMediaAudioTableViewController: SharedMediaTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         audioManager.delegate = self
-        tableView.rowHeight = 90
-        tableView.sectionHeaderHeight = 40
-        tableView.separatorStyle = .none
         tableView.register(R.nib.sharedMediaAudioCell)
         tableView.dataSource = self
         tableView.delegate = self

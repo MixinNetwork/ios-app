@@ -502,9 +502,6 @@ public class Localized {
     public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
         return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)
     }
-    public static func PAY_WITHDRAWAL_TITLE(label: String) -> String {
-        return String(format: LocalizedString("pay_withdrawal_title", comment: "Withdrawal to %@"), label)
-    }
 
     // Setting
     public static let SETTING_TITLE = LocalizedString("setting_title", comment: "Setting")

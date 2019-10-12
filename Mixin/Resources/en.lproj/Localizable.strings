@@ -103,7 +103,7 @@
 "pin_log_verification" = "Verify";
 "pin_log_raw_transfer" = "Transfer to mixin address";
 "pin_log_user_transfer" = "Transfer to user or bot";
-"pin_log_withdrawal" = "Withdrawal";
+"pin_log_withdrawal" = "Withdraw";
 "pin_log_add_address" = "Add address";
 "pin_log_delete_address" = "Delete address";
 "pin_log_add_emergency" = "Add emergency contact";
@@ -366,7 +366,7 @@
 "wallet_withdrawal_change_amount_count" = "Change Amount (%@)";
 "wallet_withdrawal_address_tips" = "For the first withdraw to the new address, please try a small amount.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
-"wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_withdrawal_pay_password" = "Withdraw with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "wallet_no_price" = "N/A";
@@ -464,7 +464,7 @@
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
-"pay_withdrawal_title" = "Withdrawal to %@";
+"pay_withdrawal_title" = "Withdraw to %@";
 "pay_use_face" = "Use Face Pay";
 "pay_use_touch" = "Use Touch Pay";
 

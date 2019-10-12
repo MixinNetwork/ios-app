@@ -116,7 +116,11 @@ extension AssetItem {
 extension AssetItem {
 
     var isUseTag: Bool {
+        // XRP 23dfb5a5-5d7b-48b6-905f-3970e3176e27
         return assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     }
 
+    var memoLabel: String {
+        return isUseTag ? R.string.localizable.wallet_address_tag() : R.string.localizable.wallet_address_memo()
+    }
 }

@@ -338,8 +338,8 @@
 "wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改支付密码成功";
 "wallet_set_password_success" = "设置支付密码成功";
-"wallet_snapshot_from" = "转账来自%@";
-"wallet_snapshot_to" = "转账给%@";
+"wallet_snapshot_transfer_from" = "转账来自";
+"wallet_snapshot_transfer_to" = "转账给";
 "wallet_caption_send" = "转出";
 "wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";

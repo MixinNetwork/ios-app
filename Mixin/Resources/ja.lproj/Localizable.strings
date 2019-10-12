@@ -314,8 +314,6 @@
 "wallet_change_password" = "PINを変更";
 "wallet_change_password_success" = "ウォレットのPINを正しく変更する";
 "wallet_set_password_success" = "ウォレットのPINを正しく設定する";
-"wallet_snapshot_from" = " %@ から";
-"wallet_snapshot_to" = " %@ まで";
 "wallet_caption_send" = "送金";
 "wallet_caption_receive" = "受取";
 "wallet_deposit" = "受取";

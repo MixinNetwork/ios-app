@@ -33,7 +33,7 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.contentLabel.text = asset.tag
             let memoImage = UIImage(qrcode: asset.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
             lowerDepositFieldView.qrCodeImageView.image = memoImage
-            upperDepositFieldView.assetIconView.setIcon(asset: asset)
+            lowerDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
         } else {
@@ -93,8 +93,8 @@ extension DepositViewController: DepositFieldViewDelegate {
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {
-        depositWindow.render(title: upperDepositFieldView.titleLabel.text ?? "",
-                             content: upperDepositFieldView.contentLabel.text ?? "",
+        depositWindow.render(title: view.titleLabel.text ?? "",
+                             content: view.contentLabel.text ?? "",
                              asset: asset)
         depositWindow.presentView()
     }

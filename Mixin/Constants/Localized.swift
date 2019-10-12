@@ -373,12 +373,6 @@ public class Localized {
     public static let WALLET_PASSWORD_VERIFY_TITLE = LocalizedString("wallet_password_verify_title", comment: "Old PIN")
     public static let WALLET_CHANGE_PASSWORD_SUCCESS = LocalizedString("wallet_change_password_success", comment: "Change PIN successfully")
     public static let WALLET_SET_PASSWORD_SUCCESS = LocalizedString("wallet_set_password_success", comment: "Set PIN successfully")
-    public static func WALLET_SNAPSHOT_FROM(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_from", comment: "Transfer from %@"), fullName)
-    }
-    public static func WALLET_SNAPSHOT_TO(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_to", comment: "Transfer to %@"), fullName)
-    }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")

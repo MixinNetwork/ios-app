@@ -336,8 +336,8 @@
 "wallet_pin_logs_empty" = "No logs";
 "wallet_change_password_success" = "Change PIN successfully";
 "wallet_set_password_success" = "Set PIN successfully";
-"wallet_snapshot_from" = "From %@";
-"wallet_snapshot_to" = "To %@";
+"wallet_snapshot_transfer_from" = "From";
+"wallet_snapshot_transfer_to" = "To";
 "wallet_caption_send" = "SEND";
 "wallet_caption_receive" = "RECEIVE";
 "wallet_deposit" = "Deposit";

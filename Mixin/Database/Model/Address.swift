@@ -8,13 +8,13 @@ struct Address: BaseCodable {
     let type: String
     let addressId: String
     let assetId: String
-    let updatedAt: String
-    let fee: String
-    let reserve: String
     let destination: String
     let label: String
     let tag: String
+    let fee: String
+    let reserve: String
     let dust: String
+    let updatedAt: String
     
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Address
@@ -23,11 +23,11 @@ struct Address: BaseCodable {
         case assetId = "asset_id"
         case destination
         case label
-        case updatedAt = "updated_at"
+        case tag
         case fee
         case reserve
-        case tag
         case dust
+        case updatedAt = "updated_at"
         
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

@@ -59,11 +59,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             textViewDidChange(memoTextView)
         }
 
-        if asset.isUseTag {
-            memoTextView.placeholder = R.string.localizable.wallet_address_tag()
-        } else {
-            memoTextView.placeholder = R.string.localizable.wallet_address_memo()
-        }
+        memoTextView.placeholder = asset.memoLabel
         memoHintTextView.delegate = self
         updateMemoTips()
     }
@@ -208,6 +204,7 @@ extension NewAddressViewController: UITextViewDelegate {
         if noMemo {
             memoTextView.text = ""
         }
+        checkLabelAndAddressAction(textView)
         updateMemoTips()
         return false
     }

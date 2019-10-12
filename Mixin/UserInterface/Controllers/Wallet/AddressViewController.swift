@@ -9,13 +9,6 @@ class AddressViewController: UIViewController {
     private let cellReuseId = "address"
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
-    private lazy var editAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal,
-                                          title: Localized.MENU_EDIT,
-                                          handler: tableViewCommitEditAction)
-        action.backgroundColor = .theme
-        return action
-    }()
     
     private var asset: AssetItem!
     private var addresses = [Address]()
@@ -51,10 +44,7 @@ class AddressViewController: UIViewController {
         if keyword.isEmpty {
             searchResult = []
         } else {
-            let isAccount = asset.isAccount
-            searchResult = addresses.filter {
-                isAccount ? $0.accountName?.uppercased().contains(keyword) ?? false : $0.label?.uppercased().contains(keyword) ?? false
-            }
+            searchResult = addresses.filter { $0.label.uppercased().contains(keyword) }
         }
         tableView.reloadData()
     }
@@ -108,7 +98,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
         }
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
         
-        let vc = SendViewController.instance(asset: asset, type: .address(address))
+        let vc = TransferOutViewController.instance(asset: asset, type: .address(address))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)
@@ -122,7 +112,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return [deleteAction, editAction]
+        return [deleteAction]
     }
     
 }
@@ -153,15 +143,6 @@ extension AddressViewController {
         tableView.setEditing(false, animated: true)
         
         AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: asset, addressRequest: nil, address: address, dismissCallback: nil)
-    }
-    
-    private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
-        if searchBoxView.textField.isFirstResponder {
-            searchBoxView.textField.resignFirstResponder()
-        }
-        tableView.setEditing(false, animated: true)
-        let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
-        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
     private func deleteAddress(at indexPath: IndexPath, pin: String) {

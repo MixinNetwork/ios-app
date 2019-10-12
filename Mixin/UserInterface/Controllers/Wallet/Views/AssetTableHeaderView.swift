@@ -34,7 +34,7 @@ class AssetTableHeaderView: InfiniteTopView {
             amount = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
             fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalance
         }
-        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
+        depositButton.isBusy = asset.destination.isEmpty
         let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
         amountTextView.attributedText = attributedAmount
         

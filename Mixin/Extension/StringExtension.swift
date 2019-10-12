@@ -137,6 +137,10 @@ extension String {
         let fullRange = NSRange(location: 0, length: nsStr.length)
         return nsStr.replacingOccurrences(of: "\\s", with: "", options: .regularExpression, range: fullRange)
     }
+
+    func trim() -> String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
     
     func digits() -> String {
         return components(separatedBy: CharacterSet.decimalDigits.inverted).joined()

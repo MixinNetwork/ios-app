@@ -573,7 +573,7 @@ class ConversationViewController: UIViewController {
         }
         let viewController: UIViewController
         if AccountAPI.shared.account?.has_pin ?? false {
-            viewController = SendViewController.instance(asset: nil, type: .contact(user))
+            viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
         }

@@ -2,7 +2,7 @@ import WCDBSwift
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 6
+    private static let databaseVersion: Int = 7
 
     static let shared = MixinDatabase()
 
@@ -77,6 +77,12 @@ class MixinDatabase: BaseDatabase {
         if currentVersion < 6 {
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_status_index").execute()
             try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_update").execute()
+        }
+
+        if currentVersion < 7 {
+            try database.drop(table: Address.tableName)
+            try database.drop(table: Asset.tableName)
+            try database.drop(table: Asset.topAssetsTableName)
         }
     }
 

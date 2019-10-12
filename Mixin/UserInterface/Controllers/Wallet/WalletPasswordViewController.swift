@@ -121,7 +121,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
                 case .wallet:
                     self?.navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
                 case let .transfer(user):
-                    self?.navigationController?.pushViewController(withBackChat: SendViewController.instance(asset: nil, type: .contact(user)))
+                    self?.navigationController?.pushViewController(withBackChat: TransferOutViewController.instance(asset: nil, type: .contact(user)))
                 case .changePhone:
                     let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
                     self?.removeWalletPasswordAndPresent(vc)

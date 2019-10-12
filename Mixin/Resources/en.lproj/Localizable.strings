@@ -103,7 +103,7 @@
 "pin_log_verification" = "Verify";
 "pin_log_raw_transfer" = "Transfer to mixin address";
 "pin_log_user_transfer" = "Transfer to user or bot";
-"pin_log_withdrawal" = "Withdrawal";
+"pin_log_withdrawal" = "Withdraw";
 "pin_log_add_address" = "Add address";
 "pin_log_delete_address" = "Delete address";
 "pin_log_add_emergency" = "Add emergency contact";
@@ -336,8 +336,8 @@
 "wallet_pin_logs_empty" = "No logs";
 "wallet_change_password_success" = "Change PIN successfully";
 "wallet_set_password_success" = "Set PIN successfully";
-"wallet_snapshot_from" = "From %@";
-"wallet_snapshot_to" = "To %@";
+"wallet_snapshot_transfer_from" = "From";
+"wallet_snapshot_transfer_to" = "To";
 "wallet_caption_send" = "SEND";
 "wallet_caption_receive" = "RECEIVE";
 "wallet_deposit" = "Deposit";
@@ -349,8 +349,9 @@
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
 "wallet_address" = "Address";
-"wallet_account_name" = "Address";
-"wallet_account_memo" = "Memo";
+"wallet_address_destination" = "Address";
+"wallet_address_tag" = "Tag";
+"wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
 "wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
@@ -358,8 +359,6 @@
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
 "wallet_send_amount" = "Amount";
-"wallet_send_memo" = "Memo";
-"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Save by PIN";
@@ -367,7 +366,7 @@
 "wallet_withdrawal_change_amount_count" = "Change Amount (%@)";
 "wallet_withdrawal_address_tips" = "For the first withdraw to the new address, please try a small amount.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
-"wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_withdrawal_pay_password" = "Withdraw with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "wallet_no_price" = "N/A";
@@ -438,8 +437,14 @@
 "address_book_title" = "%@ Address Book";
 "address_book_add_address" = "Add address";
 "address_list_title" = "Address";
-"address_new_placeholder_label" = "Label";
+"address_new_placeholder_label" = "Label (e.g. exchanges, wallets, etc.)";
 "address_new_placeholder_address" = "Address";
+"address_memo_no" = "Destination Tag or ID Number or notes. If not, you can set it %@.";
+"address_memo_add" = "If you are required to fill in Destination Tag or ID Number or notes, you can %@.";
+"address_add_memo" = "Add Memo";
+"address_add_tag" = "Add Tag";
+"address_no_tag" = "No Tag";
+"address_no_memo" = "No Memo";
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";
@@ -449,13 +454,8 @@
 
 // Transfer
 "transfer_title" = "Transfer";
-"transfer_title_to" = "Transfer to";
-"transfer_title_to_receiver" = "to %@";
 "transfer_balance" = "Balance";
-"transfer_transactions" = "TRANSACTIONS";
-"transfer_transfer_type" = "Transfer Type";
-"transfer_transfer_amount" = "Transfer Amount";
-"transfer_transfer_memo" = "Memo (optional)";
+"transfer_memo" = "Memo (optional)";
 "transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
 "transfer_error_balance_insufficient" = "Insufficient balance";
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";
@@ -464,7 +464,7 @@
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
-"pay_withdrawal_title" = "Withdrawal to %@";
+"pay_withdrawal_title" = "Withdraw to %@";
 "pay_use_face" = "Use Face Pay";
 "pay_use_touch" = "Use Touch Pay";
 

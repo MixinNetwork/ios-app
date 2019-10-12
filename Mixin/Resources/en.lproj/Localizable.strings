@@ -249,6 +249,9 @@
 "chat_media_category_audio" = "Audio";
 "chat_media_category_link" = "Link";
 "chat_media_category_file" = "File";
+"chat_shared_media_empty" = "NO MEDIA";
+"chat_shared_audio_empty" = "NO AUDIO";
+"chat_shared_data_empty" = "NO FILE";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

@@ -230,6 +230,9 @@
 "chat_media_category_audio" = "オーディオ";
 "chat_media_category_link" = "リンク";
 "chat_media_category_file" = "ファイル";
+"chat_shared_media_empty" = "メディアなし";
+"chat_shared_audio_empty" = "オーディオなし";
+"chat_shared_data_empty" = "ファイルなし";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

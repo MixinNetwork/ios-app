@@ -20,7 +20,7 @@ class DepositTipWindow: BottomSheetView {
         self.asset = asset
         titleLabel.text = "\(asset.symbol) \(Localized.WALLET_DEPOSIT)"
         tipsLabel.text = asset.depositTips
-        if asset.isAccount {
+        if !asset.tag.isEmpty {
             warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             warningLabel.text = R.string.localizable.wallet_deposit_attention()

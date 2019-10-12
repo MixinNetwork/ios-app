@@ -24,7 +24,7 @@ class DepositViewController: UIViewController {
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
 
-        if asset.isAccount {
+        if !asset.tag.isEmpty {
             if asset.isUseTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_tag()
             } else {
@@ -36,16 +36,13 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
+            warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             lowerDepositFieldView.isHidden = true
+            warningLabel.text = R.string.localizable.wallet_deposit_attention()
         }
 
         hintLabel.text = asset.depositTips
-        if asset.isAccount {
-            warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
-        } else {
-            warningLabel.text = R.string.localizable.wallet_deposit_attention()
-        }
 
         if !WalletUserDefault.shared.depositTipRemind.contains(asset.chainId) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
@@ -77,11 +74,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
     }
 
     func barRightButtonTappedAction() {
-        if asset.isAccount {
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
-        } else {
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
-        }
+        UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
     }
     
 }

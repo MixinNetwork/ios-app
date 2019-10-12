@@ -317,10 +317,10 @@ extension UrlWindow {
                 return
             }
 
-            while !(asset.isAccount || asset.isAddress) && self?.isShowing ?? false {
+            while asset.destination.isEmpty && self?.isShowing ?? false {
                 switch AssetAPI.shared.asset(assetId: asset.assetId) {
                 case let .success(remoteAsset):
-                    guard remoteAsset.isAccount || remoteAsset.isAddress else {
+                    guard !remoteAsset.destination.isEmpty else {
                         Thread.sleep(forTimeInterval: 2)
                         continue
                     }

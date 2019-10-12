@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
+class AssetItem: TableCodable, NumberStringLocalizable {
     
     let assetId: String
     let type: String

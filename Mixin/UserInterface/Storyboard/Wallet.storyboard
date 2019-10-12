@@ -1355,7 +1355,7 @@
                                                         <rect key="frame" x="0.0" y="132" width="374" height="56"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Memo (Optional)" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Teg-Ls-XtU">
-                                                                <rect key="frame" x="15.999999999999993" y="6" width="126.33333333333331" height="44"/>
+                                                                <rect key="frame" x="16" y="6" width="342" height="44"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="44" id="nsu-2k-UdD"/>
                                                                 </constraints>
@@ -1371,7 +1371,7 @@
                                                         <constraints>
                                                             <constraint firstItem="Teg-Ls-XtU" firstAttribute="leading" secondItem="BeX-wN-FHz" secondAttribute="leading" constant="16" id="9xF-Kf-hiG"/>
                                                             <constraint firstItem="Teg-Ls-XtU" firstAttribute="centerY" secondItem="BeX-wN-FHz" secondAttribute="centerY" id="Hju-Xd-aHy"/>
-                                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Teg-Ls-XtU" secondAttribute="trailing" constant="16" id="sbj-09-UIr"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Teg-Ls-XtU" secondAttribute="trailing" constant="16" id="sbj-09-UIr"/>
                                                             <constraint firstAttribute="height" constant="56" id="zmV-iB-Ssh"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>

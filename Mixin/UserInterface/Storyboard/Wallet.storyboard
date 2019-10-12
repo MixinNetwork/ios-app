@@ -1499,7 +1499,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="ckF-ii-wPq">
-                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="636"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J5J-Cq-feN">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="360"/>
@@ -1538,7 +1538,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="54"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Label (e.g. exchanges, wallets, etc.)" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Y8d-9S-d2e">
-                                                                <rect key="frame" x="16" y="5" width="262.66666666666669" height="44"/>
+                                                                <rect key="frame" x="16" y="5" width="342" height="44"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="44" id="d6I-2d-eth"/>
                                                                 </constraints>
@@ -1557,6 +1557,7 @@
                                                         <constraints>
                                                             <constraint firstItem="Y8d-9S-d2e" firstAttribute="centerY" secondItem="y8U-tt-l3l" secondAttribute="centerY" id="7MA-o5-a6z"/>
                                                             <constraint firstAttribute="height" constant="54" id="ApI-Ri-eGb"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Y8d-9S-d2e" secondAttribute="trailing" constant="16" id="LYB-Oi-vHe"/>
                                                             <constraint firstItem="Y8d-9S-d2e" firstAttribute="leading" secondItem="y8U-tt-l3l" secondAttribute="leading" constant="16" id="iJe-E6-5Zi"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -1696,10 +1697,10 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rn4-tn-OhQ">
-                                <rect key="frame" x="0.0" y="648" width="414" height="88"/>
+                                <rect key="frame" x="0.0" y="664" width="414" height="72"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1dB-og-fL5" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="146" y="20" width="122" height="48"/>
+                                        <rect key="frame" x="146" y="12" width="122" height="48"/>
                                         <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
                                         <state key="normal" title="Continue">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1714,9 +1715,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="1dB-og-fL5" firstAttribute="top" secondItem="rn4-tn-OhQ" secondAttribute="top" constant="20" id="Yu3-Q2-G7V"/>
+                                    <constraint firstItem="1dB-og-fL5" firstAttribute="top" secondItem="rn4-tn-OhQ" secondAttribute="top" constant="12" id="Yu3-Q2-G7V"/>
                                     <constraint firstItem="1dB-og-fL5" firstAttribute="centerX" secondItem="rn4-tn-OhQ" secondAttribute="centerX" id="dvo-Qa-Rn6"/>
-                                    <constraint firstAttribute="bottom" secondItem="1dB-og-fL5" secondAttribute="bottom" constant="20" id="mSF-RZ-brb"/>
+                                    <constraint firstAttribute="bottom" secondItem="1dB-og-fL5" secondAttribute="bottom" constant="12" id="mSF-RZ-brb"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1728,7 +1729,7 @@
                             <constraint firstAttribute="trailing" secondItem="ckF-ii-wPq" secondAttribute="trailing" id="DVd-WJ-HxA"/>
                             <constraint firstItem="TT9-eb-hza" firstAttribute="top" secondItem="ckF-ii-wPq" secondAttribute="top" id="FlM-NG-MHm"/>
                             <constraint firstAttribute="bottom" secondItem="rn4-tn-OhQ" secondAttribute="bottom" id="RWA-QR-LgR"/>
-                            <constraint firstItem="TT9-eb-hza" firstAttribute="bottom" secondItem="ckF-ii-wPq" secondAttribute="bottom" id="bzz-GM-xXF"/>
+                            <constraint firstItem="TT9-eb-hza" firstAttribute="bottom" secondItem="ckF-ii-wPq" secondAttribute="bottom" priority="999" constant="80" id="bzz-GM-xXF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="TT9-eb-hza"/>
                     </view>
@@ -1745,6 +1746,7 @@
                         <outlet property="opponentImageViewWidthConstraint" destination="C6U-7t-8fC" id="dSo-QW-eQr"/>
                         <outlet property="saveButton" destination="1dB-og-fL5" id="KJA-Yo-jUF"/>
                         <outlet property="scrollView" destination="ckF-ii-wPq" id="UII-N6-TlF"/>
+                        <outlet property="scrollViewBottomConstraint" destination="bzz-GM-xXF" id="1dc-vU-MeX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Msp-oa-RE5" userLabel="First Responder" sceneMemberID="firstResponder"/>

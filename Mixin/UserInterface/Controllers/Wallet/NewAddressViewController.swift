@@ -15,6 +15,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
 
     @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
@@ -112,12 +113,14 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     override func layout(for keyboardFrame: CGRect) {
         let windowHeight = AppDelegate.current.window.bounds.height
         let keyboardHeight = windowHeight - keyboardFrame.origin.y
-        continueWrapperBottomConstraint.constant = keyboardHeight
-        scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
-        scrollView.scrollIndicatorInsets.bottom = keyboardHeight
-        view.layoutIfNeeded()
-        if !viewHasAppeared, ScreenSize.current <= .inch4 {
-            scrollView.contentOffset.y = assetView.frame.maxY
+        if keyboardHeight > 0 {
+            continueWrapperBottomConstraint.constant = keyboardHeight
+            scrollViewBottomConstraint.constant = keyboardHeight + 72
+            view.layoutIfNeeded()
+
+            if !noMemo {
+                scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height + scrollView.contentInset.bottom
+            }
         }
     }
 

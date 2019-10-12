@@ -425,7 +425,6 @@
 "transaction_type" = "交易类型";
 "transaction_asset" = "资产类型";
 "transaction_memo" = "备注";
-"transaction_tag" = "Tag";
 "transaction_date" = "时间";
 "transaction_sender" = "发送者";
 "transaction_receiver" = "接收者";

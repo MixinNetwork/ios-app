@@ -18,13 +18,13 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     
     private var asset: AssetItem!
     private var addressValue: String {
-        return addressTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return addressTextView.text?.trim() ?? ""
     }
     private var labelValue: String {
-        return labelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return labelTextField.text?.trim() ?? ""
     }
     private var memoValue: String {
-        return memoTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return memoTextView.text?.trim() ?? ""
     }
     private var isLegalAddress: Bool {
         return !addressValue.isEmpty && !labelValue.isEmpty && (noMemo || !memoValue.isEmpty)

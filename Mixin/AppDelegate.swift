@@ -178,7 +178,7 @@ extension AppDelegate {
 
         switch actionIdentifier {
         case NotificationActionIdentifier.reply:
-            guard let text = inputText?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
+            guard let text = inputText?.trim(), !text.isEmpty else {
                 return false
             }
             var ownerUser: UserItem?

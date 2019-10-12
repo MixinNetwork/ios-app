@@ -177,8 +177,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             return
         }
         
-        let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        var amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let memo = memoTextField.text?.trim() ?? ""
+        var amount = amountTextField.text?.trim() ?? ""
         var fiatMoneyAmount: String? = nil
         if !isInputAssetAmount {
             fiatMoneyAmount = amount + " " + Currency.current.code

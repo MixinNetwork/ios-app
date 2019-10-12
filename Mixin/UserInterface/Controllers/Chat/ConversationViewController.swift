@@ -735,23 +735,18 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
         case .delete:
             conversationInputViewController.textView.resignFirstResponder()
-            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
-            if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
-                AudioManager.shared.stop()
-            }
-
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             if message.canRecall() {
                 controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
                     if CommonUserDefault.shared.isRecallTips {
-                        self.deleteForEveryone(message: message)
+                        self.deleteForEveryone(viewModel: viewModel)
                     } else {
-                        self.showRecallTips(message: message)
+                        self.showRecallTips(viewModel: viewModel)
                     }
                 }))
             }
             controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
-                self.deleteForMe(message: message, forIndexPath: indexPath)
+                self.deleteForMe(viewModel: viewModel)
             }))
             controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
@@ -1395,27 +1390,37 @@ extension ConversationViewController {
         }
     }
     
-    private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
+    private func deleteForMe(viewModel: MessageViewModel) {
+        let message = viewModel.message
+        if message.messageId == AudioManager.shared.playingNode?.message.messageId {
+            AudioManager.shared.stop()
+        }
         dataSource?.queue.async { [weak self] in
+            guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
+                return
+            }
+            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
             if MessageDAO.shared.deleteMessage(id: message.messageId) {
                 ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
             }
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
-                    return
-                }
                 _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
                 weakSelf.tableView.reloadData()
                 weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
             }
         }
     }
-
-    private func deleteForEveryone(message: MessageItem) {
+    
+    private func deleteForEveryone(viewModel: MessageViewModel) {
+        let message = viewModel.message
+        if message.messageId == AudioManager.shared.playingNode?.message.messageId {
+            AudioManager.shared.stop()
+        }
+        (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
         SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status, sendToSession: true)
     }
 
-    private func showRecallTips(message: MessageItem) {
+    private func showRecallTips(viewModel: MessageViewModel) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true
@@ -1423,7 +1428,7 @@ extension ConversationViewController {
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true
-            self.deleteForEveryone(message: message)
+            self.deleteForEveryone(viewModel: viewModel)
         }))
         present(alc, animated: true, completion: nil)
     }

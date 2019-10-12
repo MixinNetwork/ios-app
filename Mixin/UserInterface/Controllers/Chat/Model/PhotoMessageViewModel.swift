@@ -50,6 +50,9 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     func cancelAttachmentLoading(isTriggeredByUser: Bool) {
+        guard mediaStatus == MediaStatus.PENDING.rawValue else {
+            return
+        }
         guard isTriggeredByUser || !downloadIsTriggeredByUser else {
             return
         }

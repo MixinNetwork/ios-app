@@ -76,6 +76,9 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     func cancelAttachmentLoading(isTriggeredByUser: Bool) {
+        guard mediaStatus == MediaStatus.PENDING.rawValue else {
+            return
+        }
         guard isTriggeredByUser || !downloadIsTriggeredByUser else {
             return
         }

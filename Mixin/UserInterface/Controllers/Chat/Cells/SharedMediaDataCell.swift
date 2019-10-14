@@ -11,6 +11,15 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func render(viewModel: DataMessageViewModel) {
         self.viewModel = viewModel
         if let mediaMimeType = viewModel.message.mediaMimeType {
@@ -20,6 +29,7 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         let mediaExpired = viewModel.message.mediaStatus == MediaStatus.EXPIRED.rawValue
         subtitleLabel.text = mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
         updateOperationButtonStyle()
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
     }
     
     func updateProgress() {
@@ -43,6 +53,20 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
     
     @IBAction func operationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
+    }
+    
+    @objc func conversationDidChange(_ notification: Notification) {
+        guard let change = notification.object as? ConversationChange else {
+            return
+        }
+        guard case let .updateDownloadProgress(messageId, progress) = change.action else {
+            return
+        }
+        guard let viewModel = viewModel as? (MessageViewModel & AttachmentLoadingViewModel), messageId == viewModel.message.messageId else {
+            return
+        }
+        viewModel.progress = progress
+        updateProgress()
     }
     
 }

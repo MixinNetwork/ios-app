@@ -7,6 +7,7 @@ class SharedMediaAudio {
     let mediaWaveform: Waveform
     let length: String
     
+    var progress: Double?
     var mediaStatus: MediaStatus {
         get {
             if let status = message.mediaStatus {

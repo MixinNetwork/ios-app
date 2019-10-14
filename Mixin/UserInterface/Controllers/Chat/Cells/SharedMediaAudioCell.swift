@@ -46,6 +46,10 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         waveformMaskView.backgroundColor = .black
@@ -58,6 +62,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         waveformMaskView.frame = .zero
         timer?.invalidate()
         timer = nil
+        NotificationCenter.default.removeObserver(self)
     }
     
     func render(audio: SharedMediaAudio) {
@@ -70,12 +75,13 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         highlightedWaveformView.waveform = audio.mediaWaveform
         update(with: audio.mediaStatus)
         updateUnreadStyle()
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
     }
     
     func update(with mediaStatus: MediaStatus) {
         switch mediaStatus {
         case .PENDING, .CANCELED:
-            networkOperationButton.style = .busy(progress: 0)
+            networkOperationButton.style = .busy(progress: audio?.progress ?? 0)
             networkOperationButton.isHidden = false
             playButton.isHidden = true
         case .DONE, .READ:
@@ -104,6 +110,20 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     
     @IBAction func playAction(_ sender: Any) {
         delegate?.sharedMediaAudioCellDidSelectPlay(self)
+    }
+    
+    @objc func conversationDidChange(_ notification: Notification) {
+        guard let change = notification.object as? ConversationChange else {
+            return
+        }
+        guard case let .updateDownloadProgress(messageId, progress) = change.action else {
+            return
+        }
+        guard let audio = audio, audio.messageId == messageId else {
+            return
+        }
+        audio.progress = progress
+        networkOperationButton.style = .busy(progress: audio.progress ?? 0)
     }
     
     private func updateWaveformProgress() {

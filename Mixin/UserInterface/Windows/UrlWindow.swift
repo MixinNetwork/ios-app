@@ -183,7 +183,7 @@ extension UrlWindow {
                 }
                 if transfer {
                     weakSelf.dismissPopupControllerAnimated()
-                    let vc = SendViewController.instance(asset: nil, type: .contact(user))
+                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {
@@ -317,10 +317,10 @@ extension UrlWindow {
                 return
             }
 
-            while !(asset.isAccount || asset.isAddress) && self?.isShowing ?? false {
+            while asset.destination.isEmpty && self?.isShowing ?? false {
                 switch AssetAPI.shared.asset(assetId: asset.assetId) {
                 case let .success(remoteAsset):
-                    guard remoteAsset.isAccount || remoteAsset.isAddress else {
+                    guard !remoteAsset.destination.isEmpty else {
                         Thread.sleep(forTimeInterval: 2)
                         continue
                     }
@@ -369,22 +369,14 @@ extension UrlWindow {
                     }
                 }
             } else {
-                if asset.isAccount {
-                    guard let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty else {
-                        return
-                    }
-                    addressRequest = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
-                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountName: accountName, accountTag: accountTag)
-                } else {
-                    guard let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty else {
-                        return
-                    }
-                    if let urlDecodeLabel = label.removingPercentEncoding {
-                        label = urlDecodeLabel
-                    }
-                    addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
-                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
+                guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
+                    return
                 }
+
+                let tag = query["tag"] ?? ""
+
+                addressRequest = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: label, pin: "")
+                address = AddressDAO.shared.getAddress(assetId: assetId, destination: destination, tag: tag)
                 addressAction = address == nil ? .add : .update
             }
 

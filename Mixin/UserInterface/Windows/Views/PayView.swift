@@ -7,7 +7,6 @@ class PayView: UIStackView {
 
     @IBOutlet weak var payView: UIStackView!
     @IBOutlet weak var pinField: PinField!
-    @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var mixinIDLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
@@ -81,20 +80,13 @@ class PayView: UIStackView {
         if let user = user {
             self.isWithdrawal = false
             self.user = user
-            avatarImageView.setImage(with: user)
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
         } else if let address = address {
             self.isWithdrawal = true
             self.address = address
-            avatarImageView.image = R.image.wallet.ic_transaction_external()
-            if asset.isAccount {
-                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
-                mixinIDLabel.text = address.accountTag?.toSimpleKey()
-            } else {
-                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
-                mixinIDLabel.text = address.publicKey?.toSimpleKey()
-            }
+            nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
+            mixinIDLabel.text = address.fullAddress
         }
         preparePayView(show: true)
         assetIconView.setIcon(asset: asset)

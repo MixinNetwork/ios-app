@@ -77,10 +77,6 @@ class ConversationDataSource {
         self.category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         reload(completion: completion)
@@ -88,6 +84,7 @@ class ConversationDataSource {
     
     func cancelMessageProcessing() {
         messageProcessingIsCancelled = true
+        NotificationCenter.default.removeObserver(self)
     }
     
     func scrollToFirstUnreadMessageOrBottom() {

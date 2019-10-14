@@ -338,8 +338,8 @@
 "wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改支付密码成功";
 "wallet_set_password_success" = "设置支付密码成功";
-"wallet_snapshot_from" = "转账来自%@";
-"wallet_snapshot_to" = "转账给%@";
+"wallet_snapshot_transfer_from" = "转账来自";
+"wallet_snapshot_transfer_to" = "转账给";
 "wallet_caption_send" = "转出";
 "wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";
@@ -351,8 +351,9 @@
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认。";
 "wallet_no_transaction" = "暂无转账记录";
 "wallet_address" = "地址";
-"wallet_account_name" = "地址";
-"wallet_account_memo" = "Memo（标签）";
+"wallet_address_destination" = "地址";
+"wallet_address_tag" = "Tag（标签）";
+"wallet_address_memo" = "Memo（标签）";
 "wallet_deposit_attention" = "首次充值请小额尝试！";
 "wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
@@ -360,8 +361,6 @@
 "wallet_menu_hide_asset" = "隐藏资产";
 "wallet_hide_asset_empty" = "没有需要隐藏的资产";
 "wallet_send_amount" = "数量";
-"wallet_send_memo" = "备注";
-"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "点击添加地址";
 "wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
 "wallet_password_address_tips" = "通过密码修改";
@@ -440,8 +439,14 @@
 "address_book_title" = "%@ 地址簿";
 "address_book_add_address" = "添加地址";
 "address_list_title" = "地址";
-"address_new_placeholder_label" = "标签";
+"address_new_placeholder_label" = "地址名称，例如 OceanONE ";
 "address_new_placeholder_address" = "地址";
+"address_memo_no" = "地址标签、数字 ID 或备注。如果没有，点击%@。";
+"address_memo_add" = "如果你需要填写地址标签、数字 ID 或备注，点击%@。";
+"address_add_memo" = "添加标签（Memo）";
+"address_add_tag" = "添加标签（Tag）";
+"address_no_tag" = "不使用标签（Tag）";
+"address_no_memo" = "不使用标签（Memo）";
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";
@@ -451,13 +456,8 @@
 
 // Transfer
 "transfer_title" = "转账";
-"transfer_title_to" = "转账给";
-"transfer_title_to_receiver" = "给%@";
 "transfer_balance" = "余额";
-"transfer_transactions" = "转账记录";
-"transfer_transfer_type" = "转账类型";
-"transfer_transfer_amount" = "转账金额";
-"transfer_transfer_memo" = "备注 (可选)";
+"transfer_memo" = "备注 (可选)";
 "transfer_touch_id_reason" = "请验证指纹完成转账";
 "transfer_error_balance_insufficient" = "余额不足";
 "transfer_error_fee_insufficient" = "手续费不足";

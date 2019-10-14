@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct Asset: BaseCodable, AssetKeyConvertible {
+struct Asset: BaseCodable {
 
     static var tableName: String = "assets"
     static let topAssetsTableName = "top_assets"
@@ -12,15 +12,13 @@ struct Asset: BaseCodable, AssetKeyConvertible {
     let name: String
     let iconUrl: String
     let balance: String
-    let publicKey: String?
+    let destination: String
+    let tag: String
     let priceBtc: String
     let priceUsd: String
     let changeUsd: String
     let chainId: String
     let confirmations: Int
-    let accountName: String?
-    let accountTag: String?
-
     let assetKey: String
 
     enum CodingKeys: String, CodingTableKey {
@@ -31,14 +29,13 @@ struct Asset: BaseCodable, AssetKeyConvertible {
         case name
         case iconUrl = "icon_url"
         case balance
-        case publicKey = "public_key"
+        case destination
+        case tag
         case priceBtc = "price_btc"
         case priceUsd = "price_usd"
         case changeUsd = "change_usd"
         case chainId = "chain_id"
         case confirmations
-        case accountName = "account_name"
-        case accountTag = "account_tag"
         case assetKey = "asset_key"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -53,7 +50,7 @@ struct Asset: BaseCodable, AssetKeyConvertible {
 extension Asset {
 
     static func createAsset(asset: AssetItem) -> Asset {
-        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag, assetKey: asset.assetKey)
+        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, destination: asset.destination, tag: asset.tag, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, assetKey: asset.assetKey)
     }
 
 }

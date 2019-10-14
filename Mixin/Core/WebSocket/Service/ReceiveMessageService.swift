@@ -81,34 +81,47 @@ class ReceiveMessageService: MixinService {
                     guard AccountAPI.shared.didLogin else {
                         return
                     }
-                    guard MessageCategory.isLegal(category: data.category) else {
-                        ReceiveMessageService.shared.processBadMessage(data: data)
-                        continue
-                    }
                     if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
                         ReceiveMessageService.shared.processBadMessage(data: data)
                         continue
                     }
 
                     ReceiveMessageService.shared.syncConversation(data: data)
-                    if data.isSessionMessage {
-                        ReceiveMessageService.shared.processSessionSystemMessage(data: data)
-                        ReceiveMessageService.shared.processSessionPlainMessage(data: data)
-                        ReceiveMessageService.shared.processSessionSignalMessage(data: data)
-                        ReceiveMessageService.shared.processSessionRecallMessage(data: data)
+                    if MessageCategory.isLegal(category: data.category) {
+                        if data.isSessionMessage {
+                            ReceiveMessageService.shared.processSessionSystemMessage(data: data)
+                            ReceiveMessageService.shared.processSessionPlainMessage(data: data)
+                            ReceiveMessageService.shared.processSessionSignalMessage(data: data)
+                            ReceiveMessageService.shared.processSessionRecallMessage(data: data)
+                        } else {
+                            ReceiveMessageService.shared.processSystemMessage(data: data)
+                            ReceiveMessageService.shared.processPlainMessage(data: data)
+                            ReceiveMessageService.shared.processSignalMessage(data: data)
+                            ReceiveMessageService.shared.processAppButton(data: data)
+                            ReceiveMessageService.shared.processWebRTCMessage(data: data)
+                            ReceiveMessageService.shared.processRecallMessage(data: data)
+                        }
                     } else {
-                        ReceiveMessageService.shared.processSystemMessage(data: data)
-                        ReceiveMessageService.shared.processPlainMessage(data: data)
-                        ReceiveMessageService.shared.processSignalMessage(data: data)
-                        ReceiveMessageService.shared.processAppButton(data: data)
-                        ReceiveMessageService.shared.processWebRTCMessage(data: data)
-                        ReceiveMessageService.shared.processRecallMessage(data: data)
+                        ReceiveMessageService.shared.processUnknownMessage(data: data)
                     }
                     BlazeMessageDAO.shared.delete(data: data)
                 }
 
                 finishedJobCount += blazeMessageDatas.count
             } while true
+        }
+    }
+
+    private func processUnknownMessage(data: BlazeMessageData) {
+        var unknownMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
+        unknownMessage.status = MessageStatus.UNKNOWN.rawValue
+        unknownMessage.content = data.data
+        MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source)
+        
+        if data.isSessionMessage {
+            SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+        } else {
+            ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
     }
 

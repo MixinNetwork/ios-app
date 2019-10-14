@@ -61,21 +61,11 @@ class AddressView: UIStackView {
             titleLabel.text = Localized.ADDRESS_DELETE_TITLE(symbol: asset.symbol)
         }
         if let address = addressRequest {
-            if asset.isAccount {
-                nameLabel.text = address.accountName
-                addressLabel.text = address.accountTag
-            } else {
-                nameLabel.text = address.label
-                addressLabel.text = address.publicKey
-            }
+            nameLabel.text = address.label
+            addressLabel.text = address.fullAddress
         } else if let address = address {
-            if asset.isAccount {
-                nameLabel.text = address.accountName
-                addressLabel.text = address.accountTag
-            } else {
-                nameLabel.text = address.label
-                addressLabel.text = address.publicKey
-            }
+            nameLabel.text = address.label
+            addressLabel.text = address.fullAddress
         }
         assetIconView.setIcon(asset: asset)
         pinField.clear()

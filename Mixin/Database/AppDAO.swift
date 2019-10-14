@@ -13,6 +13,10 @@ final class AppDAO {
         SELECT \(sqlQueryColumns) FROM apps a, users u
         WHERE u.user_id = ? AND a.app_id = u.app_id
     """
+    static let sqlQueryAppsByHost = """
+    SELECT \(sqlQueryColumns) FROM apps a
+    WHERE a.home_uri LIKE ? ESCAPE '/'
+    """
 
     func getConversationBots(conversationId: String) -> [App] {
         return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryApps, values: [conversationId]).filter({ (app) -> Bool in
@@ -22,6 +26,10 @@ final class AppDAO {
 
     func getApp(ofUserId userId: String) -> App? {
         return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId]).first
+    }
+
+    func getApps(host: String) -> [App] {
+        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByHost, values: ["%\(host.sqlEscaped)%"])
     }
     
 }

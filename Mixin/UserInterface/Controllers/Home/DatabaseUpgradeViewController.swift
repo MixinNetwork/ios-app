@@ -32,6 +32,7 @@ class DatabaseUpgradeViewController: UIViewController {
                     AccountUserDefault.shared.hasRestoreMedia = true
                     AccountUserDefault.shared.hasRestoreFilesAndVideos = false
                 }
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             }
 
             DatabaseUserDefault.shared.forceUpgradeDatabase = false

@@ -64,7 +64,9 @@ class CloudFile {
                 }
             }
         }
-        query.start()
+        DispatchQueue.main.async {
+            query.start()
+        }
         semaphore.wait()
         NotificationCenter.default.removeObserver(observer)
     }
@@ -83,13 +85,12 @@ class CloudFile {
 
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-        query.predicate = NSPredicate(format: "%K LIKE %@", NSMetadataItemPathKey, url.path)
+        query.predicate = NSPredicate(format: "%K LIKE[CD] %@", NSMetadataItemPathKey, destination.path)
         query.valueListAttributes = [NSMetadataUbiquitousItemPercentUploadedKey,
                                      NSMetadataUbiquitousItemIsUploadedKey]
 
         let semaphore = DispatchSemaphore(value: 0)
-        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { (notification) in
-
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: query, queue: .main) { (notification) in
             guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
                 return
             }
@@ -112,33 +113,10 @@ class CloudFile {
                 }
             }
         }
-        query.start()
+        DispatchQueue.main.async {
+            query.start()
+        }
         semaphore.wait()
         NotificationCenter.default.removeObserver(observer)
     }
-
-
-    //    func cloudExist() -> Bool {
-    //        guard FileManager.default.ubiquityIdentityToken != nil else {
-    //            return false
-    //        }
-    //
-    //        var result = false
-    //
-    //        let query = NSMetadataQuery()
-    //        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-    //        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, url.path)
-    //
-    //        let semaphore = DispatchSemaphore(value: 0)
-    //        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidFinishGathering, object: nil, queue: .main) { (notification) in
-    //            query.stop()
-    //            result = query.resultCount > 0
-    //            semaphore.signal()
-    //        }
-    //        query.start()
-    //        semaphore.wait()
-    //        NotificationCenter.default.removeObserver(observer)
-    //
-    //        return result
-    //    }
 }

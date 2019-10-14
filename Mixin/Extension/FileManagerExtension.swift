@@ -15,7 +15,7 @@ extension FileManager {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
     }
 
-    func isDirectory(atPath path: String) -> Bool {
+    func directoryExists(atPath path: String) -> Bool {
         var isDir : ObjCBool = false
         return FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
     }
@@ -67,6 +67,9 @@ extension FileManager {
     }
 
     func removeDirectoryAndChildFiles(_ directory: URL) {
+        guard directoryExists(atPath: directory.path) else {
+            return
+        }
         if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
             for file in files {
                 try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))

@@ -60,9 +60,13 @@ class BackupJob: BaseJob {
             var categories: [MixinFile.ChatDirectory] = [.photos, .audios]
             if CommonUserDefault.shared.hasBackupFiles {
                 categories.append(.files)
+            } else {
+                FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
             }
             if CommonUserDefault.shared.hasBackupVideos {
                 categories.append(.videos)
+            } else {
+                FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
             }
 
             try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
@@ -75,8 +79,14 @@ class BackupJob: BaseJob {
                 let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
                 let cloudDir = backupDir.appendingPathComponent(category.rawValue)
 
-                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).map { "\(category.rawValue)/\($0)" })
-                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).map { "\(category.rawValue)/\($0)" })
+                if localDir.fileExists {
+                    localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).map { "\(category.rawValue)/\($0)" })
+                }
+                if cloudDir.fileExists {
+                    cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).map { "\(category.rawValue)/\($0)" })
+                } else {
+                    try FileManager.default.createDirectoryIfNeeded(dir: cloudDir)
+                }
             }
 
             for path in cloudPaths {
@@ -96,7 +106,9 @@ class BackupJob: BaseJob {
                 return $0
             }
 
-            totalFileSize += MixinFile.databaseURL.fileSize
+            let databaseFileSize = MixinFile.databaseURL.fileSize
+            totalFileSize = databaseFileSize
+            needUploadFileSize = databaseFileSize
             totalFileSize += localPaths.map { chatDir.appendingPathComponent($0).fileSize }.reduce(0, +)
             needUploadFileSize += paths.map { chatDir.appendingPathComponent($0).fileSize }.reduce(0, +)
 

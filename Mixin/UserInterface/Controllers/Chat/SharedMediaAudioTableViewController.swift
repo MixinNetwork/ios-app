@@ -135,7 +135,7 @@ extension SharedMediaAudioTableViewController: SharedMediaAudioCellDelegate {
         if AudioManager.shared.player?.status == .playing {
             AudioManager.shared.player?.pause()
         }
-        if audioManager.playingMessage?.messageId == item.messageId {
+        if audioManager.playingMessage?.messageId == item.messageId, audioManager.player?.status == .playing {
             playingIndexPath = nil
             audioManager.pause()
         } else {

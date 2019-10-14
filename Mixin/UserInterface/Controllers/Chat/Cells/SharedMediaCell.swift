@@ -39,7 +39,7 @@ class SharedMediaCell: UICollectionViewCell {
                 mediaTypeView.style = .hidden
             }
         case .video:
-            let duration = TimeInterval(item.mediaDuration)
+            let duration = TimeInterval(item.mediaDuration) / millisecondsPerSecond
             mediaTypeView.style = .video(duration: duration)
         case .live:
             mediaTypeView.style = .hidden

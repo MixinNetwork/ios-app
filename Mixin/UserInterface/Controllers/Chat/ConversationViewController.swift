@@ -369,7 +369,7 @@ class ConversationViewController: UIViewController {
                     quotingMessageId = message.messageId
                     reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
                 }
-            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let filename = message.mediaUrl {
+            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
                     AudioManager.shared.pause()
                 } else {

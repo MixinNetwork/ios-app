@@ -142,7 +142,6 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
         isLoading = true
         let conversationId = self.conversationId!
         let count = numberOfItemsPerFetch
-        var loadedMessageIds = self.loadedMessageIds
         queue.async { [weak self] in
             guard let weakSelf = self, weakSelf.conversationId == conversationId else {
                 return
@@ -160,7 +159,6 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
                 }
             }
             let messageIds = categorizer.categorizedItems.map({ $0.messageId })
-            loadedMessageIds.formUnion(messageIds)
             var dates = categorizer.dates
             let itemGroups = categorizer.itemGroups
             DispatchQueue.main.sync {
@@ -177,7 +175,7 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
                 for date in dates {
                     weakSelf.items[date] = itemGroups[date]
                 }
-                weakSelf.loadedMessageIds = loadedMessageIds
+                weakSelf.loadedMessageIds.formUnion(messageIds)
                 weakSelf.onReload()
                 weakSelf.didLoadEarliest = didLoadEarliest
                 weakSelf.isLoading = false

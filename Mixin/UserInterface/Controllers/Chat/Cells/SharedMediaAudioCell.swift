@@ -95,8 +95,10 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         }
         if mediaStatus == .DONE {
             waveformView.tintColor = .highlightedText
+            lengthLabel.textColor = .highlightedText
         } else if mediaStatus == .READ {
             waveformView.tintColor = .disabledGray
+            lengthLabel.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
         }
     }
     

@@ -51,6 +51,7 @@ class AudioManager {
             controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
         
+        let shouldUpdateMediaStatus = message.mediaStatus != MediaStatus.READ.rawValue && message.userId != AccountAPI.shared.accountUserId
         cells[message.messageId]?.cell?.style = .playing
         
         if message.messageId == playingMessage?.messageId, let player = player {
@@ -67,7 +68,7 @@ class AudioManager {
         
         queue.async {
             do {
-                if message.mediaStatus != MediaStatus.READ.rawValue && message.userId != AccountAPI.shared.accountUserId {
+                if shouldUpdateMediaStatus {
                     MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
                                                         status: .READ,
                                                         conversationId: message.conversationId)

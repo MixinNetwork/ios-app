@@ -43,17 +43,29 @@
     if (_outputBuffer.length < maxLength) {
         _outputBuffer.length = maxLength;
     }
-    int result = op_read(_file, (opus_int16 *)_outputBuffer.mutableBytes, (int)(maxLength / 2), NULL);
+    
     int bytesRead = 0;
-    if (result < 0) {
-        if (outError) {
-            *outError = ErrorWithCodeAndOpusErrorCode(MXNOggOpusErrorCodeRead, result);
+    while (bytesRead < maxLength) {
+        opus_int16 *buf = (opus_int16 *)(_outputBuffer.mutableBytes + bytesRead);
+        int remainingCapacity = (int)((maxLength - bytesRead) / 2);
+        int result = op_read(_file, buf, remainingCapacity, NULL);
+        if (result < 0) {
+            if (outError) {
+                *outError = ErrorWithCodeAndOpusErrorCode(MXNOggOpusErrorCodeRead, result);
+            }
+            return nil;
+        } else if (result == 0) {
+            break;
+        } else {
+            bytesRead += result * 2;
         }
-        return nil;
-    } else {
-        bytesRead = result * 2;
     }
-    return [_outputBuffer subdataWithRange:NSMakeRange(0, bytesRead)];
+    
+    if (bytesRead) {
+        return [_outputBuffer subdataWithRange:NSMakeRange(0, bytesRead)];
+    } else {
+        return nil;
+    }
 }
 
 - (void)seekToZero {

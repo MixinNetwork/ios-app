@@ -76,6 +76,7 @@
 	<string>Mixin uses the photo library to set profile photo, and send photo to your contact in chat.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>voip</string>
 	</array>
 	<key>UIFileSharingEnabled</key>

@@ -1361,19 +1361,31 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-fl-cjF">
-                                            <rect key="frame" x="5" y="0.0" width="365" height="40"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="dark_text"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oot-mE-CFF">
+                                            <rect key="frame" x="0.0" y="0.0" width="365" height="40"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-fl-cjF">
+                                                    <rect key="frame" x="5" y="0.0" width="360" height="40"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="6Kj-fl-cjF" firstAttribute="top" secondItem="oot-mE-CFF" secondAttribute="top" id="DPN-7t-wvU"/>
+                                                <constraint firstAttribute="trailing" secondItem="6Kj-fl-cjF" secondAttribute="trailing" id="R6Y-GX-wLw"/>
+                                                <constraint firstAttribute="bottom" secondItem="6Kj-fl-cjF" secondAttribute="bottom" id="XH8-C9-aHf"/>
+                                                <constraint firstItem="6Kj-fl-cjF" firstAttribute="leading" secondItem="oot-mE-CFF" secondAttribute="leading" constant="5" id="afS-gU-S7f"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="6Kj-fl-cjF" firstAttribute="leading" secondItem="RII-cZ-869" secondAttribute="leading" constant="5" id="38e-UI-r4g"/>
-                                        <constraint firstAttribute="trailing" secondItem="6Kj-fl-cjF" secondAttribute="trailing" constant="5" id="9mo-qY-jrT"/>
-                                        <constraint firstItem="6Kj-fl-cjF" firstAttribute="top" secondItem="RII-cZ-869" secondAttribute="top" id="bvP-aX-Kfy"/>
-                                        <constraint firstAttribute="bottom" secondItem="6Kj-fl-cjF" secondAttribute="bottom" id="lcB-rE-kNS"/>
+                                        <constraint firstItem="oot-mE-CFF" firstAttribute="top" secondItem="RII-cZ-869" secondAttribute="top" id="B9V-Zx-u9L"/>
+                                        <constraint firstAttribute="bottom" secondItem="oot-mE-CFF" secondAttribute="bottom" id="HCp-1i-aHT"/>
+                                        <constraint firstAttribute="trailing" secondItem="oot-mE-CFF" secondAttribute="trailing" constant="10" id="TMp-Xa-Y7l"/>
+                                        <constraint firstItem="oot-mE-CFF" firstAttribute="leading" secondItem="RII-cZ-869" secondAttribute="leading" id="ohl-N2-7Eb"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="label" destination="6Kj-fl-cjF" id="71J-na-TbD"/>
@@ -1530,24 +1542,24 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2ui-1P-Jut">
-                                            <rect key="frame" x="74" y="9" width="285" height="34"/>
+                                            <rect key="frame" x="74" y="8" width="285" height="36.5"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="TMD-7Z-E08">
-                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="19.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Latin Poems" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9u-Oj-cdT">
-                                                            <rect key="frame" x="0.0" y="0.0" width="89" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="89" height="22"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" name="dark_text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="c9C-SK-bFF">
-                                                            <rect key="frame" x="93" y="0.0" width="192" height="19.5"/>
+                                                            <rect key="frame" x="93" y="0.0" width="192" height="22"/>
                                                         </imageView>
                                                     </subviews>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000101986" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuN-iN-kAk">
-                                                    <rect key="frame" x="0.0" y="19.5" width="285" height="14.5"/>
+                                                    <rect key="frame" x="0.0" y="22" width="285" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1555,7 +1567,7 @@
                                             </subviews>
                                         </stackView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-NS-eJs">
-                                            <rect key="frame" x="74" y="28.5" width="40.5" height="14.5"/>
+                                            <rect key="frame" x="74" y="30" width="40.5" height="14.5"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2291,7 +2303,7 @@
         <image name="ic_user_bot" width="14" height="11"/>
         <image name="ic_user_verified" width="14" height="14"/>
         <namedColor name="dark_text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

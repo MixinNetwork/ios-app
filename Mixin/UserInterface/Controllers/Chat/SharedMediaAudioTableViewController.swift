@@ -95,7 +95,6 @@ extension SharedMediaAudioTableViewController: UITableViewDataSource {
         if let item = dataSource.item(for: indexPath) {
             cell.render(audio: item)
         }
-        cell.delegate = self
         cell.audioManager = audioManager
         return cell
     }
@@ -124,12 +123,8 @@ extension SharedMediaAudioTableViewController: UITableViewDelegate {
         return view
     }
     
-}
-
-extension SharedMediaAudioTableViewController: SharedMediaAudioCellDelegate {
-    
-    func sharedMediaAudioCellDidSelectPlay(_ cell: SharedMediaAudioCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let item = dataSource.item(for: indexPath) else {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let item = dataSource.item(for: indexPath) else {
             return
         }
         if AudioManager.shared.player?.status == .playing {

@@ -1,9 +1,5 @@
 import UIKit
 
-protocol SharedMediaAudioCellDelegate: class {
-    func sharedMediaAudioCellDidSelectPlay(_ cell: SharedMediaAudioCell)
-}
-
 class SharedMediaAudioCell: UITableViewCell, AudioCell {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
@@ -13,7 +9,6 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     @IBOutlet weak var highlightedWaveformView: WaveformView!
     @IBOutlet weak var lengthLabel: UILabel!
     
-    weak var delegate: SharedMediaAudioCellDelegate?
     weak var audioManager: SharedMediaAudioManager?
     
     private let waveformMaskView = UIView()
@@ -106,10 +101,6 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
             waveformView.tintColor = .disabledGray
             lengthLabel.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
         }
-    }
-    
-    @IBAction func playAction(_ sender: Any) {
-        delegate?.sharedMediaAudioCellDidSelectPlay(self)
     }
     
     @objc func conversationDidChange(_ notification: Notification) {

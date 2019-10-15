@@ -49,6 +49,19 @@ extension FileManager {
         }
     }
 
+    func debugDirectory(directory: URL, tree: String, baseDir: String = "") {
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
+            return
+        }
+        for file in files {
+            if directoryExists(atPath: directory.appendingPathComponent(file).path) {
+                debugDirectory(directory: directory.appendingPathComponent(file), tree: "\(tree)---", baseDir: "\(baseDir)\(file)/")
+            } else {
+                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize)")
+            }
+        }
+    }
+
     func createNobackupDirectory(_ directory: URL) -> Bool {
         guard !FileManager.default.fileExists(atPath: directory.path) else {
             return true

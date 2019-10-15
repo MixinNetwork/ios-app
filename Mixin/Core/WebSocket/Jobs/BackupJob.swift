@@ -129,16 +129,27 @@ class BackupJob: BaseJob {
                 try uploadToCloud(query: query, semaphore: semaphore, from: localURL, destination: cloudURL)
             }
 
+            removeOldFiles(backupDir: backupDir)
+
             progress = 1
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
             CommonUserDefault.shared.lastBackupSize = totalFileSize
         } catch {
-            #if DEBUG
-            print(error)
-            #endif
             UIApplication.traceError(error)
         }
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
+    }
+
+    private func removeOldFiles(backupDir: URL) {
+        let files = ["mixin.backup.db",
+                     "mixin.\(MixinFile.ChatDirectory.photos.rawValue.lowercased()).zip",
+                     "mixin.\(MixinFile.ChatDirectory.audios.rawValue.lowercased()).zip"]
+        for file in files {
+            let cloudURL = backupDir.appendingPathComponent(file)
+            if cloudURL.isStoredCloud {
+                try? FileManager.default.removeItem(at: cloudURL)
+            }
+        }
     }
 
     private func uploadToCloud(query: NSMetadataQuery, semaphore: DispatchSemaphore, from: URL, destination: URL) throws {
@@ -159,7 +170,7 @@ class BackupJob: BaseJob {
         let fileSize = from.fileSize
 
         query.predicate = NSPredicate(format: "%K LIKE[CD] %@", NSMetadataItemPathKey, destination.path)
-        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: query, queue: .main) { [weak self](notification) in
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { [weak self](notification) in
             guard let weakSelf = self else {
                 return
             }

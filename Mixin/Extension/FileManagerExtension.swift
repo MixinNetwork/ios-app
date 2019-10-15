@@ -285,9 +285,6 @@ extension FileManager {
                     try log.write(toFile: path, atomically: true, encoding: .utf8)
                 }
             } catch {
-                #if DEBUG
-                    print("======FileManagerExtension...writeLog...error:\(error)")
-                #endif
                 UIApplication.traceError(error)
             }
         }

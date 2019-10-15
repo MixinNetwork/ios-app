@@ -44,6 +44,7 @@ class RestoreViewController: UIViewController {
         restoreButton.isBusy = true
         skipButton.isHidden = true
         progressLabel.isHidden = false
+        progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: 0.01))
         DispatchQueue.global().async {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
@@ -51,32 +52,40 @@ class RestoreViewController: UIViewController {
             guard let backupDir = MixinFile.iCloudBackupDirectory else {
                 return
             }
+            var cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+            if !cloudURL.isStoredCloud {
+                cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
+            }
+            guard cloudURL.isStoredCloud else {
+                DispatchQueue.main.async {
+                    self.skipAction(sender)
+                }
+                UIApplication.traceError(code: ReportErrorCode.restoreError, userInfo: ["error": "Backup file does not exist"])
+                return
+            }
 
             DatabaseUserDefault.shared.forceUpgradeDatabase = true
             MixinDatabase.shared.close()
 
             let localURL = MixinFile.databaseURL
-            self.removeDatabase(databaseURL: localURL, completion: {
-                let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
-                let backupFile = CloudFile(url: cloudURL)
-
-                do {
-                    if !backupFile.isDownloaded() {
-                        try backupFile.startDownload { (progress) in
-                            self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
-                        }
-                    }
-                    try FileManager.default.copyItem(at: cloudURL, to: localURL)
-
-                    MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
-                    AccountUserDefault.shared.hasRestoreChat = false
-                    DispatchQueue.main.async {
-                        AppDelegate.current.window.rootViewController = makeInitialViewController()
-                    }
-                } catch {
-                    self.restoreFailed(error: error)
+            self.removeDatabase(databaseURL: localURL)
+            do {
+                if !cloudURL.isDownloaded {
+                    try cloudURL.downloadFromCloud(progress: { (progress) in
+                        self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
+                    })
                 }
-            })
+                try FileManager.default.copyItem(at: cloudURL, to: localURL)
+
+                MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
+                AccountUserDefault.shared.hasRestoreChat = false
+
+                DispatchQueue.main.async {
+                    AppDelegate.current.window.rootViewController = makeInitialViewController()
+                }
+            } catch {
+                self.restoreFailed(error: error)
+            }
         }
     }
 
@@ -87,26 +96,24 @@ class RestoreViewController: UIViewController {
             makeInitialViewController()
     }
 
-    private func removeDatabase(databaseURL: URL, completion: () -> Void) {
+    private func removeDatabase(databaseURL: URL) {
+        guard FileManager.default.fileExists(atPath: databaseURL.path) else {
+            return
+        }
+        let semaphore = DispatchSemaphore(value: 0)
         do {
-            if FileManager.default.fileExists(atPath: databaseURL.path) {
-                try Database(withPath: databaseURL.path).close {
-                    try FileManager.default.removeItem(at: databaseURL)
-                    completion()
-                }
-            } else {
-                completion()
+            try Database(withPath: databaseURL.path).close {
+                try FileManager.default.removeItem(at: databaseURL)
+                semaphore.signal()
             }
+            semaphore.wait()
         } catch {
+            semaphore.signal()
             restoreFailed(error: error)
         }
     }
 
     private func restoreFailed(error: Swift.Error) {
-        #if DEBUG
-        print(error)
-        #endif
-
         DispatchQueue.main.async {
             self.restoreButton.isBusy = false
             self.skipButton.isHidden = false

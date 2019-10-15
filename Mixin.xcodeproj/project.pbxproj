@@ -710,7 +710,6 @@
 		DFE63CA41FC6B6D300D6E028 /* ConversationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63CA31FC6B6D300D6E028 /* ConversationRequest.swift */; };
 		DFE63CA61FC6B7D700D6E028 /* ConversationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63CA51FC6B7D700D6E028 /* ConversationResponse.swift */; };
 		DFE63CA81FC6BED500D6E028 /* VerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63CA71FC6BED500D6E028 /* VerificationResponse.swift */; };
-		DFE89FE72340AE0C004D1E8E /* CloudFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE89FE62340AE0C004D1E8E /* CloudFile.swift */; };
 		DFEE215A200CACB300D9B3F7 /* AuthorizeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEE2159200CACB300D9B3F7 /* AuthorizeAPI.swift */; };
 		DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEE215B200CAD8800D9B3F7 /* AuthorizationRequest.swift */; };
 		DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */; };
@@ -1487,7 +1486,6 @@
 		DFE63CA31FC6B6D300D6E028 /* ConversationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationRequest.swift; sourceTree = "<group>"; };
 		DFE63CA51FC6B7D700D6E028 /* ConversationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationResponse.swift; sourceTree = "<group>"; };
 		DFE63CA71FC6BED500D6E028 /* VerificationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationResponse.swift; sourceTree = "<group>"; };
-		DFE89FE62340AE0C004D1E8E /* CloudFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFile.swift; sourceTree = "<group>"; };
 		DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mixin.entitlements; sourceTree = "<group>"; };
 		DFEE2159200CACB300D9B3F7 /* AuthorizeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeAPI.swift; sourceTree = "<group>"; };
 		DFEE215B200CAD8800D9B3F7 /* AuthorizationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationRequest.swift; sourceTree = "<group>"; };
@@ -1851,7 +1849,6 @@
 				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
 				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
-				DFE89FE62340AE0C004D1E8E /* CloudFile.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 				7BBDF3E1230D6CBA00079979 /* Currency.swift */,
@@ -3739,7 +3736,6 @@
 				7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */,
-				DFE89FE72340AE0C004D1E8E /* CloudFile.swift in Sources */,
 				DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */,
 				DFBC04A52003A89A008CA56A /* SentSenderKeyDAO.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,

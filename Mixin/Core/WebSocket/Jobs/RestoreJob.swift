@@ -35,6 +35,8 @@ class RestoreJob: BaseJob {
             totalFiles += try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).count
         }
 
+        FileManager.default.debugDirectory(directory: backupDir, tree: "---")
+
         for category in categories {
             guard try !restoreZipFiles(backupDir: backupDir, chatDir: chatDir, category: category) else {
                 continue
@@ -52,6 +54,11 @@ class RestoreJob: BaseJob {
                 continue
             }
 
+            let semaphore = DispatchSemaphore(value: 0)
+            let query = NSMetadataQuery()
+            query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+            query.valueListAttributes = [NSMetadataUbiquitousItemPercentDownloadedKey]
+
             let localDir = chatDir.appendingPathComponent(category)
             try FileManager.default.createDirectoryIfNeeded(dir: localDir)
 
@@ -61,12 +68,18 @@ class RestoreJob: BaseJob {
                     filename = String(filename[filename.index(filename.startIndex, offsetBy: 1)..<filename.index(filename.endIndex, offsetBy: -7)])
                 }
 
-                let cloudPath = cloudDir.appendingPathComponent(filename)
-                try CloudFile(url: cloudPath).startDownload { (_) in }
+                let cloudURL = cloudDir.appendingPathComponent(filename)
+                try downloadFromCloud(query: query, semaphore: semaphore, cloudURL: cloudURL)
 
-                let localPath = localDir.appendingPathComponent(filename)
-                try? FileManager.default.removeItem(at: localPath)
-                try FileManager.default.copyItem(at: cloudPath, to: localPath)
+                let localURL = localDir.appendingPathComponent(filename)
+                if FileManager.default.fileExists(atPath: localURL.path) {
+                    if FileManager.default.fileSize(localURL.path) != FileManager.default.fileSize(cloudURL.path) {
+                        try? FileManager.default.removeItem(at: localURL)
+                        try FileManager.default.copyItem(at: cloudURL, to: localURL)
+                    }
+                } else {
+                    try FileManager.default.copyItem(at: cloudURL, to: localURL)
+                }
 
                 restoreFiles += 1
                 progress = Float(restoreFiles) / Float(totalFiles)
@@ -82,11 +95,10 @@ class RestoreJob: BaseJob {
         }
 
         let zipFile = backupDir.appendingPathComponent("mixin.\(category.lowercased()).zip")
-        let cloudFile = CloudFile(url: zipFile)
-        let exist = cloudFile.isStoredCloud()
+        let exist = zipFile.isStoredCloud
         if exist {
-            if !cloudFile.isDownloaded() {
-                try cloudFile.startDownload { (_) in }
+            if !zipFile.isDownloaded {
+                try zipFile.downloadFromCloud { (_) in }
             }
 
             let localZip = chatDir.appendingPathComponent("\(category).zip")
@@ -99,16 +111,49 @@ class RestoreJob: BaseJob {
                 try Zip.unzipFile(localZip, destination: localDir, overwrite: true, password: nil, progress: { (_) in
                 })
 
-                try? cloudFile.remove()
+                try FileManager.default.removeItem(at: localZip)
                 AccountUserDefault.shared.removeMedia(category: category)
             } catch {
-                #if DEBUG
-                print(error)
-                #endif
                 UIApplication.traceError(error)
             }
         }
         return exist
+    }
+
+    private func downloadFromCloud(query: NSMetadataQuery, semaphore: DispatchSemaphore, cloudURL: URL) throws {
+        guard !cloudURL.isDownloaded else {
+            return
+        }
+        try FileManager.default.startDownloadingUbiquitousItem(at: cloudURL)
+
+        query.predicate = NSPredicate(format: "%K LIKE[CD] %@", NSMetadataItemPathKey, cloudURL.path)
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { (notification) in
+
+            guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
+                return
+            }
+
+            for attrName in metadataItem.attributes {
+                switch attrName {
+                case NSMetadataUbiquitousItemDownloadingStatusKey:
+                    guard let status = metadataItem.value(forAttribute: attrName) as? String else {
+                        return
+                    }
+                    guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded else {
+                        return
+                    }
+                    query.stop()
+                    semaphore.signal()
+                default:
+                    break
+                }
+            }
+        }
+        DispatchQueue.main.async {
+            query.start()
+        }
+        semaphore.wait()
+        NotificationCenter.default.removeObserver(observer)
     }
 
 }

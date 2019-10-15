@@ -78,6 +78,7 @@ enum ReportErrorCode: Int {
     case databaseNoSuchTable = 100018
     case appUpgradeError = 100020
     case loadAvatar = 100021
+    case restoreError = 100022
     
     var errorName: String {
         switch self {
@@ -123,6 +124,8 @@ enum ReportErrorCode: Int {
             return "appUpgradeError"
         case .loadAvatar:
             return "loadAvatar"
+        case .restoreError:
+            return "restoreError"
         }
     }
 }

@@ -45,6 +45,9 @@ extension UIApplication {
     }
 
     static func traceError(_ error: Swift.Error) {
+        #if DEBUG
+        print(error)
+        #endif
         Bugsnag.notifyError(error)
         Crashlytics.sharedInstance().recordError(error)
     }

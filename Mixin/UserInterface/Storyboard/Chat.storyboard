@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -1326,12 +1325,24 @@
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="shared_media" id="O1Y-Sq-OYc" customClass="SharedMediaCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="5" y="40" width="92" height="92"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hxn-LC-Nju">
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="92" height="92"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OHb-5X-LEp" customClass="VerticalPositioningImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="92" height="92"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2gK-kc-Vy6" customClass="VerticalPositioningImageView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="92" height="92"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dMb-V2-BMa" customClass="SharedMediaTypeOverlayView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="92" height="92"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
+                                                    </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-N8-nNF" customClass="SharedMediaTypeOverlayView" customModule="Mixin" customModuleProvider="target">
@@ -1339,17 +1350,17 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="7vo-N8-nNF" firstAttribute="top" secondItem="hxn-LC-Nju" secondAttribute="top" id="4Fc-Ow-b75"/>
-                                                <constraint firstItem="OHb-5X-LEp" firstAttribute="top" secondItem="hxn-LC-Nju" secondAttribute="top" id="Dpk-tu-sio"/>
-                                                <constraint firstAttribute="trailing" secondItem="OHb-5X-LEp" secondAttribute="trailing" id="Jlr-io-oEi"/>
-                                                <constraint firstItem="7vo-N8-nNF" firstAttribute="leading" secondItem="hxn-LC-Nju" secondAttribute="leading" id="YJY-Ja-10N"/>
-                                                <constraint firstItem="OHb-5X-LEp" firstAttribute="leading" secondItem="hxn-LC-Nju" secondAttribute="leading" id="keW-ON-Yck"/>
-                                                <constraint firstAttribute="bottom" secondItem="7vo-N8-nNF" secondAttribute="bottom" id="nLr-Ir-WuA"/>
-                                                <constraint firstAttribute="trailing" secondItem="7vo-N8-nNF" secondAttribute="trailing" id="vFa-n4-D6x"/>
-                                                <constraint firstAttribute="bottom" secondItem="OHb-5X-LEp" secondAttribute="bottom" id="zFH-5m-ULa"/>
-                                            </constraints>
-                                        </collectionViewCellContentView>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="7vo-N8-nNF" firstAttribute="top" secondItem="O1Y-Sq-OYc" secondAttribute="top" id="4Fc-Ow-b75"/>
+                                            <constraint firstItem="OHb-5X-LEp" firstAttribute="top" secondItem="O1Y-Sq-OYc" secondAttribute="top" id="Dpk-tu-sio"/>
+                                            <constraint firstAttribute="trailing" secondItem="OHb-5X-LEp" secondAttribute="trailing" id="Jlr-io-oEi"/>
+                                            <constraint firstItem="7vo-N8-nNF" firstAttribute="leading" secondItem="O1Y-Sq-OYc" secondAttribute="leading" id="YJY-Ja-10N"/>
+                                            <constraint firstItem="OHb-5X-LEp" firstAttribute="leading" secondItem="O1Y-Sq-OYc" secondAttribute="leading" id="keW-ON-Yck"/>
+                                            <constraint firstAttribute="bottom" secondItem="7vo-N8-nNF" secondAttribute="bottom" id="nLr-Ir-WuA"/>
+                                            <constraint firstAttribute="trailing" secondItem="7vo-N8-nNF" secondAttribute="trailing" id="vFa-n4-D6x"/>
+                                            <constraint firstAttribute="bottom" secondItem="OHb-5X-LEp" secondAttribute="bottom" id="zFH-5m-ULa"/>
+                                        </constraints>
                                         <size key="customSize" width="92" height="92"/>
                                         <connections>
                                             <outlet property="imageWrapperView" destination="OHb-5X-LEp" id="CQU-IP-P6m"/>

@@ -30,7 +30,7 @@ class WaveformView: UIView {
             return .zero
         }
         return CGSize(width: lastBarLayer.frame.maxX,
-                      height: Self.layoutHeight)
+                      height: type(of: self).layoutHeight)
     }
     
     var waveform: Waveform? {
@@ -45,18 +45,18 @@ class WaveformView: UIView {
     private var barLayers = [CAShapeLayer]()
     
     private func makeBarLayer(forBarAtIndex index: Int, atLevel level: UInt8) -> CAShapeLayer {
-        let size = CGSize(width: Self.barWidth, height: Self.layoutHeight)
+        let size = CGSize(width: type(of: self).barWidth, height: type(of: self).layoutHeight)
         let layer = CAShapeLayer()
-        let layerOrigin = CGPoint(x: (1.5 * CGFloat(index) + 0.5) * Self.barWidth, y: 0)
+        let layerOrigin = CGPoint(x: (1.5 * CGFloat(index) + 0.5) * type(of: self).barWidth, y: 0)
         layer.frame = CGRect(origin: layerOrigin, size: size)
-        let barHeight = CGFloat(level) * Self.yPositionSlope + Self.yPositionIntercept
+        let barHeight = CGFloat(level) * type(of: self).yPositionSlope + type(of: self).yPositionIntercept
         let pathRect = CGRect(x: 0,
-                              y: Self.layoutHeight - barHeight,
-                              width: Self.barWidth,
+                              y: type(of: self).layoutHeight - barHeight,
+                              width: type(of: self).barWidth,
                               height: barHeight)
         let path = CGPath(roundedRect: pathRect,
-                          cornerWidth: Self.barCornerRadius,
-                          cornerHeight: Self.barCornerRadius,
+                          cornerWidth: type(of: self).barCornerRadius,
+                          cornerHeight: type(of: self).barCornerRadius,
                           transform: nil)
         layer.fillColor = tintColor.cgColor
         layer.path = path

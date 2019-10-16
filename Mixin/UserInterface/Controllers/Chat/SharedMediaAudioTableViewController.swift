@@ -83,11 +83,11 @@ extension SharedMediaAudioTableViewController: SharedMediaDataSourceDelegate {
 extension SharedMediaAudioTableViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        dataSource.numberOfSections
+        return dataSource.numberOfSections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dataSource.numberOfItems(in: section)
+        return dataSource.numberOfItems(in: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

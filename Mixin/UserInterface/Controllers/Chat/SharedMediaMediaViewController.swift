@@ -95,11 +95,11 @@ extension SharedMediaMediaViewController: SharedMediaDataSourceDelegate {
 extension SharedMediaMediaViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        dataSource.numberOfSections
+        return dataSource.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataSource.numberOfItems(in: section)
+        return dataSource.numberOfItems(in: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

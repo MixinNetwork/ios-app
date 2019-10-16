@@ -5,7 +5,7 @@ class SharedMediaGroupedByDateCategorizer<ItemType: SharedMediaItem>: SharedMedi
     override func input(items: [ItemType], didLoadEarliest: Bool) {
         var allItems = items
         for item in items {
-            let title = Self.groupTitle(for: item)
+            let title = type(of: self).groupTitle(for: item)
             if itemGroups[title] != nil {
                 itemGroups[title]!.insert(item, at: 0)
             } else {

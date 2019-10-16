@@ -33,11 +33,11 @@ class SharedMediaAudio {
 extension SharedMediaAudio: SharedMediaItem {
     
     var messageId: String {
-        message.messageId
+        return message.messageId
     }
     
     var createdAt: String {
-        message.createdAt
+        return message.createdAt
     }
     
 }

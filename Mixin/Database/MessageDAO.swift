@@ -305,7 +305,7 @@ final class MessageDAO {
     }
     
     func getDataMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = Self.sqlQueryFullDataMessages
+        var sql = MessageDAO.sqlQueryFullDataMessages
         if let location = location {
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location.messageId)
@@ -317,7 +317,7 @@ final class MessageDAO {
     }
     
     func getAudioMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = Self.sqlQueryFullAudioMessages
+        var sql = MessageDAO.sqlQueryFullAudioMessages
         if let location = location {
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location.messageId)

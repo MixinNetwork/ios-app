@@ -19,7 +19,7 @@ class SharedMediaCategorizer<ItemType: SharedMediaItem> {
     func input(items: [ItemType], didLoadEarliest: Bool) {
         self.categorizedItems = items
         for item in items {
-            let title = Self.groupTitle(for: item)
+            let title = type(of: self).groupTitle(for: item)
             if itemGroups[title] != nil {
                 itemGroups[title]!.append(item)
             } else {

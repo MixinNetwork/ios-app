@@ -118,7 +118,7 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
     }
     
     func numberOfItems(in section: Int) -> Int {
-        items[dates[section]]?.count ?? 0
+        return items[dates[section]]?.count ?? 0
     }
     
     func item(for indexPath: IndexPath) -> ItemType? {

@@ -2,15 +2,33 @@ import UIKit
 
 class WaveformView: UIView {
     
-    class var barWidth: CGFloat { 2 }
-    class var layoutHeight: CGFloat { 20 }
+    class var barWidth: CGFloat {
+        return 2
+    }
     
-    private class var barCornerRadius: CGFloat { barWidth / 2 }
-    private class var yPositionSlope: CGFloat { (layoutHeight - 2 * barCornerRadius) / CGFloat(maxLevel) }
-    private class var yPositionIntercept: CGFloat { 2 * barCornerRadius }
+    class var layoutHeight: CGFloat {
+        return 20
+    }
     
-    private class var minLevel: UInt8 { 0 }
-    private class var maxLevel: UInt8 { .max }
+    private class var barCornerRadius: CGFloat {
+        return barWidth / 2
+    }
+    
+    private class var yPositionSlope: CGFloat {
+        return (layoutHeight - 2 * barCornerRadius) / CGFloat(maxLevel)
+    }
+    
+    private class var yPositionIntercept: CGFloat {
+        return 2 * barCornerRadius
+    }
+    
+    private class var minLevel: UInt8 {
+        return 0
+    }
+    
+    private class var maxLevel: UInt8 {
+        return .max
+    }
     
     override var tintColor: UIColor! {
         didSet {

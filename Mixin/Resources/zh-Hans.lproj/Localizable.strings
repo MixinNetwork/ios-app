@@ -57,6 +57,7 @@
 
 "shortcut_title_scan_qr_code" = "识别二维码";
 "shortcut_title_wallet" = "钱包";
+"shortcut_title_my_qr_code" = "我的二维码";
 
 // Search
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";

@@ -11,6 +11,8 @@ class QrcodeWindow: BottomSheetView {
     
     @IBOutlet weak var qrcodeView: UIView!
     
+    var isShowingMyQrCode = false
+    
     func render(conversation: ConversationItem) {
         guard let conversationCodeUrl = conversation.codeUrl else {
             return
@@ -32,6 +34,7 @@ class QrcodeWindow: BottomSheetView {
         avatarImageView.isHidden = false
         assetIconView.isHidden = true
         avatarImageView.setImage(with: account)
+        isShowingMyQrCode = true
     }
     
     func render(title: String, content: String, asset: AssetItem) {

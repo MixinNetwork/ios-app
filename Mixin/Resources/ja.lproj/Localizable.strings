@@ -53,6 +53,7 @@
 
 "shortcut_title_scan_qr_code" = "QRコードを読み取る";
 "shortcut_title_wallet" = "財布";
+"shortcut_title_my_qr_code" = "自分のQRコード";
 
 // Search
 "search_placeholder_number" = "Mixin IDか電話番号を検索: ";

@@ -76,17 +76,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
         
-        if let item = pendingShortcutItem {
-            switch item {
+        if let item = pendingShortcutItem, let itemType = UIApplicationShortcutItem.ItemType(rawValue: item.type) {
+            switch itemType {
             case .scanQrCode:
                 pushCameraViewController()
             case .wallet:
                 pushWalletViewController()
-            default:
-                break
+            case .myQrCode:
+                showMyQrCode()
             }
-            pendingShortcutItem = nil
         }
+        pendingShortcutItem = nil
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -366,6 +366,20 @@ extension AppDelegate {
         navigationController.popToRootViewController(animated: false)
         let vc = WalletViewController.instance()
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func showMyQrCode() {
+        if let window = UIApplication.currentActivity()?.view.subviews.compactMap({ $0 as? QrcodeWindow }).first, window.isShowingMyQrCode {
+            return
+        }
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        let qrcodeWindow = QrcodeWindow.instance()
+        qrcodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
+                            description: Localized.MYQRCODE_PROMPT,
+                            account: account)
+        qrcodeWindow.presentView()
     }
     
 }

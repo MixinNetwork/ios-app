@@ -87,6 +87,7 @@ class RestoreJob: BaseJob {
 
             AccountUserDefault.shared.removeMedia(category: category)
         }
+        NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
 
     private func restoreZipFiles(backupDir: URL, chatDir: URL, category: String) throws -> Bool {
@@ -133,20 +134,12 @@ class RestoreJob: BaseJob {
                 return
             }
 
-            for attrName in metadataItem.attributes {
-                switch attrName {
-                case NSMetadataUbiquitousItemDownloadingStatusKey:
-                    guard let status = metadataItem.value(forAttribute: attrName) as? String else {
-                        return
-                    }
-                    guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded else {
-                        return
-                    }
-                    query.stop()
-                    semaphore.signal()
-                default:
-                    break
+            if let status = metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String {
+                guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
+                    return
                 }
+                query.stop()
+                semaphore.signal()
             }
         }
         DispatchQueue.main.async {

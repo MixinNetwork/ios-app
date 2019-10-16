@@ -98,7 +98,7 @@ extension Date {
         let nowDateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: now)
         let dateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: self)
 
-        if nowDateComponents.day == dateComponents.day {
+        if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
             return Localized.CHAT_TIME_TODAY
         } else {
             if nowDateComponents.year == dateComponents.year && nowDateComponents.weekOfYear == dateComponents.weekOfYear {

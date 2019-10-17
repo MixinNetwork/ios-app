@@ -13,6 +13,11 @@ class QrcodeWindow: BottomSheetView {
     
     var isShowingMyQrCode = false
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+    }
+    
     func render(conversation: ConversationItem) {
         guard let conversationCodeUrl = conversation.codeUrl else {
             return

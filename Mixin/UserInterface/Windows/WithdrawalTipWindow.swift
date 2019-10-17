@@ -15,7 +15,8 @@ class WithdrawalTipWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.changeButton.setTitle(R.string.localizable.wallet_withdrawal_change_amount_count("3"), for: .normal)
+        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        changeButton.setTitle(R.string.localizable.wallet_withdrawal_change_amount_count("3"), for: .normal)
     }
 
     deinit {

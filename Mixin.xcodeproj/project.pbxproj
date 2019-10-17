@@ -417,6 +417,7 @@
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE1109022FD60FD0017BA06 /* StickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1108F22FD60FD0017BA06 /* StickerItem.swift */; };
 		7BE1109422FD986C0017BA06 /* StickerPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */; };
+		7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5505823573AC00074DB4A /* FontExtension.swift */; };
 		7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */; };
 		7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
@@ -1239,6 +1240,7 @@
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE1108F22FD60FD0017BA06 /* StickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerItem.swift; sourceTree = "<group>"; };
 		7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerPrefetcher.swift; sourceTree = "<group>"; };
+		7BE5505823573AC00074DB4A /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
 		7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InConversationSearchViewController.swift; sourceTree = "<group>"; };
 		7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchConversationView.xib; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
@@ -2425,6 +2427,7 @@
 				7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */,
 				DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */,
 				DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */,
+				7BE5505823573AC00074DB4A /* FontExtension.swift */,
 				7B0B01931FEA281E000EEE4F /* URLExtension.swift */,
 				7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */,
 				7B60A374206537FE00673CA1 /* GeometryExtension.swift */,
@@ -3830,6 +3833,7 @@
 				DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */,
+				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
 				DFE63CA81FC6BED500D6E028 /* VerificationResponse.swift in Sources */,

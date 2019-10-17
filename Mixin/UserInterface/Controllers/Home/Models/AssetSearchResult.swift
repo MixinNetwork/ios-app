@@ -8,7 +8,7 @@ struct AssetSearchResult {
         return attrs
     }()
     
-    let attributedSymbol: NSAttributedString?
+    let attributedSymbol: NSMutableAttributedString?
     let asset: AssetItem
     
     init(asset: AssetItem, keyword: String) {

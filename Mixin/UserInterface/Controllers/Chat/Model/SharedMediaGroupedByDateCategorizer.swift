@@ -2,8 +2,11 @@ import Foundation
 
 class SharedMediaGroupedByDateCategorizer<ItemType: SharedMediaItem>: SharedMediaCategorizer<ItemType> {
     
+    override class var itemGroupIsAscending: Bool {
+        return true
+    }
+    
     override func input(items: [ItemType], didLoadEarliest: Bool) {
-        var allItems = items
         for item in items {
             let title = type(of: self).groupTitle(for: item)
             if itemGroups[title] != nil {
@@ -14,16 +17,16 @@ class SharedMediaGroupedByDateCategorizer<ItemType: SharedMediaItem>: SharedMedi
             }
         }
         if didLoadEarliest {
+            categorizedMessageIds.formUnion(items.map({ $0.messageId }))
             wantsMoreInput = false
         } else {
             if dates.count > 1 {
-                wantsMoreInput = false
                 let date = dates.removeLast()
-                if let lastItemGroup = itemGroups[date] {
-                    itemGroups[date] = nil
-                    allItems.removeLast(lastItemGroup.count)
-                }
+                itemGroups[date] = nil
+                categorizedMessageIds.formUnion(itemGroups.values.flatMap({ $0 }).map({ $0.messageId }))
+                wantsMoreInput = false
             } else {
+                categorizedMessageIds.formUnion(items.map({ $0.messageId }))
                 wantsMoreInput = true
             }
         }

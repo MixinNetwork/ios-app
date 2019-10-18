@@ -107,6 +107,7 @@ extension SharedMediaDataTableViewController: UITableViewDataSource {
 extension SharedMediaDataTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        dataSource.loadMoreEarlierItemsIfNeeded(location: indexPath)
         guard let viewModel = dataSource.item(for: indexPath), viewModel.automaticallyLoadsAttachment else {
             return
         }

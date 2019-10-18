@@ -104,6 +104,7 @@ extension SharedMediaAudioTableViewController: UITableViewDataSource {
 extension SharedMediaAudioTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        dataSource.loadMoreEarlierItemsIfNeeded(location: indexPath)
         guard let cell = cell as? AudioCell, let item = dataSource.item(for: indexPath) else {
             return
         }

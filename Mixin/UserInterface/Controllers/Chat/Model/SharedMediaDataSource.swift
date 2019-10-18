@@ -98,7 +98,7 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
                 categorizer.input(items: items, didLoadEarliest: didLoadEarliest)
                 location = items.last
             }
-            let loadedMessageIds = Set(categorizer.categorizedItems.map({ $0.messageId }))
+            let loadedMessageIds = categorizer.categorizedMessageIds
             DispatchQueue.main.async {
                 guard let weakSelf = self, weakSelf.conversationId == conversationId else {
                     return
@@ -136,7 +136,10 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
         guard !didLoadEarliest, !isLoading else {
             return
         }
-        guard location.section == dates.count - 1, let lastDate = dates.last, let lastItems = items[lastDate], location.row >= lastItems.count - 10, var lastItem = lastItems.last else {
+        guard location.section == dates.count - 1, let lastDate = dates.last, let lastItems = items[lastDate], location.row >= lastItems.count - 10 else {
+            return
+        }
+        guard var location = CategorizerType.itemGroupIsAscending ? lastItems.first : lastItems.last else {
             return
         }
         isLoading = true
@@ -149,16 +152,16 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
             let categorizer = CategorizerType.init()
             var didLoadEarliest = false
             while categorizer.wantsMoreInput {
-                let items = weakSelf.getItems(conversationId, lastItem, count)
+                let items = weakSelf.getItems(conversationId, location, count)
                 didLoadEarliest = items.count < count
                 categorizer.input(items: items, didLoadEarliest: didLoadEarliest)
                 if !didLoadEarliest, let last = items.last {
-                    lastItem = last
+                    location = last
                 } else {
                     break
                 }
             }
-            let messageIds = categorizer.categorizedItems.map({ $0.messageId })
+            let messageIds = categorizer.categorizedMessageIds
             var dates = categorizer.dates
             let itemGroups = categorizer.itemGroups
             DispatchQueue.main.sync {

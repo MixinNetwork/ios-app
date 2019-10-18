@@ -2,7 +2,11 @@ import Foundation
 
 class SharedMediaCategorizer<ItemType: SharedMediaItem> {
     
-    var categorizedItems = [ItemType]()
+    class var itemGroupIsAscending: Bool {
+        return false
+    }
+    
+    var categorizedMessageIds = Set<String>()
     var dates = [String]()
     var itemGroups = [String: [ItemType]]()
     var wantsMoreInput = true
@@ -17,7 +21,7 @@ class SharedMediaCategorizer<ItemType: SharedMediaItem> {
     }
     
     func input(items: [ItemType], didLoadEarliest: Bool) {
-        self.categorizedItems = items
+        categorizedMessageIds = Set(items.map({ $0.messageId }))
         for item in items {
             let title = type(of: self).groupTitle(for: item)
             if itemGroups[title] != nil {

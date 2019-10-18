@@ -150,6 +150,9 @@ class GroupView: CornerView {
         alc.addAction(UIAlertAction(title: R.string.localizable.profile_search_conversation(), style: .default, handler: { (action) in
             self.searchConversationAction()
         }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.chat_shared_media(), style: .default, handler: { (action) in
+            self.showSharedMediaAction()
+        }))
         if isAdmin {
             alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_ANNOUNCEMENT, style: .default, handler: { (action) in
                 self.editAnnouncementAction()
@@ -274,6 +277,13 @@ extension GroupView {
         let vc = InConversationSearchViewController()
         vc.load(group: conversation)
         let container = ContainerViewController.instance(viewController: vc, title: conversation.name)
+        UIApplication.homeNavigationController?.pushViewController(container, animated: true)
+    }
+    
+    func showSharedMediaAction() {
+        let vc = R.storyboard.chat.shared_media()!
+        vc.conversationId = conversation.conversationId
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_shared_media())
         UIApplication.homeNavigationController?.pushViewController(container, animated: true)
     }
     

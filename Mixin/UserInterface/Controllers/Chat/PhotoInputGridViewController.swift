@@ -87,7 +87,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.imageView.contentMode = .center
             cell.imageView.image = R.image.conversation.ic_camera()
             cell.imageView.backgroundColor = UIColor(rgbValue: 0x333333)
-            cell.fileTypeWrapperView.isHidden = true
+            cell.mediaTypeView.style = .hidden
         } else if let asset = asset(at: indexPath) {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
@@ -99,19 +99,12 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
                 cell.imageView.image = image
             }
             if asset.mediaType == .video {
-                cell.fileTypeWrapperView.isHidden = false
-                cell.gifFileTypeView.isHidden = true
-                cell.videoTypeView.isHidden = false
-                cell.videoDurationLabel.text = mediaDurationFormatter.string(from: asset.duration)
+                cell.mediaTypeView.style = .video(duration: asset.duration)
             } else {
                 if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
-                    cell.fileTypeWrapperView.isHidden = false
-                    cell.gifFileTypeView.isHidden = false
-                    cell.videoTypeView.isHidden = true
+                    cell.mediaTypeView.style = .gif
                 } else {
-                    cell.fileTypeWrapperView.isHidden = true
-                    cell.gifFileTypeView.isHidden = true
-                    cell.videoTypeView.isHidden = true
+                    cell.mediaTypeView.style = .hidden
                 }
             }
         }

@@ -19,7 +19,9 @@ class VerticalPositioningImageView: UIView {
     
     var aspectRatio = CGSize.zero {
         didSet {
-            setNeedsLayout()
+            if aspectRatio != oldValue {
+                setNeedsLayout()
+            }
         }
     }
     

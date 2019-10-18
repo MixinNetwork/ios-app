@@ -2,18 +2,25 @@ import Foundation
 import UIKit
 
 protocol XibDesignable {
+    var nibName: String { get }
     func loadXib()
 }
 
 extension XibDesignable where Self: UIView {
     
+    var nibName: String {
+        return String(describing: type(of: self))
+    }
+    
     func loadXib() {
-        let nibName = String(describing: type(of: self))
-        guard let view = Bundle(for: self.classForCoder).loadNibNamed(nibName, owner: self, options: nil)?.first as? UIView else { return }
+        let bundle = Bundle(for: type(of: self))
+        guard let view = bundle.loadNibNamed(nibName, owner: self, options: nil)?.first as? UIView else {
+            return
+        }
         layoutMargins = .zero
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
-        view.snp.makeConstraints{ $0.edges.equalTo(self) }
+        view.snp.makeEdgesEqualToSuperview()
     }
-
+    
 }

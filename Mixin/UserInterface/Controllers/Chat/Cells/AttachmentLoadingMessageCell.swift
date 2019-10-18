@@ -1,17 +1,18 @@
 import UIKit
 
 protocol AttachmentLoadingMessageCellDelegate: class {
-    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell)
+    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell)
 }
 
 protocol AttachmentLoadingMessageCell: class {
+    var viewModel: MessageViewModel? { get }
     var operationButton: NetworkOperationButton! { get }
     var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate? { get set }
     func updateProgress()
     func updateOperationButtonStyle()
 }
 
-extension AttachmentLoadingMessageCell where Self: MessageCell {
+extension AttachmentLoadingMessageCell {
     
     func updateProgress() {
         guard let viewModel = viewModel as? AttachmentLoadingViewModel else {

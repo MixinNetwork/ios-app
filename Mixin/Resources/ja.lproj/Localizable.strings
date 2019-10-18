@@ -47,7 +47,7 @@
 "connection_hint_progress" = "同期中 %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "dd/MM/yyyy";
+"date_format_date" = "yyyy年M月dd日";
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
@@ -225,6 +225,14 @@
 "chat_restore" = "復元";
 "chat_restore_title" = "iCloudから\nチャット履歴を復元。";
 "chat_restore_subtitle" = "今実行しないと、後で復元することはできません。メッセージを復元した後、バックグラウンドでメディアを復元します。";
+"chat_shared_media" = "アタッチメント";
+"chat_media_category_media" = "メディア";
+"chat_media_category_audio" = "オーディオ";
+"chat_media_category_link" = "リンク";
+"chat_media_category_file" = "ファイル";
+"chat_shared_media_empty" = "メディアなし";
+"chat_shared_audio_empty" = "オーディオなし";
+"chat_shared_data_empty" = "ファイルなし";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

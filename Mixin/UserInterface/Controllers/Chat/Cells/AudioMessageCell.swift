@@ -1,12 +1,6 @@
 import UIKit
 
-class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
-    
-    enum Style {
-        case playing
-        case paused
-        case stopped
-    }
+class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell {
     
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var playbackStateWrapperView: UIView!
@@ -23,7 +17,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     private var timer: Timer?
     private var duration: Float64 = 0
     
-    var style: Style = .stopped {
+    var style: AudioCellStyle = .stopped {
         didSet {
             timer?.invalidate()
             timer = nil
@@ -116,7 +110,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     }
     
     private func updateWaveformProgress() {
-        guard let player = AudioManager.shared.player, AudioManager.shared.playingNode?.message.messageId == viewModel?.message.messageId else {
+        guard let player = AudioManager.shared.player, AudioManager.shared.playingMessage?.messageId == viewModel?.message.messageId else {
             return
         }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)

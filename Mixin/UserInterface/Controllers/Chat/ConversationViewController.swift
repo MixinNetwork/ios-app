@@ -136,7 +136,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -369,14 +369,12 @@ class ConversationViewController: UIViewController {
                     quotingMessageId = message.messageId
                     reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
                 }
-            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let filename = message.mediaUrl {
-                let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
-                if AudioManager.shared.playingNode?.message.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
+            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
+                if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
                     AudioManager.shared.pause()
                 } else {
                     (cell as? AudioMessageCell)?.updateUnreadStyle()
-                    let node = AudioManager.Node(message: message, path: url.path)
-                    AudioManager.shared.play(node: node)
+                    AudioManager.shared.play(message: message)
                 }
             } else if (isImageOrVideo && mediaStatusIsReady) || message.category.hasSuffix("_LIVE"), let item = GalleryItem(message: message), let cell = cell as? PhotoRepresentableMessageCell {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
@@ -907,7 +905,7 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 // MARK: - AttachmentLoadingMessageCellDelegate
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
-    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
+    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell) {
         guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
@@ -994,7 +992,7 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - GalleryViewControllerDelegate
 extension ConversationViewController: GalleryViewControllerDelegate {
     
-    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell? {
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
         return visiblePhotoRepresentableCell(of: item.messageId)
     }
     
@@ -1392,7 +1390,7 @@ extension ConversationViewController {
     
     private func deleteForMe(viewModel: MessageViewModel) {
         let message = viewModel.message
-        if message.messageId == AudioManager.shared.playingNode?.message.messageId {
+        if viewModel.message.messageId == AudioManager.shared.playingMessage?.messageId {
             AudioManager.shared.stop()
         }
         dataSource?.queue.async { [weak self] in
@@ -1413,7 +1411,7 @@ extension ConversationViewController {
     
     private func deleteForEveryone(viewModel: MessageViewModel) {
         let message = viewModel.message
-        if message.messageId == AudioManager.shared.playingNode?.message.messageId {
+        if viewModel.message.messageId == AudioManager.shared.playingMessage?.messageId {
             AudioManager.shared.stop()
         }
         (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)

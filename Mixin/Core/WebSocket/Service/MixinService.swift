@@ -233,7 +233,7 @@ class MixinService {
             }
         }
 
-        if messageId == AudioManager.shared.playingNode?.message.messageId {
+        if messageId == AudioManager.shared.playingMessage?.messageId {
             AudioManager.shared.stop()
         }
 

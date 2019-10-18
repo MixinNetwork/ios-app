@@ -6,9 +6,15 @@ protocol GalleryItemModelControllerDelegate: class {
 }
 
 final class GalleryItemModelController: NSObject {
+
+    enum Direction {
+        case forward
+        case backward
+    }
     
     weak var delegate: GalleryItemModelControllerDelegate?
     
+    var direction = Direction.forward
     var conversationId = "" {
         didSet {
             didLoadEarliestItem = false
@@ -28,13 +34,13 @@ final class GalleryItemModelController: NSObject {
     private var isLoadingBefore = false
     private var isLoadingAfter = false
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func dequeueReusableViewController(with item: GalleryItem) -> GalleryItemViewController {
@@ -198,29 +204,45 @@ final class GalleryItemModelController: NSObject {
         items.remove(at: index)
     }
     
+    private func dequeueReusableViewController(before viewController: UIViewController) -> UIViewController? {
+        guard let item = (viewController as? GalleryItemViewController)?.item, let index = items.firstIndex(of: item) else {
+            return nil
+        }
+        if index <= 1 {
+            fetchMoreItemsBefore()
+        }
+        return dequeueReusableViewController(of: index - 1)
+    }
+    
+    private func dequeueReusableViewController(after viewController: UIViewController) -> UIViewController? {
+        guard let item = (viewController as? GalleryItemViewController)?.item, let index = items.lastIndex(of: item) else {
+            return nil
+        }
+        if index >= items.count - 2 {
+            fetchMoreItemsAfter()
+        }
+        return dequeueReusableViewController(of: index + 1)
+    }
+    
 }
 
 extension GalleryItemModelController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let item = (viewController as? GalleryItemViewController)?.item, let index = items.firstIndex(of: item) {
-            if index <= 1 {
-                fetchMoreItemsBefore()
-            }
-            return dequeueReusableViewController(of: index - 1)
-        } else {
-            return nil
+        switch direction {
+        case .forward:
+            return dequeueReusableViewController(before: viewController)
+        case .backward:
+            return dequeueReusableViewController(after: viewController)
         }
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let item = (viewController as? GalleryItemViewController)?.item, let index = items.lastIndex(of: item) {
-            if index >= items.count - 2 {
-                fetchMoreItemsAfter()
-            }
-            return dequeueReusableViewController(of: index + 1)
-        } else {
-            return nil
+        switch direction {
+        case .forward:
+            return dequeueReusableViewController(after: viewController)
+        case .backward:
+            return dequeueReusableViewController(before: viewController)
         }
     }
     

@@ -89,13 +89,13 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     }
     
     func updateUnreadStyle() {
-        guard let mediaStatus = audio?.mediaStatus else {
+        guard let audio = audio else {
             return
         }
-        if mediaStatus == .DONE {
+        if audio.mediaStatus == .DONE && !audio.isSentByMe {
             waveformView.tintColor = .highlightedText
             lengthLabel.textColor = .highlightedText
-        } else if mediaStatus == .READ {
+        } else {
             waveformView.tintColor = .disabledGray
             lengthLabel.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
         }

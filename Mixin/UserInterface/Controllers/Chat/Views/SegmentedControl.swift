@@ -28,7 +28,7 @@ class SegmentedControl: UIControl {
             button.titleLabel?.font = .systemFont(ofSize: 14)
             button.setTitle(title, for: .normal)
             button.setTitleColor(UIColor(displayP3RgbValue: 0xB8BDC7), for: .normal)
-            button.setTitleColor(UIColor(displayP3RgbValue: 0x2F3032), for: .selected)
+            button.setTitleColor(.highlightedText, for: .selected)
             button.tag = index
             button.addTarget(self, action: #selector(tapAction(_:)), for: .touchUpInside)
             stackView.insertArrangedSubview(button, at: index)

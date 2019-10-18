@@ -48,6 +48,10 @@ class GalleryItemViewController: UIViewController {
         expiredHintLabel.text = R.string.localizable.chat_file_expired()
         expiredHintLabel.font = .systemFont(ofSize: 13)
         expiredHintLabel.textColor = .white
+        expiredHintLabel.textAlignment = .center
+        mediaStatusView.axis = .vertical
+        mediaStatusView.alignment = .fill
+        mediaStatusView.spacing = 10
         [operationButton, expiredHintLabel].forEach(mediaStatusView.addArrangedSubview)
         mediaStatusView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mediaStatusView)

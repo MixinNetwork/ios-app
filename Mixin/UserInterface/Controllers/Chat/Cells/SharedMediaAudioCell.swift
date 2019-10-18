@@ -29,8 +29,6 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .common)
-                audio?.mediaStatus = .READ
-                updateUnreadStyle()
             case .stopped:
                 playButton.setImage(R.image.ic_play(), for: .normal)
                 waveformMaskView.frame = .zero

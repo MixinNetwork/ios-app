@@ -133,14 +133,15 @@ class RestoreJob: BaseJob {
             guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
                 return
             }
-
-            if let status = metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String {
-                guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
-                    return
-                }
-                query.stop()
-                semaphore.signal()
+            guard let status = metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String else {
+                return
             }
+            guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
+                return
+            }
+
+            query.stop()
+            semaphore.signal()
         }
         DispatchQueue.main.async {
             query.start()

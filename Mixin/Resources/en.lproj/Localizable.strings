@@ -610,7 +610,10 @@
 "setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
 "setting_backup_auto_tips" = "Automatically back up to iCloud only over Wi-Fi.";
 "setting_backup_last" = "Last backup on %@, total size %@.";
-"setting_backup_progress" = "Uploading %@";
+"setting_backup_preparing" = "Preparing...";
+"setting_backup_preparing_progress" = "Preparing...(%@)";
+"setting_backup_uploading" = "Uploading...";
+"setting_backup_uploading_progress" = "Uploading: %@ of %@ (%@)";
 "setting_restore_progress" = "Restoring %@";
 "setting_auto_download_never" = "Never";
 "setting_auto_download_wifi" = "Wi-Fi";

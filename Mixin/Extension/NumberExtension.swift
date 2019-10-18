@@ -15,6 +15,15 @@ extension NumberFormatter {
         formatter.locale = .current
         return formatter
     }()
+
+    static let simpleFileSize: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 1
+        formatter.roundingMode = .halfUp
+        return formatter
+    }()
     
     convenience init(numberStyle: NumberFormatter.Style, maximumFractionDigits: Int? = nil, roundingMode: NumberFormatter.RoundingMode? = nil, locale: Locale? = nil) {
         self.init()
@@ -30,6 +39,9 @@ extension NumberFormatter {
         }
     }
 
+    func stringFormat(value: Float64) -> String {
+        return string(from: NSNumber(value: value)) ?? "\(Int64(value))"
+    }
 }
 
 extension Int64 {
@@ -39,11 +51,13 @@ extension Int64 {
         if sizeInBytes < 1024 {
             return "\(sizeInBytes) Bytes"
         } else {
-            let sizeInKB = sizeInBytes / 1024
+            let sizeInKB = Float64(sizeInBytes) / Float64(1024)
             if sizeInKB <= 1024 {
-                return "\(sizeInKB) KB"
+                return "\(NumberFormatter.simpleFileSize.stringFormat(value: sizeInKB)) KB"
+            } else if sizeInKB > 1024 * 1024  {
+                return "\(NumberFormatter.simpleFileSize.stringFormat(value: sizeInKB / Float64(1024 * 1024))) GB"
             } else {
-                return "\(sizeInKB / 1024) MB"
+                return "\(NumberFormatter.simpleFileSize.stringFormat(value: sizeInKB / Float64(1024))) MB"
             }
         }
     }

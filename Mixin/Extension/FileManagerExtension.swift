@@ -54,10 +54,11 @@ extension FileManager {
             return
         }
         for file in files {
-            if directoryExists(atPath: directory.appendingPathComponent(file).path) {
-                debugDirectory(directory: directory.appendingPathComponent(file), tree: "\(tree)---", baseDir: "\(baseDir)\(file)/")
+            let url = directory.appendingPathComponent(file)
+            if directoryExists(atPath: url.path) {
+                debugDirectory(directory: url, tree: "\(tree)---", baseDir: "\(baseDir)\(file)/")
             } else {
-                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize)")
+                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize.sizeRepresentation())...isUploaded:\(url.isUploaded)")
             }
         }
     }
@@ -85,7 +86,12 @@ extension FileManager {
         }
         if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
             for file in files {
-                try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))
+                let url = directory.appendingPathComponent(file)
+                if directoryExists(atPath: url.path) {
+                    removeDirectoryAndChildFiles(url)
+                } else {
+                    try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))
+                }
             }
         }
         try? FileManager.default.removeItem(at: directory)

@@ -612,6 +612,10 @@
 "setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin Messenger 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
 "setting_backup_auto_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
+"setting_backup_preparing" = "备份中...";
+"setting_backup_preparing_progress" = "备份中...(%@)";
+"setting_backup_uploading" = "上传中...";
+"setting_backup_uploading_progress" = "上传中: %@ / %@ (%@)";
 "setting_backup_progress" = "正在备份 %@";
 "setting_restore_progress" = "正在恢复 %@";
 "setting_auto_download_never" = "关闭";

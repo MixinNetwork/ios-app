@@ -13,6 +13,22 @@ class SafeDictionary<Key, Value> where Key : Hashable {
         return result
     }
 
+    var values: [Value] {
+        var result = [Value]()
+        queue.sync {
+            result = [Value](self.dictionary.values)
+        }
+        return result
+    }
+
+    var count: Int {
+        var result = 0
+        queue.sync {
+            result = self.dictionary.count
+        }
+        return result
+    }
+
     func removeValue(forKey key: Key) {
         queue.async(flags: .barrier) {
             self.dictionary.removeValue(forKey: key)

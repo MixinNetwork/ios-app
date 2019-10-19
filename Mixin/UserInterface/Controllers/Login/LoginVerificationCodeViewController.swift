@@ -126,7 +126,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             } else {
                 DispatchQueue.main.sync {
                     AccountUserDefault.shared.hasRestoreChat = true
-                    AccountUserDefault.shared.hasRestoreMedia = true
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }

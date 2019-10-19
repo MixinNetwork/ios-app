@@ -6,10 +6,13 @@ class BackupJob: BaseJob {
     
     static let sharedId = "backup"
 
+    private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
     private let immediatelyBackup: Bool
     private var totalFileSize: Int64 = 0
     private var monitors = SafeDictionary<String, Int64>()
-    private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
+    private var isContinueBackup: Bool {
+        return !isCancelled && NetworkManager.shared.isReachableOnWiFi
+    }
 
     private(set) var preparing = true
     private(set) var backupTotalSize: Int64 = 0
@@ -94,6 +97,10 @@ class BackupJob: BaseJob {
                 }
             }
 
+            guard isContinueBackup else {
+                return
+            }
+
             var uploadPaths: [String] = []
             var backupPaths: [String] = []
             uploadedSize = 0
@@ -119,6 +126,10 @@ class BackupJob: BaseJob {
             }
             totalFileSize = localPaths.map { chatDir.appendingPathComponent($0).fileSize }.reduce(0, +)
 
+            guard isContinueBackup else {
+                return
+            }
+
             let semaphore = DispatchSemaphore(value: 0)
             let query = NSMetadataQuery()
 
@@ -128,6 +139,10 @@ class BackupJob: BaseJob {
                 }
                 self?.monitorQueue.async {
                     guard let weakSelf = self else {
+                        return
+                    }
+                    guard weakSelf.isContinueBackup else {
+                        // TODO
                         return
                     }
 
@@ -164,7 +179,7 @@ class BackupJob: BaseJob {
             backupDatabase(backupDir: backupDir)
 
             for path in backupPaths {
-                guard !isCancelled else {
+                guard isContinueBackup else {
                     return
                 }
                 let localURL = chatDir.appendingPathComponent(path)
@@ -178,7 +193,7 @@ class BackupJob: BaseJob {
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
             CommonUserDefault.shared.lastBackupSize = totalFileSize
 
-            if uploadedSize == uploadTotalSize {
+            if uploadedSize == uploadTotalSize || !isContinueBackup {
                 DispatchQueue.main.async {
                     query.stop()
                 }

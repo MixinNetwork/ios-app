@@ -107,37 +107,10 @@ class AccountUserDefault {
 
     var hasRestoreMedia: Bool {
         get {
-            return restoreMedia.count > 0
-        }
-        set {
-            if newValue {
-                let categories = [
-                    MixinFile.ChatDirectory.photos.rawValue,
-                    MixinFile.ChatDirectory.audios.rawValue,
-                    MixinFile.ChatDirectory.files.rawValue,
-                    MixinFile.ChatDirectory.videos.rawValue
-                ]
-                session.set(categories, forKey: keyHasRestoreMedia)
-            } else {
-                session.set([], forKey: keyHasRestoreMedia)
-            }
-        }
-    }
-
-    var restoreMedia: [String] {
-        get {
-            return session.stringArray(forKey: keyHasRestoreMedia) ?? []
+            return session.bool(forKey: keyHasRestoreMedia)
         }
         set {
             session.set(newValue, forKey: keyHasRestoreMedia)
-        }
-    }
-
-    func removeMedia(category: String) {
-        var categories = restoreMedia
-        if let idx = categories.firstIndex(of: category) {
-            categories.remove(at: idx)
-            restoreMedia = categories
         }
     }
 

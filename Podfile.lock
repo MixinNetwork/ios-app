@@ -155,11 +155,11 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - PhoneNumberKit (2.6.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 2.6.0)
-    - PhoneNumberKit/UIKit (= 2.6.0)
-  - PhoneNumberKit/PhoneNumberKitCore (2.6.0)
-  - PhoneNumberKit/UIKit (2.6.0):
+  - PhoneNumberKit (3.0.0):
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.0.0)
+    - PhoneNumberKit/UIKit (= 3.0.0)
+  - PhoneNumberKit/PhoneNumberKitCore (3.0.0)
+  - PhoneNumberKit/UIKit (3.0.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - Protobuf (3.10.0)
   - R.swift (5.0.3):
@@ -202,7 +202,7 @@ DEPENDENCIES:
   - GiphyCoreSDK
   - GoogleWebRTC
   - GzipSwift
-  - PhoneNumberKit (from `https://github.com/wuyuehyang/PhoneNumberKit.git`, branch `swift5`)
+  - PhoneNumberKit
   - R.swift
   - RSKImageCropper
   - SDWebImage
@@ -247,6 +247,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - GzipSwift
     - nanopb
+    - PhoneNumberKit
     - Protobuf
     - R.swift
     - R.swift.Library
@@ -260,9 +261,6 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
-  PhoneNumberKit:
-    :branch: swift5
-    :git: https://github.com/wuyuehyang/PhoneNumberKit.git
   SignalProtocolC:
     :git: https://github.com/MixinNetwork/SignalProtocolC.git
     :submodules: true
@@ -274,9 +272,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/MixinNetwork/wcdb.git
 
 CHECKOUT OPTIONS:
-  PhoneNumberKit:
-    :commit: 9d4a088bb54cda57153960823f97d3b2b8e3bfe1
-    :git: https://github.com/wuyuehyang/PhoneNumberKit.git
   SignalProtocolC:
     :commit: 31f5f56a03b54ecba250040e1c5cd8acf44ed50e
     :git: https://github.com/MixinNetwork/SignalProtocolC.git
@@ -320,7 +315,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   GzipSwift: 5592f4d62b641e04d06443ba471f8ed76b1363e4
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  PhoneNumberKit: a326ae980d5bb891273b693f16fa62e7fb6218c6
+  PhoneNumberKit: 86019c972ef6904bcad11b46a6b8a91184d51117
   Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
@@ -336,6 +331,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: ddddb7475cc6aaf7ee50e4b02f5d434c2da19e0d
+PODFILE CHECKSUM: 2d3f473b1302c9a0b934c311a265f642ef041bc2
 
 COCOAPODS: 1.8.3

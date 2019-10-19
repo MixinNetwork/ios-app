@@ -22,7 +22,7 @@ target 'Mixin' do
   pod 'YYImage/WebP'
   pod 'SnapKit'
   pod 'SocketRocket', :git => 'https://github.com/over140/SocketRocket.git', :branch => 'feature/request'
-  pod 'PhoneNumberKit', :git => 'https://github.com/wuyuehyang/PhoneNumberKit.git', :branch => 'swift5'
+  pod 'PhoneNumberKit'
   pod 'GzipSwift'
   pod 'RSKImageCropper'
   pod 'DeviceGuru'

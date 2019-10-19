@@ -9,6 +9,7 @@ protocol GalleryItemRepresentable {
     var mediaWidth: Int? { get }
     var mediaHeight: Int? { get }
     var mediaStatus: String? { get }
+    var mediaDuration: Int64? { get }
     var thumbImage: String? { get }
     var thumbUrl: String? { get }
     var createdAt: String { get }
@@ -51,11 +52,12 @@ struct GalleryItem: Equatable {
     let size: CGSize
     let thumbnail: Thumbnail
     let mediaMimeType: String?
+    let mediaDuration: Int64
     let createdAt: String
     let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
-    init?(conversationId: String, messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
+    init?(conversationId: String, messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, mediaDuration: Int64?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
         self.conversationId = conversationId
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
@@ -98,6 +100,7 @@ struct GalleryItem: Equatable {
         self.createdAt = createdAt
         self.shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
         self.mediaStatus = MediaStatus(rawValue: mediaStatus ?? "")
+        self.mediaDuration = mediaDuration ?? 0
     }
     
     init?(message m: GalleryItemRepresentable) {
@@ -109,6 +112,7 @@ struct GalleryItem: Equatable {
                   mediaWidth: m.mediaWidth,
                   mediaHeight: m.mediaHeight,
                   mediaStatus: m.mediaStatus,
+                  mediaDuration: m.mediaDuration,
                   thumbImage: m.thumbImage,
                   thumbUrl: m.thumbUrl,
                   createdAt: m.createdAt)

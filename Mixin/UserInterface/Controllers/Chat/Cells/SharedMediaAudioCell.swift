@@ -51,6 +51,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        avatarImageView.prepareForReuse()
         audio = nil
         waveformMaskView.frame = .zero
         timer?.invalidate()
@@ -60,9 +61,11 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     
     func render(audio: SharedMediaAudio) {
         self.audio = audio
-        avatarImageView.setImage(with: audio.message.userAvatarUrl,
-                                 userId: audio.message.userId,
-                                 name: audio.message.userFullName)
+        if let avatarUrl = audio.message.userAvatarUrl {
+            avatarImageView.setImage(with: avatarUrl,
+                                     userId: audio.message.userId,
+                                     name: audio.message.userFullName)
+        }
         lengthLabel.text = audio.length
         waveformView.waveform = audio.mediaWaveform
         highlightedWaveformView.waveform = audio.mediaWaveform

@@ -40,9 +40,12 @@ class SharedMediaAudioTableViewController: SharedMediaTableViewController {
     
     @objc func audioManagerWillPlayNext(_ notification: Notification) {
         playingIndexPath?.row += 1
-        if let indexPath = playingIndexPath {
-            dataSource.item(for: indexPath)?.mediaStatus = .READ
-            if let cell = tableView.cellForRow(at: indexPath) as? SharedMediaAudioCell {
+        DispatchQueue.main.async { [weak self] in
+            guard let weakSelf = self, let indexPath = weakSelf.playingIndexPath else {
+                return
+            }
+            weakSelf.dataSource.item(for: indexPath)?.mediaStatus = .READ
+            if let cell = weakSelf.tableView.cellForRow(at: indexPath) as? SharedMediaAudioCell {
                 cell.updateUnreadStyle()
             }
         }

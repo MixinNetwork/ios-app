@@ -6,6 +6,7 @@ class RestoreJob: BaseJob {
     private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.restore.download")
     private let restoreQueue = DispatchQueue(label: "one.mixin.messenger.queue.restore")
     private var monitors = SafeDictionary<String, DownloadFile>()
+    private var isStoppedQuery = false
     private var isContinueRestore: Bool {
         return !isCancelled && NetworkManager.shared.isReachableOnWiFi
     }
@@ -40,10 +41,11 @@ class RestoreJob: BaseJob {
                            MixinFile.ChatDirectory.files.rawValue,
                            MixinFile.ChatDirectory.videos.rawValue ]
 
+        monitors = SafeDictionary<String, DownloadFile>()
         preparing = true
         downloadTotalSize = 0
         downloadedSize = 0
-        monitors = SafeDictionary<String, DownloadFile>()
+        isStoppedQuery = false
 
         for category in categories {
             try FileManager.default.createDirectoryIfNeeded(dir: chatDir.appendingPathComponent(category))
@@ -91,6 +93,7 @@ class RestoreJob: BaseJob {
                     return
                 }
                 guard weakSelf.isContinueRestore else {
+                    weakSelf.stopQuery(query: query, semaphore: semaphore)
                     return
                 }
 
@@ -172,25 +175,21 @@ class RestoreJob: BaseJob {
     private func restoreFromCloud(file: DownloadFile, chatDir: URL, semaphore: DispatchSemaphore, query: NSMetadataQuery) {
         var file = file
         restoreQueue.async { [weak self] in
-            guard let weakSelf = self, !weakSelf.isCancelled else {
+            guard let weakSelf = self else {
+                return
+            }
+            guard weakSelf.isContinueRestore else {
+                weakSelf.stopQuery(query: query, semaphore: semaphore)
                 return
             }
             let restoreSuccess = {
-                if !NetworkManager.shared.isReachableOnWiFi && query.isGathering {
-                    query.stop()
-                    semaphore.signal()
-                    return
-                }
-
                 if !file.isRestored {
                     file.isRestored = true
                     weakSelf.monitors[file.cloudURL.lastPathComponent] = file
                 }
 
-                print("=====isGathering:\(query.isGathering)")
-                if weakSelf.monitors.values.first(where: { !$0.isRestored }) == nil && query.isGathering {
-                    query.stop()
-                    semaphore.signal()
+                if weakSelf.monitors.values.first(where: { !$0.isRestored }) == nil {
+                    weakSelf.stopQuery(query: query, semaphore: semaphore)
                 }
             }
 
@@ -233,6 +232,15 @@ class RestoreJob: BaseJob {
                 UIApplication.traceError(error)
             }
         }
+    }
+
+    private func stopQuery(query: NSMetadataQuery, semaphore: DispatchSemaphore) {
+        guard !isStoppedQuery else {
+            return
+        }
+        isStoppedQuery = true
+        query.stop()
+        semaphore.signal()
     }
 }
 

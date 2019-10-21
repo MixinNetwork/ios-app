@@ -108,7 +108,7 @@ class BackupViewController: UITableViewController {
     private func reloadActionSectionFooterLabel() {
         let text: String?
         if let backupJob = BackupJobQueue.shared.backupJob {
-            if backupJob.preparing {
+            if backupJob.isBackingUp {
                 if backupJob.backupSize == 0 {
                     text = R.string.localizable.setting_backup_preparing()
                 } else {
@@ -118,10 +118,10 @@ class BackupViewController: UITableViewController {
             } else if backupJob.uploadedSize == 0 {
                 text = R.string.localizable.setting_backup_uploading()
             } else {
-                let uploadedSize = backupJob.uploadedSize.sizeRepresentation()
-                let uploadTotalSize = backupJob.uploadTotalSize.sizeRepresentation()
-                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(backupJob.uploadedSize) / Float64(backupJob.uploadTotalSize))
-                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize, uploadTotalSize, uploadProgress)
+                let uploadedSize = backupJob.uploadedSize
+                let totalFileSize = backupJob.totalFileSize
+                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
+                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
             }
         } else if let restoreProgress = BackupJobQueue.shared.restoreJob?.progress {
             let number = NSNumber(value: restoreProgress)

@@ -28,10 +28,6 @@ class DatabaseUpgradeViewController: UIViewController {
                 }
             }
             if currentVersion < 4 {
-                if AccountUserDefault.shared.hasRestoreFilesAndVideos {
-                    AccountUserDefault.shared.hasRestoreMedia = true
-                    AccountUserDefault.shared.hasRestoreFilesAndVideos = false
-                }
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             }
 

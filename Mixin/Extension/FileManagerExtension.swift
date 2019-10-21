@@ -49,7 +49,7 @@ extension FileManager {
         }
     }
 
-    func debugDirectory(directory: URL, tree: String, baseDir: String = "") {
+    func debugDirectory(directory: URL, tree: String = "---", baseDir: String = "") {
         guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
             return
         }

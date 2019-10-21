@@ -166,7 +166,7 @@ extension WebSocketService: SRWebSocketDelegate {
         }
 
         if NetworkManager.shared.isReachableOnWiFi {
-            if CommonUserDefault.shared.backupCategory != .off {
+            if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
                 BackupJobQueue.shared.addJob(job: BackupJob())
             }
             if AccountUserDefault.shared.hasRestoreMedia {

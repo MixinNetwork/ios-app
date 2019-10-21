@@ -45,6 +45,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     
     override func didSetStyle() {
         guard let quote = quote else {
+            super.didSetStyle()
             return
         }
         switch quote.category {

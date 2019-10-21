@@ -34,7 +34,7 @@ class MessageItem: TableCodable {
 
     var userFullName: String = ""
     var userIdentityNumber: String = ""
-    var userAvatarUrl: String = ""
+    var userAvatarUrl: String? = nil
     
     var appId: String? = nil
 

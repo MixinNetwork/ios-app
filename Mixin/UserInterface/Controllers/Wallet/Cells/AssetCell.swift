@@ -22,7 +22,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
         balanceLabel.set(font: .dinCondensedBold(ofSize: 19), adjustForContentSize: true)
-        symbolLabel.set(font: .systemFont(ofSize: 12, weight: .medium), adjustForContentSize: true)
+        symbolLabel.adjustsFontForContentSizeCategory = true
     }
     
     override func prepareForReuse() {

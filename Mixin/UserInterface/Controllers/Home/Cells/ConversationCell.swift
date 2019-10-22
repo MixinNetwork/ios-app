@@ -3,11 +3,6 @@ import SDWebImage
 
 class ConversationCell: ModernSelectedBackgroundCell {
     
-    static let contentLabelNormalFont = UIFont.systemFont(ofSize: 14)
-    static let contentLabelItalicFont: UIFont = {
-        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
-        return UIFont(descriptor: desc, size: 14)
-    }()
     static let cellIdentifier = "cell_identifier_conversation"
     static let height: CGFloat = 80
 
@@ -22,10 +17,24 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
     
+    private var contentLabelNormalFont: UIFont!
+    private var contentLabelItalicFont: UIFont!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        contentLabelNormalFont = contentLabel.font
+        updateContentLabelItalicFont()
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()
         setContentLabelFontItalic(false)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        updateContentLabelItalicFont()
+        super.traitCollectionDidChange(previousTraitCollection)
     }
     
     func render(item: ConversationItem) {
@@ -169,7 +178,12 @@ class ConversationCell: ModernSelectedBackgroundCell {
     }
     
     private func setContentLabelFontItalic(_ isItalic: Bool) {
-        contentLabel.font = isItalic ? ConversationCell.contentLabelItalicFont : ConversationCell.contentLabelNormalFont
+        contentLabel.font = isItalic ? contentLabelItalicFont : contentLabelNormalFont
+    }
+    
+    private func updateContentLabelItalicFont() {
+        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
+        contentLabelItalicFont = UIFont(descriptor: desc, size: contentLabelNormalFont.pointSize)
     }
     
 }

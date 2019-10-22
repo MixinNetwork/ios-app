@@ -55,7 +55,7 @@ class AssetTableHeaderView: InfiniteTopView {
     
     private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont(name: "DINCondensed-Bold", size: 34)!,
+            .font: UIFontMetrics.default.scaledFont(for: .dinCondensedBold(ofSize: 34)),
             .foregroundColor: UIColor.darkText
         ]
         let str = NSMutableAttributedString(string: amount, attributes: attrs)

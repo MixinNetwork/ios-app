@@ -14,6 +14,7 @@ class ClockSkewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         FileManager.default.writeLog(log: "ClockSkewViewController...")
+        tipsLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
     }
 
 

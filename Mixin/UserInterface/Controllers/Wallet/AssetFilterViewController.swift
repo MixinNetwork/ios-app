@@ -7,6 +7,7 @@ protocol AssetFilterViewControllerDelegate: class {
 
 class AssetFilterViewController: UIViewController {
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var applyButton: RoundedButton!
@@ -68,6 +69,7 @@ class AssetFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         collectionView.register(AssetFilterHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerReuseId)

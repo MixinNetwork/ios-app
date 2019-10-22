@@ -15,10 +15,10 @@ func makeInitialViewController() -> UIViewController {
         return UsernameViewController()
     } else if AccountUserDefault.shared.hasRestoreChat {
         return RestoreViewController.instance()
-    } else if !CryptoUserDefault.shared.isLoaded {
-        return SignalLoadingViewController.instance()
     } else if DatabaseUserDefault.shared.hasUpgradeDatabase() {
         return DatabaseUpgradeViewController.instance()
+    } else if !CryptoUserDefault.shared.isLoaded {
+        return SignalLoadingViewController.instance()
     } else {
         return HomeContainerViewController()
     }

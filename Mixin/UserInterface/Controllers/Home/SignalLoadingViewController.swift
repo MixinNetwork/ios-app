@@ -23,7 +23,6 @@ class SignalLoadingViewController: UIViewController {
                             return
                         }
                         MixinWebView.clearCookies()
-                        WebSocketService.shared.connect()
                         let time = Date().timeIntervalSince(startTime)
                         if time < 2 {
                             DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {

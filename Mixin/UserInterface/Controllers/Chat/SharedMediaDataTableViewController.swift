@@ -68,7 +68,7 @@ extension SharedMediaDataTableViewController: SharedMediaDataSourceDelegate {
     }
     
     func sharedMediaDataSource(_ dataSource: AnyObject, didRemoveItemAt indexPath: IndexPath) {
-        if self.dataSource.item(for: indexPath)?.messageId == previewDocumentMessageId {
+        if self.dataSource.item(at: indexPath)?.messageId == previewDocumentMessageId {
             previewDocumentController?.dismissPreview(animated: true)
             previewDocumentController?.dismissMenu(animated: true)
             previewDocumentController = nil
@@ -95,7 +95,7 @@ extension SharedMediaDataTableViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.shared_media_data, for: indexPath)!
-        if let item = dataSource.item(for: indexPath) {
+        if let item = dataSource.item(at: indexPath) {
             cell.render(viewModel: item)
             cell.attachmentLoadingDelegate = self
         }
@@ -108,7 +108,7 @@ extension SharedMediaDataTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         dataSource.loadMoreEarlierItemsIfNeeded(location: indexPath)
-        guard let viewModel = dataSource.item(for: indexPath), viewModel.automaticallyLoadsAttachment else {
+        guard let viewModel = dataSource.item(at: indexPath), viewModel.automaticallyLoadsAttachment else {
             return
         }
         viewModel.beginAttachmentLoading(isTriggeredByUser: false)
@@ -116,7 +116,7 @@ extension SharedMediaDataTableViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let viewModel = dataSource.item(for: indexPath) else {
+        guard let viewModel = dataSource.item(at: indexPath) else {
             return
         }
         viewModel.cancelAttachmentLoading(isTriggeredByUser: false)
@@ -130,7 +130,7 @@ extension SharedMediaDataTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let viewModel = dataSource.item(for: indexPath) {
+        if let viewModel = dataSource.item(at: indexPath) {
             UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
             preview(viewModel: viewModel)
         }
@@ -141,7 +141,7 @@ extension SharedMediaDataTableViewController: UITableViewDelegate {
 extension SharedMediaDataTableViewController: AttachmentLoadingMessageCellDelegate {
     
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource.item(for: indexPath) else {
+        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource.item(at: indexPath) else {
             return
         }
         switch viewModel.operationButtonStyle {

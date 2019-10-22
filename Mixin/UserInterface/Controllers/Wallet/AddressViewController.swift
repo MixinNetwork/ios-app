@@ -23,6 +23,7 @@ class AddressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        newAddressButton.titleLabel?.set(font: .systemFont(ofSize: 14, weight: .medium), adjustForContentSize: true)
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         tableView.dataSource = self
         tableView.delegate = self

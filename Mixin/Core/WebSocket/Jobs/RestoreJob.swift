@@ -6,15 +6,19 @@ class RestoreJob: BaseJob {
     private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.restore.download")
     private let restoreQueue = DispatchQueue(label: "one.mixin.messenger.queue.restore")
     private var monitors = SafeDictionary<String, DownloadFile>()
+    private var totalFileSize: Int64 = 0
+    private var downloadedSize: Int64 = 0
     private var isStoppedQuery = false
     private var isContinueRestore: Bool {
         return !isCancelled && NetworkManager.shared.isReachableOnWiFi
     }
+    private var isRestoredAllFiles: Bool {
+        return downloadedSize >= totalFileSize
+    }
 
-    private(set) var preparing = true
-    private(set) var progress: Float = 0
-    private(set) var downloadTotalSize: Int64 = 0
-    private(set) var downloadedSize: Int64 = 0
+    var progress: Float {
+        return Float(Float64(downloadedSize) / Float64(totalFileSize))
+    }
 
     static let sharedId = "restore"
 
@@ -33,8 +37,6 @@ class RestoreJob: BaseJob {
             return
         }
 
-        FileManager.default.debugDirectory(directory: backupDir, tree: "---")
-
         let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
         let categories = [ MixinFile.ChatDirectory.photos.rawValue,
                            MixinFile.ChatDirectory.audios.rawValue,
@@ -42,8 +44,7 @@ class RestoreJob: BaseJob {
                            MixinFile.ChatDirectory.videos.rawValue ]
 
         monitors = SafeDictionary<String, DownloadFile>()
-        preparing = true
-        downloadTotalSize = 0
+        totalFileSize = 0
         downloadedSize = 0
         isStoppedQuery = false
 
@@ -55,7 +56,7 @@ class RestoreJob: BaseJob {
                 monitorURL(cloudURL: backupDir.appendingPathComponent(filename), localURL: chatDir.appendingPathComponent(filename), category: category, isZipFile: true)
             } else {
                 let cloudDir = backupDir.appendingPathComponent(category)
-                guard FileManager.default.fileExists(atPath: cloudDir.path) else {
+                guard FileManager.default.directoryExists(atPath: cloudDir.path) else {
                     continue
                 }
 
@@ -97,28 +98,36 @@ class RestoreJob: BaseJob {
                     return
                 }
 
-                let monitors = weakSelf.monitors
                 for metadataItem in metadataItems {
                     let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
                     let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
                     let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? NSNumber)?.floatValue ?? 0
-                    let isDownloaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? NSNumber)?.boolValue ?? false
+                    let status = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String)
+                    let isDownloaded = status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent
 
                     if let error = metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? NSError {
                         UIApplication.traceError(error)
                     }
 
-                    if let fileName = name, fileSize > 0, percent > 0, var monitorFile = monitors[fileName] {
+                    if let fileName = name, fileSize > 0, percent > 0, var monitorFile = weakSelf.monitors[fileName] {
                         monitorFile.downloadedSize = isDownloaded ? fileSize : Int64(Float(fileSize) * percent / 100)
                         monitorFile.isDownloaded = isDownloaded
-                        monitors[fileName] = monitorFile
+                        monitorFile.fileSize = fileSize
+                        weakSelf.monitors[fileName] = monitorFile
                         if isDownloaded {
-                            weakSelf.restoreFromCloud(file: monitorFile, chatDir: chatDir, semaphore: semaphore, query: query)
+                            weakSelf.restoreFromCloud(fileName: fileName, chatDir: chatDir, semaphore: semaphore, query: query)
                         }
                     }
                 }
-                weakSelf.monitors = monitors
-                weakSelf.downloadedSize = monitors.values.map { $0.downloadedSize }.reduce(0, +)
+
+                var totalFileSize: Int64 = 0
+                var downloadedSize: Int64 = 0
+                weakSelf.monitors.values.forEach({ (monitorFile) in
+                    totalFileSize += monitorFile.fileSize
+                    downloadedSize += monitorFile.downloadedSize
+                })
+                weakSelf.totalFileSize = totalFileSize
+                weakSelf.downloadedSize = downloadedSize
             }
         }
 
@@ -131,7 +140,6 @@ class RestoreJob: BaseJob {
         DispatchQueue.main.async {
             query.start()
         }
-        preparing = false
 
         let fileNames = [String](monitors.keys)
         for fileName in fileNames {
@@ -139,8 +147,8 @@ class RestoreJob: BaseJob {
                 continue
             }
             if file.cloudURL.isDownloaded {
-                restoreFromCloud(file: file, chatDir: chatDir, semaphore: semaphore, query: query)
-            } else if !file.cloudURL.isDownloading {
+                restoreFromCloud(fileName: fileName, chatDir: chatDir, semaphore: semaphore, query: query)
+            } else {
                 do {
                     try FileManager.default.startDownloadingUbiquitousItem(at: file.cloudURL)
                 } catch {
@@ -150,13 +158,19 @@ class RestoreJob: BaseJob {
             }
         }
 
-        if monitors.count == 0 || !isContinueRestore {
+        let hasRestoreTask = monitors.count > 0 && monitors.values.first(where: { !$0.isRestored }) != nil
+        if !hasRestoreTask || !isContinueRestore {
             DispatchQueue.main.async {
                 query.stop()
             }
         } else {
             semaphore.wait()
         }
+
+        if isRestoredAllFiles {
+            AccountUserDefault.shared.hasRestoreMedia = false
+        }
+
         NotificationCenter.default.removeObserver(observer)
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
@@ -164,16 +178,15 @@ class RestoreJob: BaseJob {
     func monitorURL(cloudURL: URL, localURL: URL, category: String, isZipFile: Bool = false) {
         if cloudURL.isDownloaded {
             let fileSize = cloudURL.fileSize
-            downloadTotalSize += fileSize
+            totalFileSize += fileSize
             downloadedSize += fileSize
-            monitors[cloudURL.lastPathComponent] = DownloadFile(cloudURL: cloudURL, localURL: localURL, category: category, downloadedSize: fileSize, isDownloaded: true, isRestored: false, isZipFile: isZipFile)
+            monitors[cloudURL.lastPathComponent] = DownloadFile(cloudURL: cloudURL, localURL: localURL, category: category, downloadedSize: fileSize, fileSize: fileSize, isDownloaded: true, isRestored: false, isZipFile: isZipFile)
         } else {
-            monitors[cloudURL.lastPathComponent] = DownloadFile(cloudURL: cloudURL, localURL: localURL, category: category, downloadedSize: 0, isDownloaded: false, isRestored: false, isZipFile: isZipFile)
+            monitors[cloudURL.lastPathComponent] = DownloadFile(cloudURL: cloudURL, localURL: localURL, category: category, downloadedSize: 0, fileSize: 0, isDownloaded: false, isRestored: false, isZipFile: isZipFile)
         }
     }
 
-    private func restoreFromCloud(file: DownloadFile, chatDir: URL, semaphore: DispatchSemaphore, query: NSMetadataQuery) {
-        var file = file
+    private func restoreFromCloud(fileName: String, chatDir: URL, semaphore: DispatchSemaphore, query: NSMetadataQuery) {
         restoreQueue.async { [weak self] in
             guard let weakSelf = self else {
                 return
@@ -182,13 +195,23 @@ class RestoreJob: BaseJob {
                 weakSelf.stopQuery(query: query, semaphore: semaphore)
                 return
             }
+            guard var file = weakSelf.monitors[fileName] else {
+                return
+            }
+            let filename = file.cloudURL.lastPathComponent
             let restoreSuccess = {
                 if !file.isRestored {
                     file.isRestored = true
-                    weakSelf.monitors[file.cloudURL.lastPathComponent] = file
+                    weakSelf.monitors[filename] = file
                 }
 
-                if weakSelf.monitors.values.first(where: { !$0.isRestored }) == nil {
+                if weakSelf.isRestoredAllFiles {
+                    weakSelf.stopQuery(query: query, semaphore: semaphore)
+                }
+            }
+            let restoreFailed = {
+                weakSelf.monitors.removeValue(forKey: filename)
+                if weakSelf.isRestoredAllFiles {
                     weakSelf.stopQuery(query: query, semaphore: semaphore)
                 }
             }
@@ -230,6 +253,7 @@ class RestoreJob: BaseJob {
                 restoreSuccess()
             } catch {
                 UIApplication.traceError(error)
+                restoreFailed()
             }
         }
     }
@@ -250,6 +274,7 @@ private struct DownloadFile {
     let localURL: URL
     let category: String
     var downloadedSize: Int64
+    var fileSize: Int64
     var isDownloaded: Bool
     var isRestored: Bool
     var isZipFile: Bool

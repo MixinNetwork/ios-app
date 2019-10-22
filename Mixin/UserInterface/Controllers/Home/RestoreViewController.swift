@@ -71,7 +71,7 @@ class RestoreViewController: UIViewController {
             self.removeDatabase(databaseURL: localURL)
             do {
                 if !cloudURL.isDownloaded {
-                    try cloudURL.downloadFromCloud(progress: { (progress) in
+                    try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
                         self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
                     })
                 }
@@ -120,5 +120,42 @@ class RestoreViewController: UIViewController {
             self.progressLabel.isHidden = true
         }
         UIApplication.traceError(error)
+    }
+
+    private func downloadFromCloud(cloudURL: URL, progress: @escaping (Float) -> Void) throws {
+        guard !cloudURL.isDownloaded else {
+            progress(1)
+            return
+        }
+        try FileManager.default.startDownloadingUbiquitousItem(at: cloudURL)
+
+        let query = NSMetadataQuery()
+        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+        query.predicate = NSPredicate(format: "%K LIKE[CD] %@", NSMetadataItemPathKey, cloudURL.path)
+        query.valueListAttributes = [NSMetadataUbiquitousItemPercentDownloadedKey,
+                                     NSMetadataUbiquitousItemDownloadingStatusKey]
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: .main) { (notification) in
+            guard let metadataItem = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem])?.first else {
+                return
+            }
+
+            if let percent = metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double, percent > 1 {
+                progress(Float(percent) / 100)
+            }
+            if let status = metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String {
+                guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
+                    return
+                }
+                query.stop()
+                semaphore.signal()
+            }
+        }
+        DispatchQueue.main.async {
+            query.start()
+        }
+        semaphore.wait()
+        NotificationCenter.default.removeObserver(observer)
     }
 }

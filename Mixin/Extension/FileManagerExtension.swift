@@ -90,11 +90,27 @@ extension FileManager {
                 if directoryExists(atPath: url.path) {
                     removeDirectoryAndChildFiles(url)
                 } else {
-                    try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))
+                    try? FileManager.default.removeItem(at: url)
                 }
             }
         }
         try? FileManager.default.removeItem(at: directory)
+    }
+
+    func removeCloudCacheFiles(_ directory: URL) {
+        guard directoryExists(atPath: directory.path) else {
+            return
+        }
+        if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
+            for file in files {
+                let url = directory.appendingPathComponent(file)
+                if directoryExists(atPath: url.path) {
+                    removeCloudCacheFiles(url)
+                } else {
+                    try? FileManager.default.evictUbiquitousItem(at: url)
+                }
+            }
+        }
     }
 
     func mimeType(ext: String) -> String {

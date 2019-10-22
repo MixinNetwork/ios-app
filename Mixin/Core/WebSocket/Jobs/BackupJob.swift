@@ -143,9 +143,7 @@ class BackupJob: BaseJob {
         let databaseCloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
         let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
 
-        if isBackupDatabase {
-            backupTotalSize += databaseFileSize
-        } else {
+        if !isBackupDatabase {
             withoutUploadSize += databaseFileSize
             totalFileSize += databaseFileSize
         }
@@ -198,7 +196,7 @@ class BackupJob: BaseJob {
         }
 
         if isBackupDatabase {
-            copyToCloud(from: MixinFile.databaseURL, destination: databaseCloudURL, addToTotalSize: true)
+            copyToCloud(from: MixinFile.databaseURL, destination: databaseCloudURL, isDatabase: true)
         }
         for path in backupPaths {
             guard isContinueBackup else {
@@ -209,7 +207,7 @@ class BackupJob: BaseJob {
 
         isBackingUp = false
 
-        if monitors.count == 0 || !isContinueBackup {
+        if uploadedSize >= totalFileSize || !isContinueBackup {
             DispatchQueue.main.async {
                 query.stop()
             }
@@ -231,7 +229,7 @@ class BackupJob: BaseJob {
     private func getDatabaseFileSize() -> Int64 {
         let now = Date().timeIntervalSince1970
         try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
-        if now - DatabaseUserDefault.shared.lastVacuumTime >= 86400 * 7 {
+        if now - DatabaseUserDefault.shared.lastVacuumTime >= 86400 * 14 {
             DatabaseUserDefault.shared.lastVacuumTime = now
             try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
         }
@@ -247,7 +245,7 @@ class BackupJob: BaseJob {
         semaphore.signal()
     }
 
-    private func copyToCloud(from: URL, destination: URL, addToTotalSize: Bool = false) {
+    private func copyToCloud(from: URL, destination: URL, isDatabase: Bool = false) {
         let tmpFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         monitors[destination.lastPathComponent] = 0
         do {
@@ -257,11 +255,14 @@ class BackupJob: BaseJob {
             }
             try FileManager.default.setUbiquitous(true, itemAt: tmpFile, destinationURL: destination)
             backupSize += from.fileSize
-            if addToTotalSize {
+            if isDatabase {
+                backupTotalSize += destination.fileSize
                 totalFileSize += destination.fileSize
             }
         } catch {
-            backupTotalSize -= from.fileSize
+            if !isDatabase {
+                backupTotalSize -= from.fileSize
+            }
             monitors.removeValue(forKey: destination.lastPathComponent)
             if tmpFile.fileExists {
                 try? FileManager.default.removeItem(at: tmpFile)

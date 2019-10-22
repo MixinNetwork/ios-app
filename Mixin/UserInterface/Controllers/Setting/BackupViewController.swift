@@ -123,8 +123,8 @@ class BackupViewController: UITableViewController {
                 let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
                 text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
             }
-        } else if let restoreProgress = BackupJobQueue.shared.restoreJob?.progress {
-            let number = NSNumber(value: restoreProgress)
+        } else if let restoreJob = BackupJobQueue.shared.restoreJob {
+            let number = NSNumber(value: restoreJob.progress)
             let percentage = NumberFormatter.simplePercentage.string(from: number)
             text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
         } else {

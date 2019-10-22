@@ -9,7 +9,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var memoScanButton: UIButton!
     @IBOutlet weak var saveButton: RoundedButton!
     @IBOutlet weak var assetView: AssetIconView!
-    @IBOutlet weak var memoHintTextView: IntroTextView!
+    @IBOutlet weak var memoHintTextView: UITextView!
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var memoView: CornerView!
 
@@ -61,7 +61,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         }
 
         memoTextView.placeholder = asset.memoLabel
-        memoHintTextView.delegate = self
         updateMemoTips()
     }
 
@@ -178,6 +177,30 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         })
     }
     
+    @IBAction func memoHintTapAction(_ recognizer: UITapGestureRecognizer) {
+        guard recognizer.state == .ended else {
+            return
+        }
+        let point = recognizer.location(in: memoHintTextView)
+        guard let position = memoHintTextView.closestPosition(to: point) else {
+            return
+        }
+        guard let range = memoHintTextView.tokenizer.rangeEnclosingPosition(position, with: .character, inDirection: .layout(.left)) else {
+            return
+        }
+        let startIndex = memoHintTextView.offset(from: memoHintTextView.beginningOfDocument, to: range.start)
+        let attr = memoHintTextView.attributedText.attribute(.link, at: startIndex, effectiveRange: nil)
+        guard attr != nil else {
+            return
+        }
+        noMemo.toggle()
+        if noMemo {
+            memoTextView.text = ""
+        }
+        checkLabelAndAddressAction(textView)
+        updateMemoTips()
+    }
+    
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "new_address") as! NewAddressViewController
         vc.asset = asset
@@ -195,9 +218,6 @@ extension NewAddressViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        guard textView != memoHintTextView else {
-            return
-        }
         checkLabelAndAddressAction(textView)
         view.layoutIfNeeded()
         let sizeToFit = CGSize(width: textView.bounds.width,
@@ -205,20 +225,7 @@ extension NewAddressViewController: UITextViewDelegate {
         let contentSize = textView.sizeThatFits(sizeToFit)
         textView.isScrollEnabled = contentSize.height > textView.frame.height
     }
-
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        guard textView == memoHintTextView else {
-            return true
-        }
-        noMemo = !noMemo
-        if noMemo {
-            memoTextView.text = ""
-        }
-        checkLabelAndAddressAction(textView)
-        updateMemoTips()
-        return false
-    }
-
+    
 }
 
 extension NewAddressViewController: CameraViewControllerDelegate {

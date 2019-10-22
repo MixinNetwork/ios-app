@@ -121,12 +121,12 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
         return items[dates[section]]?.count ?? 0
     }
     
-    func item(for indexPath: IndexPath) -> ItemType? {
+    func item(at indexPath: IndexPath) -> ItemType? {
         guard indexPath.section < dates.count else {
             return nil
         }
         let date = dates[indexPath.section]
-        guard let items = self.items[date], indexPath.row < items.count else {
+        guard let items = self.items[date], indexPath.row >= 0, indexPath.row < items.count else {
             return nil
         }
         return items[indexPath.row]

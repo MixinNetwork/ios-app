@@ -104,7 +104,7 @@ extension SharedMediaMediaViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.shared_media, for: indexPath)!
-        if let item = dataSource.item(for: indexPath) {
+        if let item = dataSource.item(at: indexPath) {
             cell.render(item: item)
         }
         return cell
@@ -123,7 +123,7 @@ extension SharedMediaMediaViewController: UICollectionViewDataSource {
 extension SharedMediaMediaViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let item = dataSource.item(for: indexPath), let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else {
+        guard let item = dataSource.item(at: indexPath), let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else {
             return
         }
         if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {

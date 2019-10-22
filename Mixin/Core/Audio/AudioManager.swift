@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 
-class AudioManager {
+class AudioManager: NSObject {
     
     struct WeakCellBox {
         weak var cell: AudioCell?
@@ -9,6 +9,7 @@ class AudioManager {
     
     static let shared = AudioManager()
     static let willPlayNextNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
+    static let willPlayPreviousNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_previous")
     static let conversationIdUserInfoKey = "conversation_id"
     static let messageIdUserInfoKey = "message_id"
     
@@ -20,7 +21,8 @@ class AudioManager {
     
     private var cells = [String: WeakCellBox]()
     
-    init() {
+    override init() {
+        super.init()
         queue.setSpecific(key: queueSpecificKey, value: ())
     }
     
@@ -98,7 +100,18 @@ class AudioManager {
                 
                 self.playingMessage = message
                 self.player = try AudioPlayer(path: path)
-                self.player!.onStatusChanged = self.playerStatusChanged
+                self.player!.onStatusChanged = { [weak self] player in
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    if DispatchQueue.getSpecific(key: weakSelf.queueSpecificKey) == nil {
+                        weakSelf.queue.async {
+                            weakSelf.handleStatusChange(player: player)
+                        }
+                    } else {
+                        weakSelf.handleStatusChange(player: player)
+                    }
+                }
                 self.player!.play()
                 
                 self.preloadAudio(nextTo: message)
@@ -225,35 +238,26 @@ class AudioManager {
         player = nil
     }
     
-    private func playerStatusChanged(player: AudioPlayer) {
-        
-        func handleStatusChange() {
-            DispatchQueue.main.async {
-                UIApplication.shared.isIdleTimerDisabled = player.status == .playing
-            }
-            if player.status == .didReachEnd, let playingMessage = playingMessage {
-                DispatchQueue.main.sync {
-                    cells[playingMessage.messageId]?.cell?.style = .stopped
-                }
-                if let next = self.playableMessage(nextTo: playingMessage) {
-                    DispatchQueue.main.sync {
-                        let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
-                                        AudioManager.messageIdUserInfoKey: next.messageId]
-                        NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
-                        play(message: next)
-                    }
-                } else {
-                    self.playingMessage = nil
-                    NotificationCenter.default.removeObserver(self)
-                    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-                }
-            }
+    func handleStatusChange(player: AudioPlayer) {
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = player.status == .playing
         }
-        
-        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
-            queue.async(execute: handleStatusChange)
-        } else {
-            handleStatusChange()
+        if player.status == .didReachEnd, let playingMessage = playingMessage {
+            DispatchQueue.main.sync {
+                cells[playingMessage.messageId]?.cell?.style = .stopped
+            }
+            if let next = self.playableMessage(nextTo: playingMessage) {
+                DispatchQueue.main.sync {
+                    let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
+                                    AudioManager.messageIdUserInfoKey: next.messageId]
+                    NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
+                    play(message: next)
+                }
+            } else {
+                self.playingMessage = nil
+                NotificationCenter.default.removeObserver(self)
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            }
         }
     }
     

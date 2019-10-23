@@ -8,16 +8,9 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var restoreButton: RoundedButton!
     @IBOutlet weak var progressLabel: UILabel!
-    
-    private var stopDownload = false
-    private let query = NSMetadataQuery()
 
     class func instance() -> UIViewController {
         return Storyboard.home.instantiateViewController(withIdentifier: "restore")
-    }
-
-    deinit {
-        stopDownload = true
     }
 
     override func viewDidLoad() {

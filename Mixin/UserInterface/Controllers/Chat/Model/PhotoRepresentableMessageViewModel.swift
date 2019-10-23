@@ -37,7 +37,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         super.init(message: message, style: style, fits: layoutWidth)
     }
     
-    override func didSetStyle() {
+    override func layout() {
         let backgroundImageMargin = MessageViewModel.backgroundImageMargin
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
@@ -63,7 +63,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         }
         backgroundImageFrame = contentFrame
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
-        super.didSetStyle()
+        super.layout()
     }
     
     func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {

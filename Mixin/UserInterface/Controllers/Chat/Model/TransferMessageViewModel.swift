@@ -9,8 +9,8 @@ class TransferMessageViewModel: CardMessageViewModel {
         super.init(message: message, style: style, fits: layoutWidth)
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         if !style.contains(.received) {
             timeFrame.origin.x += statusFrame.width
         }

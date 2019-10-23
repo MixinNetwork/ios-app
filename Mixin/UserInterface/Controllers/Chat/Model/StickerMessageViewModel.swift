@@ -45,7 +45,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
         backgroundImage = nil
     }
     
-    override func didSetStyle() {
+    override func layout() {
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         let timeMargin = StickerMessageViewModel.timeMargin
@@ -71,7 +71,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
                                           width: contentSize.width + contentMargin.horizontal,
                                           height: contentSize.height + contentMargin.vertical)
         }
-        super.didSetStyle()
+        super.layout()
         fullnameFrame.size.width = min(fullnameWidth, maxContentWidth)
         if style.contains(.received) {
             timeFrame.origin.x = max(timeFrame.origin.x, contentFrame.origin.x)

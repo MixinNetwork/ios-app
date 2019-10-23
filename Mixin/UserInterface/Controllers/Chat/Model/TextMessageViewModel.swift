@@ -131,10 +131,10 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             }
         }
         self.contentSize = contentSize
-        didSetStyle()
+        layout()
     }
     
-    override func didSetStyle() {
+    override func layout() {
         if style.contains(.received) {
             backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
                                           y: 0,
@@ -155,7 +155,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                                        height: textSize.height)
         }
         cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
-        super.didSetStyle()
+        super.layout()
     }
     
     func highlight(keyword: String) {

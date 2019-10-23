@@ -32,8 +32,8 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
         return false
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         if style.contains(.received) {
             prefixImage = R.image.ic_recalled_message_prefix_received()
         } else {

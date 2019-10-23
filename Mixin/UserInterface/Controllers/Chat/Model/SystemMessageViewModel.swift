@@ -29,8 +29,8 @@ class SystemMessageViewModel: MessageViewModel {
         backgroundImage = #imageLiteral(resourceName: "ic_chat_bubble_system")
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         cellHeight = textRect.height + SystemMessageViewModel.labelVerticalInset + bottomSeparatorHeight
     }
     

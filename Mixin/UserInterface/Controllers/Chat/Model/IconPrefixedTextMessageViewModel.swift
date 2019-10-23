@@ -13,8 +13,8 @@ class IconPrefixedTextMessageViewModel: TextMessageViewModel {
             + IconPrefixedTextMessageViewModel.prefixInset.horizontal
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         prefixFrame = CGRect(x: contentLabelFrame.origin.x + IconPrefixedTextMessageViewModel.prefixInset.left,
                              y: contentLabelFrame.origin.y,
                              width: IconPrefixedTextMessageViewModel.prefixSize.width,

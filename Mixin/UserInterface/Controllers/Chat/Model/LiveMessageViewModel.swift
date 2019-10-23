@@ -10,8 +10,8 @@ class LiveMessageViewModel: PhotoRepresentableMessageViewModel {
     
     var badgeOrigin = CGPoint.zero
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         if style.contains(.received) {
             badgeOrigin = CGPoint(x: contentFrame.origin.x + badgeMargin.leading,
                                   y: contentFrame.origin.y + badgeMargin.top)

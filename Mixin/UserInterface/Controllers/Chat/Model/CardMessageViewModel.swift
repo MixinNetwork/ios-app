@@ -33,7 +33,7 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         return 30
     }
     
-    override func didSetStyle() {
+    override func layout() {
         let backgroundSize = CGSize(width: min(size.width, layoutWidth - MessageViewModel.backgroundImageMargin.horizontal),
                                     height: size.height)
         let backgroundOrigin: CGPoint
@@ -48,7 +48,7 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         }
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
         cellHeight = fullnameHeight + backgroundSize.height + bottomSeparatorHeight
-        super.didSetStyle()
+        super.layout()
     }
     
 }

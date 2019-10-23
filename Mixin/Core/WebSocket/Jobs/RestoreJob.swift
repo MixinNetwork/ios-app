@@ -191,7 +191,7 @@ class RestoreJob: BaseJob {
             guard let weakSelf = self else {
                 return
             }
-            guard weakSelf.isContinueRestore else {
+            guard !weakSelf.isCancelled else {
                 weakSelf.stopQuery(query: query, semaphore: semaphore)
                 return
             }
@@ -222,17 +222,6 @@ class RestoreJob: BaseJob {
             }
 
             do {
-                if file.isZipFile {
-                    let localDir = chatDir.appendingPathComponent(file.category)
-                    if FileManager.default.directoryExists(atPath: localDir.path) {
-                        let contents = try FileManager.default.contentsOfDirectory(atPath: localDir.path)
-                        if contents.count > 0 {
-                            restoreSuccess()
-                            return
-                        }
-                    }
-                }
-
                 let cloudURL = file.cloudURL
                 let localURL = file.localURL
                 if FileManager.default.fileExists(atPath: localURL.path) {

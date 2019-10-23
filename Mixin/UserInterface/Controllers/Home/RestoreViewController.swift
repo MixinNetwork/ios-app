@@ -64,9 +64,6 @@ class RestoreViewController: UIViewController {
                 return
             }
 
-            DatabaseUserDefault.shared.forceUpgradeDatabase = true
-            MixinDatabase.shared.close()
-
             let localURL = MixinFile.databaseURL
             self.removeDatabase(databaseURL: localURL)
             do {
@@ -77,9 +74,10 @@ class RestoreViewController: UIViewController {
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 
-                MixinDatabase.shared.initDatabase(clearSentSenderKey: true)
                 AccountUserDefault.shared.hasRestoreChat = false
                 AccountUserDefault.shared.hasRestoreMedia = true
+                DatabaseUserDefault.shared.clearSentSenderKey = true
+                DatabaseUserDefault.shared.forceUpgradeDatabase = true
 
                 DispatchQueue.main.async {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()

@@ -125,7 +125,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        guard client != nil else {
+        guard client != nil, AccountAPI.shared.didLogin else {
             return
         }
         if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
@@ -165,8 +165,13 @@ extension WebSocketService: SRWebSocketDelegate {
             CryptoUserDefault.shared.refreshOneTimePreKey = cur
         }
 
-        if CommonUserDefault.shared.backupCategory != .off && NetworkManager.shared.isReachableOnWiFi {
-            BackupJobQueue.shared.addJob(job: BackupJob())
+        if NetworkManager.shared.isReachableOnWiFi {
+            if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
+                BackupJobQueue.shared.addJob(job: BackupJob())
+            }
+            if AccountUserDefault.shared.hasRestoreMedia {
+                BackupJobQueue.shared.addJob(job: RestoreJob())
+            }
         }
 
         ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())

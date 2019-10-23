@@ -78,6 +78,7 @@ enum ReportErrorCode: Int {
     case databaseNoSuchTable = 100018
     case appUpgradeError = 100020
     case loadAvatar = 100021
+    case restoreError = 100022
     
     var errorName: String {
         switch self {
@@ -123,6 +124,8 @@ enum ReportErrorCode: Int {
             return "appUpgradeError"
         case .loadAvatar:
             return "loadAvatar"
+        case .restoreError:
+            return "restoreError"
         }
     }
 }
@@ -238,7 +241,7 @@ struct MixinFile {
         return dir.appendingPathComponent("signal.db").path
     }
 
-    static let backupDatabaseName = "mixin.backup.db"
+    static let backupDatabaseName = "mixin.db"
 
     static func url(ofChatDirectory directory: ChatDirectory, filename: String?) -> URL {
         let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)

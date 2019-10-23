@@ -16,6 +16,12 @@ class DatabaseUserDefault {
     private var keyForceUpgradeDatabase: String {
         return "key_force_upgrade_database_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyLastVacuumTime: String {
+        return "key_last_vacuum_time_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyClearSentSenderKey: String {
+        return "key_clear_sent_sender_key_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
     let currentDatabaseVersion = 4
@@ -55,4 +61,21 @@ class DatabaseUserDefault {
         }
     }
 
+    var lastVacuumTime: TimeInterval {
+        get {
+            return session.double(forKey: keyLastVacuumTime)
+        }
+        set {
+            session.set(newValue, forKey: keyLastVacuumTime)
+        }
+    }
+
+    var clearSentSenderKey: Bool {
+        get {
+            return session.bool(forKey: keyClearSentSenderKey)
+        }
+        set {
+            session.set(newValue, forKey: keyClearSentSenderKey)
+        }
+    }
 }

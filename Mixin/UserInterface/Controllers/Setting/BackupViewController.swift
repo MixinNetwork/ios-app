@@ -12,7 +12,6 @@ class BackupViewController: UITableViewController {
     private let footerReuseId = "footer"
     
     private lazy var actionSectionFooterView = SeparatorShadowFooterView()
-    private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
     private lazy var autoBackupFrequencyController: UIAlertController = {
         let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
@@ -58,16 +57,13 @@ class BackupViewController: UITableViewController {
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
         updateUIOfBackupFrequency()
         reloadActionSectionFooterLabel()
+
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
-        if BackupJobQueue.shared.isBackingUp {
+        if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
             backingUI()
-        } else {
-            backupAvailabilityQuery.fileExist() { (exist) in
-                if !exist {
-                    CommonUserDefault.shared.lastBackupTime = 0
-                    CommonUserDefault.shared.lastBackupSize = 0
-                }
-            }
+        } else if let backupDir = MixinFile.iCloudBackupDirectory, !backupDir.isStoredCloud {
+            CommonUserDefault.shared.lastBackupTime = 0
+            CommonUserDefault.shared.lastBackupSize = 0
         }
     }
     
@@ -79,7 +75,6 @@ class BackupViewController: UITableViewController {
     @objc func backupChanged() {
         timer?.invalidate()
         timer = nil
-        reloadActionSectionFooterLabel(progress: 1)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.reloadActionSectionFooterLabel()
             self.backupIndicatorView.stopAnimating()
@@ -100,7 +95,7 @@ class BackupViewController: UITableViewController {
 
     private func backingUI() {
         backupIndicatorView.startAnimating()
-        backupLabel.text = Localized.SETTING_BACKING
+        backupLabel.text = BackupJobQueue.shared.isBackingUp ? R.string.localizable.setting_backing() : R.string.localizable.setting_restoring()
         switchIncludeFiles.isEnabled = false
         switchIncludeVideos.isEnabled = false
         reloadActionSectionFooterLabel()
@@ -110,12 +105,28 @@ class BackupViewController: UITableViewController {
         })
     }
     
-    private func reloadActionSectionFooterLabel(progress: Float? = nil) {
+    private func reloadActionSectionFooterLabel() {
         let text: String?
-        if let progress = progress ?? BackupJobQueue.shared.backupJob?.progress.fractionCompleted {
-            let number = NSNumber(value: progress)
+        if let backupJob = BackupJobQueue.shared.backupJob {
+            if backupJob.isBackingUp {
+                if backupJob.backupSize == 0 {
+                    text = R.string.localizable.setting_backup_preparing()
+                } else {
+                    let progress = NumberFormatter.simplePercentage.stringFormat(value: Float64(backupJob.backupSize) / Float64(backupJob.backupTotalSize))
+                    text = R.string.localizable.setting_backup_preparing_progress(progress)
+                }
+            } else if backupJob.uploadedSize == 0 {
+                text = R.string.localizable.setting_backup_uploading()
+            } else {
+                let uploadedSize = backupJob.uploadedSize
+                let totalFileSize = backupJob.totalFileSize
+                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
+                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
+            }
+        } else if let restoreJob = BackupJobQueue.shared.restoreJob {
+            let number = NSNumber(value: restoreJob.progress)
             let percentage = NumberFormatter.simplePercentage.string(from: number)
-            text = Localized.SETTING_BACKUP_PROGRESS(progress: percentage ?? "")
+            text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
         } else {
             let time = CommonUserDefault.shared.lastBackupTime
             if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {

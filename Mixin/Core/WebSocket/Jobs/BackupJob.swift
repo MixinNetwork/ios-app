@@ -1,23 +1,29 @@
 import Foundation
-import Zip
 import WCDBSwift
 
 class BackupJob: BaseJob {
     
     static let sharedId = "backup"
-    
-    let progress = Progress()
-    
+
+    private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
     private let immediatelyBackup: Bool
-    
-    private var shouldBackupFiles: Bool {
-        return CommonUserDefault.shared.hasBackupFiles
+    private var monitors = SafeDictionary<String, Int64>()
+    private var withoutUploadSize: Int64 = 0
+    private var realUploadedSize: Int64 = 0
+    private var isStoppedQuery = false
+    private var isContinueBackup: Bool {
+        return !isCancelled && NetworkManager.shared.isReachableOnWiFi
     }
-    
-    private var shouldBackupVideos: Bool {
-        return CommonUserDefault.shared.hasBackupVideos
+
+    private(set) var isBackingUp = true
+    private(set) var totalFileSize: Int64 = 0
+    private(set) var backupTotalSize: Int64 = 0
+    private(set) var backupSize: Int64 = 0
+
+    var uploadedSize: Int64 {
+        return realUploadedSize + withoutUploadSize
     }
-    
+
     init(immediatelyBackup: Bool = false) {
         self.immediatelyBackup = immediatelyBackup
         super.init()
@@ -35,7 +41,7 @@ class BackupJob: BaseJob {
             return
         }
 
-        if !immediatelyBackup {
+        if !immediatelyBackup && !AccountUserDefault.shared.hasRebackup {
             let lastBackupTime = CommonUserDefault.shared.lastBackupTime
             let now = Date().timeIntervalSince1970
             switch CommonUserDefault.shared.backupCategory {
@@ -56,143 +62,232 @@ class BackupJob: BaseJob {
             }
         }
 
-        do {
-            try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
-            
-            if !shouldBackupFiles && !shouldBackupVideos {
-                progress.remainingJobCount = 3
-            } else {
-                progress.remainingJobCount = 4
-            }
-            
-            var fileSize: Int64 = 0
-            fileSize += try backupDatabase(backupDir: backupDir)
-            fileSize += try backupPhotosAndAudios(backupDir: backupDir)
-            fileSize += try backupFilesAndVideos(backupDir: backupDir)
-            
-            CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
-            CommonUserDefault.shared.lastBackupSize = fileSize
-        } catch {
-            #if DEBUG
-            print(error)
-            #endif
-            UIApplication.traceError(error)
-        }
-        NotificationCenter.default.postOnMain(name: .BackupDidChange)
-    }
+        AccountUserDefault.shared.hasRebackup = true
 
-    private func backupDatabase(backupDir: URL) throws -> Int64 {
-        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
-        try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+        try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
 
-        try FileManager.default.saveToCloud(from: MixinFile.databaseURL, to: cloudURL, removeFromFile: false)
-        progress.completeCurrentJob()
-        return FileManager.default.fileSize(cloudURL.path)
-    }
-
-    private func backupPhotosAndAudios(backupDir: URL) throws -> Int64 {
-        let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
-        var fileSize: Int64 = 0
-        for category in categories {
-            let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
-            let paths = try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ localDir.appendingPathComponent($0) }
-            if paths.isEmpty {
-                progress.completeCurrentJob()
-            } else {
-                let localURL = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())", progress: { (progress) in
-                    self.progress.currentJobProgress = Float(progress)
-                })
-                let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
-                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
-                fileSize += FileManager.default.fileSize(cloudURL.path)
-                progress.completeCurrentJob()
-            }
-        }
-        return fileSize
-    }
-
-    private func backupFilesAndVideos(backupDir: URL) throws -> Int64 {
-        var categories = [MixinFile.ChatDirectory]()
-        var localPaths = Set<String>()
-        var cloudPaths = Set<String>()
-
-        if shouldBackupFiles {
+        var categories: [MixinFile.ChatDirectory] = [.photos, .audios]
+        if CommonUserDefault.shared.hasBackupFiles {
             categories.append(.files)
-            try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         } else {
             FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         }
-
-        if shouldBackupVideos {
+        if CommonUserDefault.shared.hasBackupVideos {
             categories.append(.videos)
-            try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
         } else {
             FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
         }
+
+        var localPaths = Set<String>()
+        var cloudPaths = Set<String>()
+        let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
 
         for category in categories {
             let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
             let cloudDir = backupDir.appendingPathComponent(category.rawValue)
 
-            localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ "\(category.rawValue)/\($0)" })
-            cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).compactMap{ "\(category.rawValue)/\($0)" })
+            if localDir.fileExists {
+                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).map { "\(category.rawValue)/\($0)" })
+            }
+            if cloudDir.fileExists {
+                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).map { "\(category.rawValue)/\($0)" })
+            } else {
+                try FileManager.default.createDirectoryIfNeeded(dir: cloudDir)
+            }
         }
 
         for path in cloudPaths {
             if !localPaths.contains(path) {
-                try FileManager.default.removeItem(at: backupDir.appendingPathComponent(path))
+                try? FileManager.default.removeItem(at: backupDir.appendingPathComponent(path))
             }
         }
 
-        var fileSize: Int64 = 0
-        let pathCount = Float(localPaths.count)
-        for (index, path) in localPaths.enumerated() {
-            progress.currentJobProgress = Float(index + 1) / pathCount
-            let localURL = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
-            let cloudURL = backupDir.appendingPathComponent(path)
+        guard isContinueBackup else {
+            return
+        }
 
-            if FileManager.default.fileExists(atPath: cloudURL.path) {
-                if FileManager.default.fileSize(cloudURL.path) != FileManager.default.fileSize(localURL.path) {
-                    try FileManager.default.saveToCloud(from: localURL, to: cloudURL, removeFromFile: false)
+        var uploadPaths: [String] = []
+        var backupPaths: [String] = []
+        monitors = SafeDictionary<String, Int64>()
+        totalFileSize = 0
+        withoutUploadSize = 0
+        realUploadedSize = 0
+        backupSize = 0
+        backupTotalSize = 0
+        isStoppedQuery = false
+        isBackingUp = true
+
+        for filename in localPaths {
+            let localURL = chatDir.appendingPathComponent(filename)
+            let cloudURL = backupDir.appendingPathComponent(filename)
+            let localFileSize = FileManager.default.fileSize(localURL.path)
+            let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
+
+            if !cloudExists || FileManager.default.fileSize(cloudURL.path) != localFileSize {
+                backupPaths.append(filename)
+                backupTotalSize += localFileSize
+
+                uploadPaths.append(filename)
+            } else if cloudExists {
+                if cloudURL.isUploaded {
+                    withoutUploadSize += localFileSize
+                } else {
+                    uploadPaths.append(filename)
                 }
-            } else {
-                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
             }
-            fileSize += FileManager.default.fileSize(cloudURL.path)
+            totalFileSize += localFileSize
         }
-        progress.completeCurrentJob()
-        return fileSize
-    }
-    
-}
 
-extension BackupJob {
-    
-    class Progress {
-        
-        var completedJobCount = 0
-        var remainingJobCount = 0
-        
-        var currentJobProgress: Float = 0
-        
-        var fractionCompleted: Float {
-            let totalCount = completedJobCount + remainingJobCount
-            guard totalCount > 0 else {
-                return 0
+        let databaseFileSize = getDatabaseFileSize()
+        let databaseCloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+        let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
+
+        if !isBackupDatabase {
+            withoutUploadSize += databaseFileSize
+            totalFileSize += databaseFileSize
+        }
+
+        guard isContinueBackup else {
+            return
+        }
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let query = NSMetadataQuery()
+
+        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: nil) { [weak self](notification) in
+            guard let metadataItems = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem]) else {
+                return
             }
-            if remainingJobCount > 0 {
-                return (Float(completedJobCount) + currentJobProgress) / Float(totalCount)
-            } else {
-                return 1
+            self?.monitorQueue.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                guard weakSelf.isContinueBackup else {
+                    weakSelf.stopQuery(query: query, semaphore: semaphore)
+                    return
+                }
+
+                for metadataItem in metadataItems {
+                    let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
+                    let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
+                    let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.floatValue ?? 0
+                    let isUploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
+
+                    if let fileName = name, fileSize > 0, percent > 0, weakSelf.monitors[fileName] != nil {
+                        weakSelf.monitors[fileName] = isUploaded ? fileSize : Int64(Float(fileSize) * percent / 100)
+                    }
+                }
+                weakSelf.realUploadedSize = weakSelf.monitors.values.map { $0 }.reduce(0, +)
+                if weakSelf.uploadedSize >= weakSelf.totalFileSize {
+                    weakSelf.stopQuery(query: query, semaphore: semaphore)
+                }
             }
         }
-        
-        func completeCurrentJob() {
-            completedJobCount += 1
-            remainingJobCount -= 1
-            currentJobProgress = 0
+
+        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+        query.valueListAttributes = [ NSMetadataUbiquitousItemPercentUploadedKey,
+                                      NSMetadataUbiquitousItemIsUploadingKey,
+                                      NSMetadataUbiquitousItemUploadingErrorKey,
+                                      NSMetadataUbiquitousItemIsUploadedKey]
+        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupDir.path)
+        DispatchQueue.main.async {
+            query.start()
         }
-        
+
+        if isBackupDatabase {
+            copyToCloud(from: MixinFile.databaseURL, destination: databaseCloudURL, isDatabase: true)
+        }
+        for path in backupPaths {
+            guard isContinueBackup else {
+                return
+            }
+            copyToCloud(from: chatDir.appendingPathComponent(path), destination: backupDir.appendingPathComponent(path))
+        }
+
+        isBackingUp = false
+
+        if uploadedSize >= totalFileSize || !isContinueBackup {
+            DispatchQueue.main.async {
+                query.stop()
+            }
+        } else {
+            semaphore.wait()
+        }
+        NotificationCenter.default.removeObserver(observer)
+
+        if uploadedSize >= totalFileSize {
+            removeOldFiles(backupDir: backupDir)
+            CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
+            CommonUserDefault.shared.lastBackupSize = totalFileSize
+            AccountUserDefault.shared.hasRebackup = false
+        }
+
+        NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
-    
+
+    private func getDatabaseFileSize() -> Int64 {
+        let now = Date().timeIntervalSince1970
+        try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+        if now - DatabaseUserDefault.shared.lastVacuumTime >= 86400 * 14 {
+            DatabaseUserDefault.shared.lastVacuumTime = now
+            try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
+        }
+        return FileManager.default.fileSize(MixinFile.databaseURL.path)
+    }
+
+    private func stopQuery(query: NSMetadataQuery, semaphore: DispatchSemaphore) {
+        guard !isStoppedQuery else {
+            return
+        }
+        isStoppedQuery = true
+        query.stop()
+        semaphore.signal()
+    }
+
+    private func copyToCloud(from: URL, destination: URL, isDatabase: Bool = false) {
+        let tmpFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        monitors[destination.lastPathComponent] = 0
+        do {
+            try FileManager.default.copyItem(at: from, to: tmpFile)
+            if FileManager.default.fileExists(atPath: destination.path) {
+                try FileManager.default.removeItem(at: destination)
+            }
+            try FileManager.default.setUbiquitous(true, itemAt: tmpFile, destinationURL: destination)
+            backupSize += from.fileSize
+            if isDatabase {
+                backupTotalSize += destination.fileSize
+                totalFileSize += destination.fileSize
+            }
+        } catch {
+            if !isDatabase {
+                backupTotalSize -= from.fileSize
+            }
+            monitors.removeValue(forKey: destination.lastPathComponent)
+            if tmpFile.fileExists {
+                try? FileManager.default.removeItem(at: tmpFile)
+            }
+            UIApplication.traceError(error)
+        }
+    }
+
+    private func removeOldFiles(backupDir: URL) {
+        let files = ["mixin.backup.db",
+                     "mixin.\(MixinFile.ChatDirectory.photos.rawValue.lowercased()).zip",
+            "mixin.\(MixinFile.ChatDirectory.audios.rawValue.lowercased()).zip"]
+
+        let baseDir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        for file in files {
+            let cloudURL = backupDir.appendingPathComponent(file)
+            if cloudURL.isStoredCloud {
+                try? FileManager.default.removeItem(at: cloudURL)
+            }
+
+            if file.hasSuffix(".zip") {
+                let localURL = baseDir.appendingPathComponent(file)
+                if localURL.fileExists {
+                    try? FileManager.default.removeItem(at: localURL)
+                }
+            }
+        }
+    }
 }

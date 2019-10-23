@@ -8,6 +8,8 @@ class AccountUserDefault {
     private var keyHasClockSkew = "has_clock_skew"
     private var keyHasRestoreChat = "has_restore_chat"
     private var keyHasRestoreFilesAndVideos = "has_restore_files_videos"
+    private var keyRebackup = "has_rebackup"
+    private var keyHasRestoreMedia = "has_restore_media"
     private var keyExtensionSession = "extension_session"
     private var keyLastDesktopLogIn = "last_desktop_login"
     
@@ -94,12 +96,21 @@ class AccountUserDefault {
         }
     }
 
-    var hasRestoreFilesAndVideos: Bool {
+    var hasRestoreMedia: Bool {
         get {
             return session.bool(forKey: keyHasRestoreFilesAndVideos)
         }
         set {
             session.set(newValue, forKey: keyHasRestoreFilesAndVideos)
+        }
+    }
+
+    var hasRebackup: Bool {
+        get {
+            return session.bool(forKey: keyRebackup)
+        }
+        set {
+            session.set(newValue, forKey: keyRebackup)
         }
     }
 

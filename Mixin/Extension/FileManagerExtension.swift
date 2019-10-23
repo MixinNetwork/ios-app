@@ -11,27 +11,11 @@ extension FileManager {
         return fileSize.int64Value
     }
 
-    func saveToCloud(from: URL, to: URL, removeFromFile: Bool = true) throws {
-        if FileManager.default.fileExists(atPath: to.path) {
-            if removeFromFile {
-                _ = try FileManager.default.replaceItemAt(to, withItemAt: from)
-            } else {
-                let tempToURL = to.appendingPathExtension("tmp")
-                try? FileManager.default.removeItem(at: tempToURL)
-                try FileManager.default.copyItem(at: from, to: tempToURL)
-                
-                _ = try FileManager.default.replaceItemAt(to, withItemAt: tempToURL)
-            }
-        } else {
-            try FileManager.default.copyItem(at: from, to: to)
-        }
-    }
-
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
     }
 
-    func isDirectory(atPath path: String) -> Bool {
+    func directoryExists(atPath path: String) -> Bool {
         var isDir : ObjCBool = false
         return FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
     }
@@ -65,6 +49,20 @@ extension FileManager {
         }
     }
 
+    func debugDirectory(directory: URL, tree: String = "---", baseDir: String = "") {
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
+            return
+        }
+        for file in files {
+            let url = directory.appendingPathComponent(file)
+            if directoryExists(atPath: url.path) {
+                debugDirectory(directory: url, tree: "\(tree)---", baseDir: "\(baseDir)\(file)/")
+            } else {
+                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize.sizeRepresentation())...isUploaded:\(url.isUploaded)")
+            }
+        }
+    }
+
     func createNobackupDirectory(_ directory: URL) -> Bool {
         guard !FileManager.default.fileExists(atPath: directory.path) else {
             return true
@@ -83,12 +81,36 @@ extension FileManager {
     }
 
     func removeDirectoryAndChildFiles(_ directory: URL) {
+        guard directoryExists(atPath: directory.path) else {
+            return
+        }
         if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
             for file in files {
-                try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))
+                let url = directory.appendingPathComponent(file)
+                if directoryExists(atPath: url.path) {
+                    removeDirectoryAndChildFiles(url)
+                } else {
+                    try? FileManager.default.removeItem(at: url)
+                }
             }
         }
         try? FileManager.default.removeItem(at: directory)
+    }
+
+    func removeCloudCacheFiles(_ directory: URL) {
+        guard directoryExists(atPath: directory.path) else {
+            return
+        }
+        if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
+            for file in files {
+                let url = directory.appendingPathComponent(file)
+                if directoryExists(atPath: url.path) {
+                    removeCloudCacheFiles(url)
+                } else {
+                    try? FileManager.default.evictUbiquitousItem(at: url)
+                }
+            }
+        }
     }
 
     func mimeType(ext: String) -> String {
@@ -285,9 +307,6 @@ extension FileManager {
                     try log.write(toFile: path, atomically: true, encoding: .utf8)
                 }
             } catch {
-                #if DEBUG
-                    print("======FileManagerExtension...writeLog...error:\(error)")
-                #endif
                 UIApplication.traceError(error)
             }
         }

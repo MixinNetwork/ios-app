@@ -179,6 +179,7 @@ final class AccountAPI: BaseAPI {
             self.account = nil
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
+            BackupJobQueue.shared.cancelAllOperations()
             AccountUserDefault.shared.clear()
             MixinDatabase.shared.logout()
             SignalDatabase.shared.logout()

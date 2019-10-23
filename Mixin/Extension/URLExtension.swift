@@ -18,17 +18,48 @@ extension URL {
         return results
     }
 
-    func cloudExist() -> Bool {
-        // Returns a Boolean indicating whether the item is targeted for storage in iCloud.
-        return FileManager.default.isUbiquitousItem(at: self)
+    var fileExists: Bool {
+        return (try? checkResourceIsReachable()) ?? false
     }
-
-    func cloudDownloaded() throws -> Bool {
-        // A local copy of this item exists and is the most up-to-date version known to the device.
-        return try resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current
+    
+    var fileSize: Int64 {
+        return (try? resourceValues(forKeys: [.fileSizeKey]))?.allValues[.fileSizeKey] as? Int64 ?? -1
     }
 
     static func createTempUrl(fileExtension: String) -> URL {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString.lowercased()).\(fileExtension)")
+    }
+
+    var childFileCount: Int {
+        guard FileManager.default.directoryExists(atPath: path) else {
+            return 0
+        }
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: path) else {
+            return 0
+        }
+        return files.count
+    }
+}
+
+extension URL {
+
+    var isDownloaded: Bool {
+        return (try? resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current) ?? false
+    }
+
+    var isDownloading: Bool {
+        return (try? resourceValues(forKeys: [.ubiquitousItemIsDownloadingKey]).ubiquitousItemIsDownloading) ?? false
+    }
+
+    var isUploaded: Bool {
+        return (try? resourceValues(forKeys: [.ubiquitousItemIsUploadedKey]).ubiquitousItemIsUploaded) ?? false
+    }
+
+    var isUploading: Bool {
+        return (try? resourceValues(forKeys: [.ubiquitousItemIsUploadingKey]).ubiquitousItemIsUploading) ?? false
+    }
+
+    var isStoredCloud: Bool {
+        return FileManager.default.isUbiquitousItem(at: self)
     }
 }

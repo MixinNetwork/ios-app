@@ -92,7 +92,8 @@
                             <constraint firstItem="Iyh-gj-jcc" firstAttribute="top" secondItem="y4k-Xv-8tX" secondAttribute="bottom" id="fVa-WW-X5r"/>
                             <constraint firstItem="y4k-Xv-8tX" firstAttribute="trailing" secondItem="fwU-YY-eBW" secondAttribute="trailing" id="jmh-yK-gfF"/>
                             <constraint firstAttribute="bottom" secondItem="Iyh-gj-jcc" secondAttribute="bottom" id="le9-MW-E3r"/>
-                            <constraint firstItem="y4k-Xv-8tX" firstAttribute="top" secondItem="fwU-YY-eBW" secondAttribute="top" id="rMG-sO-8mU"/>
+                            <constraint firstItem="y4k-Xv-8tX" firstAttribute="top" secondItem="fwU-YY-eBW" secondAttribute="top" priority="750" id="rMG-sO-8mU"/>
+                            <constraint firstItem="y4k-Xv-8tX" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7DS-bH-jdl" secondAttribute="top" constant="20" id="zrR-8D-HnN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fwU-YY-eBW"/>
                     </view>

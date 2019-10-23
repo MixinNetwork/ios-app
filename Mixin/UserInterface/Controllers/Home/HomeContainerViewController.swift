@@ -83,13 +83,13 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         viewController.didMove(toParent: topMostViewController)
         viewController.view.setNeedsLayout()
         viewController.view.layoutIfNeeded()
+        isShowingGallery = true
+        setNeedsStatusBarAppearanceUpdate()
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, willShow: item)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
-        isShowingGallery = true
-        setNeedsStatusBarAppearanceUpdate()
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didShow: item)
     }
     

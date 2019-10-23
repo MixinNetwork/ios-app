@@ -13,23 +13,23 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         return style.contains(.fullname) ? fullnameFrame.height : 0
     }
     
-    internal var size: CGSize {
+    var size: CGSize {
         return CGSize(width: 220, height: 72)
     }
     
-    internal var leftLeadingMargin: CGFloat {
+    var leftLeadingMargin: CGFloat {
         return 22
     }
     
-    internal var rightLeadingMargin: CGFloat {
+    var rightLeadingMargin: CGFloat {
         return 12
     }
     
-    internal var leftTrailingMargin: CGFloat {
+    var leftTrailingMargin: CGFloat {
         return 20
     }
     
-    internal var rightTrailingMargin: CGFloat {
+    var rightTrailingMargin: CGFloat {
         return 30
     }
     

@@ -13,7 +13,7 @@ class RestoreJob: BaseJob {
         return !isCancelled && NetworkManager.shared.isReachableOnWiFi
     }
     private var isRestoredAllFiles: Bool {
-        return downloadedSize >= totalFileSize
+        return monitors.values.first(where: { !$0.isRestored }) == nil
     }
 
     var progress: Float {
@@ -103,7 +103,7 @@ class RestoreJob: BaseJob {
                     let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
                     let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? NSNumber)?.floatValue ?? 0
                     let status = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String)
-                    let isDownloaded = status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent
+                    let isDownloaded = status == NSMetadataUbiquitousItemDownloadingStatusCurrent
 
                     if let error = metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? NSError {
                         UIApplication.traceError(error)
@@ -158,8 +158,7 @@ class RestoreJob: BaseJob {
             }
         }
 
-        let hasRestoreTask = monitors.count > 0 && monitors.values.first(where: { !$0.isRestored }) != nil
-        if !hasRestoreTask || !isContinueRestore {
+        if monitors.count == 0 || !isContinueRestore || isRestoredAllFiles {
             DispatchQueue.main.async {
                 query.stop()
             }

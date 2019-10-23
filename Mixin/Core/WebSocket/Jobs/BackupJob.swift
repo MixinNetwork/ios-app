@@ -1,5 +1,4 @@
 import Foundation
-import Zip
 import WCDBSwift
 
 class BackupJob: BaseJob {
@@ -275,14 +274,19 @@ class BackupJob: BaseJob {
         let files = ["mixin.backup.db",
                      "mixin.\(MixinFile.ChatDirectory.photos.rawValue.lowercased()).zip",
             "mixin.\(MixinFile.ChatDirectory.audios.rawValue.lowercased()).zip"]
+
+        let baseDir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for file in files {
             let cloudURL = backupDir.appendingPathComponent(file)
             if cloudURL.isStoredCloud {
                 try? FileManager.default.removeItem(at: cloudURL)
             }
-            let localURL = MixinFile.rootDirectory.appendingPathComponent(file)
-            if localURL.fileExists {
-                try? FileManager.default.removeItem(at: localURL)
+
+            if file.hasSuffix(".zip") {
+                let localURL = baseDir.appendingPathComponent(file)
+                if localURL.fileExists {
+                    try? FileManager.default.removeItem(at: localURL)
+                }
             }
         }
     }

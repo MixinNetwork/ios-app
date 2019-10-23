@@ -29,6 +29,16 @@ extension URL {
     static func createTempUrl(fileExtension: String) -> URL {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString.lowercased()).\(fileExtension)")
     }
+
+    var childFileCount: Int {
+        guard FileManager.default.directoryExists(atPath: path) else {
+            return 0
+        }
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: path) else {
+            return 0
+        }
+        return files.count
+    }
 }
 
 extension URL {

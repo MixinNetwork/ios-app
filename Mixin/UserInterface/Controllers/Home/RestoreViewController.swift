@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import WCDBSwift
-import Zip
 
 class RestoreViewController: UIViewController {
 
@@ -90,6 +89,7 @@ class RestoreViewController: UIViewController {
 
     @IBAction func skipAction(_ sender: Any) {
         AccountUserDefault.shared.hasRestoreChat = false
+        AccountUserDefault.shared.hasRestoreMedia = false
         AppDelegate.current.window.rootViewController =
             makeInitialViewController()
     }

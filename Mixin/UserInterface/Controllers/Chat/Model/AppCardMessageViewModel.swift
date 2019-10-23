@@ -40,11 +40,11 @@ extension AppCardMessageViewModel {
     class AppCardBubbleImageProvider: BubbleImageProvider {
 
         override class var leftTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left")
+            return R.image.ic_chat_bubble_left()!
         }
         
         override class var leftTailHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left_highlight")
+            return R.image.ic_chat_bubble_left_highlight()!
         }
         
     }

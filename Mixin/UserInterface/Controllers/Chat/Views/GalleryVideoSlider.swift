@@ -28,8 +28,8 @@ final class GalleryVideoSlider: UISlider {
     }
     
     private func prepare() {
-        setThumbImage(#imageLiteral(resourceName: "ic_slider_thumb"), for: .normal)
-        setThumbImage(#imageLiteral(resourceName: "ic_slider_thumb"), for: .highlighted)
+        setThumbImage(R.image.ic_slider_thumb()!, for: .normal)
+        setThumbImage(R.image.ic_slider_thumb()!, for: .highlighted)
     }
     
 }

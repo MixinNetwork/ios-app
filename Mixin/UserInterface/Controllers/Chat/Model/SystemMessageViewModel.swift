@@ -26,7 +26,7 @@ class SystemMessageViewModel: MessageViewModel {
                                                    attributes: SystemMessageViewModel.attributes,
                                                    context: nil)
         super.init(message: message, style: style, fits: layoutWidth)
-        backgroundImage = #imageLiteral(resourceName: "ic_chat_bubble_system")
+        backgroundImage = R.image.ic_chat_bubble_system()
     }
     
     override func layout() {

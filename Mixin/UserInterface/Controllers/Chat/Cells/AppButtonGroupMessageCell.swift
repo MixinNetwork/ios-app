@@ -25,8 +25,8 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
                 let buttonContent = appButtons[i]
                 let button = UIButton(frame: frame.button)
                 contentView.addSubview(button)
-                button.setBackgroundImage(#imageLiteral(resourceName: "ic_app_button_normal"), for: .normal)
-                button.setBackgroundImage(#imageLiteral(resourceName: "ic_app_button_selected"), for: .highlighted)
+                button.setBackgroundImage(R.image.ic_app_button_normal(), for: .normal)
+                button.setBackgroundImage(R.image.ic_app_button_selected(), for: .highlighted)
                 button.tag = i
                 button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
                 buttonViews.append(button)

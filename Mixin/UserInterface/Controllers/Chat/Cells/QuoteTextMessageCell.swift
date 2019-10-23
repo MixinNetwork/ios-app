@@ -61,7 +61,7 @@ class QuoteTextMessageCell: TextMessageCell {
     override func prepare() {
         super.prepare()
         
-        quoteBackgroundImageView.image = #imageLiteral(resourceName: "bg_chat_quote")
+        quoteBackgroundImageView.image = R.image.bg_chat_quote()
         contentView.addSubview(quoteBackgroundImageView)
         
         quoteTitleLabel.font = QuoteTextMessageViewModel.Quote.titleFont

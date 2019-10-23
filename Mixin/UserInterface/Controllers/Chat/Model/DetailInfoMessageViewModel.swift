@@ -29,17 +29,17 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var fullnameWidth: CGFloat = 0
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
-    internal var statusNormalTintColor: UIColor {
+    var statusNormalTintColor: UIColor {
         return .infoGray
     }
 
-    internal var maxContentWidth: CGFloat {
+    var maxContentWidth: CGFloat {
         return layoutWidth
             - MessageViewModel.backgroundImageMargin.horizontal
             - contentMargin.horizontal
     }
     
-    internal var showStatusImage: Bool {
+    var showStatusImage: Bool {
         return !style.contains(.received) || message.status == MessageStatus.FAILED.rawValue
     }
     
@@ -125,35 +125,35 @@ extension DetailInfoMessageViewModel {
     
     class BubbleImageProvider {
         
-        internal class var left: UIImage {
+        class var left: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_left")
         }
         
-        internal class var leftTail: UIImage {
+        class var leftTail: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_left_tail")
         }
         
-        internal class var right: UIImage {
+        class var right: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_right")
         }
         
-        internal class var rightTail: UIImage {
+        class var rightTail: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_right_tail")
         }
         
-        internal class var leftHighlight: UIImage {
+        class var leftHighlight: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_left_highlight")
         }
         
-        internal class var leftTailHighlight: UIImage {
+        class var leftTailHighlight: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_left_tail_highlight")
         }
         
-        internal class var rightHighlight: UIImage {
+        class var rightHighlight: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_right_highlight")
         }
         
-        internal class var rightTailHighlight: UIImage {
+        class var rightTailHighlight: UIImage {
             return #imageLiteral(resourceName: "ic_chat_bubble_right_tail_highlight")
         }
         

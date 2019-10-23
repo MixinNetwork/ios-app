@@ -20,10 +20,10 @@ class ContactMessageCell: CardMessageCell {
             avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
 
             if viewModel.message.sharedUserIsVerified {
-                verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+                verifiedImageView.image = R.image.ic_user_verified()
                 verifiedImageView.isHidden = false
             } else if !viewModel.message.sharedUserAppId.isEmpty {
-                verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+                verifiedImageView.image = R.image.ic_user_bot()
                 verifiedImageView.isHidden = false
             } else {
                 verifiedImageView.isHidden = true

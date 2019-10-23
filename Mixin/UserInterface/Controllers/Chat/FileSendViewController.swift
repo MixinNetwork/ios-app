@@ -10,7 +10,7 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        container?.leftButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
+        container?.leftButton.setImage(R.image.ic_titlebar_close(), for: .normal)
         let config = WKWebViewConfiguration()
         config.mediaTypesRequiringUserActionForPlayback = .all
         webView = WKWebView(frame: self.view.frame, configuration: config)
@@ -41,7 +41,7 @@ extension FileSendViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_chat_send")
+        return R.image.ic_chat_send()
     }
 
 }

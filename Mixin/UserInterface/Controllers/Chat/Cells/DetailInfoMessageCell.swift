@@ -11,7 +11,7 @@ class DetailInfoMessageCell: MessageCell {
     let fullnameButton = UIButton()
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
-    let identityIconImageView = UIImageView(image: #imageLiteral(resourceName: "ic_user_bot"))
+    let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
     let highlightAnimationDuration: TimeInterval = 0.2
     
     override func render(viewModel: MessageViewModel) {

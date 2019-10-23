@@ -2,17 +2,18 @@ import UIKit
 
 class DetailInfoMessageViewModel: MessageViewModel {
     
-    static let pendingImage = #imageLiteral(resourceName: "ic_chat_time").withRenderingMode(.alwaysTemplate)
-    static let checkmarkImage = #imageLiteral(resourceName: "ic_chat_checkmark").withRenderingMode(.alwaysTemplate)
-    static let doubleCheckmarkImage = #imageLiteral(resourceName: "ic_chat_double_checkmark").withRenderingMode(.alwaysTemplate)
-    static let statusImageSize = CGSize(width: #imageLiteral(resourceName: "ic_chat_double_checkmark").size.width, height: #imageLiteral(resourceName: "ic_chat_time").size.height)
+    static let pendingImage = R.image.ic_chat_time()!.withRenderingMode(.alwaysTemplate)
+    static let checkmarkImage = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
+    static let doubleCheckmarkImage = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
+    static let statusImageSize = CGSize(width: R.image.ic_chat_double_checkmark()!.size.width,
+                                        height: R.image.ic_chat_time()!.size.height)
     static let statusHighlightTintColor = UIColor.darkTheme
     static let margin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     static let statusLeftMargin: CGFloat = 4
     static let timeFont = UIFont.systemFont(ofSize: 11, weight: .light)
     static let fullnameFont = UIFont.systemFont(ofSize: 14)
     static let identityIconLeftMargin: CGFloat = 4
-    static let identityIconSize = #imageLiteral(resourceName: "ic_user_bot").size
+    static let identityIconSize = R.image.ic_user_bot()!.size
     static let minFullnameWidth: CGFloat = 44
     
     class var bubbleImageProvider: BubbleImageProvider.Type {
@@ -126,35 +127,35 @@ extension DetailInfoMessageViewModel {
     class BubbleImageProvider {
         
         class var left: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left")
+            return R.image.ic_chat_bubble_left()!
         }
         
         class var leftTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left_tail")
+            return R.image.ic_chat_bubble_left_tail()!
         }
         
         class var right: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right")
+            return R.image.ic_chat_bubble_right()!
         }
         
         class var rightTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_tail")
+            return R.image.ic_chat_bubble_right_tail()!
         }
         
         class var leftHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left_highlight")
+            return R.image.ic_chat_bubble_left_highlight()!
         }
         
         class var leftTailHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left_tail_highlight")
+            return R.image.ic_chat_bubble_left_tail_highlight()!
         }
         
         class var rightHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_highlight")
+            return R.image.ic_chat_bubble_right_highlight()!
         }
         
         class var rightTailHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_tail_highlight")
+            return R.image.ic_chat_bubble_right_tail_highlight()!
         }
         
         class func bubbleImage(forStyle style: Style, highlight: Bool) -> UIImage {
@@ -178,19 +179,19 @@ extension DetailInfoMessageViewModel {
     class LightRightBubbleImageProvider: BubbleImageProvider {
         
         override class var right: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_white")
+            return R.image.ic_chat_bubble_right_white()!
         }
         
         override class var rightTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_white_tail")
+            return R.image.ic_chat_bubble_right_white_tail()!
         }
         
         override class var rightHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_white_highlight")
+            return R.image.ic_chat_bubble_right_white_highlight()!
         }
         
         override class var rightTailHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_right_white_tail_highlight")
+            return R.image.ic_chat_bubble_right_white_tail_highlight()!
         }
         
     }

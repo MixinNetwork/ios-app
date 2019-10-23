@@ -23,11 +23,11 @@ extension UnknownMessageViewModel {
     class UnknownBubbleImageProvider: BubbleImageProvider {
         
         override class var left: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_unknown_left")
+            return R.image.ic_chat_bubble_unknown_left()!
         }
         
         override class var leftTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_unknown_left_tail")
+            return R.image.ic_chat_bubble_unknown_left_tail()!
         }
         
     }

@@ -97,13 +97,13 @@ extension StickerInputViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_album, for: indexPath)!
         switch indexPath.row {
         case 0:
-            cell.imageView.image = #imageLiteral(resourceName: "ic_recent_stickers")
+            cell.imageView.image = R.image.ic_recent_stickers()
             cell.imageView.contentMode = .center
         case 1:
-            cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_favorite")
+            cell.imageView.image = R.image.ic_sticker_favorite()
             cell.imageView.contentMode = .center
         case 2:
-            cell.imageView.image = #imageLiteral(resourceName: "ic_gif")
+            cell.imageView.image = R.image.ic_gif()
             cell.imageView.contentMode = .center
         default:
             let album = officialAlbums[indexPath.row - modelController.numberOfFixedControllers]

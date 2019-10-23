@@ -8,7 +8,7 @@ class RecorderLongPressHintView: UIImageView {
         let textSize = (Localized.CHAT_VOICE_RECORD_LONGPRESS_HINT as NSString)
             .size(withAttributes: [.font: RecorderLongPressHintView.labelFont])
         let textWidth = ceil(textSize.width)
-        return CGSize(width: textWidth + labelHorizontalMargin * 2, height: #imageLiteral(resourceName: "bg_recorder_longpress_hint").size.height)
+        return CGSize(width: textWidth + labelHorizontalMargin * 2, height: R.image.bg_recorder_longpress_hint()!.size.height)
     }()
     
     let label = UILabel()
@@ -34,7 +34,7 @@ class RecorderLongPressHintView: UIImageView {
     }
     
     private func prepare() {
-        image = #imageLiteral(resourceName: "bg_recorder_longpress_hint")
+        image = R.image.bg_recorder_longpress_hint()!
         label.preferredMaxLayoutWidth = UIScreen.main.bounds.width - RecorderLongPressHintView.labelHorizontalMargin * 2
         label.numberOfLines = 0
         label.text = Localized.CHAT_VOICE_RECORD_LONGPRESS_HINT

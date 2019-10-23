@@ -21,7 +21,7 @@ class TransferMessageCell: CardMessageCell {
         if let viewModel = viewModel as? TransferMessageViewModel {
             if let icon = viewModel.message.assetIcon {
                 let url = URL(string: icon)
-                iconImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), context: assetIconContext)
+                iconImageView.sd_setImage(with: url, placeholderImage: R.image.ic_place_holder(), context: assetIconContext)
             }
             amountLabel.text = viewModel.snapshotAmount
             symbolLabel.text = viewModel.message.assetSymbol

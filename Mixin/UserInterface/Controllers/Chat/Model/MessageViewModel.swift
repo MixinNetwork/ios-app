@@ -26,7 +26,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     var style: Style {
         didSet {
             if style != oldValue {
-                didSetStyle()
+                layout()
             }
         }
     }
@@ -54,10 +54,10 @@ class MessageViewModel: CustomDebugStringConvertible {
         } else {
             self.quote = nil
         }
-        didSetStyle()
+        layout()
     }
     
-    func didSetStyle() {
+    func layout() {
         
     }
     

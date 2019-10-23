@@ -85,8 +85,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
         status = message.status
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         timeSize = ceil((time as NSString).size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont]))
         let margin = DetailInfoMessageViewModel.margin
         timeFrame = CGRect(x: backgroundImageFrame.maxX - timeSize.width,

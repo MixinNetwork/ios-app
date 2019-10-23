@@ -28,8 +28,8 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         backgroundImage = nil
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout() {
+        super.layout()
         var bottomRight = CGPoint(x: margin.leading, y: 0)
         var y: CGFloat = 0
         var frames = [CGRect]()

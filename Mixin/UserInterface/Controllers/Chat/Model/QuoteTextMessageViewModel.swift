@@ -43,9 +43,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         return max(super.backgroundWidth, quoteMaxWidth)
     }
     
-    override func didSetStyle() {
+    override func layout() {
         guard let quote = quote else {
-            super.didSetStyle()
+            super.layout()
             return
         }
         switch quote.category {
@@ -87,7 +87,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             + Quote.contentMargin.horizontal
             + Quote.backgroundMargin.horizontal
         
-        super.didSetStyle()
+        super.layout()
         
         if style.contains(.fullname) {
             backgroundImageFrame.origin.y += fullnameHeight

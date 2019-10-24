@@ -1,7 +1,7 @@
 import UIKit
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
-
+    
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = false

@@ -2,14 +2,13 @@ import UIKit
 
 class MessageViewModel: CustomDebugStringConvertible {
     
-    static let backgroundImageMargin = Margin(leading: 8, trailing: 66, top: 0, bottom: 0)
     static let bottomSeparatorHeight: CGFloat = 10
     
     let message: MessageItem
     let quote: Quote?
     let time: String
-    let layoutWidth: CGFloat
     
+    var layoutWidth: CGFloat
     var thumbnail: UIImage?
     var backgroundImage: UIImage?
     var backgroundImageFrame = CGRect.zero

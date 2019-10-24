@@ -57,12 +57,12 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
         let maxTitleWidth = layoutWidth
-            - MessageViewModel.backgroundImageMargin.horizontal
+            - DetailInfoMessageViewModel.bubbleMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
             - quoteImageWidth
         let maxSubtitleWidth = layoutWidth
-            - MessageViewModel.backgroundImageMargin.horizontal
+            - DetailInfoMessageViewModel.bubbleMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
             - paddedQuoteIconWidth

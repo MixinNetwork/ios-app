@@ -61,7 +61,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             ? ImageSet.MessageStatus.size.width
             : 0
         let width = timeLeftMargin
-            + timeSize.width
+            + timeFrame.width
             + statusImageWidth
             + DetailInfoMessageViewModel.statusLeftMargin
         return CGSize(width: width, height: 16)
@@ -135,8 +135,9 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func layout() {
+        let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         if style.contains(.received) {
-            backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
+            backgroundImageFrame = CGRect(x: bubbleMargin.leading,
                                           y: 0,
                                           width: backgroundWidth,
                                           height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)
@@ -145,7 +146,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                                        width: textSize.width,
                                        height: textSize.height)
         } else {
-            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - backgroundWidth,
+            backgroundImageFrame = CGRect(x: layoutWidth - bubbleMargin.leading - backgroundWidth,
                                           y: 0,
                                           width: backgroundWidth,
                                           height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)

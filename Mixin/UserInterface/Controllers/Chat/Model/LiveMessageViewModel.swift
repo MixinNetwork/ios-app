@@ -6,9 +6,9 @@ class LiveMessageViewModel: PhotoRepresentableMessageViewModel {
         return LightRightBubbleImageSet.self
     }
     
-    private let badgeMargin = Margin(leading: 12, trailing: 4, top: 3, bottom: 0)
-    
     var badgeOrigin = CGPoint.zero
+    
+    private let badgeMargin = Margin(leading: 12, trailing: 4, top: 3, bottom: 0)
     
     override func layout() {
         super.layout()

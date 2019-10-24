@@ -2,17 +2,17 @@ import UIKit
 
 class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     
-    static let contentWidth: CGFloat = 220
-    static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
-    static let shadowImage = UIImage(named: "ic_chat_shadow")
+    static let shadowImage = R.image.ic_chat_shadow()
     
-    let contentSize: CGSize
-    let aspectRatio: CGSize
+    let contentRatio: CGSize
     
     var contentFrame = CGRect.zero
     var shadowImageOrigin = CGPoint.zero
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = VerticalPositioningImageView.Position.center
+    
+    // Presentation width is fixed at 220
+    private(set) var presentationSize = CGSize(width: 220, height: 220)
     
     override var contentMargin: Margin {
         return Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
@@ -22,33 +22,35 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         return .white
     }
     
-    private let contentSize: CGSize
+    private var maxPresentationHeight: CGFloat {
+        return performSynchronouslyOnMainThread {
+            AppDelegate.current.window.bounds.height / 2
+        }
+    }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        let contentWidth = PhotoRepresentableMessageViewModel.contentWidth
         let mediaWidth = abs(CGFloat(message.mediaWidth ?? 0))
         let mediaHeight = abs(CGFloat(message.mediaHeight ?? 0))
         if mediaWidth < 1 || mediaHeight < 1 {
-            contentSize = CGSize(width: contentWidth, height: contentWidth)
-            aspectRatio = contentSize
+            contentRatio = CGSize(width: 1, height: 1)
         } else {
-            let height = min(PhotoRepresentableMessageViewModel.maxHeight, contentWidth / mediaWidth * mediaHeight)
-            contentSize = CGSize(width: contentWidth, height: height)
-            aspectRatio = CGSize(width: mediaWidth, height: mediaHeight)
+            contentRatio = CGSize(width: mediaWidth, height: mediaHeight)
         }
         super.init(message: message, style: style, fits: layoutWidth)
     }
     
     override func layout() {
-        let backgroundImageMargin = MessageViewModel.backgroundImageMargin
+        let ratio = contentRatio.width / contentRatio.height
+        presentationSize.height = min(maxPresentationHeight, round(presentationSize.width / ratio))
+        let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         let shadowImageSize = PhotoRepresentableMessageViewModel.shadowImage?.size ?? .zero
         if style.contains(.received) {
-            contentFrame = CGRect(x: backgroundImageMargin.leading,
-                                  y: backgroundImageMargin.top,
-                                  width: contentSize.width,
-                                  height: contentSize.height)
+            contentFrame = CGRect(x: bubbleMargin.leading,
+                                  y: bubbleMargin.top,
+                                  width: presentationSize.width,
+                                  height: presentationSize.height)
             shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
                                         y: contentFrame.maxY - shadowImageSize.height)
             if style.contains(.fullname) {
@@ -56,10 +58,10 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
                 shadowImageOrigin.y += fullnameHeight
             }
         } else {
-            contentFrame = CGRect(x: layoutWidth - backgroundImageMargin.leading - contentSize.width,
-                                  y: backgroundImageMargin.top,
-                                  width: contentSize.width,
-                                  height: contentSize.height)
+            contentFrame = CGRect(x: layoutWidth - bubbleMargin.leading - presentationSize.width,
+                                  y: bubbleMargin.top,
+                                  width: presentationSize.width,
+                                  height: presentationSize.height)
             shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
                                         y: contentFrame.maxY - shadowImageSize.height)
         }

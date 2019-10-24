@@ -28,7 +28,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()
-        layoutPosition = GalleryItem.shouldLayoutImageOfRatioAsAriticle(aspectRatio) ? .relativeOffset(0) : .center
+        layoutPosition = GalleryItem.shouldLayoutImageOfRatioAsAriticle(contentRatio) ? .relativeOffset(0) : .center
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

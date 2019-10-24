@@ -10,10 +10,17 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     var frames = [(button: CGRect, label: CGRect)]()
     var buttonGroupFrame = CGRect.zero
     
-    private let buttonSizes: [CGSize]
     private let margin = Margin(leading: 10, trailing: 10, top: 0, bottom: 0)
     
+    private var buttonSizes = [CGSize]()
+    
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+        super.init(message: message, style: style, fits: layoutWidth)
+        backgroundImage = nil
+    }
+    
+    override func layout() {
+        super.layout()
         let boundingSize = CGSize(width: layoutWidth - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
                                   height: UIView.layoutFittingExpandedSize.height)
         buttonSizes = message.appButtons?.map({
@@ -24,12 +31,6 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
             return CGSize(width: ceil(titleSize.width + AppButtonGroupViewModel.titleMargin.horizontal),
                           height: ceil(titleSize.height + AppButtonGroupViewModel.titleMargin.vertical))
         }) ?? []
-        super.init(message: message, style: style, fits: layoutWidth)
-        backgroundImage = nil
-    }
-    
-    override func layout() {
-        super.layout()
         var bottomRight = CGPoint(x: margin.leading, y: 0)
         var y: CGFloat = 0
         var frames = [CGRect]()

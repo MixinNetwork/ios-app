@@ -28,7 +28,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
             contentImageWrapperView.position = viewModel.layoutPosition
             contentImageWrapperView.frame = viewModel.contentFrame
-            contentImageWrapperView.aspectRatio = viewModel.aspectRatio
+            contentImageWrapperView.aspectRatio = viewModel.contentRatio
             selectedOverlapView.frame = contentImageWrapperView.bounds
             shadowImageView.frame = CGRect(origin: viewModel.shadowImageOrigin,
                                            size: shadowImageView.image?.size ?? .zero)

@@ -331,12 +331,10 @@ extension AppDelegate {
         }
         
         func push() {
-            navigationController.dismiss(animated: true, completion: nil)
             if navigationController.viewControllers.last is CameraViewController {
-                navigationController.popViewController(animated: false)
+               return
             }
-            let vc = CameraViewController.instance()
-            navigationController.pushViewController(vc, animated: true)
+            navigationController.pushViewController(withBackRoot: CameraViewController.instance())
         }
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -362,10 +360,10 @@ extension AppDelegate {
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        navigationController.dismiss(animated: true, completion: nil)
-        navigationController.popToRootViewController(animated: false)
-        let vc = WalletViewController.instance()
-        navigationController.pushViewController(vc, animated: true)
+        if let lastVC = (navigationController.viewControllers.last as? ContainerViewController)?.viewController, lastVC is WalletViewController {
+            return
+        }
+        navigationController.pushViewController(withBackRoot: WalletViewController.instance())
     }
     
     private func showMyQrCode() {

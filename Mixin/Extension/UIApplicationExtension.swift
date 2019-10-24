@@ -122,7 +122,7 @@ extension UIApplication {
     func setShortcutItemsEnabled(_ enabled: Bool) {
         DispatchQueue.main.async {
             if enabled {
-                UIApplication.shared.shortcutItems = [.scanQrCode, .wallet, .myQrCode]
+                UIApplication.shared.shortcutItems = [.wallet, .scanQrCode, .myQrCode]
             } else {
                 UIApplication.shared.shortcutItems = nil
             }
@@ -140,17 +140,17 @@ extension UIApplicationShortcutItem {
     }
     
     static let scanQrCode = UIApplicationShortcutItem(type: ItemType.scanQrCode.rawValue,
-                                                      localizedTitle: R.string.localizable.shortcut_title_scan_qr_code(),
+                                                      localizedTitle: R.string.localizable.scan_qr_code(),
                                                       localizedSubtitle: nil,
                                                       icon: .init(templateImageName: "ic_shortcut_scan_qr_code"),
                                                       userInfo: nil)
     static let wallet = UIApplicationShortcutItem(type: ItemType.wallet.rawValue,
-                                                  localizedTitle: R.string.localizable.shortcut_title_wallet(),
+                                                  localizedTitle: R.string.localizable.wallet_title(),
                                                   localizedSubtitle: nil,
                                                   icon: .init(templateImageName: "ic_shortcut_wallet"),
                                                   userInfo: nil)
     static let myQrCode = UIApplicationShortcutItem(type: ItemType.myQrCode.rawValue,
-                                                    localizedTitle: R.string.localizable.shortcut_title_my_qr_code(),
+                                                    localizedTitle: R.string.localizable.myqrcode_title(),
                                                     localizedSubtitle: nil,
                                                     icon: .init(templateImageName: "ic_shortcut_my_qr_code"),
                                                     userInfo: nil)

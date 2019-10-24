@@ -177,12 +177,12 @@ final class AccountAPI: BaseAPI {
         FileManager.default.writeLog(log: "===========logout...from:\(from)")
         CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {
+            MixinDatabase.shared.logout()
             self.account = nil
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
             BackupJobQueue.shared.cancelAllOperations()
             AccountUserDefault.shared.clear()
-            MixinDatabase.shared.logout()
             SignalDatabase.shared.logout()
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = 1

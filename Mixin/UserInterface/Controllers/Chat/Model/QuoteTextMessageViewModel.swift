@@ -21,6 +21,10 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let avatarImageMargin: CGFloat = 8
     }
     
+    override class var bubbleImageSet: BubbleImageSet.Type {
+        return LightRightBubbleImageSet.self
+    }
+    
     private(set) var quoteBackgroundFrame = CGRect.zero
     private(set) var quoteTitleFrame = CGRect.zero
     private(set) var quoteIconFrame = CGRect.zero
@@ -30,10 +34,6 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     
     private var quoteMaxWidth: CGFloat = 0
     private var quoteContentHeight: CGFloat = 0
-    
-    override class var bubbleImageProvider: BubbleImageProvider.Type {
-        return LightRightBubbleImageProvider.self
-    }
     
     override var contentLabelTopMargin: CGFloat {
         return fullnameHeight + quoteContentHeight + Quote.backgroundMargin.vertical

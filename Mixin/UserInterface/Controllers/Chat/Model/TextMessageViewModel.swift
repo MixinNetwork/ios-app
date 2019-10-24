@@ -58,7 +58,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     var timeStatusSize: CGSize {
         let statusImageWidth = showStatusImage
-            ? DetailInfoMessageViewModel.statusImageSize.width
+            ? ImageSet.MessageStatus.size.width
             : 0
         let width = timeLeftMargin
             + timeSize.width

@@ -6,14 +6,14 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     static let maxWH: CGFloat = 120
     static let minWH: CGFloat = 48
     
-    var contentFrame = CGRect.zero
-
     override var contentMargin: Margin {
         return Margin(leading: 17, trailing: 0, top: 2, bottom: 2)
     }
     
+    var contentFrame = CGRect.zero
+    
     private let contentSize: CGSize
-
+    
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
             let width = CGFloat(assetWidth / 2)

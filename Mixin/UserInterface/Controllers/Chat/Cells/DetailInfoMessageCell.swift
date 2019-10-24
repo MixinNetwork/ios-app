@@ -67,11 +67,11 @@ class DetailInfoMessageCell: MessageCell {
     }
  
     func updateAppearance(highlight: Bool, animated: Bool) {
-        guard let viewModel = viewModel, let bubbleImageProvider = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageProvider else {
+        guard let viewModel = viewModel, let bubbleImageSet = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageSet else {
             return
         }
         let transition = {
-            self.backgroundImageView.image = bubbleImageProvider.bubbleImage(forStyle: viewModel.style, highlight: highlight)
+            self.backgroundImageView.image = bubbleImageSet.image(forStyle: viewModel.style, highlight: highlight)
         }
         if animated {
             UIView.transition(with: backgroundImageView,

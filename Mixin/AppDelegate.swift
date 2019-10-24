@@ -7,6 +7,7 @@ import YYImage
 import GiphyCoreSDK
 import PushKit
 import Crashlytics
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private var pendingShortcutItem: UIApplicationShortcutItem?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
@@ -41,12 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let key = MixinKeys.giphy {
             GiphyCore.configure(apiKey: key)
         }
+        pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
         AudioManager.shared.pause()
+    }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        pendingShortcutItem = shortcutItem
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -68,6 +75,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let conversationId = UIApplication.currentConversationId() {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
+        
+        if let item = pendingShortcutItem, let itemType = UIApplicationShortcutItem.ItemType(rawValue: item.type) {
+            switch itemType {
+            case .scanQrCode:
+                pushCameraViewController()
+            case .wallet:
+                pushWalletViewController()
+            case .myQrCode:
+                showMyQrCode()
+            }
+        }
+        pendingShortcutItem = nil
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -218,6 +237,7 @@ extension AppDelegate {
                 window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
             }
         }
+        UIApplication.shared.setShortcutItemsEnabled(AccountAPI.shared.didLogin)
         window.makeKeyAndVisible()
     }
     
@@ -303,6 +323,61 @@ extension AppDelegate {
             }
         }
         UNUserNotificationCenter.current().removeAllNotifications()
+    }
+    
+    private func pushCameraViewController() {
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        
+        func push() {
+            if navigationController.viewControllers.last is CameraViewController {
+               return
+            }
+            navigationController.pushViewController(withBackRoot: CameraViewController.instance())
+        }
+        
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            push()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    push()
+                }
+            })
+        case .denied, .restricted:
+            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        @unknown default:
+            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        }
+    }
+    
+    private func pushWalletViewController() {
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        if let lastVC = (navigationController.viewControllers.last as? ContainerViewController)?.viewController, lastVC is WalletViewController {
+            return
+        }
+        navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+    }
+    
+    private func showMyQrCode() {
+        if let window = UIApplication.currentActivity()?.view.subviews.compactMap({ $0 as? QrcodeWindow }).first, window.isShowingMyQrCode {
+            return
+        }
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        let qrcodeWindow = QrcodeWindow.instance()
+        qrcodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
+                            description: Localized.MYQRCODE_PROMPT,
+                            account: account)
+        qrcodeWindow.presentView()
     }
     
 }

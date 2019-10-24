@@ -173,6 +173,7 @@ final class AccountAPI: BaseAPI {
         guard account != nil else {
             return
         }
+        UIApplication.shared.setShortcutItemsEnabled(false)
         FileManager.default.writeLog(log: "===========logout...from:\(from)")
         CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {

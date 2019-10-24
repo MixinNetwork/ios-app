@@ -442,6 +442,7 @@
 "transaction_type_withdrawal" = "提现";
 "transaction_type_fee" = "手续费";
 "transaction_type_rebate" = "退款";
+"transaction_type_raw" = "其他";
 
 // Address Book
 "address_book_title" = "%@ 地址簿";

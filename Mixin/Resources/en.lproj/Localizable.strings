@@ -440,6 +440,7 @@
 "transaction_type_withdrawal" = "Withdrawal";
 "transaction_type_fee" = "Fee";
 "transaction_type_rebate" = "Rebate";
+"transaction_type_raw" = "Raw";
 
 // Address Book
 "address_book_title" = "%@ Address Book";

@@ -46,3 +46,19 @@ struct SnapshotItem: TableDecodable {
     }
     
 }
+
+extension SnapshotItem {
+
+    var hasSender: Bool {
+        return !(sender?.isEmpty ?? true)
+    }
+
+    var hasReceiver: Bool {
+        return !(receiver?.isEmpty ?? true)
+    }
+
+    var hasMemo: Bool {
+        return !(memo?.isEmpty ?? true)
+    }
+
+}

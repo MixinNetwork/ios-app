@@ -49,6 +49,13 @@ class SnapshotCell: UITableViewCell {
                 amountLabel.textColor = .walletGreen
             }
             titleLabel.text = Localized.TRANSACTION_TYPE_TRANSFER
+        case SnapshotType.raw.rawValue:
+            if snapshot.amount.hasMinusPrefix {
+                amountLabel.textColor = .walletRed
+            } else {
+                amountLabel.textColor = .walletGreen
+            }
+            titleLabel.text = R.string.localizable.transaction_type_raw()
         case SnapshotType.withdrawal.rawValue:
             amountLabel.textColor = .walletRed
             titleLabel.text = Localized.TRANSACTION_TYPE_WITHDRAWAL

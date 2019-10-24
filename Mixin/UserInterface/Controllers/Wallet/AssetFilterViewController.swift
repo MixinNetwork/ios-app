@@ -49,7 +49,8 @@ class AssetFilterViewController: UIViewController {
                             Localized.TRANSACTION_TYPE_DEPOSIT,
                             Localized.TRANSACTION_TYPE_WITHDRAWAL,
                             Localized.TRANSACTION_TYPE_FEE,
-                            Localized.TRANSACTION_TYPE_REBATE]
+                            Localized.TRANSACTION_TYPE_REBATE,
+                            R.string.localizable.transaction_type_raw()]
         if showFilters {
             return [sortTitles, filterTitles]
         } else {
@@ -189,6 +190,8 @@ extension AssetFilterViewController {
                 collectionView.selectItem(at: IndexPath(item: 4, section: 1), animated: false, scrollPosition: .top)
             case .rebate:
                 collectionView.selectItem(at: IndexPath(item: 5, section: 1), animated: false, scrollPosition: .top)
+            case .raw:
+                collectionView.selectItem(at: IndexPath(item: 6, section: 1), animated: false, scrollPosition: .top)
             }
         }
     }
@@ -216,6 +219,8 @@ extension AssetFilterViewController {
             return .withdrawal
         case 4:
             return .fee
+        case 6:
+            return .raw
         default:
             return .rebate
         }

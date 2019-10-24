@@ -143,7 +143,7 @@ extension TransactionViewController {
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_DEPOSIT))
             contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.sender))
-            if !(snapshot.memo?.isEmpty ?? true) {
+            if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.transfer.rawValue:
@@ -153,7 +153,19 @@ extension TransactionViewController {
             } else {
                 contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.opponentUserFullName))
             }
-            if !(snapshot.memo?.isEmpty ?? true) {
+            if snapshot.hasMemo {
+                contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
+            }
+        case SnapshotType.raw.rawValue:
+            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: R.string.localizable.transaction_type_raw()))
+            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
+            if snapshot.hasSender {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.sender))
+            }
+            if snapshot.hasReceiver {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.receiver))
+            }
+            if snapshot.hasMemo {
                 contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
             }
         case SnapshotType.withdrawal.rawValue:
@@ -161,21 +173,21 @@ extension TransactionViewController {
                 Localized.TRANSACTION_TYPE_WITHDRAWAL))
             contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
-            if !(snapshot.memo?.isEmpty ?? true) {
+            if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.fee.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_FEE))
             contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
-            if !(snapshot.memo?.isEmpty ?? true) {
+            if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.rebate.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_REBATE))
             contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
-            if !(snapshot.memo?.isEmpty ?? true) {
+            if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         default:
@@ -199,15 +211,32 @@ extension TransactionViewController {
             case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
                 return (true, snapshot.receiver ?? "")
             case SnapshotType.transfer.rawValue:
-                if !(snapshot.memo?.isEmpty ?? true) {
+                if snapshot.hasMemo {
                     return (true, snapshot.memo ?? "")
+                }
+            case SnapshotType.raw.rawValue:
+                if snapshot.hasSender {
+                    return (true, snapshot.sender ?? "")
+                } else if snapshot.hasReceiver {
+                    return (true, snapshot.receiver ?? "")
                 }
             default:
                 break
             }
         case 5:
-            if snapshot.type != SnapshotType.transfer.rawValue && !(snapshot.memo?.isEmpty ?? true) {
-                return (true, snapshot.memo ?? "")
+            switch snapshot.type {
+            case SnapshotType.raw.rawValue:
+                if snapshot.hasSender && snapshot.hasReceiver {
+                    return (true, snapshot.receiver ?? "")
+                } else if snapshot.hasMemo {
+                    return (true, snapshot.memo ?? "")
+                }
+            case SnapshotType.transfer.rawValue:
+                break
+            default:
+                if snapshot.hasMemo {
+                    return (true, snapshot.memo ?? "")
+                }
             }
         default:
             break

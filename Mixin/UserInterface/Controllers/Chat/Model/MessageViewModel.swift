@@ -91,4 +91,16 @@ extension MessageViewModel {
         }
     }
     
+    enum ImageSet {
+        
+        enum MessageStatus {
+            static let size = CGSize(width: doubleCheckmark.size.width,
+                                     height: pending.size.height)
+            static let pending = R.image.ic_chat_time()!.withRenderingMode(.alwaysTemplate)
+            static let checkmark = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
+            static let doubleCheckmark = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
+        }
+        
+    }
+    
 }

@@ -2,12 +2,12 @@ import UIKit
 
 class CardMessageViewModel: DetailInfoMessageViewModel {
     
+    override class var bubbleImageSet: BubbleImageSet.Type {
+        return LightRightBubbleImageSet.self
+    }
+    
     var leadingConstant: CGFloat = 0
     var trailingConstant: CGFloat = 0
-    
-    override class var bubbleImageProvider: BubbleImageProvider.Type {
-        return LightRightBubbleImageProvider.self
-    }
     
     var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0

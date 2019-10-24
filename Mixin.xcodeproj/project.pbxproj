@@ -120,6 +120,7 @@
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
 		7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BA922B9EAFE00C16652 /* IntroTextView.swift */; };
 		7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */; };
+		7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B31E565236181C9004F891A /* BubbleImageSet.swift */; };
 		7B33000C223A8CB900A1016E /* LoneBackButtonNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */; };
 		7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */; };
 		7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */; };
@@ -930,6 +931,7 @@
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
 		7B311BA922B9EAFE00C16652 /* IntroTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroTextView.swift; sourceTree = "<group>"; };
 		7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
+		7B31E565236181C9004F891A /* BubbleImageSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleImageSet.swift; sourceTree = "<group>"; };
 		7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoneBackButtonNavigationController.swift; sourceTree = "<group>"; };
 		7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreSnapshotsJob.swift; sourceTree = "<group>"; };
 		7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionFromMessageCellView.swift; sourceTree = "<group>"; };
@@ -1832,6 +1834,7 @@
 			isa = PBXGroup;
 			children = (
 				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
+				7B31E565236181C9004F891A /* BubbleImageSet.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
 				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
@@ -4007,6 +4010,7 @@
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
+				7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,

@@ -1,7 +1,7 @@
 import UIKit
 
 class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
-
+    
     static let contentWidth: CGFloat = 220
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
     static let shadowImage = UIImage(named: "ic_chat_shadow")
@@ -21,6 +21,8 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     override var statusNormalTintColor: UIColor {
         return .white
     }
+    
+    private let contentSize: CGSize
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         let contentWidth = PhotoRepresentableMessageViewModel.contentWidth

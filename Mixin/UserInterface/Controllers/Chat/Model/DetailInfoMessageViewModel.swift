@@ -2,11 +2,6 @@ import UIKit
 
 class DetailInfoMessageViewModel: MessageViewModel {
     
-    static let pendingImage = R.image.ic_chat_time()!.withRenderingMode(.alwaysTemplate)
-    static let checkmarkImage = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
-    static let doubleCheckmarkImage = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
-    static let statusImageSize = CGSize(width: R.image.ic_chat_double_checkmark()!.size.width,
-                                        height: R.image.ic_chat_time()!.size.height)
     static let statusHighlightTintColor = UIColor.darkTheme
     static let margin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     static let statusLeftMargin: CGFloat = 4
@@ -16,8 +11,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let identityIconSize = R.image.ic_user_bot()!.size
     static let minFullnameWidth: CGFloat = 44
     
-    class var bubbleImageProvider: BubbleImageProvider.Type {
-        return BubbleImageProvider.self
+    class var bubbleImageSet: BubbleImageSet.Type {
+        return GeneralBubbleImageSet.self
     }
     
     var statusImage: UIImage?
@@ -52,23 +47,23 @@ class DetailInfoMessageViewModel: MessageViewModel {
             if showStatusImage {
                 switch newValue {
                 case MessageStatus.SENDING.rawValue, MessageStatus.FAILED.rawValue, MessageStatus.UNKNOWN.rawValue:
-                    statusImage = DetailInfoMessageViewModel.pendingImage
+                    statusImage = ImageSet.MessageStatus.pending
                     statusTintColor = statusNormalTintColor
                 case MessageStatus.SENT.rawValue:
-                    statusImage = DetailInfoMessageViewModel.checkmarkImage
+                    statusImage = ImageSet.MessageStatus.checkmark
                     statusTintColor = statusNormalTintColor
                 case MessageStatus.DELIVERED.rawValue:
-                    statusImage = DetailInfoMessageViewModel.doubleCheckmarkImage
+                    statusImage = ImageSet.MessageStatus.doubleCheckmark
                     statusTintColor = statusNormalTintColor
                 case MessageStatus.READ.rawValue:
-                    statusImage = DetailInfoMessageViewModel.doubleCheckmarkImage
+                    statusImage = ImageSet.MessageStatus.doubleCheckmark
                     statusTintColor = DetailInfoMessageViewModel.statusHighlightTintColor
                 default:
                     return
                 }
             } else {
                 if newValue == MessageStatus.FAILED.rawValue {
-                    statusImage = DetailInfoMessageViewModel.pendingImage
+                    statusImage = ImageSet.MessageStatus.pending
                     statusTintColor = statusNormalTintColor
                 } else {
                     statusImage = nil
@@ -94,9 +89,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
                            y: backgroundImageFrame.maxY - margin.bottom - timeSize.height,
                            width: timeSize.width,
                            height: timeSize.height)
-        backgroundImage = type(of: self).bubbleImageProvider.bubbleImage(forStyle: style, highlight: false)
+        backgroundImage = type(of: self).bubbleImageSet.image(forStyle: style, highlight: false)
         if showStatusImage {
-            statusFrame.size = DetailInfoMessageViewModel.statusImageSize
+            statusFrame.size = ImageSet.MessageStatus.size
         } else {
             statusFrame.size = .zero
         }
@@ -118,82 +113,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
         fullnameFrame.size.width = max(DetailInfoMessageViewModel.minFullnameWidth, min(fullnameWidth, maxContentWidth))
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
-    }
-    
-}
-
-extension DetailInfoMessageViewModel {
-    
-    class BubbleImageProvider {
-        
-        class var left: UIImage {
-            return R.image.ic_chat_bubble_left()!
-        }
-        
-        class var leftTail: UIImage {
-            return R.image.ic_chat_bubble_left_tail()!
-        }
-        
-        class var right: UIImage {
-            return R.image.ic_chat_bubble_right()!
-        }
-        
-        class var rightTail: UIImage {
-            return R.image.ic_chat_bubble_right_tail()!
-        }
-        
-        class var leftHighlight: UIImage {
-            return R.image.ic_chat_bubble_left_highlight()!
-        }
-        
-        class var leftTailHighlight: UIImage {
-            return R.image.ic_chat_bubble_left_tail_highlight()!
-        }
-        
-        class var rightHighlight: UIImage {
-            return R.image.ic_chat_bubble_right_highlight()!
-        }
-        
-        class var rightTailHighlight: UIImage {
-            return R.image.ic_chat_bubble_right_tail_highlight()!
-        }
-        
-        class func bubbleImage(forStyle style: Style, highlight: Bool) -> UIImage {
-            if style.contains(.received) {
-                if style.contains(.tail) {
-                    return highlight ? leftTailHighlight : leftTail
-                } else {
-                    return highlight ? leftHighlight : left
-                }
-            } else {
-                if style.contains(.tail) {
-                    return highlight ? rightTailHighlight : rightTail
-                } else {
-                    return highlight ? rightHighlight : right
-                }
-            }
-        }
-        
-    }
-    
-    class LightRightBubbleImageProvider: BubbleImageProvider {
-        
-        override class var right: UIImage {
-            return R.image.ic_chat_bubble_right_white()!
-        }
-        
-        override class var rightTail: UIImage {
-            return R.image.ic_chat_bubble_right_white_tail()!
-        }
-        
-        override class var rightHighlight: UIImage {
-            return R.image.ic_chat_bubble_right_white_highlight()!
-        }
-        
-        override class var rightTailHighlight: UIImage {
-            return R.image.ic_chat_bubble_right_white_tail_highlight()!
-        }
-        
     }
     
 }

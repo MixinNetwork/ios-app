@@ -58,7 +58,7 @@ extension FileManager {
             if directoryExists(atPath: url.path) {
                 debugDirectory(directory: url, tree: "\(tree)---", baseDir: "\(baseDir)\(file)/")
             } else {
-                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize.sizeRepresentation())...isUploaded:\(url.isUploaded)")
+                print("\(tree)\(baseDir)\(file)...\(directory.appendingPathComponent(file).fileSize.sizeRepresentation())...isUploaded:\(url.isUploaded)...isDownloaded:\(url.isDownloaded)")
             }
         }
     }

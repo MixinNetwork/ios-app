@@ -54,27 +54,27 @@ class RestoreJob: BaseJob {
             if (category == MixinFile.ChatDirectory.photos.rawValue || category == MixinFile.ChatDirectory.audios.rawValue) && backupDir.appendingPathComponent("mixin.\(category.lowercased()).zip").isStoredCloud {
                 let filename = "mixin.\(category.lowercased()).zip"
                 monitorURL(cloudURL: backupDir.appendingPathComponent(filename), localURL: chatDir.appendingPathComponent(filename), category: category, isZipFile: true)
-            } else {
-                let cloudDir = backupDir.appendingPathComponent(category)
-                guard FileManager.default.directoryExists(atPath: cloudDir.path) else {
-                    continue
-                }
+            }
+            
+            let cloudDir = backupDir.appendingPathComponent(category)
+            guard FileManager.default.directoryExists(atPath: cloudDir.path) else {
+                continue
+            }
 
-                let contents = try FileManager.default.contentsOfDirectory(atPath: cloudDir.path)
-                guard contents.count > 0 else {
-                    continue
-                }
+            let contents = try FileManager.default.contentsOfDirectory(atPath: cloudDir.path)
+            guard contents.count > 0 else {
+                continue
+            }
 
-                let localDir = chatDir.appendingPathComponent(category)
-                for content in contents {
-                    var filename = content
-                    if filename.hasSuffix(".icloud") {
-                        filename = String(filename[filename.index(filename.startIndex, offsetBy: 1)..<filename.index(filename.endIndex, offsetBy: -7)])
-                    }
-                    let cloudURL = cloudDir.appendingPathComponent(filename)
-                    let localURL = localDir.appendingPathComponent(filename)
-                    monitorURL(cloudURL: cloudURL, localURL: localURL, category: category)
+            let localDir = chatDir.appendingPathComponent(category)
+            for content in contents {
+                var filename = content
+                if filename.hasSuffix(".icloud") {
+                    filename = String(filename[filename.index(filename.startIndex, offsetBy: 1)..<filename.index(filename.endIndex, offsetBy: -7)])
                 }
+                let cloudURL = cloudDir.appendingPathComponent(filename)
+                let localURL = localDir.appendingPathComponent(filename)
+                monitorURL(cloudURL: cloudURL, localURL: localURL, category: category)
             }
         }
 

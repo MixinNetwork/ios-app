@@ -136,7 +136,7 @@ class RestoreViewController: UIViewController {
                 progress(Float(percent) / 100)
             }
             if let status = metadataItem.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String {
-                guard status == NSMetadataUbiquitousItemDownloadingStatusDownloaded || status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
+                guard status == NSMetadataUbiquitousItemDownloadingStatusCurrent else {
                     return
                 }
                 query.stop()

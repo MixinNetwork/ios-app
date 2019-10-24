@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TQ9-9O-96j" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="413.5" width="375" height="266.5"/>
+                    <rect key="frame" x="0.0" y="667" width="375" height="266.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqB-K4-ipL">
                             <rect key="frame" x="309" y="0.0" width="66" height="66"/>
@@ -52,6 +50,7 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstAttribute="bottom" secondItem="uOW-zj-ZNt" secondAttribute="bottom" constant="33" id="29p-TK-4nD"/>
                         <constraint firstItem="uOW-zj-ZNt" firstAttribute="top" secondItem="V5F-62-qhE" secondAttribute="bottom" constant="60" id="AnS-vn-jhf"/>
                         <constraint firstItem="xqB-K4-ipL" firstAttribute="top" secondItem="TQ9-9O-96j" secondAttribute="top" id="Kcg-ha-yt7"/>
                         <constraint firstAttribute="trailing" secondItem="xqB-K4-ipL" secondAttribute="trailing" id="Xn1-AO-ZSp"/>
@@ -71,12 +70,13 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="TQ9-9O-96j" secondAttribute="trailing" id="0GY-qh-rHq"/>
                 <constraint firstItem="TQ9-9O-96j" firstAttribute="leading" secondItem="UYR-5Z-1kS" secondAttribute="leading" id="AUv-Pb-zGK"/>
-                <constraint firstItem="lRr-3C-PSy" firstAttribute="bottom" secondItem="uOW-zj-ZNt" secondAttribute="bottom" constant="20" id="EyB-dZ-DhZ"/>
-                <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" constant="-13" id="ZWl-62-ZeD"/>
+                <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" priority="500" constant="-13" id="ZWl-62-ZeD"/>
+                <constraint firstItem="TQ9-9O-96j" firstAttribute="top" secondItem="UYR-5Z-1kS" secondAttribute="bottom" priority="750" id="bX0-y2-wYd"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="lRr-3C-PSy"/>
             <connections>
                 <outlet property="contentTextView" destination="V5F-62-qhE" id="oDN-oE-zx0"/>
+                <outlet property="hidePopupViewConstraint" destination="bX0-y2-wYd" id="Gf3-F2-1IC"/>
                 <outlet property="popupView" destination="TQ9-9O-96j" id="sX7-ac-uZj"/>
             </connections>
             <point key="canvasLocation" x="82.5" y="63.5"/>

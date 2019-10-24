@@ -109,7 +109,21 @@ class WebViewController: UIViewController {
         let request = URLRequest(url: context.initialUrl)
         webView.load(request)
     }
-
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        parent?.setNeedsStatusBarAppearanceUpdate()
+        parent?.setNeedsUpdateOfHomeIndicatorAutoHidden()
+    }
+    
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        if parent == nil {
+            self.parent?.setNeedsStatusBarAppearanceUpdate()
+            self.parent?.setNeedsUpdateOfHomeIndicatorAutoHidden()
+        }
+    }
+    
     private func findAppByUrl(url: URL) {
         guard let host = url.host else {
             return

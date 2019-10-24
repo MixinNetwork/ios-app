@@ -19,7 +19,7 @@ class HomeNavigationController: UINavigationController {
         if let web = activeWebViewController {
             return web
         } else {
-            return super.childForStatusBarStyle
+            return super.childForStatusBarHidden
         }
     }
     

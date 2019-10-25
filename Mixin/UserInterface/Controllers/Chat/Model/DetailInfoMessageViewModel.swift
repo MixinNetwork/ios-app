@@ -19,7 +19,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var fullnameColor = UIColor.darkTheme
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
-    var fullnameWidth: CGFloat = 0
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
     var statusNormalTintColor: UIColor {
@@ -46,39 +45,41 @@ class DetailInfoMessageViewModel: MessageViewModel {
         }
     }
     
+    private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 44
     private let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     private let statusHighlightTintColor = UIColor.darkTheme
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        fullnameWidth = (message.userFullName as NSString)
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
+        let fullnameSize = (message.userFullName as NSString)
             .boundingRect(with: UIView.layoutFittingExpandedSize, options: [], attributes: [.font: DetailInfoMessageViewModel.fullnameFont], context: nil)
-            .width
-        super.init(message: message, style: style, fits: layoutWidth)
+        fullnameFrame.size = CGSize(width: ceil(fullnameSize.width),
+                                    height: ceil(fullnameSize.height) + fullnameVerticalInset)
         updateStatusImageAndTintColor()
+        backgroundImage = type(of: self).bubbleImageSet.image(forStyle: style, highlight: false)
+        timeFrame.size = ceil((time as NSString).size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont]))
     }
     
-    override func layout() {
-        super.layout()
-        let timeSize = ceil((time as NSString).size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont]))
-        timeFrame = CGRect(x: backgroundImageFrame.maxX - timeSize.width,
-                           y: backgroundImageFrame.maxY - timeMargin.bottom - timeSize.height,
-                           width: timeSize.width,
-                           height: timeSize.height)
-        backgroundImage = type(of: self).bubbleImageSet.image(forStyle: style, highlight: false)
+    func layoutDetailInfo(backgroundImageFrame: CGRect) {
+        timeFrame.origin = CGPoint(x: backgroundImageFrame.maxX - timeFrame.width,
+                                   y: backgroundImageFrame.maxY - timeMargin.bottom - timeFrame.height)
         if showStatusImage {
             statusFrame.size = ImageSet.MessageStatus.size
         } else {
             statusFrame.size = .zero
         }
         if style.contains(.received) {
+            var offset = timeMargin.trailing
             if message.status == MessageStatus.FAILED.rawValue {
-                timeFrame.origin.x -= (timeMargin.trailing + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
-            } else {
-                timeFrame.origin.x -= timeMargin.trailing
+                offset += DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width
             }
+            timeFrame.origin.x -= offset
         } else {
-            timeFrame.origin.x -= (timeMargin.leading + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
+            let offset = timeMargin.leading
+                + DetailInfoMessageViewModel.statusLeftMargin
+                + statusFrame.width
+            timeFrame.origin.x -= offset
         }
         if style.contains(.fullname) {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
@@ -86,7 +87,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
         }
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
-        fullnameFrame.size.width = max(minFullnameWidth, min(fullnameWidth, maxContentWidth))
+        fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
     }

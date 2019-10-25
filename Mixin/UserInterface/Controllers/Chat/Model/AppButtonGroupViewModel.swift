@@ -14,14 +14,15 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     
     private var buttonSizes = [CGSize]()
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        super.init(message: message, style: style, fits: layoutWidth)
+    override init(message: MessageItem) {
+        super.init(message: message)
         backgroundImage = nil
     }
     
-    override func layout() {
-        super.layout()
-        let boundingSize = CGSize(width: layoutWidth - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        let boundingSize = CGSize(width: width - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
                                   height: UIView.layoutFittingExpandedSize.height)
         buttonSizes = message.appButtons?.map({
             let titleSize = ($0.label as NSString).boundingRect(with: boundingSize,
@@ -36,7 +37,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         var frames = [CGRect]()
         for buttonSize in buttonSizes {
             let frame: CGRect
-            if bottomRight.x + buttonSize.width + margin.trailing <= layoutWidth || abs(bottomRight.x - margin.leading) < 0.1 {
+            if bottomRight.x + buttonSize.width + margin.trailing <= width || abs(bottomRight.x - margin.leading) < 0.1 {
                 frame = CGRect(x: bottomRight.x, y: y, width: buttonSize.width, height: buttonSize.height)
             } else {
                 frame = CGRect(x: margin.leading, y: bottomRight.y, width: buttonSize.width, height: buttonSize.height)

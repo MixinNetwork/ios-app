@@ -25,12 +25,12 @@ class AppCardMessageViewModel: CardMessageViewModel {
     
     private var contentWidth: CGFloat = 0
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         let emptyLabelWidth = AppCardMessageViewModel.emptyLabelWidth
         let titleWidth = ceil(message.appCard?.title.size(withAttributes: AppCardMessageViewModel.titleAttributes).width ?? emptyLabelWidth)
         let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: AppCardMessageViewModel.descriptionAttributes).width ?? emptyLabelWidth)
         contentWidth = max(emptyLabelWidth, titleWidth, descriptionWidth)
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
     }
     
 }

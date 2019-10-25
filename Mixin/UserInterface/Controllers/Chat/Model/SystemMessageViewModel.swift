@@ -16,26 +16,26 @@ class SystemMessageViewModel: MessageViewModel {
     
     let text: String
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
                                                          userId: message.userId,
                                                          userFullName: message.userFullName,
                                                          participantId: message.participantUserId,
                                                          participantFullName: message.participantFullName,
                                                          content: message.content)
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()
     }
     
-    override func layout() {
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
         let backgroundImageHorizontalMargin: CGFloat = 76
-        let sizeToFit = CGSize(width: layoutWidth - backgroundImageHorizontalMargin,
+        let sizeToFit = CGSize(width: width - backgroundImageHorizontalMargin,
                                height: UIView.layoutFittingExpandedSize.height)
         let textRect = (text as NSString).boundingRect(with: sizeToFit,
                                                        options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                        attributes: SystemMessageViewModel.attributes,
                                                        context: nil)
-        super.layout()
+        super.layout(width: width, style: style)
         cellHeight = textRect.height
             + LabelInsets.vertical
             + bottomSeparatorHeight

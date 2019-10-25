@@ -33,9 +33,10 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         return 30
     }
     
-    override func layout() {
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
-        let backgroundSize = CGSize(width: min(size.width, layoutWidth - bubbleMargin.horizontal),
+        let backgroundSize = CGSize(width: min(size.width, width - bubbleMargin.horizontal),
                                     height: size.height)
         let backgroundOrigin: CGPoint
         if style.contains(.received) {
@@ -43,13 +44,13 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
             leadingConstant = leftLeadingMargin
             trailingConstant = leftTrailingMargin
         } else {
-            backgroundOrigin = CGPoint(x: layoutWidth - bubbleMargin.leading - backgroundSize.width, y: fullnameHeight)
+            backgroundOrigin = CGPoint(x: width - bubbleMargin.leading - backgroundSize.width, y: fullnameHeight)
             leadingConstant = rightLeadingMargin
             trailingConstant = rightTrailingMargin
         }
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
         cellHeight = fullnameHeight + backgroundSize.height + bottomSeparatorHeight
-        super.layout()
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
     }
     
 }

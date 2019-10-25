@@ -8,7 +8,8 @@ class MessageViewModel: CustomDebugStringConvertible {
     let quote: Quote?
     let time: String
     
-    var layoutWidth: CGFloat
+    private(set) var layoutWidth: CGFloat = 414
+    
     var thumbnail: UIImage?
     var backgroundImage: UIImage?
     var backgroundImageFrame = CGRect.zero
@@ -23,10 +24,11 @@ class MessageViewModel: CustomDebugStringConvertible {
     }
     
     var style: Style {
-        didSet {
-            if style != oldValue {
-                layout()
-            }
+        get {
+            return _style
+        }
+        set {
+            layout(width: layoutWidth, style: newValue)
         }
     }
     
@@ -38,11 +40,11 @@ class MessageViewModel: CustomDebugStringConvertible {
         }
     }
     
-    init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    private var _style: Style = []
+    
+    init(message: MessageItem) {
         self.message = message
-        self.style = style
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
-        self.layoutWidth = layoutWidth
         if let thumbImage = message.thumbImage, let imageData = Data(base64Encoded: thumbImage)  {
             thumbnail = UIImage(data: imageData)
         } else {
@@ -53,11 +55,11 @@ class MessageViewModel: CustomDebugStringConvertible {
         } else {
             self.quote = nil
         }
-        layout()
     }
     
-    func layout() {
-        
+    func layout(width: CGFloat, style: Style) {
+        layoutWidth = width
+        _style = style
     }
     
 }

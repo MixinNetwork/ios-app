@@ -27,8 +27,8 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         return !shouldUpload && shouldAutoDownload
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        super.init(message: message, style: style, fits: layoutWidth)
+    override init(message: MessageItem) {
+        super.init(message: message)
         updateOperationButtonStyle()
     }
     

@@ -10,9 +10,12 @@ class UnknownMessageViewModel: TextMessageViewModel {
         return .white
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        message.content = Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
-        super.init(message: message, style: style, fits: layoutWidth)
+    override var rawContent: String {
+        return Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
+    }
+    
+    override init(message: MessageItem) {
+        super.init(message: message)
         statusImage = nil
     }
     

@@ -46,14 +46,14 @@ extension SharedMediaDataTableViewController: SharedMediaDataSourceDelegate {
     
     func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
         let messages = MessageDAO.shared.getDataMessages(conversationId: conversationId, earlierThan: location?.message, count: count)
-        return messages.map { DataMessageViewModel(message: $0, style: [], fits: 600) }
+        return messages.map { DataMessageViewModel(message: $0) }
     }
     
     func sharedMediaDataSource(_ dataSource: AnyObject, itemForMessageId messageId: String) -> ItemType? {
         guard let msg = MessageDAO.shared.getFullMessage(messageId: messageId) else {
             return nil
         }
-        return DataMessageViewModel(message: msg, style: [], fits: 600)
+        return DataMessageViewModel(message: msg)
     }
     
     func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {

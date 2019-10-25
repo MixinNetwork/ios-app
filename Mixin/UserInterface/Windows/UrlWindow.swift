@@ -18,14 +18,9 @@ class UrlWindow: BottomSheetView {
         return CGPoint(x: self.bounds.size.width-(self.popupView.bounds.size.width * 0.5), y: self.popupView.center.y)
     }
 
-    private lazy var groupView = GroupView.instance()
-    private lazy var loginView = LoginView.instance()
     private lazy var payView = PayView.instance()
-    private lazy var userView = UserView.instance()
-    private lazy var addressView = AddressView.instance()
 
     private(set) var fromWeb = false
-    private var showLoginView = false
     private var interceptDismiss = false
 
     class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true, checkLastWindow: Bool = true) -> Bool {
@@ -37,17 +32,17 @@ class UrlWindow: BottomSheetView {
         }
         switch mixinURL {
         case let .codes(code):
-            return checkCodesUrl(code, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+            return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
         case .pay:
             return checkPayUrl(url: url, fromWeb: fromWeb)
         case .withdrawal:
             return checkWithdrawal(url: url, fromWeb: fromWeb)
         case .address:
-            return checkAddress(url: url, fromWeb: fromWeb)
+            return checkAddress(url: url)
         case let .users(id):
-            return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+            return checkUsersUrl(id, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
-            return checkTransferUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+            return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
         case .send:
             return checkSendUrl(url: url, fromWeb: fromWeb)
         case .device:
@@ -77,9 +72,6 @@ class UrlWindow: BottomSheetView {
                 return
             }
         }
-        if showLoginView {
-            loginView.onWindowWillDismiss()
-        }
         super.dismissPopupControllerAnimated()
     }
 
@@ -98,197 +90,86 @@ class UrlWindow: BottomSheetView {
 
 extension UrlWindow {
 
-    class func checkCodesUrl(_ codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
-        guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
-            return false
-        }
-
-        UrlWindow.instance().presentPopupControllerAnimated(codeId: codeId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
-        return true
-    }
-
-    class func checkUsersUrl(_ userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
+    class func checkUsersUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
             return false
         }
-        
-        UrlWindow.instance().presentPopupControllerAnimated(userId: userId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+
+        DispatchQueue.global().async {
+            var userItem = UserDAO.shared.getUser(userId: userId)
+            var refreshUser = true
+            if userItem == nil {
+                switch UserAPI.shared.showUser(userId: userId) {
+                case let .success(response):
+                    refreshUser = false
+                    userItem = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if error.code == 404 {
+                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
+                        } else {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                    return
+                }
+            }
+
+            guard let user = userItem, user.isCreatedByMessenger else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+            }
+        }
         return true
     }
 
-    class func checkTransferUrl(_ userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
+    class func checkTransferUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != AccountAPI.shared.accountUserId else {
             return false
         }
 
-        UrlWindow.instance().presentPopupControllerAnimated(userId: userId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack, transfer: true)
+        DispatchQueue.global().async {
+            var userItem = UserDAO.shared.getUser(userId: userId)
+            if userItem == nil {
+                switch UserAPI.shared.showUser(userId: userId) {
+                case let .success(response):
+                    userItem = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if error.code == 404 {
+                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
+                        } else {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                    return
+                }
+            }
+
+            guard let user = userItem, user.isCreatedByMessenger else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
+                if clearNavigationStack {
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                } else {
+                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
         return true
     }
 
     private func presentPopupControllerAnimated(codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
-
-        UserAPI.shared.codes(codeId: codeId) { [weak self](result) in
-            guard let weakSelf = self, weakSelf.isShowing else {
-                return
-            }
-
-            switch result {
-            case let .success(code):
-                if let user = code.user {
-                    UserDAO.shared.updateUsers(users: [user])
-                    weakSelf.presentUser(user: UserItem.createUser(from: user), clearNavigationStack: clearNavigationStack, refreshUser: false)
-                } else if let authorization = code.authorization {
-                    weakSelf.load(authorization: authorization, fromWeb: fromWeb)
-                } else if let conversation = code.conversation {
-                    weakSelf.load(conversation: conversation, codeId: codeId)
-                }
-            case let .failure(error):
-                if error.code == 404 {
-                    weakSelf.failedHandler(Localized.CODE_RECOGNITION_FAIL_TITLE)
-                } else {
-                    weakSelf.failedHandler(error.localizedDescription)
-                }
-            }
-        }
-    }
-    
-    private func presentPopupControllerAnimated(userId: String, fromWeb: Bool = false, clearNavigationStack: Bool, transfer: Bool = false) {
-        self.fromWeb = fromWeb
-        presentPopupControllerAnimated()
-        DispatchQueue.global().async { [weak self] in
-            var user = UserDAO.shared.getUser(userId: userId)
-            var refreshUser = true
-            if user == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
-                case let .success(response):
-                    refreshUser = false
-                    user = UserItem.createUser(from: response)
-                    UserDAO.shared.updateUsers(users: [response])
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        if error.code == 404 {
-                            self?.failedHandler(Localized.CONTACT_SEARCH_NOT_FOUND)
-                        } else {
-                            self?.failedHandler(error.localizedDescription)
-                        }
-                    }
-                    return
-                }
-            }
-            DispatchQueue.main.async {
-                guard let weakSelf = self, weakSelf.isShowing, let user = user, user.isCreatedByMessenger else {
-                    return
-                }
-                if transfer {
-                    weakSelf.dismissPopupControllerAnimated()
-                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
-                    if clearNavigationStack {
-                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
-                    } else {
-                        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-                    }
-                } else {
-                    weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
-                }
-            }
-        }
-    }
-
-    private func presentUser(user: UserItem, clearNavigationStack: Bool, refreshUser: Bool = true) {
-        guard user.isCreatedByMessenger else {
-            return
-        }
-        containerView.addSubview(userView)
-        userView.snp.makeConstraints({ (make) in
-            make.edges.equalToSuperview()
-        })
-        userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
-        successHandler()
-        contentHeightConstraint.constant = 0
-        UIView.animate(withDuration: 0.15, animations: {
-            self.layoutIfNeeded()
-        })
-    }
-
-    private func load(authorization: AuthorizationResponse, fromWeb: Bool = false) {
-        DispatchQueue.global().async { [weak self] in
-            let assets = AssetDAO.shared.getAvailableAssets()
-            DispatchQueue.main.async {
-                guard let weakSelf = self, weakSelf.isShowing else {
-                    return
-                }
-
-                weakSelf.showLoginView = true
-                weakSelf.containerView.addSubview(weakSelf.loginView)
-                if fromWeb {
-                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height
-                } else {
-                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height - 56
-                }
-                weakSelf.loginView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                weakSelf.loginView.render(authInfo: authorization, assets: assets, superView: weakSelf)
-                weakSelf.successHandler()
-
-                UIView.animate(withDuration: 0.15, animations: {
-                    weakSelf.layoutIfNeeded()
-                })
-            }
-        }
-    }
-
-    private func load(conversation: ConversationResponse, codeId: String) {
-        DispatchQueue.global().async { [weak self] in
-            let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
-            let accountUserId = AccountAPI.shared.accountUserId
-            let conversationId = conversation.conversationId
-            let alreadyInTheGroup = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
-            let userIds = subParticipants.map{ $0.userId }
-            var participants = [ParticipantUser]()
-            switch UserAPI.shared.showUsers(userIds: userIds) {
-            case let .success(users):
-                participants = users.map {
-                    ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
-                }
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    self?.failedHandler(error.localizedDescription)
-                }
-                return
-            }
-            var creatorUser = UserDAO.shared.getUser(userId: conversation.creatorId)
-            if creatorUser == nil {
-                switch UserAPI.shared.showUser(userId: conversation.creatorId) {
-                case let .success(user):
-                    creatorUser = UserItem.createUser(from: user)
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        self?.failedHandler(error.localizedDescription)
-                    }
-                    return
-                }
-            }
-
-            DispatchQueue.main.async {
-                guard let weakSelf = self, let ownerUser = creatorUser, weakSelf.isShowing else {
-                    return
-                }
-                weakSelf.containerView.addSubview(weakSelf.groupView)
-                weakSelf.groupView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                weakSelf.groupView.render(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup, superView: weakSelf)
-                weakSelf.successHandler()
-
-                weakSelf.contentHeightConstraint.constant = 0
-                UIView.animate(withDuration: 0.15, animations: {
-                    weakSelf.layoutIfNeeded()
-                })
-            }
-        }
     }
 
     private func failedHandler(_ errorMsg: String) {
@@ -304,96 +185,6 @@ extension UrlWindow {
 }
 
 extension UrlWindow {
-
-    func presentPopupControllerAnimated(query: Dictionary<String, String>, assetId: String, fromWeb: Bool = false) {
-        self.fromWeb = fromWeb
-        presentPopupControllerAnimated()
-
-        DispatchQueue.global().async { [weak self] in
-            guard var asset = AssetDAO.shared.getAsset(assetId: assetId) else {
-                DispatchQueue.main.async {
-                    self?.failedHandler(R.string.localizable.address_asset_not_found())
-                }
-                return
-            }
-
-            while asset.destination.isEmpty && self?.isShowing ?? false {
-                switch AssetAPI.shared.asset(assetId: asset.assetId) {
-                case let .success(remoteAsset):
-                    guard !remoteAsset.destination.isEmpty else {
-                        Thread.sleep(forTimeInterval: 2)
-                        continue
-                    }
-                    guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
-                        return
-                    }
-                    asset = localAsset
-                    break
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        self?.failedHandler(error.localizedDescription)
-                    }
-                    return
-                }
-            }
-
-            guard self?.isShowing ?? false else {
-                return
-            }
-
-            var addressRequest: AddressRequest?
-            var address: Address?
-
-            let addressAction: AddressView.action
-            if let action = query["action"]?.lowercased(), "delete" == action {
-                guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
-                    return
-                }
-
-                addressAction = .delete
-                address = AddressDAO.shared.getAddress(addressId: addressId)
-                if address == nil {
-                    switch WithdrawalAPI.shared.address(addressId: addressId) {
-                    case let .success(remoteAddress):
-                        AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
-                        address = remoteAddress
-                    case let .failure(error):
-                        DispatchQueue.main.async {
-                            if error.code == 404 {
-                                self?.failedHandler(R.string.localizable.address_not_found())
-                            } else {
-                                self?.failedHandler(error.localizedDescription)
-                            }
-                        }
-                        return
-                    }
-                }
-            } else {
-                guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
-                    return
-                }
-
-                let tag = query["tag"] ?? ""
-
-                addressRequest = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: label, pin: "")
-                address = AddressDAO.shared.getAddress(assetId: assetId, destination: destination, tag: tag)
-                addressAction = address == nil ? .add : .update
-            }
-
-            DispatchQueue.main.async {
-                guard let weakSelf = self, weakSelf.isShowing else {
-                    return
-                }
-
-                weakSelf.containerView.addSubview(weakSelf.addressView)
-                weakSelf.addressView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                weakSelf.addressView.render(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil, superView: weakSelf)
-                weakSelf.successHandler()
-            }
-        }
-    }
 
     func presentPopupControllerAnimated(addressId: String, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
@@ -503,7 +294,7 @@ extension UrlWindow {
         return true
     }
 
-    class func checkAddress(url: URL, fromWeb: Bool = false) -> Bool {
+    class func checkAddress(url: URL) -> Bool {
         guard AccountAPI.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
@@ -515,8 +306,83 @@ extension UrlWindow {
             return false
         }
 
-        UrlWindow.instance().presentPopupControllerAnimated(query: query, assetId: assetId, fromWeb: fromWeb)
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        DispatchQueue.global().async {
+            guard var asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
 
+            while asset.destination.isEmpty {
+                switch AssetAPI.shared.asset(assetId: asset.assetId) {
+                case let .success(remoteAsset):
+                    guard !remoteAsset.destination.isEmpty else {
+                        Thread.sleep(forTimeInterval: 2)
+                        continue
+                    }
+                    guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
+                        return
+                    }
+                    asset = localAsset
+                    break
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+            }
+
+            var addressRequest: AddressRequest?
+            var address: Address?
+
+            let addressAction: AddressView.action
+            if let action = query["action"]?.lowercased(), "delete" == action {
+                guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+                    return
+                }
+
+                addressAction = .delete
+                address = AddressDAO.shared.getAddress(addressId: addressId)
+                if address == nil {
+                    switch WithdrawalAPI.shared.address(addressId: addressId) {
+                    case let .success(remoteAddress):
+                        AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
+                        address = remoteAddress
+                    case let .failure(error):
+                        DispatchQueue.main.async {
+                            if error.code == 404 {
+                                hud.set(style: .error, text: R.string.localizable.address_not_found())
+                            } else {
+                                hud.set(style: .error, text: error.localizedDescription)
+                            }
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                }
+            } else {
+                guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
+                    return
+                }
+
+                let tag = query["tag"] ?? ""
+
+                addressRequest = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: label, pin: "")
+                address = AddressDAO.shared.getAddress(assetId: assetId, destination: destination, tag: tag)
+                addressAction = address == nil ? .add : .update
+            }
+
+            DispatchQueue.main.async {
+                hud.hide()
+                AddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
+            }
+        }
         return true
     }
 
@@ -558,4 +424,105 @@ extension UrlWindow {
         return true
     }
 
+}
+
+extension UrlWindow {
+
+    private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool) -> Bool {
+        guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
+            return false
+        }
+
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+
+        UserAPI.shared.codes(codeId: codeId) { (result) in
+            switch result {
+            case let .success(code):
+                hud.hide()
+                if let user = code.user {
+                    presentUser(user: user, hud: hud)
+                } else if let authorization = code.authorization {
+                    presentAuthorization(authorization: authorization, hud: hud)
+                } else if let conversation = code.conversation {
+                    presentConversation(conversation: conversation, codeId: codeId, hud: hud)
+                }
+            case let .failure(error):
+                if error.code == 404 {
+                    hud.set(style: .error, text: Localized.CODE_RECOGNITION_FAIL_TITLE)
+                } else {
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+            }
+        }
+        return true
+    }
+
+    private static func presentUser(user: UserResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            UserDAO.shared.updateUsers(users: [user])
+
+            DispatchQueue.main.async {
+                hud.hide()
+                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentPopupControllerAnimated()
+            }
+        }
+    }
+
+    private static func presentAuthorization(authorization: AuthorizationResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            let assets = AssetDAO.shared.getAvailableAssets()
+
+            DispatchQueue.main.async {
+                hud.hide()
+                AuthorizationWindow.instance().render(authInfo: authorization, assets: assets).presentPopupControllerAnimated()
+            }
+        }
+    }
+
+    private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
+        DispatchQueue.global().async {
+            defer {
+                DispatchQueue.main.async {
+                    hud.hide()
+                }
+            }
+            let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
+            let accountUserId = AccountAPI.shared.accountUserId
+            let conversationId = conversation.conversationId
+            let alreadyInTheGroup = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
+            let userIds = subParticipants.map{ $0.userId }
+            var participants = [ParticipantUser]()
+            switch UserAPI.shared.showUsers(userIds: userIds) {
+            case let .success(users):
+                participants = users.map {
+                    ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
+                }
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+                return
+            }
+            var creatorUser = UserDAO.shared.getUser(userId: conversation.creatorId)
+            if creatorUser == nil {
+                switch UserAPI.shared.showUser(userId: conversation.creatorId) {
+                case let .success(user):
+                    creatorUser = UserItem.createUser(from: user)
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                    return
+                }
+            }
+
+            guard let ownerUser = creatorUser else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
+            }
+        }
+    }
 }

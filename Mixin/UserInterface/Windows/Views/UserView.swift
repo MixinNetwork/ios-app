@@ -85,7 +85,7 @@ class UserView: CornerView {
         idLabel.highlightIdentityNumber = false
     }
 
-    func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true, superView: BottomSheetView?) {
+    func updateUser(user: UserItem, refreshUser: Bool = true, superView: BottomSheetView?) {
         self.superView = superView
         self.user = user
         avatarImageView.setImage(with: user)
@@ -401,9 +401,9 @@ class UserView: CornerView {
             guard let account = AccountAPI.shared.account else {
                 return
             }
-            updateUser(user: UserItem.createUser(from: account), animated: true, superView: superView)
+            updateUser(user: UserItem.createUser(from: account), superView: superView)
         } else {
-            updateUser(user: creator, animated: true, superView: superView)
+            updateUser(user: creator, superView: superView)
         }
         superView?.presentView()
     }
@@ -462,7 +462,7 @@ class UserView: CornerView {
                 switch result {
                 case let .success(account):
                     if let weakSelf = self {
-                        weakSelf.updateUser(user: UserItem.createUser(from: account), animated: true, refreshUser: false, superView: weakSelf.superView)
+                        weakSelf.updateUser(user: UserItem.createUser(from: account), refreshUser: false, superView: weakSelf.superView)
                     }
                     AccountAPI.shared.updateAccount(account: account)
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_CHANGED)
@@ -555,7 +555,7 @@ class UserView: CornerView {
         switch result {
         case let .success(user):
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
-            updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
+            updateUser(user: UserItem.createUser(from: user), refreshUser: false, superView: superView)
         case let .failure(error):
             if showError {
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

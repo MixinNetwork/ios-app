@@ -1,6 +1,6 @@
-import UIKit
+import Foundation
 
-class LoginView: UIView {
+class AuthorizationWindow: BottomSheetView {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var iconImageView: CornerImageView!
@@ -8,11 +8,10 @@ class LoginView: UIView {
     @IBOutlet weak var authorizeButton: RoundedButton!
     @IBOutlet weak var titleLabel: UILabel!
 
-    private weak var superView: UrlWindow?
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var loginSuccess = false
-    
+
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
         case PHONE = "PHONE:READ"
@@ -62,12 +61,9 @@ class LoginView: UIView {
     }()
     private var selectedScopes = [Scope.PROFILE.rawValue]
 
-    func render(authInfo: AuthorizationResponse, assets: [AssetItem], superView: UrlWindow) {
+    func render(authInfo: AuthorizationResponse, assets: [AssetItem]) -> AuthorizationWindow {
         self.authInfo = authInfo
         self.assets = assets
-        self.superView = superView
-        
-        superView.layoutIfNeeded()
 
         titleLabel.text = authInfo.app.name
         iconImageView.sd_setImage(with: URL(string: authInfo.app.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
@@ -79,9 +75,12 @@ class LoginView: UIView {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
             }
         }
+        return self
     }
 
-    func onWindowWillDismiss() {
+    override func dismissPopupControllerAnimated() {
+        super.dismissPopupControllerAnimated()
+
         guard !loginSuccess else {
             return
         }
@@ -98,7 +97,7 @@ class LoginView: UIView {
     }
 
     @IBAction func backAction(_ sender: Any) {
-        superView?.dismissPopupControllerAnimated()
+        dismissPopupControllerAnimated()
     }
 
     @IBAction func authorizeAction(_ sender: Any) {
@@ -115,7 +114,7 @@ class LoginView: UIView {
             case let .success(response):
                 weakSelf.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
-                weakSelf.superView?.dismissPopupControllerAnimated()
+                weakSelf.dismissPopupControllerAnimated()
                 if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
                     UIApplication.homeNavigationController?.popViewController(animated: true)
                 }
@@ -141,12 +140,12 @@ class LoginView: UIView {
         return result
     }
 
-    class func instance() -> LoginView {
-        return Bundle.main.loadNibNamed("LoginView", owner: nil, options: nil)?.first as! LoginView
+    class func instance() -> AuthorizationWindow {
+        return Bundle.main.loadNibNamed("AuthorizationWindow", owner: nil, options: nil)?.first as! AuthorizationWindow
     }
 }
 
-extension LoginView: UITableViewDelegate, UITableViewDataSource {
+extension AuthorizationWindow: UITableViewDelegate, UITableViewDataSource {
 
     private func prepareTableView() {
         tableView.register(UINib(nibName: "AuthorizationScopeCell", bundle: nil), forCellReuseIdentifier: AuthorizationScopeCell.cellIdentifier)
@@ -210,4 +209,5 @@ private extension UIApplication {
         }
         UIApplication.shared.open(targetUrl, options: [:], completionHandler: nil)
     }
+
 }

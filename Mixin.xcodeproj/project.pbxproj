@@ -637,6 +637,8 @@
 		DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF84777720DA5A1200DE5163 /* RecordButton.swift */; };
 		DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8794932074FB4E004A1E55 /* TransactionViewController.swift */; };
 		DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF87949B207505F4004A1E55 /* TransactionCell.swift */; };
+		DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8A7520236301C500765A82 /* AuthorizationWindow.swift */; };
+		DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */; };
 		DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECD61FC2EE4200E40064 /* PayWindow.swift */; };
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
 		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
@@ -659,8 +661,6 @@
 		DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */; };
 		DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */; };
 		DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */; };
-		DF8EF6B120315D2A00E99CE8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B020315D2A00E99CE8 /* LoginView.swift */; };
-		DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B22031614700E99CE8 /* LoginView.xib */; };
 		DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B42032D1D700E99CE8 /* PayView.xib */; };
 		DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B62032D3D700E99CE8 /* PayView.swift */; };
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
@@ -1436,6 +1436,8 @@
 		DF84777720DA5A1200DE5163 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		DF8794932074FB4E004A1E55 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		DF87949B207505F4004A1E55 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
+		DF8A7520236301C500765A82 /* AuthorizationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationWindow.swift; sourceTree = "<group>"; };
+		DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationWindow.xib; sourceTree = "<group>"; };
 		DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mixin-Bridging-Header.h"; sourceTree = "<group>"; };
 		DF8CECD61FC2EE4200E40064 /* PayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWindow.swift; sourceTree = "<group>"; };
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
@@ -1461,8 +1463,6 @@
 		DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshUserJob.swift; sourceTree = "<group>"; };
 		DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UrlWindow.xib; sourceTree = "<group>"; };
 		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
-		DF8EF6B020315D2A00E99CE8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		DF8EF6B22031614700E99CE8 /* LoginView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginView.xib; sourceTree = "<group>"; };
 		DF8EF6B42032D1D700E99CE8 /* PayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayView.xib; sourceTree = "<group>"; };
 		DF8EF6B62032D3D700E99CE8 /* PayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayView.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
@@ -2140,6 +2140,8 @@
 				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
 				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
 				DFF21458209ABA6500612234 /* GroupWindow.swift */,
+				DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */,
+				DF8A7520236301C500765A82 /* AuthorizationWindow.swift */,
 				DFF2145A209ABBB400612234 /* GroupWindow.xib */,
 				DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */,
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
@@ -2273,8 +2275,6 @@
 				DF53BB6720233657002BF028 /* MixinWebView.swift */,
 				7BD69C421FF2753E00758D7C /* GroupView.swift */,
 				7BD69C441FF2755D00758D7C /* GroupView.xib */,
-				DF8EF6B020315D2A00E99CE8 /* LoginView.swift */,
-				DF8EF6B22031614700E99CE8 /* LoginView.xib */,
 				DF8EF6B62032D3D700E99CE8 /* PayView.swift */,
 				DF8EF6B42032D1D700E99CE8 /* PayView.xib */,
 				DF2A0D962295734C00CA0280 /* AddressView.swift */,
@@ -3079,6 +3079,7 @@
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
+				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
@@ -3130,7 +3131,6 @@
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
-				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
@@ -3344,7 +3344,6 @@
 				DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */,
 				7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
-				DF8EF6B120315D2A00E99CE8 /* LoginView.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
@@ -3783,6 +3782,7 @@
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
+				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,

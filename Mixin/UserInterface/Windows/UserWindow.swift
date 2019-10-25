@@ -63,8 +63,8 @@ class UserWindow: BottomSheetView {
     }
 
     @discardableResult
-    func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true) -> UserWindow {
-        userView.updateUser(user: user, animated: animated, refreshUser: refreshUser, superView: self)
+    func updateUser(user: UserItem, refreshUser: Bool = true) -> UserWindow {
+        userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
         return self
     }
 

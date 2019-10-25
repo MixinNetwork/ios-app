@@ -13,6 +13,7 @@ class ConversationDataSource {
     
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
+    var focusIndexPath: IndexPath?
     weak var tableView: ConversationTableView?
     
     private let windowRect = AppDelegate.current.window.bounds
@@ -729,12 +730,14 @@ extension ConversationDataSource {
             self.didLoadLatestMessage = didLoadLatestMessage
             let scrolling: () -> Void = {
                 if let initialIndexPath = initialIndexPath {
+                    self.focusIndexPath = initialIndexPath
                     if tableView.contentSize.height > self.layoutSize.height {
                         let rect = tableView.rectForRow(at: initialIndexPath)
                         let y = rect.origin.y + offset - tableView.contentInset.top
                         tableView.setContentOffsetYSafely(y)
                     }
                 } else {
+                    self.focusIndexPath = self.lastIndexPath
                     tableView.scrollToBottom(animated: false)
                 }
             }

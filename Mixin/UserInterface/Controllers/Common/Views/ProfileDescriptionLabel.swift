@@ -127,7 +127,7 @@ extension ProfileDescriptionLabel {
         let str = NSMutableAttributedString(string: text)
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
         var linksMap = [NSRange: URL]()
-        Link.detector.enumerateMatches(in: str, options: [], using: { (result, _, _) in
+        Link.detector.enumerateMatches(in: text, options: [], using: { (result, _, _) in
             guard let result = result, let url = result.url else {
                 return
             }

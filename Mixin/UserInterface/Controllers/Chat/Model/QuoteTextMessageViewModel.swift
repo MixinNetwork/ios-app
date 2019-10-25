@@ -43,9 +43,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         return max(super.backgroundWidth, quoteMaxWidth)
     }
     
-    override func layout() {
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
         guard let quote = quote else {
-            super.layout()
+            super.layout(width: width, style: style)
             return
         }
         switch quote.category {
@@ -56,12 +56,12 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
-        let maxTitleWidth = layoutWidth
+        let maxTitleWidth = width
             - DetailInfoMessageViewModel.bubbleMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
             - quoteImageWidth
-        let maxSubtitleWidth = layoutWidth
+        let maxSubtitleWidth = width
             - DetailInfoMessageViewModel.bubbleMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
@@ -87,7 +87,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             + Quote.contentMargin.horizontal
             + Quote.backgroundMargin.horizontal
         
-        super.layout()
+        quoteContentHeight = max(Quote.imageSize.height, Quote.contentMargin.vertical + Quote.titleHeight + Quote.subtitleTopMargin + subtitleHeight)
+        
+        super.layout(width: width, style: style)
         
         if style.contains(.fullname) {
             backgroundImageFrame.origin.y += fullnameHeight
@@ -100,12 +102,10 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         } else {
             quoteBackgroundOriginX = backgroundImageFrame.origin.x + Quote.backgroundMargin.trailing
         }
-        quoteContentHeight = max(Quote.imageSize.height, Quote.contentMargin.vertical + Quote.titleHeight + Quote.subtitleTopMargin + subtitleHeight)
         quoteBackgroundFrame = CGRect(x: quoteBackgroundOriginX,
                                       y: backgroundImageFrame.origin.y + Quote.backgroundMargin.top,
                                       width: backgroundImageFrame.width - Quote.backgroundMargin.horizontal,
                                       height: quoteContentHeight)
-        
         quoteTitleFrame = CGRect(x: quoteBackgroundFrame.origin.x + Quote.contentMargin.leading,
                                  y: quoteBackgroundFrame.origin.y + Quote.contentMargin.top,
                                  width: titleWidth,
@@ -123,6 +123,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
                                     y: quoteTitleFrame.maxY + Quote.subtitleTopMargin,
                                     width: subtitleSize.width,
                                     height: subtitleSize.height)
+        
         if let image = quote.image {
             let quoteImageOrigin = CGPoint(x: quoteBackgroundFrame.maxX - Quote.imageSize.width,
                                            y: quoteBackgroundFrame.origin.y)

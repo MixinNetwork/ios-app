@@ -802,46 +802,47 @@ extension ConversationDataSource {
     private func viewModel(withMessage message: MessageItem, style: MessageViewModel.Style, fits layoutWidth: CGFloat) -> MessageViewModel {
         let viewModel: MessageViewModel
         if message.status == MessageStatus.FAILED.rawValue {
-            viewModel = DecryptionFailedMessageViewModel(message: message, style: style, fits: layoutWidth)
+            viewModel = DecryptionFailedMessageViewModel(message: message)
         } else {
             if message.quoteMessageId != nil && message.quoteContent != nil {
-                viewModel = QuoteTextMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = QuoteTextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_TEXT") {
-                viewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = TextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_IMAGE") {
-                viewModel = PhotoMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = PhotoMessageViewModel(message: message)
             } else if message.category.hasSuffix("_STICKER") {
-                viewModel = StickerMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = StickerMessageViewModel(message: message)
             } else if message.category.hasSuffix("_DATA") {
-                viewModel = DataMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = DataMessageViewModel(message: message)
             } else if message.category.hasSuffix("_VIDEO") {
-                viewModel = VideoMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = VideoMessageViewModel(message: message)
             } else if message.category.hasSuffix("_AUDIO") {
-                viewModel = AudioMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AudioMessageViewModel(message: message)
             } else if message.category.hasSuffix("_CONTACT") {
-                viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = ContactMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LIVE") {
-                viewModel = LiveMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = LiveMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
-                viewModel = CallMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                viewModel = TransferMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = TransferMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-                viewModel = SystemMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = SystemMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-                viewModel = AppButtonGroupViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AppButtonGroupViewModel(message: message)
             } else if message.category == MessageCategory.APP_CARD.rawValue {
-                viewModel = AppCardMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AppCardMessageViewModel(message: message)
             } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
-                viewModel = RecalledMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = RecalledMessageViewModel(message: message)
             } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
-                viewModel = MessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = MessageViewModel(message: message)
                 viewModel.cellHeight = 38
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                viewModel = EncryptionHintViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = EncryptionHintViewModel(message: message)
             } else {
-                viewModel = UnknownMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = UnknownMessageViewModel(message: message)
             }
+            viewModel.layout(width: layoutWidth, style: style)
             if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
                 viewModel.highlight(keyword: keyword)
             }
@@ -929,11 +930,9 @@ extension ConversationDataSource {
                     }
                     previousViewModel.style.insert(.bottomSeparator)
                 } else if previousViewModelIsFromDifferentUser {
-                    previousViewModel.style.insert(.bottomSeparator)
-                    previousViewModel.style.insert(.tail)
+                    previousViewModel.style.formUnion([.bottomSeparator, .tail])
                 } else {
-                    previousViewModel.style.remove(.bottomSeparator)
-                    previousViewModel.style.remove(.tail)
+                    previousViewModel.style.subtract([.bottomSeparator, .tail])
                 }
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
                     style.insert(.fullname)
@@ -951,14 +950,12 @@ extension ConversationDataSource {
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
-                    viewModel.style.insert(.tail)
-                    viewModel.style.insert(.bottomSeparator)
+                    viewModel.style.formUnion([.bottomSeparator, .tail])
                     if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
                         nextViewModel.style.insert(.fullname)
                     }
                 } else {
-                    viewModel.style.remove(.tail)
-                    viewModel.style.remove(.bottomSeparator)
+                    viewModel.style.subtract([.bottomSeparator, .tail])
                     nextViewModel.style.remove(.fullname)
                 }
                 DispatchQueue.main.sync {

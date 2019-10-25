@@ -16,7 +16,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     private let timeMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 4)
     private let contentSize: CGSize
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
             let width = CGFloat(assetWidth / 2)
             let height = CGFloat(assetHeight / 2)
@@ -43,11 +43,12 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
         } else {
             contentSize = CGSize(width: SideLength.min, height: SideLength.min)
         }
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
         backgroundImage = nil
     }
     
-    override func layout() {
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         if style.contains(.received) {
@@ -59,13 +60,13 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
                 contentFrame.origin.y += fullnameHeight
             }
         } else {
-            contentFrame = CGRect(x: layoutWidth - contentMargin.leading - contentSize.width,
+            contentFrame = CGRect(x: width - contentMargin.leading - contentSize.width,
                                   y: contentMargin.top,
                                   width: contentSize.width,
                                   height: contentSize.height)
         }
-        super.layout()
-        fullnameFrame.size.width = min(fullnameWidth, maxContentWidth)
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        fullnameFrame.size.width = min(fullnameFrame.size.width, maxContentWidth)
         let timeOffset = style.contains(.received)
             ? timeMargin.leading
             : (timeMargin.trailing - DetailInfoMessageViewModel.statusLeftMargin - statusFrame.width)

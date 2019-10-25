@@ -11,11 +11,10 @@
     return detector;
 }
 
-- (void)enumerateMatchesInAttributedString:(NSAttributedString *)attributedString options:(NSMatchingOptions)options usingBlock:(void (NS_NOESCAPE ^)(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL *stop))block {
-    if (attributedString.length < 3) {
+- (void)enumerateMatchesInString:(NSString *)string options:(NSMatchingOptions)options usingBlock:(void (NS_NOESCAPE ^)(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL *stop))block {
+    if (string.length < 3) {
         return;
     }
-    NSString *string = attributedString.string;
     BOOL maybeContainsURL = NO;
     int dotSequence = 0;
     unichar lastChar = 0;

@@ -28,7 +28,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         }
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         let mediaWidth = abs(CGFloat(message.mediaWidth ?? 0))
         let mediaHeight = abs(CGFloat(message.mediaHeight ?? 0))
         if mediaWidth < 1 || mediaHeight < 1 {
@@ -36,10 +36,11 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         } else {
             contentRatio = CGSize(width: mediaWidth, height: mediaHeight)
         }
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
     }
     
-    override func layout() {
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         let ratio = contentRatio.width / contentRatio.height
         presentationSize.height = min(maxPresentationHeight, round(presentationSize.width / ratio))
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
@@ -58,7 +59,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
                 shadowImageOrigin.y += fullnameHeight
             }
         } else {
-            contentFrame = CGRect(x: layoutWidth - bubbleMargin.leading - presentationSize.width,
+            contentFrame = CGRect(x: width - bubbleMargin.leading - presentationSize.width,
                                   y: bubbleMargin.top,
                                   width: presentationSize.width,
                                   height: presentationSize.height)
@@ -67,7 +68,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         }
         backgroundImageFrame = contentFrame
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
-        super.layout()
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
     }
     
     func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {

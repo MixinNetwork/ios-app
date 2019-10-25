@@ -7,11 +7,11 @@ class DecryptionFailedMessageViewModel: TextMessageViewModel {
             + Localized.CHAT_DECRYPTION_FAILED_LINK
     }
     
-    override func linksMap(from attributedString: NSAttributedString) -> [NSRange : URL] {
+    override func linkRanges(from string: String) -> [Link.Range] {
         let location = (Localized.CHAT_DECRYPTION_FAILED_HINT(username: message.userFullName) as NSString).length
         let length = (Localized.CHAT_DECRYPTION_FAILED_LINK as NSString).length
         let range = NSRange(location: location, length: length)
-        return [range: .aboutEncryption]
+        return [Link.Range(range: range, url: .aboutEncryption)]
     }
     
 }

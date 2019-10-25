@@ -45,7 +45,6 @@ class ConversationViewController: UIViewController {
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
-    private var didInitData = false
     private var isShowingMenu = false
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
@@ -136,6 +135,21 @@ class ConversationViewController: UIViewController {
         updateStrangerHintView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
+        updateNavigationBarHeightAndTableViewTopInset()
+        conversationInputViewController = R.storyboard.chat.input()
+        addChild(conversationInputViewController)
+        inputWrapperView.addSubview(conversationInputViewController.view)
+        conversationInputViewController.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        conversationInputViewController.didMove(toParent: self)
+        if dataSource.category == .group {
+            updateSubtitleAndInputBar()
+        } else if let user = ownerUser {
+            conversationInputViewController.inputBarView.isHidden = false
+            conversationInputViewController.update(opponentUser: user)
+        }
+        dataSource.initData(completion: finishInitialLoading)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
@@ -148,24 +162,6 @@ class ConversationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
-        if !didInitData {
-            didInitData = true
-            updateNavigationBarHeightAndTableViewTopInset()
-            conversationInputViewController = R.storyboard.chat.input()
-            addChild(conversationInputViewController)
-            inputWrapperView.addSubview(conversationInputViewController.view)
-            conversationInputViewController.view.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            conversationInputViewController.didMove(toParent: self)
-            if dataSource.category == .group {
-                updateSubtitleAndInputBar()
-            } else if let user = ownerUser {
-                conversationInputViewController.inputBarView.isHidden = false
-                conversationInputViewController.update(opponentUser: user)
-            }
-            dataSource.initData(completion: finishInitialLoading)
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -540,7 +536,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func participantDidChange(_ notification: Notification) {
-        guard didInitData, let conversationId = notification.object as? String, conversationId == self.conversationId else {
+        guard isViewLoaded, let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
         updateSubtitleAndInputBar()
@@ -588,7 +584,9 @@ class ConversationViewController: UIViewController {
         }
         updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: oldHeight, newHeight: newHeight)
         let bottomInset = newHeight + MessageViewModel.bottomSeparatorHeight
-        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
+        let shouldAdjustContentOffset = adjustTableViewContentOffsetWhenInputWrapperHeightChanges
+            || dataSource.focusIndexPath == dataSource.lastIndexPath
+        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: shouldAdjustContentOffset)
         view.layoutIfNeeded()
         if animated {
             UIView.commitAnimations()
@@ -865,6 +863,7 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        dataSource.focusIndexPath = indexPath
         guard let dataSource = dataSource else {
             return
         }

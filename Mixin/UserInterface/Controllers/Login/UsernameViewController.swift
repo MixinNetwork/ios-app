@@ -5,7 +5,8 @@ class UsernameViewController: LoginInfoInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.navigation_title_enter_name()
-        textField.text = defaultUsername()
+        textField.text = makeDefaultUsername()
+        editingChangedAction(self)
     }
     
     override func continueAction(_ sender: Any) {
@@ -26,7 +27,7 @@ class UsernameViewController: LoginInfoInputViewController {
         }
     }
     
-    private func defaultUsername() -> String? {
+    private func makeDefaultUsername() -> String? {
         let name = UIDevice.current.name
         let deviceName: String
         if name.range(of: "iPhone") != nil {

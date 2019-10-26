@@ -479,6 +479,17 @@
 "pay_use_face" = "使用面容支付";
 "pay_use_touch" = "使用指纹支付";
 
+// Multisig
+"multisig_pay_pin" = "通过密码签名";
+"multisig_pay_face" = "使用面容签名";
+"multisig_pay_touch" = "使用指纹签名";
+"multisig_transaction" = "多重签名交易";
+"multisig_revoke_transaction" = "撤销多重签名交易";
+"multisig_senders" = "交易发起人";
+"multisig_receivers" = "交易接收人";
+"multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
+"multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
+
 // QRCode
 "myqrcode_title" = "我的二维码";
 "myqrcode_prompt" = "用 Mixin 扫描二维码加我为联系人";

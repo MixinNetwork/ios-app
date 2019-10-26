@@ -446,6 +446,8 @@ extension UrlWindow {
                     presentAuthorization(authorization: authorization, hud: hud)
                 } else if let conversation = code.conversation {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
+                } else if let multisig = code.multisig {
+                    presentMultisig(multisig: multisig)
                 }
             case let .failure(error):
                 if error.code == 404 {
@@ -457,6 +459,10 @@ extension UrlWindow {
             }
         }
         return true
+    }
+
+    private static func presentMultisig(multisig: MultisigResponse) {
+        
     }
 
     private static func presentUser(user: UserResponse, hud: Hud) {

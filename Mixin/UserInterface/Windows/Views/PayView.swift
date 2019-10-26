@@ -25,13 +25,11 @@ class PayView: UIStackView {
 
     private lazy var context = LAContext()
     private var user: UserItem!
-    private var trackId: String!
+    private var trackId = ""
     private var asset: AssetItem!
     private var address: Address?
     private var amount = ""
     private var memo = ""
-    private var isWithdrawal = false
-    private var fromWebWithdrawal = false
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
@@ -42,15 +40,18 @@ class PayView: UIStackView {
         guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
             return false
         }
-        guard !isWithdrawal else {
-            return false
-        }
 
         guard biometryType != .none else {
             return false
         }
 
         return true
+    }
+
+    enum Action {
+        case transfer(trackId: String)
+        case withdraw(trackId: String, address: Address, fromWeb: Bool)
+        case multisig(multisign: MultisigResponse)
     }
     
     override func awakeFromNib() {
@@ -68,6 +69,23 @@ class PayView: UIStackView {
             AudioServicesRemoveSystemSoundCompletion(soundId)
         }
         NotificationCenter.default.removeObserver(self)
+    }
+
+    func render(asset: AssetItem, action: Action, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, superView: BottomSheetView) {
+        self.asset = asset
+        self.amount = amount
+        self.memo = memo
+        self.superView = superView
+        switch action {
+        case let .transfer(trackId):
+            break
+        case let .withdraw(trackId, address, fromWeb):
+            break
+        case let .multisig(multisign):
+            break
+        default:
+            break
+        }
     }
     
     func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, fromWebWithdrawal: Bool = false, fiatMoneyAmount: String? = nil, superView: BottomSheetView) {

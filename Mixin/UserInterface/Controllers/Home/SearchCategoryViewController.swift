@@ -88,13 +88,18 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         lastSearchFieldText = searchTextField.text
     }
-
-    private func cancelOperation() {
-        statement?.interrupt()
-        statement = nil
-        queue.cancelAllOperations()
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        models.flatMap({ $0 })
+            .compactMap({ $0 as? SearchResult })
+            .forEach({ $0.updateTitleAndDescription() })
+        tableView.reloadData()
     }
-
+    
     @objc func searchAction(_ sender: Any) {
         cancelOperation()
         guard let keyword = trimmedLowercaseKeyword else {
@@ -148,6 +153,12 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
         }
         queue.addOperation(op)
         navigationSearchBoxView.isBusy = true
+    }
+    
+    private func cancelOperation() {
+        statement?.interrupt()
+        statement = nil
+        queue.cancelAllOperations()
     }
     
 }

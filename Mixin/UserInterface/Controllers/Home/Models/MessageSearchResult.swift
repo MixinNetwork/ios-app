@@ -9,21 +9,32 @@ class MessageSearchResult: SearchResult {
     let userFullname: String
     let createdAt: String
     
+    private let content: String
+    private let keyword: String
+    
     init(conversationId: String, messageId: String, category: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
         self.conversationId = conversationId
         self.messageId = messageId
         self.isData = category.hasSuffix("_DATA")
+        self.content = content
         self.userId = userId
         self.userFullname = fullname
         self.createdAt = createdAt
-        let title = SearchResult.attributedText(text: fullname,
-                                                textAttributes: SearchResult.titleAttributes,
-                                                keyword: keyword,
-                                                keywordAttributes: SearchResult.highlightedTitleAttributes)
+        self.keyword = keyword
         let badgeImage = SearchResult.userBadgeImage(isVerified: isVerified,
                                                      appId: appId)
         let superscript = createdAt.toUTCDate().timeAgo()
-        let description: NSAttributedString?
+        super.init(iconUrl: avatarUrl,
+                   badgeImage: badgeImage,
+                   superscript: superscript)
+    }
+    
+    override func updateTitleAndDescription() {
+        title = SearchResult.attributedText(text: userFullname,
+                                            textAttributes: SearchResult.titleAttributes,
+                                            keyword: keyword,
+                                            keywordAttributes: SearchResult.highlightedTitleAttributes)
+        
         if isData {
             description = NSAttributedString(string: R.string.localizable.notification_content_file(),
                                              attributes: SearchResult.normalDescriptionAttributes)
@@ -34,11 +45,6 @@ class MessageSearchResult: SearchResult {
                                                       keyword: keyword,
                                                       keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes)
         }
-        super.init(iconUrl: avatarUrl,
-                   title: title,
-                   badgeImage: badgeImage,
-                   superscript: superscript,
-                   description: description)
     }
     
 }

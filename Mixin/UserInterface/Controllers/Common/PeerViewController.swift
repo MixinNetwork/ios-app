@@ -34,6 +34,17 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         initData()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        searchResults.forEach { $0.updateTitleAndDescription() }
+        if isSearching {
+            tableView.reloadData()
+        }
+    }
+    
     @objc func textFieldEditingChanged(_ textField: UITextField) {
         let trimmedLowercaseKeyword = (textField.text ?? "")
             .trimmingCharacters(in: .whitespaces)

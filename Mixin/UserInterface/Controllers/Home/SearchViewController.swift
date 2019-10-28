@@ -82,11 +82,16 @@ class SearchViewController: UIViewController, HomeSearchViewController {
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         lastSearchFieldText = searchTextField.text
     }
-
-    private func cancelOperation() {
-        statement?.interrupt()
-        statement = nil
-        queue.cancelAllOperations()
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        [users, conversationsByName, conversationsByMessage]
+            .flatMap({ $0 })
+            .forEach({ $0.updateTitleAndDescription() })
+        tableView.reloadData()
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -401,6 +406,12 @@ extension SearchViewController {
         } else {
             return true
         }
+    }
+    
+    private func cancelOperation() {
+        statement?.interrupt()
+        statement = nil
+        queue.cancelAllOperations()
     }
     
     private func showSearchResults() {

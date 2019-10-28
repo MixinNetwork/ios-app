@@ -86,6 +86,16 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         searchTextField.resignFirstResponder()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        messages.flatMap({ $0 })
+            .forEach({ $0.updateTitleAndDescription() })
+        tableView.reloadData()
+    }
+    
     func prepareNavigationBar() {
         navigationTitleLabel?.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
                                       adjustForContentSize: true)

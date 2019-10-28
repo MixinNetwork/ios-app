@@ -17,6 +17,14 @@ class MessageFontSet {
         let font = UIFont(descriptor: descriptor, size: 13)
         return MessageFontSet(font: font)
     }()
+    static let normalConversationContent = MessageFontSet(size: 15, weight: .regular)
+    static let recalledConversationContent: MessageFontSet = {
+        let descriptor = UIFont.systemFont(ofSize: 15)
+            .fontDescriptor
+            .withMatrix(.italic)
+        let font = UIFont(descriptor: descriptor, size: 15)
+        return MessageFontSet(font: font)
+    }()
     
     enum FontDescription {
         case font(UIFont)

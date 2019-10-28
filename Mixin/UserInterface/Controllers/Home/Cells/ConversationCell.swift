@@ -20,21 +20,10 @@ class ConversationCell: ModernSelectedBackgroundCell {
     private var contentLabelNormalFont: UIFont!
     private var contentLabelItalicFont: UIFont!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        contentLabelNormalFont = contentLabel.font
-        updateContentLabelItalicFont()
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()
         setContentLabelFontItalic(false)
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        updateContentLabelItalicFont()
-        super.traitCollectionDidChange(previousTraitCollection)
     }
     
     func render(item: ConversationItem) {
@@ -178,12 +167,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
     }
     
     private func setContentLabelFontItalic(_ isItalic: Bool) {
-        contentLabel.font = isItalic ? contentLabelItalicFont : contentLabelNormalFont
-    }
-    
-    private func updateContentLabelItalicFont() {
-        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
-        contentLabelItalicFont = UIFont(descriptor: desc, size: contentLabelNormalFont.pointSize)
+        contentLabel.font = isItalic
+            ? MessageFontSet.recalledConversationContent.scaled
+            : MessageFontSet.normalConversationContent.scaled
     }
     
 }

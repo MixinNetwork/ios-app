@@ -64,7 +64,8 @@ class QuoteTextMessageCell: TextMessageCell {
         quoteBackgroundImageView.image = R.image.bg_chat_quote()
         contentView.addSubview(quoteBackgroundImageView)
         
-        quoteTitleLabel.font = QuoteTextMessageViewModel.Quote.titleFont
+        quoteTitleLabel.font = MessageFontSet.quoteTitle.font
+        quoteTitleLabel.adjustsFontForContentSizeCategory = true
         contentView.addSubview(quoteTitleLabel)
         
         quoteIconImageView.contentMode = .center

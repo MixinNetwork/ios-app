@@ -5,15 +5,8 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     enum Quote {
         static let backgroundMargin = Margin(leading: 9, trailing: 2, top: 1, bottom: 4)
         static let contentMargin = Margin(leading: 11, trailing: 11, top: 6, bottom: 6)
-        static let titleFont = UIFont.systemFont(ofSize: 15)
-        static let titleHeight = ceil(titleFont.lineHeight)
         static let iconSize = MessageCategory.maxIconSize
         static let iconTrailingMargin: CGFloat = 4
-        static let normalSubtitleFont = UIFont.systemFont(ofSize: 13, weight: .light)
-        static let recalledSubtitleFont: UIFont = {
-            let descriptor = normalSubtitleFont.fontDescriptor.withMatrix(.italic)
-            return UIFont(descriptor: descriptor, size: 13)
-        }()
         static let subtitleTopMargin: CGFloat = 4
         static let subtitleNumberOfLines = 3
         static let imageSize = CGSize(width: 50, height: 50)
@@ -30,7 +23,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     private(set) var quoteIconFrame = CGRect.zero
     private(set) var quoteSubtitleFrame = CGRect.zero
     private(set) var quoteImageFrame = CGRect.zero
-    private(set) var subtitleFont = Quote.normalSubtitleFont
+    private(set) var subtitleFont = MessageFontSet.normalQuoteSubtitle.font
     
     private var quoteMaxWidth: CGFloat = 0
     private var quoteContentHeight: CGFloat = 0
@@ -50,9 +43,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         }
         switch quote.category {
         case .normal:
-            subtitleFont = Quote.normalSubtitleFont
+            subtitleFont = MessageFontSet.normalQuoteSubtitle.font
         case .recalled:
-            subtitleFont = Quote.recalledSubtitleFont
+            subtitleFont = MessageFontSet.recalledQuoteSubtitle.font
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
@@ -68,8 +61,10 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             - paddedQuoteIconWidth
             - quoteImageWidth
         
-        var titleWidth: CGFloat = 0
-        titleWidth = (quote.title as NSString).size(withAttributes: [.font: Quote.titleFont]).width
+        let titleHeight = MessageFontSet.quoteTitle.font.lineHeight
+        var titleWidth = (quote.title as NSString)
+            .size(withAttributes: [.font: MessageFontSet.quoteTitle.font])
+            .width
         titleWidth = ceil(titleWidth)
         titleWidth = min(maxTitleWidth, titleWidth)
         
@@ -87,7 +82,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             + Quote.contentMargin.horizontal
             + Quote.backgroundMargin.horizontal
         
-        quoteContentHeight = max(Quote.imageSize.height, Quote.contentMargin.vertical + Quote.titleHeight + Quote.subtitleTopMargin + subtitleHeight)
+        quoteContentHeight = max(Quote.imageSize.height, Quote.contentMargin.vertical + titleHeight + Quote.subtitleTopMargin + subtitleHeight)
         
         super.layout(width: width, style: style)
         
@@ -109,7 +104,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         quoteTitleFrame = CGRect(x: quoteBackgroundFrame.origin.x + Quote.contentMargin.leading,
                                  y: quoteBackgroundFrame.origin.y + Quote.contentMargin.top,
                                  width: titleWidth,
-                                 height: Quote.titleHeight)
+                                 height: titleHeight)
         
         let quoteIconOrigin = CGPoint(x: quoteTitleFrame.origin.x,
                                       y: round(quoteTitleFrame.maxY + Quote.subtitleTopMargin + (subtitleFont.lineHeight - Quote.iconSize.height) / 2))

@@ -34,7 +34,8 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
                 contentView.addSubview(label)
                 label.numberOfLines = 0
                 label.text = buttonContent.label
-                label.font = AppButtonGroupViewModel.titleFont
+                label.font = MessageFontSet.appButtonTitle.font
+                label.adjustsFontForContentSizeCategory = true
                 label.textColor = UIColor(hexString: buttonContent.color) ?? .gray
                 label.textAlignment = .left
                 label.lineBreakMode = .byCharWrapping

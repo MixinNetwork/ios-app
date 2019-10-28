@@ -15,6 +15,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     override func prepare() {
         super.prepare()
+        expiredHintLabel.adjustsFontForContentSizeCategory = true
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
     }

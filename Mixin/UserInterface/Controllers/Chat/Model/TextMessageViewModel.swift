@@ -2,18 +2,12 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    private enum Font {
-        private static let font = UIFont.systemFont(ofSize: 16)
-        static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
-        static let lineHeight = round(font.lineHeight)
-    }
-    
     class var ctFont: CTFont {
-        return Font.ctFont
+        return CoreTextFontSet.textMessage.ctFont
     }
     
     class var lineHeight: CGFloat {
-        return Font.lineHeight
+        return CoreTextFontSet.textMessage.lineHeight
     }
     
     class var textColor: UIColor {
@@ -25,7 +19,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var highlightPaths = [UIBezierPath]()
     
     private let timeLeftMargin: CGFloat = 20
-    private let minimumTextSize = CGSize(width: 5, height: 18)
+    private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
     private let hightlightPathCornerRadius: CGFloat = 4
     

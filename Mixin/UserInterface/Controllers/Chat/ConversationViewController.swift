@@ -206,6 +206,20 @@ class ConversationViewController: UIViewController {
         updateNavigationBarHeightAndTableViewTopInset()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        let messageId: String?
+        if let indexPath = dataSource.focusIndexPath {
+            messageId = dataSource.viewModel(for: indexPath)?.message.messageId
+        } else {
+            messageId = nil
+        }
+        dataSource.reload(initialMessageId: messageId)
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

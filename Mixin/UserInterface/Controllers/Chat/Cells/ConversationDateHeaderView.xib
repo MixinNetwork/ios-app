@@ -22,7 +22,7 @@
                         <constraint firstAttribute="height" constant="24" id="G4i-0V-z1F"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="VDU-aH-4i6"/>
                     </constraints>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>

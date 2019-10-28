@@ -2,8 +2,6 @@ import UIKit
 
 class AppCardMessageViewModel: CardMessageViewModel {
     
-    static let titleAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)]
-    static let descriptionAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
     static let emptyLabelWidth: CGFloat = 2
     
     override class var bubbleImageSet: BubbleImageSet.Type {
@@ -27,8 +25,10 @@ class AppCardMessageViewModel: CardMessageViewModel {
     
     override init(message: MessageItem) {
         let emptyLabelWidth = AppCardMessageViewModel.emptyLabelWidth
-        let titleWidth = ceil(message.appCard?.title.size(withAttributes: AppCardMessageViewModel.titleAttributes).width ?? emptyLabelWidth)
-        let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: AppCardMessageViewModel.descriptionAttributes).width ?? emptyLabelWidth)
+        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardTitle.font]
+        let titleWidth = ceil(message.appCard?.title.size(withAttributes: titleAttributes).width ?? emptyLabelWidth)
+        let descriptionAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardDescription.font]
+        let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: descriptionAttributes).width ?? emptyLabelWidth)
         contentWidth = max(emptyLabelWidth, titleWidth, descriptionWidth)
         super.init(message: message)
     }

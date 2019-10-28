@@ -1,0 +1,69 @@
+import UIKit
+
+class MessageFontSet {
+    
+    static let time = MessageFontSet(size: 11, weight: .light)
+    static let fullname = MessageFontSet(style: .subheadline)
+    static let systemMessage = MessageFontSet(style: .subheadline)
+    static let appButtonTitle = MessageFontSet(size: 16, weight: .regular)
+    static let appCardTitle = MessageFontSet(style: .body)
+    static let appCardDescription = MessageFontSet(size: 14, weight: .regular)
+    static let quoteTitle = MessageFontSet(style: .subheadline)
+    static let normalQuoteSubtitle = MessageFontSet(size: 13, weight: .light)
+    static let recalledQuoteSubtitle: MessageFontSet = {
+        let descriptor = UIFont.systemFont(ofSize: 13, weight: .light)
+            .fontDescriptor
+            .withMatrix(.italic)
+        let font = UIFont(descriptor: descriptor, size: 13)
+        return MessageFontSet(font: font)
+    }()
+    
+    enum FontDescription {
+        case font(UIFont)
+        case style(UIFont.TextStyle)
+    }
+    
+    private(set) var font: UIFont
+    
+    private let fontDescription: FontDescription
+    
+    init(font: UIFont) {
+        fontDescription = .font(font)
+        self.font = MessageFontSet.font(for: fontDescription)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(contentSizeCategoryDidChange(_:)),
+                                               name: UIContentSizeCategory.didChangeNotification,
+                                               object: nil)
+    }
+    
+    init(style: UIFont.TextStyle) {
+        fontDescription = .style(style)
+        font = MessageFontSet.font(for: fontDescription)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(contentSizeCategoryDidChange(_:)),
+                                               name: UIContentSizeCategory.didChangeNotification,
+                                               object: nil)
+    }
+    
+    convenience init(size: CGFloat, weight: UIFont.Weight) {
+        self.init(font: .systemFont(ofSize: size, weight: weight))
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func contentSizeCategoryDidChange(_ notification: Notification) {
+        font = MessageFontSet.font(for: fontDescription)
+    }
+    
+    private static func font(for description: FontDescription) -> UIFont {
+        switch description {
+        case .font(let font):
+            return UIFontMetrics.default.scaledFont(for: font)
+        case .style(let style):
+            return UIFont.preferredFont(forTextStyle: style)
+        }
+    }
+    
+}

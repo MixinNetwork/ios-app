@@ -2,10 +2,7 @@ import UIKit
 
 class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     
-    static let titleFont = UIFont.boldSystemFont(ofSize: 16)
-    
     private static let titleMargin = Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
-    private static let titleAttribute = [NSAttributedString.Key.font: AppButtonGroupViewModel.titleFont]
     
     var frames = [(button: CGRect, label: CGRect)]()
     var buttonGroupFrame = CGRect.zero
@@ -24,10 +21,11 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
         let boundingSize = CGSize(width: width - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
                                   height: UIView.layoutFittingExpandedSize.height)
+        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appButtonTitle]
         buttonSizes = message.appButtons?.map({
             let titleSize = ($0.label as NSString).boundingRect(with: boundingSize,
                                                                 options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                                attributes: AppButtonGroupViewModel.titleAttribute,
+                                                                attributes: titleAttributes,
                                                                 context: nil)
             return CGSize(width: ceil(titleSize.width + AppButtonGroupViewModel.titleMargin.horizontal),
                           height: ceil(titleSize.height + AppButtonGroupViewModel.titleMargin.vertical))

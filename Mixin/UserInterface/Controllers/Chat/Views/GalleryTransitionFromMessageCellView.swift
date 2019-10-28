@@ -127,7 +127,8 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
     
     override func prepare() {
         timeLabel.backgroundColor = .clear
-        timeLabel.font = DetailInfoMessageViewModel.timeFont
+        timeLabel.font = MessageFontSet.time.font
+        timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         timeLabel.textColor = .white
         statusImageView.contentMode = .left

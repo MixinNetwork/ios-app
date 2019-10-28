@@ -7,11 +7,10 @@ class SystemMessageViewModel: MessageViewModel {
         static let vertical: CGFloat = 16
     }
     
-    private static let attributes: [NSAttributedString.Key: Any] = {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .byWordWrapping
-        return [.font: UIFont.systemFont(ofSize: 14),
-                .paragraphStyle: paragraphStyle]
+    private static let paragraphStyle: NSParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineBreakMode = .byWordWrapping
+        return style.copy() as! NSParagraphStyle
     }()
     
     let text: String
@@ -31,9 +30,13 @@ class SystemMessageViewModel: MessageViewModel {
         let backgroundImageHorizontalMargin: CGFloat = 76
         let sizeToFit = CGSize(width: width - backgroundImageHorizontalMargin,
                                height: UIView.layoutFittingExpandedSize.height)
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: MessageFontSet.systemMessage.font,
+            .paragraphStyle: SystemMessageViewModel.paragraphStyle
+        ]
         let textRect = (text as NSString).boundingRect(with: sizeToFit,
                                                        options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                       attributes: SystemMessageViewModel.attributes,
+                                                       attributes: attrs,
                                                        context: nil)
         super.layout(width: width, style: style)
         cellHeight = textRect.height

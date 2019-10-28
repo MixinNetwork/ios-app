@@ -8,7 +8,7 @@ final class EmergencyTipsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
     }
     
     class func instance() -> EmergencyTipsViewController {

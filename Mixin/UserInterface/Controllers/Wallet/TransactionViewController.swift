@@ -34,7 +34,7 @@ class TransactionViewController: UIViewController {
         } else {
             amountLabel.textColor = .walletGreen
         }
-        amountLabel.set(font: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
+        amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
         let fiatMoneyValue = snapshot.amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
         if let value = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) {
             fiatMoneyValueLabel.text = "≈ " + Currency.current.symbol + value

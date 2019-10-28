@@ -31,7 +31,7 @@ class SystemMessageViewModel: MessageViewModel {
         let sizeToFit = CGSize(width: width - backgroundImageHorizontalMargin,
                                height: UIView.layoutFittingExpandedSize.height)
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: MessageFontSet.systemMessage.font,
+            .font: MessageFontSet.systemMessage.scaled,
             .paragraphStyle: SystemMessageViewModel.paragraphStyle
         ]
         let textRect = (text as NSString).boundingRect(with: sizeToFit,

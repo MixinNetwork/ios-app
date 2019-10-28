@@ -11,7 +11,7 @@ class DepositTipWindow: BottomSheetView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
     }
     
     override func dismissPopupControllerAnimated() {

@@ -23,7 +23,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     private(set) var quoteIconFrame = CGRect.zero
     private(set) var quoteSubtitleFrame = CGRect.zero
     private(set) var quoteImageFrame = CGRect.zero
-    private(set) var subtitleFont = MessageFontSet.normalQuoteSubtitle.font
+    private(set) var subtitleFont = MessageFontSet.normalQuoteSubtitle.scaled
     
     private var quoteMaxWidth: CGFloat = 0
     private var quoteContentHeight: CGFloat = 0
@@ -43,9 +43,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         }
         switch quote.category {
         case .normal:
-            subtitleFont = MessageFontSet.normalQuoteSubtitle.font
+            subtitleFont = MessageFontSet.normalQuoteSubtitle.scaled
         case .recalled:
-            subtitleFont = MessageFontSet.recalledQuoteSubtitle.font
+            subtitleFont = MessageFontSet.recalledQuoteSubtitle.scaled
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
@@ -61,9 +61,9 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             - paddedQuoteIconWidth
             - quoteImageWidth
         
-        let titleHeight = MessageFontSet.quoteTitle.font.lineHeight
+        let titleHeight = MessageFontSet.quoteTitle.scaled.lineHeight
         var titleWidth = (quote.title as NSString)
-            .size(withAttributes: [.font: MessageFontSet.quoteTitle.font])
+            .size(withAttributes: [.font: MessageFontSet.quoteTitle.scaled])
             .width
         titleWidth = ceil(titleWidth)
         titleWidth = min(maxTitleWidth, titleWidth)

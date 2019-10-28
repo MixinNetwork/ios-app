@@ -29,7 +29,7 @@ class ContactViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        accountNameLabel.set(font: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)
+        accountNameLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)
         tableView.register(ContactHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SeparatorShadowFooterView.self,

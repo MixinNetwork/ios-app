@@ -80,7 +80,7 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         updateBackground(pageThemeColor: .white)
         buttonsBackgroundView.layer.borderWidth = 1
         webViewWrapperView.addSubview(webView)

@@ -48,7 +48,7 @@ class DetailInfoMessageCell: MessageCell {
     
     override func prepare() {
         super.prepare()
-        fullnameButton.titleLabel?.font = MessageFontSet.fullname.font
+        fullnameButton.titleLabel?.font = MessageFontSet.fullname.scaled
         fullnameButton.adjustsFontForContentSizeCategory = true
         fullnameButton.contentHorizontalAlignment = .left
         fullnameButton.titleLabel?.lineBreakMode = .byTruncatingTail
@@ -57,7 +57,7 @@ class DetailInfoMessageCell: MessageCell {
         statusImageView.contentMode = .left
         contentView.addSubview(statusImageView)
         timeLabel.backgroundColor = .clear
-        timeLabel.font = MessageFontSet.time.font
+        timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         contentView.addSubview(timeLabel)

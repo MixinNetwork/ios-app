@@ -11,7 +11,7 @@ class SearchAssetCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        titleLabel.set(font: .systemFont(ofSize: 15, weight: .medium), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 15, weight: .medium), adjustForContentSize: true)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -25,7 +25,7 @@ class WalletHeaderView: InfiniteTopView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        btcValueLabel.set(font: .dinCondensedBold(ofSize: 12), adjustForContentSize: true)
+        btcValueLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 12), adjustForContentSize: true)
         fiatMoneyValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     

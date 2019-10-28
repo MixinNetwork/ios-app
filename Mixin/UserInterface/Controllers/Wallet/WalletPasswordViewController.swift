@@ -40,7 +40,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
         super.viewDidLoad()
         pinField.delegate = self
         pinField.becomeFirstResponder()
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .medium), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .medium), adjustForContentSize: true)
         switch walletPasswordType {
         case .initPinStep1:
             titleLabel.text = Localized.WALLET_PIN_CREATE_TITLE

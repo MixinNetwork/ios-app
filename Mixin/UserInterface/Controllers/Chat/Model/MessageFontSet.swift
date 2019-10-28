@@ -23,13 +23,13 @@ class MessageFontSet {
         case style(UIFont.TextStyle)
     }
     
-    private(set) var font: UIFont
+    private(set) var scaled: UIFont
     
     private let fontDescription: FontDescription
     
     init(font: UIFont) {
         fontDescription = .font(font)
-        self.font = MessageFontSet.font(for: fontDescription)
+        self.scaled = MessageFontSet.font(for: fontDescription)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contentSizeCategoryDidChange(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
@@ -38,7 +38,7 @@ class MessageFontSet {
     
     init(style: UIFont.TextStyle) {
         fontDescription = .style(style)
-        font = MessageFontSet.font(for: fontDescription)
+        scaled = MessageFontSet.font(for: fontDescription)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contentSizeCategoryDidChange(_:)),
                                                name: UIContentSizeCategory.didChangeNotification,
@@ -54,7 +54,7 @@ class MessageFontSet {
     }
     
     @objc func contentSizeCategoryDidChange(_ notification: Notification) {
-        font = MessageFontSet.font(for: fontDescription)
+        scaled = MessageFontSet.font(for: fontDescription)
     }
     
     private static func font(for description: FontDescription) -> UIFont {

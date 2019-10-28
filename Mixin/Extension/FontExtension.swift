@@ -24,7 +24,7 @@ extension UIButton {
 
 extension UILabel {
     
-    func set(font: UIFont, adjustForContentSize: Bool) {
+    func setFont(scaledFor font: UIFont, adjustForContentSize: Bool) {
         self.font = UIFontMetrics.default.scaledFont(for: font)
         self.adjustsFontForContentSizeCategory = adjustForContentSize
     }

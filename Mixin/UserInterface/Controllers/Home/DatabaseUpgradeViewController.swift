@@ -11,7 +11,7 @@ class DatabaseUpgradeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in

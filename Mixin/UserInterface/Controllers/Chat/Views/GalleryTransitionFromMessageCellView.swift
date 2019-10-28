@@ -127,7 +127,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
     
     override func prepare() {
         timeLabel.backgroundColor = .clear
-        timeLabel.font = MessageFontSet.time.font
+        timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         timeLabel.textColor = .white

@@ -51,12 +51,12 @@ class DetailInfoMessageViewModel: MessageViewModel {
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
         let fullnameSize = (message.userFullName as NSString)
-            .boundingRect(with: UIView.layoutFittingExpandedSize, options: [], attributes: [.font: MessageFontSet.fullname.font], context: nil)
+            .boundingRect(with: UIView.layoutFittingExpandedSize, options: [], attributes: [.font: MessageFontSet.fullname.scaled], context: nil)
         fullnameFrame.size = CGSize(width: ceil(fullnameSize.width),
                                     height: ceil(fullnameSize.height) + fullnameVerticalInset)
         updateStatusImageAndTintColor()
         backgroundImage = type(of: self).bubbleImageSet.image(forStyle: style, highlight: false)
-        timeFrame.size = ceil((time as NSString).size(withAttributes: [.font: MessageFontSet.time.font]))
+        timeFrame.size = ceil((time as NSString).size(withAttributes: [.font: MessageFontSet.time.scaled]))
     }
     
     func layoutDetailInfo(backgroundImageFrame: CGRect) {

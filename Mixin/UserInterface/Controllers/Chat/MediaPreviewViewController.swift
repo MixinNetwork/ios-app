@@ -63,7 +63,7 @@ final class MediaPreviewViewController: UIViewController {
         super.viewDidLoad()
         imageView.autoPlayAnimatedImage = true
         for case let label? in [sendButton.titleLabel, dismissButton.titleLabel] {
-            label.set(font: .systemFont(ofSize: 19, weight: .medium), adjustForContentSize: true)
+            label.setFont(scaledFor: .systemFont(ofSize: 19, weight: .medium), adjustForContentSize: true)
         }
     }
     

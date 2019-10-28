@@ -14,7 +14,7 @@ class AboutViewController: UITableViewController {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         versionLabel.text = Bundle.main.shortVersion + "(\(Bundle.main.bundleVersion))"
-        titleLabel.set(font: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

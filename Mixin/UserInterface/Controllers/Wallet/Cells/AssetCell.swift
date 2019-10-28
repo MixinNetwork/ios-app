@@ -21,7 +21,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
-        balanceLabel.set(font: .dinCondensedBold(ofSize: 19), adjustForContentSize: true)
+        balanceLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 19), adjustForContentSize: true)
         symbolLabel.adjustsFontForContentSizeCategory = true
     }
     

@@ -25,9 +25,9 @@ class AppCardMessageViewModel: CardMessageViewModel {
     
     override init(message: MessageItem) {
         let emptyLabelWidth = AppCardMessageViewModel.emptyLabelWidth
-        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardTitle.font]
+        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardTitle.scaled]
         let titleWidth = ceil(message.appCard?.title.size(withAttributes: titleAttributes).width ?? emptyLabelWidth)
-        let descriptionAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardDescription.font]
+        let descriptionAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardDescription.scaled]
         let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: descriptionAttributes).width ?? emptyLabelWidth)
         contentWidth = max(emptyLabelWidth, titleWidth, descriptionWidth)
         super.init(message: message)

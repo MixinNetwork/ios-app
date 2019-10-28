@@ -46,7 +46,8 @@ class GalleryItemViewController: UIViewController {
         super.viewDidLoad()
         operationButton.addTarget(self, action: #selector(attachmentAction(_:)), for: .touchUpInside)
         expiredHintLabel.text = R.string.localizable.chat_file_expired()
-        expiredHintLabel.font = .systemFont(ofSize: 13)
+        expiredHintLabel.font = .preferredFont(forTextStyle: .footnote)
+        expiredHintLabel.adjustsFontForContentSizeCategory = true
         expiredHintLabel.textColor = .white
         expiredHintLabel.textAlignment = .center
         mediaStatusView.axis = .vertical

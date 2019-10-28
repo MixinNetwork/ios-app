@@ -18,7 +18,8 @@ class AssetHeaderView: UITableViewHeaderFooterView {
     private func prepare() {
         contentView.backgroundColor = .white
         clipsToBounds = true
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .accessoryText
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)

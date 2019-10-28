@@ -15,7 +15,7 @@ class AssetFilterHeaderView: UICollectionReusableView {
     }
     
     private func prepare() {
-        label.font = .systemFont(ofSize: 14)
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         label.textColor = .darkText
         addSubview(label)
         label.snp.makeConstraints { (make) in

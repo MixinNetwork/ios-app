@@ -28,8 +28,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
     
-    private let placeHolderFont = UIFont.systemFont(ofSize: 16)
-    private let amountFont = UIFont.systemFont(ofSize: 17, weight: .semibold)
+    private let placeHolderFont = UIFont.preferredFont(forTextStyle: .callout)
+    private let amountFont = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 17, weight: .semibold))
     
     private var availableAssets = [AssetItem]()
     private var opponent: Opponent!
@@ -86,6 +86,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             fetchAvailableAssets()
         }
         
+        amountTextField.adjustsFontForContentSizeCategory = true
         amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
     }

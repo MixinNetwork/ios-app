@@ -59,7 +59,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 18, weight: .semibold))
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
+                           adjustForContentSize: true)
         updateCameraWrapperHeight()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)

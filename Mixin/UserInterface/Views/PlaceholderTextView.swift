@@ -64,6 +64,7 @@ class PlaceholderTextView: UITextView {
         placeholderLabel.textColor = .placeholder
         placeholderLabel.textAlignment = textAlignment
         placeholderLabel.font = font
+        placeholderLabel.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(textViewDidChange(_:)),
                                                name: UITextView.textDidChangeNotification,

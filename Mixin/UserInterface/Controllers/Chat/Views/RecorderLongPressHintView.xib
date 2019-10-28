@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="h9o-rG-cBK">
+            <rect key="frame" x="0.0" y="0.0" width="247" height="36"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_recorder_longpress_hint" translatesAutoresizingMaskIntoConstraints="NO" id="ehg-x0-Nvp">
+                    <rect key="frame" x="0.0" y="0.0" width="247" height="36"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold to record, release to send." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CjF-NX-mBH">
+                    <rect key="frame" x="8" y="4" width="231" height="22"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_voice_record_longpress_hint"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="CjF-NX-mBH" firstAttribute="top" secondItem="h9o-rG-cBK" secondAttribute="top" constant="4" id="1p9-0G-Daf"/>
+                <constraint firstItem="CjF-NX-mBH" firstAttribute="leading" secondItem="h9o-rG-cBK" secondAttribute="leading" constant="8" id="6FE-Nd-4XZ"/>
+                <constraint firstItem="ehg-x0-Nvp" firstAttribute="top" secondItem="h9o-rG-cBK" secondAttribute="top" id="Agk-yn-hO0"/>
+                <constraint firstAttribute="bottom" secondItem="ehg-x0-Nvp" secondAttribute="bottom" id="DjC-JD-Zaw"/>
+                <constraint firstAttribute="trailing" secondItem="ehg-x0-Nvp" secondAttribute="trailing" id="ISV-mz-7U4"/>
+                <constraint firstItem="ehg-x0-Nvp" firstAttribute="leading" secondItem="h9o-rG-cBK" secondAttribute="leading" id="fZ0-Kg-grd"/>
+                <constraint firstAttribute="bottom" secondItem="CjF-NX-mBH" secondAttribute="bottom" constant="10" id="mjg-Vc-OI2"/>
+                <constraint firstAttribute="trailing" secondItem="CjF-NX-mBH" secondAttribute="trailing" constant="8" id="pBJ-vy-uco"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-38.405797101449281" y="415.84821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg_recorder_longpress_hint" width="25" height="14.5"/>
+    </resources>
+</document>

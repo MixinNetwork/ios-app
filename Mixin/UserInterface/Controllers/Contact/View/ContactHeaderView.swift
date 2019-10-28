@@ -17,7 +17,7 @@ class ContactHeaderView: UITableViewHeaderFooterView {
     private func prepare() {
         backgroundView = UIView()
         backgroundView?.backgroundColor = .white
-        label.font = .systemFont(ofSize: 14)
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         label.textColor = .darkText
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
@@ -29,4 +29,3 @@ class ContactHeaderView: UITableViewHeaderFooterView {
     }
     
 }
-

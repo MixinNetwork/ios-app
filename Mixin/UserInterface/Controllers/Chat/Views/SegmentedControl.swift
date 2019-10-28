@@ -25,7 +25,7 @@ class SegmentedControl: UIControl {
     private func reloadData() {
         buttons = itemTitles.enumerated().map { (index, title) in
             let button = UIButton()
-            button.titleLabel?.font = .systemFont(ofSize: 14)
+            button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             button.setTitle(title, for: .normal)
             button.setTitleColor(UIColor(displayP3RgbValue: 0xB8BDC7), for: .normal)
             button.setTitleColor(.highlightedText, for: .selected)

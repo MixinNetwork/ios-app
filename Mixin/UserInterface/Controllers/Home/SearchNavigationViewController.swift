@@ -9,7 +9,7 @@ class SearchNavigationViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchNavigationBar.searchBoxView.textField.delegate = self
-        let image = UIColor.white.image
+        let image = UIColor.secondaryBackground.image
         navigationBar.setBackgroundImage(image, for: .default)
         navigationBar.shadowImage = image
         navigationBar.backIndicatorImage = R.image.ic_search_back()

@@ -3,9 +3,6 @@ import SDWebImage
 
 class ConversationCell: ModernSelectedBackgroundCell {
     
-    static let cellIdentifier = "cell_identifier_conversation"
-    static let height: CGFloat = 80
-
     @IBOutlet weak var avatarView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
@@ -16,9 +13,6 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
-    
-    private var contentLabelNormalFont: UIFont!
-    private var contentLabelItalicFont: UIFont!
     
     override func awakeFromNib() {
         super.awakeFromNib()

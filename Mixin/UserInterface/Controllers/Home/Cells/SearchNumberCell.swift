@@ -8,13 +8,13 @@ class SearchNumberCell: UITableViewCell {
     
     private var numberAttributes: [NSAttributedString.Key: Any] {
         return [.font: UIFont.preferredFont(forTextStyle: .subheadline),
-                .foregroundColor: UIColor.highlightedText]
+                .foregroundColor: UIColor.mixinBlue]
     }
     
     private var prefix: NSAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.preferredFont(forTextStyle: .subheadline),
-            .foregroundColor: UIColor.darkText
+            .foregroundColor: UIColor.text
         ]
         let plain = R.string.localizable.search_placeholder_number()
         let str = NSAttributedString(string: plain, attributes: attrs)
@@ -37,7 +37,7 @@ class SearchNumberCell: UITableViewCell {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        let color: UIColor = highlighted ? .modernCellSelection : .white
+        let color: UIColor = highlighted ? .selectionBackground : .secondaryBackground
         let work = {
             self.labelBackgroundView.backgroundColor = color
         }

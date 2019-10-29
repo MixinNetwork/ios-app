@@ -6,20 +6,28 @@ class SearchNumberCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     
-    private let numberAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont.systemFont(ofSize: 14),
-        .foregroundColor: UIColor.highlightedText
-    ]
+    private var numberAttributes: [NSAttributedString.Key: Any] {
+        return [.font: UIFont.preferredFont(forTextStyle: .subheadline),
+                .foregroundColor: UIColor.highlightedText]
+    }
     
-    private let prefix: NSAttributedString = {
+    private var prefix: NSAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
+            .font: UIFont.preferredFont(forTextStyle: .subheadline),
             .foregroundColor: UIColor.darkText
         ]
         let plain = R.string.localizable.search_placeholder_number()
         let str = NSAttributedString(string: plain, attributes: attrs)
         return str
-    }()
+    }
+    
+    var number: String? {
+        didSet {
+            let text = NSMutableAttributedString(attributedString: prefix)
+            text.append(NSMutableAttributedString(string: number ?? "", attributes: numberAttributes))
+            label.attributedText = text
+        }
+    }
     
     var isBusy = false {
         didSet {
@@ -38,12 +46,6 @@ class SearchNumberCell: UITableViewCell {
         } else {
             work()
         }
-    }
-    
-    func render(number: String) {
-        let text = NSMutableAttributedString(attributedString: prefix)
-        text.append(NSMutableAttributedString(string: number, attributes: numberAttributes))
-        label.attributedText = text
     }
     
 }

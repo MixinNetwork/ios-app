@@ -214,9 +214,7 @@ extension SearchViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_number, for: indexPath)!
-            if let keyword = searchTextField.text {
-                cell.render(number: keyword)
-            }
+            cell.number = searchTextField.text
             cell.isBusy = searchNumberRequest != nil
             return cell
         case .asset:

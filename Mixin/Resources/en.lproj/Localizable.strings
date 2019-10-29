@@ -486,7 +486,7 @@
 "multisig_senders" = "Senders";
 "multisig_receivers" = "Receivers";
 "multisig_state_signed" = "This multisig link has already been signed by yourself, you can not make a duplicate operation.";
-"multisig_state_unlocked" = "This multisig link has already been unlocked by someone, you can not make a duplicate operation.";
+"multisig_state_unlocked" = "This multisig link has already been revoked by someone, you can not make a duplicate operation.";
 
 // QRCode
 "myqrcode_title" = "My QR Code";

@@ -1335,7 +1335,7 @@ extension ConversationViewController {
     }
 
     private func open(url: URL) {
-        guard !UrlWindow.checkUrl(url: url, checkLastWindow: false) else {
+        guard !UrlWindow.checkUrl(url: url) else {
             return
         }
         guard !conversationId.isEmpty else {

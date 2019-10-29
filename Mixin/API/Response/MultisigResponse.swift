@@ -12,6 +12,7 @@ struct MultisigResponse: Codable {
     let transactionHash: String
     let rawTransaction: String
     let createdAt: String
+    let memo: String
 
     enum CodingKeys: String, CodingKey {
         case codeId = "code_id"
@@ -26,6 +27,7 @@ struct MultisigResponse: Codable {
         case transactionHash = "transaction_hash"
         case rawTransaction = "raw_transaction"
         case createdAt = "created_at"
+        case memo
     }
 }
 
@@ -39,5 +41,4 @@ enum MultisigState: String {
 enum MultisigAction: String {
     case sign
     case unlock
-    case cancel
 }

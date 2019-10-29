@@ -661,10 +661,7 @@
 		DF8DA1A81FD6783200425CEC /* ConversationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */; };
 		DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1AC1FD6820600425CEC /* RefreshConversationJob.swift */; };
 		DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */; };
-		DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */; };
 		DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */; };
-		DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B42032D1D700E99CE8 /* PayView.xib */; };
-		DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B62032D3D700E99CE8 /* PayView.swift */; };
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */; };
@@ -1465,10 +1462,7 @@
 		DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationAPI.swift; sourceTree = "<group>"; };
 		DF8DA1AC1FD6820600425CEC /* RefreshConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshConversationJob.swift; sourceTree = "<group>"; };
 		DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshUserJob.swift; sourceTree = "<group>"; };
-		DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UrlWindow.xib; sourceTree = "<group>"; };
 		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
-		DF8EF6B42032D1D700E99CE8 /* PayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayView.xib; sourceTree = "<group>"; };
-		DF8EF6B62032D3D700E99CE8 /* PayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayView.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessage.swift; sourceTree = "<group>"; };
 		DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessageDAO.swift; sourceTree = "<group>"; };
@@ -2138,7 +2132,6 @@
 				DF6ABB152295049E00A012B2 /* AddressWindow.swift */,
 				DF6ABB132295019C00A012B2 /* AddressWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
-				DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */,
 				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
 				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
@@ -2279,8 +2272,6 @@
 				DF53BB6720233657002BF028 /* MixinWebView.swift */,
 				7BD69C421FF2753E00758D7C /* GroupView.swift */,
 				7BD69C441FF2755D00758D7C /* GroupView.xib */,
-				DF8EF6B62032D3D700E99CE8 /* PayView.swift */,
-				DF8EF6B42032D1D700E99CE8 /* PayView.xib */,
 				DF2A0D962295734C00CA0280 /* AddressView.swift */,
 				DF2A0D942295721200CA0280 /* AddressView.xib */,
 				DF2F089220B68872005786CB /* UserView.swift */,
@@ -3095,7 +3086,6 @@
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
-				DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
@@ -3157,7 +3147,6 @@
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
 				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
-				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
@@ -3560,7 +3549,6 @@
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */,
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
-				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
 				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,

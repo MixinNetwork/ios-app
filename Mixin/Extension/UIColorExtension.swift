@@ -1,7 +1,20 @@
 import UIKit
 
 extension UIColor {
-
+    
+    static let background = R.color.background()!
+    static let secondaryBackground = R.color.background_secondary()!
+    static let tertiaryBackground = R.color.background_tertiary()!
+    static let selectionBackground = R.color.background_selection()!
+    static let mixinBlue = R.color.blue()!
+    static let mixinGreen = R.color.green()!
+    static let mixinRed = R.color.red()!
+    static let title = R.color.title()!
+    static let text = R.color.text()!
+    static let text2 = R.color.text_2()!
+    static let text3 = R.color.text_3()!
+    static let text4 = R.color.text_4()!
+    
     static let theme = UIColor(rgbValue: 0x397EE4)
     static let darkTheme = UIColor(rgbValue: 0x0CAAF5)
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)

@@ -8,7 +8,7 @@ class PayWindow: BottomSheetView {
     enum PinAction {
         case transfer(trackId: String, user: UserItem)
         case withdraw(trackId: String, address: Address, fromWeb: Bool)
-        case multisig(multisign: MultisigResponse)
+        case multisig(multisig: MultisigResponse, senders: [UserResponse], receivers: [UserResponse])
     }
 
     @IBOutlet weak var pinField: PinField!
@@ -30,6 +30,16 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var pinView: UIView!
 
+    @IBOutlet weak var senderViewOne: AvatarImageView!
+    @IBOutlet weak var senderViewTwo: AvatarImageView!
+    @IBOutlet weak var senderMoreView: CornerView!
+    @IBOutlet weak var senderMoreLabel: UILabel!
+    @IBOutlet weak var receiverViewOne: AvatarImageView!
+    @IBOutlet weak var receiverViewTwo: AvatarImageView!
+    @IBOutlet weak var receiverMoreView: CornerView!
+    @IBOutlet weak var receiverMoreLabel: UILabel!
+    @IBOutlet weak var multisigActionView: UIImageView!
+
     private lazy var context = LAContext()
     private weak var textfield: UITextField?
 
@@ -40,6 +50,7 @@ class PayWindow: BottomSheetView {
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
     private var processing = false
+    private var isKeyboardAppear = false
     private var isAllowBiometricPay: Bool {
         guard WalletUserDefault.shared.isBiometricPay else {
             return false
@@ -75,14 +86,36 @@ class PayWindow: BottomSheetView {
         self.pinAction = action
         self.textfield = textfield
 
+        let showError = !(error?.isEmpty ?? true)
+        let showBiometric = isAllowBiometricPay
         switch pinAction! {
         case let .transfer(_, user):
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
+            if !showError {
+                payLabel.text = R.string.localizable.transfer_by_pin()
+                if showBiometric {
+                    if biometryType == .faceID {
+                        biometricButton.setTitle(R.string.localizable.transfer_use_face(), for: .normal)
+                    } else {
+                        biometricButton.setTitle(R.string.localizable.transfer_use_touch(), for: .normal)
+                    }
+                }
+            }
         case let .withdraw(_, address, _):
             nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
             mixinIDLabel.text = address.fullAddress
-        case let .multisig(multisig):
+            if !showError {
+                payLabel.text = R.string.localizable.withdraw_by_pin()
+                if showBiometric {
+                    if biometryType == .faceID {
+                        biometricButton.setTitle(R.string.localizable.withdraw_use_face(), for: .normal)
+                    } else {
+                        biometricButton.setTitle(R.string.localizable.withdraw_use_touch(), for: .normal)
+                    }
+                }
+            }
+        case let .multisig(multisig, senders, receivers):
             switch multisig.action {
             case MultisigAction.sign.rawValue:
                 nameLabel.text = R.string.localizable.multisig_transaction()
@@ -92,6 +125,48 @@ class PayWindow: BottomSheetView {
                 break
             }
             mixinIDLabel.text = multisig.memo
+            if !showError {
+                payLabel.text = R.string.localizable.multisig_by_pin()
+                if showBiometric {
+                    if biometryType == .faceID {
+                        biometricButton.setTitle(R.string.localizable.multisig_use_face(), for: .normal)
+                    } else {
+                        biometricButton.setTitle(R.string.localizable.multisig_use_touch(), for: .normal)
+                    }
+                }
+            }
+
+            if senders.count > 0 {
+                senderViewOne.setImage(user: senders[0])
+            }
+            if senders.count > 1 {
+                senderViewTwo.setImage(user: senders[1])
+                senderViewTwo.isHidden = false
+            } else {
+                senderViewTwo.isHidden = true
+            }
+            if senders.count > 2 {
+                senderMoreLabel.text = "+\(senders.count - 2)"
+                senderMoreView.isHidden = false
+            } else {
+                senderMoreView.isHidden = true
+            }
+
+            if receivers.count > 0 {
+                receiverViewOne.setImage(user: receivers[0])
+            }
+            if receivers.count > 1 {
+                receiverViewTwo.setImage(user: receivers[1])
+                receiverViewTwo.isHidden = false
+            } else {
+                receiverViewTwo.isHidden = true
+            }
+            if receivers.count > 2 {
+                receiverMoreLabel.text = "+\(receivers.count - 2)"
+                receiverMoreView.isHidden = false
+            } else {
+                receiverMoreView.isHidden = true
+            }
         }
 
         assetIconView.setIcon(asset: asset)
@@ -112,6 +187,7 @@ class PayWindow: BottomSheetView {
         dismissButton.isEnabled = true
         if let err = error, !err.isEmpty {
             pinView.isHidden = true
+            biometricButton.isHidden = true
             successView.isHidden = true
             errorView.isHidden = false
             errorLabel.text = err
@@ -120,12 +196,10 @@ class PayWindow: BottomSheetView {
             errorView.isHidden = true
             successView.isHidden = true
             pinField.clear()
-            if isAllowBiometricPay {
+            if showBiometric {
                 if biometryType == .faceID {
-                    biometricButton.setTitle(Localized.PAY_USE_FACE, for: .normal)
                     biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
                 } else {
-                    biometricButton.setTitle(Localized.PAY_USE_TOUCH, for: .normal)
                     biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
                 }
                 biometricButton.isHidden = false
@@ -164,7 +238,11 @@ class PayWindow: BottomSheetView {
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        if isKeyboardAppear && textfield == nil {
+            pinField.resignFirstResponder()
+        } else {
+            dismissPopupControllerAnimated()
+        }
     }
 
     static func instance() -> PayWindow {
@@ -176,6 +254,7 @@ class PayWindow: BottomSheetView {
 extension PayWindow {
 
     @objc func keyboardWillAppear(_ sender: Notification) {
+        isKeyboardAppear = true
         guard let info = sender.userInfo, isShowing else {
             return
         }
@@ -196,6 +275,7 @@ extension PayWindow {
     }
 
     @objc func keyboardWillDisappear(_ sender: Notification) {
+        isKeyboardAppear = false
         guard let info = sender.userInfo, isShowing else {
             return
         }
@@ -206,7 +286,6 @@ extension PayWindow {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
-
 
         if successView.isHidden {
             UIView.animate(withDuration: 5, delay: 0, options: options, animations: {
@@ -254,8 +333,10 @@ extension PayWindow: PinFieldDelegate {
             WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
         }
         loadingView.stopAnimating()
-        pinView.isHidden = true
-        successView.isHidden = false
+        UIView.animate(withDuration: 0.15) {
+            self.pinView.isHidden = true
+            self.successView.isHidden = false
+        }
         playSuccessSound()
         delayDismissWindow()
     }
@@ -333,7 +414,7 @@ extension PayWindow: PinFieldDelegate {
             } else {
                 WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
             }
-        case let .multisig(multisig):
+        case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self](result: APIResult<EmptyResponse>) in
                 guard let weakSelf = self else {
                     return

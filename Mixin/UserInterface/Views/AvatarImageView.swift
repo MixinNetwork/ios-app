@@ -16,6 +16,15 @@ class AvatarImageView: UIView {
             setNeedsLayout()
         }
     }
+
+    @IBInspectable
+    var hasBorder: Bool = false {
+        didSet {
+            layer.borderColor = UIColor.white.cgColor
+            layer.borderWidth = 2
+            setNeedsLayout()
+        }
+    }
     
     var image: UIImage? {
         get {

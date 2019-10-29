@@ -12,7 +12,7 @@ struct MultisigResponse: Codable {
     let transactionHash: String
     let rawTransaction: String
     let createdAt: String
-    let memo: String
+    let memo: String?
 
     enum CodingKeys: String, CodingKey {
         case codeId = "code_id"

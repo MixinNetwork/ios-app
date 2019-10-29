@@ -186,7 +186,6 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         AssetAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
-            print("====isMainThread:\(Thread.isMainThread)")
             switch result {
             case let .success(payment):
                 hud.hide()
@@ -331,7 +330,7 @@ extension UrlWindow {
                 } else if let conversation = code.conversation {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
-                    presentMultisig(multisig: multisig)
+                    presentMultisig(multisig: multisig, hud: hud)
                 }
             case let .failure(error):
                 if error.code == 404 {
@@ -345,8 +344,45 @@ extension UrlWindow {
         return true
     }
 
-    private static func presentMultisig(multisig: MultisigResponse) {
-        
+    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
+        print(multisig)
+        DispatchQueue.global().async {
+            guard let asset = AssetDAO.shared.getAsset(assetId: multisig.assetId) else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let senders = multisig.senders
+            let receivers = multisig.receivers
+            var senderUsers = [UserResponse]()
+            var receiverUsers = [UserResponse]()
+            switch UserAPI.shared.showUsers(userIds: multisig.senders + multisig.receivers) {
+            case let .success(users):
+                senderUsers = users.filter { senders.contains($0.userId) }
+                receiverUsers = users.filter { receivers.contains($0.userId) }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            var error = ""
+            if multisig.action == MultisigAction.sign.rawValue && multisig.state == MultisigState.signed.rawValue {
+                error = R.string.localizable.multisig_state_signed()
+            } else if multisig.action == MultisigAction.unlock.rawValue && multisig.state == MultisigState.unlocked.rawValue {
+                error = R.string.localizable.multisig_state_unlocked()
+            }
+
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: multisig.memo ?? "", error: error).presentPopupControllerAnimated()
+            }
+        }
     }
 
     private static func presentUser(user: UserResponse, hud: Hud) {
@@ -390,8 +426,10 @@ extension UrlWindow {
                     ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
                 }
             case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
                 return
             }
             var creatorUser = UserDAO.shared.getUser(userId: conversation.creatorId)

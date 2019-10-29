@@ -471,16 +471,19 @@
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
-"transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
 "pay_withdrawal_title" = "Withdraw to %@";
-"pay_use_face" = "Use Face Pay";
-"pay_use_touch" = "Use Touch Pay";
+"transfer_by_pin" = "Pay with PIN";
+"transfer_use_face" = "Use Face Pay";
+"transfer_use_touch" = "Use Touch Pay";
+"withdraw_by_pin" = "Withdraw by PIN";
+"withdraw_use_face" = "Use Face Withdraw";
+"withdraw_use_touch" = "Use Touch Withdraw";
 
 // Multisig
-"multisig_pay_pin" = "Multisig by PIN";
-"multisig_pay_face" = "Use Touch Multisig";
-"multisig_pay_touch" = "Use Face Multisig";
+"multisig_by_pin" = "Multisig by PIN";
+"multisig_use_face" = "Use Touch Multisig";
+"multisig_use_touch" = "Use Face Multisig";
 "multisig_transaction" = "Multisig Transaction";
 "multisig_revoke_transaction" = "Revoke Multisig Transaction";
 "multisig_senders" = "Senders";

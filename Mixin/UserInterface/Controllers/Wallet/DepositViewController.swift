@@ -44,14 +44,12 @@ class DepositViewController: UIViewController {
 
         hintLabel.text = asset.depositTips
 
-        if !WalletUserDefault.shared.depositTipRemind.contains(asset.chainId) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let weakself = self else {
-                    return
-                }
-
-                DepositTipWindow.instance().render(asset: weakself.asset).presentPopupControllerAnimated()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            guard let weakself = self else {
+                return
             }
+
+            DepositTipWindow.instance().render(asset: weakself.asset).presentPopupControllerAnimated()
         }
     }
     

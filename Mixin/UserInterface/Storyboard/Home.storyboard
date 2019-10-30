@@ -875,10 +875,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_clock_skew" translatesAutoresizingMaskIntoConstraints="NO" id="hmp-73-im2">
-                                <rect key="frame" x="147.5" y="94" width="80" height="80"/>
+                                <rect key="frame" x="151.5" y="94" width="72" height="72"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="System time is unusual" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tou-53-uta">
-                                <rect key="frame" x="50" y="224" width="275" height="21.5"/>
+                                <rect key="frame" x="50" y="216" width="275" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
@@ -901,7 +901,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Please continue to use again after correction. Settings &gt; General &gt; Date &amp; Time &gt; Turn on Set Automatically" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gh-oY-fRs">
-                                <rect key="frame" x="36" y="275.5" width="303" height="58"/>
+                                <rect key="frame" x="36" y="267.5" width="303" height="58"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <color key="textColor" name="text_3"/>
                                 <nil key="highlightedColor"/>
@@ -1077,7 +1077,7 @@ chat history from icloud</string>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
         <image name="ic_chat_time" width="9" height="9"/>
-        <image name="ic_clock_skew" width="80" height="80"/>
+        <image name="ic_clock_skew" width="72" height="72"/>
         <image name="ic_database" width="60" height="60"/>
         <image name="ic_home_camera" width="42" height="42"/>
         <image name="ic_home_qrcode" width="18" height="17"/>

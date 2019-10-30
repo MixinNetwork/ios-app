@@ -7,13 +7,13 @@ final class MultisigAPI: BaseAPI {
 
     private enum url {
         static func cancel(id: String) -> String {
-            return "/multisigs/\(id)/cancel"
+            return "multisigs/\(id)/cancel"
         }
         static func sign(id: String) -> String {
-            return "/multisigs/\(id)/sign"
+            return "multisigs/\(id)/sign"
         }
         static func unlock(id: String) -> String {
-            return "/multisigs/\(id)/unlock"
+            return "multisigs/\(id)/unlock"
         }
     }
 

@@ -322,7 +322,6 @@ extension UrlWindow {
         UserAPI.shared.codes(codeId: codeId) { (result) in
             switch result {
             case let .success(code):
-                hud.hide()
                 if let user = code.user {
                     presentUser(user: user, hud: hud)
                 } else if let authorization = code.authorization {
@@ -331,6 +330,8 @@ extension UrlWindow {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
                     presentMultisig(multisig: multisig, hud: hud)
+                } else {
+                    hud.hide()
                 }
             case let .failure(error):
                 if error.code == 404 {
@@ -345,7 +346,6 @@ extension UrlWindow {
     }
 
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
-        print(multisig)
         DispatchQueue.global().async {
             guard let asset = AssetDAO.shared.getAsset(assetId: multisig.assetId) else {
                 DispatchQueue.main.async {
@@ -380,7 +380,7 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: multisig.memo ?? "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }
@@ -409,11 +409,6 @@ extension UrlWindow {
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
         DispatchQueue.global().async {
-            defer {
-                DispatchQueue.main.async {
-                    hud.hide()
-                }
-            }
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
             let accountUserId = AccountAPI.shared.accountUserId
             let conversationId = conversation.conversationId
@@ -444,12 +439,11 @@ extension UrlWindow {
                 }
             }
 
-            guard let ownerUser = creatorUser else {
-                return
-            }
-
             DispatchQueue.main.async {
-                GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
+                hud.hide()
+                if let ownerUser = creatorUser {
+                    GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
+                }
             }
         }
     }

@@ -39,6 +39,10 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiverMoreView: CornerView!
     @IBOutlet weak var receiverMoreLabel: UILabel!
     @IBOutlet weak var multisigActionView: UIImageView!
+    @IBOutlet weak var multisigStackView: UIStackView!
+
+    @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
 
     private lazy var context = LAContext()
     private weak var textfield: UITextField?
@@ -51,6 +55,7 @@ class PayWindow: BottomSheetView {
     private var isAutoFillPIN = false
     private var processing = false
     private var isKeyboardAppear = false
+    private var isMultisigUsersAppear = false
     private var isAllowBiometricPay: Bool {
         guard WalletUserDefault.shared.isBiometricPay else {
             return false
@@ -92,6 +97,7 @@ class PayWindow: BottomSheetView {
         case let .transfer(_, user):
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
+            multisigView.isHidden = true
             if !showError {
                 payLabel.text = R.string.localizable.transfer_by_pin()
                 if showBiometric {
@@ -105,6 +111,7 @@ class PayWindow: BottomSheetView {
         case let .withdraw(_, address, _):
             nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
             mixinIDLabel.text = address.fullAddress
+            multisigView.isHidden = true
             if !showError {
                 payLabel.text = R.string.localizable.withdraw_by_pin()
                 if showBiometric {
@@ -116,10 +123,13 @@ class PayWindow: BottomSheetView {
                 }
             }
         case let .multisig(multisig, senders, receivers):
+            multisigView.isHidden = false
             switch multisig.action {
             case MultisigAction.sign.rawValue:
+                multisigActionView.image = R.image.multisig_sign()
                 nameLabel.text = R.string.localizable.multisig_transaction()
             case MultisigAction.unlock.rawValue:
+                multisigActionView.image = R.image.multisig_revoke()
                 nameLabel.text = R.string.localizable.multisig_revoke_transaction()
             default:
                 break
@@ -134,6 +144,10 @@ class PayWindow: BottomSheetView {
                         biometricButton.setTitle(R.string.localizable.multisig_use_touch(), for: .normal)
                     }
                 }
+            }
+
+            for view in multisigStackView.arrangedSubviews {
+                multisigStackView.sendSubviewToBack(view)
             }
 
             if senders.count > 0 {
@@ -151,6 +165,13 @@ class PayWindow: BottomSheetView {
             } else {
                 senderMoreView.isHidden = true
             }
+            if senders.count == 1 {
+                sendersButtonWidthConstraint.constant = 32
+            } else if senders.count == 2 {
+                sendersButtonWidthConstraint.constant = 56
+            } else {
+                sendersButtonWidthConstraint.constant = 80
+            }
 
             if receivers.count > 0 {
                 receiverViewOne.setImage(user: receivers[0])
@@ -167,6 +188,14 @@ class PayWindow: BottomSheetView {
             } else {
                 receiverMoreView.isHidden = true
             }
+            if receivers.count == 1 {
+                receiversButtonWidthConstraint.constant = 32
+            } else if receivers.count == 2 {
+                receiversButtonWidthConstraint.constant = 56
+            } else {
+                receiversButtonWidthConstraint.constant = 80
+            }
+            multisigView.layoutIfNeeded()
         }
 
         assetIconView.setIcon(asset: asset)
@@ -219,6 +248,41 @@ class PayWindow: BottomSheetView {
         textfield?.becomeFirstResponder()
         onDismiss?()
     }
+
+    @IBAction func sendersAction(_ sender: Any) {
+        guard case let .multisig(_, senders, _) = pinAction! else {
+            return
+        }
+
+        let window = MultisigUsersWindow.instance()
+        window.render(users: senders, isSender: true)
+        window.onDismiss = {
+            self.isMultisigUsersAppear = false
+            self.pinField.becomeFirstResponder()
+        }
+        window.presentPopupControllerAnimated()
+
+        isMultisigUsersAppear = true
+        pinField.resignFirstResponder()
+    }
+
+
+    @IBAction func receiversAction(_ sender: Any) {
+        guard case let .multisig(_, _, receivers) = pinAction! else {
+            return
+        }
+        let window = MultisigUsersWindow.instance()
+        window.render(users: receivers, isSender: false)
+        window.onDismiss = {
+            self.isMultisigUsersAppear = false
+            self.pinField.becomeFirstResponder()
+        }
+        window.presentPopupControllerAnimated()
+
+        isMultisigUsersAppear = true
+        pinField.resignFirstResponder()
+    }
+
 
     @IBAction func biometricAction(_ sender: Any) {
         guard isAllowBiometricPay else {
@@ -276,7 +340,7 @@ extension PayWindow {
 
     @objc func keyboardWillDisappear(_ sender: Notification) {
         isKeyboardAppear = false
-        guard let info = sender.userInfo, isShowing else {
+        guard let info = sender.userInfo, isShowing, !isMultisigUsersAppear else {
             return
         }
         guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {

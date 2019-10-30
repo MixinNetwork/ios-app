@@ -20,9 +20,9 @@ class AvatarImageView: UIView {
     @IBInspectable
     var hasBorder: Bool = false {
         didSet {
-            layer.borderColor = UIColor.white.cgColor
-            layer.borderWidth = 2
-            setNeedsLayout()
+            imageView.layer.borderColor = UIColor.white.cgColor
+            imageView.layer.borderWidth = 2
+            imageView.setNeedsLayout()
         }
     }
     

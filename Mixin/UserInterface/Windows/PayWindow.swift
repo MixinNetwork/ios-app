@@ -240,6 +240,14 @@ class PayWindow: BottomSheetView {
         return self
     }
 
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+
+        if case let .multisig(multisig, _, _) = pinAction! {
+            MultisigAPI.shared.cancel(requestId: multisig.requestId) { (_) in }
+        }
+    }
+
     override func dismissPopupControllerAnimated() {
         guard !processing else {
             return

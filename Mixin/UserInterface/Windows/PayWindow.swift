@@ -442,8 +442,8 @@ extension PayWindow: PinFieldDelegate {
                 case .transfer:
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 case let .withdraw(_,address,_):
-                    WalletUserDefault.shared.depositWithdrawalTip.removeAll( where: { $0 == address.addressId })
-                    WalletUserDefault.shared.depositWithdrawalTip.append(address.addressId)
+                    WalletUserDefault.shared.firstWithdrawalTip.removeAll( where: { $0 == address.addressId })
+                    WalletUserDefault.shared.firstWithdrawalTip.append(address.addressId)
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 default:
                     break

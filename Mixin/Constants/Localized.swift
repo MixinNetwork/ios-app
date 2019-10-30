@@ -476,9 +476,7 @@ public class Localized {
     public static let TRANSACTION_TYPE_WITHDRAWAL = LocalizedString("transaction_type_withdrawal", comment: "Withdrawal")
     public static let TRANSACTION_TYPE_FEE = LocalizedString("transaction_type_fee", comment: "Fee")
     public static let TRANSACTION_TYPE_REBATE = LocalizedString("transaction_type_rebate", comment: "Rebate")
-    public static let PAY_USE_FACE = LocalizedString("pay_use_face", comment: "Use Face Pay")
-    public static let PAY_USE_TOUCH = LocalizedString("pay_use_touch", comment: "Use Touch Pay")
-
+    
     // Address Book
     public static func ADDRESS_BOOK_TITLE(symbol: String) -> String {
         return String(format: LocalizedString("address_book_title", comment: "%@ Address Book"), symbol)
@@ -498,7 +496,6 @@ public class Localized {
     // Transfer
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
     public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "This payment link has already been paid by someone, you can not make a duplicate payment.")
-    public static let TRANSFER_PAY_PASSWORD = LocalizedString("transfer_pay_password", comment: "Pay with PIN")
     public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
         return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)
     }

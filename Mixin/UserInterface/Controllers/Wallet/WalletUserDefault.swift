@@ -41,7 +41,7 @@ class WalletUserDefault {
     let pinMinInterval: Double = 60 * 15
     let pinDefaultInterval: Double = 60 * 120
 
-    var depositWithdrawalTip: [String] {
+    var firstWithdrawalTip: [String] {
         get {
             return session.stringArray(forKey: keyWithdrawalTip) ?? []
         }

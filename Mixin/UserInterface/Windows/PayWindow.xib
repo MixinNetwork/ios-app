@@ -457,7 +457,7 @@
                                         <color key="titleColor" red="0.29411764709999999" green="0.48627450979999998" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pay_use_face"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_use_face"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="biometricAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4Cp-KF-bkG"/>

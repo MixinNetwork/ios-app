@@ -160,7 +160,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard !newAddressTips else {
             return false
         }
-        guard !WalletUserDefault.shared.depositWithdrawalTip.contains(addressId) else {
+        guard !WalletUserDefault.shared.firstWithdrawalTip.contains(addressId) else {
             return false
         }
 

@@ -4,7 +4,6 @@ final class MultisigAPI: BaseAPI {
 
     static let shared = MultisigAPI()
 
-
     private enum url {
         static func cancel(id: String) -> String {
             return "multisigs/\(id)/cancel"

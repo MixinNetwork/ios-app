@@ -2,31 +2,9 @@ import Foundation
 import UIKit
 import Alamofire
 
-class UrlWindow: BottomSheetView {
+class UrlWindow {
 
-    @IBOutlet weak var loadingView: ActivityIndicatorView!
-    @IBOutlet weak var errorLabel: UILabel!
-    @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var assistView: UIView!
-
-    @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
-
-    private var animationPushOriginPoint: CGPoint {
-        return CGPoint(x: self.bounds.size.width + self.popupView.bounds.size.width, y: self.popupView.center.y)
-    }
-    private var animationPushEndPoint: CGPoint {
-        return CGPoint(x: self.bounds.size.width-(self.popupView.bounds.size.width * 0.5), y: self.popupView.center.y)
-    }
-
-    private lazy var payView = PayView.instance()
-
-    private(set) var fromWeb = false
-    private var interceptDismiss = false
-
-    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true, checkLastWindow: Bool = true) -> Bool {
-        if checkLastWindow && UIApplication.shared.keyWindow?.subviews.last is UrlWindow {
-            return false
-        }
+    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true) -> Bool {
         guard let mixinURL = MixinURL(url: url) else {
             return false
         }
@@ -34,9 +12,9 @@ class UrlWindow: BottomSheetView {
         case let .codes(code):
             return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
         case .pay:
-            return checkPayUrl(url: url, fromWeb: fromWeb)
+            return checkPayUrl(url: url)
         case .withdrawal:
-            return checkWithdrawal(url: url, fromWeb: fromWeb)
+            return checkWithdrawal(url: url)
         case .address:
             return checkAddress(url: url)
         case let .users(id):
@@ -44,51 +22,13 @@ class UrlWindow: BottomSheetView {
         case let .transfer(id):
             return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
         case .send:
-            return checkSendUrl(url: url, fromWeb: fromWeb)
+            return checkSendUrl(url: url)
         case .device:
             return false
         case .unknown:
             return false
         }
     }
-
-    override func presentPopupControllerAnimated() {
-        if fromWeb {
-            contentHeightConstraint.constant = 484
-            self.layoutIfNeeded()
-            windowBackgroundColor = UIColor.clear
-        }
-        super.presentPopupControllerAnimated()
-        errorLabel.isHidden = true
-    }
-
-    override func dismissPopupControllerAnimated() {
-        if interceptDismiss {
-            if payView.processing {
-                return
-            }
-            if payView.pinField.isFirstResponder {
-                payView.pinField.resignFirstResponder()
-                return
-            }
-        }
-        super.dismissPopupControllerAnimated()
-    }
-
-    override func getAnimationStartPoint() -> CGPoint {
-        return fromWeb ? animationPushOriginPoint : super.getAnimationStartPoint()
-    }
-
-    override func getAnimationEndPoint() -> CGPoint {
-        return fromWeb ? animationPushEndPoint : super.getAnimationEndPoint()
-    }
-
-    class func instance() -> UrlWindow {
-        return Bundle.main.loadNibNamed("UrlWindow", owner: nil, options: nil)?.first as! UrlWindow
-    }
-}
-
-extension UrlWindow {
 
     class func checkUsersUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
@@ -167,33 +107,29 @@ extension UrlWindow {
         return true
     }
 
-    private func presentPopupControllerAnimated(codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
-        self.fromWeb = fromWeb
-        presentPopupControllerAnimated()
-    }
+    class func checkWithdrawal(url: URL) -> Bool {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            return true
+        }
+        guard let query = url.getKeyVals() else {
+            return false
+        }
+        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
+            return false
+        }
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty else {
+            return false
+        }
+        var memo = query["memo"]
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
 
-    private func failedHandler(_ errorMsg: String) {
-        loadingView.stopAnimating()
-        errorLabel.text = errorMsg
-        errorLabel.isHidden = false
-    }
-
-    private func successHandler() {
-        loadingView.stopAnimating()
-        errorLabel.isHidden = true
-    }
-}
-
-extension UrlWindow {
-
-    func presentPopupControllerAnimated(addressId: String, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
-        self.fromWeb = fromWeb
-        presentPopupControllerAnimated()
-
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async {
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
                 DispatchQueue.main.async {
-                    self?.failedHandler(R.string.localizable.address_asset_not_found())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.address_asset_not_found())
                 }
                 return
             }
@@ -206,68 +142,25 @@ extension UrlWindow {
                 case let .failure(error):
                     DispatchQueue.main.async {
                         if error.code == 404 {
-                            self?.failedHandler(R.string.localizable.address_not_found())
+                            showAutoHiddenHud(style: .error, text: R.string.localizable.address_not_found())
                         } else {
-                            self?.failedHandler(error.localizedDescription)
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         }
                     }
                     return
                 }
             }
 
-            DispatchQueue.main.async {
-                guard let weakSelf = self, weakSelf.isShowing else {
-                    return
-                }
-
-                if PayWindow.shared.isShowing {
-                    PayWindow.shared.removeFromSuperview()
-                }
-
-                weakSelf.interceptDismiss = true
-
-                weakSelf.containerView.addSubview(weakSelf.payView)
-                weakSelf.payView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                if let address = address {
-                    weakSelf.payView.render(asset: asset, address: address, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
-                }
-                weakSelf.successHandler()
-            }
-        }
-    }
-
-    func presentPopupControllerAnimated(assetId: String, opponentId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
-        self.fromWeb = fromWeb
-        presentPopupControllerAnimated()
-        AssetAPI.shared.payments(assetId: assetId, opponentId: opponentId, amount: amount, traceId: traceId) { [weak self](result) in
-            guard let weakSelf = self, weakSelf.isShowing else {
+            guard let addr = address else {
                 return
             }
-            switch result {
-            case let .success(payment):
-                guard payment.status != PaymentStatus.paid.rawValue else {
-                    weakSelf.failedHandler(Localized.TRANSFER_PAID)
-                    return
-                }
-                if PayWindow.shared.isShowing {
-                    PayWindow.shared.removeFromSuperview()
-                }
 
-                weakSelf.interceptDismiss = true
-
-                weakSelf.containerView.addSubview(weakSelf.payView)
-                weakSelf.payView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
-                weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
-                weakSelf.successHandler()
-            case let .failure(error):
-                weakSelf.failedHandler(error.localizedDescription)
+            DispatchQueue.main.async {
+                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
+
+        return true
     }
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
@@ -289,8 +182,22 @@ extension UrlWindow {
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo
         }
-        UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        AssetAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
+            switch result {
+            case let .success(payment):
+                hud.hide()
+                let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
+                let asset = AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
+                let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient)), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
         return true
     }
 
@@ -386,31 +293,7 @@ extension UrlWindow {
         return true
     }
 
-    class func checkWithdrawal(url: URL, fromWeb: Bool = false) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
-            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
-            return true
-        }
-        guard let query = url.getKeyVals() else {
-            return false
-        }
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
-            return false
-        }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty else {
-            return false
-        }
-        var memo = query["memo"]
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
-        UrlWindow.instance().presentPopupControllerAnimated(addressId: addressId, assetId: assetId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
-
-        return true
-    }
-
-    class func checkSendUrl(url: URL, fromWeb: Bool = false) -> Bool {
+    class func checkSendUrl(url: URL) -> Bool {
         guard let query = url.getKeyVals() else {
             return false
         }
@@ -439,13 +322,16 @@ extension UrlWindow {
         UserAPI.shared.codes(codeId: codeId) { (result) in
             switch result {
             case let .success(code):
-                hud.hide()
                 if let user = code.user {
                     presentUser(user: user, hud: hud)
                 } else if let authorization = code.authorization {
                     presentAuthorization(authorization: authorization, hud: hud)
                 } else if let conversation = code.conversation {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
+                } else if let multisig = code.multisig {
+                    presentMultisig(multisig: multisig, hud: hud)
+                } else {
+                    hud.hide()
                 }
             case let .failure(error):
                 if error.code == 404 {
@@ -457,6 +343,46 @@ extension UrlWindow {
             }
         }
         return true
+    }
+
+    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            guard let asset = AssetDAO.shared.getAsset(assetId: multisig.assetId) else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let senders = multisig.senders
+            let receivers = multisig.receivers
+            var senderUsers = [UserResponse]()
+            var receiverUsers = [UserResponse]()
+            switch UserAPI.shared.showUsers(userIds: multisig.senders + multisig.receivers) {
+            case let .success(users):
+                senderUsers = users.filter { senders.contains($0.userId) }
+                receiverUsers = users.filter { receivers.contains($0.userId) }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            var error = ""
+            if multisig.action == MultisigAction.sign.rawValue && multisig.state == MultisigState.signed.rawValue {
+                error = R.string.localizable.multisig_state_signed()
+            } else if multisig.action == MultisigAction.unlock.rawValue && multisig.state == MultisigState.unlocked.rawValue {
+                error = R.string.localizable.multisig_state_unlocked()
+            }
+
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
+            }
+        }
     }
 
     private static func presentUser(user: UserResponse, hud: Hud) {
@@ -483,11 +409,6 @@ extension UrlWindow {
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
         DispatchQueue.global().async {
-            defer {
-                DispatchQueue.main.async {
-                    hud.hide()
-                }
-            }
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
             let accountUserId = AccountAPI.shared.accountUserId
             let conversationId = conversation.conversationId
@@ -500,8 +421,10 @@ extension UrlWindow {
                     ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
                 }
             case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
                 return
             }
             var creatorUser = UserDAO.shared.getUser(userId: conversation.creatorId)
@@ -516,12 +439,11 @@ extension UrlWindow {
                 }
             }
 
-            guard let ownerUser = creatorUser else {
-                return
-            }
-
             DispatchQueue.main.async {
-                GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
+                hud.hide()
+                if let ownerUser = creatorUser {
+                    GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
+                }
             }
         }
     }

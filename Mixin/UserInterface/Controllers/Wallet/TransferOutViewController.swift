@@ -193,13 +193,13 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
-        let payWindow = Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
+        let payWindow = PayWindow.instance()
         payWindow.onDismiss = { [weak self] in
             self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
         }
         switch opponent! {
         case .contact(let user):
-            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField)
+            payWindow.render(asset: asset, action: .transfer(trackId: tranceId, user: user), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
         case .address(let address):
             guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                 showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
@@ -212,7 +212,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                         return
                     }
                     if isContinue {
-                        payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: weakSelf.tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField)
+                        payWindow.render(asset: asset, action: .withdraw(trackId: weakSelf.tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
                     } else {
                         weakSelf.amountTextField.becomeFirstResponder()
                     }
@@ -220,7 +220,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 return
             }
 
-            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField)
+            payWindow.render(asset: asset, action: .withdraw(trackId: tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
         }
     }
     

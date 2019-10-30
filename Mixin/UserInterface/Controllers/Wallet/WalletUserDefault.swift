@@ -28,9 +28,6 @@ class WalletUserDefault {
     private var keyAssetTransactionOffset: String {
         return "asset_transaction_offset_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyDepositTipRemind: String {
-        return "asset_deposit_tip_remind_\(AccountAPI.shared.accountIdentityNumber)"
-    }
     private var keyWithdrawalTip: String {
         return "asset_withdrawal_tip_\(AccountAPI.shared.accountIdentityNumber)"
     }
@@ -43,15 +40,6 @@ class WalletUserDefault {
     let checkMinInterval: Double = 60 * 10
     let pinMinInterval: Double = 60 * 15
     let pinDefaultInterval: Double = 60 * 120
-
-    var depositTipRemind: [String] {
-        get {
-            return session.stringArray(forKey: keyDepositTipRemind) ?? []
-        }
-        set {
-            session.set(newValue, forKey: keyDepositTipRemind)
-        }
-    }
 
     var depositWithdrawalTip: [String] {
         get {

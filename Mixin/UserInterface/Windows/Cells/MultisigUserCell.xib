@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" focusStyle="custom" rowHeight="80" id="53w-69-eWQ" userLabel="MultisigUserCell" customClass="MultisigUserCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="53w-69-eWQ" id="aF2-vI-jXr">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zpU-gP-OgX" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="20" y="15" width="50" height="50"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="Yjt-WS-qey"/>
+                            <constraint firstAttribute="width" constant="50" id="tTe-1n-P0e"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasShadow" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="HeN-2O-TSq">
+                        <rect key="frame" x="86" y="19" width="68.5" height="19.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CtR-oh-aC1">
+                                <rect key="frame" x="0.0" y="0.0" width="68.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="Gyu-rA-paR">
+                                <rect key="frame" x="68.5" y="4" width="0.0" height="11"/>
+                            </imageView>
+                        </subviews>
+                    </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Mixin ID: 25566" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Su3-sf-vN3">
+                        <rect key="frame" x="86" y="44.5" width="102" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="zpU-gP-OgX" firstAttribute="centerY" secondItem="aF2-vI-jXr" secondAttribute="centerY" id="AgC-zX-FlT"/>
+                    <constraint firstItem="Su3-sf-vN3" firstAttribute="top" secondItem="HeN-2O-TSq" secondAttribute="bottom" constant="6" id="BnT-pZ-7zU"/>
+                    <constraint firstItem="HeN-2O-TSq" firstAttribute="leading" secondItem="zpU-gP-OgX" secondAttribute="trailing" constant="16" id="HY1-3I-F2x"/>
+                    <constraint firstItem="Su3-sf-vN3" firstAttribute="leading" secondItem="zpU-gP-OgX" secondAttribute="trailing" constant="16" id="LQp-Ed-6C8"/>
+                    <constraint firstItem="HeN-2O-TSq" firstAttribute="top" secondItem="zpU-gP-OgX" secondAttribute="top" constant="4" id="Zwm-0a-DgN"/>
+                    <constraint firstItem="zpU-gP-OgX" firstAttribute="leading" secondItem="aF2-vI-jXr" secondAttribute="leading" constant="20" id="oCt-HC-nXZ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="avatarView" destination="zpU-gP-OgX" id="5UA-2K-aRY"/>
+                <outlet property="idLabel" destination="Su3-sf-vN3" id="OlS-Yb-usa"/>
+                <outlet property="nameLabel" destination="CtR-oh-aC1" id="0cV-jA-N5A"/>
+                <outlet property="verifiedImageView" destination="Gyu-rA-paR" id="ajB-3G-jrO"/>
+            </connections>
+            <point key="canvasLocation" x="-128.80000000000001" y="-98.050974512743636"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic_user_bot" width="14" height="11"/>
+    </resources>
+</document>

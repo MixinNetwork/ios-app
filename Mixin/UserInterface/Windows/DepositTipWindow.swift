@@ -33,17 +33,6 @@ class DepositTipWindow: BottomSheetView {
         dismissPopupControllerAnimated()
     }
 
-    @IBAction func dontRemindAction(_ sender: Any) {
-        guard let assetId = asset?.chainId else {
-            return
-        }
-        WalletUserDefault.shared.depositTipRemind.removeAll( where: { $0 == assetId })
-        WalletUserDefault.shared.depositTipRemind.append(assetId)
-
-        canDismiss = true
-        dismissPopupControllerAnimated()
-    }
-
     class func instance() -> DepositTipWindow {
         return Bundle.main.loadNibNamed("DepositTipWindow", owner: nil, options: nil)?.first as! DepositTipWindow
     }

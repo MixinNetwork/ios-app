@@ -434,7 +434,7 @@
 "transfer_error_amount_too_small" = "振込金額が少なすぎます";
 "transfer_error_pin_incorrect" = "PINが正しくありません";
 "transfer_paid" = "この支払いリンクは既に他のユーザーに使われました。重複支払いはできません。";
-"transfer_pay_password" = "PINで支払う";
+"transfer_pay_pin" = "PINで支払う";
 "pay_transfer_title" = " %@ に振込";
 "pay_withdrawal_title" = " %@ に送金";
 "pay_use_face" = "Face Payを使います";

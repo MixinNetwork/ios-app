@@ -95,7 +95,14 @@ class PayWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        nameLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
+                          adjustForContentSize: true)
+        amountLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
+                            adjustForContentSize: true)
+        memoLabel.setFont(scaledFor: .systemFont(ofSize: 14),
+                          adjustForContentSize: true)
+        errorLabel.setFont(scaledFor: .systemFont(ofSize: 14),
+                           adjustForContentSize: true)
         if ScreenSize.current == .inch3_5 {
             pinField.cellLength = 8
         }

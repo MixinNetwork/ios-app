@@ -33,7 +33,7 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="gNp-o7-9t7">
-                        <rect key="frame" x="122" y="17" width="237" height="43.5"/>
+                        <rect key="frame" x="122" y="14.5" width="237" height="43.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sQp-bg-2LK">
                                 <rect key="frame" x="0.0" y="0.0" width="32.5" height="20.5"/>
@@ -54,7 +54,7 @@
                     <constraint firstAttribute="trailing" secondItem="gNp-o7-9t7" secondAttribute="trailing" constant="16" id="AyN-Ta-BnP"/>
                     <constraint firstItem="xvQ-iP-MWP" firstAttribute="leading" secondItem="c8C-1d-gGu" secondAttribute="leading" constant="36" id="CJG-Kq-1Ho"/>
                     <constraint firstItem="8ht-g4-ePU" firstAttribute="top" secondItem="c8C-1d-gGu" secondAttribute="top" constant="15" id="K1R-WJ-Age"/>
-                    <constraint firstItem="gNp-o7-9t7" firstAttribute="top" secondItem="c8C-1d-gGu" secondAttribute="top" constant="17" id="cTd-Ld-b1n"/>
+                    <constraint firstItem="gNp-o7-9t7" firstAttribute="centerY" secondItem="c8C-1d-gGu" secondAttribute="centerY" id="Thj-Gq-BjF"/>
                     <constraint firstItem="8ht-g4-ePU" firstAttribute="leading" secondItem="xvQ-iP-MWP" secondAttribute="trailing" constant="12" id="dtA-uR-pXV"/>
                     <constraint firstItem="xvQ-iP-MWP" firstAttribute="top" secondItem="c8C-1d-gGu" secondAttribute="top" constant="28" id="hFx-Hb-MWC"/>
                     <constraint firstItem="gNp-o7-9t7" firstAttribute="leading" secondItem="8ht-g4-ePU" secondAttribute="trailing" constant="16" id="uAo-bv-uHw"/>

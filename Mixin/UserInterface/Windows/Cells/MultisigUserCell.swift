@@ -8,7 +8,13 @@ class MultisigUserCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var verifiedImageView: UIImageView!
-
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        idLabel.setFont(scaledFor: .systemFont(ofSize: 14),
+                        adjustForContentSize: true)
+    }
+    
     func render(user: UserResponse) {
         avatarView.setImage(user: user)
         nameLabel.text = user.fullName

@@ -8,7 +8,13 @@ class MultisigUsersWindow: BottomSheetView {
     private var users: [UserResponse] = []
 
     var onDismiss: (() -> Void)?
-
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold),
+                           adjustForContentSize: true)
+    }
+    
     func render(users: [UserResponse], isSender: Bool) {
         self.users = users
         if isSender {

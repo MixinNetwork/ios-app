@@ -3,7 +3,7 @@ import UIKit
 class MessageFontSet {
     
     static let time = MessageFontSet(size: 11, weight: .light)
-    static let fullname = MessageFontSet(style: .subheadline)
+    static let fullname = MessageFontSet(size: 14, weight: .regular)
     static let systemMessage = MessageFontSet(style: .subheadline)
     static let appButtonTitle = MessageFontSet(size: 16, weight: .regular)
     static let appCardTitle = MessageFontSet(style: .body)

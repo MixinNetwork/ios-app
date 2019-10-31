@@ -283,7 +283,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: URL(string: "wss://blaze.mixin.one")!)
+        var request = URLRequest(url: URL(string: "wss://mixin-blaze.zeromesh.net")!)
         request.timeoutInterval = 5
         return SRWebSocket(urlRequest: request)
     }

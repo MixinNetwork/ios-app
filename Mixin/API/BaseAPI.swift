@@ -85,7 +85,7 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
-    static let rootURLString = "https://api.mixin.one/"
+    static let rootURLString = "https://mixin-api.zeromesh.net/"
     static let rootURL = URL(string: rootURLString)!
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")

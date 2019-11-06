@@ -143,7 +143,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
-                weakSelf.navigationSearchBoxView.isBusy = false
+                weakSelf.navigationSearchBoxView?.isBusy = false
             }
         }
         queue.addOperation(op)

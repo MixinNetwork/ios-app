@@ -56,6 +56,8 @@
 		<string>alipay</string>
 		<string>foxone</string>
 		<string>exin</string>
+		<string>tbopen</string>
+		<string>openapp.jdmobile</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -141,6 +141,12 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         let user = self.user(at: indexPath)
         if alreadyInGroupUserIds.contains(user.userId) {
             return nil
+        } else if selectedUserIds.count + alreadyInGroupUserIds.count == maxMembersCount {
+            showAutoHiddenHud(style: .error, text: R.string.localizable.group_participant_add_full())
+            return nil
+        } else if selectedUserIds.count == 50 {
+            showAutoHiddenHud(style: .error, text: R.string.localizable.group_participant_add_limit())
+            return nil
         } else {
             return indexPath
         }

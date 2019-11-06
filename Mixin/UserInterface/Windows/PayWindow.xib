@@ -464,10 +464,10 @@
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mes-3z-Cyg">
-                                    <rect key="frame" x="-170.5" y="303.5" width="636" height="50"/>
+                                    <rect key="frame" x="-170.5" y="303.5" width="636" height="118"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C06-9U-gZk" userLabel="ErrorView" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="20" width="636" height="28"/>
+                                            <rect key="frame" x="0.0" y="16" width="636" height="28"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="This multisig link has already been signed by yourself, you can not make a duplicate operation." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="alA-n5-fOS">
                                                     <rect key="frame" x="14" y="14" width="608" height="0.0"/>
@@ -489,14 +489,32 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bfm-a2-pNd" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="265" y="76" width="106" height="42"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="42" id="Q6K-g9-1I0"/>
+                                            </constraints>
+                                            <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                                            <state key="normal" title="Create">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_ok"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="errorNextAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tlI-af-Bhc"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="C06-9U-gZk" firstAttribute="centerX" secondItem="Mes-3z-Cyg" secondAttribute="centerX" id="08h-vj-Ayy"/>
-                                        <constraint firstAttribute="bottom" secondItem="C06-9U-gZk" secondAttribute="bottom" constant="2" id="2qe-tX-hW1"/>
-                                        <constraint firstItem="C06-9U-gZk" firstAttribute="top" secondItem="Mes-3z-Cyg" secondAttribute="top" constant="20" id="4Wt-Xv-1PK"/>
+                                        <constraint firstItem="C06-9U-gZk" firstAttribute="top" secondItem="Mes-3z-Cyg" secondAttribute="top" constant="16" id="4Wt-Xv-1PK"/>
+                                        <constraint firstItem="bfm-a2-pNd" firstAttribute="centerX" secondItem="Mes-3z-Cyg" secondAttribute="centerX" id="KCI-pk-TaC"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="C06-9U-gZk" secondAttribute="trailing" id="QSM-Wr-9sf"/>
+                                        <constraint firstAttribute="bottom" secondItem="bfm-a2-pNd" secondAttribute="bottom" id="g0a-N8-59Z"/>
                                         <constraint firstItem="C06-9U-gZk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Mes-3z-Cyg" secondAttribute="leading" id="rhT-YT-5mz"/>
+                                        <constraint firstItem="bfm-a2-pNd" firstAttribute="top" secondItem="C06-9U-gZk" secondAttribute="bottom" constant="32" id="zr3-LC-Eec"/>
                                     </constraints>
                                 </view>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQV-om-Skc" userLabel="ResultView">
@@ -547,13 +565,13 @@
                                         <constraint firstAttribute="height" constant="30" id="Blo-vS-RNo" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                                    <real key="value" value="0.0"/>
+                                                    <real key="value" value="10"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                    <real key="value" value="0.0"/>
+                                                    <real key="value" value="10"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                                    <real key="value" value="10"/>
+                                                    <real key="value" value="15"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </constraint>
@@ -595,6 +613,7 @@
                 <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
                 <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
                 <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>
+                <outlet property="errorContinueButton" destination="bfm-a2-pNd" id="yBu-C9-gPH"/>
                 <outlet property="errorLabel" destination="alA-n5-fOS" id="58o-RH-fuU"/>
                 <outlet property="errorView" destination="Mes-3z-Cyg" id="XsU-nr-PDN"/>
                 <outlet property="loadingView" destination="MtN-so-wKF" id="7Fm-S3-1J0"/>

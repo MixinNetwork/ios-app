@@ -199,7 +199,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         switch opponent! {
         case .contact(let user):
-            payWindow.render(asset: asset, action: .transfer(trackId: tranceId, user: user), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
+            payWindow.render(asset: asset, action: .transfer(trackId: tranceId, user: user, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
         case .address(let address):
             guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                 showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))

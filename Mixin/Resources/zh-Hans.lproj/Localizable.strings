@@ -40,6 +40,7 @@
 "action_delete_everyone" = "撤回";
 "action_learn_more" = "了解更多";
 "action_later" = "稍后";
+"action_try_again" = "重试";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";

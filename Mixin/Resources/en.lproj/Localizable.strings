@@ -40,6 +40,7 @@
 "action_delete_everyone" = "Delete for Everyone";
 "action_learn_more" = "Learn More";
 "action_later" = "Later";
+"action_try_again" = "Try Again";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";

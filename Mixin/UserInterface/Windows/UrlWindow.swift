@@ -192,7 +192,7 @@ class UrlWindow {
                 let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
                 let asset = AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
-                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient)), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
                 hud.scheduleAutoHidden()

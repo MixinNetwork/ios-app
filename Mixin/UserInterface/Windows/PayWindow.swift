@@ -6,9 +6,15 @@ import AudioToolbox
 class PayWindow: BottomSheetView {
 
     enum PinAction {
-        case transfer(trackId: String, user: UserItem)
+        case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserResponse], receivers: [UserResponse])
+    }
+
+    enum ErrorContinueAction {
+        case retryPin
+        case changeAmount
+        case close
     }
 
     @IBOutlet weak var pinField: PinField!
@@ -29,6 +35,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var pinView: UIView!
+    @IBOutlet weak var errorContinueButton: RoundedButton!
 
     @IBOutlet weak var senderViewOne: AvatarImageView!
     @IBOutlet weak var senderViewTwo: AvatarImageView!
@@ -48,6 +55,7 @@ class PayWindow: BottomSheetView {
     private weak var textfield: UITextField?
 
     private var pinAction: PinAction!
+    private var errorContinueAction: ErrorContinueAction?
     private var asset: AssetItem!
     private var amount = ""
     private var memo = ""
@@ -94,7 +102,7 @@ class PayWindow: BottomSheetView {
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
         switch pinAction! {
-        case let .transfer(_, user):
+        case let .transfer(_, user, _):
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
             multisigView.isHidden = true
@@ -215,29 +223,36 @@ class PayWindow: BottomSheetView {
 
         dismissButton.isEnabled = true
         if let err = error, !err.isEmpty {
+            errorContinueAction = .close
             pinView.isHidden = true
             biometricButton.isHidden = true
             successView.isHidden = true
             errorView.isHidden = false
             errorLabel.text = err
         } else {
-            pinView.isHidden = false
-            errorView.isHidden = true
-            successView.isHidden = true
-            pinField.clear()
-            if showBiometric {
-                if biometryType == .faceID {
-                    biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
-                } else {
-                    biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
-                }
-                biometricButton.isHidden = false
-            } else {
-                biometricButton.isHidden = true
-            }
-            pinField.becomeFirstResponder()
+            resetPinInput()
         }
         return self
+    }
+
+    private func resetPinInput() {
+        pinField.isHidden = false
+        payLabel.isHidden = false
+        pinView.isHidden = false
+        errorView.isHidden = true
+        successView.isHidden = true
+        pinField.clear()
+        if isAllowBiometricPay {
+            if biometryType == .faceID {
+                biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
+            } else {
+                biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
+            }
+            biometricButton.isHidden = false
+        } else {
+            biometricButton.isHidden = true
+        }
+        pinField.becomeFirstResponder()
     }
 
     override func removeFromSuperview() {
@@ -255,6 +270,19 @@ class PayWindow: BottomSheetView {
         super.dismissPopupControllerAnimated()
         textfield?.becomeFirstResponder()
         onDismiss?()
+    }
+
+    @IBAction func errorNextAction(_ sender: Any) {
+        guard let continueAction = errorContinueAction else {
+            return
+        }
+        switch continueAction {
+        case .retryPin:
+            resetPinInput()
+        default:
+            dismissPopupControllerAnimated()
+        }
+        errorContinueAction = nil
     }
 
     @IBAction func sendersAction(_ sender: Any) {
@@ -359,7 +387,7 @@ extension PayWindow {
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
 
-        if successView.isHidden {
+        if successView.isHidden && errorContinueAction == nil {
             UIView.animate(withDuration: 5, delay: 0, options: options, animations: {
                 self.alpha = 0
                 self.popupView.center = self.getAnimationStartPoint()
@@ -385,19 +413,38 @@ extension PayWindow: PinFieldDelegate {
 
     private func failedHandler(error: APIError) {
         let errorMsg = error.code == 429 ? R.string.localizable.wallet_password_too_many_requests() : error.localizedDescription
+        switch error.code {
+        case 20118, 20119:
+            errorContinueAction = .retryPin
+        case 20120, 20117:
+            errorContinueAction = .changeAmount
+        default:
+            errorContinueAction = .close
+        }
         failedHandler(errorMsg: errorMsg)
     }
 
     private func failedHandler(errorMsg: String) {
+        guard let continueAction = errorContinueAction else {
+            return
+        }
+        switch continueAction {
+        case .retryPin:
+            errorContinueButton.setTitle(R.string.localizable.action_try_again(), for: .normal)
+        case .changeAmount:
+            errorContinueButton.setTitle(R.string.localizable.wallet_withdrawal_change_amount(), for: .normal)
+        case .close:
+            errorContinueButton.setTitle(R.string.localizable.dialog_button_ok(), for: .normal)
+        }
         processing = false
+        loadingView.stopAnimating()
         dismissButton.isEnabled = true
         errorLabel.text = errorMsg
-        UIView.animate(withDuration: 0.15) {
-            self.biometricButton.isHidden = true
-            self.pinView.isHidden = true
-            self.successView.isHidden = true
-            self.errorView.isHidden = false
-        }
+        biometricButton.isHidden = true
+        pinView.isHidden = true
+        successView.isHidden = true
+        errorView.isHidden = false
+        pinField.resignFirstResponder()
     }
 
     private func successHandler() {
@@ -405,10 +452,8 @@ extension PayWindow: PinFieldDelegate {
             WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
         }
         loadingView.stopAnimating()
-        UIView.animate(withDuration: 0.15) {
-            self.pinView.isHidden = true
-            self.successView.isHidden = false
-        }
+        pinView.isHidden = true
+        successView.isHidden = false
         playSuccessSound()
         delayDismissWindow()
     }
@@ -421,14 +466,11 @@ extension PayWindow: PinFieldDelegate {
         let pinAction: PinAction = self.pinAction!
         let assetId = asset.assetId
         dismissButton.isEnabled = false
-
-        UIView.animate(withDuration: 0.15) {
-            if !self.biometricButton.isHidden {
-                self.biometricButton.isHidden = true
-            }
-            self.pinField.isHidden = true
-            self.payLabel.isHidden = true
+        if !biometricButton.isHidden {
+            biometricButton.isHidden = true
         }
+        pinField.isHidden = true
+        payLabel.isHidden = true
         loadingView.startAnimating()
 
         let completion = { [weak self](result: APIResult<Snapshot>) in
@@ -463,7 +505,7 @@ extension PayWindow: PinFieldDelegate {
         }
 
         switch pinAction {
-        case let .transfer(trackId, user):
+        case let .transfer(trackId, user, _):
             CommonUserDefault.shared.hasPerformedTransfer = true
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .withdraw(trackId, address, fromWeb):
@@ -475,6 +517,7 @@ extension PayWindow: PinFieldDelegate {
                     switch result {
                     case let .success(payment):
                         guard payment.status != PaymentStatus.paid.rawValue else {
+                            weakSelf.errorContinueAction = .close
                             weakSelf.failedHandler(errorMsg: Localized.TRANSFER_PAID)
                             return
                         }
@@ -524,7 +567,10 @@ extension PayWindow: PinFieldDelegate {
             var viewControllers = navigation.viewControllers
 
             switch weakSelf.pinAction! {
-            case let .transfer(_, user):
+            case let .transfer(_, user, fromWeb):
+                guard !fromWeb else {
+                    return
+                }
                 if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == user.userId {
                     while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                         viewControllers.removeLast()

@@ -11,6 +11,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
+    private lazy var footerLabel = FooterLabel()
     
     private var isMe = false
     private var relationship = Relationship.ME
@@ -356,6 +357,26 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
 // MARK: - Private works
 extension UserProfileViewController {
     
+    class FooterLabel: UILabel {
+        
+        convenience init() {
+            let frame = CGRect(x: 0, y: 0, width: 414, height: 46)
+            self.init(frame: frame)
+            backgroundColor = .clear
+            textColor = .text3
+            font = .preferredFont(forTextStyle: .footnote)
+            adjustsFontForContentSizeCategory = true
+            numberOfLines = 0
+            textAlignment = .center
+        }
+        
+        override var intrinsicContentSize: CGSize {
+            let size = super.intrinsicContentSize
+            return CGSize(width: size.width, height: size.height + 30)
+        }
+        
+    }
+    
     private func reloadData() {
         for view in centerStackView.subviews {
             view.removeFromSuperview()
@@ -452,6 +473,12 @@ extension UserProfileViewController {
                                  style: [],
                                  action: #selector(changeNumber))]
             ]
+            
+            if let createdAt = user.createdAt?.toUTCDate() {
+                let rep = DateFormatter.dateSimple.string(from: createdAt)
+                footerLabel.text = R.string.localizable.profile_join_in(rep)
+                menuStackView.addArrangedSubview(footerLabel)
+            }
         } else {
             var groups = [[ProfileMenuItem]]()
             

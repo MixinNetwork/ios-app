@@ -498,8 +498,9 @@
 "profile_unmute" = "消音を解除";
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
-"profile_toast_muted" = " %@ まで消音しました";
+"profile_toast_muted" = " %@まで消音しました";
 "profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
+"profile_join_in" = "%@から参加しました";
 
 // Emergency
 "emergency_view" = "緊急連絡先を表示";

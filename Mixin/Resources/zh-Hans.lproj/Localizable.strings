@@ -561,6 +561,7 @@
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
 "profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
+"profile_join_in" = "%@ 加入";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

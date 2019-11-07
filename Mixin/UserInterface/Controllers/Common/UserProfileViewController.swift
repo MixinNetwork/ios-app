@@ -436,7 +436,7 @@ extension UserProfileViewController {
             centerStackView.addArrangedSubview(shortcutView)
         }
         
-        if centerStackView.arrangedSubviews.isEmpty {
+        if isMe || centerStackView.arrangedSubviews.isEmpty {
             menuStackViewTopConstraint.constant = 24
         } else {
             menuStackViewTopConstraint.constant = 0

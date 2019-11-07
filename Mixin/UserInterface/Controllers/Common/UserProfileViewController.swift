@@ -429,7 +429,7 @@ extension UserProfileViewController {
                                  action: #selector(showMyQrCode)),
                  ProfileMenuItem(title: R.string.localizable.contact_receive_money(),
                                  subtitle: nil,
-                                 style: [.accessoryDisclosure],
+                                 style: [],
                                  action: #selector(showMyMoneyReceivingCode))],
                 [ProfileMenuItem(title: R.string.localizable.profile_edit_name(),
                                  subtitle: nil,
@@ -437,18 +437,18 @@ extension UserProfileViewController {
                                  action: #selector(editMyName)),
                  ProfileMenuItem(title: R.string.localizable.profile_edit_biography(),
                                  subtitle: nil,
-                                 style: [.accessoryDisclosure],
+                                 style: [],
                                  action: #selector(editMyBiography))],
                 [ProfileMenuItem(title: R.string.localizable.profile_change_avatar_camera(),
                                  subtitle: nil,
-                                 style: [.accessoryDisclosure],
+                                 style: [],
                                  action: #selector(changeAvatarWithCamera)),
                  ProfileMenuItem(title: R.string.localizable.profile_change_avatar_library(),
                                  subtitle: nil,
-                                 style: [.accessoryDisclosure],
+                                 style: [],
                                  action: #selector(changeAvatarWithLibrary))],
                 [ProfileMenuItem(title: R.string.localizable.profile_change_number(),
-                                 subtitle: nil,
+                                 subtitle: user.phone,
                                  style: [],
                                  action: #selector(changeNumber))]
             ]
@@ -457,18 +457,18 @@ extension UserProfileViewController {
             
             let shareUserItem = ProfileMenuItem(title: R.string.localizable.profile_share_card(),
                                                 subtitle: nil,
-                                                style: [.accessoryDisclosure],
+                                                style: [],
                                                 action: #selector(shareUser))
             groups.append([shareUserItem])
             
             let sharedMediaAndSearchGroup = [
                 ProfileMenuItem(title: R.string.localizable.chat_shared_media(),
                                 subtitle: nil,
-                                style: [.accessoryDisclosure],
+                                style: [],
                                 action: #selector(showSharedMedia)),
                 ProfileMenuItem(title: R.string.localizable.profile_search_conversation(),
                                 subtitle: nil,
-                                style: [.accessoryDisclosure],
+                                style: [],
                                 action: #selector(searchConversation))
             ]
             groups.append(sharedMediaAndSearchGroup)
@@ -495,7 +495,7 @@ extension UserProfileViewController {
                 }
                 group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
                                              subtitle: nil,
-                                             style: [.accessoryDisclosure],
+                                             style: [],
                                              action: #selector(showTransactions)))
                 return group
             }()

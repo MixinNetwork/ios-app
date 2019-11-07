@@ -12,7 +12,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileMenuItemView" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="accessoryDisclosureImageView" destination="tdl-Zl-0Jw" id="6gt-Xg-Fnx"/>
                 <outlet property="button" destination="h5C-eh-0Uc" id="C6M-bB-r96"/>
                 <outlet property="label" destination="BFl-4p-1Ax" id="dZW-nn-mA1"/>
                 <outlet property="subtitleLabel" destination="qi3-bH-5pj" id="fPn-KH-FNd"/>
@@ -45,14 +44,11 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qi3-bH-5pj">
-                            <rect key="frame" x="48" y="0.0" width="280" height="64"/>
+                            <rect key="frame" x="48" y="0.0" width="292" height="64"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" name="text_3"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="tdl-Zl-0Jw">
-                            <rect key="frame" x="334" y="0.0" width="6" height="64"/>
-                        </imageView>
                     </subviews>
                     <constraints>
                         <constraint firstAttribute="height" constant="64" id="hBP-o1-tzi"/>
@@ -75,12 +71,11 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <namedColor name="background_tertiary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.23137254901960785" green="0.24705882352941178" blue="0.26666666666666666" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_3">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="1" green="1" blue="1" alpha="0.40000000596046448" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

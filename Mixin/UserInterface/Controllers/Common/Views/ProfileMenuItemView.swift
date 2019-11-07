@@ -5,7 +5,6 @@ final class ProfileMenuItemView: UIView, XibDesignable {
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var accessoryDisclosureImageView: UIImageView!
     
     weak var target: NSObject?
     
@@ -17,7 +16,6 @@ final class ProfileMenuItemView: UIView, XibDesignable {
             label.text = item.title
             label.textColor = item.style.contains(.destructive) ? .mixinRed : .text
             subtitleLabel.text = item.subtitle
-            accessoryDisclosureImageView.isHidden = !item.style.contains(.accessoryDisclosure)
         }
     }
     

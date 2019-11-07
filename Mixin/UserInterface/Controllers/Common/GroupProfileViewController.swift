@@ -285,11 +285,11 @@ extension GroupProfileViewController {
         groups.append([
             ProfileMenuItem(title: R.string.localizable.chat_shared_media(),
                             subtitle: nil,
-                            style: [.accessoryDisclosure],
+                            style: [],
                             action: #selector(showSharedMedia)),
             ProfileMenuItem(title: R.string.localizable.profile_search_conversation(),
                             subtitle: nil,
-                            style: [.accessoryDisclosure],
+                            style: [],
                             action: #selector(searchConversation))
         ])
         

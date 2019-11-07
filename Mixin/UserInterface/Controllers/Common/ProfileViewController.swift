@@ -65,16 +65,15 @@ class ProfileViewController: UIViewController {
         view.layoutIfNeeded()
         let window = AppDelegate.current.window
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
-        let contentHeight: CGFloat
         switch size {
         case .expanded, .unavailable:
-            contentHeight = contentView.frame.height
+            preferredContentSize.height = maxHeight
         case .compressed:
             let point = CGPoint(x: 0, y: centerStackView.bounds.maxY)
-            contentHeight = centerStackView.convert(point, to: contentView).y
+            let contentHeight = centerStackView.convert(point, to: contentView).y
+            let height = titleViewHeightConstraint.constant + contentHeight + window.safeAreaInsets.bottom
+            preferredContentSize.height = min(maxHeight, height)
         }
-        let height = titleViewHeightConstraint.constant + contentHeight + window.safeAreaInsets.bottom
-        preferredContentSize.height = min(maxHeight, height)
     }
     
     func dismissAndPresent(_ viewController: UIViewController) {
@@ -182,11 +181,13 @@ extension ProfileViewController {
             menuStackView.alpha = 1
             (sender as? UIButton)?.transform = .init(rotationAngle: .pi)
             scrollView.isScrollEnabled = true
+            scrollView.alwaysBounceVertical = true
         case .compressed:
             menuStackView.alpha = 0
             (sender as? UIButton)?.transform = .identity
             scrollView.contentOffset = .zero
             scrollView.isScrollEnabled = false
+            scrollView.alwaysBounceVertical = false
         case .unavailable:
             break
         }

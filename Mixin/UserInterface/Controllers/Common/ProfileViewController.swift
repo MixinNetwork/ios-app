@@ -179,7 +179,7 @@ extension ProfileViewController {
         switch size {
         case .expanded:
             menuStackView.alpha = 1
-            (sender as? UIButton)?.transform = .init(rotationAngle: .pi)
+            (sender as? UIButton)?.transform = CGAffineTransform(scaleX: 1, y: -1)
             scrollView.isScrollEnabled = true
             scrollView.alwaysBounceVertical = true
         case .compressed:

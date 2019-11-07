@@ -53,6 +53,7 @@ class ImageUploadJob: AttachmentUploadJob {
             let image = UIImage(contentsOfFile: fileUrl.path)
             message.thumbImage = image?.base64Thumbnail() ?? ""
         }
+        message.mediaMimeType = FileManager.default.mimeType(ext: fileUrl.pathExtension.lowercased())
         
         guard !isCancelled else {
             try? FileManager.default.removeItem(at: fileUrl)

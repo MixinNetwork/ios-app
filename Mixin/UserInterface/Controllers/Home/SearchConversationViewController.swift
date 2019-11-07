@@ -35,8 +35,6 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     private var messages = [[MessageSearchResult]]()
     private var didLoadAllMessages = false
     
-    private lazy var userWindow = UserWindow.instance()
-    
     convenience init() {
         self.init(nib: R.nib.searchConversationView)
     }
@@ -136,7 +134,8 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         guard let user = user, user.isCreatedByMessenger else {
             return
         }
-        userWindow.updateUser(user: user).presentView()
+        let vc = UserProfileViewController(user: user)
+        present(vc, animated: true, completion: nil)
     }
     
     private func reloadMessages(keyword: String) {

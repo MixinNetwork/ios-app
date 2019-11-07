@@ -321,7 +321,6 @@ public class Localized {
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")
     public static let PROFILE_OPEN_BOT = LocalizedString("profile_open_bot", comment: "Open App")
-    public static let PROFILE_CHANGE_AVATAR = LocalizedString("profile_change_avatar", comment: "Change Profile Photo")
     public static func PROFILE_MIXIN_ID(id: String) -> String {
         return String(format: LocalizedString("profile_mixin_id", comment: "Mixin ID: %@"), id)
     }
@@ -341,7 +340,6 @@ public class Localized {
     public static let PROFILE_MUTE_DURATION_8H = LocalizedString("profile_mute_duration_8h", comment: "8 hours")
     public static let PROFILE_MUTE_DURATION_1WEEK = LocalizedString("profile_mute_duration_1week", comment: "1 week")
     public static let PROFILE_MUTE_DURATION_1YEAR = LocalizedString("profile_mute_duration_1year", comment: "1 year")
-    public static let PROFILE_UNMUTE = LocalizedString("profile_unmute", comment: "Unmute")
     public static let PROFILE_MUTE = LocalizedString("profile_mute", comment: "Mute")
     public static let PROFILE_CHANGE_NUMBER = LocalizedString("profile_change_number", comment: "Change Number")
     public static let PROFILE_CHANGE_NUMBER_CONFIRMATION = LocalizedString("profile_change_number_confirmation", comment: "Do you want to change the phone number?")

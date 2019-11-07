@@ -535,7 +535,8 @@
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
-"profile_change_avatar" = "Change Profile Photo";
+"profile_change_avatar_camera" = "Change Profile Photo with Camera";
+"profile_change_avatar_library" = "Change Profile Photo with Library";
 "profile_change_number" = "Change Phone Number";
 "profile_change_number_confirmation" = "Do you want to change the phone number?";
 "profile_change_number_succeeded" = "Successfully changed phone number";
@@ -550,8 +551,10 @@
 "profile_mute_duration_8h" = "8 hours";
 "profile_mute_duration_1week" = "1 week";
 "profile_mute_duration_1year" = "1 year";
-"profile_unmute" = "Unmute";
+"profile_mute_ends_at" = "Until %@";
 "profile_mute" = "Mute";
+"profile_muted" = "Muted";
+"profile_unmute" = "Unmute";
 "profile_report" = "Report";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";

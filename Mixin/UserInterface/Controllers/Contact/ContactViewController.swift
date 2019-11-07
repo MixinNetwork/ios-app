@@ -19,8 +19,6 @@ class ContactViewController: UITableViewController {
     private var phoneContacts = [[PhoneContact]]()
     private var phoneContactSectionTitles = [String]()
     
-    private lazy var userWindow = UserWindow.instance()
-    
     private var isPhoneContactAuthorized: Bool {
         return ContactsManager.shared.authorization == .authorized
     }
@@ -55,8 +53,9 @@ class ContactViewController: UITableViewController {
         guard let account = AccountAPI.shared.account else {
             return
         }
-        userWindow.updateUser(user: UserItem.createUser(from: account))
-        userWindow.presentView()
+        let user = UserItem.createUser(from: account)
+        let vc = UserProfileViewController(user: user)
+        present(vc, animated: true, completion: nil)
     }
     
     @IBAction func newGroupAction(_ sender: Any) {

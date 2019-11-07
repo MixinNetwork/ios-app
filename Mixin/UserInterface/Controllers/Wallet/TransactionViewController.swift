@@ -99,8 +99,9 @@ extension TransactionViewController: UITableViewDelegate {
             guard let user = UserDAO.shared.getUser(userId: userId), user.isCreatedByMessenger else {
                 return
             }
-            DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user).presentView()
+            DispatchQueue.main.async { [weak self] in
+                let vc = UserProfileViewController(user: user)
+                self?.present(vc, animated: true, completion: nil)
             }
         }
     }

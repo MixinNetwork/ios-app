@@ -538,7 +538,8 @@
 "profile_full_name" = "名称";
 "profile_my_qrcode" = "我的二维码";
 "profile_change_number" = "更换手机号";
-"profile_change_avatar" = "更改头像";
+"profile_change_avatar_camera" = "更换头像（相机）";
+"profile_change_avatar_library" = "更换头像（相册）";
 "profile_change_number_confirmation" = "是否更换手机号？";
 "profile_change_number_succeeded" = "更换手机号成功";
 "profile_change_number_verify_pin" = "验证钱包密码";
@@ -552,8 +553,10 @@
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
-"profile_unmute" = "取消静音";
+"profile_mute_ends_at" = "直到 %@";
 "profile_mute" = "静音";
+"profile_muted" = "已静音";
+"profile_unmute" = "取消静音";
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";

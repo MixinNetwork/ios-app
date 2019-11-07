@@ -478,7 +478,8 @@
 "profile_full_name" = "名前";
 "profile_my_qrcode" = "私のQRコード";
 "profile_change_number" = "変更電話番号";
-"profile_change_avatar" = "プロフィール写真の変更";
+"profile_change_avatar_camera" = "プロフィール写真を変更（カメラ）";
+"profile_change_avatar_library" = "プロフィール写真を変更（ライブラリ）";
 "profile_change_number_confirmation" = "電話番号を変更しますか？";
 "profile_change_number_succeeded" = "電話番号を変更しました";
 "profile_change_number_verify_pin" = "PINを確認";
@@ -491,8 +492,10 @@
 "profile_mute_duration_8h" = "8時間";
 "profile_mute_duration_1week" = "1週間";
 "profile_mute_duration_1year" = "1年";
-"profile_unmute" = "消音を解除";
+"profile_mute_ends_at" = "%@まで";
 "profile_mute" = "消音";
+"profile_muted" = "消音しました";
+"profile_unmute" = "消音を解除";
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@ まで消音しました";

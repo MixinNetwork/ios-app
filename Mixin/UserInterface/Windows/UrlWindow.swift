@@ -61,7 +61,8 @@ class UrlWindow {
             }
 
             DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+                let vc = UserProfileViewController(user: user)
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
         return true
@@ -391,7 +392,9 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentPopupControllerAnimated()
+                let user = UserItem.createUser(from: user)
+                let vc = UserProfileViewController(user: user)
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }
@@ -412,7 +415,7 @@ extension UrlWindow {
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
             let accountUserId = AccountAPI.shared.accountUserId
             let conversationId = conversation.conversationId
-            let alreadyInTheGroup = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
+            let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }
             var participants = [ParticipantUser]()
             switch UserAPI.shared.showUsers(userIds: userIds) {
@@ -438,12 +441,11 @@ extension UrlWindow {
                     return
                 }
             }
-
+            
             DispatchQueue.main.async {
                 hud.hide()
-                if let ownerUser = creatorUser {
-                    GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
-                }
+                let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }

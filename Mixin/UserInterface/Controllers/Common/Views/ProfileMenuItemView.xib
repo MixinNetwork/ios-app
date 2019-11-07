@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileMenuItemView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="accessoryDisclosureImageView" destination="tdl-Zl-0Jw" id="6gt-Xg-Fnx"/>
+                <outlet property="button" destination="h5C-eh-0Uc" id="C6M-bB-r96"/>
+                <outlet property="label" destination="BFl-4p-1Ax" id="dZW-nn-mA1"/>
+                <outlet property="subtitleLabel" destination="qi3-bH-5pj" id="fPn-KH-FNd"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="oUx-ff-ELS">
+            <rect key="frame" x="0.0" y="0.0" width="380" height="64"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5C-eh-0Uc">
+                    <rect key="frame" x="0.0" y="0.0" width="380" height="64"/>
+                    <color key="backgroundColor" name="background_tertiary"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="selectAction:" destination="-1" eventType="touchUpInside" id="tWI-gA-28t"/>
+                    </connections>
+                </button>
+                <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="pQe-X5-XvU">
+                    <rect key="frame" x="20" y="0.0" width="340" height="64"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BFl-4p-1Ax">
+                            <rect key="frame" x="0.0" y="0.0" width="42" height="64"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qi3-bH-5pj">
+                            <rect key="frame" x="48" y="0.0" width="280" height="64"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="tdl-Zl-0Jw">
+                            <rect key="frame" x="334" y="0.0" width="6" height="64"/>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="hBP-o1-tzi"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="h5C-eh-0Uc" firstAttribute="top" secondItem="oUx-ff-ELS" secondAttribute="top" id="4lm-NB-BYF"/>
+                <constraint firstItem="h5C-eh-0Uc" firstAttribute="leading" secondItem="oUx-ff-ELS" secondAttribute="leading" id="NJF-vG-sbF"/>
+                <constraint firstItem="pQe-X5-XvU" firstAttribute="top" secondItem="oUx-ff-ELS" secondAttribute="top" id="NRT-21-Cpe"/>
+                <constraint firstAttribute="bottom" secondItem="pQe-X5-XvU" secondAttribute="bottom" id="Vxj-97-rjd"/>
+                <constraint firstAttribute="bottom" secondItem="h5C-eh-0Uc" secondAttribute="bottom" id="Y0f-2e-tbh"/>
+                <constraint firstAttribute="trailing" secondItem="h5C-eh-0Uc" secondAttribute="trailing" id="hYt-dN-IL0"/>
+                <constraint firstAttribute="trailing" secondItem="pQe-X5-XvU" secondAttribute="trailing" constant="20" id="jm6-j6-zvb"/>
+                <constraint firstItem="pQe-X5-XvU" firstAttribute="leading" secondItem="oUx-ff-ELS" secondAttribute="leading" constant="20" id="otL-8T-CXK"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="114" y="46"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <namedColor name="background_tertiary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_3">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -8,8 +8,6 @@ final class PrivacyViewController: UITableViewController {
     private let blockedUsersIndexPath = IndexPath(row: 0, section: 0)
     private let footerReuseId = "footer"
     
-    private lazy var userWindow = UserWindow.instance()
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

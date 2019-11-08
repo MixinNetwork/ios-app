@@ -283,6 +283,11 @@ extension GroupProfileViewController {
     }
     
     private func updateMenuItems() {
+        guard isMember else {
+            menuItemGroups = []
+            return
+        }
+        
         var groups = [[ProfileMenuItem]]()
         
         groups.append([

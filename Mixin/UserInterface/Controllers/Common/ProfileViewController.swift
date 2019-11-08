@@ -27,9 +27,14 @@ class ProfileViewController: UIViewController {
         let view = ProfileDescriptionView()
         view.label.delegate = self
         view.clipsToBounds = true
+        descriptionViewIfLoaded = view
         return view
     }()
-    lazy var shortcutView = ProfileShortcutView()
+    lazy var shortcutView: ProfileShortcutView = {
+        let view = ProfileShortcutView()
+        shortcutViewIfLoaded = view
+        return view
+    }()
     
     var size = Size.compressed
     
@@ -48,13 +53,15 @@ class ProfileViewController: UIViewController {
     }
     
     private weak var editNameController: UIAlertController?
+    private weak var descriptionViewIfLoaded: ProfileDescriptionView?
+    private weak var shortcutViewIfLoaded: ProfileShortcutView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateBottomInset()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
-        setNeedsSizeAppearanceUpdated(sender: self)
+        setNeedsSizeAppearanceUpdated()
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -151,7 +158,7 @@ extension ProfileViewController: CollapsingLabelDelegate {
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.updatePreferredContentSizeHeight()
-            self.setNeedsSizeAppearanceUpdated(sender: label)
+            self.setNeedsSizeAppearanceUpdated()
         })
     }
     
@@ -177,6 +184,7 @@ extension ProfileViewController {
         switch size {
         case .expanded:
             size = .compressed
+            descriptionViewIfLoaded?.label.mode = .collapsed
         case .compressed:
             size = .expanded
         case .unavailable:
@@ -185,7 +193,7 @@ extension ProfileViewController {
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.updatePreferredContentSizeHeight()
-            self.setNeedsSizeAppearanceUpdated(sender: sender)
+            self.setNeedsSizeAppearanceUpdated()
         })
     }
     
@@ -230,16 +238,17 @@ extension ProfileViewController {
         editNameController?.actions[1].isEnabled = !textIsEmpty
     }
     
-    private func setNeedsSizeAppearanceUpdated(sender: Any) {
+    private func setNeedsSizeAppearanceUpdated() {
+        let toggleSizeButton = shortcutViewIfLoaded?.toggleSizeButton
         switch size {
         case .expanded:
             menuStackView.alpha = 1
-            (sender as? UIButton)?.transform = CGAffineTransform(scaleX: 1, y: -1)
+            toggleSizeButton?.transform = CGAffineTransform(scaleX: 1, y: -1)
             scrollView.isScrollEnabled = true
             scrollView.alwaysBounceVertical = true
         case .compressed:
             menuStackView.alpha = 0
-            (sender as? UIButton)?.transform = .identity
+            toggleSizeButton?.transform = .identity
             scrollView.contentOffset = .zero
             scrollView.isScrollEnabled = false
             scrollView.alwaysBounceVertical = false

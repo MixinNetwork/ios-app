@@ -167,6 +167,30 @@ extension UserProfileViewController: UIGestureRecognizerDelegate {
     
 }
 
+// MARK: - ImagePickerControllerDelegate
+extension UserProfileViewController: ImagePickerControllerDelegate {
+    
+    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
+        guard let avatarBase64 = image.scaledToSize(newSize: CGSize(width: 1024, height: 1024)).base64 else {
+            alert(Localized.CONTACT_ERROR_COMPOSE_AVATAR)
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: view)
+        AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
+            switch result {
+            case let .success(account):
+                AccountAPI.shared.updateAccount(account: account)
+                hud.set(style: .notification, text: Localized.TOAST_CHANGED)
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
+            hud.scheduleAutoHidden()
+        })
+    }
+    
+}
+
 // MARK: - Actions
 extension UserProfileViewController {
     
@@ -425,29 +449,6 @@ extension UserProfileViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
-    }
-    
-}
-
-extension UserProfileViewController: ImagePickerControllerDelegate {
-    
-    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        guard let avatarBase64 = image.scaledToSize(newSize: CGSize(width: 1024, height: 1024)).base64 else {
-            alert(Localized.CONTACT_ERROR_COMPOSE_AVATAR)
-            return
-        }
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: view)
-        AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
-            switch result {
-            case let .success(account):
-                AccountAPI.shared.updateAccount(account: account)
-                hud.set(style: .notification, text: Localized.TOAST_CHANGED)
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-            }
-            hud.scheduleAutoHidden()
-        })
     }
     
 }

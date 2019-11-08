@@ -10,6 +10,10 @@ final class UserProfileViewController: ProfileViewController {
         return user.isMuted
     }
     
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     
@@ -17,6 +21,7 @@ final class UserProfileViewController: ProfileViewController {
     private var relationship = Relationship.ME
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
+    private var menuDismissResponder: MenuDismissResponder?
     private var user: UserItem! {
         didSet {
             isMe = user.userId == AccountAPI.shared.accountUserId
@@ -40,10 +45,18 @@ final class UserProfileViewController: ProfileViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         size = isMe ? .unavailable : .compressed
         super.viewDidLoad()
         reloadData()
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+        recognizer.delegate = self
+        view.addGestureRecognizer(recognizer)
+        NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -55,6 +68,14 @@ final class UserProfileViewController: ProfileViewController {
                 imageView.removeFromSuperview()
             }
         }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(copy(_:))
+    }
+    
+    override func copy(_ sender: Any?) {
+        UIPasteboard.general.string = user.identityNumber
     }
     
     override func previewAvatarAction(_ sender: Any) {
@@ -105,6 +126,43 @@ final class UserProfileViewController: ProfileViewController {
             }
             hud.scheduleAutoHidden()
         }
+    }
+    
+    @objc func willHideMenu(_ notification: Notification) {
+        menuDismissResponder?.removeFromSuperview()
+        subtitleLabel.highlightIdentityNumber = false
+    }
+    
+    @objc func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        subtitleLabel.highlightIdentityNumber = true
+        if let highlightedRect = subtitleLabel.highlightedRect {
+            let menu = UIMenuController.shared
+            menu.setTargetRect(highlightedRect, in: subtitleLabel)
+            menu.setMenuVisible(true, animated: true)
+            let menuDismissResponder: MenuDismissResponder
+            if let responder = self.menuDismissResponder {
+                menuDismissResponder = responder
+            } else {
+                menuDismissResponder = MenuDismissResponder()
+                self.menuDismissResponder = menuDismissResponder
+            }
+            AppDelegate.current.window.addSubview(menuDismissResponder)
+        }
+    }
+    
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension UserProfileViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let location = gestureRecognizer.location(in: view)
+        let area = subtitleLabel.convert(subtitleLabel.bounds, to: view).insetBy(dx: -8, dy: -8)
+        return area.contains(location)
     }
     
 }
@@ -413,6 +471,21 @@ extension UserProfileViewController {
         override var intrinsicContentSize: CGSize {
             let size = super.intrinsicContentSize
             return CGSize(width: size.width, height: size.height + 30)
+        }
+        
+    }
+    
+    class MenuDismissResponder: UIButton {
+        
+        convenience init() {
+            let frame = AppDelegate.current.window.bounds
+            self.init(frame: frame)
+            backgroundColor = .clear
+            addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
+        }
+        
+        @objc func dismissMenu() {
+            UIMenuController.shared.setMenuVisible(false, animated: true)
         }
         
     }

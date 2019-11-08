@@ -163,10 +163,13 @@ extension GroupProfileViewController {
             ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
             NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: nil)
             DispatchQueue.main.async {
-                guard UIApplication.currentConversationId() == conversationId else {
-                    return
+                self.dismiss(animated: true) {
+                    if UIApplication.currentConversationId() == conversationId {
+                        UIApplication.homeNavigationController?.backToHome()
+                    } else {
+                        showAutoHiddenHud(style: .notification, text: R.string.localizable.action_done())
+                    }
                 }
-                UIApplication.homeNavigationController?.backToHome()
             }
         }
     }

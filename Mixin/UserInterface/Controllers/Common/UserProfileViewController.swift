@@ -706,6 +706,7 @@ extension UserProfileViewController {
             menuItemGroups = groups
         }
         
+        view.frame = AppDelegate.current.window.bounds
         updatePreferredContentSizeHeight()
     }
     

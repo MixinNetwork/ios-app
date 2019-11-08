@@ -87,7 +87,7 @@ class ProfileViewController: UIViewController {
             preferredContentSize.height = maxHeight
         case .compressed:
             let point = CGPoint(x: 0, y: centerStackView.bounds.maxY)
-            let contentHeight = centerStackView.convert(point, to: contentView).y
+            let contentHeight = centerStackView.convert(point, to: contentView).y + 6
             let height = titleViewHeightConstraint.constant + contentHeight + window.safeAreaInsets.bottom
             preferredContentSize.height = min(maxHeight, height)
         }
@@ -262,7 +262,7 @@ extension ProfileViewController {
         if view.safeAreaInsets.bottom > 5 {
             scrollView.contentInset.bottom = 5
         } else {
-            scrollView.contentInset.bottom = 10
+            scrollView.contentInset.bottom = 30
         }
     }
     

@@ -30,6 +30,7 @@ final class ProfileShortcutView: UIView, XibDesignable {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         view.snp.makeConstraints { (make) in
+            make.height.equalTo(44)
             make.center.equalToSuperview()
             make.top.equalToSuperview().offset(23)
             make.bottom.equalToSuperview().offset(-23)

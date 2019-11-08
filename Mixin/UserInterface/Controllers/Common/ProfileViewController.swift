@@ -239,7 +239,8 @@ extension ProfileViewController {
             scrollView.isScrollEnabled = false
             scrollView.alwaysBounceVertical = false
         case .unavailable:
-            break
+            scrollView.isScrollEnabled = true
+            scrollView.alwaysBounceVertical = true
         }
     }
     

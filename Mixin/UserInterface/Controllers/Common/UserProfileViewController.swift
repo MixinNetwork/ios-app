@@ -273,6 +273,7 @@ extension UserProfileViewController {
     }
     
     @objc func blockUser() {
+        relationshipView.isBusy = true
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         UserAPI.shared.blockUser(userId: user.userId) { [weak self] (result) in
@@ -284,10 +285,12 @@ extension UserProfileViewController {
                 hud.set(style: .error, text: error.localizedDescription)
             }
             hud.scheduleAutoHidden()
+            self?.relationshipView.isBusy = false
         }
     }
     
     @objc func unblockUser() {
+        relationshipView.isBusy = true
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
@@ -299,8 +302,8 @@ extension UserProfileViewController {
                 hud.set(style: .error, text: error.localizedDescription)
             }
             hud.scheduleAutoHidden()
+            self?.relationshipView.isBusy = false
         }
-        
     }
     
     @objc func reportUser() {

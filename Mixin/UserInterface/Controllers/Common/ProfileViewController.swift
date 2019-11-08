@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var centerStackView: UIStackView!
     @IBOutlet weak var menuStackView: UIStackView!
     
+    @IBOutlet weak var hideContentConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuStackViewTopConstraint: NSLayoutConstraint!
     
@@ -64,6 +65,10 @@ class ProfileViewController: UIViewController {
     
     @IBAction func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func previewAvatarAction(_ sender: Any) {
+        
     }
     
     func updatePreferredContentSizeHeight() {

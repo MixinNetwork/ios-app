@@ -16,6 +16,7 @@ final class UserProfileViewController: ProfileViewController {
     private var isMe = false
     private var relationship = Relationship.ME
     private var developer: UserItem?
+    private var avatarPreviewImageView: UIImageView?
     private var user: UserItem! {
         didSet {
             isMe = user.userId == AccountAPI.shared.accountUserId
@@ -43,6 +44,42 @@ final class UserProfileViewController: ProfileViewController {
         size = isMe ? .unavailable : .compressed
         super.viewDidLoad()
         reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView {
+            coordinator.animate(alongsideTransition: { (context) in
+                imageView.frame.origin.y = AppDelegate.current.window.bounds.height
+            }) { (_) in
+                imageView.removeFromSuperview()
+            }
+        }
+    }
+    
+    override func previewAvatarAction(_ sender: Any) {
+        guard let image = avatarImageView.image else {
+            return
+        }
+        let window = AppDelegate.current.window
+        let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
+        let imageView = UIImageView(frame: initialFrame)
+        imageView.layer.cornerRadius = initialFrame.height / 2
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        imageView.isUserInteractionEnabled = false
+        imageView.image = image
+        window.addSubview(imageView)
+        avatarPreviewImageView = imageView
+        view.isUserInteractionEnabled = false
+        hideContentConstraint.priority = .defaultHigh
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            imageView.bounds = CGRect(x: 0, y: 0, width: window.bounds.width, height: window.bounds.width)
+            imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
+            imageView.layer.cornerRadius = 0
+        })
     }
     
     override func updateMuteInterval(inSeconds interval: Int64) {

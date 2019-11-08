@@ -22,7 +22,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var menuStackViewTopConstraint: NSLayoutConstraint!
     
     lazy var relationshipView = ProfileRelationshipView()
-    lazy var descriptionView = ProfileDescriptionView()
+    lazy var descriptionView: ProfileDescriptionView = {
+        let view = ProfileDescriptionView()
+        view.label.delegate = self
+        view.clipsToBounds = true
+        return view
+    }()
     lazy var shortcutView = ProfileShortcutView()
     
     var size = Size.compressed
@@ -111,6 +116,51 @@ class ProfileViewController: UIViewController {
     
     func updateMuteInterval(inSeconds interval: Int64) {
         
+    }
+    
+}
+
+// MARK: - CollapsingLabelDelegate
+extension ProfileViewController: CollapsingLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        let conversationId = self.conversationId
+        dismiss(animated: true) {
+            guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+                return
+            }
+            guard !self.openUrlOutsideApplication(url) else {
+                return
+            }
+            if !UrlWindow.checkUrl(url: url) {
+                WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: parent)
+            }
+        }
+    }
+    
+    func collapsingLabel(_ label: CollapsingLabel, didChangeModeTo newMode: CollapsingLabel.Mode) {
+        guard newMode == .normal && size == .compressed else {
+            return
+        }
+        size = .expanded
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.updatePreferredContentSizeHeight()
+            self.setNeedsSizeAppearanceUpdated(sender: label)
+        })
+    }
+    
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self] (_) in
+            self?.coreTextLabel(label, didSelectURL: url)
+        }))
+        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
+            UIPasteboard.general.string = url.absoluteString
+            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        }))
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
 }

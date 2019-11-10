@@ -2,6 +2,7 @@ import UIKit
 import UserNotifications
 import Bugsnag
 import Crashlytics
+import DeviceCheck
 
 class HomeNavigationController: UINavigationController {
     
@@ -108,6 +109,19 @@ extension HomeNavigationController {
             Crashlytics.sharedInstance().setUserName(account.full_name)
             Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+        }
+    }
+
+    private func checkDevice() {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
+        DCDevice.current.generateToken { (data, error) in
+            guard let token = data?.base64EncodedString() else {
+                return
+            }
+
+            AccountAPI.shared.updateSession(deviceCheckToken: token)
         }
     }
     

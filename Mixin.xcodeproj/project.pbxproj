@@ -681,6 +681,7 @@
 		DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B5901FB04C9C00549728 /* Wallet.storyboard */; };
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
 		DFA606312013AA4F0006EEE4 /* UploaderQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA606302013AA4F0006EEE4 /* UploaderQueue.swift */; };
+		DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */; };
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
 		DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */; };
 		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
@@ -1485,6 +1486,7 @@
 		DFA5B5901FB04C9C00549728 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		DFA606302013AA4F0006EEE4 /* UploaderQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploaderQueue.swift; sourceTree = "<group>"; };
+		DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceCheck.framework; path = System/Library/Frameworks/DeviceCheck.framework; sourceTree = SDKROOT; };
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementView.xib; sourceTree = "<group>"; };
 		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
@@ -1578,6 +1580,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
@@ -2117,6 +2120,7 @@
 		DBADD0FED15BCB65F6FF70EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */,
 				DFCC4341206B668A006F50BE /* Security.framework */,
 				DFAA4B36200F627500C696D3 /* SafariServices.framework */,
 				DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */,

@@ -102,7 +102,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             DispatchQueue.main.sync {
                 let voipToken = UIApplication.appDelegate().voipToken
                 if !voipToken.isEmpty {
-                    AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+                    AccountAPI.shared.updateSession(voipToken: voipToken)
                 }
             }
 

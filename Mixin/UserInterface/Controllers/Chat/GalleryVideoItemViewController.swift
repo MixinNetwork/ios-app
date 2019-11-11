@@ -190,7 +190,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
-        videoRatio = item.size.width / item.size.height
+        videoRatio = standardizedRatio(of: item.size)
         videoView.coverSize = item.size
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
@@ -564,7 +564,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     private func updateVideoViewSize(with item: AVPlayerItem) {
-        let videoRatio = item.presentationSize.width / item.presentationSize.height
+        let videoRatio = standardizedRatio(of: item.presentationSize)
         self.videoRatio = videoRatio
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
@@ -645,6 +645,18 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         let hidePlayControls = playControlsHidden || !isPlayable
         let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || UIApplication.homeContainerViewController?.pipController == self)
         controlView.set(playControlsHidden: hidePlayControls, otherControlsHidden: hideOtherControls, animated: animated)
+    }
+    
+    private func standardizedRatio(of size: CGSize) -> CGFloat {
+        guard !size.height.isZero else {
+            return 1
+        }
+        var videoRatio = size.width / size.height
+        guard !videoRatio.isNaN else {
+            return 1
+        }
+        videoRatio = max(9 / 21, min(21 / 9, videoRatio))
+        return videoRatio
     }
     
 }

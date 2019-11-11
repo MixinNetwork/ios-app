@@ -332,6 +332,7 @@ class PayWindow: BottomSheetView {
             }
             DispatchQueue.main.async {
                 self?.isAutoFillPIN = true
+                self?.pinField.clear()
                 self?.pinField.insertText(pin)
             }
         }

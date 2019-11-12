@@ -57,6 +57,7 @@ final class UserProfileViewController: ProfileViewController {
         recognizer.delegate = self
         view.addGestureRecognizer(recognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: .AccountDidChange, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -131,6 +132,14 @@ final class UserProfileViewController: ProfileViewController {
     @objc func willHideMenu(_ notification: Notification) {
         menuDismissResponder?.removeFromSuperview()
         subtitleLabel.highlightIdentityNumber = false
+    }
+    
+    @objc func accountDidChange(_ notification: Notification) {
+        guard let account = AccountAPI.shared.account, account.user_id == user.userId else {
+            return
+        }
+        self.user = UserItem.createUser(from: account)
+        reloadData()
     }
     
     @objc func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
@@ -252,17 +261,13 @@ extension UserProfileViewController {
     }
     
     @objc func editMyName() {
-        presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { [weak self] (name) in
+        presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { (name) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.window)
             AccountAPI.shared.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
                     AccountAPI.shared.updateAccount(account: account)
-                    if let self = self {
-                        self.user = UserItem.createUser(from: account)
-                        self.reloadData()
-                    }
                     hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)

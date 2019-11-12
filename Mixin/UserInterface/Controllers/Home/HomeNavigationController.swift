@@ -40,6 +40,7 @@ class HomeNavigationController: UINavigationController {
         if CryptoUserDefault.shared.isLoaded && !AccountUserDefault.shared.hasClockSkew {
             WebSocketService.shared.connect()
             checkUser()
+            checkDevice()
         }
     }
     

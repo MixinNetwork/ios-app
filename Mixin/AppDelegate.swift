@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString(), voip_token: "")
+        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString())
     }
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -133,7 +133,7 @@ extension AppDelegate: PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         voipToken = pushCredentials.token.toHexString()
         if AccountAPI.shared.didLogin {
-            AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+            AccountAPI.shared.updateSession(voipToken: voipToken)
         }
     }
     

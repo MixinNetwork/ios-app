@@ -562,7 +562,7 @@ extension UserProfileViewController {
         }
         
         if isMe {
-            menuItemGroups = [
+            let groups = [
                 [ProfileMenuItem(title: R.string.localizable.profile_my_qrcode(),
                                  subtitle: nil,
                                  style: [],
@@ -592,6 +592,7 @@ extension UserProfileViewController {
                                  style: [],
                                  action: #selector(changeNumber))]
             ]
+            reloadMenu(groups: groups)
             
             if let createdAt = user.createdAt?.toUTCDate() {
                 let rep = DateFormatter.dateSimple.string(from: createdAt)
@@ -709,7 +710,7 @@ extension UserProfileViewController {
                                              action: #selector(reportUser))
             groups.append([reportItem])
             
-            menuItemGroups = groups
+            reloadMenu(groups: groups)
         }
         
         view.frame = AppDelegate.current.window.bounds

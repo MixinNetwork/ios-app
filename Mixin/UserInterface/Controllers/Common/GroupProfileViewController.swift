@@ -283,12 +283,12 @@ extension GroupProfileViewController {
     }
     
     private func updateMenuItems() {
+        var groups = [[ProfileMenuItem]]()
+        
         guard isMember else {
-            menuItemGroups = []
+            reloadMenu(groups: groups)
             return
         }
-        
-        var groups = [[ProfileMenuItem]]()
         
         groups.append([
             ProfileMenuItem(title: R.string.localizable.chat_shared_media(),
@@ -348,10 +348,7 @@ extension GroupProfileViewController {
                             action: #selector(exitGroup))
         ])
         
-        for view in menuStackView.subviews {
-            view.removeFromSuperview()
-        }
-        menuItemGroups = groups
+        reloadMenu(groups: groups)
     }
     
     private func showConversation(with response: ConversationResponse) {

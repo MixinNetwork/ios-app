@@ -46,11 +46,8 @@ class ProfileViewController: UIViewController {
         return false
     }
     
-    var menuItemGroups = [[ProfileMenuItem]]() {
-        didSet {
-            layoutMenuItems()
-        }
-    }
+    private var menuItemGroups = [[ProfileMenuItem]]()
+    private var reusableMenuItemViews = Set<ProfileMenuItemView>()
     
     private weak var editNameController: UIAlertController?
     private weak var descriptionViewIfLoaded: ProfileDescriptionView?
@@ -128,6 +125,35 @@ class ProfileViewController: UIViewController {
     
     func updateMuteInterval(inSeconds interval: Int64) {
         
+    }
+    
+    func reloadMenu(groups: [[ProfileMenuItem]]) {
+        let removeFromSuperview = { (view: UIView) in
+            view.removeFromSuperview()
+        }
+        reusableMenuItemViews.forEach(removeFromSuperview)
+        menuStackView.subviews.forEach(removeFromSuperview)
+        
+        self.menuItemGroups = groups
+        for group in groups {
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            for (index, item) in group.enumerated() {
+                let view = dequeueReusableMenuItemView()
+                view.item = item
+                view.target = self
+                var maskedCorners: CACornerMask = []
+                if index == group.startIndex {
+                    maskedCorners.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+                }
+                if index == group.endIndex - 1 {
+                    maskedCorners.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+                }
+                view.button.layer.maskedCorners = maskedCorners
+                stackView.addArrangedSubview(view)
+            }
+            menuStackView.addArrangedSubview(stackView)
+        }
     }
     
 }
@@ -266,28 +292,13 @@ extension ProfileViewController {
         }
     }
     
-    private func layoutMenuItems() {
-        menuStackView.subviews.forEach { (view) in
-            view.removeFromSuperview()
-        }
-        for group in menuItemGroups {
-            let stackView = UIStackView()
-            stackView.axis = .vertical
-            for (index, item) in group.enumerated() {
-                let view = ProfileMenuItemView()
-                view.item = item
-                view.target = self
-                var maskedCorners: CACornerMask = []
-                if index == group.startIndex {
-                    maskedCorners.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner])
-                }
-                if index == group.endIndex - 1 {
-                    maskedCorners.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
-                }
-                view.button.layer.maskedCorners = maskedCorners
-                stackView.addArrangedSubview(view)
-            }
-            menuStackView.addArrangedSubview(stackView)
+    private func dequeueReusableMenuItemView() -> ProfileMenuItemView {
+        if let view = reusableMenuItemViews.first(where: { $0.superview == nil }) {
+            return view
+        } else {
+            let view = ProfileMenuItemView()
+            reusableMenuItemViews.insert(view)
+            return view
         }
     }
     

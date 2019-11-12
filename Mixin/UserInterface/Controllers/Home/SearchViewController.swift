@@ -471,6 +471,7 @@ extension SearchViewController {
                 let userItem = UserItem.createUser(from: user)
                 if userItem.isCreatedByMessenger {
                     let vc = UserProfileViewController(user: userItem)
+                    vc.updateUserFromRemoteAfterReloaded = false
                     weakSelf.present(vc, animated: true, completion: nil)
                 }
             case let .failure(error):

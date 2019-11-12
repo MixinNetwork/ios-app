@@ -2,6 +2,8 @@ import UIKit
 
 final class UserProfileViewController: ProfileViewController {
     
+    var updateUserFromRemoteAfterReloaded = true
+    
     override var conversationId: String {
         return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
     }
@@ -715,6 +717,16 @@ extension UserProfileViewController {
         
         view.frame = AppDelegate.current.window.bounds
         updatePreferredContentSizeHeight()
+        
+        if updateUserFromRemoteAfterReloaded {
+            updateUserFromRemoteAfterReloaded = false
+            UserAPI.shared.showUser(userId: user.userId) { [weak self] (result) in
+                guard case let .success(response) = result else {
+                    return
+                }
+                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+            }
+        }
     }
     
     private func handle(userResponse: UserResponse, postContactDidChangeNotificationOnSuccess: Bool) {

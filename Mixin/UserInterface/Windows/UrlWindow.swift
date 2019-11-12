@@ -37,11 +37,11 @@ class UrlWindow {
 
         DispatchQueue.global().async {
             var userItem = UserDAO.shared.getUser(userId: userId)
-            var refreshUser = true
+            var updateUserFromRemoteAfterReloaded = true
             if userItem == nil {
                 switch UserAPI.shared.showUser(userId: userId) {
                 case let .success(response):
-                    refreshUser = false
+                    updateUserFromRemoteAfterReloaded = false
                     userItem = UserItem.createUser(from: response)
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
@@ -62,6 +62,7 @@ class UrlWindow {
 
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
+                vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
                 UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }

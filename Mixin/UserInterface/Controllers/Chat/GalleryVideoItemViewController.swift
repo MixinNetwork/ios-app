@@ -651,11 +651,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard !size.height.isZero else {
             return 1
         }
-        var videoRatio = size.width / size.height
-        guard !videoRatio.isNaN else {
+        let videoRatio = size.width / size.height
+        guard !videoRatio.isNaN && !videoRatio.isZero else {
             return 1
         }
-        videoRatio = max(9 / 21, min(21 / 9, videoRatio))
         return videoRatio
     }
     

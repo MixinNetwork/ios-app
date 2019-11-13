@@ -4,7 +4,7 @@ import CoreText
 
 extension String {
 
-    private static var hashCodeMaps = [String: Int]()
+    private static var hashCodeMaps = SafeDictionary<String, Int>()
 
     var isNumeric: Bool {
         let number = NumberFormatter.decimal.number(from: self)

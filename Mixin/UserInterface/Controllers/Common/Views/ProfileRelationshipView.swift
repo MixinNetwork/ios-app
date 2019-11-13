@@ -45,19 +45,22 @@ final class ProfileRelationshipView: UIView {
     }
     
     private func update(style: Style) {
-        switch style {
-        case .none:
-            button.setImage(nil, for: .normal)
-            button.setTitle(nil, for: .normal)
-        case .addContact:
-            button.setImage(R.image.ic_profile_add(), for: .normal)
-            button.setTitle(R.string.localizable.profile_add(), for: .normal)
-        case .unblock:
-            button.setImage(R.image.ic_profile_unblock(), for: .normal)
-            button.setTitle(R.string.localizable.profile_unblock(), for: .normal)
-        case .joinGroup:
-            button.setImage(R.image.ic_profile_add(), for: .normal)
-            button.setTitle(R.string.localizable.group_button_title_join(), for: .normal)
+        UIView.performWithoutAnimation {
+            switch style {
+            case .none:
+                button.setImage(nil, for: .normal)
+                button.setTitle(nil, for: .normal)
+            case .addContact:
+                button.setImage(R.image.ic_profile_add(), for: .normal)
+                button.setTitle(R.string.localizable.profile_add(), for: .normal)
+            case .unblock:
+                button.setImage(R.image.ic_profile_unblock(), for: .normal)
+                button.setTitle(R.string.localizable.profile_unblock(), for: .normal)
+            case .joinGroup:
+                button.setImage(R.image.ic_profile_add(), for: .normal)
+                button.setTitle(R.string.localizable.group_button_title_join(), for: .normal)
+            }
+            button.layoutIfNeeded()
         }
     }
     

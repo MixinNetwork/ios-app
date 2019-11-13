@@ -143,32 +143,8 @@ extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
             return
         }
         DispatchQueue.main.sync {
-            if changes.hasIncrementalChanges {
-                collectionView.performBatchUpdates({
-                    let newFetchResult = changes.fetchResultAfterChanges
-                    self.fetchResult = newFetchResult
-                    let newCount = newFetchResult.count
-                    if let removed = changes.removedIndexes, !removed.isEmpty {
-                        let indexPaths = removed.map { indexPath(fetchResultCount: oldFetchResult.count, index: $0) }
-                        collectionView.deleteItems(at: indexPaths)
-                    }
-                    if let inserted = changes.insertedIndexes, !inserted.isEmpty {
-                        let indexPaths = inserted.map { indexPath(fetchResultCount: newCount, index: $0) }
-                        collectionView.insertItems(at: indexPaths)
-                    }
-                    changes.enumerateMoves({ (from, to) in
-                        self.collectionView.moveItem(at: self.indexPath(fetchResultCount: newCount, index: from),
-                                                     to: self.indexPath(fetchResultCount: newCount, index: to))
-                    })
-                    if let changed = changes.changedIndexes, !changed.isEmpty {
-                        let indexPaths = changed.map { indexPath(fetchResultCount: newCount, index: $0) }
-                        collectionView.reloadItems(at: indexPaths)
-                    }
-                })
-            } else {
-                self.fetchResult = changes.fetchResultAfterChanges
-                collectionView.reloadData()
-            }
+            self.fetchResult = changes.fetchResultAfterChanges
+            collectionView.reloadData()
             resetCachedAssets()
         }
     }

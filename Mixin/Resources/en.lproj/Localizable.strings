@@ -92,6 +92,7 @@
 "toast_logined" = "Logined";
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
+"toast_blocked" = "Blocked";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
@@ -558,7 +559,7 @@
 "profile_report" = "Report";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";
-"profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
+"profile_report_tips" = "This conversation will also be deleted";
 "profile_join_in" = "Joined in %@";
 
 // Emergency

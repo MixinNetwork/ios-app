@@ -92,6 +92,7 @@
 "toast_logined" = "已登录";
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
+"toast_blocked" = "已屏蔽";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
@@ -560,7 +561,7 @@
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-"profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
+"profile_report_tips" = "举报后你们的对话会被立即删除";
 "profile_join_in" = "%@ 加入";
 
 // Emergency

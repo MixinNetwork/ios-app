@@ -159,19 +159,24 @@ extension GroupProfileViewController {
     
     @objc func exitGroup() {
         let conversationId = conversation.conversationId
-        DispatchQueue.global().async {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
             ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: nil)
-            DispatchQueue.main.async {
-                self.dismiss(animated: true) {
-                    if UIApplication.currentConversationId() == conversationId {
-                        UIApplication.homeNavigationController?.backToHome()
-                    } else {
-                        showAutoHiddenHud(style: .notification, text: R.string.localizable.action_done())
-                    }
+            NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
+            self.dismiss(animated: true) {
+                if UIApplication.currentConversationId() == conversationId {
+                    hud.hide()
+                    UIApplication.homeNavigationController?.backToHome()
+                } else {
+                    hud.set(style: .notification, text: R.string.localizable.action_done())
+                    hud.scheduleAutoHidden()
                 }
             }
-        }
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
 }

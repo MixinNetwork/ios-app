@@ -247,14 +247,19 @@ extension ProfileViewController {
     }
     
     @objc func clearChat() {
-        dismiss(animated: true, completion: nil)
         let conversationId = self.conversationId
-        DispatchQueue.global().async {
-            MessageDAO.shared.clearChat(conversationId: conversationId)
-            DispatchQueue.main.async {
-                showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
+            self.dismiss(animated: true, completion: nil)
+            DispatchQueue.global().async {
+                MessageDAO.shared.clearChat(conversationId: conversationId)
+                DispatchQueue.main.async {
+                    showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+                }
             }
-        }
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
 }

@@ -384,35 +384,47 @@ extension UserProfileViewController {
     }
     
     @objc func removeFriend() {
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        UserAPI.shared.removeFriend(userId: user.userId, completion: { [weak self] (result) in
-            switch result {
-            case let .success(response):
-                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
-                hud.set(style: .notification, text: Localized.TOAST_CHANGED)
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-            }
-            hud.scheduleAutoHidden()
-        })
+        let userId = user.userId
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.profile_remove(), style: .destructive, handler: { (_) in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            UserAPI.shared.removeFriend(userId: userId, completion: { [weak self] (result) in
+                switch result {
+                case let .success(response):
+                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
+                    hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+            })
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func blockUser() {
-        relationshipView.isBusy = true
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        UserAPI.shared.blockUser(userId: user.userId) { [weak self] (result) in
-            switch result {
-            case let .success(response):
-                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
-                hud.set(style: .notification, text: Localized.TOAST_CHANGED)
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
+        let userId = user.userId
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.profile_block(), style: .destructive, handler: { (_) in
+            self.relationshipView.isBusy = true
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
+                switch result {
+                case let .success(response):
+                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+                    hud.set(style: .notification, text: R.string.localizable.toast_blocked())
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+                self?.relationshipView.isBusy = false
             }
-            hud.scheduleAutoHidden()
-            self?.relationshipView.isBusy = false
-        }
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func unblockUser() {
@@ -435,7 +447,7 @@ extension UserProfileViewController {
     @objc func reportUser() {
         let userId = user.userId
         let conversationId = self.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_report_tips(), message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: R.string.localizable.profile_report_tips(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (_) in
             let hud = Hud()

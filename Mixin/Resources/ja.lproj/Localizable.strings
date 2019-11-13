@@ -87,6 +87,7 @@
 "toast_logined" = "ログインしました";
 "toast_authorized" = "許可された";
 "toast_changed" = "かわった";
+"toast_blocked" = "ブロックしました";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
@@ -499,7 +500,7 @@
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@まで消音しました";
-"profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
+"profile_report_tips" = "このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";
 
 // Emergency

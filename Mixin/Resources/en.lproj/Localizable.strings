@@ -179,6 +179,9 @@
 "placeholder_new_name" = "new name";
 "navigation_title_add_people" = "Add people";
 
+// Apps
+"app_not_found" = "App not found.";
+
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";
 "home_start_messaging" = "Start Messaging";

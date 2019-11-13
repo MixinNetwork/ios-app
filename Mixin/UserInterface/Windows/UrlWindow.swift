@@ -18,7 +18,9 @@ class UrlWindow {
         case .address:
             return checkAddress(url: url)
         case let .users(id):
-            return checkUsersUrl(id, clearNavigationStack: clearNavigationStack)
+            return checkUser(id, clearNavigationStack: clearNavigationStack)
+        case let .apps(userId):
+            return checkApp(url: url, userId: userId)
         case let .transfer(id):
             return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
         case .send:
@@ -30,7 +32,67 @@ class UrlWindow {
         }
     }
 
-    class func checkUsersUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
+    class func checkApp(url: URL, userId: String) -> Bool {
+        guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
+            return false
+        }
+
+        let isOpenApp = url.getKeyVals()?["action"] == "open"
+
+        DispatchQueue.global().async {
+            var appItem = AppDAO.shared.getApp(ofUserId: userId)
+            var userItem = UserDAO.shared.getUser(userId: userId)
+            var refreshUser = true
+            if appItem == nil || userItem == nil {
+                switch UserAPI.shared.showUser(userId: userId) {
+                case let .success(response):
+                    refreshUser = false
+                    userItem = UserItem.createUser(from: response)
+                    appItem = response.app
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if error.code == 404 {
+                            showAutoHiddenHud(style: .error, text: R.string.localizable.app_not_found())
+                        } else {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                    return
+                }
+            }
+
+            guard let user = userItem else {
+                return
+            }
+
+            guard let app = appItem else {
+                DispatchQueue.main.async {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.app_not_found())
+                }
+                return
+            }
+
+            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: AccountAPI.shared.accountUserId)
+
+            DispatchQueue.main.async {
+                if isOpenApp {
+                    guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+                        return
+                    }
+                    UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UrlWindow", "identityNumber": app.appNumber])
+                    DispatchQueue.main.async {
+                        WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                    }
+                } else {
+                    UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+                }
+            }
+        }
+        return true
+    }
+
+    class func checkUser(_ userId: String, clearNavigationStack: Bool) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
             return false
         }

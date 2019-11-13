@@ -179,6 +179,9 @@
 "placeholder_new_name" = "名称";
 "navigation_title_add_people" = "添加联系人";
 
+// Apps
+"app_not_found" = "找不到这个机器人";
+
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
 "home_start_messaging" = "开始聊天";

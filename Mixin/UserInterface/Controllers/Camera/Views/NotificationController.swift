@@ -41,7 +41,7 @@ class NotificationController: NSObject {
     func present(urlString: String) {
         if let url = MixinURL(string: urlString) {
             switch url {
-            case .codes, .pay, .users, .transfer, .withdrawal, .address:
+            case .codes, .pay, .users, .apps, .transfer, .withdrawal, .address:
                 present(text: Localized.CAMERA_QRCODE_CODES)
             case .send:
                 present(text: urlString)

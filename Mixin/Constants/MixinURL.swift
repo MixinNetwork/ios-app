@@ -15,11 +15,13 @@ enum MixinURL {
         static let auth = "auth"
         static let withdrawal = "withdrawal"
         static let address = "address"
+        static let apps = "apps"
     }
     private typealias Host = Path
     
     case codes(String)
     case users(String)
+    case apps(String)
     case pay
     case transfer(String)
     case send
@@ -36,6 +38,8 @@ enum MixinURL {
                 self = .pay
             } else if url.host == Host.users && url.pathComponents.count == 2 {
                 self = .users(url.pathComponents[1])
+            } else if url.host == Host.apps && url.pathComponents.count == 2 {
+                self = .apps(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
                 self = .transfer(url.pathComponents[1])
             } else if url.host == Host.send {
@@ -60,6 +64,8 @@ enum MixinURL {
                 self = .pay
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.users {
                 self = .users(url.pathComponents[2])
+            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.apps {
+                self = .apps(url.pathComponents[2])
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {
                 self = .transfer(url.pathComponents[2])
             } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.withdrawal {

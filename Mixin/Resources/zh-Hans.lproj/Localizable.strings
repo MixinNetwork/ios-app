@@ -561,7 +561,10 @@
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-"profile_report_tips" = "举报后你们的对话会被立即删除";
+"profile_remove_hint" = "删除好友？聊天记录将会保留";
+"profile_exit_group_hint" = "退出群组？聊天记录也将删除";
+"profile_block_hint" = "屏蔽后该联系人无法向您拨打电话或发送消息";
+"profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
 "profile_join_in" = "%@ 加入";
 
 // Emergency

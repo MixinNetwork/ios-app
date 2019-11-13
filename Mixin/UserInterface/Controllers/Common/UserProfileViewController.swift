@@ -385,7 +385,7 @@ extension UserProfileViewController {
     
     @objc func removeFriend() {
         let userId = user.userId
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.profile_remove_hint(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_remove(), style: .destructive, handler: { (_) in
             let hud = Hud()
@@ -406,7 +406,7 @@ extension UserProfileViewController {
     
     @objc func blockUser() {
         let userId = user.userId
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.profile_block_hint(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_block(), style: .destructive, handler: { (_) in
             self.relationshipView.isBusy = true
@@ -447,7 +447,7 @@ extension UserProfileViewController {
     @objc func reportUser() {
         let userId = user.userId
         let conversationId = self.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_report_tips(), message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.profile_report_hint(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (_) in
             let hud = Hud()

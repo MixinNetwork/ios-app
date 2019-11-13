@@ -248,7 +248,7 @@ extension ProfileViewController {
     
     @objc func clearChat() {
         let conversationId = self.conversationId
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.group_menu_clear(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)

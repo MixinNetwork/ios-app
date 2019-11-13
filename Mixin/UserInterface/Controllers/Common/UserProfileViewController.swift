@@ -456,14 +456,23 @@ extension UserProfileViewController {
                 switch UserAPI.shared.reportUser(userId: userId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                    ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
+                    MixinFile.cleanAllChatDirectories()
+                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        self.dismiss(animated: true) {
+                            guard UIApplication.currentConversationId() == conversationId else {
+                                return
+                            }
+                            UIApplication.homeNavigationController?.backToHome()
+                        }
+                    }
                 case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-                ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
-                MixinFile.cleanAllChatDirectories()
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
-                DispatchQueue.main.async {
-                    UIApplication.homeNavigationController?.backToHome()
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
                 }
             }
         }))

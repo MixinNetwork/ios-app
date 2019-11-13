@@ -76,6 +76,9 @@ class ProfileViewController: UIViewController {
     }
     
     func updatePreferredContentSizeHeight() {
+        guard !isBeingDismissed else {
+            return
+        }
         view.layoutIfNeeded()
         let window = AppDelegate.current.window
         let maxHeight = window.bounds.height - window.safeAreaInsets.top

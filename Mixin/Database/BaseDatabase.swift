@@ -91,12 +91,8 @@ class BaseDatabase {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
 
-    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset, limit: Limit) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, limit: limit, offset: offset)
-    }
-    
-    func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit)
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
     
     func getCodables<T: Codable>(on propertyConvertibleList: [PropertyConvertible] = [], fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, callback: (FundamentalRowXColumn) -> [T]) -> [T] {

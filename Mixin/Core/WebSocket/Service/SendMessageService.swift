@@ -72,7 +72,7 @@ class SendMessageService: MixinService {
 
             let createdAt = Date().toUTCString()
             let participants = [ParticipantResponse(userId: user.userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: account.user_id, role: "", createdAt: createdAt)]
-            let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, codeUrl: "", creatorId: user.userId, muteUntil: "")
+            let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, codeUrl: "", creatorId: user.userId, muteUntil: "", participantSessions: nil)
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
         }
         if !message.category.hasPrefix("WEBRTC_") {
@@ -80,7 +80,6 @@ class SendMessageService: MixinService {
         }
         if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_LIVE") {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
-            SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
             UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
         } else if msg.category.hasSuffix("_VIDEO") {
@@ -94,7 +93,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String, sendToSession: Bool) {
+    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {
         guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return
         }
@@ -103,9 +102,6 @@ class SendMessageService: MixinService {
             let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
             var jobs = [Job]()
             jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage))
-            if sendToSession && AccountUserDefault.shared.isDesktopLoggedIn {
-                jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
-            }
 
             ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: category, conversationId: conversationId, mediaUrl: mediaUrl)
 
@@ -123,53 +119,6 @@ class SendMessageService: MixinService {
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
-            SendMessageService.shared.processMessages()
-        }
-    }
-
-    func sendRecallSessionMessage(messageId: String, conversationId: String) {
-        guard AccountUserDefault.shared.isDesktopLoggedIn else {
-            return
-        }
-        let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
-        let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true)
-        saveDispatchQueue.async {
-            MixinDatabase.shared.insertOrReplace(objects: [job])
-            SendMessageService.shared.processMessages()
-        }
-    }
-
-    func sendSessionMessage(message: Message, representativeId: String? = nil, data: String?) {
-        guard AccountUserDefault.shared.isDesktopLoggedIn else {
-            return
-        }
-        guard message.category.hasSuffix("_TEXT") ||
-            message.category.hasSuffix("_STICKER") ||
-            message.category.hasSuffix("_CONTACT") ||
-            message.category.hasSuffix("_IMAGE") ||
-            message.category.hasSuffix("_DATA") ||
-            message.category.hasSuffix("_AUDIO") ||
-            message.category.hasSuffix("_VIDEO") ||
-            message.category.hasSuffix("_LIVE") ||
-            message.category.hasPrefix("APP_") ||
-            message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue ||
-            message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
-            return
-        }
-        let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
-        saveDispatchQueue.async {
-            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true, representativeId: representativeId, data: content)])
-            SendMessageService.shared.processMessages()
-        }
-    }
-
-    func sendSessionMessage(action: JobAction, messageId: String, status: String) {
-        guard AccountUserDefault.shared.isDesktopLoggedIn else {
-            return
-        }
-        saveDispatchQueue.async {
-            let job = Job(action: action, messageId: messageId, status: status, isSessionMessage: true)
-            MixinDatabase.shared.insertOrReplace(objects: [job])
             SendMessageService.shared.processMessages()
         }
     }
@@ -197,7 +146,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func resendMessages(conversationId: String, userId: String, messageIds: [String]) {
+    func resendMessages(conversationId: String, userId: String, sessionId: String?, messageIds: [String]) {
         var jobs = [Job]()
         var resendMessages = [ResendMessage]()
         for messageId in messageIds {
@@ -207,7 +156,8 @@ class SendMessageService: MixinService {
             }
 
             if let message = MessageDAO.shared.getMessage(messageId: messageId), message.category != MessageCategory.MESSAGE_RECALL.rawValue {
-                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId)
+                var param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId)
+                param.sessionId = sessionId
                 let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
                 jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), blazeMessage: blazeMessage))
                 resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 1))
@@ -247,20 +197,12 @@ class SendMessageService: MixinService {
                         let messageId = ids[0]
                         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
-                        if AccountUserDefault.shared.isDesktopLoggedIn {
-                            jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
-                        }
                     } else {
                         for i in stride(from: 0, to: ids.count, by: 100) {
                             let by = i + 100 > ids.count ? ids.count : i + 100
                             let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue) }
                             let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                             jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
-
-                            if let sessionId = AccountUserDefault.shared.extensionSession {
-                                let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
-                                jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage, isSessionMessage: true))
-                            }
                         }
                     }
 
@@ -418,11 +360,7 @@ class SendMessageService: MixinService {
                         if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                             try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
                         } else {
-                            if job.isSessionMessage {
-                                try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage)
-                            } else {
-                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
-                            }
+                            try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
                         }
                     }
                 case JobAction.RESEND_MESSAGE.rawValue:
@@ -467,15 +405,14 @@ class SendMessageService: MixinService {
                     }
 
                     #if DEBUG
-                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)...isSessionMessage:\(job.isSessionMessage)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
+                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)....currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                     #endif
-                    FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
+                    FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...blazeMessage:\(blazeMessage)...\(error)")
                     var userInfo = [String: Any]()
                     userInfo["errorCode"] = error.errorCode
                     userInfo["errorDescription"] = error.localizedDescription
                     userInfo["JobAction"] = job.action
                     userInfo["blazeMessage"] = blazeMessage
-                    userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
                     if let err = error as? SignalError {
                         userInfo["signalErrorCode"] = err.rawValue
                         if IdentityDAO.shared.getLocalIdentity() == nil {
@@ -516,54 +453,6 @@ extension SendMessageService {
         try deliverMessage(blazeMessage: blazeMessage)
 
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
-    }
-
-    private func sendSessionMessage(blazeMessage: BlazeMessage) throws {
-        guard let messageId = blazeMessage.params?.messageId, let category = blazeMessage.params?.category, let sessionId = AccountUserDefault.shared.extensionSession else {
-            return
-        }
-        guard let conversationId = blazeMessage.params?.conversationId, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
-            return
-        }
-        if conversation.category == ConversationCategory.CONTACT.rawValue {
-            try requestCreateConversation(conversation: conversation)
-        }
-
-        let accountId = AccountAPI.shared.accountUserId
-
-        var blazeMessage = blazeMessage
-        blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
-        blazeMessage.params?.messageId = UUID().uuidString.lowercased()
-        blazeMessage.params?.recipientId = accountId
-        blazeMessage.params?.sessionId = sessionId
-        blazeMessage.params?.primitiveMessageId = messageId
-
-        if category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-            blazeMessage.params?.primitiveId = User.systemUser
-        } else {
-            guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
-                return
-            }
-            blazeMessage.params?.quoteMessageId = message.quoteMessageId
-            if category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue  {
-                if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
-                    blazeMessage.params?.primitiveId = representativeId
-                    blazeMessage.params?.representativeId = message.userId
-                } else {
-                    blazeMessage.params?.primitiveId = message.userId
-                }
-            } else if category.hasPrefix("SIGNAL_") {
-                blazeMessage.params?.primitiveId = message.userId
-                guard try checkSignalSession(recipientId: accountId, sessionId: sessionId) else {
-                    return
-                }
-                let content = blazeMessage.params?.data ?? ""
-                blazeMessage.params?.data = try SignalProtocol.shared.encryptTransferSessionMessageData(content: content, sessionId: sessionId, recipientId: accountId)
-            } else if category.hasPrefix("APP_") || category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                blazeMessage.params?.primitiveId = message.userId
-            }
-        }
-        try deliverMessage(blazeMessage: blazeMessage)
     }
 
     private func sendMessage(blazeMessage: BlazeMessage) throws {

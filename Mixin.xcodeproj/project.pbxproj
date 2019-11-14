@@ -692,7 +692,6 @@
 		DFB19008233220360021CAF3 /* PINLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB19007233220360021CAF3 /* PINLogCell.xib */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
-		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
 		DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
@@ -703,6 +702,10 @@
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
+		DFCFAFBE237C327500F0AFD5 /* ConversationSessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFBD237C327500F0AFD5 /* ConversationSessionRequest.swift */; };
+		DFCFAFC0237D66C600F0AFD5 /* ParticipantSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */; };
+		DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */; };
+		DFCFAFC4237D7CF900F0AFD5 /* ParticipantSessionDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDao.swift */; };
 		DFD089E01FE4040500A7D815 /* AttachmentDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */; };
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
@@ -1497,7 +1500,6 @@
 		DFB19007233220360021CAF3 /* PINLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PINLogCell.xib; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
-		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -1508,6 +1510,10 @@
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
+		DFCFAFBD237C327500F0AFD5 /* ConversationSessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSessionRequest.swift; sourceTree = "<group>"; };
+		DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSession.swift; sourceTree = "<group>"; };
+		DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSync.swift; sourceTree = "<group>"; };
+		DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSessionDao.swift; sourceTree = "<group>"; };
 		DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloadJob.swift; sourceTree = "<group>"; };
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
@@ -2252,6 +2258,7 @@
 				DF2A3CD52016DB1E0095F024 /* StickerDAO.swift */,
 				DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */,
 				DF1070902048103000E20047 /* BlazeMessageDAO.swift */,
+				DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDao.swift */,
 				DF121F2D1FA1C244000F701D /* ConversationDAO.swift */,
 				DF3C474D1FA1849500A07C71 /* MessageDAO.swift */,
 				DF03C85C1FF2BE6500C1ED6B /* MessageHistoryDAO.swift */,
@@ -2744,7 +2751,6 @@
 				DF22D94C1FDE500500243CAE /* SystemConversationData.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
-				DFB37D941FF7C2B6000875BD /* ResendData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2942,6 +2948,7 @@
 				DF7A4B451FCDA6A000F21BCB /* User.swift */,
 				DF17B51B20528B36006447C2 /* UserItem.swift */,
 				DF8DA1971FD5301200425CEC /* Participant.swift */,
+				DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */,
 				DF65AAF420514B3B004E3459 /* ParticipantUser.swift */,
 				DF114B0920206D3300EA8F9C /* App.swift */,
 				DF233CE02202F5BE005F2FD1 /* UserSession.swift */,
@@ -2950,6 +2957,7 @@
 				DF2A3CD72016DC860095F024 /* Sticker.swift */,
 				7BE1108F22FD60FD0017BA06 /* StickerItem.swift */,
 				7B97BA092019D42C0013D58F /* StickerRelationship.swift */,
+				DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */,
 				DFF3B68920E25CB500DC82D9 /* Album.swift */,
 				DF191193208F104800BD415D /* Job.swift */,
 				7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */,
@@ -2967,6 +2975,7 @@
 				7B1CCBA21FEE63C300137644 /* UserRequest.swift */,
 				DF22092F1FFFE96500D470EF /* SessionRequest.swift */,
 				DFCC433D206B53A5006F50BE /* AccountRequest.swift */,
+				DFCFAFBD237C327500F0AFD5 /* ConversationSessionRequest.swift */,
 				DFEE215B200CAD8800D9B3F7 /* AuthorizationRequest.swift */,
 				DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */,
 				DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */,
@@ -3398,6 +3407,7 @@
 				DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */,
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
+				DFCFAFC0237D66C600F0AFD5 /* ParticipantSession.swift in Sources */,
 				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */,
@@ -3405,6 +3415,7 @@
 				DFE63CA61FC6B7D700D6E028 /* ConversationResponse.swift in Sources */,
 				DFF353021FEE532300058453 /* AssetDAO.swift in Sources */,
 				DF3AF36F22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift in Sources */,
+				DFCFAFBE237C327500F0AFD5 /* ConversationSessionRequest.swift in Sources */,
 				DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */,
 				7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */,
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
@@ -3578,7 +3589,6 @@
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
 				7B402F88214692C300383687 /* BubbleLayer.swift in Sources */,
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
-				DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */,
 				DFA606312013AA4F0006EEE4 /* UploaderQueue.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */,
@@ -3828,6 +3838,7 @@
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				DFBC04A1200397B0008CA56A /* SentSenderKey.swift in Sources */,
+				DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				DFD5F6F720722C8F0017AAF1 /* PinTokenResponse.swift in Sources */,
@@ -3966,6 +3977,7 @@
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,
 				DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */,
 				7B746B4022A628ED0097D18A /* Counter.swift in Sources */,
+				DFCFAFC4237D7CF900F0AFD5 /* ParticipantSessionDao.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,
 				DF503D321FECF71400C008E7 /* SenderKey.swift in Sources */,
 				7B34A19722C0B59200665F41 /* MixinNavigationAnimating.swift in Sources */,

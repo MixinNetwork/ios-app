@@ -19,6 +19,7 @@ final class UserAPI: BaseAPI {
         static let relationships = "relationships"
         static let reports = "reports"
         static let blockingUsers = "blocking_users"
+        static let sessionFetch = "sessions/fetch"
     }
 
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {

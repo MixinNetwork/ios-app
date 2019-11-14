@@ -7,6 +7,7 @@ struct SignalKeyResponse: Codable {
     let preKey: OneTimePreKey
     let registrationId: UInt32
     let userId: String?
+    let sessionId: String?
 
     enum CodingKeys: String, CodingKey {
         case identityKey = "identity_key"
@@ -14,6 +15,7 @@ struct SignalKeyResponse: Codable {
         case preKey = "one_time_pre_key"
         case registrationId = "registration_id"
         case userId = "user_id"
+        case sessionId = "session_id"
     }
 }
 

@@ -6,7 +6,7 @@ final class JobDAO {
     static let shared = JobDAO()
 
     func nextJob() -> Job? {
-        return MixinDatabase.shared.getCodables(orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.isSessionMessage.asOrder(by: .ascending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
+        return MixinDatabase.shared.getCodables(orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
     }
 
     func clearSessionJob() {

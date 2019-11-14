@@ -12,6 +12,7 @@ struct ConversationResponse: Codable {
     let codeUrl: String
     let creatorId: String
     let muteUntil: String
+    let participantSessions: [ParticipantSessionResponse]?
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -24,6 +25,7 @@ struct ConversationResponse: Codable {
         case codeUrl = "code_url"
         case creatorId = "creator_id"
         case muteUntil = "mute_until"
+        case participantSessions = "participant_sessions"
     }
 }
 
@@ -37,5 +39,18 @@ struct ParticipantResponse: Codable {
         case userId = "user_id"
         case role
         case createdAt = "created_at"
+    }
+}
+
+struct ParticipantSessionResponse: Codable {
+
+    let userId: String
+    let sessionId: String
+    let platform: String
+
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case sessionId = "session_id"
+        case platform
     }
 }

@@ -30,4 +30,8 @@ class SessionDAO: SignalDAO {
         return SignalDatabase.shared.getCount(on: Session.Properties.id.count(), fromTable: Session.tableName)
     }
 
+    func syncGetSessionAddress() -> [Session] {
+        return SignalDatabase.shared.getCodables(condition: Session.Properties.device == 1)
+    }
+
 }

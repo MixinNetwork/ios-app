@@ -306,31 +306,47 @@ class PayWindow: BottomSheetView {
 
         let window = MultisigUsersWindow.instance()
         window.render(users: senders, isSender: true)
+        let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
-            self.pinField.becomeFirstResponder()
+            if isKeyboardAppear {
+                self.pinField.becomeFirstResponder()
+            }
         }
         window.presentPopupControllerAnimated()
 
         isMultisigUsersAppear = true
-        pinField.resignFirstResponder()
+        if isKeyboardAppear {
+            pinField.resignFirstResponder()
+        }
     }
 
 
     @IBAction func receiversAction(_ sender: Any) {
-        guard case let .multisig(_, _, receivers) = pinAction! else {
+        var users = [UserResponse]()
+        switch pinAction! {
+        case let .multisig(_, _, receivers):
+            users = receivers
+        case let .payment(_, receivers):
+            users = receivers
+        default:
             return
         }
         let window = MultisigUsersWindow.instance()
-        window.render(users: receivers, isSender: false)
+        window.render(users: users, isSender: false)
+        let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
-            self.pinField.becomeFirstResponder()
+            if isKeyboardAppear {
+                self.pinField.becomeFirstResponder()
+            }
         }
         window.presentPopupControllerAnimated()
 
         isMultisigUsersAppear = true
-        pinField.resignFirstResponder()
+        if isKeyboardAppear {
+            pinField.resignFirstResponder()
+        }
     }
 
 

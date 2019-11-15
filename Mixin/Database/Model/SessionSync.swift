@@ -1,6 +1,6 @@
 import WCDBSwift
 
-struct SessionSync: TableCodable {
+struct SessionSync: BaseCodable {
 
     static var tableName: String = "session_sync"
 

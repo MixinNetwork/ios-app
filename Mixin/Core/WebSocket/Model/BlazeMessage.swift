@@ -60,8 +60,8 @@ extension BlazeMessage {
         self.error = nil
     }
 
-    init(conversationId: String, recipientId: String, cipherText: String) throws {
-        let param = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, cipherText: cipherText)
+    init(conversationId: String, recipientId: String, cipherText: String, sessionId: String?) throws {
+        let param = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, cipherText: cipherText, sessionId: sessionId)
         self.init(params: param, action: BlazeMessageAction.createMessage.rawValue)
     }
 

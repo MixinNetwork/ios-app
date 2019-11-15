@@ -185,15 +185,6 @@ extension Optional where Wrapped == String {
             return true
         }
     }
-
-    func getDeviceId() -> Int32 {
-        switch self {
-        case .some(let value):
-            return value.isEmpty ? 1 : value.toUUID().hashCode()
-        case .none:
-            return 1
-        }
-    }
     
 }
 

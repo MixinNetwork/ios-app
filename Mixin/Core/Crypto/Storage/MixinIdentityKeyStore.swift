@@ -35,6 +35,14 @@ class MixinIdentityKeyStore: IdentityKeyStore {
         IdentityDAO.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         return true
     }
+
+    func removeIdentity(address: SignalAddress) {
+        objc_sync_enter(lock)
+        defer {
+            objc_sync_exit(lock)
+        }
+        IdentityDAO.shared.deleteIdentity(address: address.name)
+    }
 }
 
 

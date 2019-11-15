@@ -268,46 +268,6 @@ class SendMessageService: MixinService {
                     if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
-                } else if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
-                    guard let sessionId = AccountUserDefault.shared.extensionSession else {
-                        JobDAO.shared.removeJob(jobId: job.jobId)
-                        continue
-                    }
-
-                    let jobs = JobDAO.shared.nextBatchJobs(action: .SEND_SESSION_MESSAGE, limit: 100)
-                    let messages: [TransferMessage] = jobs.compactMap {
-                        guard let messageId = $0.messageId, let status = $0.status else {
-                            return nil
-                        }
-                        return TransferMessage(messageId: messageId, status: status)
-                    }
-
-                    guard messages.count > 0 else {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        continue
-                    }
-                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
-                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                    }
-                } else if job.action == JobAction.SEND_SESSION_ACK_MESSAGE.rawValue {
-                    let jobs = JobDAO.shared.nextBatchJobs(action: .SEND_SESSION_ACK_MESSAGE, limit: 100)
-                    let messages: [TransferMessage] = jobs.compactMap {
-                        guard let messageId = $0.messageId, let status = $0.status else {
-                            return nil
-                        }
-                        return TransferMessage(messageId: messageId, status: status)
-                    }
-
-                    guard messages.count > 0 else {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        continue
-                    }
-
-                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeSessionMessageReceipts.rawValue)
-                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                    }
                 } else {
                     if deleteJobId == job.jobId {
                         UIApplication.traceError(code: ReportErrorCode.jobError, userInfo: UIApplication.getTrackUserInfo())
@@ -369,7 +329,7 @@ class SendMessageService: MixinService {
                     }
                 case JobAction.SEND_ACK_MESSAGE.rawValue, JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
-                case JobAction.SEND_ACK_MESSAGES.rawValue, JobAction.SEND_SESSION_MESSAGES.rawValue:
+                case JobAction.SEND_ACK_MESSAGES.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in

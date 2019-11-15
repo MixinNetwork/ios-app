@@ -13,7 +13,7 @@ struct BlazeMessageParam: Codable {
     var quoteMessageId: String? = nil
 
     var keys: SignalKeyRequest? = nil
-    var recipients: [BlazeSessionMessageParam]? = nil
+    var recipients: [BlazeMessageParamSession]? = nil
     var messages: [TransferMessage]? = nil
 
     var sessionId: String? = nil
@@ -21,6 +21,7 @@ struct BlazeMessageParam: Codable {
     var primitiveMessageId: String? = nil
 
     var representativeId: String? = nil
+    var conversations: [String]? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -51,16 +52,17 @@ extension BlazeMessageParam {
         self.status = status
     }
     
-    init(conversationId: String, recipientId: String, cipherText: String) {
+    init(conversationId: String, recipientId: String, cipherText: String, sessionId: String?) {
         self.messageId = UUID().uuidString.lowercased()
         self.status = MessageStatus.SENT.rawValue
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.data = cipherText
         self.category = MessageCategory.SIGNAL_KEY.rawValue
+        self.sessionId = sessionId
     }
 
-    init(consumeSignalKeys recipients: [BlazeSessionMessageParam]) {
+    init(consumeSignalKeys recipients: [BlazeMessageParamSession]) {
         self.recipients = recipients
     }
 
@@ -85,7 +87,7 @@ extension BlazeMessageParam {
         self.primitiveId = accountId
     }
 
-    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.category = category

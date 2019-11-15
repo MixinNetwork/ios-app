@@ -1,6 +1,6 @@
 import Foundation
 
-struct SystemConversationData: Codable {
+struct SystemConversationMessagePayload: Codable {
 
     let action: String
     let participantId: String?
@@ -13,6 +13,12 @@ struct SystemConversationData: Codable {
         case participantId = "participant_id"
         case role
     }
+}
+
+enum SystemSessionMessageAction: String {
+    case PROVISION
+    case ADD
+    case DESTROY
 }
 
 enum SystemConversationAction: String {

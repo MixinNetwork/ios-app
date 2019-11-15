@@ -188,6 +188,12 @@ class ReceiveMessageService: MixinService {
         }
     }
 
+    private func processSessionSyncMessage(data: BlazeMessageData) {
+        guard data.category == MessageCategory.SESSION_SYNC.rawValue else {
+            return
+        }
+    }
+
     private func processSignalMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("SIGNAL_") else {
             return
@@ -202,7 +208,6 @@ class ReceiveMessageService: MixinService {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
 
-        let deviceId = data.sessionId.getDeviceId()
         let decoded = SignalProtocol.shared.decodeMessageData(encoded: data.data)
         do {
             try SignalProtocol.shared.decrypt(groupId: data.conversationId, senderId: data.userId, keyType: decoded.keyType, cipherText: decoded.cipher, category: data.category, sessionId: data.sessionId, callback: { (plain) in
@@ -220,7 +225,7 @@ class ReceiveMessageService: MixinService {
             let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             if status == RatchetStatus.REQUESTING.rawValue {
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: data.sessionId.getDeviceId())
+                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
@@ -255,7 +260,7 @@ class ReceiveMessageService: MixinService {
                 return
             }
             if (data.category == MessageCategory.SIGNAL_KEY.rawValue) {
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: data.sessionId.getDeviceId())
+                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
                 refreshKeys(conversationId: data.conversationId)
             } else {
                 insertFailedMessage(data: data)
@@ -550,7 +555,7 @@ class ReceiveMessageService: MixinService {
                 }
                 SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, messageIds: messageIds)
             case PlainDataAction.NO_KEY.rawValue:
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: data.sessionId.getDeviceId())
+                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
             default:
                 break
             }
@@ -566,7 +571,7 @@ class ReceiveMessageService: MixinService {
     private func requestResendMessage(conversationId: String, userId: String, sessionId: String?) {
         let messages: [String] = MessageDAO.shared.findFailedMessages(conversationId: conversationId, userId: userId).reversed()
         guard messages.count > 0 else {
-            SignalProtocol.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, deviceId: sessionId.getDeviceId())
+            SignalProtocol.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
             return
         }
 
@@ -607,6 +612,9 @@ extension ReceiveMessageService {
             }
         case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
             processSystemSnapshotMessage(data: data)
+        case MessageCategory.SYSTEM_SESSION.rawValue:
+
+            break
         default:
             break
         }
@@ -638,8 +646,41 @@ extension ReceiveMessageService {
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
     }
 
+    private func processSystemSessionMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let systemSession = (try? jsonDecoder.decode(SystemConversationMessagePayload.self, from: base64Data)) else {
+            return
+        }
+
+        if systemSession.action == SystemSessionMessageAction.PROVISION.rawValue {
+//            Session.storeExtensionSessionId(systemSession.sessionId)
+//            signalProtocol.deleteSession(systemSession.userId)
+//            val conversations = conversationDao.getConversationsByUserId(systemSession.userId)
+//            val ps = conversations?.map {
+//                ParticipantSession(it.conversationId, systemSession.userId, systemSession.sessionId)
+//            }
+//            ps?.let {
+//                participantSessionDao.insertList(it)
+//                sessionSyncDao.insertList(conversations)
+//                jobManager.addJobInBackground(SendProcessSignalKeyJob(data, ProcessSignalKeyAction.SESSION_SYNC))
+//            }
+
+        } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
+//            Session.deleteExtensionSessionId()
+//            signalProtocol.deleteSession(data.userId)
+//            val conversations = conversationDao.getConversationsByUserId(systemSession.userId)
+//            val ps = conversations?.map {
+//                ParticipantSession(it.conversationId, systemSession.userId, systemSession.sessionId)
+//            }
+//            ps?.let {
+//                participantSessionDao.deleteList(it)
+//                sessionSyncDao.insertList(conversations)
+//                jobManager.addJobInBackground(SendProcessSignalKeyJob(data, ProcessSignalKeyAction.SESSION_SYNC))
+//            }
+        }
+    }
+
     private func processSystemConversationMessage(data: BlazeMessageData) {
-        guard let base64Data = Data(base64Encoded: data.data), let sysMessage = (try? jsonDecoder.decode(SystemConversationData.self, from: base64Data)) else {
+        guard let base64Data = Data(base64Encoded: data.data), let sysMessage = (try? jsonDecoder.decode(SystemConversationMessagePayload.self, from: base64Data)) else {
             return
         }
 

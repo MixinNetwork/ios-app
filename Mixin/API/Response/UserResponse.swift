@@ -52,4 +52,10 @@ enum Relationship: String, Codable {
     }
 }
 
+extension UserResponse {
 
+    static func createUser(account: Account) -> UserResponse {
+        return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil)
+    }
+
+}

@@ -392,6 +392,8 @@ extension UrlWindow {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
                     presentMultisig(multisig: multisig, hud: hud)
+                } else if let payment = code.payment {
+                    presentPayment(payment: payment, hud: hud)
                 } else {
                     hud.hide()
                 }
@@ -443,6 +445,38 @@ extension UrlWindow {
             DispatchQueue.main.async {
                 hud.hide()
                 PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
+            }
+        }
+    }
+
+    private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            guard let asset = AssetDAO.shared.getAsset(assetId: payment.assetId) else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let receivers = payment.receivers
+            var receiverUsers = [UserResponse]()
+            switch UserAPI.shared.showUsers(userIds: payment.receivers) {
+            case let .success(users):
+                receiverUsers = users.filter { receivers.contains($0.userId) }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .payment(payment: payment, receivers: receiverUsers), amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }

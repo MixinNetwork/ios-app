@@ -188,11 +188,10 @@ class UrlWindow {
             memo = urlDecodeMemo
         }
 
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         DispatchQueue.global().async {
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
-                DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.address_asset_not_found())
-                }
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
             var address = AddressDAO.shared.getAddress(addressId: addressId)
@@ -204,14 +203,17 @@ class UrlWindow {
                 case let .failure(error):
                     DispatchQueue.main.async {
                         if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: R.string.localizable.address_not_found())
+                            hud.set(style: .error, text: R.string.localizable.address_not_found())
                         } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                            hud.set(style: .error, text: error.localizedDescription)
                         }
+                        hud.scheduleAutoHidden()
                     }
                     return
                 }
             }
+
+            hud.safeHide()
 
             guard let addr = address else {
                 return
@@ -278,11 +280,7 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         DispatchQueue.global().async {
-            guard var asset = AssetDAO.shared.getAsset(assetId: assetId) else {
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
-                    hud.scheduleAutoHidden()
-                }
+            guard var asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
 
@@ -294,10 +292,10 @@ class UrlWindow {
                         continue
                     }
                     guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
+                        hud.safeHide()
                         return
                     }
                     asset = localAsset
-                    break
                 case let .failure(error):
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: error.localizedDescription)
@@ -313,6 +311,7 @@ class UrlWindow {
             let addressAction: AddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
                 guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+                    hud.safeHide()
                     return
                 }
 
@@ -337,6 +336,7 @@ class UrlWindow {
                 }
             } else {
                 guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
+                    hud.safeHide()
                     return
                 }
 
@@ -407,13 +407,38 @@ extension UrlWindow {
         return true
     }
 
-    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
-        DispatchQueue.global().async {
-            guard let asset = AssetDAO.shared.getAsset(assetId: multisig.assetId) else {
+    private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
+        var asset = AssetDAO.shared.getAsset(assetId: assetId)
+        if asset == nil {
+            switch AssetAPI.shared.asset(assetId: assetId) {
+            case let .success(assetItem):
+                asset = AssetDAO.shared.saveAsset(asset: assetItem)
+            case let .failure(error):
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    if error.code == 404 {
+                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
                     hud.scheduleAutoHidden()
                 }
+                return nil
+            }
+        }
+
+        if asset == nil {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                hud.scheduleAutoHidden()
+            }
+        }
+
+        return asset
+    }
+
+    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
             }
 
@@ -495,8 +520,10 @@ extension UrlWindow {
                 case let .success(user):
                     creatorUser = UserItem.createUser(from: user)
                 case let .failure(error):
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
                     return
                 }
             }

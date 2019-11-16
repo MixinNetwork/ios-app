@@ -466,8 +466,9 @@
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";
 "address_format_error" = "地址格式错误";
-"address_asset_not_found" = "找不到该资产.";
 "address_not_found" = "找不到该地址";
+
+"asset_not_found" = "找不到该资产.";
 
 // Transfer
 "transfer_title" = "转账";

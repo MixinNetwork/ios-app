@@ -421,8 +421,9 @@
 "address_edit_title" = " %@ アドレスを編集";
 "address_delete_title" = "アドレス%@を削除します";
 "address_format_error" = "無効なアドレス形式です。";
-"address_asset_not_found" = "資産が見つかりませんでした。";
 "address_not_found" = "このアドレスは見つかりませんでした。";
+
+"asset_not_found" = "資産が見つかりませんでした。";
 
 // Transfer
 "transfer_title" = "振込";

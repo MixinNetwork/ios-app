@@ -464,8 +464,9 @@
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";
 "address_format_error" = "Invalid address format.";
-"address_asset_not_found" = "Asset not found.";
 "address_not_found" = "Address not found.";
+
+"asset_not_found" = "Asset not found.";
 
 // Transfer
 "transfer_title" = "Transfer";

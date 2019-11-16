@@ -478,7 +478,7 @@ extension UrlWindow {
         DispatchQueue.global().async {
             guard let asset = AssetDAO.shared.getAsset(assetId: payment.assetId) else {
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    hud.set(style: .error, text: R.string.localizable.asset_not_found())
                     hud.scheduleAutoHidden()
                 }
                 return

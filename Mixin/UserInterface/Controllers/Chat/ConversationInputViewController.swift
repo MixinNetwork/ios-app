@@ -72,7 +72,7 @@ class ConversationInputViewController: UIViewController {
     
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
-    private var opponentApp: App?
+    private(set) var opponentApp: App?
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {

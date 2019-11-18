@@ -1321,7 +1321,7 @@ extension ConversationViewController {
         }
         guard action.hasPrefix("input:"), action.count > 6 else {
             if let url = URL(string: action) {
-                open(url: url)
+                open(url: url, app: conversationInputViewController?.opponentApp)
             }
             return
         }
@@ -1334,14 +1334,19 @@ extension ConversationViewController {
         }
     }
 
-    private func open(url: URL) {
+    private func open(url: URL, app: App? = nil) {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
         guard !conversationId.isEmpty else {
             return
         }
-        WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+
+        if let app = app {
+            WebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
+        } else {
+            WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+        }
     }
     
     private func report(conversationId: String) {

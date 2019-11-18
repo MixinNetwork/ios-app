@@ -97,7 +97,6 @@ class WebViewController: UIViewController {
                 }
                 self?.titleLabel.text = webView.title
             })
-            findAppByUrl(url: context.initialUrl)
         case let .app(_, title, iconUrl):
             titleLabel.text = title
             if let iconUrl = iconUrl {
@@ -121,36 +120,6 @@ class WebViewController: UIViewController {
         if parent == nil {
             self.parent?.setNeedsStatusBarAppearanceUpdate()
             self.parent?.setNeedsUpdateOfHomeIndicatorAutoHidden()
-        }
-    }
-    
-    private func findAppByUrl(url: URL) {
-        guard let host = url.host else {
-            return
-        }
-        let conversationId = self.context.conversationId
-        DispatchQueue.global().async { [weak self] in
-            let apps = AppDAO.shared.getApps(host: host)
-            guard apps.count == 1 else {
-                return
-            }
-            let app = apps[0]
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.context = Context(conversationId: conversationId, app: app)
-                if weakSelf.context.isImmersive {
-                    weakSelf.showPageTitleConstraint.priority = .defaultLow
-                } else {
-                    if let iconUrl = URL(string: app.iconUrl) {
-                        weakSelf.titleImageView.isHidden = false
-                        weakSelf.titleImageView.sd_setImage(with: iconUrl, completed: nil)
-                    }
-                    weakSelf.showPageTitleConstraint.priority = .defaultHigh
-                }
-                weakSelf.titleLabel.text = app.name
-            }
         }
     }
 
@@ -479,6 +448,13 @@ extension WebViewController {
             style = .webPage
             self.initialUrl = initialUrl
             isImmersive = false
+        }
+
+        init(conversationId: String, url: URL, app: App) {
+            self.conversationId = conversationId
+            style = .app(appId: app.appId, title: app.name, iconUrl: URL(string: app.iconUrl))
+            initialUrl = url
+            isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
         
     }

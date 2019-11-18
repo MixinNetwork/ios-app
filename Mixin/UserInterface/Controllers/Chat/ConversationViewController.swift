@@ -354,18 +354,26 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func exitGroupAndReportInviterAction(_ sender: Any) {
-        let hud = Hud()
-        if let view = navigationController?.view {
-            hud.show(style: .busy, text: "", on: view)
+        
+        func work(_: UIAlertAction) {
+            let hud = Hud()
+            if let view = navigationController?.view {
+                hud.show(style: .busy, text: "", on: view)
+            }
+            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+            NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
+            hud.hide()
+            UIApplication.homeNavigationController?.backToHome()
+            guard let inviterId = dataSource.myInvitation?.userId else {
+                return
+            }
+            UserAPI.shared.reportUser(userId: inviterId) { (_) in }
         }
-        ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
-        hud.hide()
-        UIApplication.homeNavigationController?.backToHome()
-        guard let inviterId = dataSource.myInvitation?.userId else {
-            return
-        }
-        UserAPI.shared.reportUser(userId: inviterId) { (_) in }
+        
+        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: work))
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {

@@ -258,6 +258,7 @@
 "chat_shared_data_empty" = "NO FILE";
 "chat_invited_by_stranger" = "The inviter is not in your contacts";
 "chat_exit_group_and_report_inviter" = "Exit group and report inviter";
+"chat_exit_group_and_report_inviter_confirmation" = "Exit group and report inviter?";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

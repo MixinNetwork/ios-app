@@ -354,20 +354,33 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func exitGroupAndReportInviterAction(_ sender: Any) {
-        
+        guard let inviterId = dataSource.myInvitation?.userId else {
+            return
+        }
+
+        let conversationId = self.conversationId
+
         func work(_: UIAlertAction) {
             let hud = Hud()
             if let view = navigationController?.view {
                 hud.show(style: .busy, text: "", on: view)
             }
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
-            hud.hide()
-            UIApplication.homeNavigationController?.backToHome()
-            guard let inviterId = dataSource.myInvitation?.userId else {
-                return
+
+            DispatchQueue.global().async {
+                switch UserAPI.shared.reportUser(userId: inviterId) {
+                case let .success(user):
+                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                    ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
+                        hud.hide()
+                        UIApplication.homeNavigationController?.backToHome()
+                    }
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
             }
-            UserAPI.shared.reportUser(userId: inviterId) { (_) in }
         }
         
         let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)

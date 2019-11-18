@@ -90,7 +90,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 AppGroupUserDefaults.Account.serializedAccount = data
             }
             AccountAPI.shared.account = account
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
+            MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
             TaskDatabase.shared.initDatabase()
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
@@ -114,8 +114,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 backupExist = backupDir.appendingPathComponent(MixinFile.backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
             }
 
-            if CommonUserDefault.shared.hasForceLogout || !backupExist {
-                CommonUserDefault.shared.hasForceLogout = false
+            if AppGroupUserDefaults.User.isLogoutByServer || !backupExist {
+                AppGroupUserDefaults.User.isLogoutByServer = false
                 UserDAO.shared.updateAccount(account: account)
                 DispatchQueue.main.sync {
                     if account.full_name.isEmpty {

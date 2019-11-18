@@ -41,22 +41,20 @@ class BackupJob: BaseJob {
             return
         }
 
-        if !immediatelyBackup && !AppGroupUserDefaults.Account.hasUnfinishedBackup {
-            let lastBackupTime = CommonUserDefault.shared.lastBackupTime
-            let now = Date().timeIntervalSince1970
-            switch CommonUserDefault.shared.backupCategory {
+        if !immediatelyBackup && !AppGroupUserDefaults.Account.hasUnfinishedBackup, let lastBackupDate = AppGroupUserDefaults.User.lastBackupDate {
+            switch AppGroupUserDefaults.User.autoBackup {
             case .off:
                 return
             case .daily:
-                if now - lastBackupTime < 86400 {
+                if -lastBackupDate.timeIntervalSinceNow < 86400 {
                     return
                 }
             case .weekly:
-                if now - lastBackupTime < 86400 * 7 {
+                if -lastBackupDate.timeIntervalSinceNow < 86400 * 7 {
                     return
                 }
             case .monthly:
-                if now - lastBackupTime < 86400 * 30 {
+                if -lastBackupDate.timeIntervalSinceNow < 86400 * 30 {
                     return
                 }
             }
@@ -67,12 +65,12 @@ class BackupJob: BaseJob {
         try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
 
         var categories: [MixinFile.ChatDirectory] = [.photos, .audios]
-        if CommonUserDefault.shared.hasBackupFiles {
+        if AppGroupUserDefaults.User.backupFiles {
             categories.append(.files)
         } else {
             FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         }
-        if CommonUserDefault.shared.hasBackupVideos {
+        if AppGroupUserDefaults.User.backupVideos {
             categories.append(.videos)
         } else {
             FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
@@ -217,8 +215,8 @@ class BackupJob: BaseJob {
 
         if uploadedSize >= totalFileSize {
             removeOldFiles(backupDir: backupDir)
-            CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
-            CommonUserDefault.shared.lastBackupSize = totalFileSize
+            AppGroupUserDefaults.User.lastBackupDate = Date()
+            AppGroupUserDefaults.User.lastBackupSize = totalFileSize
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         }
 

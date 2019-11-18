@@ -162,7 +162,7 @@ extension WebSocketService: WebSocketDelegate {
             AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
             
             if rechability?.isReachableOnEthernetOrWiFi ?? false {
-                if CommonUserDefault.shared.backupCategory != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
+                if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
                     BackupJobQueue.shared.addJob(job: BackupJob())
                 }
                 if AppGroupUserDefaults.Account.canRestoreMedia {

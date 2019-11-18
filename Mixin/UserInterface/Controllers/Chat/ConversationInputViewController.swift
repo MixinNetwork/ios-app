@@ -146,7 +146,7 @@ class ConversationInputViewController: UIViewController {
         textView.delegate = self
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
-        if let draft = CommonUserDefault.shared.getConversationDraft(dataSource.conversationId), !draft.isEmpty {
+        if let draft = AppGroupUserDefaults.User.conversationDraft[dataSource.conversationId], !draft.isEmpty {
             UIView.performWithoutAnimation {
                 layoutForTextViewIsEmpty(false, animated: false)
                 textView.text = draft
@@ -320,7 +320,7 @@ class ConversationInputViewController: UIViewController {
                 DispatchQueue.main.async {
                     if let app = app {
                         self?.opponentApp = app
-                        CommonUserDefault.shared.insertRecentlyUsedAppId(id: app.appId)
+                        AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                     } else {
                         self?.loadFavoriteApps(ownerUser: ownerUser)
                     }
@@ -438,7 +438,7 @@ extension ConversationInputViewController {
     }
     
     @objc private func saveDraft() {
-        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
+        AppGroupUserDefaults.User.conversationDraft[dataSource.conversationId] = trimmedMessageDraft
     }
     
     @objc private func participantDidChange(_ notification: Notification) {

@@ -587,7 +587,7 @@ extension PayWindow: PinFieldDelegate {
             case let .success(snapshot):
                 switch pinAction {
                 case .transfer, .payment:
-                    CommonUserDefault.shared.hasPerformedTransfer = true
+                    AppGroupUserDefaults.User.hasPerformedTransfer = true
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 case let .withdraw(_,address,_):
                     WalletUserDefault.shared.firstWithdrawalTip.removeAll( where: { $0 == address.addressId })

@@ -13,7 +13,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var downloadIsTriggeredByUser = false
     
     var shouldAutoDownload: Bool {
-        switch CommonUserDefault.shared.autoDownloadVideos {
+        switch AppGroupUserDefaults.User.autoDownloadVideos {
         case .never:
             return false
         case .wifi:

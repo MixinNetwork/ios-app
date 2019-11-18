@@ -15,19 +15,19 @@ class BackupViewController: UITableViewController {
     private lazy var autoBackupFrequencyController: UIAlertController = {
         let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
-            CommonUserDefault.shared.backupCategory = .daily
+            AppGroupUserDefaults.User.autoBackup = .daily
             self?.updateUIOfBackupFrequency()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_WEEKLY, style: .default, handler: { [weak self] (_) in
-            CommonUserDefault.shared.backupCategory = .weekly
+            AppGroupUserDefaults.User.autoBackup = .weekly
             self?.updateUIOfBackupFrequency()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_MONTHLY, style: .default, handler: { [weak self] (_) in
-            CommonUserDefault.shared.backupCategory = .monthly
+            AppGroupUserDefaults.User.autoBackup = .monthly
             self?.updateUIOfBackupFrequency()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_OFF, style: .default, handler: { [weak self] (_) in
-            CommonUserDefault.shared.backupCategory = .off
+            AppGroupUserDefaults.User.autoBackup = .off
             self?.updateUIOfBackupFrequency()
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
@@ -53,8 +53,8 @@ class BackupViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         updateTableViewContentInsetBottom()
-        switchIncludeFiles.isOn = CommonUserDefault.shared.hasBackupFiles
-        switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
+        switchIncludeFiles.isOn = AppGroupUserDefaults.User.backupFiles
+        switchIncludeVideos.isOn = AppGroupUserDefaults.User.backupVideos
         updateUIOfBackupFrequency()
         reloadActionSectionFooterLabel()
 
@@ -62,8 +62,8 @@ class BackupViewController: UITableViewController {
         if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
             backingUI()
         } else if let backupDir = MixinFile.iCloudBackupDirectory, !backupDir.isStoredCloud {
-            CommonUserDefault.shared.lastBackupTime = 0
-            CommonUserDefault.shared.lastBackupSize = 0
+            AppGroupUserDefaults.User.lastBackupDate = nil
+            AppGroupUserDefaults.User.lastBackupSize = nil
         }
     }
     
@@ -86,11 +86,11 @@ class BackupViewController: UITableViewController {
     }
     
     @IBAction func switchIncludeFiles(_ sender: Any) {
-        CommonUserDefault.shared.hasBackupFiles = switchIncludeFiles.isOn
+        AppGroupUserDefaults.User.backupFiles = switchIncludeFiles.isOn
     }
 
     @IBAction func switchIncludeVideos(_ sender: Any) {
-        CommonUserDefault.shared.hasBackupVideos = switchIncludeVideos.isOn
+        AppGroupUserDefaults.User.backupVideos = switchIncludeVideos.isOn
     }
 
     private func backingUI() {
@@ -128,9 +128,8 @@ class BackupViewController: UITableViewController {
             let percentage = NumberFormatter.simplePercentage.string(from: number)
             text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
         } else {
-            let time = CommonUserDefault.shared.lastBackupTime
-            if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {
-                text = Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: Date(timeIntervalSince1970: time)), size: size.sizeRepresentation())
+            if let size = AppGroupUserDefaults.User.lastBackupSize, let date = AppGroupUserDefaults.User.lastBackupDate {
+                text = Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: date), size: size.sizeRepresentation())
             } else {
                 text = nil
             }
@@ -147,7 +146,7 @@ class BackupViewController: UITableViewController {
     }
     
     private func updateUIOfBackupFrequency() {
-        switch CommonUserDefault.shared.backupCategory {
+        switch AppGroupUserDefaults.User.autoBackup {
         case .daily:
             categoryLabel.text = Localized.SETTING_BACKUP_DAILY
         case .weekly:

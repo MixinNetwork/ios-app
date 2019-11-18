@@ -56,7 +56,7 @@ extension UNUserNotificationCenter {
 
     func sendMessageNotification(message: MessageItem, ownerUser: UserItem?, conversation: ConversationItem) {
         let notificationContent = UNMutableNotificationContent()
-        if CommonUserDefault.shared.shouldShowPreviewForMessageNotification {
+        if AppGroupUserDefaults.User.showMessagePreviewInNotification {
             if !notificationContent.setTitleAndBody(with: message, ownerUser: ownerUser, conversation: conversation) {
                 return
             }

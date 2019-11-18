@@ -370,7 +370,7 @@ final class ConversationDAO {
         }
 
         if oldConversation.announcement != conversation.announcement, !conversation.announcement.isEmpty {
-            CommonUserDefault.shared.setHasUnreadAnnouncement(true, forConversationId: conversationId)
+            AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] = true
         }
 
         MixinDatabase.shared.transaction { (db) in

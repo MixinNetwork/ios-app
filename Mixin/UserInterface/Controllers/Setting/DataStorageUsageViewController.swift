@@ -38,11 +38,11 @@ class DataStorageUsageViewController: UITableViewController {
             cell.titleLabel.text = title
             switch indexPath.row {
             case 0:
-                cell.subtitleLabel.text = CommonUserDefault.shared.autoDownloadPhotos.description
+                cell.subtitleLabel.text = AppGroupUserDefaults.User.autoDownloadPhotos.description
             case 1:
-                cell.subtitleLabel.text = CommonUserDefault.shared.autoDownloadVideos.description
+                cell.subtitleLabel.text = AppGroupUserDefaults.User.autoDownloadVideos.description
             default:
-                cell.subtitleLabel.text = CommonUserDefault.shared.autoDownloadFiles.description
+                cell.subtitleLabel.text = AppGroupUserDefaults.User.autoDownloadFiles.description
             }
             cell.subtitleLabel.isHidden = false
             return cell
@@ -63,11 +63,11 @@ class DataStorageUsageViewController: UITableViewController {
             func setAutoDownload(_ value: AutoDownload) {
                 switch indexPath.row {
                 case 0:
-                    CommonUserDefault.shared.autoDownloadPhotos = value
+                    AppGroupUserDefaults.User.autoDownloadPhotos = value
                 case 1:
-                    CommonUserDefault.shared.autoDownloadVideos = value
+                    AppGroupUserDefaults.User.autoDownloadVideos = value
                 default:
-                    CommonUserDefault.shared.autoDownloadFiles = value
+                    AppGroupUserDefaults.User.autoDownloadFiles = value
                 }
                 tableView.reloadRows(at: [indexPath], with: .none)
             }

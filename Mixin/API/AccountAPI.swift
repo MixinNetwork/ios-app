@@ -185,7 +185,7 @@ final class AccountAPI: BaseAPI {
         }
         UIApplication.shared.setShortcutItemsEnabled(false)
         FileManager.default.writeLog(log: "===========logout...from:\(from)")
-        CommonUserDefault.shared.hasForceLogout = true
+        AppGroupUserDefaults.User.isLogoutByServer = true
         DispatchQueue.main.async {
             self.account = nil
             Keychain.shared.clearPIN()

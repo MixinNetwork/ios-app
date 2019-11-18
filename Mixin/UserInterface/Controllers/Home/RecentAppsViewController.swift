@@ -29,7 +29,7 @@ class RecentAppsViewController: UIViewController {
         collectionView.delegate = self
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didChangeRecentlyUsedAppIds),
-                                               name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification,
+                                               name: AppGroupUserDefaults.User.didChangeRecentlyUsedAppIdsNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(userDidChange(_:)),
@@ -82,7 +82,7 @@ class RecentAppsViewController: UIViewController {
             guard self != nil, !op.isCancelled, AccountAPI.shared.didLogin else {
                 return
             }
-            let ids = CommonUserDefault.shared.recentlyUsedAppIds.prefix(maxIdCount)
+            let ids = AppGroupUserDefaults.User.recentlyUsedAppIds.prefix(maxIdCount)
             let users = UserDAO.shared.getUsers(ofAppIds: Array(ids))
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {

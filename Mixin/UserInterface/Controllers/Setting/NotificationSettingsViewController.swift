@@ -32,12 +32,12 @@ class NotificationSettingsViewController: UITableViewController {
         tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        messagePreviewSwitch.isOn = CommonUserDefault.shared.shouldShowPreviewForMessageNotification
+        messagePreviewSwitch.isOn = AppGroupUserDefaults.User.showMessagePreviewInNotification
         updateThresholdLabel()
     }
     
     @IBAction func switchMessagePreview(_ sender: Any) {
-        CommonUserDefault.shared.shouldShowPreviewForMessageNotification = messagePreviewSwitch.isOn
+        AppGroupUserDefaults.User.showMessagePreviewInNotification = messagePreviewSwitch.isOn
     }
     
     class func instance() -> UIViewController {

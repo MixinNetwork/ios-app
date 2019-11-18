@@ -96,7 +96,7 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        qrcodeImageView.isHidden = CommonUserDefault.shared.hasPerformedQRCodeScanning
+        qrcodeImageView.isHidden = AppGroupUserDefaults.User.hasPerformedQrCodeScanning
         if needRefresh {
             fetchConversations()
         }
@@ -501,8 +501,8 @@ extension HomeViewController {
     private func requestAppStoreReviewIfNeeded() {
         let sevenDays: Double = 7 * 24 * 60 * 60
         let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
-            && CommonUserDefault.shared.hasPerformedTransfer
-            && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
+            && AppGroupUserDefaults.User.hasPerformedTransfer
+            && -AppGroupUserDefaults.firstShownHomeDate.timeIntervalSinceNow > sevenDays
         if shouldRequestReview {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                 SKStoreReviewController.requestReview()

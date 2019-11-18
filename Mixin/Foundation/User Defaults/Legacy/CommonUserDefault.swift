@@ -4,8 +4,6 @@ class CommonUserDefault {
 
     static let shared = CommonUserDefault()
     
-    static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.ios.recently.used.app.ids.change")
-    
     private let keyFirstLaunchSince1970 = "first_launch_since_1970"
     private let keyHasPerformedTransfer = "has_performed_transfer"
     private var keyConversationDraft: String {
@@ -264,18 +262,6 @@ class CommonUserDefault {
         set {
             session.set(newValue, forKey: keyRecentlyUsedAppIds)
         }
-    }
-    
-    func insertRecentlyUsedAppId(id: String) {
-        let maxNumberOfIds = 12
-        var ids = recentlyUsedAppIds
-        ids.removeAll(where: { $0 == id })
-        ids.insert(id, at: 0)
-        if ids.count > maxNumberOfIds {
-            ids.removeLast(ids.count - maxNumberOfIds)
-        }
-        recentlyUsedAppIds = ids
-        NotificationCenter.default.post(name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification, object: ids)
     }
     
     var autoDownloadPhotos: AutoDownload {

@@ -56,7 +56,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard item?.category == .video else {
             return false
         }
-        switch CommonUserDefault.shared.autoDownloadVideos {
+        switch AppGroupUserDefaults.User.autoDownloadVideos {
         case .wifiAndCellular:
             return true
         case .wifi:

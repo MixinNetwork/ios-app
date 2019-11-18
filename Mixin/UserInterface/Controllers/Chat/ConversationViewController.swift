@@ -137,7 +137,8 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+        let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+        announcementButton.isHidden = !hasUnreadAnnouncement
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
         updateStrangerActionView()
@@ -253,7 +254,7 @@ class ConversationViewController: UIViewController {
                                             numberOfParticipants: numberOfParticipants,
                                             isMember: isMember)
         present(vc, animated: true, completion: nil)
-        CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
+        AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
         announcementButton.isHidden = true
     }
     
@@ -530,7 +531,8 @@ class ConversationViewController: UIViewController {
                 dataSource?.conversation.name = conversation.name
             }
             dataSource?.conversation.announcement = conversation.announcement
-            announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+            let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+            announcementButton.isHidden = !hasUnreadAnnouncement
             hideLoading()
         case .startedUpdateConversation:
             showLoading()
@@ -828,7 +830,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             if message.canRecall() {
                 controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
-                    if CommonUserDefault.shared.isRecallTips {
+                    if AppGroupUserDefaults.User.hasShownRecallTips {
                         self.deleteForEveryone(viewModel: viewModel)
                     } else {
                         self.showRecallTips(viewModel: viewModel)
@@ -1576,11 +1578,11 @@ extension ConversationViewController {
     private func showRecallTips(viewModel: MessageViewModel) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
+            AppGroupUserDefaults.User.hasShownRecallTips = true
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
+            AppGroupUserDefaults.User.hasShownRecallTips = true
             self.deleteForEveryone(viewModel: viewModel)
         }))
         present(alc, animated: true, completion: nil)

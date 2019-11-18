@@ -30,7 +30,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     }
     
     override var shouldDownloadAutomatically: Bool {
-        switch CommonUserDefault.shared.autoDownloadPhotos {
+        switch AppGroupUserDefaults.User.autoDownloadPhotos {
         case .wifiAndCellular:
             return true
         case .wifi:

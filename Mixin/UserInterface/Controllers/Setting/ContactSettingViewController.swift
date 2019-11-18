@@ -7,7 +7,7 @@ final class ContactSettingViewController: UITableViewController {
     private lazy var hud = Hud()
 
     private var hasUploadMobileContacts: Bool {
-        return CommonUserDefault.shared.isUploadContacts
+        return AppGroupUserDefaults.User.autoUploadsContacts
     }
 
     deinit {
@@ -76,7 +76,7 @@ final class ContactSettingViewController: UITableViewController {
             switch result {
             case .success:
                 hud.hide()
-                CommonUserDefault.shared.isUploadContacts = isUpload
+                AppGroupUserDefaults.User.autoUploadsContacts = isUpload
                 self?.tableView.reloadData()
                 if isUpload {
                     ContactAPI.shared.syncContacts()

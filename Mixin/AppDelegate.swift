@@ -220,7 +220,7 @@ extension AppDelegate {
         window.backgroundColor = .black
         if AccountAPI.shared.didLogin {
             window.rootViewController = makeInitialViewController()
-            if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
+            if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
                 })
@@ -248,9 +248,8 @@ extension AppDelegate {
             Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
-
-        CommonUserDefault.shared.checkUpdateOrInstallVersion()
-        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
+        
+        AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
     }
     
     private func checkJailbreak() {

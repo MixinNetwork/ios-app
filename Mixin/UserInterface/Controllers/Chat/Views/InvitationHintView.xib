@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="T54-sJ-Vgj" customClass="InvitationHintView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The inviter is not in your contacts" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MOc-Mw-545">
+                    <rect key="frame" x="0.0" y="16" width="375" height="19.5"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_invited_by_stranger"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GY9-v1-r3d" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="80" y="47.5" width="215" height="46.5"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <inset key="contentEdgeInsets" minX="12" minY="0.0" maxX="12" maxY="0.0"/>
+                    <state key="normal" title="Exit group and report inviter"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_exit_group_and_report_inviter"/>
+                    </userDefinedRuntimeAttributes>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="GY9-v1-r3d" secondAttribute="trailing" constant="16" id="9H3-PZ-MPJ"/>
+                <constraint firstItem="GY9-v1-r3d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="T54-sJ-Vgj" secondAttribute="leading" constant="16" id="Pct-Z5-HRa"/>
+                <constraint firstItem="GY9-v1-r3d" firstAttribute="top" secondItem="MOc-Mw-545" secondAttribute="bottom" constant="12" id="Qfz-yJ-wIZ"/>
+                <constraint firstAttribute="bottom" secondItem="GY9-v1-r3d" secondAttribute="bottom" constant="16" id="aX3-CF-eWC"/>
+                <constraint firstItem="MOc-Mw-545" firstAttribute="top" secondItem="T54-sJ-Vgj" secondAttribute="top" constant="16" id="dBm-ZF-TQZ"/>
+                <constraint firstItem="MOc-Mw-545" firstAttribute="leading" secondItem="T54-sJ-Vgj" secondAttribute="leading" id="hqe-hb-Hk2"/>
+                <constraint firstItem="GY9-v1-r3d" firstAttribute="centerX" secondItem="T54-sJ-Vgj" secondAttribute="centerX" id="rwx-ZB-ajs"/>
+                <constraint firstAttribute="trailing" secondItem="MOc-Mw-545" secondAttribute="trailing" id="xqE-sj-e4W"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="exitButton" destination="GY9-v1-r3d" id="FhB-Sy-rb2"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="-228.5"/>
+        </view>
+    </objects>
+</document>

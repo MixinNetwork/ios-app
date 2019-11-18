@@ -70,6 +70,12 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
+    private lazy var invitationHintView: InvitationHintView = {
+        let view = R.nib.invitationHintView(owner: nil)!
+        view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
+        return view
+    }()
+    
     private var unreadBadgeValue: Int = 0 {
         didSet {
             guard unreadBadgeValue != oldValue else {
@@ -347,6 +353,21 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc func exitGroupAndReportInviterAction(_ sender: Any) {
+        let hud = Hud()
+        if let view = navigationController?.view {
+            hud.show(style: .busy, text: "", on: view)
+        }
+        ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
+        hud.hide()
+        UIApplication.homeNavigationController?.backToHome()
+        guard let inviterId = dataSource.myInvitation?.userId else {
+            return
+        }
+        UserAPI.shared.reportUser(userId: inviterId) { (_) in }
+    }
+    
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
         if conversationInputViewController.audioViewController.hideLongPressHint() {
             return
@@ -475,6 +496,7 @@ class ConversationViewController: UIViewController {
         }
         hideLoading()
         dataSource?.ownerUser = ownerUser
+        updateInvitationHintView()
     }
     
     @objc func menuControllerDidShowMenu(_ notification: Notification) {
@@ -1172,6 +1194,28 @@ extension ConversationViewController {
         }
     }
     
+    private func updateInvitationHintView() {
+        guard dataSource.category == .group else {
+            return
+        }
+        let conversationId = self.conversationId
+        DispatchQueue.global().async { [weak self] in
+            let isInvitedByStranger: Bool
+            if let inviterId = self?.dataSource.myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {
+                isInvitedByStranger = true
+            } else {
+                isInvitedByStranger = false
+            }
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                self.tableView.tableFooterView = isInvitedByStranger ? self.invitationHintView : nil
+                self.tableView.contentOffset.y += self.invitationHintView.frame.height
+            }
+        }
+    }
+    
     private func updateNavigationBarHeightAndTableViewTopInset() {
         titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
@@ -1282,6 +1326,7 @@ extension ConversationViewController {
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
         if dataSource.category == .group {
+            updateInvitationHintView()
             let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
             userHandleViewController.users = users
             let keyword: String = conversationInputViewController.textView.text

@@ -84,7 +84,12 @@ final class UserAPI: BaseAPI {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
         return request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
     }
-
+    
+    func reportUser(userId: String, completion: @escaping (APIResult<UserResponse>) -> Void) {
+        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
+        request(method: .post, url: url.reports, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+    }
+    
     func reportUser(userId: String) -> APIResult<UserResponse> {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
         return request(method: .post, url: url.reports, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())

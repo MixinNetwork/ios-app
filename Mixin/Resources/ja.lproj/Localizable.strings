@@ -233,6 +233,8 @@
 "chat_shared_media_empty" = "メディアなし";
 "chat_shared_audio_empty" = "オーディオなし";
 "chat_shared_data_empty" = "ファイルなし";
+"chat_invited_by_stranger" = "招待者は連絡先にありません";
+"chat_exit_group_and_report_inviter" = "グループを退会しても招待者を報告する";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

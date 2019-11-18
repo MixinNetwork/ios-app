@@ -256,6 +256,8 @@
 "chat_shared_media_empty" = "无媒体";
 "chat_shared_audio_empty" = "无音频";
 "chat_shared_data_empty" = "无文件";
+"chat_invited_by_stranger" = "邀请人不是你的联系人";
+"chat_exit_group_and_report_inviter" = "退出群组并举报邀请人";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

@@ -769,6 +769,8 @@
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
 		DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */; };
 		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
+		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
+		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
@@ -1577,6 +1579,8 @@
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
 		DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeWindow.swift; sourceTree = "<group>"; };
 		DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecognizeWindow.xib; sourceTree = "<group>"; };
+		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
+		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2659,6 +2663,8 @@
 				7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */,
 				7B0B01971FEA63FA000EEE4F /* StrangerHintView.swift */,
 				7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */,
+				E0A70A13238250EF003C3B96 /* InvitationHintView.swift */,
+				E0A70A1123825004003C3B96 /* InvitationHintView.xib */,
 				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
 				7BD38B5F20BEA03200D06E5C /* WaveformView.swift */,
 				7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */,
@@ -3163,6 +3169,7 @@
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
 				7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */,
 				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
+				E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
@@ -3382,6 +3389,7 @@
 				7B50DE112333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
+				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				273FACB0205FB9A800513327 /* SignalError.swift in Sources */,

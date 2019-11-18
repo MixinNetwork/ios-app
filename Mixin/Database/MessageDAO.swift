@@ -386,6 +386,15 @@ final class MessageDAO {
         return results
     }
     
+    func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {
+        let condition: Condition = Message.Properties.conversationId == conversationId
+            && Message.Properties.category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+            && Message.Properties.action == SystemConversationAction.ADD.rawValue
+            && Message.Properties.participantId == inviteeUserId
+        let order = [Message.Properties.createdAt.asOrder(by: .ascending)]
+        return MixinDatabase.shared.getCodable(condition: condition, orderBy: order)
+    }
+    
     func getUnreadMessagesCount(conversationId: String) -> Int {
         guard let firstUnreadMessage = self.firstUnreadMessage(conversationId: conversationId) else {
             return 0

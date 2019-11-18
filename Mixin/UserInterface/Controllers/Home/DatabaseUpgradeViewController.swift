@@ -12,13 +12,15 @@ class DatabaseUpgradeViewController: UIViewController {
         FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
-            let currentVersion = DatabaseUserDefault.shared.databaseVersion
+            let localVersion = AppGroupUserDefaults.User.localVersion
 
             TaskDatabase.shared.initDatabase()
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: DatabaseUserDefault.shared.clearSentSenderKey)
-            DatabaseUserDefault.shared.clearSentSenderKey = false
+            
+            let shouldClearSentSenderKey = !AppGroupUserDefaults.Database.isSentSenderKeyCleared
+            MixinDatabase.shared.initDatabase(clearSentSenderKey: shouldClearSentSenderKey)
+            AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
 
-            if currentVersion < 3 {
+            if localVersion < 3 {
                 if let currency = WalletUserDefault.shared.currencyCode, !currency.isEmpty {
                     AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency), completion: {  (result) in
                         if case let .success(account) = result {
@@ -28,12 +30,12 @@ class DatabaseUpgradeViewController: UIViewController {
                     })
                 }
             }
-            if currentVersion < 4 {
+            if localVersion < 4 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             }
-
-            DatabaseUserDefault.shared.forceUpgradeDatabase = false
-            DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
+            
+            AppGroupUserDefaults.User.needsRebuildDatabase = false
+            AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
             let time = Date().timeIntervalSince(startTime)
             if time < 2 {

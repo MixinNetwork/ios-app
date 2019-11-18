@@ -15,7 +15,7 @@ func makeInitialViewController() -> UIViewController {
         return UsernameViewController()
     } else if AccountUserDefault.shared.hasRestoreChat {
         return RestoreViewController.instance()
-    } else if DatabaseUserDefault.shared.hasUpgradeDatabase() {
+    } else if AppGroupUserDefaults.User.needsUpgradeInMainApp {
         return DatabaseUpgradeViewController.instance()
     } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized {
         return SignalLoadingViewController.instance()

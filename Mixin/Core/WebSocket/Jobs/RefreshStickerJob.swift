@@ -33,9 +33,9 @@ class RefreshStickerJob: BaseJob {
                     AlbumDAO.shared.insertOrUpdateAblum(album: album)
                 }
 
-                if !DatabaseUserDefault.shared.upgradeStickers {
+                if !AppGroupUserDefaults.Database.isStickersUpgraded {
                     MessageDAO.shared.updateOldStickerMessages()
-                    DatabaseUserDefault.shared.upgradeStickers = true
+                    AppGroupUserDefaults.Database.isStickersUpgraded = true
                 }
             case let .failure(error):
                 throw error

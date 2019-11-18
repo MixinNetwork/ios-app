@@ -226,10 +226,9 @@ class BackupJob: BaseJob {
     }
 
     private func getDatabaseFileSize() -> Int64 {
-        let now = Date().timeIntervalSince1970
         try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
-        if now - DatabaseUserDefault.shared.lastVacuumTime >= 86400 * 14 {
-            DatabaseUserDefault.shared.lastVacuumTime = now
+        if -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
+            AppGroupUserDefaults.Database.vacuumDate = Date()
             try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
         }
         return FileManager.default.fileSize(MixinFile.databaseURL.path)

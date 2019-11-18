@@ -271,7 +271,7 @@ extension AppDelegate {
         guard AccountAPI.shared.didLogin else {
             return
         }
-        guard !DatabaseUserDefault.shared.hasUpgradeDatabase() else {
+        guard !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             return
         }
         WebSocketService.shared.reconnectIfNeeded()

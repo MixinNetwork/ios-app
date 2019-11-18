@@ -18,6 +18,9 @@ class MixinDatabase: BaseDatabase {
             try database.run(transaction: {
                 var currentVersion = try database.getDatabaseVersion()
                 if currentVersion == 0 {
+                    // UserDefaults migration is performed before database opening
+                    // Database won't be opened if UserDefaults migration fails (e.g. launched in App Extension)
+                    // As long as database is open this is guaranteed running in main App
                     currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
                 }
                 try self.createBefore(database: database, currentVersion: currentVersion)

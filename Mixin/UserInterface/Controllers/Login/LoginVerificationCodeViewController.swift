@@ -89,8 +89,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AccountAPI.shared.account = account
             MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
             TaskDatabase.shared.initDatabase()
-            DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
-
+            AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
+            
             if account.full_name.isEmpty {
                 UIApplication.logEvent(eventName: AnalyticsEventSignUp)
             } else if HomeViewController.showChangePhoneNumberTips {

@@ -68,9 +68,9 @@ class RestoreViewController: UIViewController {
 
                 AccountUserDefault.shared.hasRestoreChat = false
                 AccountUserDefault.shared.hasRestoreMedia = true
-                DatabaseUserDefault.shared.clearSentSenderKey = true
-                DatabaseUserDefault.shared.forceUpgradeDatabase = true
-
+                AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+                AppGroupUserDefaults.User.needsRebuildDatabase = true
+                
                 DispatchQueue.main.async {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }

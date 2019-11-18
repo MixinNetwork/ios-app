@@ -55,7 +55,7 @@ class BaseDatabase {
                     if AccountAPI.shared.didLogin && (error.path?.hasSuffix("mixin.db") ?? false) {
                         // no such table
                         UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
-                        DatabaseUserDefault.shared.forceUpgradeDatabase = true
+                        AppGroupUserDefaults.User.needsRebuildDatabase = true
                         return
                     }
                 }

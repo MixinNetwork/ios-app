@@ -256,6 +256,9 @@
 "chat_shared_media_empty" = "NO MEDIA";
 "chat_shared_audio_empty" = "NO AUDIO";
 "chat_shared_data_empty" = "NO FILE";
+"chat_invited_by_stranger" = "The inviter is not in your contacts";
+"chat_exit_group_and_report_inviter" = "Exit group and report inviter";
+"chat_exit_group_and_report_inviter_confirmation" = "Exit group and report inviter?";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
@@ -681,7 +684,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send a audio";
+"alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";

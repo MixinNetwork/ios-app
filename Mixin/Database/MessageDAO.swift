@@ -391,6 +391,15 @@ final class MessageDAO {
         return results
     }
     
+    func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {
+        let condition: Condition = Message.Properties.conversationId == conversationId
+            && Message.Properties.category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+            && Message.Properties.action == SystemConversationAction.ADD.rawValue
+            && Message.Properties.participantId == inviteeUserId
+        let order = [Message.Properties.createdAt.asOrder(by: .ascending)]
+        return MixinDatabase.shared.getCodable(condition: condition, orderBy: order)
+    }
+    
     func getUnreadMessagesCount(conversationId: String) -> Int {
         guard let firstUnreadMessage = self.firstUnreadMessage(conversationId: conversationId) else {
             return 0
@@ -556,10 +565,9 @@ final class MessageDAO {
         }
         return deleteCount > 0
     }
-
-    func hasSentMessage(toUserId userId: String) -> Bool {
+    
+    func hasSentMessage(inConversationOf conversationId: String) -> Bool {
         let myId = AccountAPI.shared.accountUserId
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myId, ownerUserId: userId)
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     

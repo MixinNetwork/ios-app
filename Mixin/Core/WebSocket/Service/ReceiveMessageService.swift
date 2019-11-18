@@ -688,14 +688,14 @@ extension ReceiveMessageService {
         }
 
         if systemSession.action == SystemSessionMessageAction.PROVISION.rawValue {
-            AccountUserDefault.shared.lastDesktopLogin = Date()
-            AccountUserDefault.shared.extensionSession = systemSession.sessionId
+            AppGroupUserDefaults.Account.lastDesktopLoginDate = Date()
+            AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: data.userId)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
-            AccountUserDefault.shared.extensionSession = nil
+            AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
 
             JobDAO.shared.clearSessionJob()

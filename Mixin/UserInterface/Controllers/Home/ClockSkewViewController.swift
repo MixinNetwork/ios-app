@@ -27,7 +27,7 @@ class ClockSkewViewController: UIViewController {
 
             switch result {
             case .success:
-                AccountUserDefault.shared.hasClockSkew = false
+                AppGroupUserDefaults.Account.isClockSkewed = false
                 AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

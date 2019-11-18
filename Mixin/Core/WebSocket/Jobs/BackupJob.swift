@@ -41,7 +41,7 @@ class BackupJob: BaseJob {
             return
         }
 
-        if !immediatelyBackup && !AccountUserDefault.shared.hasRebackup {
+        if !immediatelyBackup && !AppGroupUserDefaults.Account.hasUnfinishedBackup {
             let lastBackupTime = CommonUserDefault.shared.lastBackupTime
             let now = Date().timeIntervalSince1970
             switch CommonUserDefault.shared.backupCategory {
@@ -62,7 +62,7 @@ class BackupJob: BaseJob {
             }
         }
 
-        AccountUserDefault.shared.hasRebackup = true
+        AppGroupUserDefaults.Account.hasUnfinishedBackup = true
 
         try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
 
@@ -219,7 +219,7 @@ class BackupJob: BaseJob {
             removeOldFiles(backupDir: backupDir)
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
             CommonUserDefault.shared.lastBackupSize = totalFileSize
-            AccountUserDefault.shared.hasRebackup = false
+            AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         }
 
         NotificationCenter.default.postOnMain(name: .BackupDidChange)

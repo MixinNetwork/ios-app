@@ -141,7 +141,7 @@ extension WebSocketService: WebSocketDelegate {
             if -signingDate.timeIntervalSinceNow > 60 {
                 reconnect(sendDisconnectToRemote: true)
             } else {
-                AccountUserDefault.shared.hasClockSkew = true
+                AppGroupUserDefaults.Account.isClockSkewed = true
                 disconnect()
                 DispatchQueue.main.async {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
@@ -162,10 +162,10 @@ extension WebSocketService: WebSocketDelegate {
             AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
             
             if rechability?.isReachableOnEthernetOrWiFi ?? false {
-                if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
+                if CommonUserDefault.shared.backupCategory != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
                     BackupJobQueue.shared.addJob(job: BackupJob())
                 }
-                if AccountUserDefault.shared.hasRestoreMedia {
+                if AppGroupUserDefaults.Account.canRestoreMedia {
                     BackupJobQueue.shared.addJob(job: RestoreJob())
                 }
             }
@@ -206,7 +206,7 @@ extension WebSocketService: WebSocketDelegate {
             }
             let needsLogout = message.action == BlazeMessageAction.error.rawValue
                 && error.code == 401
-                && !AccountUserDefault.shared.hasClockSkew
+                && !AppGroupUserDefaults.Account.isClockSkewed
             if needsLogout {
                 AccountAPI.shared.logout(from: "WebSocketService")
             }

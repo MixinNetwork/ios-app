@@ -66,8 +66,8 @@ class RestoreViewController: UIViewController {
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 
-                AccountUserDefault.shared.hasRestoreChat = false
-                AccountUserDefault.shared.hasRestoreMedia = true
+                AppGroupUserDefaults.Account.canRestoreChat = false
+                AppGroupUserDefaults.Account.canRestoreMedia = true
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
                 AppGroupUserDefaults.User.needsRebuildDatabase = true
                 
@@ -81,8 +81,8 @@ class RestoreViewController: UIViewController {
     }
 
     @IBAction func skipAction(_ sender: Any) {
-        AccountUserDefault.shared.hasRestoreChat = false
-        AccountUserDefault.shared.hasRestoreMedia = false
+        AppGroupUserDefaults.Account.canRestoreChat = false
+        AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.window.rootViewController =
             makeInitialViewController()
     }

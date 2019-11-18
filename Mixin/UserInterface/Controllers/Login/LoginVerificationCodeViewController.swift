@@ -83,9 +83,12 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         switch result {
         case let .success(account):
             let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)
-            AccountUserDefault.shared.storePinToken(pinToken: pinToken)
-            AccountUserDefault.shared.storeToken(token: privateKeyPem)
-            AccountUserDefault.shared.storeAccount(account: account)
+            AppGroupUserDefaults.Account.pinToken = pinToken
+            AppGroupUserDefaults.Account.sessionSecret = privateKeyPem
+            if let data = try? JSONEncoder.default.encode(account) {
+                // FIXME: Extend AppGroupUserDefaults for account r/w
+                AppGroupUserDefaults.Account.serializedAccount = data
+            }
             AccountAPI.shared.account = account
             MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
             TaskDatabase.shared.initDatabase()
@@ -125,7 +128,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 }
             } else {
                 DispatchQueue.main.sync {
-                    AccountUserDefault.shared.hasRestoreChat = true
+                    AppGroupUserDefaults.Account.canRestoreChat = true
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }

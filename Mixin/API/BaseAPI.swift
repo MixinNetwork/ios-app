@@ -131,7 +131,7 @@ class BaseAPI {
                                 return
                             } else {
                                 if abs(serverTime / 1000000000 - clientTime) > 300 {
-                                    AccountUserDefault.shared.hasClockSkew = true
+                                    AppGroupUserDefaults.Account.isClockSkewed = true
                                     DispatchQueue.main.async {
                                         WebSocketService.shared.disconnect()
                                         AppDelegate.current.window.rootViewController = makeInitialViewController()
@@ -246,7 +246,7 @@ extension BaseAPI {
                     return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
                 } else {
                     if abs(serverTime / 1000000000 - clientTime) > 300 {
-                        AccountUserDefault.shared.hasClockSkew = true
+                        AppGroupUserDefaults.Account.isClockSkewed = true
                         DispatchQueue.main.async {
                             WebSocketService.shared.disconnect()
                             AppDelegate.current.window.rootViewController = makeInitialViewController()

@@ -72,7 +72,7 @@ class MixinRequest {
     }
 
     fileprivate static func getAuthenticationToken(request: URLRequest) -> String? {
-        guard let account = AccountAPI.shared.account, let token = AccountUserDefault.shared.getToken(), !token.isEmpty else {
+        guard let account = AccountAPI.shared.account, let token = AppGroupUserDefaults.Account.sessionSecret, !token.isEmpty else {
             return nil
         }
         guard let signedToken = signToken(sessionId: account.session_id, userId: account.user_id, authenticationToken: token, request: request) else {

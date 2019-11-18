@@ -1,7 +1,7 @@
 import UIKit
 
 func makeInitialViewController() -> UIViewController {
-    if AccountUserDefault.shared.hasClockSkew {
+    if AppGroupUserDefaults.Account.isClockSkewed {
         if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
             return viewController
@@ -13,7 +13,7 @@ func makeInitialViewController() -> UIViewController {
         }
     } else if AccountAPI.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
         return UsernameViewController()
-    } else if AccountUserDefault.shared.hasRestoreChat {
+    } else if AppGroupUserDefaults.Account.canRestoreChat {
         return RestoreViewController.instance()
     } else if AppGroupUserDefaults.User.needsUpgradeInMainApp {
         return DatabaseUpgradeViewController.instance()

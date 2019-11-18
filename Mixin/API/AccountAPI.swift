@@ -39,7 +39,7 @@ final class AccountAPI: BaseAPI {
         guard account != nil else {
             return false
         }
-        guard let token = AccountUserDefault.shared.getToken(), !token.isEmpty else {
+        guard let token = AppGroupUserDefaults.Account.sessionSecret, !token.isEmpty else {
             return false
         }
         return true
@@ -57,11 +57,21 @@ final class AccountAPI: BaseAPI {
         return account?.identity_number ?? "00000"
     }
     
-    var account = AccountUserDefault.shared.getAccount()
-
+    // FIXME: Extend AppGroupUserDefaults for account r/w
+    var account: Account? = {
+        guard let data = AppGroupUserDefaults.Account.serializedAccount else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(Account.self, from: data)
+    }()
+    
+    // FIXME: Extend AppGroupUserDefaults for account r/w
     func updateAccount(account: Account) {
         self.account = account
-        AccountUserDefault.shared.storeAccount(account: account)
+        if let data = try? JSONEncoder.default.encode(account) {
+            AppGroupUserDefaults.Account.serializedAccount = data
+        }
+        NotificationCenter.default.post(name: .AccountDidChange, object: nil)
         DispatchQueue.global().async {
             UserDAO.shared.updateAccount(account: account)
         }
@@ -141,7 +151,7 @@ final class AccountAPI: BaseAPI {
     }
     
     func updatePin(old: String?, new: String, completion: @escaping (APIResult<Account>) -> Void) {
-        guard let pinToken = AccountUserDefault.shared.getPinToken() else {
+        guard let pinToken = AppGroupUserDefaults.Account.pinToken else {
             completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
             return
         }
@@ -181,7 +191,7 @@ final class AccountAPI: BaseAPI {
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
             BackupJobQueue.shared.cancelAllOperations()
-            AccountUserDefault.shared.clear()
+            AppGroupUserDefaults.Account.clearAll()
             SignalDatabase.shared.logout()
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = 1

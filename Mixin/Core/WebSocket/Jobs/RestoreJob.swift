@@ -27,7 +27,7 @@ class RestoreJob: BaseJob {
     }
 
     override func run() throws {
-        guard AccountUserDefault.shared.hasRestoreMedia else {
+        guard AppGroupUserDefaults.Account.canRestoreMedia else {
             return
         }
         guard FileManager.default.ubiquityIdentityToken != nil else {
@@ -167,7 +167,7 @@ class RestoreJob: BaseJob {
         }
 
         if isRestoredAllFiles {
-            AccountUserDefault.shared.hasRestoreMedia = false
+            AppGroupUserDefaults.Account.canRestoreMedia = false
         }
 
         NotificationCenter.default.removeObserver(observer)

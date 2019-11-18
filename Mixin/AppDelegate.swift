@@ -110,11 +110,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard AccountAPI.shared.account == nil else {
             return
         }
-        guard let account = AccountUserDefault.shared.getAccount() else {
+        // FIXME: Extend AppGroupUserDefaults for account r/w
+        guard let data = AppGroupUserDefaults.Account.serializedAccount else {
             return
         }
-
-        AccountAPI.shared.account = account
+        AccountAPI.shared.account = try? JSONDecoder.default.decode(Account.self, from: data)
         configAnalytics()
         if AccountAPI.shared.didLogin && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()

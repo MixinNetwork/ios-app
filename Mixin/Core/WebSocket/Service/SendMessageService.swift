@@ -191,7 +191,7 @@ class SendMessageService: MixinService {
             SendMessageService.shared.saveDispatchQueue.async {
                 let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0
-                let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
+                let pageCount = AppGroupUserDefaults.Account.isDesktopLoggedIn ? 1000 : 2000
                 while messageIds.count > 0 && position < messageIds.count {
                     let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
                     let ids = Array(messageIds[position..<nextPosition])
@@ -206,7 +206,7 @@ class SendMessageService: MixinService {
                         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
 
-                        if AccountUserDefault.shared.isDesktopLoggedIn {
+                        if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                             jobs.append(Job(sessionRead: conversationId, messageId: messageId))
                         }
                     } else {
@@ -216,7 +216,7 @@ class SendMessageService: MixinService {
                             let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                             jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
 
-                            if let sessionId = AccountUserDefault.shared.extensionSession {
+                            if let sessionId = AppGroupUserDefaults.Account.extensionSession {
                                 let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, ackMessages: messages), action: BlazeMessageAction.createMessage.rawValue)
                                 jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage))
                             }
@@ -344,7 +344,7 @@ class SendMessageService: MixinService {
                 }
 
                 if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
-                    guard let sessionId = AccountUserDefault.shared.extensionSession else {
+                    guard let sessionId = AppGroupUserDefaults.Account.extensionSession else {
                         JobDAO.shared.removeJob(jobId: job.jobId)
                         continue
                     }

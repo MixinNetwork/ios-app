@@ -64,8 +64,8 @@
 		7B09E55E1FD15BAA002E45D3 /* TransferMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */; };
 		7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01911FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift */; };
 		7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01931FEA281E000EEE4F /* URLExtension.swift */; };
-		7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */; };
-		7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */; };
+		7B0B01961FEA628F000EEE4F /* StrangerHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */; };
+		7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerHintView.swift */; };
 		7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */; };
 		7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */; };
 		7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */; };
@@ -850,8 +850,8 @@
 		7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageViewModel.swift; sourceTree = "<group>"; };
 		7B0B01911FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecryptionFailedMessageViewModel.swift; sourceTree = "<group>"; };
 		7B0B01931FEA281E000EEE4F /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
-		7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerTipsView.xib; sourceTree = "<group>"; };
-		7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerTipsView.swift; sourceTree = "<group>"; };
+		7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerHintView.xib; sourceTree = "<group>"; };
+		7B0B01971FEA63FA000EEE4F /* StrangerHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerHintView.swift; sourceTree = "<group>"; };
 		7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
 		7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAssetCell.swift; sourceTree = "<group>"; };
 		7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopAssetsDAO.swift; sourceTree = "<group>"; };
@@ -2657,8 +2657,8 @@
 				7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */,
 				7BEB423522EAD209003B4479 /* ModernNetworkOperationButton.swift */,
 				7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */,
-				7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */,
-				7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */,
+				7B0B01971FEA63FA000EEE4F /* StrangerHintView.swift */,
+				7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */,
 				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
 				7BD38B5F20BEA03200D06E5C /* WaveformView.swift */,
 				7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */,
@@ -3132,7 +3132,7 @@
 				DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */,
 				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
 				7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */,
-				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
+				7B0B01961FEA628F000EEE4F /* StrangerHintView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
@@ -3290,7 +3290,7 @@
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -3319,7 +3319,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -3529,7 +3529,7 @@
 				DF7A4B481FCDA6ED00F21BCB /* UserResponse.swift in Sources */,
 				273FACC3205FB9A800513327 /* GroupCipher.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
-				7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */,
+				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,

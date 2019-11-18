@@ -551,10 +551,9 @@ final class MessageDAO {
         }
         return deleteCount > 0
     }
-
-    func hasSentMessage(toUserId userId: String) -> Bool {
+    
+    func hasSentMessage(inConversationOf conversationId: String) -> Bool {
         let myId = AccountAPI.shared.accountUserId
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myId, ownerUserId: userId)
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     

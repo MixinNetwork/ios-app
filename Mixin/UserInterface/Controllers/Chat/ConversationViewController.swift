@@ -63,9 +63,8 @@ class ConversationViewController: UIViewController {
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     
-    private lazy var strangerTipsView: StrangerTipsView = {
-        let view = StrangerTipsView()
-        view.frame.size.height = StrangerTipsView.height
+    private lazy var strangerHintView: StrangerHintView = {
+        let view = R.nib.strangerHintView(owner: nil)!
         view.blockButton.addTarget(self, action: #selector(blockAction(_:)), for: .touchUpInside)
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
@@ -127,7 +126,7 @@ class ConversationViewController: UIViewController {
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateStrangerTipsView()
+        updateStrangerHintView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
@@ -314,12 +313,12 @@ class ConversationViewController: UIViewController {
         guard let userId = ownerUser?.userId else {
             return
         }
-        strangerTipsView.blockButton.isBusy = true
+        strangerHintView.blockButton.isBusy = true
         UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.strangerTipsView.blockButton.isBusy = false
+            weakSelf.strangerHintView.blockButton.isBusy = false
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
@@ -333,12 +332,12 @@ class ConversationViewController: UIViewController {
         guard let user = ownerUser else {
             return
         }
-        strangerTipsView.addContactButton.isBusy = true
+        strangerHintView.addContactButton.isBusy = true
         UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.strangerTipsView.addContactButton.isBusy = false
+            weakSelf.strangerHintView.addContactButton.isBusy = false
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
@@ -472,7 +471,7 @@ class ConversationViewController: UIViewController {
             self.ownerUser = user
             updateNavigationBar()
             conversationInputViewController.update(opponentUser: user)
-            updateStrangerTipsView()
+            updateStrangerHintView()
         }
         hideLoading()
         dataSource?.ownerUser = ownerUser
@@ -1111,7 +1110,7 @@ extension ConversationViewController {
         conversationInputViewController.update(opponentUser: user)
         self.ownerUser = user
         updateNavigationBar()
-        updateStrangerTipsView()
+        updateStrangerHintView()
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1152,14 +1151,18 @@ extension ConversationViewController {
         UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
-    private func updateStrangerTipsView() {
+    private func updateStrangerHintView() {
+        guard dataSource.category == .contact else {
+            return
+        }
+        let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
-            if let ownerUser = self?.ownerUser, ownerUser.relationship == Relationship.STRANGER.rawValue, !MessageDAO.shared.hasSentMessage(toUserId: ownerUser.userId) {
+            if let ownerUser = self?.ownerUser, ownerUser.relationship == Relationship.STRANGER.rawValue, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId) {
                 DispatchQueue.main.async {
                     guard let weakSelf = self else {
                         return
                     }
-                    weakSelf.tableView.tableFooterView = weakSelf.strangerTipsView
+                    weakSelf.tableView.tableFooterView = weakSelf.strangerHintView
                 }
             } else {
                 DispatchQueue.main.async {

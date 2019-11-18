@@ -549,15 +549,14 @@ class ConversationViewController: UIViewController {
         let oldHeight = inputWrapperHeightConstraint.constant
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
         inputWrapperHeightConstraint.constant = newHeight
-        var bottomInset = newHeight
-        tableView.scrollIndicatorInsets.bottom = bottomInset
-        bottomInset += MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = newHeight - view.safeAreaInsets.bottom
         if animated {
             UIView.beginAnimations(nil, context: nil)
             UIView.setAnimationDuration(0.5)
             UIView.setAnimationCurve(.overdamped)
         }
         updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: oldHeight, newHeight: newHeight)
+        let bottomInset = newHeight + MessageViewModel.bottomSeparatorHeight
         tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
         view.layoutIfNeeded()
         if animated {

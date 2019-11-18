@@ -86,12 +86,13 @@ class VideoUploadJob: AttachmentUploadJob {
         let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         let thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
         thumbnail?.saveToFile(path: thumbnailUrl)
-        let size = FileManager.default.fileSize(videoUrl.path)
+        let mediaSize = FileManager.default.fileSize(videoUrl.path)
+        let mediaDuration = Int64(phAsset.duration * 1000)
         message.mediaUrl = videoFilename
-        message.mediaDuration = Int64(phAsset.duration * 1000)
-        message.mediaSize = size
-        message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
-        MixinDatabase.shared.insertOrReplace(objects: [message])
+        message.mediaDuration = mediaDuration
+        message.mediaSize = mediaSize
+        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, keyValues: [(Message.Properties.mediaUrl, videoFilename), (Message.Properties.mediaSize, mediaSize), (Message.Properties.mediaDuration, mediaDuration)])
+
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)

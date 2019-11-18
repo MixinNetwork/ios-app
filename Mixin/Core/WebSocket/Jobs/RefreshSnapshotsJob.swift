@@ -50,9 +50,9 @@ class RefreshSnapshotsJob: BaseJob {
     class func setOffset(_ newValue: String?, for category: Category) {
         switch category {
         case .all:
-            WalletUserDefault.shared.allTransactionOffset = newValue
+            AppGroupUserDefaults.Wallet.allTransactionsOffset = newValue
         case .asset(let id):
-            WalletUserDefault.shared.assetTransactionOffset[id] = newValue
+            AppGroupUserDefaults.Wallet.assetTransactionsOffset[id] = newValue
         case .opponent:
             break
         }
@@ -61,9 +61,9 @@ class RefreshSnapshotsJob: BaseJob {
     class func offset(for category: Category) -> String? {
         switch category {
         case .all:
-            return WalletUserDefault.shared.allTransactionOffset
+            return AppGroupUserDefaults.Wallet.allTransactionsOffset
         case .asset(let id):
-            return WalletUserDefault.shared.assetTransactionOffset[id]
+            return AppGroupUserDefaults.Wallet.assetTransactionsOffset[id]
         case .opponent:
             return nil
         }

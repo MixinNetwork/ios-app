@@ -111,15 +111,15 @@ extension AssetViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let asset = self.asset!
-        let toggleAssetHiddenTitle = WalletUserDefault.shared.hiddenAssets[asset.assetId] == nil ? Localized.WALLET_MENU_HIDE_ASSET : Localized.WALLET_MENU_SHOW_ASSET
+        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] == nil ? Localized.WALLET_MENU_HIDE_ASSET : Localized.WALLET_MENU_SHOW_ASSET
         alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self else {
                 return
             }
-            if WalletUserDefault.shared.hiddenAssets[asset.assetId] == nil {
-                WalletUserDefault.shared.hiddenAssets[asset.assetId] = asset.assetId
+            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] ?? false {
+                AppGroupUserDefaults.Wallet.hiddenAssetIds.removeValue(forKey: asset.assetId)
             } else {
-                WalletUserDefault.shared.hiddenAssets.removeValue(forKey: asset.assetId)
+                AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = true
             }
             NotificationCenter.default.postOnMain(name: .AssetVisibleDidChange)
             weakSelf.navigationController?.popViewController(animated: true)

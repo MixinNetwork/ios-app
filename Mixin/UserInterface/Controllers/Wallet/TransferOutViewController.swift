@@ -160,10 +160,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard !newAddressTips else {
             return false
         }
-        guard !WalletUserDefault.shared.firstWithdrawalTip.contains(addressId) else {
+        let didWithdrawn = AppGroupUserDefaults.Wallet.withdrawnAddressIds[addressId] ?? false
+        guard !didWithdrawn else {
             return false
         }
-
         let amountText = amountTextField.text ?? ""
         if isInputAssetAmount {
             return amountText.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10

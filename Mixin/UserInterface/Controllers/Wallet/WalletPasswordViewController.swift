@@ -219,7 +219,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.isBusy = false
                     switch result {
                     case .success(let account):
-                        WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                        AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         AccountAPI.shared.updateAccount(account: account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
@@ -244,7 +244,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 weakSelf.isBusy = false
                 switch result {
                 case .success:
-                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), dismissTarget: weakSelf.dismissTarget)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
@@ -284,11 +284,11 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.isBusy = false
                     switch result {
                     case .success(let account):
-                        if WalletUserDefault.shared.isBiometricPay {
+                        if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                             Keychain.shared.storePIN(pin: pin)
                         }
-                        WalletUserDefault.shared.checkPinInterval = WalletUserDefault.shared.checkMinInterval
-                        WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                        AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                        AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         AccountAPI.shared.updateAccount(account: account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):

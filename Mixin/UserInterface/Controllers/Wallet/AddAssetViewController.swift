@@ -228,11 +228,11 @@ extension AddAssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
             let (asset, forceSelected) = searchResults[indexPath.row]
-            if WalletUserDefault.shared.hiddenAssets[asset.assetId] != nil {
+            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] != nil {
                 let alert = UIAlertController(title: R.string.localizable.wallet_asset_is_hidden_prompt(), message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: R.string.localizable.action_unhide(), style: .default, handler: { (_) in
-                    WalletUserDefault.shared.hiddenAssets[asset.assetId] = nil
+                    AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = nil
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.wallet_asset_is_unhidden())
                 }))
                 present(alert, animated: true, completion: nil)

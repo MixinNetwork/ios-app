@@ -21,7 +21,7 @@ class DatabaseUpgradeViewController: UIViewController {
             AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
 
             if localVersion < 3 {
-                if let currency = WalletUserDefault.shared.currencyCode, !currency.isEmpty {
+                if let currency = AppGroupUserDefaults.Wallet.currencyCode, !currency.isEmpty {
                     AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency), completion: {  (result) in
                         if case let .success(account) = result {
                             AccountAPI.shared.updateAccount(account: account)

@@ -41,7 +41,7 @@ class WalletSettingViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         if biometryType != .none {
-            biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
+            biometricsPaySwitch.isOn = AppGroupUserDefaults.Wallet.payWithBiometricAuthentication
             payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
         }
         updateLabels()
@@ -57,15 +57,15 @@ class WalletSettingViewController: UITableViewController {
     }
     
     @IBAction func biometryPaySwitchAction(_ sender: Any) {
-        if WalletUserDefault.shared.isBiometricPay {
+        if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
             let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { [weak self](_) in
-                self?.biometricsPaySwitch.setOn(WalletUserDefault.shared.isBiometricPay, animated: true)
+                self?.biometricsPaySwitch.setOn(AppGroupUserDefaults.Wallet.payWithBiometricAuthentication, animated: true)
             }))
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_DISABLE, style: .default, handler: { [weak self](_) in
                 Keychain.shared.clearPIN()
-                WalletUserDefault.shared.isBiometricPay = false
+                AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
                 self?.tableView.reloadData()
             }))
             present(alc, animated: true, completion: nil)
@@ -83,7 +83,7 @@ class WalletSettingViewController: UITableViewController {
                     self.biometricsPaySwitch.isOn = false
                     return
                 }
-                WalletUserDefault.shared.isBiometricPay = true
+                AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = true
                 self.tableView.reloadData()
             }, onFailed: {
                 self.biometricsPaySwitch.isOn = false
@@ -101,7 +101,7 @@ extension WalletSettingViewController {
             if biometryType == .none {
                 return 0
             } else {
-                return WalletUserDefault.shared.isBiometricPay ? 2 : 1
+                return AppGroupUserDefaults.Wallet.payWithBiometricAuthentication ? 2 : 1
             }
         } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
@@ -181,13 +181,13 @@ extension WalletSettingViewController {
     
     private func setNewPinInterval(interval: Double) {
         let validator = PinValidationViewController(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in
-            WalletUserDefault.shared.pinInterval = interval
+            AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval = interval
         })
         present(validator, animated: true, completion: nil)
     }
     
     private func refreshPinIntervalUI() {
-        let pinInterval = WalletUserDefault.shared.pinInterval
+        let pinInterval = AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval
         let hour: Double = 60 * 60
         if pinInterval < hour {
             pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_MINUTES(pinInterval).lowercased()

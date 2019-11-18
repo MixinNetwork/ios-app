@@ -104,7 +104,7 @@ extension AddressView: PinFieldDelegate {
                 case .success:
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
-                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
                     if error.code == 429 {
@@ -126,7 +126,7 @@ extension AddressView: PinFieldDelegate {
                 case let .success(address):
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case let .failure(error):
                     if error.code == 429 {

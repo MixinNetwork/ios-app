@@ -342,3 +342,8 @@ let qrCodeDetector: VisionBarcodeDetector = {
 }()
 
 let bytesPerMegaByte: UInt = 1024 * 1024
+
+enum PeriodicPinVerificationInterval {
+    static let min: TimeInterval = 60 * 10
+    static let max: TimeInterval = 60 * 60 * 24
+}

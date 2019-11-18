@@ -684,7 +684,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send a audio";
+"alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";

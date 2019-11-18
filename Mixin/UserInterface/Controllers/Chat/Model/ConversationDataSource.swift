@@ -1016,7 +1016,11 @@ extension ConversationDataSource {
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
             if shouldScrollToNewMessage {
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                if tableView.tableFooterView == nil {
+                    tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                } else {
+                    tableView.scrollToBottom(animated: false)
+                }
             } else {
                 NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }

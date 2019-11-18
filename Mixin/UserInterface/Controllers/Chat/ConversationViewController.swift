@@ -1210,7 +1210,6 @@ extension ConversationViewController {
                     return
                 }
                 self.tableView.tableFooterView = isInvitedByStranger ? self.invitationHintView : nil
-                self.tableView.contentOffset.y += self.invitationHintView.frame.height
             }
         }
     }

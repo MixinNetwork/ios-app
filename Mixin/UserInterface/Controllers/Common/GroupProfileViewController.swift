@@ -10,11 +10,14 @@ final class GroupProfileViewController: ProfileViewController {
         return conversation.isMuted
     }
     
+    private let isAnnouncementExpanded: Bool
+    
+    private lazy var notMemberPaddingView = NotMemberPaddingView()
+    
     private var conversation: ConversationItem
     private var codeId: String?
     private var isMember: Bool
     private var response: ConversationResponse?
-    private let isAnnouncementExpanded: Bool
     
     private var participantsCount: Int?
     private var isAdmin = false
@@ -187,6 +190,14 @@ extension GroupProfileViewController {
 // MARK: - Private works
 extension GroupProfileViewController {
     
+    class NotMemberPaddingView: UIView {
+        
+        override var intrinsicContentSize: CGSize {
+            return CGSize(width: 320, height: 30)
+        }
+        
+    }
+    
     private func reloadData() {
         for view in centerStackView.subviews {
             view.removeFromSuperview()
@@ -218,6 +229,8 @@ extension GroupProfileViewController {
             shortcutView.toggleSizeButton.removeTarget(nil, action: nil, for: .allEvents)
             shortcutView.toggleSizeButton.addTarget(self, action: #selector(toggleSize), for: .touchUpInside)
             centerStackView.addArrangedSubview(shortcutView)
+        } else {
+            centerStackView.addArrangedSubview(notMemberPaddingView)
         }
         
         updateMenuItems()

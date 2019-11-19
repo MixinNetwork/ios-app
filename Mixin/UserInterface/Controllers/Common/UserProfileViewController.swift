@@ -227,7 +227,9 @@ extension UserProfileViewController {
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        dismissAndPush(vc)
+        dismiss(animated: true) {
+            UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+        }
     }
     
     @objc func showMyQrCode() {

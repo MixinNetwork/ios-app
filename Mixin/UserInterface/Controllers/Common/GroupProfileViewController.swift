@@ -56,6 +56,8 @@ final class GroupProfileViewController: ProfileViewController {
     override func updateMuteInterval(inSeconds interval: Int64) {
         let conversationId = conversation.conversationId
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         ConversationAPI.shared.mute(conversationId: conversationId, duration: interval) { [weak self] (result) in
             switch result {
             case let .success(response):
@@ -69,10 +71,11 @@ final class GroupProfileViewController: ProfileViewController {
                     let dateRepresentation = DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate())
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: dateRepresentation)
                 }
-                showAutoHiddenHud(style: .notification, text: toastMessage)
+                hud.set(style: .notification, text: toastMessage)
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                hud.set(style: .error, text: error.localizedDescription)
             }
+            hud.scheduleAutoHidden()
         }
     }
     

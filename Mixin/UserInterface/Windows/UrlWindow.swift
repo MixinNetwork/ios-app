@@ -85,7 +85,9 @@ class UrlWindow {
                         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }
                 } else {
-                    UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+                    let vc = UserProfileViewController(user: user)
+                    vc.updateUserFromRemoteAfterReloaded = refreshUser
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 }
             }
         }

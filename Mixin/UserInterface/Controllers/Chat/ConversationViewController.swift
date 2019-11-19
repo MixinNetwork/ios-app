@@ -212,10 +212,6 @@ class ConversationViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
-        if let user = ownerUser {
-            let vc = UserProfileViewController(user: user)
-            present(vc, animated: true, completion: nil)
-        }
         if let dataSource = dataSource, dataSource.category == .group {
             let vc = GroupProfileViewController(conversation: dataSource.conversation, isAnnouncementExpanded: false)
             present(vc, animated: true, completion: nil)

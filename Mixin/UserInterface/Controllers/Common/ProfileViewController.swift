@@ -223,6 +223,7 @@ extension ProfileViewController {
             UIView.setAnimationCurve(.overdamped)
             self.updatePreferredContentSizeHeight()
             self.setNeedsSizeAppearanceUpdated()
+            self.view.layoutIfNeeded()
         })
     }
     

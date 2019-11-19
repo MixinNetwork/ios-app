@@ -41,6 +41,7 @@ class HomeNavigationController: UINavigationController {
             WebSocketService.shared.connect()
             checkUser()
             checkDevice()
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
         }
     }
     

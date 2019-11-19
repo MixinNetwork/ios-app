@@ -96,5 +96,15 @@ final class Hud: NSObject {
             self.isShowing = false
         })
     }
+
+    func safeHide() {
+        if Thread.isMainThread {
+            hide()
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.hide()
+            }
+        }
+    }
     
 }

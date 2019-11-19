@@ -6,6 +6,7 @@ import AudioToolbox
 class PayWindow: BottomSheetView {
 
     enum PinAction {
+        case payment(payment: PaymentCodeResponse, receivers: [UserResponse])
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserResponse], receivers: [UserResponse])
@@ -130,6 +131,15 @@ class PayWindow: BottomSheetView {
                     }
                 }
             }
+        case let .payment(payment, receivers):
+            guard let account = AccountAPI.shared.account else {
+                break
+            }
+            multisigView.isHidden = false
+            multisigActionView.image = R.image.multisig_sign()
+            nameLabel.text = R.string.localizable.multisig_transaction()
+            mixinIDLabel.text = payment.memo
+            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserResponse.createUser(account: account)], receivers: receivers)
         case let .multisig(multisig, senders, receivers):
             multisigView.isHidden = false
             switch multisig.action {
@@ -143,67 +153,7 @@ class PayWindow: BottomSheetView {
                 break
             }
             mixinIDLabel.text = multisig.memo
-            if !showError {
-                payLabel.text = R.string.localizable.multisig_by_pin()
-                if showBiometric {
-                    if biometryType == .faceID {
-                        biometricButton.setTitle(R.string.localizable.multisig_use_face(), for: .normal)
-                    } else {
-                        biometricButton.setTitle(R.string.localizable.multisig_use_touch(), for: .normal)
-                    }
-                }
-            }
-
-            for view in multisigStackView.arrangedSubviews {
-                multisigStackView.sendSubviewToBack(view)
-            }
-
-            if senders.count > 0 {
-                senderViewOne.setImage(user: senders[0])
-            }
-            if senders.count > 1 {
-                senderViewTwo.setImage(user: senders[1])
-                senderViewTwo.isHidden = false
-            } else {
-                senderViewTwo.isHidden = true
-            }
-            if senders.count > 2 {
-                senderMoreLabel.text = "+\(senders.count - 2)"
-                senderMoreView.isHidden = false
-            } else {
-                senderMoreView.isHidden = true
-            }
-            if senders.count == 1 {
-                sendersButtonWidthConstraint.constant = 32
-            } else if senders.count == 2 {
-                sendersButtonWidthConstraint.constant = 56
-            } else {
-                sendersButtonWidthConstraint.constant = 80
-            }
-
-            if receivers.count > 0 {
-                receiverViewOne.setImage(user: receivers[0])
-            }
-            if receivers.count > 1 {
-                receiverViewTwo.setImage(user: receivers[1])
-                receiverViewTwo.isHidden = false
-            } else {
-                receiverViewTwo.isHidden = true
-            }
-            if receivers.count > 2 {
-                receiverMoreLabel.text = "+\(receivers.count - 2)"
-                receiverMoreView.isHidden = false
-            } else {
-                receiverMoreView.isHidden = true
-            }
-            if receivers.count == 1 {
-                receiversButtonWidthConstraint.constant = 32
-            } else if receivers.count == 2 {
-                receiversButtonWidthConstraint.constant = 56
-            } else {
-                receiversButtonWidthConstraint.constant = 80
-            }
-            multisigView.layoutIfNeeded()
+            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
         }
 
         assetIconView.setIcon(asset: asset)
@@ -233,6 +183,70 @@ class PayWindow: BottomSheetView {
             resetPinInput()
         }
         return self
+    }
+
+    private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserResponse], receivers: [UserResponse]) {
+        if !showError {
+            payLabel.text = R.string.localizable.multisig_by_pin()
+            if showBiometric {
+                if biometryType == .faceID {
+                    biometricButton.setTitle(R.string.localizable.multisig_use_face(), for: .normal)
+                } else {
+                    biometricButton.setTitle(R.string.localizable.multisig_use_touch(), for: .normal)
+                }
+            }
+        }
+
+        for view in multisigStackView.arrangedSubviews {
+            multisigStackView.sendSubviewToBack(view)
+        }
+
+        if senders.count > 0 {
+            senderViewOne.setImage(user: senders[0])
+        }
+        if senders.count > 1 {
+            senderViewTwo.setImage(user: senders[1])
+            senderViewTwo.isHidden = false
+        } else {
+            senderViewTwo.isHidden = true
+        }
+        if senders.count > 2 {
+            senderMoreLabel.text = "+\(senders.count - 2)"
+            senderMoreView.isHidden = false
+        } else {
+            senderMoreView.isHidden = true
+        }
+        if senders.count == 1 {
+            sendersButtonWidthConstraint.constant = 32
+        } else if senders.count == 2 {
+            sendersButtonWidthConstraint.constant = 56
+        } else {
+            sendersButtonWidthConstraint.constant = 80
+        }
+
+        if receivers.count > 0 {
+            receiverViewOne.setImage(user: receivers[0])
+        }
+        if receivers.count > 1 {
+            receiverViewTwo.setImage(user: receivers[1])
+            receiverViewTwo.isHidden = false
+        } else {
+            receiverViewTwo.isHidden = true
+        }
+        if receivers.count > 2 {
+            receiverMoreLabel.text = "+\(receivers.count - 2)"
+            receiverMoreView.isHidden = false
+        } else {
+            receiverMoreView.isHidden = true
+        }
+        if receivers.count == 1 {
+            receiversButtonWidthConstraint.constant = 32
+        } else if receivers.count == 2 {
+            receiversButtonWidthConstraint.constant = 56
+        } else {
+            receiversButtonWidthConstraint.constant = 80
+        }
+        multisigView.layoutIfNeeded()
     }
 
     private func resetPinInput() {
@@ -292,31 +306,47 @@ class PayWindow: BottomSheetView {
 
         let window = MultisigUsersWindow.instance()
         window.render(users: senders, isSender: true)
+        let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
-            self.pinField.becomeFirstResponder()
+            if isKeyboardAppear {
+                self.pinField.becomeFirstResponder()
+            }
         }
         window.presentPopupControllerAnimated()
 
         isMultisigUsersAppear = true
-        pinField.resignFirstResponder()
+        if isKeyboardAppear {
+            pinField.resignFirstResponder()
+        }
     }
 
 
     @IBAction func receiversAction(_ sender: Any) {
-        guard case let .multisig(_, _, receivers) = pinAction! else {
+        var users = [UserResponse]()
+        switch pinAction! {
+        case let .multisig(_, _, receivers):
+            users = receivers
+        case let .payment(_, receivers):
+            users = receivers
+        default:
             return
         }
         let window = MultisigUsersWindow.instance()
-        window.render(users: receivers, isSender: false)
+        window.render(users: users, isSender: false)
+        let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
-            self.pinField.becomeFirstResponder()
+            if isKeyboardAppear {
+                self.pinField.becomeFirstResponder()
+            }
         }
         window.presentPopupControllerAnimated()
 
         isMultisigUsersAppear = true
-        pinField.resignFirstResponder()
+        if isKeyboardAppear {
+            pinField.resignFirstResponder()
+        }
     }
 
 
@@ -482,7 +512,8 @@ extension PayWindow: PinFieldDelegate {
             switch result {
             case let .success(snapshot):
                 switch pinAction {
-                case .transfer:
+                case .transfer, .payment:
+                    CommonUserDefault.shared.hasPerformedTransfer = true
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 case let .withdraw(_,address,_):
                     WalletUserDefault.shared.firstWithdrawalTip.removeAll( where: { $0 == address.addressId })
@@ -507,8 +538,10 @@ extension PayWindow: PinFieldDelegate {
 
         switch pinAction {
         case let .transfer(trackId, user, _):
-            CommonUserDefault.shared.hasPerformedTransfer = true
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+        case let .payment(payment, _):
+            let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
+            AssetAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, fromWeb):
             if fromWeb {
                 AssetAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
@@ -595,6 +628,8 @@ extension PayWindow: PinFieldDelegate {
                 }
                 navigation.setViewControllers(viewControllers, animated: true)
             case .multisig:
+                break
+            case .payment:
                 break
             }
         }

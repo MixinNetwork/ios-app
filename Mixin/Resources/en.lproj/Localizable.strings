@@ -180,6 +180,9 @@
 "placeholder_new_name" = "new name";
 "navigation_title_add_people" = "Add people";
 
+// Apps
+"app_not_found" = "App not found.";
+
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";
 "home_start_messaging" = "Start Messaging";
@@ -254,6 +257,9 @@
 "chat_shared_media_empty" = "NO MEDIA";
 "chat_shared_audio_empty" = "NO AUDIO";
 "chat_shared_data_empty" = "NO FILE";
+"chat_invited_by_stranger" = "The inviter is not in your contacts";
+"chat_exit_group_and_report_inviter" = "Exit group and report inviter";
+"chat_exit_group_and_report_inviter_confirmation" = "Exit group and report inviter?";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
@@ -462,8 +468,9 @@
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";
 "address_format_error" = "Invalid address format.";
-"address_asset_not_found" = "Asset not found.";
 "address_not_found" = "Address not found.";
+
+"asset_not_found" = "Asset not found.";
 
 // Transfer
 "transfer_title" = "Transfer";
@@ -685,7 +692,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send a audio";
+"alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -695,7 +702,7 @@
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";
 "alert_key_contact_contact_message" = "send you a contact";
-"alert_key_contact_audio_message" = "send you a audio";
+"alert_key_contact_audio_message" = "send you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 
 // About

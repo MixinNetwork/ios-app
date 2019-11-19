@@ -61,11 +61,16 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     
-    private lazy var strangerTipsView: StrangerTipsView = {
-        let view = StrangerTipsView()
-        view.frame.size.height = StrangerTipsView.height
+    private lazy var strangerHintView: StrangerHintView = {
+        let view = R.nib.strangerHintView(owner: nil)!
         view.blockButton.addTarget(self, action: #selector(blockAction(_:)), for: .touchUpInside)
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
+        return view
+    }()
+    
+    private lazy var invitationHintView: InvitationHintView = {
+        let view = R.nib.invitationHintView(owner: nil)!
+        view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
         return view
     }()
     
@@ -125,7 +130,7 @@ class ConversationViewController: UIViewController {
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateStrangerTipsView()
+        updateStrangerHintView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
@@ -317,12 +322,12 @@ class ConversationViewController: UIViewController {
         guard let userId = ownerUser?.userId else {
             return
         }
-        strangerTipsView.blockButton.isBusy = true
+        strangerHintView.blockButton.isBusy = true
         UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.strangerTipsView.blockButton.isBusy = false
+            weakSelf.strangerHintView.blockButton.isBusy = false
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
@@ -336,12 +341,12 @@ class ConversationViewController: UIViewController {
         guard let user = ownerUser else {
             return
         }
-        strangerTipsView.addContactButton.isBusy = true
+        strangerHintView.addContactButton.isBusy = true
         UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.strangerTipsView.addContactButton.isBusy = false
+            weakSelf.strangerHintView.addContactButton.isBusy = false
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
@@ -349,6 +354,42 @@ class ConversationViewController: UIViewController {
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
+    }
+    
+    @objc func exitGroupAndReportInviterAction(_ sender: Any) {
+        guard let inviterId = dataSource.myInvitation?.userId else {
+            return
+        }
+
+        let conversationId = self.conversationId
+
+        func work(_: UIAlertAction) {
+            let hud = Hud()
+            if let view = navigationController?.view {
+                hud.show(style: .busy, text: "", on: view)
+            }
+
+            DispatchQueue.global().async {
+                switch UserAPI.shared.reportUser(userId: inviterId) {
+                case let .success(user):
+                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                    ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
+                        hud.hide()
+                        UIApplication.homeNavigationController?.backToHome()
+                    }
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+        
+        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: work))
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
@@ -423,7 +464,7 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
                 conversationInputViewController.dismiss()
-                openAction(action: action.absoluteString)
+                openAction(action: action.absoluteString, sendAppId: message.userId)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -478,10 +519,11 @@ class ConversationViewController: UIViewController {
             self.ownerUser = user
             updateNavigationBar()
             conversationInputViewController.update(opponentUser: user)
-            updateStrangerTipsView()
+            updateStrangerHintView()
         }
         hideLoading()
         dataSource?.ownerUser = ownerUser
+        updateInvitationHintView()
     }
     
     @objc func menuControllerDidShowMenu(_ notification: Notification) {
@@ -534,15 +576,14 @@ class ConversationViewController: UIViewController {
         let oldHeight = inputWrapperHeightConstraint.constant
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
         inputWrapperHeightConstraint.constant = newHeight
-        var bottomInset = newHeight
-        tableView.scrollIndicatorInsets.bottom = bottomInset
-        bottomInset += MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = newHeight - view.safeAreaInsets.bottom
         if animated {
             UIView.beginAnimations(nil, context: nil)
             UIView.setAnimationDuration(0.5)
             UIView.setAnimationCurve(.overdamped)
         }
         updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: oldHeight, newHeight: newHeight)
+        let bottomInset = newHeight + MessageViewModel.bottomSeparatorHeight
         tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
         view.layoutIfNeeded()
         if animated {
@@ -901,10 +942,10 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
 extension ConversationViewController: AppButtonGroupMessageCellDelegate {
     
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int) {
-        guard let indexPath = tableView.indexPath(for: cell), let appButtons = dataSource?.viewModel(for: indexPath)?.message.appButtons, index < appButtons.count else {
+        guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let appButtons = message.appButtons, index < appButtons.count else {
             return
         }
-        openAction(action: appButtons[index].action)
+        openAction(action: appButtons[index].action, sendAppId: message.userId)
     }
     
 }
@@ -1118,7 +1159,7 @@ extension ConversationViewController {
         conversationInputViewController.update(opponentUser: user)
         self.ownerUser = user
         updateNavigationBar()
-        updateStrangerTipsView()
+        updateStrangerHintView()
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1159,19 +1200,44 @@ extension ConversationViewController {
         UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
-    private func updateStrangerTipsView() {
+    private func updateStrangerHintView() {
+        guard dataSource.category == .contact else {
+            return
+        }
+        let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
-            if let ownerUser = self?.ownerUser, ownerUser.relationship == Relationship.STRANGER.rawValue, !MessageDAO.shared.hasSentMessage(toUserId: ownerUser.userId) {
+            if let ownerUser = self?.ownerUser, ownerUser.relationship == Relationship.STRANGER.rawValue, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId) {
                 DispatchQueue.main.async {
                     guard let weakSelf = self else {
                         return
                     }
-                    weakSelf.tableView.tableFooterView = weakSelf.strangerTipsView
+                    weakSelf.tableView.tableFooterView = weakSelf.strangerHintView
                 }
             } else {
                 DispatchQueue.main.async {
                     self?.tableView.tableFooterView = nil
                 }
+            }
+        }
+    }
+    
+    private func updateInvitationHintView() {
+        guard dataSource.category == .group else {
+            return
+        }
+        let conversationId = self.conversationId
+        DispatchQueue.global().async { [weak self] in
+            let isInvitedByStranger: Bool
+            if let inviterId = self?.dataSource.myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {
+                isInvitedByStranger = true
+            } else {
+                isInvitedByStranger = false
+            }
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                self.tableView.tableFooterView = isInvitedByStranger ? self.invitationHintView : nil
             }
         }
     }
@@ -1286,6 +1352,7 @@ extension ConversationViewController {
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
         if dataSource.category == .group {
+            updateInvitationHintView()
             let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
             userHandleViewController.users = users
             let keyword: String = conversationInputViewController.textView.text
@@ -1322,13 +1389,28 @@ extension ConversationViewController {
         titleStackView.isHidden = false
     }
 
-    private func openAction(action: String) {
+    private func openAction(action: String, sendAppId: String) {
         guard !action.isEmpty else {
             return
         }
         guard action.hasPrefix("input:"), action.count > 6 else {
             if let url = URL(string: action) {
-                open(url: url)
+                if let app = conversationInputViewController?.opponentApp, app.appId == sendAppId {
+                    open(url: url, app: app)
+                } else {
+                    DispatchQueue.global().async { [weak self] in
+                        var app = AppDAO.shared.getApp(ofUserId: sendAppId)
+                        if app == nil {
+                            if case let .success(response) = UserAPI.shared.showUser(userId: sendAppId) {
+                                UserDAO.shared.updateUsers(users: [response])
+                                app = response.app
+                            }
+                        }
+                        DispatchQueue.main.async {
+                            self?.open(url: url, app: app)
+                        }
+                    }
+                }
             }
             return
         }
@@ -1341,14 +1423,19 @@ extension ConversationViewController {
         }
     }
 
-    private func open(url: URL) {
+    private func open(url: URL, app: App? = nil) {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
         guard !conversationId.isEmpty else {
             return
         }
-        WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+
+        if let app = app {
+            WebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
+        } else {
+            WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+        }
     }
     
     private func report(conversationId: String) {

@@ -79,6 +79,7 @@ enum ReportErrorCode: Int {
     case appUpgradeError = 100020
     case loadAvatar = 100021
     case restoreError = 100022
+    case badMessageDataError = 100030
     
     var errorName: String {
         switch self {
@@ -126,6 +127,8 @@ enum ReportErrorCode: Int {
             return "loadAvatar"
         case .restoreError:
             return "restoreError"
+        case .badMessageDataError:
+            return "badMessageDataError"
         }
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import MobileCoreServices
 
 extension URL {
     
@@ -61,5 +62,20 @@ extension URL {
 
     var isStoredCloud: Bool {
         return FileManager.default.isUbiquitousItem(at: self)
+    }
+}
+
+extension URL {
+
+    func getMimeType() -> String? {
+        guard let extUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil) else {
+            return nil
+        }
+
+        guard let mimeUTI = UTTypeCopyPreferredTagWithClass(extUTI.takeUnretainedValue(), kUTTagClassMIMEType) else {
+            return nil
+        }
+
+        return String(mimeUTI.takeUnretainedValue())
     }
 }

@@ -154,9 +154,7 @@ class BaseDatabase {
         guard objects.count > 0 else {
             return true
         }
-        try! database.run(transaction: {
-            try database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
-        })
+        try! database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         return true
     }
 
@@ -165,9 +163,7 @@ class BaseDatabase {
         guard objects.count > 0 else {
             return true
         }
-        try! database.run(transaction: {
-            try database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
-        })
+        try! database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         return true
     }
 

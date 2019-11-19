@@ -150,16 +150,18 @@ extension GroupProfileViewController {
         let conversation = self.conversation
         presentEditNameController(title: Localized.CONTACT_TITLE_CHANGE_NAME, text: conversation.name, placeholder: Localized.PLACEHOLDER_NEW_NAME) { [weak self] (name) in
             NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
             ConversationAPI.shared.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in
                 switch result {
                 case .success:
-                    if let self = self {
-                        self.conversation.name = name
-                        self.titleLabel.text = name
-                    }
+                    self?.conversation.name = name
+                    self?.titleLabel.text = name
+                    hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    hud.set(style: .error, text: error.localizedDescription)
                 }
+                hud.scheduleAutoHidden()
             }
         }
     }
@@ -325,14 +327,14 @@ extension GroupProfileViewController {
         
         if isAdmin {
             groups.append([
-                ProfileMenuItem(title: R.string.localizable.group_menu_announcement(),
-                                subtitle: nil,
-                                style: [],
-                                action: #selector(editAnnouncement)),
                 ProfileMenuItem(title: R.string.localizable.profile_edit_name(),
                                 subtitle: nil,
                                 style: [],
-                                action: #selector(editGroupName))
+                                action: #selector(editGroupName)),
+                ProfileMenuItem(title: R.string.localizable.group_menu_announcement(),
+                                subtitle: nil,
+                                style: [],
+                                action: #selector(editAnnouncement))
             ])
         }
         

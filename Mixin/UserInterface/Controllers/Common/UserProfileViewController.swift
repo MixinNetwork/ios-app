@@ -661,22 +661,18 @@ extension UserProfileViewController {
                                              style: [],
                                              action: #selector(mute))]
                 }
-                group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
-                                             subtitle: nil,
-                                             style: [],
-                                             action: #selector(showTransactions)))
-                return group
-            }()
-            groups.append(muteAndTransactionGroup)
-            
-            let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
-                var group = [ProfileMenuItem]()
                 if relationship == .FRIEND {
                     group.append(ProfileMenuItem(title: R.string.localizable.profile_edit_name(),
                                                  subtitle: nil,
                                                  style: [],
                                                  action: #selector(editAlias)))
                 }
+                return group
+            }()
+            groups.append(muteAndTransactionGroup)
+            
+            let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
+                var group = [ProfileMenuItem]()
                 if user.isBot {
                     if user.isSelfBot {
                         group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_transfer(),
@@ -690,6 +686,10 @@ extension UserProfileViewController {
                                                      action: #selector(showDeveloper)))
                     }
                 }
+                group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
+                                             subtitle: nil,
+                                             style: [],
+                                             action: #selector(showTransactions)))
                 return group
             }()
             if !editAliasAndBotRelatedGroup.isEmpty {

@@ -36,6 +36,7 @@ final class GroupProfileViewController: ProfileViewController {
     
     init(response: ConversationResponse, codeId: String, participants: [ParticipantUser], isMember: Bool) {
         self.conversation = ConversationItem(response: response)
+        self.response = response
         self.codeId = codeId
         self.isMember = isMember
         self.isAnnouncementExpanded = false
@@ -94,7 +95,7 @@ extension GroupProfileViewController {
     
     @objc func sendMessage(_ button: BusyButton) {
         guard let response = response else {
-            // Currently group profile with ConversationItem is only
+            // Currently group profile without response is only
             // triggered by tapping on Converation's top right icon
             dismiss(animated: true, completion: nil)
             return

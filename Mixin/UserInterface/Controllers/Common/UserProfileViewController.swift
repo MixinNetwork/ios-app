@@ -236,24 +236,20 @@ extension UserProfileViewController {
         guard let account = AccountAPI.shared.account else {
             return
         }
-        dismiss(animated: true) {
-            let window = QrcodeWindow.instance()
-            window.render(title: Localized.CONTACT_MY_QR_CODE,
-                          description: Localized.MYQRCODE_PROMPT,
-                          account: account)
-            window.presentView()
-        }
+        let window = QrcodeWindow.instance()
+        window.render(title: Localized.CONTACT_MY_QR_CODE,
+                      description: Localized.MYQRCODE_PROMPT,
+                      account: account)
+        window.presentPopupControllerAnimated()
     }
     
     @objc func showMyMoneyReceivingCode() {
         guard let account = AccountAPI.shared.account else {
             return
         }
-        dismiss(animated: true) {
-            let window = QrcodeWindow.instance()
-            window.renderMoneyReceivingCode(account: account)
-            window.presentView()
-        }
+        let window = QrcodeWindow.instance()
+        window.renderMoneyReceivingCode(account: account)
+        window.presentPopupControllerAnimated()
     }
     
     @objc func changeAvatarWithCamera() {

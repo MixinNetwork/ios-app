@@ -303,9 +303,12 @@ struct MixinFile {
 
 }
 
-let muteDuration8H: Int64 = 8 * 60 * 60
-let muteDuration1Week: Int64 = 7 * 24 * 60 * 60
-let muteDuration1Year: Int64 = 365 * 24 * 60 * 60
+enum MuteInterval {
+    static let none: Int64 = 0
+    static let eightHours: Int64 = 8 * 60 * 60
+    static let oneWeek: Int64 = 7 * 24 * 60 * 60
+    static let oneYear: Int64 = 365 * 24 * 60 * 60
+}
 
 enum ExtensionName: String {
     

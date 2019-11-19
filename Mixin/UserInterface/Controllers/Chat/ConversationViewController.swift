@@ -59,8 +59,6 @@ class ConversationViewController: UIViewController {
     private var previewDocumentMessageId: String?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
-    private lazy var userWindow = UserWindow.instance()
-    private lazy var groupWindow = GroupWindow.instance()
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     
     private lazy var strangerHintView: StrangerHintView = {
@@ -215,11 +213,11 @@ class ConversationViewController: UIViewController {
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
-            groupWindow.bounds.size.width = view.bounds.width
-            groupWindow.updateGroup(conversation: dataSource.conversation).presentView()
+            let vc = GroupProfileViewController(conversation: dataSource.conversation, isAnnouncementExpanded: false)
+            present(vc, animated: true, completion: nil)
         } else if let user = ownerUser, user.isCreatedByMessenger {
-            userWindow.bounds.size.width = view.bounds.width
-            userWindow.updateUser(user: user).presentView()
+            let vc = UserProfileViewController(user: user)
+            present(vc, animated: true, completion: nil)
         }
     }
     
@@ -227,7 +225,8 @@ class ConversationViewController: UIViewController {
         guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
             return
         }
-        groupWindow.updateGroup(conversation: conversation, initialAnnouncementMode: .normal).presentView()
+        let vc = GroupProfileViewController(conversation: conversation, isAnnouncementExpanded: true)
+        present(vc, animated: true, completion: nil)
         CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
         announcementButton.isHidden = true
     }
@@ -439,9 +438,12 @@ class ConversationViewController: UIViewController {
                     guard let account = AccountAPI.shared.account else {
                         return
                     }
-                    UserWindow.instance().updateUser(user: UserItem.createUser(from: account)).presentView()
+                    let user = UserItem.createUser(from: account)
+                    let vc = UserProfileViewController(user: user)
+                    present(vc, animated: true, completion: nil)
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId), user.isCreatedByMessenger {
-                    UserWindow.instance().updateUser(user: user).presentView()
+                    let vc = UserProfileViewController(user: user)
+                    present(vc, animated: true, completion: nil)
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
@@ -926,7 +928,8 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        userWindow.updateUser(user: user).presentView()
+        let vc = UserProfileViewController(user: user)
+        present(vc, animated: true, completion: nil)
     }
     
 }

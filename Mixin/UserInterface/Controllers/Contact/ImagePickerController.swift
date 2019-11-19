@@ -40,6 +40,7 @@ class ImagePickerController: NSObject {
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]
         picker.delegate = self
+        picker.modalPresentationStyle = .overFullScreen
         return picker
     }()
 
@@ -47,6 +48,7 @@ class ImagePickerController: NSObject {
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]
         picker.delegate = self
+        picker.modalPresentationStyle = .overFullScreen
         return picker
     }()
 

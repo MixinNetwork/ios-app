@@ -42,9 +42,9 @@ final class ViewEmergencyContactViewController: UIViewController {
 extension ViewEmergencyContactViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let userWindow = UserWindow.instance()
-        userWindow.updateUser(user: UserItem.createUser(from: user))
-        userWindow.presentView()
+        let userItem = UserItem.createUser(from: user)
+        let vc = UserProfileViewController(user: userItem)
+        present(vc, animated: true, completion: nil)
     }
     
     func imageBarRightButton() -> UIImage? {

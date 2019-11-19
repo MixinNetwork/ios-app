@@ -92,6 +92,7 @@
 "toast_logined" = "Logined";
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
+"toast_blocked" = "Blocked";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
@@ -542,7 +543,8 @@
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
-"profile_change_avatar" = "Change Profile Photo";
+"profile_change_avatar_camera" = "Change Profile Photo with Camera";
+"profile_change_avatar_library" = "Change Profile Photo with Library";
 "profile_change_number" = "Change Phone Number";
 "profile_change_number_confirmation" = "Do you want to change the phone number?";
 "profile_change_number_succeeded" = "Successfully changed phone number";
@@ -557,12 +559,18 @@
 "profile_mute_duration_8h" = "8 hours";
 "profile_mute_duration_1week" = "1 week";
 "profile_mute_duration_1year" = "1 year";
-"profile_unmute" = "Unmute";
+"profile_mute_ends_at" = "Until %@";
 "profile_mute" = "Mute";
+"profile_muted" = "Muted";
+"profile_unmute" = "Unmute";
 "profile_report" = "Report";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";
-"profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
+"profile_remove_hint" = "Remove friend? Chat history will remain on your device";
+"profile_exit_group_hint" = "Exit group? Chat history will also be deleted";
+"profile_block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
+"profile_report_hint" = "Report and block this contact? This conversation will also be deleted";
+"profile_join_in" = "Joined in %@";
 
 // Emergency
 "emergency_view" = "View emergency contact";

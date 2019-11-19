@@ -2,8 +2,12 @@ import Foundation
 import UIKit
 
 protocol XibDesignable {
+    
     var nibName: String { get }
-    func loadXib()
+    var contentEdgeInsets: UIEdgeInsets { get }
+    
+    @discardableResult func loadXib() -> UIView?
+    
 }
 
 extension XibDesignable where Self: UIView {
@@ -12,15 +16,23 @@ extension XibDesignable where Self: UIView {
         return String(describing: type(of: self))
     }
     
-    func loadXib() {
+    var contentEdgeInsets: UIEdgeInsets {
+        return .zero
+    }
+    
+    @discardableResult
+    func loadXib() -> UIView? {
         let bundle = Bundle(for: type(of: self))
         guard let view = bundle.loadNibNamed(nibName, owner: self, options: nil)?.first as? UIView else {
-            return
+            return nil
         }
         layoutMargins = .zero
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
-        view.snp.makeEdgesEqualToSuperview()
+        view.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview().inset(contentEdgeInsets)
+        }
+        return view
     }
     
 }

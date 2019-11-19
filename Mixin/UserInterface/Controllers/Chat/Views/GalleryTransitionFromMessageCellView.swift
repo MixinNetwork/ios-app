@@ -21,11 +21,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        if let width = viewModel.message.mediaWidth, let height = viewModel.message.mediaHeight {
-            contentSize = CGSize(width: width, height: height)
-        } else {
-            contentSize = nil
-        }
+        contentSize = viewModel.contentSize
         frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
         imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode

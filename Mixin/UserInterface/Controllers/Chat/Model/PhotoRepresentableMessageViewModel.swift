@@ -6,6 +6,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
     static let shadowImage = UIImage(named: "ic_chat_shadow")
     
+    let contentSize: CGSize
     let aspectRatio: CGSize
     
     var contentFrame = CGRect.zero
@@ -17,23 +18,22 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         return Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
     }
     
-    private let contentSize: CGSize
-
     override var statusNormalTintColor: UIColor {
         return .white
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         let contentWidth = PhotoRepresentableMessageViewModel.contentWidth
-        let mediaWidth = abs(CGFloat(message.mediaWidth ?? 1))
-        var mediaHeight = abs(CGFloat(message.mediaHeight ?? 1))
-        if mediaHeight == 0 {
-            mediaHeight = 1
+        let mediaWidth = abs(CGFloat(message.mediaWidth ?? 0))
+        let mediaHeight = abs(CGFloat(message.mediaHeight ?? 0))
+        if mediaWidth < 1 || mediaHeight < 1 {
+            contentSize = CGSize(width: contentWidth, height: contentWidth)
+            aspectRatio = contentSize
+        } else {
+            let height = min(PhotoRepresentableMessageViewModel.maxHeight, contentWidth / mediaWidth * mediaHeight)
+            contentSize = CGSize(width: contentWidth, height: height)
+            aspectRatio = CGSize(width: mediaWidth, height: mediaHeight)
         }
-        let ratio = mediaWidth / mediaHeight
-        contentSize = CGSize(width: contentWidth,
-                             height: min(PhotoRepresentableMessageViewModel.maxHeight, contentWidth / ratio))
-        aspectRatio = CGSize(width: mediaWidth, height: mediaHeight)
         super.init(message: message, style: style, fits: layoutWidth)
     }
     

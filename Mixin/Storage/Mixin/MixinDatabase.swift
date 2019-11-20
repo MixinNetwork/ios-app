@@ -57,10 +57,8 @@ class MixinDatabase: BaseDatabase {
                 }
                 try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
-        } catch let err as WCDBSwift.Error {
-            UIApplication.traceWCDBError(err)
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
 

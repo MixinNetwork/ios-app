@@ -392,7 +392,7 @@ final class MessageDAO {
                 results.append(result)
             }
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
         
         return results
@@ -460,7 +460,7 @@ final class MessageDAO {
                 }
             }
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
         
         if count > 0 {

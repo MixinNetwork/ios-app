@@ -54,12 +54,10 @@ class BaseDatabase {
                 } else if error.type == .sqlite && error.operationValue == 3 {
                     if AccountAPI.shared.didLogin && (error.path?.hasSuffix("mixin.db") ?? false) {
                         // no such table
-                        UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
                         AppGroupUserDefaults.User.needsRebuildDatabase = true
-                        return
                     }
                 }
-                UIApplication.traceWCDBError(error)
+                Reporter.report(error: error)
             }
         })
     }
@@ -116,7 +114,7 @@ class BaseDatabase {
         do {
             return try callback(database)
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
         return []
     }

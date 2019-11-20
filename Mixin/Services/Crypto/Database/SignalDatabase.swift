@@ -36,10 +36,8 @@ class SignalDatabase: BaseDatabase {
                 try database.delete(fromTable: Session.tableName)
                 try database.delete(fromTable: SignedPreKey.tableName)
             })
-        } catch let err as WCDBSwift.Error {
-            UIApplication.traceWCDBError(err)
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
         AppGroupUserDefaults.Crypto.clearAll()
     }

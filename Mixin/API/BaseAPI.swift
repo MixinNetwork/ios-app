@@ -105,7 +105,7 @@ class BaseAPI {
         do {
             return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
             return BaseAPI.sharedSessionManager.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
@@ -140,7 +140,7 @@ class BaseAPI {
                                 }
                             }
                         }
-                        UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
+                        Reporter.report(error: MixinError.logout(isAsyncRequest: true))
                         AccountAPI.shared.logout(from: "AsyncRequest")
                         return
                     default:
@@ -255,7 +255,7 @@ extension BaseAPI {
                     }
                 }
             }
-            UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
+            Reporter.report(error: MixinError.logout(isAsyncRequest: false))
             AccountAPI.shared.logout(from: "SyncRequest")
         }
         return result

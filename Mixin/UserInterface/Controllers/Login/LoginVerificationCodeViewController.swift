@@ -50,7 +50,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         }
                     }
                 } else {
-                    UIApplication.traceError(error)
+                    Reporter.report(error: error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }
@@ -61,7 +61,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     func login() {
         isBusy = true
         guard let keyPair = KeyUtil.generateRSAKeyPair() else {
-            UIApplication.traceError(code: ReportErrorCode.keyError, userInfo: ["error": "generateRSAKeyPair failed"])
+            Reporter.report(error: MixinError.generateRsaKeyPair)
             isBusy = false
             return
         }

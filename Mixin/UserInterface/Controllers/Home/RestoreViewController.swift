@@ -52,7 +52,7 @@ class RestoreViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
-                UIApplication.traceError(code: ReportErrorCode.restoreError, userInfo: ["error": "Backup file does not exist"])
+                Reporter.report(error: MixinError.missingBackup)
                 return
             }
 
@@ -110,7 +110,7 @@ class RestoreViewController: UIViewController {
             self.skipButton.isHidden = false
             self.progressLabel.isHidden = true
         }
-        UIApplication.traceError(error)
+        Reporter.report(error: error)
     }
 
     private func downloadFromCloud(cloudURL: URL, progress: @escaping (Float) -> Void) throws {

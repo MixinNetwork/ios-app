@@ -38,52 +38,6 @@ extension UIApplication {
         return chatVC.dataSource?.conversationId
     }
     
-    static func traceError(_ error: Swift.Error) {
-        #if DEBUG
-        print(error)
-        #endif
-        Bugsnag.notifyError(error)
-        Crashlytics.sharedInstance().recordError(error)
-    }
-
-    static func traceErrorToFirebase(code: ReportErrorCode, userInfo: [String: Any]) {
-        let error = NSError(domain: code.errorName, code: code.rawValue, userInfo: userInfo)
-        Crashlytics.sharedInstance().recordError(error)
-    }
-
-    static func traceWCDBError(_ error: WCDBSwift.Error) {
-        #if DEBUG
-        print(error)
-        #endif
-        var userInfo = [String: Any]()
-        userInfo["operationValue"] = error.operationValue ?? ""
-        userInfo["extendedCode"] = error.extendedCode ?? ""
-        userInfo["description"] = error.description
-        userInfo["path"] = error.path ?? ""
-        userInfo["message"] = error.message ?? ""
-        if error.type == .sqlite && (error.code.value == 11 || error.code.value == 26) {
-            UIApplication.traceError(code: ReportErrorCode.databaseCorrupted, userInfo: userInfo)
-        } else {
-            UIApplication.traceError(code: ReportErrorCode.databaseError, userInfo: userInfo)
-        }
-    }
-
-    static func traceError(code: ReportErrorCode, userInfo: [String: Any]) {
-        let error = NSError(domain: code.errorName, code: code.rawValue, userInfo: userInfo)
-        Bugsnag.notifyError(error, block: { (report) in
-            report.addMetadata(userInfo, toTabWithName: "Track")
-        })
-        Crashlytics.sharedInstance().recordError(error)
-    }
-
-    static func getTrackUserInfo() -> [String: Any] {
-        var userInfo = [String: Any]()
-        userInfo["didLogin"] = AccountAPI.shared.didLogin
-        userInfo["lastUpdateOrInstallTime"] = AppGroupUserDefaults.User.lastUpdateOrInstallDate
-        userInfo["clientTime"] = DateFormatter.filename.string(from: Date())
-        return userInfo
-    }
-
 }
 
 extension UIApplication {

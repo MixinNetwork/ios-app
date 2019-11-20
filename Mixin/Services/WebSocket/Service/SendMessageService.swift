@@ -532,7 +532,7 @@ extension SendMessageService {
             userInfo["error"] = "conversation status error"
             userInfo["conversationStatus"] = "\(conversation.status)"
             userInfo["conversationId"] = "\(message.conversationId)"
-            UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+            Reporter.report(error: MixinServicesError.sendMessage(userInfo))
             return
         }
 

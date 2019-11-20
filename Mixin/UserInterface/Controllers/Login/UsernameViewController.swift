@@ -21,7 +21,7 @@ class UsernameViewController: LoginInfoInputViewController {
                 AccountAPI.shared.updateAccount(account: account)
                 AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
-                UIApplication.traceError(error)
+                Reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }

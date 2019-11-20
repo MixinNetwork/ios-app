@@ -795,6 +795,7 @@
 		E07E389F23A772BD0005A538 /* MixinServicesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E389E23A772BD0005A538 /* MixinServicesError.swift */; };
 		E07E38A123A772CC0005A538 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A023A772CC0005A538 /* CallError.swift */; };
 		E07E38A423A773F10005A538 /* WCDBError+CustomNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */; };
+		E07E38A623A774940005A538 /* MixinError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A523A774940005A538 /* MixinError.swift */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
@@ -1652,6 +1653,7 @@
 		E07E389E23A772BD0005A538 /* MixinServicesError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinServicesError.swift; sourceTree = "<group>"; };
 		E07E38A023A772CC0005A538 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
 		E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WCDBError+CustomNSError.swift"; sourceTree = "<group>"; };
+		E07E38A523A774940005A538 /* MixinError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinError.swift; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
@@ -2492,6 +2494,7 @@
 				DF5D9F1B1F9C62990036D5FD /* Constant.swift */,
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
+				E07E38A523A774940005A538 /* MixinError.swift */,
 				DFF1AD7B22254C6E0087173D /* R.generated.swift */,
 			);
 			path = Constants;
@@ -4109,6 +4112,7 @@
 				E05DC14623A76E8100E32164 /* Reporter.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				7B4D112A205BA64B0074BF60 /* Address.swift in Sources */,
+				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
 				7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */,
 				DF17B51C20528B36006447C2 /* UserItem.swift in Sources */,

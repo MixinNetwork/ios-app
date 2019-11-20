@@ -52,7 +52,7 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                UIApplication.traceError(error)
+                Reporter.report(error: error)
             }
         } while true
     }
@@ -122,7 +122,7 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                UIApplication.traceError(error)
+                Reporter.report(error: error)
             }
         } while true
     }

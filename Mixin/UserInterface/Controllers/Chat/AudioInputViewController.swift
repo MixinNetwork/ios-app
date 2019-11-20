@@ -249,7 +249,7 @@ extension AudioInputViewController {
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
     

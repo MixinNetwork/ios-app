@@ -175,7 +175,7 @@ extension WebSocketService: WebSocketDelegate {
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         if let error = error, NetworkManager.shared.isReachable {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
             if let error = error as? WSError, error.type == .writeTimeoutError {
                 MixinServer.toggle(currentWebSocketHost: host)
             }

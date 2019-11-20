@@ -81,7 +81,8 @@ extension ReCaptchaManager: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let msg = Message(messageBody: message.body) else {
-            UIApplication.traceError(code: ReportErrorCode.recaptchaUnrecognized, userInfo: ["body": String(describing: message.body)])
+            let body = String(describing: message.body)
+            Reporter.report(error: MixinError.unrecognizedReCaptchaMessage(body))
             return
         }
         switch msg {

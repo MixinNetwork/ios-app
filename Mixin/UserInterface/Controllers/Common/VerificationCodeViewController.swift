@@ -71,7 +71,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
             verificationCodeField.showError()
             alert(Localized.TEXT_INVALID_VERIFICATION_CODE)
         } else {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
             alert(error.localizedDescription)
         }
     }

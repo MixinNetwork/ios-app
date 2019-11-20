@@ -486,7 +486,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         func showReloadAndReport(error: Error?) {
             if let error = error {
-                UIApplication.traceError(error)
+                Reporter.report(error: error)
             }
             controlView.style.remove(.loading)
             controlView.playControlStyle = .reload

@@ -245,8 +245,8 @@
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.6MB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dvp-5L-YoG">
-                                                            <rect key="frame" x="0.0" y="27" width="165" height="16"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="0.6MB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dvp-5L-YoG">
+                                                            <rect key="frame" x="0.0" y="27" width="39" height="16"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -257,7 +257,6 @@
                                                         <constraint firstItem="dvp-5L-YoG" firstAttribute="leading" secondItem="j07-Lh-Frt" secondAttribute="leading" id="07w-6J-izu"/>
                                                         <constraint firstAttribute="bottom" secondItem="dvp-5L-YoG" secondAttribute="bottom" id="F3R-lh-OT2"/>
                                                         <constraint firstAttribute="trailing" secondItem="QBa-Qu-WtN" secondAttribute="trailing" id="HEx-eM-VHp"/>
-                                                        <constraint firstAttribute="trailing" secondItem="dvp-5L-YoG" secondAttribute="trailing" id="OOp-ko-qF9"/>
                                                         <constraint firstItem="QBa-Qu-WtN" firstAttribute="leading" secondItem="j07-Lh-Frt" secondAttribute="leading" id="PvI-ZV-Dkt"/>
                                                         <constraint firstItem="dvp-5L-YoG" firstAttribute="leading" secondItem="QBa-Qu-WtN" secondAttribute="leading" id="hIA-en-jBu"/>
                                                         <constraint firstItem="QBa-Qu-WtN" firstAttribute="top" secondItem="j07-Lh-Frt" secondAttribute="top" id="ocD-rx-tST"/>
@@ -327,8 +326,8 @@
                                                                 <constraint firstAttribute="height" constant="23" id="bpz-Td-S9Z"/>
                                                             </constraints>
                                                         </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10000001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5b-28-vmg">
-                                                            <rect key="frame" x="0.0" y="27" width="105" height="16"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="10000001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5b-28-vmg">
+                                                            <rect key="frame" x="0.0" y="27" width="61" height="16"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -340,7 +339,6 @@
                                                         <constraint firstItem="Y5o-nI-iN8" firstAttribute="leading" secondItem="iMh-GZ-S3Y" secondAttribute="leading" id="LLy-4t-xDD"/>
                                                         <constraint firstItem="Y5o-nI-iN8" firstAttribute="top" secondItem="iMh-GZ-S3Y" secondAttribute="top" id="fzQ-qM-rMb"/>
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Y5o-nI-iN8" secondAttribute="trailing" id="uUW-ge-jHQ"/>
-                                                        <constraint firstAttribute="trailing" secondItem="V5b-28-vmg" secondAttribute="trailing" id="w93-an-OAF"/>
                                                         <constraint firstItem="V5b-28-vmg" firstAttribute="top" secondItem="Y5o-nI-iN8" secondAttribute="bottom" constant="4" id="zBm-Sk-ZqE"/>
                                                         <constraint firstAttribute="bottom" secondItem="V5b-28-vmg" secondAttribute="bottom" id="zYP-Vn-XfY"/>
                                                     </constraints>
@@ -1559,24 +1557,24 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2ui-1P-Jut">
-                                            <rect key="frame" x="74" y="8.5" width="285" height="35"/>
+                                            <rect key="frame" x="74" y="8" width="285" height="36.5"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="TMD-7Z-E08">
-                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="20.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Latin Poems" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9u-Oj-cdT">
-                                                            <rect key="frame" x="0.0" y="0.0" width="94" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="94" height="22"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" name="dark_text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="c9C-SK-bFF">
-                                                            <rect key="frame" x="98" y="0.0" width="187" height="20.5"/>
+                                                            <rect key="frame" x="98" y="0.0" width="187" height="22"/>
                                                         </imageView>
                                                     </subviews>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000101986" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuN-iN-kAk">
-                                                    <rect key="frame" x="0.0" y="20.5" width="285" height="14.5"/>
+                                                    <rect key="frame" x="0.0" y="22" width="285" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1584,7 +1582,7 @@
                                             </subviews>
                                         </stackView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-NS-eJs">
-                                            <rect key="frame" x="74" y="29" width="40.5" height="14.5"/>
+                                            <rect key="frame" x="74" y="30" width="40.5" height="14.5"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <color key="textColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>

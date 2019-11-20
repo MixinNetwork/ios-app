@@ -85,7 +85,9 @@ class UrlWindow {
                         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }
                 } else {
-                    UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+                    let vc = UserProfileViewController(user: user)
+                    vc.updateUserFromRemoteAfterReloaded = refreshUser
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 }
             }
         }
@@ -99,11 +101,11 @@ class UrlWindow {
 
         DispatchQueue.global().async {
             var userItem = UserDAO.shared.getUser(userId: userId)
-            var refreshUser = true
+            var updateUserFromRemoteAfterReloaded = true
             if userItem == nil {
                 switch UserAPI.shared.showUser(userId: userId) {
                 case let .success(response):
-                    refreshUser = false
+                    updateUserFromRemoteAfterReloaded = false
                     userItem = UserItem.createUser(from: response)
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
@@ -123,7 +125,9 @@ class UrlWindow {
             }
 
             DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user, refreshUser: refreshUser).presentPopupControllerAnimated()
+                let vc = UserProfileViewController(user: user)
+                vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
         return true
@@ -188,11 +192,10 @@ class UrlWindow {
             memo = urlDecodeMemo
         }
 
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         DispatchQueue.global().async {
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
-                DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.address_asset_not_found())
-                }
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
             var address = AddressDAO.shared.getAddress(addressId: addressId)
@@ -204,14 +207,17 @@ class UrlWindow {
                 case let .failure(error):
                     DispatchQueue.main.async {
                         if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: R.string.localizable.address_not_found())
+                            hud.set(style: .error, text: R.string.localizable.address_not_found())
                         } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                            hud.set(style: .error, text: error.localizedDescription)
                         }
+                        hud.scheduleAutoHidden()
                     }
                     return
                 }
             }
+
+            hud.safeHide()
 
             guard let addr = address else {
                 return
@@ -278,11 +284,7 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         DispatchQueue.global().async {
-            guard var asset = AssetDAO.shared.getAsset(assetId: assetId) else {
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
-                    hud.scheduleAutoHidden()
-                }
+            guard var asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
 
@@ -294,10 +296,10 @@ class UrlWindow {
                         continue
                     }
                     guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
+                        hud.safeHide()
                         return
                     }
                     asset = localAsset
-                    break
                 case let .failure(error):
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: error.localizedDescription)
@@ -313,6 +315,7 @@ class UrlWindow {
             let addressAction: AddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
                 guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+                    hud.safeHide()
                     return
                 }
 
@@ -337,6 +340,7 @@ class UrlWindow {
                 }
             } else {
                 guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
+                    hud.safeHide()
                     return
                 }
 
@@ -392,6 +396,8 @@ extension UrlWindow {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
                     presentMultisig(multisig: multisig, hud: hud)
+                } else if let payment = code.payment {
+                    presentPayment(payment: payment, hud: hud)
                 } else {
                     hud.hide()
                 }
@@ -407,13 +413,38 @@ extension UrlWindow {
         return true
     }
 
-    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
-        DispatchQueue.global().async {
-            guard let asset = AssetDAO.shared.getAsset(assetId: multisig.assetId) else {
+    private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
+        var asset = AssetDAO.shared.getAsset(assetId: assetId)
+        if asset == nil {
+            switch AssetAPI.shared.asset(assetId: assetId) {
+            case let .success(assetItem):
+                asset = AssetDAO.shared.saveAsset(asset: assetItem)
+            case let .failure(error):
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.address_asset_not_found())
+                    if error.code == 404 {
+                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
                     hud.scheduleAutoHidden()
                 }
+                return nil
+            }
+        }
+
+        if asset == nil {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                hud.scheduleAutoHidden()
+            }
+        }
+
+        return asset
+    }
+
+    private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
             }
 
@@ -447,13 +478,47 @@ extension UrlWindow {
         }
     }
 
+    private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
+        DispatchQueue.global().async {
+            guard let asset = AssetDAO.shared.getAsset(assetId: payment.assetId) else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let receivers = payment.receivers
+            var receiverUsers = [UserResponse]()
+            switch UserAPI.shared.showUsers(userIds: payment.receivers) {
+            case let .success(users):
+                receiverUsers = users.filter { receivers.contains($0.userId) }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+
+            let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .payment(payment: payment, receivers: receiverUsers), amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
+            }
+        }
+    }
+
     private static func presentUser(user: UserResponse, hud: Hud) {
         DispatchQueue.global().async {
             UserDAO.shared.updateUsers(users: [user])
 
             DispatchQueue.main.async {
                 hud.hide()
-                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentPopupControllerAnimated()
+                let user = UserItem.createUser(from: user)
+                let vc = UserProfileViewController(user: user)
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }
@@ -474,7 +539,7 @@ extension UrlWindow {
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
             let accountUserId = AccountAPI.shared.accountUserId
             let conversationId = conversation.conversationId
-            let alreadyInTheGroup = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
+            let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }
             var participants = [ParticipantUser]()
             switch UserAPI.shared.showUsers(userIds: userIds) {
@@ -495,17 +560,18 @@ extension UrlWindow {
                 case let .success(user):
                     creatorUser = UserItem.createUser(from: user)
                 case let .failure(error):
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
                     return
                 }
             }
-
+            
             DispatchQueue.main.async {
                 hud.hide()
-                if let ownerUser = creatorUser {
-                    GroupWindow.instance().updateGroup(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup).presentPopupControllerAnimated()
-                }
+                let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }

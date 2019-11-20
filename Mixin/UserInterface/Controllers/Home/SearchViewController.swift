@@ -34,8 +34,6 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private var lastSearchFieldText: String?
     private var statement: CoreStatement?
     
-    private lazy var userWindow = UserWindow.instance()
-    
     private var searchNumberCell: SearchNumberCell? {
         let indexPath = IndexPath(row: 0, section: Section.searchNumber.rawValue)
         return tableView.cellForRow(at: indexPath) as? SearchNumberCell
@@ -472,9 +470,9 @@ extension SearchViewController {
                 UserDAO.shared.updateUsers(users: [user])
                 let userItem = UserItem.createUser(from: user)
                 if userItem.isCreatedByMessenger {
-                    weakSelf.userWindow
-                        .updateUser(user: userItem, refreshUser: false)
-                        .presentView()
+                    let vc = UserProfileViewController(user: userItem)
+                    vc.updateUserFromRemoteAfterReloaded = false
+                    weakSelf.present(vc, animated: true, completion: nil)
                 }
             case let .failure(error):
                 let text = error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription

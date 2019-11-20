@@ -38,6 +38,7 @@ class ConversationDataSource {
     private(set) var loadedMessageIds = Set<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
+    private(set) var myInvitation: Message?
     
     private var highlight: Highlight?
     private var viewModels = [String: [MessageViewModel]]()
@@ -614,6 +615,11 @@ extension ConversationDataSource {
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth
             message.mediaHeight = asset.pixelHeight
+            if assetMediaTypeIsImage {
+                message.mediaMimeType = asset.isGif ? "image/gif" : "image/jpeg"
+            } else {
+                message.mediaMimeType = "video/mp4"
+            }
             let thumbnailSize = CGSize(width: 48, height: 48)
             PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: options) { (image, info) in
                 if let image = image {
@@ -711,6 +717,9 @@ extension ConversationDataSource {
                 initialIndexPath = unreadHintIndexPath
             }
             offset -= ConversationDateHeaderView.height
+        }
+        if category == .group {
+            myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: AccountAPI.shared.accountUserId)
         }
         performSynchronouslyOnMainThread {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -1012,7 +1021,11 @@ extension ConversationDataSource {
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
             if shouldScrollToNewMessage {
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                if tableView.tableFooterView == nil {
+                    tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                } else {
+                    tableView.scrollToBottom(animated: false)
+                }
             } else {
                 NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }

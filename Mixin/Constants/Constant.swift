@@ -79,6 +79,7 @@ enum ReportErrorCode: Int {
     case appUpgradeError = 100020
     case loadAvatar = 100021
     case restoreError = 100022
+    case badMessageDataError = 100030
     
     var errorName: String {
         switch self {
@@ -126,6 +127,8 @@ enum ReportErrorCode: Int {
             return "loadAvatar"
         case .restoreError:
             return "restoreError"
+        case .badMessageDataError:
+            return "badMessageDataError"
         }
     }
 }
@@ -300,9 +303,12 @@ struct MixinFile {
 
 }
 
-let muteDuration8H: Int64 = 8 * 60 * 60
-let muteDuration1Week: Int64 = 7 * 24 * 60 * 60
-let muteDuration1Year: Int64 = 365 * 24 * 60 * 60
+enum MuteInterval {
+    static let none: Int64 = 0
+    static let eightHours: Int64 = 8 * 60 * 60
+    static let oneWeek: Int64 = 7 * 24 * 60 * 60
+    static let oneYear: Int64 = 365 * 24 * 60 * 60
+}
 
 enum ExtensionName: String {
     

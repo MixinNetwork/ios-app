@@ -313,9 +313,19 @@ class ReceiveMessageService: MixinService {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
-            guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0, !(transferMediaData.mimeType?.isEmpty ?? true) else {
+            guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
                 return
             }
+
+            if transferMediaData.mimeType?.isEmpty ?? true {
+                UIApplication.traceError(code: ReportErrorCode.badMessageDataError, userInfo: [
+                    "messageId": data.messageId,
+                    "width" : width,
+                    "height" : height,
+                    "size" : transferMediaData.size,
+                    "userId": data.userId])
+            }
+
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_LIVE") {
@@ -380,15 +390,29 @@ class ReceiveMessageService: MixinService {
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
-        case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_DATA.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.SIGNAL_AUDIO.rawValue:
+        case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue:
+            guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
+                return
+            }
+            guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
+                return
+            }
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
+        case MessageCategory.SIGNAL_DATA.rawValue:
+            guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
+                return
+            }
+            guard transferMediaData.size > 0 else {
+                return
+            }
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
+        case MessageCategory.SIGNAL_AUDIO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
-            if data.category == MessageCategory.SIGNAL_AUDIO.rawValue {
-                let job = AudioDownloadJob(messageId: messageId, mediaMimeType: transferMediaData.mimeType)
-                ConcurrentJobQueue.shared.addJob(job: job)
-            }
+            let job = AudioDownloadJob(messageId: messageId, mediaMimeType: transferMediaData.mimeType)
+            ConcurrentJobQueue.shared.addJob(job: job)
         case MessageCategory.SIGNAL_LIVE.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let liveData = (try? jsonDecoder.decode(TransferLiveData.self, from: base64Data)) else {
                 return

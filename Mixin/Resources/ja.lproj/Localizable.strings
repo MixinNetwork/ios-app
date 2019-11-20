@@ -87,6 +87,7 @@
 "toast_logined" = "ログインしました";
 "toast_authorized" = "許可された";
 "toast_changed" = "かわった";
+"toast_blocked" = "ブロックしました";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
@@ -233,6 +234,9 @@
 "chat_shared_media_empty" = "メディアなし";
 "chat_shared_audio_empty" = "オーディオなし";
 "chat_shared_data_empty" = "ファイルなし";
+"chat_invited_by_stranger" = "招待者は連絡先にありません";
+"chat_exit_group_and_report_inviter" = "グループを退会しても招待者を報告する";
+"chat_exit_group_and_report_inviter_confirmation" = "グループを退会しても招待者を報告しますか";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";
@@ -421,8 +425,9 @@
 "address_edit_title" = " %@ アドレスを編集";
 "address_delete_title" = "アドレス%@を削除します";
 "address_format_error" = "無効なアドレス形式です。";
-"address_asset_not_found" = "資産が見つかりませんでした。";
 "address_not_found" = "このアドレスは見つかりませんでした。";
+
+"asset_not_found" = "資産が見つかりませんでした。";
 
 // Transfer
 "transfer_title" = "振込";
@@ -478,7 +483,8 @@
 "profile_full_name" = "名前";
 "profile_my_qrcode" = "私のQRコード";
 "profile_change_number" = "変更電話番号";
-"profile_change_avatar" = "プロフィール写真の変更";
+"profile_change_avatar_camera" = "プロフィール写真を変更（カメラ）";
+"profile_change_avatar_library" = "プロフィール写真を変更（ライブラリ）";
 "profile_change_number_confirmation" = "電話番号を変更しますか？";
 "profile_change_number_succeeded" = "電話番号を変更しました";
 "profile_change_number_verify_pin" = "PINを確認";
@@ -491,12 +497,18 @@
 "profile_mute_duration_8h" = "8時間";
 "profile_mute_duration_1week" = "1週間";
 "profile_mute_duration_1year" = "1年";
-"profile_unmute" = "消音を解除";
+"profile_mute_ends_at" = "%@まで";
 "profile_mute" = "消音";
+"profile_muted" = "消音しました";
+"profile_unmute" = "消音を解除";
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
-"profile_toast_muted" = " %@ まで消音しました";
-"profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
+"profile_toast_muted" = " %@まで消音しました";
+"profile_remove_hint" = "連絡先を削除しますか。会話内容は削除されません";
+"profile_exit_group_hint" = "チャットを削除しますか。会話内容も削除されます";
+"profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
+"profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
+"profile_join_in" = "%@から参加しました";
 
 // Emergency
 "emergency_view" = "緊急連絡先を表示";

@@ -28,7 +28,8 @@ final class AssetAPI: BaseAPI {
         static func snapshots(opponentId: String) -> String {
             return "mutual_snapshots/\(opponentId)"
         }
-        
+
+        static let transactions = "transactions"
         static let transfers = "transfers"
         static let payments = "payments"
 
@@ -59,6 +60,14 @@ final class AssetAPI: BaseAPI {
 
     func asset(assetId: String) -> APIResult<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
+    }
+
+    func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+        var transactionRequest = transactionRequest
+        KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
+            transactionRequest.pin = encryptedPin
+            self?.request(method: .post, url: url.transactions, parameters: transactionRequest.toParameters(), encoding: EncodableParameterEncoding<RawTransactionRequest>(), completion: completion)
+        }
     }
 
     func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {

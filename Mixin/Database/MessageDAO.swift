@@ -192,6 +192,11 @@ final class MessageDAO {
         try database.prepareUpdateSQL(sql: "UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = ?) where conversation_id = ?").execute(with: [conversationId, conversationId])
     }
 
+    @discardableResult
+    func updateMediaMessage(messageId: String, keyValues: [(PropertyConvertible, ColumnEncodable?)]) -> Bool {
+        return MixinDatabase.shared.update(maps: keyValues, tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+    }
+
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
         guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
@@ -386,6 +391,15 @@ final class MessageDAO {
         return results
     }
     
+    func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {
+        let condition: Condition = Message.Properties.conversationId == conversationId
+            && Message.Properties.category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+            && Message.Properties.action == SystemConversationAction.ADD.rawValue
+            && Message.Properties.participantId == inviteeUserId
+        let order = [Message.Properties.createdAt.asOrder(by: .ascending)]
+        return MixinDatabase.shared.getCodable(condition: condition, orderBy: order)
+    }
+    
     func getUnreadMessagesCount(conversationId: String) -> Int {
         guard let firstUnreadMessage = self.firstUnreadMessage(conversationId: conversationId) else {
             return 0
@@ -551,10 +565,9 @@ final class MessageDAO {
         }
         return deleteCount > 0
     }
-
-    func hasSentMessage(toUserId userId: String) -> Bool {
+    
+    func hasSentMessage(inConversationOf conversationId: String) -> Bool {
         let myId = AccountAPI.shared.accountUserId
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myId, ownerUserId: userId)
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     

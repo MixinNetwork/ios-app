@@ -92,6 +92,7 @@
 "toast_logined" = "已登录";
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
+"toast_blocked" = "已屏蔽";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
@@ -256,6 +257,9 @@
 "chat_shared_media_empty" = "无媒体";
 "chat_shared_audio_empty" = "无音频";
 "chat_shared_data_empty" = "无文件";
+"chat_invited_by_stranger" = "邀请人不是你的联系人";
+"chat_exit_group_and_report_inviter" = "退出群组并举报邀请人";
+"chat_exit_group_and_report_inviter_confirmation" = "确认退出群组并举报邀请人？";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
@@ -466,8 +470,9 @@
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";
 "address_format_error" = "地址格式错误";
-"address_asset_not_found" = "找不到该资产.";
 "address_not_found" = "找不到该地址";
+
+"asset_not_found" = "找不到该资产.";
 
 // Transfer
 "transfer_title" = "转账";
@@ -541,7 +546,8 @@
 "profile_full_name" = "名称";
 "profile_my_qrcode" = "我的二维码";
 "profile_change_number" = "更换手机号";
-"profile_change_avatar" = "更改头像";
+"profile_change_avatar_camera" = "更换头像（相机）";
+"profile_change_avatar_library" = "更换头像（相册）";
 "profile_change_number_confirmation" = "是否更换手机号？";
 "profile_change_number_succeeded" = "更换手机号成功";
 "profile_change_number_verify_pin" = "验证钱包密码";
@@ -555,12 +561,18 @@
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
-"profile_unmute" = "取消静音";
+"profile_mute_ends_at" = "直到 %@";
 "profile_mute" = "静音";
+"profile_muted" = "已静音";
+"profile_unmute" = "取消静音";
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-"profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
+"profile_remove_hint" = "删除好友？聊天记录将会保留";
+"profile_exit_group_hint" = "退出群组？聊天记录也将删除";
+"profile_block_hint" = "屏蔽后该联系人无法向您拨打电话或发送消息";
+"profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
+"profile_join_in" = "%@ 加入";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

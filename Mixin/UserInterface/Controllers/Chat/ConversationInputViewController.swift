@@ -176,6 +176,7 @@ class ConversationInputViewController: UIViewController {
         if abs(diff) > 1 {
             setPreferredContentHeight(preferredContentHeight + diff, animated: false)
         }
+        lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
     }
     
     override func viewWillLayoutSubviews() {

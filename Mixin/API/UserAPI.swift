@@ -22,6 +22,10 @@ final class UserAPI: BaseAPI {
         static let sessionFetch = "sessions/fetch"
     }
 
+    func fetchSessions(userIds: [String]) -> APIResult<[UserSession]> {
+         return request(method: .post, url: url.sessionFetch, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
+    }
+
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {
         request(method: .get, url: url.codes(codeId: codeId), completion: completion)
     }

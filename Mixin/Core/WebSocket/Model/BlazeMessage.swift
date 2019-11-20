@@ -22,6 +22,7 @@ enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
     case createSessionMessage = "CREATE_SESSION_MESSAGE"
     case createSignalKeyMessage = "CREATE_SIGNAL_KEY_MESSAGES"
+    case createSessionSyncMessages = "CREATE_SESSION_SYNC_MESSAGES"
     case createCall = "CREATE_CALL"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
     case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"

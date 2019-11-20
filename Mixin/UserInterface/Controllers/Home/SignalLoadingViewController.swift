@@ -10,41 +10,98 @@ class SignalLoadingViewController: UIViewController {
         super.viewDidLoad()
         FileManager.default.writeLog(log: "SignalLoadingView...")
         let startTime = Date()
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async {
             try! SignalDatabase.shared.initDatabase()
-            IdentityDAO.shared.saveLocalIdentity()
 
-            repeat {
-                switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
-                case .success:
-                    CryptoUserDefault.shared.isLoaded = true
-                    DispatchQueue.main.async {
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        MixinWebView.clearCookies()
-                        let time = Date().timeIntervalSince(startTime)
-                        if time < 2 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
-                                weakSelf.dismiss()
-                            })
-                        } else {
-                            weakSelf.dismiss()
-                        }
-                    }
-                    return
-                case let .failure(error):
-                    guard error.code != 401 else {
-                        return
-                    }
-                    while AccountAPI.shared.didLogin && !NetworkManager.shared.isReachable {
-                        Thread.sleep(forTimeInterval: 2)
-                    }
-                    Thread.sleep(forTimeInterval: 2)
-                    UIApplication.traceError(error)
+            self.syncSignalKeys()
+            self.syncSession()
+
+            DispatchQueue.main.async {
+                let time = Date().timeIntervalSince(startTime)
+                if time < 2 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
+                        self.dismiss()
+                    })
+                } else {
+                    self.dismiss()
                 }
-            } while true
+            }
         }
+    }
+
+    private func syncSignalKeys() {
+        guard !CryptoUserDefault.shared.isLoaded else {
+            return
+        }
+
+        IdentityDAO.shared.saveLocalIdentity()
+        MixinWebView.clearCookies()
+
+        repeat {
+            guard AccountAPI.shared.didLogin else {
+                return
+            }
+            switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
+            case .success:
+                CryptoUserDefault.shared.isLoaded = true
+            case let .failure(error):
+                guard error.code != 401 else {
+                    return
+                }
+                Thread.sleep(forTimeInterval: 2)
+                UIApplication.traceError(error)
+            }
+        } while true
+    }
+
+    private func syncSession() {
+        guard !CryptoUserDefault.shared.isSyncSession else {
+            return
+        }
+
+        let sessions = SessionDAO.shared.syncGetSessionAddress()
+        let userIds = sessions.compactMap { $0.address }
+
+        repeat {
+            guard AccountAPI.shared.didLogin else {
+                return
+            }
+
+            switch UserAPI.shared.fetchSessions(userIds: userIds) {
+            case let .success(remoteSessions):
+                var sessionMap = [String: Int32]()
+                remoteSessions.forEach { (session) in
+                    sessionMap[session.userId] = SignalProtocol.convertSessionIdToDeviceId(session.sessionId)
+                }
+
+                guard sessionMap.count > 0 else {
+                    return
+                }
+
+                var newSession = [Session]()
+                sessions.forEach { (session) in
+                    if let deviceId = sessionMap[session.address] {
+                        newSession.append(Session(address: session.address, device: Int(deviceId), record: session.record, timestamp: session.timestamp))
+                    }
+                }
+                SignalDatabase.shared.insertOrReplace(objects: newSession)
+
+
+                let senderKeys = SenderKeyDAO.shared.syncGetSenderKeys()
+                senderKeys.forEach { (key) in
+                    let userId = String(key.senderId[0..<key.senderId.count-2])
+                    if let deviceId = sessionMap[userId] {
+                        SenderKeyDAO.shared.insertOrReplace(obj: SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record))
+                    }
+                }
+            case let .failure(error):
+                guard error.code != 401 else {
+                    return
+                }
+                Thread.sleep(forTimeInterval: 2)
+                UIApplication.traceError(error)
+            }
+        } while true
     }
     
     private func dismiss() {

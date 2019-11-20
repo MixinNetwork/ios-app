@@ -192,6 +192,13 @@ class ReceiveMessageService: MixinService {
         guard data.category == MessageCategory.SESSION_SYNC.rawValue else {
             return
         }
+
+        syncConversationParticipantSession(conversationId: data.conversationId)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func syncConversationParticipantSession(conversationId: String) {
+
     }
 
     private func processSignalMessage(data: BlazeMessageData) {
@@ -569,10 +576,10 @@ class ReceiveMessageService: MixinService {
             }
             switch plainData.action {
             case PlainDataAction.RESEND_KEY.rawValue:
-                guard SignalProtocol.shared.containsSession(recipient: data.userId) else {
+                guard SignalProtocol.shared.containsSession(recipient: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId)) else {
                     return
                 }
-                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY)
+                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, action: .RESEND_KEY)
             case PlainDataAction.RESEND_MESSAGES.rawValue:
                 guard let messageIds = plainData.messages, messageIds.count > 0 else {
                     return
@@ -637,8 +644,7 @@ extension ReceiveMessageService {
         case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
             processSystemSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SESSION.rawValue:
-
-            break
+            processSystemSessionMessage(data: data)
         default:
             break
         }
@@ -671,11 +677,18 @@ extension ReceiveMessageService {
     }
 
     private func processSystemSessionMessage(data: BlazeMessageData) {
-        guard let base64Data = Data(base64Encoded: data.data), let systemSession = (try? jsonDecoder.decode(SystemConversationMessagePayload.self, from: base64Data)) else {
+        guard let base64Data = Data(base64Encoded: data.data), let systemSession = (try? jsonDecoder.decode(SystemSessionMessagePayload.self, from: base64Data)) else {
             return
         }
 
         if systemSession.action == SystemSessionMessageAction.PROVISION.rawValue {
+            AccountUserDefault.shared.lastDesktopLogin = Date()
+            AccountUserDefault.shared.extensionSession = systemSession.sessionId
+            SignalProtocol.shared.deleteSession(userId: data.userId)
+            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
+
+            
+
 //            Session.storeExtensionSessionId(systemSession.sessionId)
 //            signalProtocol.deleteSession(systemSession.userId)
 //            val conversations = conversationDao.getConversationsByUserId(systemSession.userId)
@@ -740,7 +753,7 @@ extension ReceiveMessageService {
             operSuccess = ParticipantDAO.shared.addParticipant(message: message, conversationId: data.conversationId, participantId: participantId, updatedAt: data.updatedAt, status: status, source: data.source)
 
             if participantId != currentAccountId && SignalProtocol.shared.isExistSenderKey(groupId: data.conversationId, senderId: currentAccountId) {
-                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, action: .SEND_KEY)
+                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, sessionId: data.sessionId, action: .SEND_KEY)
             }
             return
         case SystemConversationAction.REMOVE.rawValue:

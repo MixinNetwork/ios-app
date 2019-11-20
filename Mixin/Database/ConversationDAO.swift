@@ -327,6 +327,13 @@ final class ConversationDAO {
                     }
                 }
             }
+
+            if let participantSessions = conversation.participantSessions, participantSessions.count > 0 {
+                let sessionParticipants = participantSessions.map {
+                    ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
+                }
+                try db.insertOrReplace(objects: sessionParticipants, intoTable: ParticipantSession.tableName)
+            }
             
             let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
             try statment.execute(with: [conversationId])
@@ -342,7 +349,6 @@ final class ConversationDAO {
 
     func updateConversation(conversation: ConversationResponse) {
         let conversationId = conversation.conversationId
-        let participants = conversation.participants
         var ownerId = conversation.creatorId
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let ownerParticipant = conversation.participants.first(where: { (participant) -> Bool in
@@ -354,21 +360,24 @@ final class ConversationDAO {
         guard let oldConversation: Conversation = MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId) else {
             return
         }
-        let oldUserIds = MixinDatabase.shared.getStringValues(column: Participant.Properties.userId, tableName: Participant.tableName, condition: Participant.Properties.conversationId == conversationId)
-        let newUserIds = participants.map{ $0.userId }
+
         if oldConversation.announcement != conversation.announcement, !conversation.announcement.isEmpty {
             CommonUserDefault.shared.setHasUnreadAnnouncement(true, forConversationId: conversationId)
         }
 
         MixinDatabase.shared.transaction { (db) in
-            for userId in oldUserIds {
-                if !newUserIds.contains(userId) {
-                    try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
-                }
-            }
+            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
 
             let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
+
+            if let participantSessions = conversation.participantSessions {
+                let sessionParticipants = participantSessions.map {
+                    ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
+                }
+                try db.insertOrReplace(objects: sessionParticipants, intoTable: ParticipantSession.tableName)
+            }
 
             let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
             try statment.execute(with: [conversationId])
@@ -379,6 +388,7 @@ final class ConversationDAO {
             if userIds.count > 0 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
+
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
     }

@@ -72,7 +72,7 @@ class SendMessageService: MixinService {
 
             let createdAt = Date().toUTCString()
             let participants = [ParticipantResponse(userId: user.userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: account.user_id, role: "", createdAt: createdAt)]
-            let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, codeUrl: "", creatorId: user.userId, muteUntil: "", participantSessions: nil)
+            let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: user.userId, muteUntil: "")
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
         }
         if !message.category.hasPrefix("WEBRTC_") {
@@ -130,9 +130,9 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendMessage(conversationId: String, userId: String, action: JobAction) {
+    func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         saveDispatchQueue.async {
-            let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId)
+            let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
             MixinDatabase.shared.insertOrReplace(objects: [job])
             SendMessageService.shared.processMessages()
         }
@@ -156,10 +156,9 @@ class SendMessageService: MixinService {
             }
 
             if let message = MessageDAO.shared.getMessage(messageId: messageId), message.category != MessageCategory.MESSAGE_RECALL.rawValue {
-                var param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId)
-                param.sessionId = sessionId
+                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId, sessionId: sessionId)
                 let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
-                jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), blazeMessage: blazeMessage))
+                jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), sessionId: sessionId, blazeMessage: blazeMessage))
                 resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 1))
             } else {
                 resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 0))
@@ -336,8 +335,12 @@ class SendMessageService: MixinService {
                         return try sendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)
                     }
                 case JobAction.RESEND_KEY.rawValue:
-                    _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
-                        return try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)
+                    try ReceiveMessageService.shared.messageDispatchQueue.sync {
+                        try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!, sessionId: job.sessionId)
+                    }
+                case JobAction.SEND_SESSION_SYNC.rawValue:
+                    ReceiveMessageService.shared.messageDispatchQueue.sync {
+                        sendSessionSyncMessage(conversations: SessionSyncDAO.shared.getSyncSessions())
                     }
                 case JobAction.REQUEST_RESEND_KEY.rawValue:
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
@@ -402,7 +405,7 @@ extension SendMessageService {
         guard let messageId = blazeMessage.params?.messageId, let resendMessageId = job.resendMessageId, let recipientId = job.userId else {
             return
         }
-        guard let message = MessageDAO.shared.getMessage(messageId: messageId), try checkSignalSession(recipientId: recipientId) else {
+        guard let message = MessageDAO.shared.getMessage(messageId: messageId), try checkSignalSession(recipientId: recipientId, sessionId: job.sessionId) else {
             return
         }
 
@@ -441,7 +444,7 @@ extension SendMessageService {
         }
 
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
-            try requestCreateConversation(conversation: conversation)
+            try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.data == nil {
                 if message.category == MessageCategory.PLAIN_TEXT.rawValue {
                     blazeMessage.params?.data = message.content?.base64Encoded()
@@ -450,54 +453,23 @@ extension SendMessageService {
                 }
             }
         } else {
-            let isExistSenderKey = SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId)
-            if (isExistSenderKey) {
-                try checkSentSenderKey(conversationId: message.conversationId)
-            } else {
-                if (conversation.isGroup()) {
+            if !SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId) {
+                if conversation.isGroup() {
                     guard try syncConversation(conversation: conversation) else {
                         return
                     }
-                    try sendGroupSenderKey(conversationId: conversation.conversationId)
                 } else {
-                    try requestCreateConversation(conversation: conversation)
-                    try sendSenderKey(conversationId: conversation.conversationId, recipientId: conversation.ownerId)
+                    try checkConversationExist(conversation: conversation)
                 }
             }
+            checkSessionSync(conversationId: message.conversationId)
+            try checkAndSendSenderKey(conversationId: message.conversationId)
 
             let content = blazeMessage.params?.data ?? message.content ?? ""
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
         }
         try deliverMessage(blazeMessage: blazeMessage)
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
-    }
-    
-    private func sendCallMessage(blazeMessage: BlazeMessage) throws {
-        let onlySendWhenThereIsAnActiveCall = blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
-            || blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue
-            || blazeMessage.params?.category == MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue
-        guard CallManager.shared.call != nil || !onlySendWhenThereIsAnActiveCall else {
-            return
-        }
-        guard let conversationId = blazeMessage.params?.conversationId else {
-            return
-        }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
-            return
-        }
-        try requestCreateConversation(conversation: conversation)
-        try deliverMessage(blazeMessage: blazeMessage)
-    }
-
-    private func deliverMessage(blazeMessage: BlazeMessage) throws {
-        do {
-            try deliver(blazeMessage: blazeMessage)
-        } catch {
-            if let err = error as? APIError, err.code == 403 {
-                return
-            }
-            throw error
-        }
     }
 
     private func syncConversation(conversation: ConversationItem) throws -> Bool {
@@ -507,7 +479,7 @@ extension SendMessageService {
             return true
         case let .failure(error):
             if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
-                try requestCreateConversation(conversation: conversation)
+                try checkConversationExist(conversation: conversation)
                 return true
             } else if error.code == 404 || error.code == 403 {
                 ParticipantDAO.shared.removeParticipant(conversationId: conversation.conversationId)
@@ -517,7 +489,7 @@ extension SendMessageService {
         }
     }
 
-    private func requestCreateConversation(conversation: ConversationItem) throws {
+    private func checkConversationExist(conversation: ConversationItem) throws {
         guard conversation.status == ConversationStatus.START.rawValue else {
             return
         }
@@ -540,12 +512,31 @@ extension SendMessageService {
         }
     }
 
-    private func checkSentSenderKey(conversationId: String) throws {
-        let participants = ParticipantDAO.shared.getNotSentKeyParticipants(conversationId: conversationId, accountId: currentAccountId)
-        if participants.count == 1 {
-            _ = try sendSenderKey(conversationId: conversationId, recipientId: participants[0].userId)
-        } else if participants.count > 1 {
-            try sendBatchSenderKey(conversationId: conversationId, participants: participants, from: "checkSentSenderKey")
+    private func sendCallMessage(blazeMessage: BlazeMessage) throws {
+        let onlySendWhenThereIsAnActiveCall = blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+            || blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue
+            || blazeMessage.params?.category == MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue
+        guard CallManager.shared.call != nil || !onlySendWhenThereIsAnActiveCall else {
+            return
+        }
+        guard let conversationId = blazeMessage.params?.conversationId else {
+            return
+        }
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            return
+        }
+        try checkConversationExist(conversation: conversation)
+        try deliverMessage(blazeMessage: blazeMessage)
+    }
+
+    private func deliverMessage(blazeMessage: BlazeMessage) throws {
+        do {
+            try deliver(blazeMessage: blazeMessage)
+        } catch {
+            if let err = error as? APIError, err.code == 403 {
+                return
+            }
+            throw error
         }
     }
 

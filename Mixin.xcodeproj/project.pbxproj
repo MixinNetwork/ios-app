@@ -488,6 +488,7 @@
 		DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */; };
 		DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */; };
 		DF08F0A623828B8F005CFD34 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */; };
+		DF08F180238529F5005CFD34 /* SystemSessionMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF08F17F238529F5005CFD34 /* SystemSessionMessagePayload.swift */; };
 		DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */; };
 		DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */; };
 		DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E2D2320FDEB2500BB2658 /* Keychain.swift */; };
@@ -702,10 +703,10 @@
 		DFCFAFC0237D66C600F0AFD5 /* ParticipantSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */; };
 		DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */; };
 		DFCFAFC4237D7CF900F0AFD5 /* ParticipantSessionDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDAO.swift */; };
-		DFCFAFCA237EAF7500F0AFD5 /* SessionSyncDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */; };
-		DFCFAFCC237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */; };
 		DFCFAFC6237E4DE600F0AFD5 /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC5237E4DE600F0AFD5 /* PaymentCodeResponse.swift */; };
 		DFCFAFC8237E863D00F0AFD5 /* RawTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC7237E863D00F0AFD5 /* RawTransactionRequest.swift */; };
+		DFCFAFCA237EAF7500F0AFD5 /* SessionSyncDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */; };
+		DFCFAFCC237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */; };
 		DFD089E01FE4040500A7D815 /* AttachmentDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */; };
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
@@ -775,12 +776,12 @@
 		E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */; };
 		E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E09C5EC023703FEE0095F729 /* ProfileShortcutView.xib */; };
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
+		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
+		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
-		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
-		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
@@ -1299,6 +1300,7 @@
 		DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginConfirmWindow.xib; sourceTree = "<group>"; };
 		DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConfirmWindow.swift; sourceTree = "<group>"; };
 		DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
+		DF08F17F238529F5005CFD34 /* SystemSessionMessagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionMessagePayload.swift; sourceTree = "<group>"; };
 		DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalTipWindow.xib; sourceTree = "<group>"; };
 		DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalTipWindow.swift; sourceTree = "<group>"; };
 		DF0E2D2320FDEB2500BB2658 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
@@ -1521,10 +1523,10 @@
 		DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSession.swift; sourceTree = "<group>"; };
 		DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSync.swift; sourceTree = "<group>"; };
 		DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSessionDAO.swift; sourceTree = "<group>"; };
-		DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSyncDAO.swift; sourceTree = "<group>"; };
-		DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSignalKeyMessage.swift; sourceTree = "<group>"; };
 		DFCFAFC5237E4DE600F0AFD5 /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
 		DFCFAFC7237E863D00F0AFD5 /* RawTransactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTransactionRequest.swift; sourceTree = "<group>"; };
+		DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSyncDAO.swift; sourceTree = "<group>"; };
+		DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSignalKeyMessage.swift; sourceTree = "<group>"; };
 		DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloadJob.swift; sourceTree = "<group>"; };
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
@@ -1595,12 +1597,12 @@
 		E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileShortcutView.swift; sourceTree = "<group>"; };
 		E09C5EC023703FEE0095F729 /* ProfileShortcutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileShortcutView.xib; sourceTree = "<group>"; };
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
+		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
+		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
-		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
-		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2779,6 +2781,7 @@
 				DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */,
 				7B362BB222E87B91009BB0BF /* TransferLiveData.swift */,
 				DF22D94C1FDE500500243CAE /* SystemConversationMessagePayload.swift */,
+				DF08F17F238529F5005CFD34 /* SystemSessionMessagePayload.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
 				DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */,
@@ -3402,6 +3405,7 @@
 				DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */,
 				DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */,
 				DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */,
+				DF08F180238529F5005CFD34 /* SystemSessionMessagePayload.swift in Sources */,
 				273FACC1205FB9A800513327 /* SessionPreKey.swift in Sources */,
 				DFD87C871FDA9DD300BBCFFC /* NetworkManager.swift in Sources */,
 				DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */,

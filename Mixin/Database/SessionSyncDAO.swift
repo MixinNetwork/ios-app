@@ -11,6 +11,9 @@ final class SessionSyncDAO {
     func getSyncSessions() -> [SessionSync] {
         return MixinDatabase.shared.getCodables(orderBy: [SessionSync.Properties.createdAt.asOrder(by: .descending)], limit: 50)
     }
-    
+
+    func removeSyncSessions(conversationIds: [String]) {
+        MixinDatabase.shared.delete(table: SessionSync.tableName, condition: SessionSync.Properties.conversationId.in(conversationIds))
+    }
 }
 

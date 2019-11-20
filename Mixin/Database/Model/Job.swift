@@ -18,6 +18,7 @@ struct Job: BaseCodable {
     let resendMessageId: String?
     var messageId: String?
     var status: String?
+    var sessionId: String?
 
     var isAutoIncrement = true
 
@@ -33,6 +34,7 @@ struct Job: BaseCodable {
         case resendMessageId = "resend_message_id"
         case messageId = "message_id"
         case status
+        case sessionId = "session_id"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -59,9 +61,10 @@ struct Job: BaseCodable {
         self.blazeMessage = nil
         self.messageId = messageId
         self.status = status
+        self.sessionId = nil
     }
 
-    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil) {
+    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
         switch action {
         case .RESEND_MESSAGE:
@@ -84,6 +87,7 @@ struct Job: BaseCodable {
         }
         self.messageId = nil
         self.status = nil
+        self.sessionId = sessionId
     }
 }
 
@@ -143,6 +147,8 @@ enum JobAction: String {
     case SEND_ACK_MESSAGE
     case SEND_ACK_MESSAGES
     case SEND_DELIVERED_ACK_MESSAGE
+
+    case SEND_SESSION_SYNC
 }
 
 

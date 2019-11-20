@@ -74,6 +74,10 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
+    init(conversations: [String]) {
+        self.conversations = conversations
+    }
+
     init(sessionId: String, messages: [TransferMessage]) {
         let accountId = AccountAPI.shared.accountUserId
         let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)

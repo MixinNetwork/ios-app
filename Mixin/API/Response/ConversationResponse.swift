@@ -9,10 +9,10 @@ struct ConversationResponse: Codable {
     let announcement: String
     let createdAt: String
     let participants: [ParticipantResponse]
+    let participantSessions: [ParticipantSessionResponse]?
     let codeUrl: String
     let creatorId: String
     let muteUntil: String
-    let participantSessions: [ParticipantSessionResponse]?
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"

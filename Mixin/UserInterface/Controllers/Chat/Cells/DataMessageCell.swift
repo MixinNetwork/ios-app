@@ -9,7 +9,14 @@ class DataMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     @IBOutlet weak var sizeLabel: UILabel!
 
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
-
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        sizeLabel.snp.makeConstraints { (make) in
+            make.trailing.equalTo(timeLabel.snp.leading)
+        }
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? DataMessageViewModel {

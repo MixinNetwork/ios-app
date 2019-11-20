@@ -21,7 +21,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
         let boundingSize = CGSize(width: width - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
                                   height: UIView.layoutFittingExpandedSize.height)
-        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appButtonTitle]
+        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appButtonTitle.scaled]
         buttonSizes = message.appButtons?.map({
             let titleSize = ($0.label as NSString).boundingRect(with: boundingSize,
                                                                 options: [.usesLineFragmentOrigin, .usesFontLeading],

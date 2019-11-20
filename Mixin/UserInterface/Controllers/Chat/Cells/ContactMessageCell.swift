@@ -6,7 +6,14 @@ class ContactMessageCell: CardMessageCell {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var verifiedImageView: UIImageView!
-
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        idLabel.snp.makeConstraints { (make) in
+            make.trailing.equalTo(timeLabel.snp.leading)
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarImageView.prepareForReuse()

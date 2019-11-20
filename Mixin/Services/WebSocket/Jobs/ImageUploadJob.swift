@@ -111,7 +111,7 @@ class ImageUploadJob: AttachmentUploadJob {
             }
             updateMediaUrlAndPostNotification(filename: filename, url: url)
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
     

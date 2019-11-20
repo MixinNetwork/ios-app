@@ -66,14 +66,16 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 contentLength = inputStream.contentLength
                 stream = inputStream
             } else {
-
-                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "AttachmentEncryptingInputStream init failed", "fileSize": "\(FileManager.default.fileSize(fileUrl.path))", "fileName": "\(fileUrl.lastPathComponent)"])
+                let size = FileManager.default.fileSize(fileUrl.path)
+                let name = fileUrl.lastPathComponent
+                let error = MixinServicesError.initEncryptingInputStream(size: size, name: name)
+                Reporter.report(error: error)
                 return false
             }
         } else {
             stream = InputStream(url: fileUrl)
             if stream == nil {
-                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "InputStream init failed"])
+                Reporter.report(error: MixinServicesError.initInputStream)
                 return false
             } else {
                 contentLength = Int(FileManager.default.fileSize(fileUrl.path))

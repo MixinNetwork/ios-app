@@ -22,7 +22,7 @@ class RefreshAssetsJob: BaseJob {
                 case let .success(deposits):
                     SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
                 case let .failure(error):
-                    UIApplication.traceError(error)
+                    Reporter.report(error: error)
                 }
                 updateSnapshots(assetId: assetId)
             case let .failure(error):
@@ -42,7 +42,7 @@ class RefreshAssetsJob: BaseJob {
                 Currency.updateRate(with: fiatMonies)
             }
         case let .failure(error):
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
 
@@ -52,7 +52,7 @@ class RefreshAssetsJob: BaseJob {
             AppGroupUserDefaults.Wallet.assetTransactionsOffset[assetId] = snapshots.last?.createdAt
             SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
         case let .failure(error):
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
     

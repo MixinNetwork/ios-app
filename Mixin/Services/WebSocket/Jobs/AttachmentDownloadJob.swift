@@ -102,13 +102,13 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
             }
             stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
             if stream == nil {
-                UIApplication.traceError(code: ReportErrorCode.attachmentDownloadError, userInfo: ["error": "AttachmentDecryptingOutputStream init failed"])
+                Reporter.report(error: MixinServicesError.initDecryptingOutputStream)
                 return false
             }
         } else {
             stream = OutputStream(url: fileUrl, append: false)
             if stream == nil {
-                UIApplication.traceError(code: ReportErrorCode.attachmentDownloadError, userInfo: ["error": "OutputStream init failed"])
+                Reporter.report(error: MixinServicesError.initOutputStream)
                 return false
             }
         }
@@ -131,7 +131,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     override func taskFinished() {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)

@@ -172,10 +172,8 @@ final class MessageDAO {
         }
 
         guard oldMessage.status != MessageStatus.FAILED.rawValue else {
-            UIApplication.traceError(code: ReportErrorCode.badMessageDataError, userInfo: [
-                "messageId": messageId,
-                "status" : status,
-                "from": from])
+            let error = MixinServicesError.badMessageData(id: messageId, status: status, from: from)
+            Reporter.report(error: error)
             return false
         }
 

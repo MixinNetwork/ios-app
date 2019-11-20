@@ -26,9 +26,7 @@ class MixinIdentityKeyStore: IdentityKeyStore {
             objc_sync_exit(lock)
         }
         guard let identityKey = identity else {
-            var userInfo = UIApplication.getTrackUserInfo()
-            userInfo["address"] = address.name
-            UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: ["error": "Saving new identity failed, identity is nil"])
+            Reporter.report(error: MixinServicesError.saveIdentity)
             return false
         }
         IdentityDAO.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))

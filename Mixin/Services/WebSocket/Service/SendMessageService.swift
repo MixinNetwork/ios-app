@@ -367,7 +367,7 @@ class SendMessageService: MixinService {
                     }
                 } else {
                     if deleteJobId == job.jobId {
-                        UIApplication.traceError(code: ReportErrorCode.jobError, userInfo: UIApplication.getTrackUserInfo())
+                        Reporter.report(error: MixinServicesError.duplicatedJob)
                     }
                     guard SendMessageService.shared.handlerJob(job: job) else {
                         return
@@ -392,7 +392,7 @@ class SendMessageService: MixinService {
                 } else if err.isClientError {
                     Thread.sleep(forTimeInterval: 2)
                 } else {
-                    UIApplication.traceError(error)
+                    Reporter.report(error: error)
                 }
             }
 
@@ -481,12 +481,12 @@ class SendMessageService: MixinService {
                         if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
-                            UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+                            Reporter.report(error: MixinServicesError.sendMessage(userInfo))
                             AccountAPI.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
-                    UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+                    Reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
 
                 if let err = error as? APIError, err.code == 10002 {

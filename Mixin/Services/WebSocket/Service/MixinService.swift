@@ -243,7 +243,7 @@ class MixinService {
                 #endif
 
                 guard let err = error as? APIError else {
-                    UIApplication.traceError(error)
+                    Reporter.report(error: error)
                     Thread.sleep(forTimeInterval: 2)
                     return false
                 }

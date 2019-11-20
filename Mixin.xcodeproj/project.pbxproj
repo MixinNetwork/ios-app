@@ -792,6 +792,8 @@
 		E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */; };
 		E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */; };
 		E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */; };
+		E07E389F23A772BD0005A538 /* MixinServicesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E389E23A772BD0005A538 /* MixinServicesError.swift */; };
+		E07E38A123A772CC0005A538 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A023A772CC0005A538 /* CallError.swift */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
@@ -1646,6 +1648,8 @@
 		E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonView.swift; sourceTree = "<group>"; };
 		E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReceptionView.swift; sourceTree = "<group>"; };
 		E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppReceptionView.xib; sourceTree = "<group>"; };
+		E07E389E23A772BD0005A538 /* MixinServicesError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinServicesError.swift; sourceTree = "<group>"; };
+		E07E38A023A772CC0005A538 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
@@ -2129,6 +2133,7 @@
 				7BD97DD62179DDD600FAE490 /* IceServer.swift */,
 				7BD97DD42179DD3400FAE490 /* WebRTCClient.swift */,
 				7BF7837A2179D1AF00BECB4B /* Call.swift */,
+				E07E38A023A772CC0005A538 /* CallError.swift */,
 				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallView.swift */,
@@ -3167,6 +3172,7 @@
 				27567B891FBC48C30026CC92 /* Crypto */,
 				DF30D7421FA22CB200683C1A /* WebSocket */,
 				7BB788BB216CD1DA00EDE7B4 /* Call */,
+				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4064,6 +4070,7 @@
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
 				7B14DFFE22F9AE79009CCC45 /* LocalImageLoader.swift in Sources */,
+				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
@@ -4157,6 +4164,7 @@
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
+				E07E389F23A772BD0005A538 /* MixinServicesError.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,
 				DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */,

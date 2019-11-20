@@ -108,16 +108,12 @@ class SignalProtocol {
         var cipher = Data()
         do {
             cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
+        } catch SignalError.noSession {
+            // Do nothing
+        } catch let error as SignalError {
+            Reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
         } catch {
-            if let err = error as? SignalError {
-                if err != SignalError.noSession {
-                    var userInfo = UIApplication.getTrackUserInfo()
-                    userInfo["signalErrorCode"] = err.rawValue
-                    UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: userInfo)
-                }
-            } else {
-                UIApplication.traceError(error)
-            }
+            Reporter.report(error: error)
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: nil))
         return data

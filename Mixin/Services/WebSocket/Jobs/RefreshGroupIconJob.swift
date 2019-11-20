@@ -43,7 +43,7 @@ class RefreshGroupIconJob: AsynchronousJob {
                 updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             }
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
 
         finishJob()

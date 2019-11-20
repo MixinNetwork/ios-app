@@ -118,7 +118,7 @@ extension Keychain {
 
     func getPIN(prompt: String) -> String? {
         guard let encryptedString = getString(keyEncryptedPIN), let encryptedData = Data(base64Encoded: encryptedString) else {
-            UIApplication.traceError(code: ReportErrorCode.pinError, userInfo: ["error": "Get encryption PIN failed"])
+            Reporter.report(error: MixinServicesError.extractEncryptedPin)
             AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
             return nil
         }

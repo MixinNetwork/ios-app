@@ -263,7 +263,7 @@ class BackupJob: BaseJob {
             if tmpFile.fileExists {
                 try? FileManager.default.removeItem(at: tmpFile)
             }
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
 

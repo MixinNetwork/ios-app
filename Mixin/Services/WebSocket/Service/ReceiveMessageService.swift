@@ -230,7 +230,7 @@ class ReceiveMessageService: MixinService {
         } catch {
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             if let err = error as? SignalError, err != SignalError.noSession {
-                var userInfo = UIApplication.getTrackUserInfo()
+                var userInfo = [String: Any]()
                 userInfo["conversationId"] = data.conversationId
                 userInfo["keyType"] = CiphertextMessage.MessageType.toString(rawValue: decoded.keyType)
                 userInfo["category"] = data.category
@@ -248,11 +248,11 @@ class ReceiveMessageService: MixinService {
                     userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
                 }
                 userInfo["createdAt"] = data.createdAt
-                UIApplication.traceErrorToFirebase(code: ReportErrorCode.decryptMessageError, userInfo: userInfo)
+                Reporter.reportErrorToFirebase(MixinServicesError.decryptMessage(userInfo))
             }
-
+            
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
-                UIApplication.traceError(code: ReportErrorCode.receiveMessageError, userInfo: ["error": "duplicateMessage"])
+                Reporter.report(error: MixinServicesError.duplicatedMessage)
                 return
             }
             guard decoded.resendMessageId == nil else {
@@ -292,7 +292,7 @@ class ReceiveMessageService: MixinService {
             let blazeMessage = BlazeMessage(params: BlazeMessageParam(syncSignalKeys: request), action: BlazeMessageAction.syncSignalKeys.rawValue)
             deliverNoThrow(blazeMessage: blazeMessage)
         } catch {
-            UIApplication.traceError(error)
+            Reporter.report(error: error)
         }
     }
     
@@ -316,12 +316,15 @@ class ReceiveMessageService: MixinService {
             }
 
             if transferMediaData.mimeType?.isEmpty ?? true {
-                UIApplication.traceError(code: ReportErrorCode.badMessageDataError, userInfo: [
+                let userInfo: [String: Any] = [
                     "messageId": data.messageId,
                     "width" : width,
                     "height" : height,
                     "size" : transferMediaData.size,
-                    "userId": data.userId])
+                    "userId": data.userId
+                ]
+                let error = MixinServicesError.nilMimeType(userInfo)
+                Reporter.report(error: error)
             }
 
             let message = Message.createMessage(mediaData: transferMediaData, data: data)

@@ -1,14 +1,5 @@
 import Foundation
 
-enum CallError: Error {
-    case busy
-    case invalidUUID(uuid: String)
-    case invalidSdp(sdp: String?)
-    case missingUser(userId: String)
-    case networkFailure
-    case microphonePermissionDenied
-}
-
 class Call {
     
     let uuid: UUID

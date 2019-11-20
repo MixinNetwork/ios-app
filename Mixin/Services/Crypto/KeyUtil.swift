@@ -59,7 +59,7 @@ class KeyUtil {
         var error: NSError?
         defer {
             if let err = error  {
-                UIApplication.traceError(err)
+                Reporter.report(error: err)
             }
         }
         return GoutilsRsaDecrypt(pinToken, sessionId, pkString, &error)

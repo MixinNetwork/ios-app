@@ -10,21 +10,22 @@ final class GroupProfileViewController: ProfileViewController {
         return conversation.isMuted
     }
     
+    private let conversation: ConversationItem
+    private let response: ConversationResponse?
+    private let codeId: String?
+    private let isMember: Bool
+    private let participantsCount: Int?
+    
     private lazy var notMemberPaddingView = NotMemberPaddingView()
     
-    private var conversation: ConversationItem
-    private var codeId: String?
-    private var isMember: Bool
-    private var response: ConversationResponse?
-    
-    private var participantsCount: Int?
     private var isAdmin = false
     
-    init(conversation: ConversationItem) {
+    init(conversation: ConversationItem, numberOfParticipants: Int?, isMember: Bool) {
         self.conversation = conversation
+        self.response = nil
         self.codeId = nil
-        self.isMember = true
-        self.participantsCount = 0
+        self.isMember = isMember
+        self.participantsCount = numberOfParticipants
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
@@ -204,7 +205,7 @@ extension GroupProfileViewController {
         titleLabel.text = conversation.name
         updateSubtitle()
         
-        if !isMember {
+        if !isMember && codeId != nil {
             relationshipView.style = .joinGroup
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(joinGroup), for: .touchUpInside)
@@ -215,7 +216,7 @@ extension GroupProfileViewController {
             centerStackView.addArrangedSubview(descriptionView)
         }
         
-        if isMember {
+        if isMember || codeId == nil {
             shortcutView.leftShortcutButton.setImage(R.image.ic_group_member(), for: .normal)
             shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
             shortcutView.leftShortcutButton.addTarget(self, action: #selector(showParticipants), for: .touchUpInside)
@@ -232,15 +233,12 @@ extension GroupProfileViewController {
         
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
-            let participantsCount = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
             let isAdmin = ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: AccountAPI.shared.accountUserId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
-                self.participantsCount = participantsCount
                 self.isAdmin = isAdmin
-                self.updateSubtitle()
                 self.updateMenuItems()
             }
         }
@@ -301,7 +299,7 @@ extension GroupProfileViewController {
     private func updateMenuItems() {
         var groups = [[ProfileMenuItem]]()
         
-        guard isMember else {
+        guard isMember || codeId == nil else {
             reloadMenu(groups: groups)
             return
         }
@@ -330,27 +328,29 @@ extension GroupProfileViewController {
             ])
         }
         
-        if conversation.isMuted {
-            let subtitle: String?
-            if let date = conversation.muteUntil?.toUTCDate() {
-                let rep = DateFormatter.log.string(from: date)
-                subtitle = R.string.localizable.profile_mute_ends_at(rep)
+        if isMember {
+            if conversation.isMuted {
+                let subtitle: String?
+                if let date = conversation.muteUntil?.toUTCDate() {
+                    let rep = DateFormatter.log.string(from: date)
+                    subtitle = R.string.localizable.profile_mute_ends_at(rep)
+                } else {
+                    subtitle = nil
+                }
+                groups.append([
+                    ProfileMenuItem(title: R.string.localizable.profile_muted(),
+                                    subtitle: subtitle,
+                                    style: [],
+                                    action: #selector(mute))
+                ])
             } else {
-                subtitle = nil
+                groups.append([
+                    ProfileMenuItem(title: R.string.localizable.profile_mute(),
+                                    subtitle: nil,
+                                    style: [],
+                                    action: #selector(mute))
+                ])
             }
-            groups.append([
-                ProfileMenuItem(title: R.string.localizable.profile_muted(),
-                                subtitle: subtitle,
-                                style: [],
-                                action: #selector(mute))
-            ])
-        } else {
-            groups.append([
-                ProfileMenuItem(title: R.string.localizable.profile_mute(),
-                                subtitle: nil,
-                                style: [],
-                                action: #selector(mute))
-            ])
         }
         
         groups.append([

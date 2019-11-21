@@ -34,7 +34,7 @@ class MixinService {
         }
 
         var noKeyList = [BlazeMessageParamSession]()
-        var signalKeys = [SignalKeyResponse]()
+        var signalKeys = [SignalKey]()
 
         if !requestSignalKeyUsers.isEmpty {
             signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
@@ -43,7 +43,7 @@ class MixinService {
                 guard let recipientId = signalKey.userId else {
                     continue
                 }
-                try SignalProtocol.shared.processSession(userId: recipientId, signalKey: signalKey)
+                try SignalProtocol.shared.processSession(userId: recipientId, key: signalKey)
                 let (cipherText, _) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId)
                 signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText, sessionId: signalKey.sessionId))
                 keys.append(recipientId)
@@ -79,7 +79,7 @@ class MixinService {
                 FileManager.default.writeLog(log: "[MixinService][CheckSignalSession]...recipientId:\(recipientId)...sessionId:\(sessionId ?? "")...signal keys count is zero ")
                 return false
             }
-            try SignalProtocol.shared.processSession(userId: recipientId, signalKey: signalKeys[0], deviceId: deviceId)
+            try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0], deviceId: deviceId)
         }
         return true
     }
@@ -122,7 +122,7 @@ class MixinService {
         if (!SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))) || isForce {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId, platform: nil)])
             if signalKeys.count > 0 {
-                try SignalProtocol.shared.processSession(userId: recipientId, signalKey: signalKeys[0], deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+                try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0], deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
             } else {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
                 if let sessionId = sessionId, !sessionId.isEmpty {
@@ -175,7 +175,7 @@ class MixinService {
         }
 
         var noKeyList = [BlazeMessageParamSession]()
-        var signalKeys = [SignalKeyResponse]()
+        var signalKeys = [SignalKey]()
 
         if !requestSignalKeyUsers.isEmpty {
             signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
@@ -184,7 +184,7 @@ class MixinService {
                 guard let recipientId = signalKey.userId else {
                     continue
                 }
-                try SignalProtocol.shared.processSession(userId: recipientId, signalKey: signalKey)
+                try SignalProtocol.shared.processSession(userId: recipientId, key: signalKey)
                 let (cipherText, _) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId)
                 signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText))
                 keys.append(recipientId)
@@ -219,7 +219,7 @@ class MixinService {
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .SEND_NO_KEY)
     }
 
-    private func signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession]) -> [SignalKeyResponse] {
+    private func signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession]) -> [SignalKey] {
         let blazeMessage = BlazeMessage(params: BlazeMessageParam(consumeSignalKeys: requestSignalKeyUsers), action: BlazeMessageAction.consumeSessionSignalKeys.rawValue)
         return deliverKeys(blazeMessage: blazeMessage)?.toConsumeSignalKeys() ?? []
     }

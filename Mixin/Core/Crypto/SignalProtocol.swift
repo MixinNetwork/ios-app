@@ -50,22 +50,22 @@ class SignalProtocol {
         SessionDAO.shared.delete(address: userId)
     }
 
-    func processSession(userId: String, signalKey: SignalKeyResponse, deviceId: Int32 = 0) throws {
-        var dId = SignalProtocol.convertSessionIdToDeviceId(signalKey.sessionId)
+    func processSession(userId: String, key: SignalKey, deviceId: Int32 = 0) throws {
+        var dId = SignalProtocol.convertSessionIdToDeviceId(key.sessionId)
         if deviceId != 0 {
             dId = deviceId
         }
         let address = SignalAddress(name: userId, deviceId: dId)
         let sessionBuilder = SessionBuilder(for: address, in: store)
-        let sessionPreKeyBuild = SessionPreKeyBundle(registrationId: signalKey.registrationId,
-                                                     deviceId: SignalProtocol.convertSessionIdToDeviceId(signalKey.sessionId),
-                                                     preKeyId: signalKey.preKey.key_id,
-                                                     preKey: signalKey.getPreKeyPublic(),
-                                                     signedPreKeyId: UInt32(signalKey.signedPreKey.key_id),
-                                                     signedPreKey: signalKey.getSignedPreKeyPublic(),
-                                                     signature: signalKey.getSignedSignature(),
-                                                     identityKey: signalKey.getIdentityPublic())
-        try sessionBuilder.process(preKeyBundle: sessionPreKeyBuild)
+        let preKeyBundle = SessionPreKeyBundle(registrationId: key.registrationId,
+                                                     deviceId: SignalProtocol.convertSessionIdToDeviceId(key.sessionId),
+                                                     preKeyId: key.preKey.key_id,
+                                                     preKey: key.getPreKeyPublic(),
+                                                     signedPreKeyId: UInt32(key.signedPreKey.key_id),
+                                                     signedPreKey: key.getSignedPreKeyPublic(),
+                                                     signature: key.getSignedSignature(),
+                                                     identityKey: key.getIdentityPublic())
+        try sessionBuilder.process(preKeyBundle: preKeyBundle)
     }
 
     func getSenderKeyDistribution(groupId: String, senderId: String) throws -> CiphertextMessage {

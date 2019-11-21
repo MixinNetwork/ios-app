@@ -86,10 +86,9 @@ class SignalLoadingViewController: UIViewController {
                 }
                 SignalDatabase.shared.insertOrReplace(objects: newSession)
 
-
                 let senderKeys = SenderKeyDAO.shared.syncGetSenderKeys()
                 senderKeys.forEach { (key) in
-                    let userId = String(key.senderId[0..<key.senderId.count-2])
+                    let userId = String(key.senderId.prefix(key.senderId.count - 2))
                     if let deviceId = sessionMap[userId] {
                         SenderKeyDAO.shared.insertOrReplace(obj: SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record))
                     }

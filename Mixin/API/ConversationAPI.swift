@@ -31,9 +31,6 @@ class ConversationAPI : BaseAPI {
             return "conversations/\(conversationId)/rotate"
         }
 
-        static func sessions(conversationId: String, action: String) -> String {
-            return "conversations/\(conversationId)/sessions/\(action)"
-        }
     }
 
     func createConversation(conversation: ConversationRequest, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
@@ -92,12 +89,6 @@ class ConversationAPI : BaseAPI {
     func mute(userId: String, duration: Int64, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
         let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: userId)
         mute(conversationId: conversationId, duration: duration, completion: completion)
-    }
-
-    func addSystemSession(conversationId: String, action: String, sessionId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-
-        // Need Check action
-//        ConversationSessionRequest(action: <#T##String#>, sessionId: <#T##String#>)
     }
     
     func mute(conversationId: String, duration: Int64, completion: @escaping (APIResult<ConversationResponse>) -> Void) {

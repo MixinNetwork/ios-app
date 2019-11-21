@@ -17,8 +17,6 @@ struct BlazeMessageParam: Codable {
     var messages: [TransferMessage]? = nil
 
     var sessionId: String? = nil
-    var primitiveId: String? = nil
-    var primitiveMessageId: String? = nil
 
     var representativeId: String? = nil
     var conversations: [String]? = nil
@@ -38,8 +36,6 @@ struct BlazeMessageParam: Codable {
         case messages
 
         case sessionId = "session_id"
-        case primitiveId = "primitive_id"
-        case primitiveMessageId = "primitive_message_id"
 
         case representativeId = "representative_id"
     }
@@ -88,10 +84,9 @@ extension BlazeMessageParam {
         self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
         self.status = MessageStatus.SENDING.rawValue
         self.sessionId = sessionId
-        self.primitiveId = accountId
     }
 
-    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, representativeId: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.category = category
@@ -107,8 +102,6 @@ extension BlazeMessageParam {
         self.messages = messages
 
         self.sessionId = sessionId
-        self.primitiveId = primitiveId
-        self.primitiveMessageId = primitiveMessageId
 
         self.representativeId = representativeId
     }

@@ -36,15 +36,6 @@ class ReceiveMessageService: MixinService {
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
-            } else if blazeMessage.action == BlazeMessageAction.createSessionMessage.rawValue {
-                if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty && blazeMessageData.sessionId == AccountAPI.shared.accountSessionId {
-
-                } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
-                        return
-                    }
-                    ReceiveMessageService.shared.processReceiveMessages()
-                }
             } else {
                 ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: messageId, status: .READ)
             }

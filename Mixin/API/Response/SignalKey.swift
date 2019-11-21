@@ -1,6 +1,6 @@
 import Foundation
 
-struct SignalKeyResponse: Codable {
+struct SignalKey: Codable {
 
     let identityKey: String
     let signedPreKey: SignedPreKeyRequest
@@ -20,7 +20,7 @@ struct SignalKeyResponse: Codable {
 }
 
 
-extension SignalKeyResponse {
+extension SignalKey {
     func getPreKeyPublic() -> Data {
         return Data(base64Encoded: preKey.pub_key)!
     }

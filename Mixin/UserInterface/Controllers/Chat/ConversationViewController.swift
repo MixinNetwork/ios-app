@@ -1121,7 +1121,9 @@ extension ConversationViewController {
                     guard let weakSelf = self else {
                         return
                     }
-                    weakSelf.numberOfParticipants = nil
+                    if let number = weakSelf.numberOfParticipants {
+                        weakSelf.numberOfParticipants = number - 1
+                    }
                     weakSelf.isMember = isParticipant
                     weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
                     weakSelf.conversationInputViewController.inputBarView.isHidden = false

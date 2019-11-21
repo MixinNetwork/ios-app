@@ -692,8 +692,6 @@
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
 		DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
-		DFBC04A1200397B0008CA56A /* SentSenderKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBC04A0200397B0008CA56A /* SentSenderKey.swift */; };
-		DFBC04A52003A89A008CA56A /* SentSenderKeyDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBC04A42003A89A008CA56A /* SentSenderKeyDAO.swift */; };
 		DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCC433D206B53A5006F50BE /* AccountRequest.swift */; };
 		DFCC4340206B60CE006F50BE /* KeyUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCC433F206B60CE006F50BE /* KeyUtil.swift */; };
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
@@ -1511,8 +1509,6 @@
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
-		DFBC04A0200397B0008CA56A /* SentSenderKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentSenderKey.swift; sourceTree = "<group>"; };
-		DFBC04A42003A89A008CA56A /* SentSenderKeyDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentSenderKeyDAO.swift; sourceTree = "<group>"; };
 		DFCC433D206B53A5006F50BE /* AccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
 		DFCC433F206B60CE006F50BE /* KeyUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyUtil.swift; sourceTree = "<group>"; };
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -2299,7 +2295,6 @@
 				DF114B052020551900EA8F9C /* AppDAO.swift */,
 				DF2A24511FC8744A003A8C1E /* ParticipantDAO.swift */,
 				DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */,
-				DFBC04A42003A89A008CA56A /* SentSenderKeyDAO.swift */,
 				DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */,
 			);
 			path = Database;
@@ -2972,7 +2967,6 @@
 				DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */,
 				DF17B50B2052433B006447C2 /* MessageItem.swift */,
 				DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */,
-				DFBC04A0200397B0008CA56A /* SentSenderKey.swift */,
 				DF2A244D1FC84E3F003A8C1E /* Conversation.swift */,
 				DF17B51220525485006447C2 /* ConversationItem.swift */,
 				DFE48ADB20EB8165003E0BF8 /* ConversationStorageUsage.swift */,
@@ -3774,7 +3768,6 @@
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFCFAFC8237E863D00F0AFD5 /* RawTransactionRequest.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
-				DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
@@ -3885,7 +3878,6 @@
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				DFCFAFCC237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift in Sources */,
-				DFBC04A1200397B0008CA56A /* SentSenderKey.swift in Sources */,
 				DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
@@ -3904,7 +3896,6 @@
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */,
 				DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */,
-				DFBC04A52003A89A008CA56A /* SentSenderKeyDAO.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF121F2E1FA1C244000F701D /* ConversationDAO.swift in Sources */,
 				DF22D94D1FDE500500243CAE /* SystemConversationMessagePayload.swift in Sources */,

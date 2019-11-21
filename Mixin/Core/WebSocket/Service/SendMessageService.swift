@@ -463,7 +463,7 @@ extension SendMessageService {
                 }
             }
             checkSessionSync(conversationId: message.conversationId)
-            try checkAndSendSenderKey(conversationId: message.conversationId)
+            try checkSessionSenderKey(conversationId: message.conversationId)
 
             let content = blazeMessage.params?.data ?? message.content ?? ""
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)

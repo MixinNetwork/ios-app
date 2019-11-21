@@ -51,7 +51,7 @@ class MixinService {
 
             noKeyList = requestSignalKeyUsers.filter{!keys.contains($0.userId)}
             if !noKeyList.isEmpty {
-                let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
+                let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SentToServerStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
                 MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
             }
         }
@@ -65,7 +65,7 @@ class MixinService {
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
-            let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SentSenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
+            let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SentToServerStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
             MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)        }
         FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(result)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
         FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
@@ -107,16 +107,6 @@ class MixinService {
         }
     }
 
-    internal func checkAndSendSenderKey(conversationId: String) throws {
-        try checkSessionSenderKey(conversationId: conversationId)
-        let participants = ParticipantDAO.shared.getNotSentKeyParticipants(conversationId: conversationId, accountId: currentAccountId)
-        if participants.count == 1 {
-            _ = try sendSenderKey(conversationId: conversationId, recipientId: participants[0].userId)
-        } else if participants.count > 1 {
-            try sendBatchSenderKey(conversationId: conversationId, participants: participants, from: "checkSentSenderKey")
-        }
-    }
-
     @discardableResult
     internal func sendSenderKey(conversationId: String, recipientId: String, sessionId: String? = nil, isForce: Bool = false) throws -> Bool {
         if (!SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))) || isForce {
@@ -126,9 +116,8 @@ class MixinService {
             } else {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
                 if let sessionId = sessionId, !sessionId.isEmpty {
-                    ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()))
+                    ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentToServerStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()))
                 }
-                SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue))
                 return false
             }
         }
@@ -141,74 +130,18 @@ class MixinService {
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
             if let sessionId = sessionId, !sessionId.isEmpty {
-                ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentSenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()))
+                ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentToServerStatus.SENT.rawValue, createdAt: Date().toUTCString()))
             }
-            SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.SENT.rawValue))
         }
         FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...messageId:\(blazeMessage.params?.messageId ?? "")...sessionId:\(sessionId ?? "")...recipientId:\(recipientId)...\(result)")
         return result
     }
 
-    
     internal func resendSenderKey(conversationId: String, recipientId: String, sessionId: String?) throws {
         let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId, isForce: true)
         if !result {
             sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
         }
-    }
-
-    internal func sendBatchSenderKey(conversationId: String, participants: [Participant], from: String) throws {
-        var requestSignalKeyUsers = [BlazeMessageParamSession]()
-        var signalKeyMessages = [TransferMessage]()
-        for p in participants {
-            if SignalProtocol.shared.containsSession(recipient: p.userId) {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[SendGroupSenderKey]...containsSession...\(p.userId)")
-                let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: p.userId)
-                if isError {
-                    requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: nil, platform: nil))
-                } else {
-                    signalKeyMessages.append(TransferMessage(recipientId: p.userId, data: cipherText))
-                }
-            } else {
-                requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: nil, platform: nil))
-            }
-        }
-
-        var noKeyList = [BlazeMessageParamSession]()
-        var signalKeys = [SignalKey]()
-
-        if !requestSignalKeyUsers.isEmpty {
-            signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
-            var keys = [String]()
-            for signalKey in signalKeys {
-                guard let recipientId = signalKey.userId else {
-                    continue
-                }
-                try SignalProtocol.shared.processSession(userId: recipientId, key: signalKey)
-                let (cipherText, _) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId)
-                signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText))
-                keys.append(recipientId)
-            }
-
-            noKeyList = requestSignalKeyUsers.filter{!keys.contains($0.userId)}
-            if !noKeyList.isEmpty {
-                SentSenderKeyDAO.shared.batchInsert(conversationId: conversationId, messages: noKeyList,  status: SentSenderKeyStatus.UNKNOWN.rawValue)
-            }
-        }
-
-        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey]...signalKeyMessages:\(signalKeyMessages.count) + noKeyList:\(noKeyList.count)...requestSignalKeyUsers:\(requestSignalKeyUsers.count)...signalKeys:\(signalKeys.count)")
-
-        guard signalKeyMessages.count > 0 else {
-            return
-        }
-        let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages)
-        let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
-        let result = deliverNoThrow(blazeMessage: blazeMessage)
-        if result {
-            SentSenderKeyDAO.shared.batchUpdate(conversationId: conversationId, messages: signalKeyMessages)
-        }
-        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(result)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
-        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
     }
 
     private func sendNoKeyMessage(conversationId: String, recipientId: String) {

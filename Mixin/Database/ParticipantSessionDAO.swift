@@ -23,5 +23,10 @@ final class ParticipantSessionDAO {
     func insertParticipentSession(participantSession: ParticipantSession) {
         MixinDatabase.shared.insertOrReplace(objects: [participantSession])
     }
+
+    func updateStatusByUserId(userId: String) {
+        MixinDatabase.shared.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.userId == userId)
+    }
+    
 }
 

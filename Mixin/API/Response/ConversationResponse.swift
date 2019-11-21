@@ -54,3 +54,12 @@ struct ParticipantSessionResponse: Codable {
         case platform
     }
 }
+
+
+extension ParticipantSessionResponse {
+
+    var uniqueIdentifier: String {
+        return "\(userId)\(sessionId)"
+    }
+
+}

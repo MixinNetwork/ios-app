@@ -64,7 +64,7 @@ final class ConversationDAO {
     GROUP BY m.conversation_id
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
-
+    
     func showBadgeNumber() {
         DispatchQueue.global().async {
             var badgeNumber = Int(MixinDatabase.shared.scalar(sql: ConversationDAO.sqlBadgeNumber, values: [Date().toUTCString()]).int32Value)
@@ -153,8 +153,12 @@ final class ConversationDAO {
     func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
         MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
         MixinFile.cleanAllChatDirectories()
-        let changes = MixinDatabase.shared.delete(table: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId, cascadeDelete: true)
-        if changes > 0 && autoNotification {
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
+            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
+        }
+        if autoNotification {
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
         }
     }
@@ -367,6 +371,12 @@ final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+
+            let oldParticipantSessions: [ParticipantSession] = try db.getObjects(on: ParticipantSession.Properties.all, fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
+            var sentToServerMap = [String: Int?]()
+            oldParticipantSessions.forEach({ (participantSession) in
+                sentToServerMap[participantSession.uniqueIdentifier] = participantSession.sentToServer
+            })
             try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
 
             let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
@@ -374,7 +384,7 @@ final class ConversationDAO {
 
             if let participantSessions = conversation.participantSessions {
                 let sessionParticipants = participantSessions.map {
-                    ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
+                    ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil, createdAt: Date().toUTCString())
                 }
                 try db.insertOrReplace(objects: sessionParticipants, intoTable: ParticipantSession.tableName)
             }

@@ -24,7 +24,8 @@ class MixinSessionStore: SessionStore {
             #if DEBUG
             print("New session coming")
             #endif
-            SentSenderKeyDAO.shared.delete(byUserId: address.name)
+            // TODO should update with session
+            ParticipantSessionDAO.shared.updateStatusByUserId(userId: address.name)
         }
         return SessionDAO.shared.insertOrReplace(obj: Session(address: address.name, device: Int(address.deviceId), record: session, timestamp: Date().timeIntervalSince1970))
     }

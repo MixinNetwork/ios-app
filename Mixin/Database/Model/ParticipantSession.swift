@@ -26,3 +26,17 @@ struct ParticipantSession: BaseCodable {
         }
     }
 }
+
+extension ParticipantSession {
+
+    var uniqueIdentifier: String {
+        return "\(userId)\(sessionId)"
+    }
+
+}
+
+enum SentToServerStatus: Int {
+    case UNKNOWN = 0
+    case SENT = 1
+}
+

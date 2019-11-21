@@ -29,7 +29,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: StickerRelationship.self)
                 try database.create(of: Album.self)
                 try database.create(of: MessageHistory.self)
-                try database.create(of: SentSenderKey.self)
                 try database.create(of: App.self)
 
                 try database.create(of: User.self)
@@ -40,6 +39,7 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
+                try database.create(of: ParticipantSession.self)
 
                 try self.createAfter(database: database, currentVersion: currentVersion)
 
@@ -48,7 +48,7 @@ class MixinDatabase: BaseDatabase {
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
                 if clearSentSenderKey {
-                    try database.delete(fromTable: SentSenderKey.tableName)
+                    try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
                 }
                 try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
@@ -95,19 +95,6 @@ class MixinDatabase: BaseDatabase {
             try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
     }
-
-    func logout() {
-        do {
-            try database.run(transaction: {
-                try database.delete(fromTable: SentSenderKey.tableName)
-            })
-        } catch let err as WCDBSwift.Error {
-            UIApplication.traceWCDBError(err)
-        } catch {
-            UIApplication.traceError(error)
-        }
-    }
-    
 }
 
 extension MixinDatabase {

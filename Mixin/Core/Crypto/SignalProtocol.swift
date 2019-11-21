@@ -155,16 +155,7 @@ class SignalProtocol {
     private func encryptSession(content: Data, destination: String, deviceId: Int32) throws -> CiphertextMessage {
         let address = SignalAddress(name: destination, deviceId: deviceId)
         let sessionCipher = SessionCipher(for: address, in: store)
-        do {
-            return try sessionCipher.encrypt(content)
-        } catch {
-            if let err = error as? SignalError, err == SignalError.unknownError {
-                let sessionId = AccountUserDefault.shared.extensionSession ?? ""
-                FileManager.default.writeLog(log: "[SignalProtocol][EncryptSession]...sessionId:\(sessionId)...destination:\(destination)...deviceId:\(deviceId)...containsSession:\(store.sessionStore.containsSession(for: address))")
-                _ = store.sessionStore.deleteSession(for: address)
-            }
-            throw error
-        }
+        return try sessionCipher.encrypt(content)
     }
 
     func processGroupSession(groupId: String, sender: SignalAddress, data: Data) {

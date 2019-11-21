@@ -2,7 +2,7 @@ import UIKit
 
 final class ProfileDescriptionView: UIView {
     
-    let label = CollapsingLabel()
+    let label = ProfileDescriptionLabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

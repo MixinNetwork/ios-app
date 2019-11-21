@@ -10,8 +10,6 @@ final class GroupProfileViewController: ProfileViewController {
         return conversation.isMuted
     }
     
-    private let isAnnouncementExpanded: Bool
-    
     private lazy var notMemberPaddingView = NotMemberPaddingView()
     
     private var conversation: ConversationItem
@@ -22,16 +20,14 @@ final class GroupProfileViewController: ProfileViewController {
     private var participantsCount: Int?
     private var isAdmin = false
     
-    init(conversation: ConversationItem, isAnnouncementExpanded: Bool) {
+    init(conversation: ConversationItem) {
         self.conversation = conversation
         self.codeId = nil
         self.isMember = true
-        self.isAnnouncementExpanded = isAnnouncementExpanded
         self.participantsCount = 0
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
-        size = isAnnouncementExpanded ? .expanded : .compressed
     }
     
     init(response: ConversationResponse, codeId: String, participants: [ParticipantUser], isMember: Bool) {
@@ -39,12 +35,10 @@ final class GroupProfileViewController: ProfileViewController {
         self.response = response
         self.codeId = codeId
         self.isMember = isMember
-        self.isAnnouncementExpanded = false
         self.participantsCount = participants.count
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
-        size = .compressed
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -218,8 +212,6 @@ extension GroupProfileViewController {
         }
         
         if !conversation.announcement.isEmpty {
-            descriptionView.label.text = conversation.announcement
-            descriptionView.label.mode = isAnnouncementExpanded ? .normal : .collapsed
             centerStackView.addArrangedSubview(descriptionView)
         }
         

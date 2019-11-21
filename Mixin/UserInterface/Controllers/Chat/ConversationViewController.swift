@@ -213,7 +213,7 @@ class ConversationViewController: UIViewController {
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
-            let vc = GroupProfileViewController(conversation: dataSource.conversation, isAnnouncementExpanded: false)
+            let vc = GroupProfileViewController(conversation: dataSource.conversation)
             present(vc, animated: true, completion: nil)
         } else if let user = ownerUser, user.isCreatedByMessenger {
             let vc = UserProfileViewController(user: user)
@@ -225,7 +225,7 @@ class ConversationViewController: UIViewController {
         guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
             return
         }
-        let vc = GroupProfileViewController(conversation: conversation, isAnnouncementExpanded: true)
+        let vc = GroupProfileViewController(conversation: conversation)
         present(vc, animated: true, completion: nil)
         CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
         announcementButton.isHidden = true

@@ -30,4 +30,24 @@ public enum AppGroupContainer {
         accountUrl.appendingPathComponent("task.db", isDirectory: false)
     }
     
+    @available(iOSApplicationExtension, unavailable)
+    public static func migrate() {
+        guard let userDomainDocumentUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        do {
+            if FileManager.default.fileExists(atPath: documentsUrl.path, isDirectory: nil) {
+                try FileManager.default.removeItem(at: documentsUrl)
+            }
+            try FileManager.default.copyItem(at: userDomainDocumentUrl, to: documentsUrl)
+            let enumerator = FileManager.default.enumerator(atPath: userDomainDocumentUrl.path)
+            while let file = enumerator?.nextObject() as? String {
+                let url = userDomainDocumentUrl.appendingPathComponent(file)
+                try FileManager.default.removeItem(at: url)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
 }

@@ -9,11 +9,18 @@ class DatabaseUpgradeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
             let localVersion = AppGroupUserDefaults.User.localVersion
-
+            
+            if localVersion < 9 {
+                AppGroupContainer.migrate()
+            }
+            
+            // Logs are saved in app container
+            // Write after container migration
+            FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
+            
             TaskDatabase.shared.initDatabase()
             
             let shouldClearSentSenderKey = !AppGroupUserDefaults.Database.isSentSenderKeyCleared

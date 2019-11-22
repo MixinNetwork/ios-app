@@ -24,7 +24,7 @@ extension SDImageCache {
     static let assetIcon = SDImageCache(namespace: "AssetIcon", diskCacheDirectory: documentPath, config: .persistent)
     static let persistentSticker = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath, config: .persistent)
     
-    private static let documentPath = (try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true))?.path
+    private static let documentPath = AppGroupContainer.documentsUrl.path
     
 }
 

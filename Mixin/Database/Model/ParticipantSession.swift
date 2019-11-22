@@ -35,7 +35,7 @@ extension ParticipantSession {
 
 }
 
-enum SentToServerStatus: Int {
+enum SenderKeyStatus: Int {
     case UNKNOWN = 0
     case SENT = 1
 }

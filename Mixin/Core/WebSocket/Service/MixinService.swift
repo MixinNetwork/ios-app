@@ -51,7 +51,7 @@ class MixinService {
 
             noKeyList = requestSignalKeyUsers.filter{!keys.contains($0.userId)}
             if !noKeyList.isEmpty {
-                let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SentToServerStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
+                let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
                 MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
             }
         }
@@ -65,7 +65,7 @@ class MixinService {
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
-            let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SentToServerStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
+            let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
             MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
         }
         FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(result)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
@@ -117,7 +117,7 @@ class MixinService {
             } else {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
                 if let sessionId = sessionId, !sessionId.isEmpty {
-                    ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentToServerStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()))
+                    ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()))
                 }
                 return false
             }
@@ -131,7 +131,7 @@ class MixinService {
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
             if let sessionId = sessionId, !sessionId.isEmpty {
-                ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SentToServerStatus.SENT.rawValue, createdAt: Date().toUTCString()))
+                ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()))
             }
         }
         FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...messageId:\(blazeMessage.params?.messageId ?? "")...sessionId:\(sessionId ?? "")...recipientId:\(recipientId)...\(result)")

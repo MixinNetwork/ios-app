@@ -130,6 +130,14 @@ class SendMessageService: MixinService {
         }
     }
 
+    func sendMessage(action: JobAction) {
+        saveDispatchQueue.async {
+            let job = Job(jobId: UUID().uuidString.lowercased(), action: action)
+            MixinDatabase.shared.insertOrReplace(objects: [job])
+            SendMessageService.shared.processMessages()
+        }
+    }
+
     func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         saveDispatchQueue.async {
             let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
@@ -151,7 +159,6 @@ class SendMessageService: MixinService {
         var resendMessages = [ResendMessage]()
         for messageId in messageIds {
             guard !ResendMessageDAO.shared.isExist(messageId: messageId, userId: userId) else {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[SendMessageService][ResendMessage][Exist]...resend_messages...messageId:\(messageId)")
                 continue
             }
 

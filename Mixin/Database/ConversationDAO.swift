@@ -64,6 +64,17 @@ final class ConversationDAO {
     GROUP BY m.conversation_id
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
+    private static let sqlSessionSync = """
+    SELECT c.conversation_id, c.last_message_created_at FROM conversations c
+    INNER JOIN users u ON c.owner_id = u.user_id
+    LEFT JOIN participants p on p.conversation_id = c.conversation_id
+    WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
+    ORDER BY c.last_message_created_at DESC
+    """
+
+    func getSyncSessions(userId: String) -> [SessionSync] {
+        return MixinDatabase.shared.getCodables(on: SessionSync.Properties.all, sql: ConversationDAO.sqlSessionSync, values: [userId])
+    }
     
     func showBadgeNumber() {
         DispatchQueue.global().async {
@@ -371,23 +382,10 @@ final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
-
-            let oldParticipantSessions: [ParticipantSession] = try db.getObjects(on: ParticipantSession.Properties.all, fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
-            var sentToServerMap = [String: Int?]()
-            oldParticipantSessions.forEach({ (participantSession) in
-                sentToServerMap[participantSession.uniqueIdentifier] = participantSession.sentToServer
-            })
-            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
-
             let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
 
-            if let participantSessions = conversation.participantSessions {
-                let sessionParticipants = participantSessions.map {
-                    ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil, createdAt: Date().toUTCString())
-                }
-                try db.insertOrReplace(objects: sessionParticipants, intoTable: ParticipantSession.tableName)
-            }
+            try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
 
             let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
             try statment.execute(with: [conversationId])

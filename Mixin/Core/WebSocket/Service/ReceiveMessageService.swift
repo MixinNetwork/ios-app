@@ -83,6 +83,7 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processAppButton(data: data)
                         ReceiveMessageService.shared.processWebRTCMessage(data: data)
                         ReceiveMessageService.shared.processRecallMessage(data: data)
+                        ReceiveMessageService.shared.processSessionSyncMessage(data: data)
                     } else {
                         ReceiveMessageService.shared.processUnknownMessage(data: data)
                     }
@@ -184,13 +185,16 @@ class ReceiveMessageService: MixinService {
             return
         }
 
-        syncConversationParticipantSession(conversationId: data.conversationId)
+        switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
+        case let .success(response):
+            ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
+        case .failure:
+            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+        }
+
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
-    private func syncConversationParticipantSession(conversationId: String) {
-
-    }
 
     private func processSignalMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("SIGNAL_") else {
@@ -220,10 +224,10 @@ class ReceiveMessageService: MixinService {
                     }
                 }
             })
-            let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
-            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
+            let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")...deviceId:\(SignalProtocol.convertSessionIdToDeviceId(data.sessionId))")
             if status == RatchetStatus.REQUESTING.rawValue {
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
@@ -245,7 +249,7 @@ class ReceiveMessageService: MixinService {
                 userInfo["containsSession"] = "\(SignalProtocol.shared.containsSession(recipient: data.userId))"
                 userInfo["sessionCount"] = "\(SessionDAO.shared.getCount())"
                 userInfo["localIentity"] = IdentityDAO.shared.getLocalIdentity()?.address ?? ""
-                userInfo["ratchetSenderKeyStatus"] =  SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId) ?? ""
+                userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
             }
             userInfo["createdAt"] = data.createdAt
             UIApplication.traceErrorToFirebase(code: ReportErrorCode.decryptMessageError, userInfo: userInfo)
@@ -258,15 +262,14 @@ class ReceiveMessageService: MixinService {
                 return
             }
             if (data.category == MessageCategory.SIGNAL_KEY.rawValue) {
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 refreshKeys(conversationId: data.conversationId)
             } else {
                 insertFailedMessage(data: data)
                 refreshKeys(conversationId: data.conversationId)
-                let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
+                let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 if status != RatchetStatus.REQUESTING.rawValue {
-                    requestResendKey(conversationId: data.conversationId, userId: data.userId, messageId: data.messageId)
-                    SignalProtocol.shared.setRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, status: RatchetStatus.REQUESTING.rawValue)
+                    requestResendKey(conversationId: data.conversationId, recipientId: data.userId, messageId: data.messageId, sessionId: data.sessionId)
                 }
             }
         }
@@ -296,7 +299,7 @@ class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processDecryptSuccess(data: BlazeMessageData, plainText: String, dataUserId: String? = nil) {
+    private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
         if data.category.hasSuffix("_TEXT") {
             var content = plainText
             if data.category == MessageCategory.PLAIN_TEXT.rawValue {
@@ -577,13 +580,13 @@ class ReceiveMessageService: MixinService {
                 }
                 SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, messageIds: messageIds)
             case PlainDataAction.NO_KEY.rawValue:
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
             default:
                 break
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
-            processDecryptSuccess(data: data, plainText: data.data, dataUserId: data.getDataUserId())
+            processDecryptSuccess(data: data, plainText: data.data)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         default:
             break
@@ -593,7 +596,7 @@ class ReceiveMessageService: MixinService {
     private func requestResendMessage(conversationId: String, userId: String, sessionId: String?) {
         let messages: [String] = MessageDAO.shared.findFailedMessages(conversationId: conversationId, userId: userId).reversed()
         guard messages.count > 0 else {
-            SignalProtocol.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+            RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, sessionId: sessionId)
             return
         }
 
@@ -606,13 +609,15 @@ class ReceiveMessageService: MixinService {
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
 
-    private func requestResendKey(conversationId: String, userId: String, messageId: String) {
+    private func requestResendKey(conversationId: String, recipientId: String, messageId: String, sessionId: String?) {
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
-        SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
+        SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
+
+        RatchetSenderKeyDAO.shared.setRatchetSenderKeyStatus(groupId: conversationId, senderId: recipientId, status: RatchetStatus.REQUESTING.rawValue, sessionId: sessionId)
     }
 
     private func updateRemoteMessageStatus(messageId: String, status: MessageStatus) {
@@ -676,34 +681,21 @@ extension ReceiveMessageService {
             AccountUserDefault.shared.lastDesktopLogin = Date()
             AccountUserDefault.shared.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: data.userId)
+
+            let syncSessions = ConversationDAO.shared.getSyncSessions(userId: systemSession.userId)
+            SessionSyncDAO.shared.saveSyncSessions(userId: systemSession.userId, sessionId: systemSession.sessionId, syncSessions: syncSessions)
+
+            SendMessageService.shared.sendMessage(action: .SEND_SESSION_SYNC)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
-
-            
-
-//            Session.storeExtensionSessionId(systemSession.sessionId)
-//            signalProtocol.deleteSession(systemSession.userId)
-//            val conversations = conversationDao.getConversationsByUserId(systemSession.userId)
-//            val ps = conversations?.map {
-//                ParticipantSession(it.conversationId, systemSession.userId, systemSession.sessionId)
-//            }
-//            ps?.let {
-//                participantSessionDao.insertList(it)
-//                sessionSyncDao.insertList(conversations)
-//                jobManager.addJobInBackground(SendProcessSignalKeyJob(data, ProcessSignalKeyAction.SESSION_SYNC))
-//            }
-
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
-//            Session.deleteExtensionSessionId()
-//            signalProtocol.deleteSession(data.userId)
-//            val conversations = conversationDao.getConversationsByUserId(systemSession.userId)
-//            val ps = conversations?.map {
-//                ParticipantSession(it.conversationId, systemSession.userId, systemSession.sessionId)
-//            }
-//            ps?.let {
-//                participantSessionDao.deleteList(it)
-//                sessionSyncDao.insertList(conversations)
-//                jobManager.addJobInBackground(SendProcessSignalKeyJob(data, ProcessSignalKeyAction.SESSION_SYNC))
-//            }
+            AccountUserDefault.shared.extensionSession = nil
+            SignalProtocol.shared.deleteSession(userId: data.userId)
+
+            let syncSessions = ConversationDAO.shared.getSyncSessions(userId: systemSession.userId)
+            ParticipantSessionDAO.shared.delete(userId: systemSession.userId, sessionId: systemSession.sessionId, syncSessions: syncSessions)
+
+            SendMessageService.shared.sendMessage(action: .SEND_SESSION_SYNC)
+            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         }
     }
 
@@ -742,6 +734,11 @@ extension ReceiveMessageService {
             }
             let status = checkUser(userId: participantId, tryAgain: true)
             operSuccess = ParticipantDAO.shared.addParticipant(message: message, conversationId: data.conversationId, participantId: participantId, updatedAt: data.updatedAt, status: status, source: data.source)
+
+            if participantId != currentAccountId {
+                // TODO refresh conversation?
+                ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+            }
 
             if participantId != currentAccountId && SignalProtocol.shared.isExistSenderKey(groupId: data.conversationId, senderId: currentAccountId) {
                 SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, sessionId: data.sessionId, action: .SEND_KEY)

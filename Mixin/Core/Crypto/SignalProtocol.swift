@@ -79,7 +79,8 @@ class SignalProtocol {
         }
     }
 
-    func encryptSenderKey(conversationId: String, recipientId: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) throws -> (String, Bool) {
+    func encryptSenderKey(conversationId: String, recipientId: String, sessionId: String?) throws -> (String, Bool) {
+        let deviceId = SignalProtocol.convertSessionIdToDeviceId(sessionId)
         let senderKeyDistributionMessage = try getSenderKeyDistribution(groupId: conversationId, senderId: AccountAPI.shared.accountUserId)
         do {
             let cipherMessage = try encryptSession(content: senderKeyDistributionMessage.message, destination: recipientId, deviceId: deviceId)
@@ -201,22 +202,22 @@ class SignalProtocol {
         }
     }
 
-    func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String) {
-        let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
-        let ratchet = RatchetSenderKey(groupId: senderKeyName.groupId, senderId: senderKeyName.sender.toString(), status: status)
-        RatchetSenderKeyDAO.shared.insertOrReplace(obj: ratchet)
-    }
-
-    func getRatchetSenderKeyStatus(groupId: String, senderId: String) -> String? {
-        let address = SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID)
-        let ratchet = RatchetSenderKeyDAO.shared.getRatchetSenderKey(groupId: groupId, senderId: address.toString())
-        return ratchet?.status
-    }
-
-    func deleteRatchetSenderKey(groupId: String, senderId: String, deviceId: Int32) {
-        let address = SignalAddress(name: senderId, deviceId: deviceId)
-        RatchetSenderKeyDAO.shared.delete(groupId: groupId, senderId: address.toString())
-    }
+//    func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String, sessionId: String?) {
+//        let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId)))
+//        let ratchet = RatchetSenderKey(groupId: senderKeyName.groupId, senderId: senderKeyName.sender.toString(), status: status)
+//        RatchetSenderKeyDAO.shared.insertOrReplace(obj: ratchet)
+//    }
+//
+//    func getRatchetSenderKeyStatus(groupId: String, senderId: String, sessionId: String?) -> String? {
+//        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+//        let ratchet = RatchetSenderKeyDAO.shared.getRatchetSenderKey(groupId: groupId, senderId: address.toString())
+//        return ratchet?.status
+//    }
+//
+//    func deleteRatchetSenderKey(groupId: String, senderId: String, sessionId: String?) {
+//        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+//        RatchetSenderKeyDAO.shared.delete(groupId: groupId, senderId: address.toString())
+//    }
 
 }
 

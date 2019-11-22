@@ -17,7 +17,6 @@ struct SystemConversationMessagePayload: Codable {
 
 enum SystemSessionMessageAction: String {
     case PROVISION
-    case ADD
     case DESTROY
 }
 

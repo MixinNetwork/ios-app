@@ -21,15 +21,15 @@ class MixinService {
         var signalKeyMessages = [TransferMessage]()
         for p in participants {
             if SignalProtocol.shared.containsSession(recipient: p.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(p.sessionId)) {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[SendGroupSenderKey]...containsSession...\(p.userId)")
-                let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: p.userId)
+                FileManager.default.writeLog(conversationId: conversationId, log: "[CheckSessionSenderKey]...containsSession...\(p.userId)")
+                let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: p.userId, sessionId: p.sessionId)
                 if isError {
-                    requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: p.sessionId, platform: nil))
+                    requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: p.sessionId))
                 } else {
                     signalKeyMessages.append(TransferMessage(recipientId: p.userId, data: cipherText, sessionId: p.sessionId))
                 }
             } else {
-                requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: p.sessionId, platform: nil))
+                requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: p.sessionId))
             }
         }
 
@@ -44,7 +44,7 @@ class MixinService {
                     continue
                 }
                 try SignalProtocol.shared.processSession(userId: recipientId, key: signalKey)
-                let (cipherText, _) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId)
+                let (cipherText, _) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: signalKey.sessionId)
                 signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText, sessionId: signalKey.sessionId))
                 keys.append(recipientId)
             }
@@ -66,22 +66,10 @@ class MixinService {
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
             let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SentToServerStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
-            MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)        }
+            MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
+        }
         FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(result)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
         FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
-    }
-
-    internal func checkSignalSession(recipientId: String, sessionId: String? = nil) throws -> Bool {
-        let deviceId = sessionId?.hashCode() ?? SignalProtocol.shared.DEFAULT_DEVICE_ID
-        if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
-            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId, platform: nil)])
-            guard signalKeys.count > 0 else {
-                FileManager.default.writeLog(log: "[MixinService][CheckSignalSession]...recipientId:\(recipientId)...sessionId:\(sessionId ?? "")...signal keys count is zero ")
-                return false
-            }
-            try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0], deviceId: deviceId)
-        }
-        return true
     }
 
     internal func checkSessionSync(conversationId: String) {
@@ -90,6 +78,19 @@ class MixinService {
             return
         }
         sendSessionSyncMessage(conversations: conversations)
+    }
+
+    internal func checkSignalSession(recipientId: String, sessionId: String? = nil) throws -> Bool {
+        let deviceId = sessionId?.hashCode() ?? SignalProtocol.shared.DEFAULT_DEVICE_ID
+        if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
+            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId)])
+            guard signalKeys.count > 0 else {
+                FileManager.default.writeLog(log: "[MixinService][CheckSignalSession]...recipientId:\(recipientId)...sessionId:\(sessionId ?? "")...signal keys count is zero ")
+                return false
+            }
+            try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0], deviceId: deviceId)
+        }
+        return true
     }
 
     internal func sendSessionSyncMessage(conversations: [SessionSync]) {
@@ -110,7 +111,7 @@ class MixinService {
     @discardableResult
     internal func sendSenderKey(conversationId: String, recipientId: String, sessionId: String? = nil, isForce: Bool = false) throws -> Bool {
         if (!SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))) || isForce {
-            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId, platform: nil)])
+            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId)])
             if signalKeys.count > 0 {
                 try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0], deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
             } else {
@@ -122,7 +123,7 @@ class MixinService {
             }
         }
 
-        let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
         guard !isError else {
             return false
         }

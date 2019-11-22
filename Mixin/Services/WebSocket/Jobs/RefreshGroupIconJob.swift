@@ -27,7 +27,7 @@ class RefreshGroupIconJob: AsynchronousJob {
             }
         }
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
-        let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
+        let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
             updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             return false
@@ -55,7 +55,7 @@ class RefreshGroupIconJob: AsynchronousJob {
         let oldIconUrl = ConversationDAO.shared.getConversationIconUrl(conversationId: conversationId)
         ConversationDAO.shared.updateIconUrl(conversationId: conversationId, iconUrl: imageFile)
         if let removeIconUrl = oldIconUrl, !removeIconUrl.isEmpty, removeIconUrl != imageFile {
-            try? FileManager.default.removeItem(atPath: MixinFile.groupIconsUrl.appendingPathComponent(removeIconUrl).path)
+            try? FileManager.default.removeItem(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(removeIconUrl).path)
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateGroupIcon(iconUrl: imageFile))
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)

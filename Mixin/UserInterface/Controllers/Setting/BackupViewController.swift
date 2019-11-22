@@ -61,7 +61,7 @@ class BackupViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
         if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
             backingUI()
-        } else if let backupDir = MixinFile.iCloudBackupDirectory, !backupDir.isStoredCloud {
+        } else if let backupDir = backupUrl, !backupDir.isStoredCloud {
             AppGroupUserDefaults.User.lastBackupDate = nil
             AppGroupUserDefaults.User.lastBackupSize = nil
         }

@@ -4,10 +4,10 @@ import Bugsnag
 class VideoDownloadJob: AttachmentDownloadJob {
     
     override var fileUrl: URL {
-        return MixinFile.url(ofChatDirectory: .videos, filename: fileName)
+        return AttachmentContainer.url(for: .videos, filename: fileName)
     }
     
-    private lazy var thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: messageId + ExtensionName.jpeg.withDot)
+    private lazy var thumbnailUrl = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.jpeg.withDot)
 
     override class func jobId(messageId: String) -> String {
         return "video-download-\(messageId)"

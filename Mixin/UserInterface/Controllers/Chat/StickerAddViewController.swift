@@ -17,7 +17,7 @@ class StickerAddViewController: UIViewController {
         if let assetUrl = message?.assetUrl {
             stickerImageView.sd_setImage(with: URL(string: assetUrl))
         } else if let mediaUrl = message?.mediaUrl {
-            let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+            let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
             if mediaUrl.hasSuffix(".webp") || mediaUrl.hasSuffix(".gif") {
                 animateURL = url
             }
@@ -123,7 +123,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 }
                 let fileExtension = assetUrl.pathExtension.lowercased()
                 let filename = "\(UUID().uuidString.lowercased()).\(fileExtension)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     if let stickerBase64 = FileManager.default.contents(atPath: targetUrl.path)?.base64EncodedString() {
@@ -136,7 +136,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 }
             } else {
                 let filename = "\(UUID().uuidString.lowercased()).\(ExtensionName.jpeg)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 let targetPhoto = image.scaledToSticker()
                 if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateSticker(targetUrl.path) {
                     addBloack(stickerBase64)

@@ -31,7 +31,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     }
     
     internal var fileUrl: URL {
-        return MixinFile.url(ofChatDirectory: .photos, filename: fileName)
+        return AttachmentContainer.url(for: .photos, filename: fileName)
     }
     
     init(messageId: String, mediaMimeType: String?) {

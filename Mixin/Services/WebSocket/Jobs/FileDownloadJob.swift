@@ -4,7 +4,7 @@ import Bugsnag
 class FileDownloadJob: AttachmentDownloadJob {
 
     override var fileUrl: URL {
-        return MixinFile.url(ofChatDirectory: .files, filename: fileName)
+        return AttachmentContainer.url(for: .files, filename: fileName)
     }
     
     override class func jobId(messageId: String) -> String {

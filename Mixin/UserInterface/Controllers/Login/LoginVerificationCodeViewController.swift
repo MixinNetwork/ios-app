@@ -110,8 +110,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             }
 
             var backupExist = false
-            if let backupDir = MixinFile.iCloudBackupDirectory {
-                backupExist = backupDir.appendingPathComponent(MixinFile.backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
+            if let backupDir = backupUrl {
+                backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
             }
 
             if AppGroupUserDefaults.User.isLogoutByServer || !backupExist {

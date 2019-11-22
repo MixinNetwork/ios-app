@@ -41,10 +41,10 @@ class RestoreViewController: UIViewController {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
             }
-            guard let backupDir = MixinFile.iCloudBackupDirectory else {
+            guard let backupDir = backupUrl else {
                 return
             }
-            var cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+            var cloudURL = backupDir.appendingPathComponent(backupDatabaseName)
             if !cloudURL.isStoredCloud {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
@@ -56,7 +56,7 @@ class RestoreViewController: UIViewController {
                 return
             }
 
-            let localURL = MixinFile.databaseURL
+            let localURL = AppGroupContainer.mixinDatabaseUrl
             self.removeDatabase(databaseURL: localURL)
             do {
                 if !cloudURL.isDownloaded {

@@ -6,14 +6,14 @@ class TaskDatabase: BaseDatabase {
 
     static let shared = TaskDatabase()
 
-    private lazy var _database = Database(withPath: MixinFile.taskDatabaseURL.path)
+    private lazy var _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
     override var database: Database! {
         get { return _database }
         set { }
     }
 
     func initDatabase() {
-        _database = Database(withPath: MixinFile.taskDatabaseURL.path)
+        _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
         do {
             try database.run(transaction: {
                 try database.create(of: MessageBlaze.self)

@@ -152,7 +152,7 @@ final class ConversationDAO {
     
     func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
         MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
-        MixinFile.cleanAllChatDirectories()
+        AttachmentContainer.cleanUpAll()
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)

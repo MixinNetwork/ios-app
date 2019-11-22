@@ -23,7 +23,7 @@ class VideoUploadJob: AttachmentUploadJob {
         guard let mediaUrl = message.mediaUrl else {
             return nil
         }
-        return MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
+        return AttachmentContainer.url(for: .videos, filename: mediaUrl)
     }
     
     override class func jobId(messageId: String) -> String {
@@ -71,7 +71,7 @@ class VideoUploadJob: AttachmentUploadJob {
         }
         let filename = message.messageId
         let videoFilename = filename + ExtensionName.mp4.withDot
-        let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: videoFilename)
+        let videoUrl = AttachmentContainer.url(for: .videos, filename: videoFilename)
         let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: videoUrl)
         exportSession.exportAsynchronously {
             semaphore.signal()
@@ -84,7 +84,7 @@ class VideoUploadJob: AttachmentUploadJob {
         }
         let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
         let thumbnailFilename = filename + ExtensionName.jpeg.withDot
-        let thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
+        let thumbnailUrl = AttachmentContainer.url(for: .videos, filename: thumbnailFilename)
         thumbnail?.saveToFile(path: thumbnailUrl)
         let mediaSize = FileManager.default.fileSize(videoUrl.path)
         let mediaDuration = Int64(phAsset.duration * 1000)

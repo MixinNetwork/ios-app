@@ -6,14 +6,14 @@ class MixinDatabase: BaseDatabase {
 
     static let shared = MixinDatabase()
 
-    private var _database = Database(withPath: MixinFile.databaseURL.path)
+    private var _database = Database(withPath: AppGroupContainer.mixinDatabaseUrl.path)
     override var database: Database! {
         get { return _database }
         set { }
     }
 
     func initDatabase(clearSentSenderKey: Bool = false) {
-        _database = Database(withPath: MixinFile.databaseURL.path)
+        _database = Database(withPath: AppGroupContainer.mixinDatabaseUrl.path)
         do {
             try database.run(transaction: {
                 var currentVersion = try database.getDatabaseVersion()

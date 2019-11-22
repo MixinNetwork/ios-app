@@ -296,11 +296,10 @@ class MixinService {
 
         ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
 
-        if let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: category), let mediaUrl = mediaUrl {
-            try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl))
-
+        if let attachmentCategory = AttachmentContainer.Category(messageCategory: category), let mediaUrl = mediaUrl {
+            try? FileManager.default.removeItem(at: AttachmentContainer.url(for: attachmentCategory, filename: mediaUrl))
             if category.hasSuffix("_VIDEO") {
-                let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+                let thumbUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
                 try? FileManager.default.removeItem(at: thumbUrl)
             }
         }

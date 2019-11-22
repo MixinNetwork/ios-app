@@ -37,7 +37,7 @@ class BackupJob: BaseJob {
         guard FileManager.default.ubiquityIdentityToken != nil else {
             return
         }
-        guard let backupDir = MixinFile.iCloudBackupDirectory else {
+        guard let backupUrl = backupUrl else {
             return
         }
 
@@ -61,42 +61,43 @@ class BackupJob: BaseJob {
         }
 
         AppGroupUserDefaults.Account.hasUnfinishedBackup = true
-
-        try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
-
-        var categories: [MixinFile.ChatDirectory] = [.photos, .audios]
+        
+        try FileManager.default.createDirectory(at: backupUrl, withIntermediateDirectories: true, attributes: nil)
+        
+        var categories: [AttachmentContainer.Category] = [.photos, .audios]
         if AppGroupUserDefaults.User.backupFiles {
             categories.append(.files)
         } else {
-            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
+            let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.files.pathComponent, isDirectory: true)
+            try? FileManager.default.removeItem(at: url)
         }
         if AppGroupUserDefaults.User.backupVideos {
             categories.append(.videos)
         } else {
-            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
+            let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.videos.pathComponent, isDirectory: true)
+            try? FileManager.default.removeItem(at: url)
         }
 
         var localPaths = Set<String>()
         var cloudPaths = Set<String>()
-        let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
-
+        
         for category in categories {
-            let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
-            let cloudDir = backupDir.appendingPathComponent(category.rawValue)
+            let localUrl = AttachmentContainer.url(for: category, filename: nil)
+            let cloudUrl = backupUrl.appendingPathComponent(category.pathComponent)
 
-            if localDir.fileExists {
-                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localDir.path).map { "\(category.rawValue)/\($0)" })
+            if localUrl.fileExists {
+                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localUrl.path).map { "\(category.pathComponent)/\($0)" })
             }
-            if cloudDir.fileExists {
-                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudDir.path).map { "\(category.rawValue)/\($0)" })
+            if cloudUrl.fileExists {
+                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudUrl.path).map { "\(category.pathComponent)/\($0)" })
             } else {
-                try FileManager.default.createDirectoryIfNeeded(dir: cloudDir)
+                try FileManager.default.createDirectory(at: cloudUrl, withIntermediateDirectories: true, attributes: nil)
             }
         }
 
         for path in cloudPaths {
             if !localPaths.contains(path) {
-                try? FileManager.default.removeItem(at: backupDir.appendingPathComponent(path))
+                try? FileManager.default.removeItem(at: backupUrl.appendingPathComponent(path))
             }
         }
 
@@ -116,8 +117,8 @@ class BackupJob: BaseJob {
         isBackingUp = true
 
         for filename in localPaths {
-            let localURL = chatDir.appendingPathComponent(filename)
-            let cloudURL = backupDir.appendingPathComponent(filename)
+            let localURL = AttachmentContainer.url.appendingPathComponent(filename)
+            let cloudURL = backupUrl.appendingPathComponent(filename)
             let localFileSize = FileManager.default.fileSize(localURL.path)
             let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
 
@@ -137,7 +138,7 @@ class BackupJob: BaseJob {
         }
 
         let databaseFileSize = getDatabaseFileSize()
-        let databaseCloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+        let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
         let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
 
         if !isBackupDatabase {
@@ -187,19 +188,19 @@ class BackupJob: BaseJob {
                                       NSMetadataUbiquitousItemIsUploadingKey,
                                       NSMetadataUbiquitousItemUploadingErrorKey,
                                       NSMetadataUbiquitousItemIsUploadedKey]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupDir.path)
+        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
         DispatchQueue.main.async {
             query.start()
         }
 
         if isBackupDatabase {
-            copyToCloud(from: MixinFile.databaseURL, destination: databaseCloudURL, isDatabase: true)
+            copyToCloud(from: AppGroupContainer.mixinDatabaseUrl, destination: databaseCloudURL, isDatabase: true)
         }
         for path in backupPaths {
             guard isContinueBackup else {
                 return
             }
-            copyToCloud(from: chatDir.appendingPathComponent(path), destination: backupDir.appendingPathComponent(path))
+            copyToCloud(from: AttachmentContainer.url.appendingPathComponent(path), destination: backupUrl.appendingPathComponent(path))
         }
 
         isBackingUp = false
@@ -214,7 +215,7 @@ class BackupJob: BaseJob {
         NotificationCenter.default.removeObserver(observer)
 
         if uploadedSize >= totalFileSize {
-            removeOldFiles(backupDir: backupDir)
+            removeOldFiles(backupDir: backupUrl)
             AppGroupUserDefaults.User.lastBackupDate = Date()
             AppGroupUserDefaults.User.lastBackupSize = totalFileSize
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
@@ -229,7 +230,7 @@ class BackupJob: BaseJob {
             AppGroupUserDefaults.Database.vacuumDate = Date()
             try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
         }
-        return FileManager.default.fileSize(MixinFile.databaseURL.path)
+        return FileManager.default.fileSize(AppGroupContainer.mixinDatabaseUrl.path)
     }
 
     private func stopQuery(query: NSMetadataQuery, semaphore: DispatchSemaphore) {
@@ -269,8 +270,8 @@ class BackupJob: BaseJob {
 
     private func removeOldFiles(backupDir: URL) {
         let files = ["mixin.backup.db",
-                     "mixin.\(MixinFile.ChatDirectory.photos.rawValue.lowercased()).zip",
-            "mixin.\(MixinFile.ChatDirectory.audios.rawValue.lowercased()).zip"]
+                     "mixin.photos.zip",
+                     "mixin.audios.zip"]
 
         let baseDir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for file in files {

@@ -33,30 +33,36 @@ class RestoreJob: BaseJob {
         guard FileManager.default.ubiquityIdentityToken != nil else {
             return
         }
-        guard let backupDir = MixinFile.iCloudBackupDirectory else {
+        guard let backupUrl = backupUrl else {
             return
         }
-
-        let chatDir = MixinFile.rootDirectory.appendingPathComponent("Chat")
-        let categories = [ MixinFile.ChatDirectory.photos.rawValue,
-                           MixinFile.ChatDirectory.audios.rawValue,
-                           MixinFile.ChatDirectory.files.rawValue,
-                           MixinFile.ChatDirectory.videos.rawValue ]
-
+        
+        let categories: [AttachmentContainer.Category] = [.photos, .audios, .files, .videos]
+        
         monitors = SafeDictionary<String, DownloadFile>()
         totalFileSize = 0
         downloadedSize = 0
         isStoppedQuery = false
 
         for category in categories {
-            try FileManager.default.createDirectoryIfNeeded(dir: chatDir.appendingPathComponent(category))
-
-            if (category == MixinFile.ChatDirectory.photos.rawValue || category == MixinFile.ChatDirectory.audios.rawValue) && backupDir.appendingPathComponent("mixin.\(category.lowercased()).zip").isStoredCloud {
-                let filename = "mixin.\(category.lowercased()).zip"
-                monitorURL(cloudURL: backupDir.appendingPathComponent(filename), localURL: chatDir.appendingPathComponent(filename), category: category, isZipFile: true)
+            try FileManager.default.createDirectory(at: AttachmentContainer.url(for: category, filename: nil), withIntermediateDirectories: true, attributes: nil)
+            
+            if category == .photos, backupUrl.appendingPathComponent("mixin.photos.zip").isStoredCloud {
+                let filename = "mixin.photos.zip"
+                monitorURL(cloudURL: backupUrl.appendingPathComponent(filename),
+                           localURL: AttachmentContainer.url.appendingPathComponent(filename),
+                           category: category,
+                           isZipFile: true)
+            }
+            if category == .audios, backupUrl.appendingPathComponent("mixin.audios.zip").isStoredCloud {
+                let filename = "mixin.audios.zip"
+                monitorURL(cloudURL: backupUrl.appendingPathComponent(filename),
+                           localURL: AttachmentContainer.url.appendingPathComponent(filename),
+                           category: category,
+                           isZipFile: true)
             }
             
-            let cloudDir = backupDir.appendingPathComponent(category)
+            let cloudDir = backupUrl.appendingPathComponent(category.pathComponent)
             guard FileManager.default.directoryExists(atPath: cloudDir.path) else {
                 continue
             }
@@ -66,7 +72,7 @@ class RestoreJob: BaseJob {
                 continue
             }
 
-            let localDir = chatDir.appendingPathComponent(category)
+            let localDir = AttachmentContainer.url.appendingPathComponent(category.pathComponent)
             for content in contents {
                 var filename = content
                 if filename.hasSuffix(".icloud") {
@@ -115,7 +121,7 @@ class RestoreJob: BaseJob {
                         monitorFile.fileSize = fileSize
                         weakSelf.monitors[fileName] = monitorFile
                         if isDownloaded {
-                            weakSelf.restoreFromCloud(fileName: fileName, chatDir: chatDir, semaphore: semaphore, query: query)
+                            weakSelf.restoreFromCloud(fileName: fileName, chatDir: AttachmentContainer.url, semaphore: semaphore, query: query)
                         }
                     }
                 }
@@ -136,7 +142,7 @@ class RestoreJob: BaseJob {
                                       NSMetadataUbiquitousItemIsDownloadingKey,
                                       NSMetadataUbiquitousItemDownloadingErrorKey,
                                       NSMetadataUbiquitousItemDownloadingStatusKey]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupDir.path)
+        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
         DispatchQueue.main.async {
             query.start()
         }
@@ -147,7 +153,7 @@ class RestoreJob: BaseJob {
                 continue
             }
             if file.cloudURL.isDownloaded {
-                restoreFromCloud(fileName: fileName, chatDir: chatDir, semaphore: semaphore, query: query)
+                restoreFromCloud(fileName: fileName, chatDir: AttachmentContainer.url, semaphore: semaphore, query: query)
             } else {
                 do {
                     try FileManager.default.startDownloadingUbiquitousItem(at: file.cloudURL)
@@ -174,7 +180,7 @@ class RestoreJob: BaseJob {
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
 
-    func monitorURL(cloudURL: URL, localURL: URL, category: String, isZipFile: Bool = false) {
+    func monitorURL(cloudURL: URL, localURL: URL, category: AttachmentContainer.Category, isZipFile: Bool = false) {
         if cloudURL.isDownloaded {
             let fileSize = cloudURL.fileSize
             totalFileSize += fileSize
@@ -233,7 +239,7 @@ class RestoreJob: BaseJob {
                 }
 
                 if file.isZipFile {
-                    let localDir = chatDir.appendingPathComponent(file.category)
+                    let localDir = chatDir.appendingPathComponent(file.category.pathComponent)
                     try Zip.unzipFile(localURL, destination: localDir, overwrite: true, password: nil)
                     try FileManager.default.removeItem(at: file.localURL)
                 }
@@ -260,7 +266,7 @@ private struct DownloadFile {
 
     let cloudURL: URL
     let localURL: URL
-    let category: String
+    let category: AttachmentContainer.Category
     var downloadedSize: Int64
     var fileSize: Int64
     var isDownloaded: Bool

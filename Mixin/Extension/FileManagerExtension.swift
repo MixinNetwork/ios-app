@@ -250,11 +250,11 @@ extension FileManager {
 
     func writeLog(log: String, newSection: Bool = false) {
         DispatchQueue.global().async {
-            guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
+            guard let files = try? FileManager.default.contentsOfDirectory(atPath: AppGroupContainer.logUrl.path) else {
                 return
             }
             for file in files {
-                let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
+                let filename = AppGroupContainer.logUrl.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
                 if log.hasPrefix("No sender key for:") {
                     if log.contains(filename) {
                         FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
@@ -274,7 +274,7 @@ extension FileManager {
             return
         }
 
-        let logPath = MixinFile.logPath
+        let logPath = AppGroupContainer.logUrl
 
         FileManager.dispatchQueue.async {
             var log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
@@ -315,7 +315,7 @@ extension FileManager {
     }
 
     func exportLog(conversationId: String) -> URL? {
-        let conversationFile = MixinFile.logPath.appendingPathComponent("\(conversationId).txt")
+        let conversationFile = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
         let filename = "\(AccountAPI.shared.accountIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
         do {
             return try Zip.quickZipFiles([conversationFile], fileName: filename)

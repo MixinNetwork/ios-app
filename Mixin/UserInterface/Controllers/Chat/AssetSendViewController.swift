@@ -219,7 +219,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         sendButton.isBusy = true
         if let asset = self.videoAsset {
             let messageId = UUID().uuidString.lowercased()
-            let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: messageId + ExtensionName.mp4.withDot)
+            let outputURL = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.mp4.withDot)
             let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: outputURL)
             exportSession.exportAsynchronously { [weak self] in
                 guard let weakSelf = self else {
@@ -278,7 +278,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
                 let fileExtension = assetUrl.pathExtension.lowercased()
                 let filename = "\(message.messageId).\(fileExtension)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     
@@ -297,7 +297,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
             } else {
                 let filename = "\(message.messageId).\(ExtensionName.jpeg)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 let targetPhoto = image.scaleForUpload()
                 if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
                     message.thumbImage = targetPhoto.base64Thumbnail()

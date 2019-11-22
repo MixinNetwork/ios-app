@@ -454,7 +454,7 @@ extension HomeViewController {
         tableView.endUpdates()
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversation.conversationId, autoNotification: false)
-            MixinFile.cleanAllChatDirectories()
+            AttachmentContainer.cleanUpAll()
             NotificationCenter.default.postOnMain(name: .StorageUsageDidChange)
         }
     }
@@ -466,7 +466,7 @@ extension HomeViewController {
         tableView.endUpdates()
         DispatchQueue.global().async {
             ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversation.conversationId)
-            MixinFile.cleanAllChatDirectories()
+            AttachmentContainer.cleanUpAll()
         }
     }
     

@@ -34,7 +34,7 @@ class ImageUploadJob: AttachmentUploadJob {
             return
         }
         let filename = message.messageId + ExtensionName.gif.withDot
-        let fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+        let fileUrl = AttachmentContainer.url(for: .photos, filename: filename)
         
         var success = false
         let sema = DispatchSemaphore(value: 0)
@@ -94,7 +94,7 @@ class ImageUploadJob: AttachmentUploadJob {
         }
         
         let filename = "\(message.messageId).\(extensionName)"
-        let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+        let url = AttachmentContainer.url(for: .photos, filename: filename)
         
         guard !isCancelled, let data = imageData else {
             return

@@ -95,7 +95,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             }
         }
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
-        let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
+        let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
 
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
             return imageFile

@@ -797,6 +797,8 @@
 		E07E38A423A773F10005A538 /* WCDBError+CustomNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */; };
 		E07E38A623A774940005A538 /* MixinError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A523A774940005A538 /* MixinError.swift */; };
 		E07E38AA23A777180005A538 /* MixinFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A923A777180005A538 /* MixinFile.swift */; };
+		E07E38AE23A777990005A538 /* AppGroupContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38AC23A777990005A538 /* AppGroupContainer.swift */; };
+		E07E38AF23A777990005A538 /* AttachmentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38AD23A777990005A538 /* AttachmentContainer.swift */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
@@ -1656,6 +1658,8 @@
 		E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WCDBError+CustomNSError.swift"; sourceTree = "<group>"; };
 		E07E38A523A774940005A538 /* MixinError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinError.swift; sourceTree = "<group>"; };
 		E07E38A923A777180005A538 /* MixinFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinFile.swift; sourceTree = "<group>"; };
+		E07E38AC23A777990005A538 /* AppGroupContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppGroupContainer.swift; sourceTree = "<group>"; };
+		E07E38AD23A777990005A538 /* AttachmentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentContainer.swift; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
@@ -3134,6 +3138,7 @@
 			children = (
 				E07E38A823A777180005A538 /* Legacy */,
 				E05DBEAB23A7615000E32164 /* User Defaults */,
+				E07E38AB23A777990005A538 /* File Management */,
 				E05DC06723A762E000E32164 /* AnyOptional.swift */,
 				E05DC13F23A7638900E32164 /* AutoBackup.swift */,
 				E05DC14023A7638A00E32164 /* AutoDownload.swift */,
@@ -3200,6 +3205,15 @@
 				E07E38A923A777180005A538 /* MixinFile.swift */,
 			);
 			path = Legacy;
+			sourceTree = "<group>";
+		};
+		E07E38AB23A777990005A538 /* File Management */ = {
+			isa = PBXGroup;
+			children = (
+				E07E38AC23A777990005A538 /* AppGroupContainer.swift */,
+				E07E38AD23A777990005A538 /* AttachmentContainer.swift */,
+			);
+			path = "File Management";
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
@@ -3784,6 +3798,7 @@
 				DF8DA1A21FD64C1E00425CEC /* BlazeMessageParam.swift in Sources */,
 				DF03C8631FF2C24300C1ED6B /* RatchetSenderKey.swift in Sources */,
 				DF03C85F1FF2C01B00C1ED6B /* MessageHistory.swift in Sources */,
+				E07E38AF23A777990005A538 /* AttachmentContainer.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
@@ -4210,6 +4225,7 @@
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
+				E07E38AE23A777990005A538 /* AppGroupContainer.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				DF92A51F20A5BDAD00427B80 /* ResendSessionMessageDAO.swift in Sources */,

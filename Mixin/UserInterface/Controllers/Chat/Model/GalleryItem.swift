@@ -62,14 +62,14 @@ struct GalleryItem: Equatable {
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
             if let mediaUrl = mediaUrl {
-                self.url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                self.url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
             } else {
                 self.url = nil
             }
         } else if GalleryItem.videoCategories.contains(category) {
             self.category = .video
             if let mediaUrl = mediaUrl {
-                self.url = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
+                self.url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
             } else {
                 self.url = nil
             }

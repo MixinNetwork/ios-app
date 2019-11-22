@@ -7,7 +7,8 @@ class SignalDatabase: BaseDatabase {
 
     static let shared = SignalDatabase()
 
-    private var _database = Database(withPath: MixinFile.signalDatabasePath)
+    private var _database = Database(withPath: AppGroupContainer.signalDatabaseUrl.path)
+    
     override var database: Database! {
         get { return _database }
         set { }

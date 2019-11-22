@@ -130,7 +130,7 @@ class ConversationItem: TableCodable {
     }
 
     func isNeedCachedGroupIcon() -> Bool {
-        return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: MixinFile.groupIconsUrl.appendingPathComponent(iconUrl).path))
+        return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl).path))
     }
 
 }

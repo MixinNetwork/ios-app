@@ -42,11 +42,11 @@ struct Quote {
             var image: Image?
             if message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-                    let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                    let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
                     image = .local(url)
                 } else if message.category.hasSuffix("_VIDEO"), let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
                     let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-                    let url = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+                    let url = AttachmentContainer.url(for: .videos, filename: betterThumbnailFilename)
                     image = .local(url)
                 }
             } else if message.category.hasSuffix("_LIVE"), let urlString = message.thumbUrl, let url = URL(string: urlString) {

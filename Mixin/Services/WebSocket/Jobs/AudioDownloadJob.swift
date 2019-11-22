@@ -3,7 +3,7 @@ import Foundation
 class AudioDownloadJob: AttachmentDownloadJob {
     
     override var fileUrl: URL {
-        return MixinFile.url(ofChatDirectory: .audios, filename: fileName)
+        return AttachmentContainer.url(for: .audios, filename: fileName)
     }
     
     override class func jobId(messageId: String) -> String {

@@ -6,7 +6,7 @@ class AudioUploadJob: AttachmentUploadJob {
         guard let mediaUrl = message.mediaUrl else {
             return nil
         }
-        return MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl)
+        return AttachmentContainer.url(for: .audios, filename: mediaUrl)
     }
     
     override class func jobId(messageId: String) -> String {

@@ -59,7 +59,7 @@ class QuotePreviewView: UIView, XibDesignable {
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-                let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
                 imageView.sd_setImage(with: url, placeholderImage: contentImageThumbnail, context: localImageContext)
             } else {
                 imageView.image = contentImageThumbnail

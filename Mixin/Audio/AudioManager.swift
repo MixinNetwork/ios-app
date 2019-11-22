@@ -96,7 +96,7 @@ class AudioManager: NSObject {
                                    name: AVAudioSession.mediaServicesWereResetNotification,
                                    object: nil)
                 
-                let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
+                let path = AttachmentContainer.url(for: .audios, filename: mediaUrl).path
                 
                 self.playingMessage = message
                 self.player = try AudioPlayer(path: path)

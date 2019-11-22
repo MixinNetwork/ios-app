@@ -221,3 +221,11 @@ enum PeriodicPinVerificationInterval {
     static let min: TimeInterval = 60 * 10
     static let max: TimeInterval = 60 * 60 * 24
 }
+
+var backupUrl: URL? {
+    FileManager.default.url(forUbiquityContainerIdentifier: nil)?
+        .appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
+        .appendingPathComponent("Backup")
+}
+
+let backupDatabaseName = "mixin.db"

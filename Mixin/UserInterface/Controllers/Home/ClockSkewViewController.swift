@@ -13,7 +13,7 @@ class ClockSkewViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        FileManager.default.writeLog(log: "ClockSkewViewController...")
+        Logger.write(log: "ClockSkewViewController...")
     }
 
 

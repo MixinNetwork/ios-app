@@ -19,7 +19,7 @@ class DatabaseUpgradeViewController: UIViewController {
             
             // Logs are saved in app container
             // Write after container migration
-            FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
+            Logger.write(log: "DatabaseUpgradeViewController...")
             
             TaskDatabase.shared.initDatabase()
             

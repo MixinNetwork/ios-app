@@ -438,7 +438,7 @@ class SendMessageService: MixinService {
 
                         let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
                         if !result {
-                            FileManager.default.writeLog(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
+                            Logger.write(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
                             sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
                         }
                     }
@@ -446,7 +446,7 @@ class SendMessageService: MixinService {
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
                         let blazeMessage = job.toBlazeMessage()
                         deliverNoThrow(blazeMessage: blazeMessage)
-                        FileManager.default.writeLog(conversationId: job.conversationId!, log: "[SendMessageService][REQUEST_RESEND_KEY]...messageId:\(blazeMessage.params?.messageId ?? "")")
+                        Logger.write(conversationId: job.conversationId!, log: "[SendMessageService][REQUEST_RESEND_KEY]...messageId:\(blazeMessage.params?.messageId ?? "")")
                     }
                 case JobAction.REQUEST_RESEND_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
@@ -470,7 +470,7 @@ class SendMessageService: MixinService {
                     #if DEBUG
                     print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)....currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                     #endif
-                    FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...blazeMessage:\(blazeMessage)...\(error)")
+                    Logger.write(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...blazeMessage:\(blazeMessage)...\(error)")
                     var userInfo = [String: Any]()
                     userInfo["errorCode"] = error.errorCode
                     userInfo["errorDescription"] = error.localizedDescription
@@ -515,7 +515,7 @@ extension SendMessageService {
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId, sessionId: job.sessionId)
         try deliverMessage(blazeMessage: blazeMessage)
 
-        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
+        Logger.write(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
     }
 
     private func sendMessage(blazeMessage: BlazeMessage) throws {
@@ -575,7 +575,7 @@ extension SendMessageService {
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
         }
         try deliverMessage(blazeMessage: blazeMessage)
-        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
+        Logger.write(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
     }
 
     private func checkConversationExist(conversation: ConversationItem) throws {

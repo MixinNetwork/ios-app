@@ -8,7 +8,7 @@ class SignalLoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        FileManager.default.writeLog(log: "SignalLoadingView...")
+        Logger.write(log: "SignalLoadingView...")
         let startTime = Date()
         DispatchQueue.global().async {
             try! SignalDatabase.shared.initDatabase()

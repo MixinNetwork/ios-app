@@ -20,7 +20,7 @@ class RefreshOneTimePreKeysJob: BaseJob {
         do {
             let request = try PreKeyUtil.generateKeys()
             _ = SignalKeyAPI.shared.pushSignalKeys(key: request)
-            FileManager.default.writeLog(log: "[RefreshOneTimePreKeysJob]...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+            Logger.write(log: "[RefreshOneTimePreKeysJob]...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         } catch let error as SignalError where IdentityDAO.shared.getLocalIdentity() == nil {
             let error = MixinServicesError.refreshOneTimePreKeys(error: error, identityCount: IdentityDAO.shared.getCount())
             Reporter.report(error: error)

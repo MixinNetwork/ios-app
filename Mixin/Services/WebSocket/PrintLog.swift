@@ -4,5 +4,5 @@ import Foundation
 public func printSignalLog(message: UnsafePointer<CChar>)
 {
     let log = String(cString: message)
-    FileManager.default.writeLog(log: log)
+    Logger.write(log: log)
 }

@@ -184,7 +184,7 @@ final class AccountAPI: BaseAPI {
             return
         }
         UIApplication.shared.setShortcutItemsEnabled(false)
-        FileManager.default.writeLog(log: "===========logout...from:\(from)")
+        Logger.write(log: "===========logout...from:\(from)")
         AppGroupUserDefaults.User.isLogoutByServer = true
         DispatchQueue.main.async {
             self.account = nil

@@ -81,7 +81,7 @@ class MixinService {
     }
 
     internal func checkSignalSession(recipientId: String, sessionId: String? = nil) throws -> Bool {
-        let deviceId = sessionId?.hashCode() ?? SignalProtocol.shared.DEFAULT_DEVICE_ID
+        let deviceId = SignalProtocol.convertSessionIdToDeviceId(sessionId)
         if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId)])
             guard signalKeys.count > 0 else {
@@ -117,7 +117,7 @@ class MixinService {
             } else {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
                 if let sessionId = sessionId, !sessionId.isEmpty {
-                    ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()))
+                    MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString())])
                 }
                 return false
             }
@@ -131,7 +131,7 @@ class MixinService {
         let result = deliverNoThrow(blazeMessage: blazeMessage)
         if result {
             if let sessionId = sessionId, !sessionId.isEmpty {
-                ParticipantSessionDAO.shared.insertParticipentSession(participantSession: ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()))
+                MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString())])
             }
         }
         FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...messageId:\(blazeMessage.params?.messageId ?? "")...sessionId:\(sessionId ?? "")...recipientId:\(recipientId)...\(result)")

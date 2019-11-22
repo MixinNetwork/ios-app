@@ -18,10 +18,6 @@ final class ParticipantSessionDAO {
         return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: ParticipantSessionDAO.sqlQueryParticipantUsers, values: [conversationId, sessionId])
     }
 
-    func insertParticipentSession(participantSession: ParticipantSession) {
-        MixinDatabase.shared.insertOrReplace(objects: [participantSession])
-    }
-
     func updateStatusByUserId(userId: String) {
         MixinDatabase.shared.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.userId == userId)
     }

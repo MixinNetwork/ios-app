@@ -58,6 +58,10 @@ final class ParticipantDAO {
     func getParticipants(conversationId: String) -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipantUsers, values: [conversationId])
     }
+
+    func getAllParticipants() -> [Participant] {
+        return MixinDatabase.shared.getCodables()
+    }
     
     func getParticipantCount(conversationId: String) -> Int {
         return MixinDatabase.shared.getCount(on: Participant.Properties.userId.count(),

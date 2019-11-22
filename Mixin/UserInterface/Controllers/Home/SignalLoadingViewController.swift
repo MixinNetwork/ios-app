@@ -70,8 +70,10 @@ class SignalLoadingViewController: UIViewController {
             switch UserAPI.shared.fetchSessions(userIds: userIds) {
             case let .success(remoteSessions):
                 var sessionMap = [String: Int32]()
+                var userSessionMap = [String: String]()
                 remoteSessions.forEach { (session) in
                     sessionMap[session.userId] = SignalProtocol.convertSessionIdToDeviceId(session.sessionId)
+                    userSessionMap[session.userId] = session.sessionId
                 }
 
                 guard sessionMap.count > 0 else {
@@ -88,11 +90,22 @@ class SignalLoadingViewController: UIViewController {
 
                 let senderKeys = SenderKeyDAO.shared.syncGetSenderKeys()
                 senderKeys.forEach { (key) in
-                    let userId = String(key.senderId.prefix(key.senderId.count - 2))
-                    if let deviceId = sessionMap[userId] {
-                        SenderKeyDAO.shared.insertOrReplace(obj: SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record))
+                    if key.senderId.hasSuffix(":1") {
+                        let userId = String(key.senderId.prefix(key.senderId.count - 2))
+                        if let deviceId = sessionMap[userId] {
+                            SenderKeyDAO.shared.insertOrReplace(obj: SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record))
+                        }
                     }
                 }
+
+                let participants = ParticipantDAO.shared.getAllParticipants()
+                let participantSessions: [ParticipantSession] = participants.compactMap {
+                    guard let sessionId = userSessionMap[$0.userId] else {
+                        return nil
+                    }
+                    return ParticipantSession(conversationId: $0.conversationId, userId: $0.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())
+                }
+                MixinDatabase.shared.insertOrReplace(objects: participantSessions)
             case let .failure(error):
                 guard error.code != 401 else {
                     return

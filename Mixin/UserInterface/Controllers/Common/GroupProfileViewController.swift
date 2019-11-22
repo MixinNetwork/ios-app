@@ -213,6 +213,7 @@ extension GroupProfileViewController {
         }
         
         if !conversation.announcement.isEmpty {
+            descriptionView.label.text = conversation.announcement
             centerStackView.addArrangedSubview(descriptionView)
         }
         

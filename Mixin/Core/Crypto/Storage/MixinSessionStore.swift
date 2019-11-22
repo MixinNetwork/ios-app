@@ -20,14 +20,17 @@ class MixinSessionStore: SessionStore {
         defer {
             objc_sync_exit(lock)
         }
-        if SessionDAO.shared.isExist(address: address.name, device: Int(address.deviceId)) {
-            #if DEBUG
-            print("New session coming")
-            #endif
+
+        let oldSession = SessionDAO.shared.getSession(address: address.name, device:  Int(address.deviceId))
+        let newSession = Session(address: address.name, device: Int(address.deviceId), record: session, timestamp: Date().timeIntervalSince1970)
+        if oldSession == nil {
+            SessionDAO.shared.insertOrReplace(obj: newSession)
+        } else if oldSession!.record != session {
             // TODO should update with session
             ParticipantSessionDAO.shared.updateStatusByUserId(userId: address.name)
+            SessionDAO.shared.insertOrReplace(obj: newSession)
         }
-        return SessionDAO.shared.insertOrReplace(obj: Session(address: address.name, device: Int(address.deviceId), record: session, timestamp: Date().timeIntervalSince1970))
+        return true
     }
 
     func containsSession(for address: SignalAddress) -> Bool {

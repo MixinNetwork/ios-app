@@ -14,8 +14,8 @@ class RatchetSenderKeyDAO: SignalDAO {
     }
 
     func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String, sessionId: String?) {
-        let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId)))
-        let ratchet = RatchetSenderKey(groupId: senderKeyName.groupId, senderId: senderKeyName.sender.toString(), status: status)
+        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let ratchet = RatchetSenderKey(groupId: groupId, senderId: address.toString(), status: status)
         SignalDatabase.shared.insertOrReplace(objects: [ratchet])
     }
 

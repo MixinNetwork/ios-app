@@ -202,23 +202,6 @@ class SignalProtocol {
         }
     }
 
-//    func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String, sessionId: String?) {
-//        let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId)))
-//        let ratchet = RatchetSenderKey(groupId: senderKeyName.groupId, senderId: senderKeyName.sender.toString(), status: status)
-//        RatchetSenderKeyDAO.shared.insertOrReplace(obj: ratchet)
-//    }
-//
-//    func getRatchetSenderKeyStatus(groupId: String, senderId: String, sessionId: String?) -> String? {
-//        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-//        let ratchet = RatchetSenderKeyDAO.shared.getRatchetSenderKey(groupId: groupId, senderId: address.toString())
-//        return ratchet?.status
-//    }
-//
-//    func deleteRatchetSenderKey(groupId: String, senderId: String, sessionId: String?) {
-//        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-//        RatchetSenderKeyDAO.shared.delete(groupId: groupId, senderId: address.toString())
-//    }
-
 }
 
 extension SignalProtocol {

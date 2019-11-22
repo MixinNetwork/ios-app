@@ -67,6 +67,13 @@ extension String {
         return String(self[..<endIndex])
     }
 
+    func suffix(char: Character) -> String? {
+        guard let suffixIndex = firstIndex(of: char) else {
+            return nil
+        }
+        return String(suffix(from: index(suffixIndex, offsetBy: 1)))
+    }
+
     func pathExtension() -> String? {
         guard let idx = self.lastIndex(of: ".") else {
             return nil

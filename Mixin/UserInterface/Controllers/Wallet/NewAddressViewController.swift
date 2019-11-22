@@ -161,9 +161,11 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard isLegalAddress else {
             return
         }
+
+        let destination = addressValue.suffix(char: ":") ?? addressValue
         shouldLayoutWithKeyboard = false
         let assetId = asset.assetId
-        let requestAddress = AddressRequest(assetId: assetId, destination: addressValue, tag: memoValue, label: labelValue, pin: "")
+        let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: memoValue, label: labelValue, pin: "")
         AddressWindow.instance().presentPopupControllerAnimated(action: address == nil ? .add : .update, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
             guard let weakSelf = self else {
                 return

@@ -90,6 +90,7 @@ class MixinDatabase: BaseDatabase {
 
         if currentVersion < 8 {
             try database.drop(table: "sent_sender_keys")
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
         }
     }
 

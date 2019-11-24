@@ -45,7 +45,6 @@ struct Job: BaseCodable {
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
                 "_index_id": IndexBinding(isUnique: true, indexesBy: jobId),
-                // TODO
                 "_next_indexs": IndexBinding(indexesBy: [priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
             ]
         }

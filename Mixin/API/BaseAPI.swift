@@ -85,7 +85,7 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
-    static let rootURLString = "https://mixin-api.zeromesh.net/"
+    static let rootURLString = MixinServer.http
     static let rootURL = URL(string: rootURLString)!
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
@@ -119,6 +119,7 @@ class BaseAPI {
         }
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         let requestTime = Date()
+        let rootURLString = BaseAPI.rootURLString
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
@@ -144,6 +145,8 @@ class BaseAPI {
                         UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
                         AccountAPI.shared.logout(from: "AsyncRequest")
                         return
+                    case NSURLErrorTimedOut:
+                        MixinServer.toggle(currentHttpAddress: rootURLString)
                     default:
                         break
                     }
@@ -190,6 +193,7 @@ extension BaseAPI {
         var result: APIResult<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
         let requestTime = Date()
+        let rootURLString = BaseAPI.rootURLString
         if AccountAPI.shared.didLogin {
             let semaphore = DispatchSemaphore(value: 0)
             getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
@@ -242,6 +246,11 @@ extension BaseAPI {
             UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
             AccountAPI.shared.logout(from: "SyncRequest")
         }
+        
+        if case let .failure(error) = result, error.code == -1, error.status == NSURLErrorTimedOut {
+            MixinServer.toggle(currentHttpAddress: rootURLString)
+        }
+        
         return result
     }
 }

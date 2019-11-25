@@ -773,6 +773,7 @@
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
+		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
@@ -1588,6 +1589,7 @@
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
+		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
@@ -2523,6 +2525,7 @@
 				DFE63C971FC6B13500D6E028 /* Request */,
 				DFE63C981FC6B14B00D6E028 /* Response */,
 				DF5D9F371F9C997F0036D5FD /* Model */,
+				E0D65E0C238BF99A00DC780A /* MixinServer.swift */,
 				DF5D9F211F9C79660036D5FD /* BaseAPI.swift */,
 				DFEE2159200CACB300D9B3F7 /* AuthorizeAPI.swift */,
 				DF5D9F3A1F9C9A400036D5FD /* AccountAPI.swift */,
@@ -3448,6 +3451,7 @@
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
+				E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,

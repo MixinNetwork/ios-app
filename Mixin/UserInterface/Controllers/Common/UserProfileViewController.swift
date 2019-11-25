@@ -735,7 +735,7 @@ extension UserProfileViewController {
         }
         
         view.frame = AppDelegate.current.window.bounds
-        updatePreferredContentSizeHeight()
+        updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {
             updateUserFromRemoteAfterReloaded = false
@@ -750,7 +750,13 @@ extension UserProfileViewController {
     
     private func handle(userResponse: UserResponse, postContactDidChangeNotificationOnSuccess: Bool) {
         user = UserItem.createUser(from: userResponse)
-        reloadData()
+        if let animator = sizeAnimator {
+            animator.addCompletion { _ in
+                self.reloadData()
+            }
+        } else {
+            reloadData()
+        }
         UserDAO.shared.updateUsers(users: [userResponse], notifyContact: postContactDidChangeNotificationOnSuccess)
     }
     

@@ -49,7 +49,7 @@ final class GroupProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadData()
-        updatePreferredContentSizeHeight()
+        updatePreferredContentSizeHeight(size: size)
     }
     
     override func updateMuteInterval(inSeconds interval: Int64) {

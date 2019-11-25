@@ -161,8 +161,8 @@ class ProfileViewController: UIViewController {
     
 }
 
-// MARK: - CollapsingLabelDelegate
-extension ProfileViewController: CollapsingLabelDelegate {
+// MARK: - CoreTextLabelDelegate
+extension ProfileViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         let conversationId = self.conversationId
@@ -177,18 +177,6 @@ extension ProfileViewController: CollapsingLabelDelegate {
                 WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: parent)
             }
         }
-    }
-    
-    func collapsingLabel(_ label: CollapsingLabel, didChangeModeTo newMode: CollapsingLabel.Mode) {
-        guard newMode == .normal && size == .compressed else {
-            return
-        }
-        size = .expanded
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
-            self.updatePreferredContentSizeHeight()
-            self.setNeedsSizeAppearanceUpdated()
-        })
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
@@ -213,7 +201,6 @@ extension ProfileViewController {
         switch size {
         case .expanded:
             size = .compressed
-            descriptionViewIfLoaded?.label.mode = .collapsed
         case .compressed:
             size = .expanded
         case .unavailable:

@@ -50,6 +50,8 @@ class ConversationViewController: UIViewController {
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
     private var didManuallyStoppedTableViewDecelerating = false
+    private var numberOfParticipants: Int?
+    private var isMember = true
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
@@ -213,7 +215,9 @@ class ConversationViewController: UIViewController {
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
-            let vc = GroupProfileViewController(conversation: dataSource.conversation, isAnnouncementExpanded: false)
+            let vc = GroupProfileViewController(conversation: dataSource.conversation,
+                                                numberOfParticipants: numberOfParticipants,
+                                                isMember: isMember)
             present(vc, animated: true, completion: nil)
         } else if let user = ownerUser, user.isCreatedByMessenger {
             let vc = UserProfileViewController(user: user)
@@ -225,7 +229,9 @@ class ConversationViewController: UIViewController {
         guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
             return
         }
-        let vc = GroupProfileViewController(conversation: conversation, isAnnouncementExpanded: true)
+        let vc = GroupProfileViewController(conversation: conversation,
+                                            numberOfParticipants: numberOfParticipants,
+                                            isMember: isMember)
         present(vc, animated: true, completion: nil)
         CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
         announcementButton.isHidden = true
@@ -1104,6 +1110,8 @@ extension ConversationViewController {
                     guard let weakSelf = self else {
                         return
                     }
+                    weakSelf.numberOfParticipants = count
+                    weakSelf.isMember = isParticipant
                     weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
                     weakSelf.conversationInputViewController.inputBarView.isHidden = false
                     weakSelf.subtitleLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: count)
@@ -1113,6 +1121,10 @@ extension ConversationViewController {
                     guard let weakSelf = self else {
                         return
                     }
+                    if let number = weakSelf.numberOfParticipants {
+                        weakSelf.numberOfParticipants = number - 1
+                    }
+                    weakSelf.isMember = isParticipant
                     weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
                     weakSelf.conversationInputViewController.inputBarView.isHidden = false
                     weakSelf.subtitleLabel.text = Localized.GROUP_REMOVE_TITLE

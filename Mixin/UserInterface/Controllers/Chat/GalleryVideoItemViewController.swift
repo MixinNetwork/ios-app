@@ -307,6 +307,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         } else if let url = item.url {
+            controlView.style.insert(.loading)
             loadAssetIfPlayable(url: url, playAfterLoaded: true)
         }
     }
@@ -470,17 +471,24 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         let playableKey = #keyPath(AVAsset.isPlayable)
         var error: NSError?
         
+        func showReloadAndReport(error: Error?) {
+            if let error = error {
+                UIApplication.traceError(error)
+            }
+            controlView.style.remove(.loading)
+            controlView.playControlStyle = .reload
+            updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
+        
         if asset.statusOfValue(forKey: playableKey, error: &error) == .loaded {
             load(playableAsset: asset, playAfterLoaded: playAfterLoaded)
         } else if let error = error {
-            UIApplication.traceError(error)
-            controlView.playControlStyle = .reload
-            controlView.activityIndicatorView.isAnimating = false
+            showReloadAndReport(error: error)
         } else {
             asset.loadValuesAsynchronously(forKeys: [playableKey]) {
                 guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {
-                    if let error = error {
-                        UIApplication.traceError(error)
+                    DispatchQueue.main.async {
+                        showReloadAndReport(error: error)
                     }
                     return
                 }

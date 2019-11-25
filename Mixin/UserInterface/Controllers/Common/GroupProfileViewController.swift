@@ -36,7 +36,7 @@ final class GroupProfileViewController: ProfileViewController {
         self.response = response
         self.codeId = codeId
         self.isMember = isMember
-        self.participantsCount = participants.count
+        self.participantsCount = response.participants.count
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared

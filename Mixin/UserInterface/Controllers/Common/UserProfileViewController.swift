@@ -714,7 +714,7 @@ extension UserProfileViewController {
                 case .BLOCKING:
                     group = [ProfileMenuItem(title: R.string.localizable.profile_unblock(),
                                              subtitle: nil,
-                                             style: [],
+                                             style: [.destructive],
                                              action: #selector(unblockUser))]
                 }
                 group.append(ProfileMenuItem(title: R.string.localizable.group_menu_clear(),

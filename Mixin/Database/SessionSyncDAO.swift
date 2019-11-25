@@ -17,6 +17,9 @@ final class SessionSyncDAO {
     }
 
     func saveSyncSessions(userId: String, sessionId: String, syncSessions: [SessionSync]) {
+        guard syncSessions.count > 0 else {
+            return
+        }
         let participentSessions = syncSessions.compactMap {
             ParticipantSession(conversationId: $0.conversationId, userId: userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())
         }

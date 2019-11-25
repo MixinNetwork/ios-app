@@ -17,6 +17,7 @@ class SignalLoadingViewController: UIViewController {
             self.syncSession()
 
             DispatchQueue.main.async {
+                MixinWebView.clearCookies()
                 let time = Date().timeIntervalSince(startTime)
                 if time < 2 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
@@ -35,7 +36,6 @@ class SignalLoadingViewController: UIViewController {
         }
 
         IdentityDAO.shared.saveLocalIdentity()
-        MixinWebView.clearCookies()
 
         repeat {
             guard AccountAPI.shared.didLogin else {
@@ -44,6 +44,7 @@ class SignalLoadingViewController: UIViewController {
             switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
                 CryptoUserDefault.shared.isLoaded = true
+                return
             case let .failure(error):
                 guard error.code != 401 else {
                     return
@@ -69,6 +70,9 @@ class SignalLoadingViewController: UIViewController {
 
             switch UserAPI.shared.fetchSessions(userIds: userIds) {
             case let .success(remoteSessions):
+                defer {
+                    CryptoUserDefault.shared.isSyncSession = true
+                }
                 var sessionMap = [String: Int32]()
                 var userSessionMap = [String: String]()
                 remoteSessions.forEach { (session) in
@@ -106,6 +110,7 @@ class SignalLoadingViewController: UIViewController {
                     return ParticipantSession(conversationId: $0.conversationId, userId: $0.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())
                 }
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
+                return
             case let .failure(error):
                 guard error.code != 401 else {
                     return

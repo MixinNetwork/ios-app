@@ -195,13 +195,10 @@ extension Database {
 
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) throws {
         var keys = [PropertyConvertible]()
-        var values = [ColumnEncodable]()
+        var values = [ColumnEncodable?]()
         for (key, value) in maps {
-            guard let val = value else {
-                continue
-            }
             keys.append(key)
-            values.append(val)
+            values.append(value)
         }
         try update(table: tableName, on: keys, with: values, where: condition)
     }

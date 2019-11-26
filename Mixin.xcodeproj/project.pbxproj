@@ -558,6 +558,7 @@
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
 		DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */; };
 		DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */; };
+		DF401224238D51630056A6E8 /* RefreshSessionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF401223238D51630056A6E8 /* RefreshSessionJob.swift */; };
 		DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF43304422648B32006D971D /* AssetInfoWindow.swift */; };
 		DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF43304622648B4E006D971D /* AssetInfoWindow.xib */; };
 		DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44B0CB20C6897000A099B6 /* EmptyView.swift */; };
@@ -698,12 +699,9 @@
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
 		DFCFAFC0237D66C600F0AFD5 /* ParticipantSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */; };
-		DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */; };
 		DFCFAFC4237D7CF900F0AFD5 /* ParticipantSessionDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDAO.swift */; };
 		DFCFAFC6237E4DE600F0AFD5 /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC5237E4DE600F0AFD5 /* PaymentCodeResponse.swift */; };
 		DFCFAFC8237E863D00F0AFD5 /* RawTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC7237E863D00F0AFD5 /* RawTransactionRequest.swift */; };
-		DFCFAFCA237EAF7500F0AFD5 /* SessionSyncDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */; };
-		DFCFAFCC237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */; };
 		DFD089E01FE4040500A7D815 /* AttachmentDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */; };
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
@@ -1367,6 +1365,7 @@
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
 		DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUserDefault.swift; sourceTree = "<group>"; };
+		DF401223238D51630056A6E8 /* RefreshSessionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSessionJob.swift; sourceTree = "<group>"; };
 		DF43304422648B32006D971D /* AssetInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInfoWindow.swift; sourceTree = "<group>"; };
 		DF43304622648B4E006D971D /* AssetInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetInfoWindow.xib; sourceTree = "<group>"; };
 		DF44B0CB20C6897000A099B6 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
@@ -1515,12 +1514,9 @@
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
 		DFCFAFBF237D66C600F0AFD5 /* ParticipantSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSession.swift; sourceTree = "<group>"; };
-		DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSync.swift; sourceTree = "<group>"; };
 		DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantSessionDAO.swift; sourceTree = "<group>"; };
 		DFCFAFC5237E4DE600F0AFD5 /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
 		DFCFAFC7237E863D00F0AFD5 /* RawTransactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTransactionRequest.swift; sourceTree = "<group>"; };
-		DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSyncDAO.swift; sourceTree = "<group>"; };
-		DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSignalKeyMessage.swift; sourceTree = "<group>"; };
 		DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloadJob.swift; sourceTree = "<group>"; };
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
@@ -2286,7 +2282,6 @@
 				DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */,
 				DF1070902048103000E20047 /* BlazeMessageDAO.swift */,
 				DFCFAFC3237D7CF900F0AFD5 /* ParticipantSessionDAO.swift */,
-				DFCFAFC9237EAF7500F0AFD5 /* SessionSyncDAO.swift */,
 				DF121F2D1FA1C244000F701D /* ConversationDAO.swift */,
 				DF3C474D1FA1849500A07C71 /* MessageDAO.swift */,
 				DF03C85C1FF2BE6500C1ED6B /* MessageHistoryDAO.swift */,
@@ -2754,6 +2749,7 @@
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
 				DF1A9A7F1FF25DB600A95188 /* ShowNotificationJob.swift */,
 				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
+				DF401223238D51630056A6E8 /* RefreshSessionJob.swift */,
 			);
 			path = Jobs;
 			sourceTree = "<group>";
@@ -2777,7 +2773,6 @@
 				DF08F17F238529F5005CFD34 /* SystemSessionMessagePayload.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
-				DFCFAFCB237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2982,7 +2977,6 @@
 				DF2A3CD72016DC860095F024 /* Sticker.swift */,
 				7BE1108F22FD60FD0017BA06 /* StickerItem.swift */,
 				7B97BA092019D42C0013D58F /* StickerRelationship.swift */,
-				DFCFAFC1237D717700F0AFD5 /* SessionSync.swift */,
 				DFF3B68920E25CB500DC82D9 /* Album.swift */,
 				DF191193208F104800BD415D /* Job.swift */,
 				7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */,
@@ -3765,6 +3759,7 @@
 				DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
+				DF401224238D51630056A6E8 /* RefreshSessionJob.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFCFAFC8237E863D00F0AFD5 /* RawTransactionRequest.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
@@ -3775,7 +3770,6 @@
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
 				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
-				DFCFAFCA237EAF7500F0AFD5 /* SessionSyncDAO.swift in Sources */,
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
@@ -3877,8 +3871,6 @@
 				DFF3B68C20E2690100DC82D9 /* AlbumDAO.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
-				DFCFAFCC237EDBA800F0AFD5 /* BlazeSignalKeyMessage.swift in Sources */,
-				DFCFAFC2237D717700F0AFD5 /* SessionSync.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				DFD5F6F720722C8F0017AAF1 /* PinTokenResponse.swift in Sources */,

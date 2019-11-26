@@ -185,6 +185,11 @@ class BaseDatabase {
         })
         return result
     }
+
+    func execute(sql: String, values: [ColumnEncodable]) {
+        let stmt = try! database.prepareUpdateSQL(sql: sql)
+        try! stmt.execute(with: values)
+    }
 }
 
 extension Database {

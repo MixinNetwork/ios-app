@@ -41,7 +41,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: ResendMessage.self)
 
                 try database.create(of: ParticipantSession.self)
-                try database.create(of: SessionSync.self)
 
                 try self.createAfter(database: database, currentVersion: currentVersion)
 
@@ -51,7 +50,6 @@ class MixinDatabase: BaseDatabase {
 
                 if clearSentSenderKey {
                     try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
-                    try database.delete(fromTable: SessionSync.tableName)
                 }
                 try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })

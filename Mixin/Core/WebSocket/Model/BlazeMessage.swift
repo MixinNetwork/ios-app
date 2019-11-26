@@ -20,7 +20,6 @@ struct BlazeMessage: Encodable {
 enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
     case createSignalKeyMessage = "CREATE_SIGNAL_KEY_MESSAGES"
-    case createSessionSyncMessages = "CREATE_SESSION_SYNC_MESSAGES"
     case createCall = "CREATE_CALL"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
     case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"
@@ -56,11 +55,6 @@ extension BlazeMessage {
         self.params = nil
         self.data = nil
         self.error = nil
-    }
-
-    init(conversationId: String, recipientId: String, cipherText: String, sessionId: String?) throws {
-        let param = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, cipherText: cipherText, sessionId: sessionId)
-        self.init(params: param, action: BlazeMessageAction.createMessage.rawValue)
     }
 
     init(ackBlazeMessage messageId: String, status: String) {

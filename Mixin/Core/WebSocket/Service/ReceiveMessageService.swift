@@ -76,6 +76,7 @@ class ReceiveMessageService: MixinService {
                     }
 
                     ReceiveMessageService.shared.syncConversation(data: data)
+                    ReceiveMessageService.shared.checkSession(data: data)
                     if MessageCategory.isLegal(category: data.category) {
                         ReceiveMessageService.shared.processSystemMessage(data: data)
                         ReceiveMessageService.shared.processPlainMessage(data: data)
@@ -83,7 +84,6 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processAppButton(data: data)
                         ReceiveMessageService.shared.processWebRTCMessage(data: data)
                         ReceiveMessageService.shared.processRecallMessage(data: data)
-                        ReceiveMessageService.shared.processSessionSyncMessage(data: data)
                     } else {
                         ReceiveMessageService.shared.processUnknownMessage(data: data)
                     }
@@ -92,6 +92,20 @@ class ReceiveMessageService: MixinService {
 
                 finishedJobCount += blazeMessageDatas.count
             } while true
+        }
+    }
+
+    private func checkSession(data: BlazeMessageData) {
+        guard data.conversationId != User.systemUser && data.conversationId != currentAccountId else {
+            return
+        }
+        guard let sessionId = data.sessionId else {
+            return
+        }
+
+        let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: sessionId)
+        if participantSession == nil {
+            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())])
         }
     }
 
@@ -179,22 +193,6 @@ class ReceiveMessageService: MixinService {
             MessageDAO.shared.recallMessage(message: message)
         }
     }
-
-    private func processSessionSyncMessage(data: BlazeMessageData) {
-        guard data.category == MessageCategory.SESSION_SYNC.rawValue else {
-            return
-        }
-
-        switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
-        case let .success(response):
-            ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
-        case .failure:
-            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
-        }
-
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-    }
-
 
     private func processSignalMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("SIGNAL_") else {
@@ -682,19 +680,13 @@ extension ReceiveMessageService {
             AccountUserDefault.shared.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: data.userId)
 
-            let syncSessions = ConversationDAO.shared.getSyncSessions(userId: systemSession.userId)
-            SessionSyncDAO.shared.saveSyncSessions(userId: systemSession.userId, sessionId: systemSession.sessionId, syncSessions: syncSessions)
-
-            SendMessageService.shared.sendMessage(action: .SEND_SESSION_SYNC)
+            ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
 
-            let syncSessions = ConversationDAO.shared.getSyncSessions(userId: systemSession.userId)
-            ParticipantSessionDAO.shared.delete(userId: systemSession.userId, sessionId: systemSession.sessionId, syncSessions: syncSessions)
-
-            SendMessageService.shared.sendMessage(action: .SEND_SESSION_SYNC)
+            ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         }
     }
@@ -736,8 +728,7 @@ extension ReceiveMessageService {
             operSuccess = ParticipantDAO.shared.addParticipant(message: message, conversationId: data.conversationId, participantId: participantId, updatedAt: data.updatedAt, status: status, source: data.source)
 
             if participantId != currentAccountId {
-                // TODO refresh conversation?
-                ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+                ConcurrentJobQueue.shared.addJob(job: RefreshSessionJob(conversationId: data.conversationId, userId: participantId))
             }
 
             if participantId != currentAccountId && SignalProtocol.shared.isExistSenderKey(groupId: data.conversationId, senderId: currentAccountId) {

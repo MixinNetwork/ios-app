@@ -2,34 +2,57 @@ import WCDBSwift
 
 final class ParticipantSessionDAO {
 
-    private static let sqlQueryParticipantUsers = """
+    private let sqlQueryParticipantUsers = """
     SELECT p.* FROM participant_session p
     LEFT JOIN users u ON p.user_id = u.user_id
     WHERE p.conversation_id = ? AND p.session_id != ? AND ifnull(u.app_id,'') == '' AND ifnull(p.sent_to_server,'') == ''
     """
+    private let sqlInsertParticipantSession = """
+    INSERT INTO participant_session(conversation_id, user_id, session_id, created_at)
+    SELECT c.conversation_id, ?, ?, ? FROM conversations c
+    INNER JOIN users u ON c.owner_id = u.user_id
+    LEFT JOIN participants p on p.conversation_id = c.conversation_id
+    WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
+    """
+    private let sqlDeleteParticipantSession = """
+    DELETE FROM participant_session WHERE user_id = ? AND session_id = ?
+    AND conversation_id in (
+        SELECT c.conversation_id FROM conversations c
+        INNER JOIN users u ON c.owner_id = u.user_id
+        LEFT JOIN participants p on p.conversation_id = c.conversation_id
+        WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
+    )
+    """
 
     static let shared = ParticipantSessionDAO()
 
-    func delete(conversationId: String) {
-        MixinDatabase.shared.delete(table: ParticipantSession.tableName, condition: ParticipantSession.Properties.conversationId == conversationId)
+    func getParticipantSessions(conversationId: String) -> [ParticipantSession] {
+        return MixinDatabase.shared.getCodables(condition: ParticipantSession.Properties.conversationId == conversationId)
+    }
+
+    func getParticipantSession(conversationId: String, userId: String, sessionId: String) -> ParticipantSession? {
+        return MixinDatabase.shared.getCodable(condition: ParticipantSession.Properties.conversationId == conversationId && ParticipantSession.Properties.userId == userId && ParticipantSession.Properties.sessionId == sessionId)
     }
 
     func getNotSendSessionParticipants(conversationId: String, sessionId: String) -> [ParticipantSession] {
-        return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: ParticipantSessionDAO.sqlQueryParticipantUsers, values: [conversationId, sessionId])
+        return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: sqlQueryParticipantUsers, values: [conversationId, sessionId])
     }
 
     func updateStatusByUserId(userId: String) {
         MixinDatabase.shared.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.userId == userId)
     }
 
-    func delete(userId: String, sessionId: String, syncSessions: [SessionSync]) {
-        let conversationIds = syncSessions.map { $0.conversationId }
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: ParticipantSession.tableName, where:       ParticipantSession.Properties.conversationId.in(conversationIds)
-                && ParticipantSession.Properties.userId == userId
-                && ParticipantSession.Properties.sessionId == sessionId)
-            try db.insertOrReplace(objects: syncSessions, intoTable: SessionSync.tableName)
-        }
+    func provisionSession(userId: String, sessionId: String) {
+        MixinDatabase.shared.execute(sql: sqlInsertParticipantSession, values: [userId, sessionId, Date().toUTCString(), userId])
+//        let participantSessions = conversationIds.map { ParticipantSession(conversationId: $0, userId: userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString()) }
+//        MixinDatabase.shared.insertOrReplace(objects: participantSessions)
+    }
+
+    func destorySession(userId: String, sessionId: String) {
+        MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId, userId])
+//        MixinDatabase.shared.delete(table: ParticipantSession.tableName, condition: ParticipantSession.Properties.conversationId.in(conversationIds)
+//            && ParticipantSession.Properties.userId == userId
+//            && ParticipantSession.Properties.sessionId == sessionId)
     }
 
     func syncConversationParticipantSession(conversation: ConversationResponse) {

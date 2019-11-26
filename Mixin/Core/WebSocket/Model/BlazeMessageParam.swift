@@ -19,7 +19,7 @@ struct BlazeMessageParam: Codable {
     var sessionId: String? = nil
 
     var representativeId: String? = nil
-    var conversations: [String]? = nil
+    var conversationChecksum: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -38,6 +38,7 @@ struct BlazeMessageParam: Codable {
         case sessionId = "session_id"
 
         case representativeId = "representative_id"
+        case conversationChecksum = "conversation_checksum"
     }
 }
 
@@ -70,10 +71,6 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
-    init(conversations: [String]) {
-        self.conversations = conversations
-    }
-
     init(sessionId: String, messages: [TransferMessage]) {
         let accountId = AccountAPI.shared.accountUserId
         let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)
@@ -86,7 +83,7 @@ extension BlazeMessageParam {
         self.sessionId = sessionId
     }
 
-    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, representativeId: String? = nil) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, representativeId: String? = nil, checksum: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.category = category
@@ -104,5 +101,6 @@ extension BlazeMessageParam {
         self.sessionId = sessionId
 
         self.representativeId = representativeId
+        self.conversationChecksum = checksum
     }
 }

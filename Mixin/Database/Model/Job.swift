@@ -146,8 +146,6 @@ enum JobAction: String {
     case SEND_ACK_MESSAGE
     case SEND_ACK_MESSAGES
     case SEND_DELIVERED_ACK_MESSAGE
-
-    case SEND_SESSION_SYNC
 }
 
 

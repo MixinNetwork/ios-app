@@ -64,17 +64,6 @@ final class ConversationDAO {
     GROUP BY m.conversation_id
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
-    private static let sqlSessionSync = """
-    SELECT c.conversation_id, c.last_message_created_at FROM conversations c
-    INNER JOIN users u ON c.owner_id = u.user_id
-    LEFT JOIN participants p on p.conversation_id = c.conversation_id
-    WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
-    ORDER BY c.last_message_created_at DESC
-    """
-
-    func getSyncSessions(userId: String) -> [SessionSync] {
-        return MixinDatabase.shared.getCodables(on: SessionSync.Properties.all, sql: ConversationDAO.sqlSessionSync, values: [userId])
-    }
     
     func showBadgeNumber() {
         DispatchQueue.global().async {

@@ -345,10 +345,6 @@ class SendMessageService: MixinService {
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
                         try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!, sessionId: job.sessionId)
                     }
-                case JobAction.SEND_SESSION_SYNC.rawValue:
-                    ReceiveMessageService.shared.messageDispatchQueue.sync {
-                        sendSessionSyncMessage(conversations: SessionSyncDAO.shared.getSyncSessions())
-                    }
                 case JobAction.REQUEST_RESEND_KEY.rawValue:
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
                         let blazeMessage = job.toBlazeMessage()
@@ -469,7 +465,6 @@ extension SendMessageService {
                     try checkConversationExist(conversation: conversation)
                 }
             }
-            checkSessionSync(conversationId: message.conversationId)
             try checkSessionSenderKey(conversationId: message.conversationId)
 
             let content = blazeMessage.params?.data ?? message.content ?? ""

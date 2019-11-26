@@ -143,9 +143,7 @@ class BaseDatabase {
 
     @discardableResult
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) -> Bool {
-        try! database.run(transaction: {
-            try! database.update(maps: maps, tableName: tableName, condition: condition)
-        })
+        try! database.update(maps: maps, tableName: tableName, condition: condition)
         return true
     }
 

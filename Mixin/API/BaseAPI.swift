@@ -86,10 +86,6 @@ class BaseAPI {
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
     
-    static var rootURLString: String {
-        return MixinServer.http
-    }
-    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
     private static let jsonEncoding = JSONEncoding()
     
@@ -107,10 +103,10 @@ class BaseAPI {
 
     private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> DataRequest {
         do {
-            return BaseAPI.sharedSessionManager.request(try MixinRequest(url: BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding))
+            return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
             UIApplication.traceError(error)
-            return BaseAPI.sharedSessionManager.request(BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return BaseAPI.sharedSessionManager.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
@@ -121,7 +117,7 @@ class BaseAPI {
         }
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         let requestTime = Date()
-        let rootURLString = BaseAPI.rootURLString
+        let rootURLString = MixinServer.httpUrl
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
@@ -148,7 +144,7 @@ class BaseAPI {
                         AccountAPI.shared.logout(from: "AsyncRequest")
                         return
                     case NSURLErrorTimedOut:
-                        MixinServer.toggle(currentHttpAddress: rootURLString)
+                        MixinServer.toggle(currentHttpUrl: rootURLString)
                     default:
                         break
                     }
@@ -195,7 +191,7 @@ extension BaseAPI {
         var result: APIResult<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
         let requestTime = Date()
-        let rootURLString = BaseAPI.rootURLString
+        let rootURLString = MixinServer.httpUrl
         if AccountAPI.shared.didLogin {
             let semaphore = DispatchSemaphore(value: 0)
             getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
@@ -219,6 +215,17 @@ extension BaseAPI {
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
+                        switch error._code {
+                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost:
+                            if NetworkManager.shared.isReachable {
+                                
+                            }
+                        default:
+                            break
+                        }
+                        if error._code == NSURLErrorTimedOut {
+
+                        }
                         result = .failure(APIError.createError(error: error, status: httpStatusCode))
                     }
                     semaphore.signal()
@@ -250,7 +257,7 @@ extension BaseAPI {
         }
         
         if case let .failure(error) = result, error.code == -1, error.status == NSURLErrorTimedOut {
-            MixinServer.toggle(currentHttpAddress: rootURLString)
+            MixinServer.toggle(currentHttpUrl: rootURLString)
         }
         
         return result

@@ -288,7 +288,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: MixinServer.webSocket)
+        var request = URLRequest(url: MixinServer.webSocketUrl)
         request.timeoutInterval = 5
         return SRWebSocket(urlRequest: request)
     }

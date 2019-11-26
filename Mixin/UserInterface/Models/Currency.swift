@@ -24,10 +24,6 @@ class Currency: CustomDebugStringConvertible {
 
 extension Currency {
     
-    enum UserDefaultsKey {
-        static let rates = "currency_rates"
-    }
-    
     static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.ios.current.currency.did.change")
     
     private(set) static var current = currentCurrencyStorage {
@@ -49,13 +45,12 @@ extension Currency {
             Currency(code: "SGD", symbol: "S$", rate: 1.389179),
             Currency(code: "MYR", symbol: "RM", rate: 4.205481)
         ]
-        if let rates = UserDefaults.standard.dictionary(forKey: UserDefaultsKey.rates) as? [String: Double] {
-            for currency in currencies {
-                guard let rate = rates[currency.code] else {
-                    continue
-                }
-                currency.rate = rate
+        let rates = AppGroupUserDefaults.currencyRates
+        for currency in currencies {
+            guard let rate = rates[currency.code] else {
+                continue
             }
+            currency.rate = rate
         }
         return currencies
     }()
@@ -78,7 +73,7 @@ extension Currency {
             map[money.code]?.rate = money.rate
         }
         let rates = map.mapValues({ $0.rate })
-        UserDefaults.standard.set(rates, forKey: UserDefaultsKey.rates)
+        AppGroupUserDefaults.currencyRates = rates
     }
     
 }

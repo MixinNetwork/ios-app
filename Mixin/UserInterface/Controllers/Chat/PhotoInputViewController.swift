@@ -65,6 +65,15 @@ class PhotoInputViewController: UIViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard let previous = previousTraitCollection, previous.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory else {
+            return
+        }
+        albumsCollectionLayout.invalidateLayout()
+        albumsCollectionView.reloadData()
+    }
+    
     private func reloadGrid(at indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:

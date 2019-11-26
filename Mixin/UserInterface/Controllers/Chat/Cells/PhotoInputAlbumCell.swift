@@ -12,6 +12,11 @@ class PhotoInputAlbumCell: UICollectionViewCell {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        textLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         cachedWidth = nil

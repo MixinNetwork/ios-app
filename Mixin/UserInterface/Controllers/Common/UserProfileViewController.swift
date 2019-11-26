@@ -673,18 +673,11 @@ extension UserProfileViewController {
             
             let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
                 var group = [ProfileMenuItem]()
-                if user.isBot {
-                    if user.isSelfBot {
-                        group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_transfer(),
-                                                     subtitle: nil,
-                                                     style: [],
-                                                     action: #selector(transfer)))
-                    } else {
-                        group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_developer(),
+                if user.isBot && !user.isSelfBot {
+                    group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_developer(),
                                                      subtitle: nil,
                                                      style: [],
                                                      action: #selector(showDeveloper)))
-                    }
                 }
                 group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
                                              subtitle: nil,

@@ -307,14 +307,14 @@ extension AppDelegate {
     }
     
     private func dealWithRemoteNotification(_ userInfo: [AnyHashable: Any]?, fromLaunch: Bool = false) {
-        guard AccountAPI.shared.didLogin else {
-            return
-        }
         guard let userInfo = userInfo, let conversationId = userInfo["conversation_id"] as? String else {
             return
         }
         
         DispatchQueue.global().async {
+            guard AccountAPI.shared.didLogin else {
+                return
+            }
             guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
                 return
             }

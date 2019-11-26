@@ -14,7 +14,6 @@ final class UserDAO {
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
-    private static let sqlQueryUserByAppId = "\(sqlQueryColumns) WHERE u.app_id = ? LIMIT 1"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
     private static let sqlQueryAppUserInConversation = """
     SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
@@ -59,9 +58,9 @@ final class UserDAO {
     }
     
     func getUsers(ofAppIds ids: [String]) -> [UserItem] {
-        return ids.compactMap {
-            MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByAppId, values: [$0]).first
-        }
+        let keys = ids.map { _ in "?" }.joined(separator: ",")
+        let sql = "\(UserDAO.sqlQueryColumns) WHERE u.app_id in (\(keys))"
+        return MixinDatabase.shared.getCodables(sql: sql, values: ids)
     }
     
     func getAppUsers(inConversationOf conversationId: String) -> [User] {

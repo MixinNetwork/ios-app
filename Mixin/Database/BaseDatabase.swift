@@ -175,7 +175,7 @@ class BaseDatabase {
     }
 
     @discardableResult
-    func delete(table: String, condition: Condition, cascadeDelete: Bool = false) -> Int {
+    func delete(table: String, condition: Condition, cascadeDelete: Bool) -> Int {
         var result = 0
         try! database.run(transaction: {
             if cascadeDelete {
@@ -186,6 +186,13 @@ class BaseDatabase {
             result = delete.changes ?? 0
         })
         return result
+    }
+
+    @discardableResult
+    func delete(table: String, condition: Condition) -> Int {
+        let delete = try! database.prepareDelete(fromTable: table).where(condition)
+        try! delete.execute()
+        return delete.changes ?? 0
     }
 }
 

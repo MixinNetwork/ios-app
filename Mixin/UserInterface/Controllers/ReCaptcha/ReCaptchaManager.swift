@@ -31,7 +31,8 @@ class ReCaptchaManager: NSObject {
         let keyReplacedHTMLString = htmlString
             .replacingOccurrences(of: Replacement.apiKey, with: key)
             .replacingOccurrences(of: Replacement.scriptURL, with: scriptURL)
-        webView.loadHTMLString(keyReplacedHTMLString, baseURL: BaseAPI.rootURL)
+        let rootUrl = URL(string: BaseAPI.rootURLString)!
+        webView.loadHTMLString(keyReplacedHTMLString, baseURL: rootUrl)
         self.webView = webView
         self.requestingViewController = viewController
         self.completion = completion

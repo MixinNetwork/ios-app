@@ -85,8 +85,10 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
-    static let rootURLString = MixinServer.http
-    static let rootURL = URL(string: rootURLString)!
+    
+    static var rootURLString: String {
+        return MixinServer.http
+    }
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
     private static let jsonEncoding = JSONEncoding()

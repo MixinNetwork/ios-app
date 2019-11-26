@@ -40,6 +40,7 @@
 "action_delete_everyone" = "Delete for Everyone";
 "action_learn_more" = "Learn More";
 "action_later" = "Later";
+"action_try_again" = "Try Again";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";
@@ -51,7 +52,7 @@
 "connection_hint_progress" = "Syncing %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "dd/MM/yyyy";
+"date_format_date" = "MMM dd, yyyy";
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
@@ -59,6 +60,7 @@
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_placeholder_address" = "Label";
 "search_placeholder_asset" = "Name, Symbol";
+"search_placeholder_currency" = "Code";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_related_messages_count" = " related messages";
@@ -90,6 +92,7 @@
 "toast_logined" = "Logined";
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
+"toast_blocked" = "Blocked";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
@@ -98,8 +101,21 @@
 "clock_skew_title" = "System time is unusual";
 "clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
 
+// PIN Logs
+"pin_log_verification" = "Verify";
+"pin_log_raw_transfer" = "Transfer to mixin address";
+"pin_log_user_transfer" = "Transfer to user or bot";
+"pin_log_withdrawal" = "Withdraw";
+"pin_log_add_address" = "Add address";
+"pin_log_delete_address" = "Delete address";
+"pin_log_add_emergency" = "Add emergency contact";
+"pin_log_delete_emergency" = "Delete emergency contact";
+"pin_log_read_emergency" = "View emergency contact";
+"pin_log_update_phone" = "Change phone number";
+"pin_log_update_pin" = "Change PIN";
+
 // Login
-"navigation_title_select_country" = "Select a Country";
+"navigation_title_select_country" = "Select a Country or Region";
 "navigation_title_enter_mobile_number" = "Enter your phone number";
 "navigation_title_enter_verification_code" = "Enter the 4-digit code sent to you at %@";
 "navigation_title_enter_name" = "What's your name?";
@@ -163,6 +179,9 @@
 "placeholder_mixin_id_or_phone" = "Mixin ID, Phone number";
 "placeholder_new_name" = "new name";
 "navigation_title_add_people" = "Add people";
+
+// Apps
+"app_not_found" = "App not found.";
 
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";
@@ -230,6 +249,17 @@
 "chat_stranger_tip" = "This sender is not in your contacts";
 "chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger in this chat.";
 "chat_badge_live" = "LIVE";
+"chat_shared_media" = "Shared Media";
+"chat_media_category_media" = "Media";
+"chat_media_category_audio" = "Audio";
+"chat_media_category_link" = "Link";
+"chat_media_category_file" = "File";
+"chat_shared_media_empty" = "NO MEDIA";
+"chat_shared_audio_empty" = "NO AUDIO";
+"chat_shared_data_empty" = "NO FILE";
+"chat_invited_by_stranger" = "The inviter is not in your contacts";
+"chat_exit_group_and_report_inviter" = "Exit group and report inviter";
+"chat_exit_group_and_report_inviter_confirmation" = "Exit group and report inviter?";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
@@ -288,6 +318,8 @@
 "group_remove_confirm" = "Remove %@ from the '%@' group?";
 "group_remove_button" = "Remove from Group";
 "group_role_admin" = "Admin";
+"group_participant_add_full" = "You can’t add this participant because this group is full.";
+"group_participant_add_limit" = "You can’t add this participant because only add up to 50 contacts at a time.";
 "group_participant_menu_info" = "Info";
 "group_participant_menu_send" = "Send Message";
 "group_participant_menu_admin" = "Make Group Admin";
@@ -318,10 +350,12 @@
 "wallet_password_verify_title" = "Old PIN";
 "wallet_password_too_many_requests" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
 "wallet_change_password" = "Change PIN";
+"wallet_pin_logs" = "PIN Incorrect Logs";
+"wallet_pin_logs_empty" = "No logs";
 "wallet_change_password_success" = "Change PIN successfully";
 "wallet_set_password_success" = "Set PIN successfully";
-"wallet_snapshot_from" = "From %@";
-"wallet_snapshot_to" = "To %@";
+"wallet_snapshot_transfer_from" = "From";
+"wallet_snapshot_transfer_to" = "To";
 "wallet_caption_send" = "SEND";
 "wallet_caption_receive" = "RECEIVE";
 "wallet_deposit" = "Deposit";
@@ -333,8 +367,9 @@
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
 "wallet_address" = "Address";
-"wallet_account_name" = "Address";
-"wallet_account_memo" = "Memo";
+"wallet_address_destination" = "Address";
+"wallet_address_tag" = "Tag";
+"wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
 "wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
@@ -342,8 +377,6 @@
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
 "wallet_send_amount" = "Amount";
-"wallet_send_memo" = "Memo";
-"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Save by PIN";
@@ -351,15 +384,16 @@
 "wallet_withdrawal_change_amount_count" = "Change Amount (%@)";
 "wallet_withdrawal_address_tips" = "For the first withdraw to the new address, please try a small amount.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
-"wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_withdrawal_pay_password" = "Withdraw with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
-"wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
+"wallet_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "Set a 6 digit PIN to create your first digital wallet";
 "wallet_pin_confirm_title" = "Please confirm the 6 digit PIN and remember it";
 "wallet_pin_confirm_subtitle" = "If lost, there is no way to recover your wallet.";
 "wallet_pin_confirm_again_title" = "Please confirm your 6 digit PIN again";
 "wallet_pin_confirm_again_subtitle" = "It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
+"wallet_pin_more_confirm" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "wallet_pin_title" = "Set PIN";
 "wallet_pin_new_title" = "Set a new PIN";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
@@ -369,7 +403,7 @@
 "wallet_all_transactions_title" = "All Transactions";
 "wallet_pin_touch_id_prompt" = "Confirm PIN to enable Touch Pay";
 "wallet_pin_face_id_prompt" = "Confirm PIN to enable Face Pay";
-"wallet_setting" = "Wallet Setting";
+"wallet_setting" = "Wallet";
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = "Pay with %@";
@@ -383,6 +417,7 @@
 "wallet_pin_pay_interval" = "Pay with PIN interval";
 "wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
+"wallet_currency" = "Currency";
 "withdrawal_amount_too_small" = "Withdraw amount too small";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
 "withdrawal_memo_format_incorrect" = "Withdrawal memo format incorrect";
@@ -415,40 +450,57 @@
 "transaction_type_withdrawal" = "Withdrawal";
 "transaction_type_fee" = "Fee";
 "transaction_type_rebate" = "Rebate";
+"transaction_type_raw" = "Raw";
 
 // Address Book
 "address_book_title" = "%@ Address Book";
 "address_book_add_address" = "Add address";
 "address_list_title" = "Address";
-"address_new_placeholder_label" = "Label";
+"address_new_placeholder_label" = "Label (e.g. exchanges, wallets, etc.)";
 "address_new_placeholder_address" = "Address";
+"address_memo_no" = "Destination Tag or ID Number or notes. If not, you can set it %@.";
+"address_memo_add" = "If you are required to fill in Destination Tag or ID Number or notes, you can %@.";
+"address_add_memo" = "Add Memo";
+"address_add_tag" = "Add Tag";
+"address_no_tag" = "No Tag";
+"address_no_memo" = "No Memo";
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";
 "address_format_error" = "Invalid address format.";
-"address_asset_not_found" = "Asset not found.";
 "address_not_found" = "Address not found.";
+
+"asset_not_found" = "Asset not found.";
 
 // Transfer
 "transfer_title" = "Transfer";
-"transfer_title_to" = "Transfer to";
-"transfer_title_to_receiver" = "to %@";
 "transfer_balance" = "Balance";
-"transfer_transactions" = "TRANSACTIONS";
-"transfer_transfer_type" = "Transfer Type";
-"transfer_transfer_amount" = "Transfer Amount";
-"transfer_transfer_memo" = "Memo (optional)";
+"transfer_memo" = "Memo (optional)";
 "transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
 "transfer_error_balance_insufficient" = "Insufficient balance";
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
-"transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
-"pay_withdrawal_title" = "Withdrawal to %@";
-"pay_use_face" = "Use Face Pay";
-"pay_use_touch" = "Use Touch Pay";
+"pay_withdrawal_title" = "Withdraw to %@";
+"transfer_by_pin" = "Pay with PIN";
+"transfer_use_face" = "Use Face Pay";
+"transfer_use_touch" = "Use Touch Pay";
+"withdraw_by_pin" = "Withdraw by PIN";
+"withdraw_use_face" = "Use Face Withdraw";
+"withdraw_use_touch" = "Use Touch Withdraw";
+
+// Multisig
+"multisig_by_pin" = "Multisig by PIN";
+"multisig_use_face" = "Use Touch Multisig";
+"multisig_use_touch" = "Use Face Multisig";
+"multisig_transaction" = "Multisig Transaction";
+"multisig_revoke_transaction" = "Revoke Multisig Transaction";
+"multisig_senders" = "Senders";
+"multisig_receivers" = "Receivers";
+"multisig_state_signed" = "This multisig link has already been signed by yourself, you can not make a duplicate operation.";
+"multisig_state_unlocked" = "This multisig link has already been revoked by someone, you can not make a duplicate operation.";
 
 // QRCode
 "myqrcode_title" = "My QR Code";
@@ -468,6 +520,8 @@
 "auth_permission_contacts_read_description" = "access your contacts list";
 "auth_permission_messages_represent" = "Represent messages";
 "auth_permission_messages_represent_description" = "allow bot to send messages represent of you";
+"auth_permission_snapshots_read" = "Snapshots";
+"auth_permission_snapshots_read_description" = "access your snapshots";
 "auth_assets_more" = " and more";
 "auth_profile_description" = "%@, %@, profile photo";
 "auth_success" = "Successfully log in to %@";
@@ -478,6 +532,7 @@
 "profile_title" = "Info";
 "profile_send_message" = "Send Message";
 "profile_share_card" = "Share Contact";
+"profile_search_conversation" = "Search Conversation";
 "profile_transactions" = "Transactions";
 "profile_open_bot" = "Open App";
 "profile_notification" = "Notifications";
@@ -488,8 +543,8 @@
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
-"profile_my_invitation_code" = "My Invitation Code";
-"profile_change_avatar" = "Change Profile Photo";
+"profile_change_avatar_camera" = "Change Profile Photo with Camera";
+"profile_change_avatar_library" = "Change Profile Photo with Library";
 "profile_change_number" = "Change Phone Number";
 "profile_change_number_confirmation" = "Do you want to change the phone number?";
 "profile_change_number_succeeded" = "Successfully changed phone number";
@@ -497,19 +552,25 @@
 "profile_change_number_new_number" = "Enter your new phone number";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "Reputation Score: %@";
-"profile_invitation_code_consumed_count" = "You have invited a total of %@ people.";
 "profile_edit_name" = "Edit Name";
+"profile_edit_biography" = "Edit Biography";
 "profile_add_contact_fail" = "Failed to add contact";
 "profile_remove_contact_fail" = "Failed to remove contact";
 "profile_mute_duration_8h" = "8 hours";
 "profile_mute_duration_1week" = "1 week";
 "profile_mute_duration_1year" = "1 year";
-"profile_unmute" = "Unmute";
+"profile_mute_ends_at" = "Until %@";
 "profile_mute" = "Mute";
+"profile_muted" = "Muted";
+"profile_unmute" = "Unmute";
 "profile_report" = "Report";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";
-"profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
+"profile_remove_hint" = "Remove friend? Chat history will remain on your device";
+"profile_exit_group_hint" = "Exit group? Chat history will also be deleted";
+"profile_block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
+"profile_report_hint" = "Report and block this contact? This conversation will also be deleted";
+"profile_join_in" = "Joined in %@";
 
 // Emergency
 "emergency_view" = "View emergency contact";
@@ -525,6 +586,10 @@
 "enable_emergency_contact" = "Enable Emergency Contact";
 "emergency_confirm" = "Confirm to set Mixin ID %@ as your emergency contact? Please note that the other party must add you as a contact to set up successfully.";
 
+// Database
+"database_upgrade" = "Upgrade Database";
+"database_upgrade_tips" = "The database is being upgraded, please do not close this App.";
+"database_upgrade_progress" = "Upgrading";
 "database_repair_title" = "Repair Database";
 "database_repair_tips" = "Trying to repair a corrupted database, please do not kill the app.";
 "database_repairing" = "Repairing";
@@ -571,9 +636,13 @@
 "setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
+"setting_notification_transfer" = "Transfer Notifications";
+"setting_notification_transfer_amount" = "Transfer Amount(%@)";
+"setting_notification_transfer_summary" = "Show notifications when receiving a transfer greater than or equal to %@.";
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";
+"setting_restoring" = "Restoring...";
 "setting_backup_auto" = "Auto Backup";
 "setting_backup_files" = "Include Files";
 "setting_backup_videos" = "Include Videos";
@@ -585,7 +654,10 @@
 "setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
 "setting_backup_auto_tips" = "Automatically back up to iCloud only over Wi-Fi.";
 "setting_backup_last" = "Last backup on %@, total size %@.";
-"setting_backup_progress" = "Uploading %@";
+"setting_backup_preparing" = "Preparing...";
+"setting_backup_preparing_progress" = "Preparing...(%@)";
+"setting_backup_uploading" = "Uploading...";
+"setting_backup_uploading_progress" = "Uploading: %@ of %@ (%@)";
 "setting_restore_progress" = "Restoring %@";
 "setting_auto_download_never" = "Never";
 "setting_auto_download_wifi" = "Wi-Fi";
@@ -623,7 +695,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send a audio";
+"alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -633,7 +705,7 @@
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";
 "alert_key_contact_contact_message" = "send you a contact";
-"alert_key_contact_audio_message" = "send you a audio";
+"alert_key_contact_audio_message" = "send you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 
 // About

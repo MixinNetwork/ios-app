@@ -21,7 +21,8 @@ class SignalProtocol {
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
 
         UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.localRegistrationId)
-        IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
+        UserDefaults.standard.set(identityKeyPair.privateKey, forKey: PreKeyUtil.localPrivateKey)
+        UserDefaults.standard.set(identityKeyPair.publicKey, forKey: PreKeyUtil.localPublicKey)
     }
 
     func getRegistrationId() -> UInt32 {

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopupSearchableTableViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBoxView" destination="bW5-0R-e3W" id="FAB-kt-8tc"/>
+                <outlet property="tableView" destination="tt0-Rx-5J8" id="Sxm-XC-WsF"/>
+                <outlet property="view" destination="UBw-p8-Eu8" id="YSc-rZ-G9n"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="UBw-p8-Eu8" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FeG-Tg-EDA">
+                    <rect key="frame" x="0.0" y="44" width="414" height="70"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bW5-0R-e3W" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="20" y="15" width="309" height="40"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="16"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lvl-qY-3Tc">
+                            <rect key="frame" x="329" y="4" width="85" height="62"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="15" minY="0.0" maxX="20" maxY="0.0"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="fnf-KG-hgw"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="26s-y9-sBW"/>
+                        <constraint firstItem="Lvl-qY-3Tc" firstAttribute="leading" secondItem="bW5-0R-e3W" secondAttribute="trailing" id="UWt-Za-tlP"/>
+                        <constraint firstAttribute="bottom" secondItem="bW5-0R-e3W" secondAttribute="bottom" constant="15" id="avx-d4-kdH"/>
+                        <constraint firstItem="bW5-0R-e3W" firstAttribute="top" secondItem="FeG-Tg-EDA" secondAttribute="top" constant="15" id="eC9-w5-0Wg"/>
+                        <constraint firstItem="Lvl-qY-3Tc" firstAttribute="top" secondItem="FeG-Tg-EDA" secondAttribute="top" constant="4" id="hWW-oI-d2e"/>
+                        <constraint firstAttribute="trailing" secondItem="Lvl-qY-3Tc" secondAttribute="trailing" id="idd-l1-O9A"/>
+                        <constraint firstAttribute="bottom" secondItem="Lvl-qY-3Tc" secondAttribute="bottom" constant="4" id="kUa-bK-XCK"/>
+                        <constraint firstItem="bW5-0R-e3W" firstAttribute="leading" secondItem="FeG-Tg-EDA" secondAttribute="leading" constant="20" id="ras-4W-G2e"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="72" estimatedRowHeight="72" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tt0-Rx-5J8">
+                    <rect key="frame" x="0.0" y="114" width="414" height="782"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="tt0-Rx-5J8" secondAttribute="bottom" id="Q6F-Bh-JDG"/>
+                <constraint firstItem="tt0-Rx-5J8" firstAttribute="top" secondItem="FeG-Tg-EDA" secondAttribute="bottom" id="gL0-rX-3JZ"/>
+                <constraint firstAttribute="trailing" secondItem="tt0-Rx-5J8" secondAttribute="trailing" id="gnp-Xq-qow"/>
+                <constraint firstItem="FeG-Tg-EDA" firstAttribute="top" secondItem="Rlh-tb-rOk" secondAttribute="top" id="m16-kD-iEo"/>
+                <constraint firstAttribute="trailing" secondItem="FeG-Tg-EDA" secondAttribute="trailing" id="qVR-s8-2z0"/>
+                <constraint firstItem="FeG-Tg-EDA" firstAttribute="leading" secondItem="UBw-p8-Eu8" secondAttribute="leading" id="xYo-oa-9T2"/>
+                <constraint firstItem="tt0-Rx-5J8" firstAttribute="leading" secondItem="UBw-p8-Eu8" secondAttribute="leading" id="ynD-eh-uwA"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Rlh-tb-rOk"/>
+        </view>
+    </objects>
+</document>

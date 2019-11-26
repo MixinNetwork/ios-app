@@ -34,7 +34,7 @@ final class MessageDAO {
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
+        m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, alb.category as assetCategory,
@@ -45,8 +45,9 @@ final class MessageDAO {
     LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
     LEFT JOIN assets a ON s.asset_id = a.asset_id
     LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
-    LEFT JOIN sticker_relationships sr on m.sticker_id = sr.sticker_id
-    LEFT JOIN albums alb ON sr.album_id = alb.album_id
+    LEFT JOIN albums alb ON alb.album_id = (
+        SELECT album_id FROM sticker_relationships sr WHERE sr.sticker_id = m.sticker_id LIMIT 1
+    )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     """
     private static let sqlQueryFirstNMessages = """
@@ -73,11 +74,13 @@ final class MessageDAO {
     ORDER BY m.created_at ASC
     LIMIT ?
     """
-    static let sqlQueryAudioMessageAfterRowId = """
+    static let sqlQueryFullAudioMessages = """
     \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.ROWID > ? AND m.category LIKE '%_AUDIO'
-    ORDER BY m.created_at ASC
-    LIMIT 1
+    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_AUDIO', 'PLAIN_AUDIO')
+    """
+    static let sqlQueryFullDataMessages = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_DATA', 'PLAIN_DATA')
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryPendingMessages = """
@@ -103,16 +106,15 @@ final class MessageDAO {
     """
     static let sqlSearchMessageContent = """
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
-    FROM messages m
-    LEFT JOIN users u ON m.user_id = u.user_id
-    WHERE conversation_id = ? AND m.status <> '\(MessageStatus.FAILED.rawValue)' AND (
-        (m.category LIKE '%_TEXT' AND m.content LIKE ? ESCAPE '/') OR (m.category LIKE '%_DATA' AND m.name LIKE ? ESCAPE '/')
-    )
+        FROM messages m
+        LEFT JOIN users u ON m.user_id = u.user_id
+        WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA')
+        AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
     """
     
     static let sqlQueryGalleryItem = """
     SELECT m.conversation_id, m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
-           m.media_height, m.media_status, m.thumb_image, m.thumb_url, m.created_at
+           m.media_height, m.media_status, m.media_duration, m.thumb_image, m.thumb_url, m.created_at
     FROM messages m
     WHERE conversation_id = ?
         AND ((category LIKE '%_IMAGE' OR category LIKE '%_VIDEO') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
@@ -188,6 +190,11 @@ final class MessageDAO {
 
     func updateUnseenMessageCount(database: Database, conversationId: String) throws {
         try database.prepareUpdateSQL(sql: "UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = ?) where conversation_id = ?").execute(with: [conversationId, conversationId])
+    }
+
+    @discardableResult
+    func updateMediaMessage(messageId: String, keyValues: [(PropertyConvertible, ColumnEncodable?)]) -> Bool {
+        return MixinDatabase.shared.update(maps: keyValues, tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
     }
 
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
@@ -302,11 +309,28 @@ final class MessageDAO {
         return messages
     }
     
-    func getFirstAudioMessage(conversationId: String, belowMessage location: MessageItem) -> MessageItem? {
-        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                  condition: Message.Properties.messageId == location.messageId)
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryAudioMessageAfterRowId,
-                                                values: [conversationId, rowId]).first
+    func getDataMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
+        var sql = MessageDAO.sqlQueryFullDataMessages
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            sql += " AND m.ROWID < \(rowId)"
+        }
+        sql += " ORDER BY m.created_at DESC LIMIT ?"
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])
+        return messages
+    }
+    
+    func getAudioMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
+        var sql = MessageDAO.sqlQueryFullAudioMessages
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            sql += " AND m.ROWID < \(rowId)"
+        }
+        sql += " ORDER BY m.created_at DESC LIMIT ?"
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])
+        return messages
     }
     
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
@@ -367,6 +391,15 @@ final class MessageDAO {
         return results
     }
     
+    func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {
+        let condition: Condition = Message.Properties.conversationId == conversationId
+            && Message.Properties.category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+            && Message.Properties.action == SystemConversationAction.ADD.rawValue
+            && Message.Properties.participantId == inviteeUserId
+        let order = [Message.Properties.createdAt.asOrder(by: .ascending)]
+        return MixinDatabase.shared.getCodable(condition: condition, orderBy: order)
+    }
+    
     func getUnreadMessagesCount(conversationId: String) -> Int {
         guard let firstUnreadMessage = self.firstUnreadMessage(conversationId: conversationId) else {
             return 0
@@ -376,17 +409,21 @@ final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
+    func getGalleryItems(conversationId: String, location: GalleryItem?, count: Int) -> [GalleryItem] {
         assert(count != 0)
         var items = [GalleryItem]()
-        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                  condition: Message.Properties.messageId == location.messageId)
-        
         var sql = MessageDAO.sqlQueryGalleryItem
-        if count > 0 {
-            sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            if count > 0 {
+                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+            } else {
+                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+            }
         } else {
-            sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+            assert(count > 0)
+            sql += " ORDER BY created_at DESC LIMIT \(count)"
         }
         
         do {
@@ -407,6 +444,7 @@ final class MessageDAO {
                                        mediaWidth: cs.value(atIndex: counter.advancedValue),
                                        mediaHeight: cs.value(atIndex: counter.advancedValue),
                                        mediaStatus: cs.value(atIndex: counter.advancedValue),
+                                       mediaDuration: cs.value(atIndex: counter.advancedValue),
                                        thumbImage: cs.value(atIndex: counter.advancedValue),
                                        thumbUrl: cs.value(atIndex: counter.advancedValue),
                                        createdAt: cs.value(atIndex: counter.advancedValue) ?? "")
@@ -441,7 +479,7 @@ final class MessageDAO {
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
-        
+
         guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
             return
         }
@@ -467,6 +505,7 @@ final class MessageDAO {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
+
         if category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
@@ -518,12 +557,17 @@ final class MessageDAO {
     
     @discardableResult
     func deleteMessage(id: String) -> Bool {
-        return MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.messageId == id) > 0
+        var deleteCount = 0
+        MixinDatabase.shared.transaction { (db) in
+            let delete = try db.prepareDelete(fromTable: Message.tableName).where(Message.Properties.messageId == id)
+            try delete.execute()
+            deleteCount = delete.changes ?? 0
+        }
+        return deleteCount > 0
     }
-
-    func hasSentMessage(toUserId userId: String) -> Bool {
+    
+    func hasSentMessage(inConversationOf conversationId: String) -> Bool {
         let myId = AccountAPI.shared.accountUserId
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myId, ownerUserId: userId)
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     
@@ -549,7 +593,7 @@ final class MessageDAO {
 
 extension MessageDAO {
 
-    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
@@ -574,11 +618,11 @@ extension MessageDAO {
         }
     }
 
-    func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateMessageContentAndStatus(content: String, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
 
-    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
+    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, category: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
         updateRedecryptMessage(keys: [
             Message.Properties.content,
             Message.Properties.mediaMimeType,
@@ -607,10 +651,10 @@ extension MessageDAO {
             mediaData.waveform,
             mediaData.name,
             status
-        ], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+            ], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
     
-    func updateLiveMessage(liveData: TransferLiveData, status: String, messageId: String, conversationId: String, messageSource: String) {
+    func updateLiveMessage(liveData: TransferLiveData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
         let keys = [
             Message.Properties.mediaWidth,
             Message.Properties.mediaHeight,
@@ -625,15 +669,15 @@ extension MessageDAO {
             liveData.thumbUrl,
             status
         ]
-        updateRedecryptMessage(keys: keys, values: values, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: keys, values: values, messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
     
-    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
 
-    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
     }
 
 }

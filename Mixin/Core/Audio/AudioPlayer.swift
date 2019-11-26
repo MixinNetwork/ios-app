@@ -39,7 +39,7 @@ class AudioPlayer {
     fileprivate let reader: MXNOggOpusReader
     fileprivate let sampleRate: Float64 = 48000
     fileprivate let numberOfBuffers = 3
-    fileprivate let audioQueueBufferSize: UInt32 = 65536; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
+    fileprivate let audioQueueBufferSize: UInt32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
     
     fileprivate var buffers = [AudioQueueBufferRef]()
     fileprivate var audioQueue: AudioQueueRef!

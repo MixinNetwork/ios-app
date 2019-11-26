@@ -2,81 +2,143 @@ import UIKit
 
 class NewAddressViewController: KeyboardBasedLayoutViewController {
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var labelTextField: UITextField!
     @IBOutlet weak var addressTextView: PlaceholderTextView!
-    @IBOutlet weak var accountNameButton: UIButton!
+    @IBOutlet weak var memoTextView: PlaceholderTextView!
+    @IBOutlet weak var memoScanButton: UIButton!
     @IBOutlet weak var saveButton: RoundedButton!
     @IBOutlet weak var assetView: AssetIconView!
+    @IBOutlet weak var memoHintTextView: UITextView!
+    @IBOutlet weak var continueWrapperView: UIView!
+    @IBOutlet weak var memoView: CornerView!
 
-    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
+    @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
-        return addressTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return addressTextView.text?.trim() ?? ""
     }
     private var labelValue: String {
-        return labelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return labelTextField.text?.trim() ?? ""
+    }
+    private var memoValue: String {
+        return memoTextView.text?.trim() ?? ""
+    }
+    private var isLegalAddress: Bool {
+        return !addressValue.isEmpty && !labelValue.isEmpty && (noMemo || !memoValue.isEmpty)
     }
     private var successCallback: ((Address) -> Void)?
     private var address: Address?
     private var qrCodeScanningDestination: UIView?
     private var shouldLayoutWithKeyboard = true
+    private var noMemo = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
+        memoTextView.delegate = self
+        memoTextView.textContainerInset = .zero
+        memoTextView.textContainer.lineFragmentPadding = 0
         if ScreenSize.current >= .inch6_1 {
             assetView.chainIconWidth = 28
             assetView.chainIconOutlineWidth = 4
         }
         assetView.setIcon(asset: asset)
         if let address = address {
-            if asset.isAccount {
-                labelTextField.text = address.accountName
-                addressTextView.text = address.accountTag
-            } else {
-                labelTextField.text = address.label
-                addressTextView.text = address.publicKey
-            }
+            labelTextField.text = address.label
+            addressTextView.text = address.destination
+            memoTextView.text = address.tag
+            noMemo = address.tag.isEmpty
             checkLabelAndAddressAction(self)
             view.layoutIfNeeded()
             textViewDidChange(addressTextView)
+            textViewDidChange(memoTextView)
         }
 
-        if asset.isAccount {
-            labelTextField.placeholder = Localized.WALLET_ACCOUNT_NAME
-            addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
-            accountNameButton.isHidden = false
+        memoTextView.placeholder = asset.memoLabel
+        updateMemoTips()
+    }
+
+    private func updateMemoTips() {
+        var hint: String
+        var action: String
+        if noMemo {
+            if asset.isUseTag {
+                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_tag())
+                action = R.string.localizable.address_add_tag()
+            } else {
+                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_memo())
+                action = R.string.localizable.address_add_memo()
+            }
+            memoView.isHidden = true
+        } else {
+            if asset.isUseTag {
+                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_tag())
+                action = R.string.localizable.address_no_tag()
+            } else {
+                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_memo())
+                action = R.string.localizable.address_no_memo()
+            }
+            memoView.isHidden = false
         }
+
+        let nsIntro = hint as NSString
+        let fullRange = NSRange(location: 0, length: nsIntro.length)
+        let actionRange = nsIntro.range(of: action)
+        let attributedText = NSMutableAttributedString(string: hint)
+        let paragraphSytle = NSMutableParagraphStyle()
+        paragraphSytle.alignment = .left
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14),
+            .paragraphStyle: paragraphSytle,
+            .foregroundColor: UIColor.accessoryText
+        ]
+        attributedText.setAttributes(attrs, range: fullRange)
+        attributedText.addAttributes([NSAttributedString.Key.link: ""], range: actionRange)
+        memoHintTextView.attributedText = attributedText
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         shouldLayoutWithKeyboard = true
-        labelTextField.becomeFirstResponder()
+
+        if labelValue.isEmpty {
+            labelTextField.becomeFirstResponder()
+        } else if addressValue.isEmpty || noMemo {
+            addressTextView.becomeFirstResponder()
+        } else {
+            memoTextView.becomeFirstResponder()
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        let windowHeight = AppDelegate.current.window.bounds.height
+        let keyboardHeight = windowHeight - keyboardFrame.origin.y
+        if keyboardHeight > 0 {
+            continueWrapperBottomConstraint.constant = keyboardHeight
+            scrollViewBottomConstraint.constant = keyboardHeight + 72
+            view.layoutIfNeeded()
+
+            if !noMemo {
+                scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height + scrollView.contentInset.bottom
+            }
+        }
+    }
+
+    override func keyboardWillChangeFrame(_ notification: Notification) {
         guard shouldLayoutWithKeyboard else {
             return
         }
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
-        view.layoutIfNeeded()
+        super.keyboardWillChangeFrame(notification)
     }
     
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
-        if let address = address {
-            if asset.isAccount {
-                saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty && (labelValue != address.accountName || addressValue != address.accountTag)
-            } else {
-                saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty && (labelValue != address.label || addressValue != address.publicKey)
-            }
-        } else {
-            saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty
-        }
+        saveButton.isEnabled = isLegalAddress
     }
 
     @IBAction func scanAddressAction(_ sender: Any) {
@@ -87,25 +149,23 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         qrCodeScanningDestination = addressTextView
     }
 
-    @IBAction func scanAccountNameAction(_ sender: Any) {
+    @IBAction func scanMemoAction(_ sender: Any) {
         let vc = CameraViewController.instance()
         vc.delegate = self
         vc.scanQrCodeOnly = true
         navigationController?.pushViewController(vc, animated: true)
-        qrCodeScanningDestination = labelTextField
+        qrCodeScanningDestination = memoTextView
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        guard !addressValue.isEmpty && !labelValue.isEmpty else {
+        guard isLegalAddress else {
             return
         }
+
+        let destination = addressValue.suffix(char: ":") ?? addressValue
         shouldLayoutWithKeyboard = false
         let assetId = asset.assetId
-        let publicKey: String? = asset.isAccount ? nil : addressValue
-        let label: String? = asset.isAccount ? nil : self.labelValue
-        let accountName: String? = asset.isAccount ? self.labelValue : nil
-        let accountTag: String? = asset.isAccount ? addressValue : nil
-        let requestAddress = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: accountName, accountTag: accountTag)
+        let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: memoValue, label: labelValue, pin: "")
         AddressWindow.instance().presentPopupControllerAnimated(action: address == nil ? .add : .update, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
             guard let weakSelf = self else {
                 return
@@ -117,6 +177,30 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
                 weakSelf.labelTextField.becomeFirstResponder()
             }
         })
+    }
+    
+    @IBAction func memoHintTapAction(_ recognizer: UITapGestureRecognizer) {
+        guard recognizer.state == .ended else {
+            return
+        }
+        let point = recognizer.location(in: memoHintTextView)
+        guard let position = memoHintTextView.closestPosition(to: point) else {
+            return
+        }
+        guard let range = memoHintTextView.tokenizer.rangeEnclosingPosition(position, with: .character, inDirection: .layout(.left)) else {
+            return
+        }
+        let startIndex = memoHintTextView.offset(from: memoHintTextView.beginningOfDocument, to: range.start)
+        let attr = memoHintTextView.attributedText.attribute(.link, at: startIndex, effectiveRange: nil)
+        guard attr != nil else {
+            return
+        }
+        noMemo.toggle()
+        if noMemo {
+            memoTextView.text = ""
+        }
+        checkLabelAndAddressAction(textView)
+        updateMemoTips()
     }
     
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
@@ -138,10 +222,10 @@ extension NewAddressViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         checkLabelAndAddressAction(textView)
         view.layoutIfNeeded()
-        let sizeToFit = CGSize(width: addressTextView.bounds.width,
+        let sizeToFit = CGSize(width: textView.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
-        let contentSize = addressTextView.sizeThatFits(sizeToFit)
-        addressTextView.isScrollEnabled = contentSize.height > addressTextView.frame.height
+        let contentSize = textView.sizeThatFits(sizeToFit)
+        textView.isScrollEnabled = contentSize.height > textView.frame.height
     }
     
 }
@@ -149,14 +233,12 @@ extension NewAddressViewController: UITextViewDelegate {
 extension NewAddressViewController: CameraViewControllerDelegate {
     
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
-        if qrCodeScanningDestination == labelTextField {
-            labelTextField.text = string
-            textViewDidChange(addressTextView)
-            labelTextField.resignFirstResponder()
-            addressTextView.becomeFirstResponder()
-        } else if qrCodeScanningDestination == addressTextView {
+        if qrCodeScanningDestination == addressTextView {
             addressTextView.text = standarizedAddress(from: string) ?? string
             textViewDidChange(addressTextView)
+        } else if qrCodeScanningDestination == memoTextView {
+            memoTextView.text = string
+            textViewDidChange(memoTextView)
         }
         qrCodeScanningDestination = nil
         navigationController?.popViewController(animated: true)

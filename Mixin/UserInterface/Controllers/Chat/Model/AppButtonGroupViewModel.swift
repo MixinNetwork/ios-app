@@ -8,6 +8,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     private static let titleAttribute = [NSAttributedString.Key.font: AppButtonGroupViewModel.titleFont]
     
     var frames = [(button: CGRect, label: CGRect)]()
+    var buttonGroupFrame = CGRect.zero
     
     private let buttonSizes: [CGSize]
     private let margin = Margin(leading: 10, trailing: 10, top: 0, bottom: 0)
@@ -57,6 +58,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
                  label: $0.label.offsetBy(dx: 0, dy: fullnameFrame.height))
             }
         }
+        buttonGroupFrame = frames.reduce(.zero, { $0.union($1) })
         if let lastFrame = frames.last {
             cellHeight = lastFrame.maxY + margin.bottom
             if style.contains(.fullname) {

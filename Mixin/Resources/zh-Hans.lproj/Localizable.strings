@@ -40,6 +40,7 @@
 "action_delete_everyone" = "撤回";
 "action_learn_more" = "了解更多";
 "action_later" = "稍后";
+"action_try_again" = "重试";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
@@ -51,7 +52,7 @@
 "connection_hint_progress" = "正在同步 %@%%";
 
 "date_format_day" = "ahh:mm";
-"date_format_date" = "yyyy/MM/dd";
+"date_format_date" = "yyyy年M月d日";
 "date_format_month" = "MM月d日 E";
 "date_format_transation" = "MM月d日 HH:mm";
 
@@ -59,6 +60,7 @@
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
 "search_placeholder_asset" = "名称, 符号";
+"search_placeholder_currency" = "货币代码";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
 "search_related_messages_count" = "条相关消息";
@@ -90,6 +92,7 @@
 "toast_logined" = "已登录";
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
+"toast_blocked" = "已屏蔽";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
@@ -98,8 +101,21 @@
 "clock_skew_title" = "系统时间异常";
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
+// PIN Logs
+"pin_log_verification" = "验证支付密码";
+"pin_log_raw_transfer" = "给主网地址转账";
+"pin_log_user_transfer" = "给用户或机器人转账";
+"pin_log_withdrawal" = "提现";
+"pin_log_add_address" = "添加地址";
+"pin_log_delete_address" = "删除地址";
+"pin_log_add_emergency" = "添加紧急联系人";
+"pin_log_delete_emergency" = "删除紧急联系人";
+"pin_log_read_emergency" = "查看紧急联系人";
+"pin_log_update_phone" = "修改手机号码";
+"pin_log_update_pin" = "修改支付密码";
+
 // Login
-"navigation_title_select_country" = "选择一个国家";
+"navigation_title_select_country" = "选择一个国家或地区";
 "navigation_title_enter_mobile_number" = "输入你的手机号码";
 "navigation_title_enter_verification_code" = "请输入发送至以下号码的4位验证码： %@";
 "navigation_title_enter_name" = "名字";
@@ -163,6 +179,9 @@
 "placeholder_mixin_id_or_phone" = "Mixin ID 或手机号";
 "placeholder_new_name" = "名称";
 "navigation_title_add_people" = "添加联系人";
+
+// Apps
+"app_not_found" = "找不到这个机器人";
 
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
@@ -230,6 +249,17 @@
 "chat_stranger_tip" = "对方不是你的联系人";
 "chat_delete_tip" = "这条消息将从所有使用最新版本 Mixin Messenger 的设备上删除";
 "chat_badge_live" = "直播";
+"chat_shared_media" = "媒体内容";
+"chat_media_category_media" = "媒体";
+"chat_media_category_audio" = "音频";
+"chat_media_category_link" = "链接";
+"chat_media_category_file" = "文件";
+"chat_shared_media_empty" = "无媒体";
+"chat_shared_audio_empty" = "无音频";
+"chat_shared_data_empty" = "无文件";
+"chat_invited_by_stranger" = "邀请人不是你的联系人";
+"chat_exit_group_and_report_inviter" = "退出群组并举报邀请人";
+"chat_exit_group_and_report_inviter_confirmation" = "确认退出群组并举报邀请人？";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
@@ -289,6 +319,8 @@
 "group_remove_confirm" = "从 '%@' 群组中移除 %@ 吗？";
 "group_remove_button" = "从群组中移除";
 "group_role_admin" = "管理员";
+"group_participant_add_full" = "不能再添加成员，群已经满员了！";
+"group_participant_add_limit" = "不能再添加成员，一次最多只能加 50 个联系人。";
 "group_participant_menu_info" = "信息";
 "group_participant_menu_send" = "发送消息";
 "group_participant_menu_admin" = "设为管理员";
@@ -320,10 +352,12 @@
 "wallet_password_verify_title" = "验证旧的支付密码";
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
 "wallet_change_password" = "修改支付密码";
+"wallet_pin_logs" = "支付密码错误日志";
+"wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改支付密码成功";
 "wallet_set_password_success" = "设置支付密码成功";
-"wallet_snapshot_from" = "转账来自%@";
-"wallet_snapshot_to" = "转账给%@";
+"wallet_snapshot_transfer_from" = "转账来自";
+"wallet_snapshot_transfer_to" = "转账给";
 "wallet_caption_send" = "转出";
 "wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";
@@ -335,8 +369,9 @@
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认。";
 "wallet_no_transaction" = "暂无转账记录";
 "wallet_address" = "地址";
-"wallet_account_name" = "地址";
-"wallet_account_memo" = "Memo（标签）";
+"wallet_address_destination" = "地址";
+"wallet_address_tag" = "Tag（标签）";
+"wallet_address_memo" = "Memo（标签）";
 "wallet_deposit_attention" = "首次充值请小额尝试！";
 "wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
@@ -344,8 +379,6 @@
 "wallet_menu_hide_asset" = "隐藏资产";
 "wallet_hide_asset_empty" = "没有需要隐藏的资产";
 "wallet_send_amount" = "数量";
-"wallet_send_memo" = "备注";
-"wallet_send_tag" = "Tag";
 "wallet_button_add_address" = "点击添加地址";
 "wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
 "wallet_password_address_tips" = "通过密码修改";
@@ -355,13 +388,14 @@
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
-"wallet_blockchian_not_in_sync" = "区块链同步异常";
+"wallet_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "wallet_no_price" = "暂无价格";
 "wallet_pin_create_title" = "设置 6 位数字支付密码创建你的第一个数字钱包";
 "wallet_pin_confirm_title" = "确认 6 位数字支付密码并牢记它";
 "wallet_pin_confirm_subtitle" = "如果忘记，你的钱包将无法找回。";
 "wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字支付密码";
 "wallet_pin_confirm_again_subtitle" = "很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
+"wallet_pin_more_confirm" = "这是最后一次确认支付密码，记住：支付密码丢失将永远无法找回！";
 "wallet_pin_title" = "设置支付密码";
 "wallet_pin_new_title" = "设置新的 6 位数字支付密码";
 "wallet_pin_inconsistency" = "密码不一致，请重新设置";
@@ -371,7 +405,7 @@
 "wallet_all_transactions_title" = "所有交易记录";
 "wallet_pin_touch_id_prompt" = "确认钱包密码启用指纹支付";
 "wallet_pin_face_id_prompt" = "确认钱包密码启用面容支付";
-"wallet_setting" = "钱包设置";
+"wallet_setting" = "钱包";
 "wallet_touch_id" = "指纹";
 "wallet_face_id" = "面容";
 "wallet_enable_biometric_pay_title" = "%@支付";
@@ -385,6 +419,7 @@
 "wallet_pin_pay_interval" = "支付密码使用间隔";
 "wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
 "wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
+"wallet_currency" = "货币";
 "withdrawal_amount_too_small" = "提现金额太少了";
 "withdrawal_minimum_amount" = "提现金额最小 %@ %@";
 "withdrawal_memo_format_incorrect" = "提现备注格式不正确";
@@ -417,40 +452,57 @@
 "transaction_type_withdrawal" = "提现";
 "transaction_type_fee" = "手续费";
 "transaction_type_rebate" = "退款";
+"transaction_type_raw" = "其他";
 
 // Address Book
 "address_book_title" = "%@ 地址簿";
 "address_book_add_address" = "添加地址";
 "address_list_title" = "地址";
-"address_new_placeholder_label" = "标签";
+"address_new_placeholder_label" = "地址名称，例如 OceanONE ";
 "address_new_placeholder_address" = "地址";
+"address_memo_no" = "地址标签、数字 ID 或备注。如果没有，点击%@。";
+"address_memo_add" = "如果你需要填写地址标签、数字 ID 或备注，点击%@。";
+"address_add_memo" = "添加标签（Memo）";
+"address_add_tag" = "添加标签（Tag）";
+"address_no_tag" = "不使用标签（Tag）";
+"address_no_memo" = "不使用标签（Memo）";
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";
 "address_format_error" = "地址格式错误";
-"address_asset_not_found" = "找不到该资产.";
 "address_not_found" = "找不到该地址";
+
+"asset_not_found" = "找不到该资产.";
 
 // Transfer
 "transfer_title" = "转账";
-"transfer_title_to" = "转账给";
-"transfer_title_to_receiver" = "给%@";
 "transfer_balance" = "余额";
-"transfer_transactions" = "转账记录";
-"transfer_transfer_type" = "转账类型";
-"transfer_transfer_amount" = "转账金额";
-"transfer_transfer_memo" = "备注 (可选)";
+"transfer_memo" = "备注 (可选)";
 "transfer_touch_id_reason" = "请验证指纹完成转账";
 "transfer_error_balance_insufficient" = "余额不足";
 "transfer_error_fee_insufficient" = "手续费不足";
 "transfer_error_amount_too_small" = "转账金额太小";
 "transfer_error_pin_incorrect" = "支付密码不正确";
 "transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
-"transfer_pay_password" = "通过密码支付";
 "pay_transfer_title" = "转账给%@";
 "pay_withdrawal_title" = "提现到%@";
-"pay_use_face" = "使用面容支付";
-"pay_use_touch" = "使用指纹支付";
+"transfer_by_pin" = "通过密码支付";
+"transfer_use_face" = "使用面容支付";
+"transfer_use_touch" = "使用指纹支付";
+"withdraw_by_pin" = "通过密码提现";
+"withdraw_use_face" = "使用面容提现";
+"withdraw_use_touch" = "使用指纹提现";
+
+// Multisig
+"multisig_by_pin" = "通过密码签名";
+"multisig_use_face" = "使用面容签名";
+"multisig_use_touch" = "使用指纹签名";
+"multisig_transaction" = "多重签名交易";
+"multisig_revoke_transaction" = "撤销多重签名交易";
+"multisig_senders" = "交易发起人";
+"multisig_receivers" = "交易接收人";
+"multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
+"multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 
 // QRCode
 "myqrcode_title" = "我的二维码";
@@ -470,6 +522,8 @@
 "auth_permission_contacts_read_description" = "访问你的联系人列表";
 "auth_permission_messages_represent" = "代发消息";
 "auth_permission_messages_represent_description" = "允许机器人代表你发消息";
+"auth_permission_snapshots_read" = "转账记录";
+"auth_permission_snapshots_read_description" = "访问你的转账记录";
 "auth_assets_more" = "等";
 "auth_profile_description" = "%@, %@, 头像";
 "auth_success" = "成功登录 %@";
@@ -481,6 +535,7 @@
 "profile_send_message" = "发消息";
 "profile_open_bot" = "打开小程序";
 "profile_share_card" = "分享他的名片";
+"profile_search_conversation" = "搜索聊天记录";
 "profile_transactions" = "转账记录";
 "profile_notification" = "通知";
 "profile_add" = "添加联系人";
@@ -490,28 +545,53 @@
 "profile_photo" = "个人头像";
 "profile_full_name" = "名称";
 "profile_my_qrcode" = "我的二维码";
-"profile_my_invitation_code" = "我的邀请码";
 "profile_change_number" = "更换手机号";
-"profile_change_avatar" = "更改头像";
+"profile_change_avatar_camera" = "更换头像（相机）";
+"profile_change_avatar_library" = "更换头像（相册）";
 "profile_change_number_confirmation" = "是否更换手机号？";
 "profile_change_number_succeeded" = "更换手机号成功";
 "profile_change_number_verify_pin" = "验证钱包密码";
 "profile_change_number_new_number" = "请输入新号码";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "荣誉值: %@";
-"profile_invitation_code_consumed_count" = "你总共邀请了 %@ 好友。";
 "profile_edit_name" = "编辑名称";
+"profile_edit_biography" = "编辑个人简介";
 "profile_add_contact_fail" = "添加联系人失败，请稍后重试";
 "profile_remove_contact_fail" = "删除联系人失败，请稍后重试";
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
-"profile_unmute" = "取消静音";
+"profile_mute_ends_at" = "直到 %@";
 "profile_mute" = "静音";
+"profile_muted" = "已静音";
+"profile_unmute" = "取消静音";
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-"profile_report_tips" = "确定要举报并屏蔽这个联系人？举报后你们的对话会被立即删除。";
+"profile_remove_hint" = "删除好友？聊天记录将会保留";
+"profile_exit_group_hint" = "退出群组？聊天记录也将删除";
+"profile_block_hint" = "屏蔽后该联系人无法向您拨打电话或发送消息";
+"profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
+"profile_join_in" = "%@ 加入";
+
+// Emergency
+"emergency_view" = "查看紧急联系人";
+"emergency_change" = "修改紧急联系人";
+"emergency_remove" = "删除紧急联系人";
+"emergency_tip_remove" = "确定删除紧急联系人？";
+"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
+"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
+"emergency_tip_link" = "紧急联系人";
+"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
+"emergency_change_number_tip" = "立即更换手机号？";
+"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
+"enable_emergency_contact" = "启用紧急联系人";
+"emergency_confirm" = "确认设置 Mixin ID %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
+
+// Database
+"database_upgrade" = "数据库升级";
+"database_upgrade_tips" = "正在进行数据库升级，请不要强制关闭应用。";
+"database_upgrade_progress" = "升级中...";
 
 "database_repair_title" = "修复数据库";
 "database_repair_tips" = "正在尝试修复已损坏的数据库，请不要关闭应用程序";
@@ -559,9 +639,13 @@
 "setting_change_emergency_contact_success" = "成功设置紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
+"setting_notification_transfer" = "转账通知";
+"setting_notification_transfer_amount" = "转账金额（%@）";
+"setting_notification_transfer_summary" = "当收到不少于 %@ 转账时显示通知";
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";
+"setting_restoring" = "正在恢复...";
 "setting_backup_auto" = "自动备份";
 "setting_backup_files" = "包含文件";
 "setting_backup_videos" = "包含视频";
@@ -573,6 +657,10 @@
 "setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin Messenger 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
 "setting_backup_auto_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
+"setting_backup_preparing" = "备份中...";
+"setting_backup_preparing_progress" = "备份中...(%@)";
+"setting_backup_uploading" = "上传中...";
+"setting_backup_uploading_progress" = "上传中: %@ / %@ (%@)";
 "setting_backup_progress" = "正在备份 %@";
 "setting_restore_progress" = "正在恢复 %@";
 "setting_auto_download_never" = "关闭";
@@ -584,20 +672,6 @@
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
 "setting_contacts_upload" = "上传手机通讯录";
-
-// Emergency
-"emergency_view" = "查看紧急联系人";
-"emergency_change" = "修改紧急联系人";
-"emergency_remove" = "删除紧急联系人";
-"emergency_tip_remove" = "确定删除紧急联系人？";
-"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
-"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
-"emergency_tip_link" = "紧急联系人";
-"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
-"emergency_change_number_tip" = "立即更换手机号？";
-"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
-"enable_emergency_contact" = "启用紧急联系人";
-"emergency_confirm" = "确认设置 Mixin Id %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
 
 // Notifications
 "notification_reply" = "回复";

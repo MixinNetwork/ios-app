@@ -24,6 +24,7 @@ struct Quote {
     
     init?(quoteContent: Data) {
         guard let message = try? JSONDecoder.default.decode(MessageItem.self, from: quoteContent) else {
+            assertionFailure("Quote content decoding failed")
             return nil
         }
         title = message.userFullName

@@ -12,8 +12,6 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     private let legalKeywordCharactersSet = Set("+0123456789")
     private let phoneNumberKit = PhoneNumberKit()
     
-    private var userWindow = UserWindow.instance()
-    
     private var keywordTextField: UITextField {
         return searchBoxView.textField
     }
@@ -26,9 +24,6 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
         super.viewDidLoad()
         if let id = AccountAPI.shared.account?.identity_number {
             myIdLabel.text = Localized.CONTACT_MY_IDENTITY_NUMBER(id: id)
-        }
-        userWindow.setDismissCallback { [weak self] in
-            self?.keywordTextField.becomeFirstResponder()
         }
         searchButton.isEnabled = false
         keywordTextField.keyboardType = .phonePad
@@ -45,7 +40,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let windowHeight = AppDelegate.current.window!.bounds.height
+        let windowHeight = AppDelegate.current.window.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
         view.layoutIfNeeded()
     }
@@ -66,7 +61,10 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                weakSelf.userWindow.updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
+                let userItem = UserItem.createUser(from: user)
+                let vc = UserProfileViewController(user: userItem)
+                vc.updateUserFromRemoteAfterReloaded = false
+                weakSelf.present(vc, animated: true, completion: nil)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }

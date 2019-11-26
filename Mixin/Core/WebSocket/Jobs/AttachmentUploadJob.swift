@@ -66,7 +66,8 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 contentLength = inputStream.contentLength
                 stream = inputStream
             } else {
-                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "AttachmentEncryptingInputStream init failed"])
+
+                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "AttachmentEncryptingInputStream init failed", "fileSize": "\(FileManager.default.fileSize(fileUrl.path))", "fileName": "\(fileUrl.lastPathComponent)"])
                 return false
             }
         } else {

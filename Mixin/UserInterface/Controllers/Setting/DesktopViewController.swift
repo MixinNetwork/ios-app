@@ -2,7 +2,7 @@ import UIKit
 
 class DesktopViewController: UITableViewController {
     
-    @IBOutlet weak var actionCell: UITableViewCell!
+    @IBOutlet weak var actionCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var indicatorView: ActivityIndicatorView!
     @IBOutlet weak var actionLabel: UILabel!
     @IBOutlet weak var footerLabel: UILabel!
@@ -17,7 +17,6 @@ class DesktopViewController: UITableViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
         updateLabels(isDesktopLoggedIn: AccountUserDefault.shared.isDesktopLoggedIn)
-        actionCell.selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
     
     @objc func sessionChanged() {

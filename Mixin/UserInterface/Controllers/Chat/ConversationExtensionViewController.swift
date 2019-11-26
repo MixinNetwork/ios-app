@@ -89,17 +89,17 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             let ext = fixedExtensions[indexPath.row]
             switch ext {
             case .camera:
-                GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.imagePickerController.presentCamera()
             case .file:
-                GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.documentAction()
             case .transfer:
                 conversationViewController?.transferAction()
             case .contact:
                 conversationViewController?.contactAction()
             case .call:
-                GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.callAction()
             }
             if ext.dismissPanelAfterSent {
@@ -107,10 +107,9 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             }
         } else {
             let app = apps[indexPath.row - fixedExtensions.count]
-            if let url = URL(string: app.homeUri), let conversationId = dataSource?.conversationId {
+            if let conversationId = dataSource?.conversationId, let parent = conversationViewController {
                 UIApplication.logEvent(eventName: "open_app", parameters: ["source": "ConversationExtension", "identityNumber": app.appNumber])
-                WebWindow.instance(conversationId: conversationId, app: app)
-                    .presentPopupControllerAnimated(url: url)
+                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
             }
         }
     }

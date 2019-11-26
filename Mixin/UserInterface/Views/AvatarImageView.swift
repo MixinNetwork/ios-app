@@ -16,6 +16,15 @@ class AvatarImageView: UIView {
             setNeedsLayout()
         }
     }
+
+    @IBInspectable
+    var hasBorder: Bool = false {
+        didSet {
+            imageView.layer.borderColor = UIColor.white.cgColor
+            imageView.layer.borderWidth = 2
+            imageView.setNeedsLayout()
+        }
+    }
     
     var image: UIImage? {
         get {
@@ -83,6 +92,10 @@ class AvatarImageView: UIView {
         setImage(with: user.avatar_url, userId: user.user_id, name: user.full_name)
     }
     
+    func setImage(with user: User) {
+        setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
+    }
+    
     func setImage(with user: UserItem) {
         setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
     }
@@ -97,7 +110,7 @@ class AvatarImageView: UIView {
             let placeholder = placeholder ? R.image.ic_place_holder() : nil
             imageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
-            imageView.image = UIImage(named: "color\(userId.positiveHashCode() % 24 + 1)")
+            imageView.image = UIImage(named: "AvatarBackground/color\(userId.positiveHashCode() % 24 + 1)")
             if let firstLetter = name.first {
                 titleLabel.text = String([firstLetter]).uppercased()
             } else {

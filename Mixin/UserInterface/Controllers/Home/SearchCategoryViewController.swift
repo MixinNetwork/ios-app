@@ -1,6 +1,7 @@
 import UIKit
+import WCDBSwift
 
-class SearchCategoryViewController: UIViewController, SearchableViewController {
+class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     
     enum Category {
         case asset
@@ -41,9 +42,10 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     private var lastKeyword: String?
     private var lastSearchFieldText: String?
     private var models = [[Any]]()
+    private var statement: CoreStatement?
     
     deinit {
-        queue.cancelAllOperations()
+        cancelOperation()
     }
     
     override func viewDidLoad() {
@@ -86,9 +88,15 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         lastSearchFieldText = searchTextField.text
     }
-    
-    @objc func searchAction(_ sender: Any) {
+
+    private func cancelOperation() {
+        statement?.interrupt()
+        statement = nil
         queue.cancelAllOperations()
+    }
+
+    @objc func searchAction(_ sender: Any) {
+        cancelOperation()
         guard let keyword = trimmedLowercaseKeyword else {
             models = []
             tableView.reloadData()
@@ -118,7 +126,12 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: nil)
                     .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             case .conversationsByMessage:
-                models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil)
+                models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil, callback: { (statement) in
+                    guard !op.isCancelled else {
+                        return
+                    }
+                    self?.statement = statement
+                })
             }
             guard !op.isCancelled, self != nil else {
                 return
@@ -130,7 +143,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
-                weakSelf.navigationSearchBoxView.isBusy = false
+                weakSelf.navigationSearchBoxView?.isBusy = false
             }
         }
         queue.addOperation(op)

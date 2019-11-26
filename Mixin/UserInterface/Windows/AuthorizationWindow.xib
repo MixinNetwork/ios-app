@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="WPn-rX-5IO" customClass="AuthorizationWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rph-I6-ZA7" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="-243.5" width="320" height="736.5"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1RF-kj-XBd">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FOI-GB-2Kz">
+                                    <rect key="frame" x="254" y="0.0" width="66" height="70"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="66" id="WX3-bz-DMf"/>
+                                    </constraints>
+                                    <state key="normal" image="ic_dialog_close"/>
+                                    <connections>
+                                        <action selector="backAction:" destination="WPn-rX-5IO" eventType="touchUpInside" id="OjO-OB-xf8"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="FOI-GB-2Kz" secondAttribute="trailing" id="9z9-rW-4jb"/>
+                                <constraint firstAttribute="height" constant="70" id="Eru-aq-Zp2"/>
+                                <constraint firstAttribute="bottom" secondItem="FOI-GB-2Kz" secondAttribute="bottom" id="ZXg-yG-Xhy"/>
+                                <constraint firstItem="FOI-GB-2Kz" firstAttribute="top" secondItem="1RF-kj-XBd" secondAttribute="top" id="yUp-ak-ZaE"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="Mfp-Qe-iP4" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="125" y="132" width="70" height="70"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="e91-RW-GJl"/>
+                                <constraint firstAttribute="width" constant="70" id="qQb-fp-Krk"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="36"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixcoin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3u-pZ-R09">
+                            <rect key="frame" x="127.5" y="228" width="65" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0u-DF-ohD" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="99" y="555.5" width="122" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="hNE-t3-nqF"/>
+                                <constraint firstAttribute="height" constant="42" id="mCI-lt-5kZ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Authorize"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_authorize"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="authorizeAction:" destination="WPn-rX-5IO" eventType="touchUpInside" id="OUZ-1t-4kf"/>
+                            </connections>
+                        </button>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hoh-Ub-0jd">
+                            <rect key="frame" x="30" y="275.5" width="260" height="220"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="260" id="Vwe-gZ-ag2"/>
+                                <constraint firstAttribute="height" constant="220" id="kI7-JZ-bMq"/>
+                            </constraints>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Mfp-Qe-iP4" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="19Z-yL-Cgq"/>
+                        <constraint firstAttribute="trailing" secondItem="1RF-kj-XBd" secondAttribute="trailing" id="3Au-3l-pBF"/>
+                        <constraint firstItem="i3u-pZ-R09" firstAttribute="top" secondItem="Mfp-Qe-iP4" secondAttribute="bottom" constant="26" id="6Jh-pB-xxi"/>
+                        <constraint firstItem="Mfp-Qe-iP4" firstAttribute="top" secondItem="1RF-kj-XBd" secondAttribute="bottom" constant="62" id="9c4-df-yFS" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="1RF-kj-XBd" firstAttribute="top" secondItem="rph-I6-ZA7" secondAttribute="top" id="FXO-sl-GQk"/>
+                        <constraint firstItem="Hoh-Ub-0jd" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="N0X-Rj-UVE"/>
+                        <constraint firstItem="i3u-pZ-R09" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="ZM0-nW-c9L"/>
+                        <constraint firstItem="z0u-DF-ohD" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="rZx-4L-OfX"/>
+                        <constraint firstItem="z0u-DF-ohD" firstAttribute="top" secondItem="Hoh-Ub-0jd" secondAttribute="bottom" constant="60" id="u8f-1G-Sne" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                    <real key="value" value="40"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="1RF-kj-XBd" firstAttribute="leading" secondItem="rph-I6-ZA7" secondAttribute="leading" id="uMI-E7-6Gb"/>
+                        <constraint firstItem="Hoh-Ub-0jd" firstAttribute="top" secondItem="i3u-pZ-R09" secondAttribute="bottom" constant="26" id="wo1-Pl-Deg"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="rph-I6-ZA7" secondAttribute="trailing" id="0qw-D7-NiJ"/>
+                <constraint firstItem="hQj-XO-iMW" firstAttribute="bottom" secondItem="z0u-DF-ohD" secondAttribute="bottom" constant="126" id="F2B-ML-OVf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" constant="-13" id="K1m-zD-4D7"/>
+                <constraint firstItem="rph-I6-ZA7" firstAttribute="leading" secondItem="WPn-rX-5IO" secondAttribute="leading" id="eHP-yW-E18"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="hQj-XO-iMW"/>
+            <connections>
+                <outlet property="authorizeButton" destination="z0u-DF-ohD" id="cZ8-dH-2r5"/>
+                <outlet property="closeButton" destination="FOI-GB-2Kz" id="eyK-Gh-sKl"/>
+                <outlet property="iconImageView" destination="Mfp-Qe-iP4" id="xSF-pf-oor"/>
+                <outlet property="popupView" destination="rph-I6-ZA7" id="tFj-71-DwN"/>
+                <outlet property="tableView" destination="Hoh-Ub-0jd" id="ofu-BL-ty5"/>
+                <outlet property="titleLabel" destination="i3u-pZ-R09" id="w8D-wL-RKo"/>
+            </connections>
+            <point key="canvasLocation" x="81.159420289855078" y="62.946428571428569"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_place_holder" width="38" height="38"/>
+    </resources>
+</document>

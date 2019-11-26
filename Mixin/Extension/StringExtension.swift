@@ -4,7 +4,7 @@ import CoreText
 
 extension String {
 
-    private static var hashCodeMaps = [String: Int]()
+    private static var hashCodeMaps = SafeDictionary<String, Int>()
 
     var isNumeric: Bool {
         let number = NumberFormatter.decimal.number(from: self)
@@ -67,6 +67,13 @@ extension String {
         return String(self[..<endIndex])
     }
 
+    func suffix(char: Character) -> String? {
+        guard let suffixIndex = firstIndex(of: char) else {
+            return nil
+        }
+        return String(suffix(from: index(suffixIndex, offsetBy: 1)))
+    }
+
     func pathExtension() -> String? {
         guard let idx = self.lastIndex(of: ".") else {
             return nil
@@ -100,6 +107,9 @@ extension String {
 
     func hashCode() -> Int32 {
         let components = self.split(separator: "-")
+        guard components.count >= 5 else {
+            return 0
+        }
 
         var mostSigBits = Int64(components[0], radix: 16)!
         mostSigBits <<= 16
@@ -133,6 +143,10 @@ extension String {
         let nsStr = self as NSString
         let fullRange = NSRange(location: 0, length: nsStr.length)
         return nsStr.replacingOccurrences(of: "\\s", with: "", options: .regularExpression, range: fullRange)
+    }
+
+    func trim() -> String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     func digits() -> String {
@@ -196,3 +210,13 @@ extension NSMutableAttributedString {
     
 }
 
+extension Substring {
+
+    func dropFirstAndLast() -> String {
+        let text = String(self)
+        let start = text.index(text.startIndex, offsetBy: 1)
+        let end = text.index(text.endIndex, offsetBy: -1)
+        return String(text[start..<end])
+    }
+
+}

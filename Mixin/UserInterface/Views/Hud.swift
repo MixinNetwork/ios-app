@@ -8,7 +8,7 @@ func showAutoHiddenHud(style: Hud.Style, text: String) {
         return
     }
     let hud = Hud()
-    hud.show(style: style, text: text, on: AppDelegate.current.window!)
+    hud.show(style: style, text: text, on: AppDelegate.current.window)
     hud.scheduleAutoHidden()
 }
 
@@ -50,6 +50,7 @@ final class Hud: NSObject {
             activityIndicator.startAnimating()
         }
         label.text = text
+        containerView.isUserInteractionEnabled = style == .busy
     }
     
     func scheduleAutoHidden() {
@@ -94,6 +95,16 @@ final class Hud: NSObject {
             self.containerView.removeFromSuperview()
             self.isShowing = false
         })
+    }
+
+    func safeHide() {
+        if Thread.isMainThread {
+            hide()
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.hide()
+            }
+        }
     }
     
 }

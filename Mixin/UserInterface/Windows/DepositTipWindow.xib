@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IBN-Cg-mAs">
-                    <rect key="frame" x="0.0" y="253" width="414" height="656"/>
+                    <rect key="frame" x="0.0" y="309" width="414" height="600"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M2l-q6-JUi">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -109,20 +109,6 @@ confirmations. </string>
                                 <action selector="okAction:" destination="Ywk-v6-QQI" eventType="touchUpInside" id="K2D-a5-ek7"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xuj-F6-OV5">
-                            <rect key="frame" x="108" y="538" width="198" height="41"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
-                            <state key="normal" title="Don’t remind me again">
-                                <color key="titleColor" red="0.23921568627450979" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_no_remind"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="dontRemindAction:" destination="Ywk-v6-QQI" eventType="touchUpInside" id="NYe-Yz-c4Q"/>
-                            </connections>
-                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -143,23 +129,9 @@ confirmations. </string>
                         <constraint firstItem="KEs-gY-Z4X" firstAttribute="top" secondItem="M2l-q6-JUi" secondAttribute="bottom" id="T8n-se-oxl"/>
                         <constraint firstItem="M2l-q6-JUi" firstAttribute="top" secondItem="IBN-Cg-mAs" secondAttribute="top" id="VOg-kw-vgg"/>
                         <constraint firstItem="plh-FU-Uiw" firstAttribute="centerX" secondItem="IBN-Cg-mAs" secondAttribute="centerX" id="a9j-dA-U8r"/>
-                        <constraint firstItem="Xuj-F6-OV5" firstAttribute="top" secondItem="plh-FU-Uiw" secondAttribute="bottom" constant="30" id="e5m-lr-j1M" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                    <real key="value" value="16"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
                         <constraint firstAttribute="trailing" secondItem="KEs-gY-Z4X" secondAttribute="trailing" constant="30" id="ege-Gj-CeF"/>
                         <constraint firstItem="KEs-gY-Z4X" firstAttribute="leading" secondItem="IBN-Cg-mAs" secondAttribute="leading" constant="30" id="hnn-Sa-9tP"/>
                         <constraint firstItem="M2l-q6-JUi" firstAttribute="leading" secondItem="IBN-Cg-mAs" secondAttribute="leading" id="kCI-uE-fHk"/>
-                        <constraint firstItem="Xuj-F6-OV5" firstAttribute="centerX" secondItem="IBN-Cg-mAs" secondAttribute="centerX" id="wdP-nC-9Sb"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -172,20 +144,8 @@ confirmations. </string>
             <constraints>
                 <constraint firstItem="Lz3-15-BbT" firstAttribute="trailing" secondItem="IBN-Cg-mAs" secondAttribute="trailing" id="cdc-qZ-g98"/>
                 <constraint firstAttribute="bottom" secondItem="IBN-Cg-mAs" secondAttribute="bottom" constant="-13" id="dJv-eM-ws4"/>
+                <constraint firstItem="Lz3-15-BbT" firstAttribute="bottom" secondItem="plh-FU-Uiw" secondAttribute="bottom" constant="45" id="inG-O0-AyZ"/>
                 <constraint firstItem="IBN-Cg-mAs" firstAttribute="leading" secondItem="Lz3-15-BbT" secondAttribute="leading" id="j1r-QJ-r5A"/>
-                <constraint firstItem="Lz3-15-BbT" firstAttribute="bottom" secondItem="Xuj-F6-OV5" secondAttribute="bottom" constant="30" id="nsb-qU-Lfy" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                            <real key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                            <real key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                            <real key="value" value="16"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </constraint>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Lz3-15-BbT"/>
             <connections>

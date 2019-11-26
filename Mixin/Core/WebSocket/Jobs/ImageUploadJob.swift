@@ -2,6 +2,7 @@ import Foundation
 import Photos
 import CoreServices
 import Alamofire
+import WCDBSwift
 
 class ImageUploadJob: AttachmentUploadJob {
     
@@ -53,7 +54,7 @@ class ImageUploadJob: AttachmentUploadJob {
             let image = UIImage(contentsOfFile: fileUrl.path)
             message.thumbImage = image?.base64Thumbnail() ?? ""
         }
-        
+
         guard !isCancelled else {
             try? FileManager.default.removeItem(at: fileUrl)
             return
@@ -67,15 +68,7 @@ class ImageUploadJob: AttachmentUploadJob {
             return
         }
         
-        let uti: CFString
-        if let id = asset.value(forKey: "uniformTypeIdentifier") as? String {
-            uti = id as CFString
-        } else if let res = PHAssetResource.assetResources(for: asset).first {
-            uti = res.uniformTypeIdentifier as CFString
-        } else {
-            uti = kUTTypeJPEG
-        }
-        
+        let uti = asset.uniformTypeIdentifier ?? kUTTypeJPEG
         let extensionName: String
         var image: UIImage?
         var imageData: Data?
@@ -100,7 +93,6 @@ class ImageUploadJob: AttachmentUploadJob {
             imageData = image?.jpegData(compressionQuality: jpegCompressionQuality)
         }
         
-        message.mediaMimeType = FileManager.default.mimeType(ext: extensionName)
         let filename = "\(message.messageId).\(extensionName)"
         let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         
@@ -136,9 +128,10 @@ class ImageUploadJob: AttachmentUploadJob {
     }
     
     private func updateMediaUrlAndPostNotification(filename: String, url: URL) {
+        let mediaSize = FileManager.default.fileSize(url.path)
         message.mediaUrl = filename
-        message.mediaSize = FileManager.default.fileSize(url.path)
-        MixinDatabase.shared.insertOrReplace(objects: [message])
+        message.mediaSize = mediaSize
+        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, keyValues: [(Message.Properties.mediaUrl, filename), (Message.Properties.mediaSize, mediaSize)])
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)

@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import StoreKit
 import UserNotifications
+import WCDBSwift
 
 class HomeViewController: UIViewController {
     

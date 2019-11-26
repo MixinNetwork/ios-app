@@ -12,8 +12,7 @@ class RefreshAccountJob: BaseJob {
         }
         switch AccountAPI.shared.me() {
         case let .success(account):
-            UserDAO.shared.updateAccount(account: account)
-            AccountAPI.shared.account = account
+            AccountAPI.shared.updateAccount(account: account)
         case let .failure(error):
             throw error
         }

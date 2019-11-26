@@ -4,14 +4,17 @@ import Photos
 
 final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAnimatable {
     
-    static var currentPipController: GalleryVideoItemViewController?
-    
     let videoView = GalleryVideoView()
+    
+    private let stickToEdgeVelocityLimit: CGFloat = 800
+    private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    private let pipModeDefaultTopMargin: CGFloat = 61
     
     private var panRecognizer: UIPanGestureRecognizer!
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
+    private var itemPresentationSizeObserver: NSKeyValueObservation?
     private var sliderObserver: Any?
     private var timeLabelObserver: Any?
     private var isSeeking = false
@@ -19,6 +22,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var playerDidReachEnd = false
     private var playerDidFailedToPlay = false
     private var isPipMode = false
+    private var videoRatio: CGFloat = 1
+    
+    var hidePlayControlAfterPlaybackBegins = false
     
     var isPlayable: Bool {
         if let item = item {
@@ -62,24 +68,26 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override var isFocused: Bool {
         didSet {
-            if !isFocused {
-                player.pause()
-                if isPlayable {
-                    updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
-                }
+            guard !isFocused else {
+                return
+            }
+            player.pause()
+            if isPlayable {
+                updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
             }
         }
     }
     
-    private var player: AVPlayer {
-        return videoView.player
+    override var isReusable: Bool {
+        return parent == nil && UIApplication.homeContainerViewController?.pipController != self
     }
     
-    private var videoRatio: CGFloat {
-        guard let item = item else {
-            return 1
-        }
-        return item.size.width / item.size.height
+    override var respondsToLongPress: Bool {
+        return item?.category == .video
+    }
+    
+    private var player: AVPlayer {
+        return videoView.player
     }
     
     private var playerItemDuration: CMTime {
@@ -88,6 +96,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else {
             return .invalid
         }
+    }
+    
+    private var pipModeLayoutInsets: UIEdgeInsets {
+        let insets = parent?.view.safeAreaInsets ?? .zero
+        return UIEdgeInsets(top: max(20, insets.top),
+                            left: insets.left,
+                            bottom: max(5, insets.bottom),
+                            right: insets.right)
     }
     
     deinit {
@@ -124,14 +140,17 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        videoRatio = 1
         isPipMode = false
+        videoView.isPipMode = false
         controlView.style.remove(.loading)
         controlView.playControlStyle = .play
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
         videoView.coverImageView.image = nil
-        videoView.bringCoverToFront()
+        videoView.coverImageView.isHidden = false
         player.replaceCurrentItem(with: nil)
+        hidePlayControlAfterPlaybackBegins = false
     }
     
     override func beginDownload() {
@@ -171,8 +190,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
-        videoView.videoRatio = item.size.width / item.size.height
-        videoView.layoutFullsized()
+        videoRatio = standardizedRatio(of: item.size)
+        videoView.coverSize = item.size
+        videoView.videoRatio = videoRatio
+        videoView.setNeedsLayout()
+        layoutFullsized()
         if item.category == .video {
             controlView.style.remove(.liveStream)
         } else if item.category == .live {
@@ -217,44 +239,36 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         isPipMode.toggle()
         if isPipMode {
             controlView.pipButton.setImage(R.image.ic_video_pip(), for: .normal)
-            videoView.removeFromSuperview()
-            GalleryVideoItemViewController.currentPipController = self
-            UIApplication.homeContainerViewController?.view.addSubview(videoView)
-            galleryViewController?.dismissForPip()
+            galleryViewController?.dismiss(pipController: self)
+            UIApplication.homeContainerViewController?.pipController = self
         } else {
             controlView.pipButton.setImage(R.image.ic_video_fullsize(), for: .normal)
-            GalleryVideoItemViewController.currentPipController = nil
             galleryViewController?.show(itemViewController: self)
+            UIApplication.homeContainerViewController?.pipController = nil
         }
         if player.timeControlStatus == .playing {
             updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         }
         let isPipMode = self.isPipMode
         animate(animations: {
+            self.videoView.isPipMode = isPipMode
             if isPipMode {
-                self.videoView.layoutPip()
+                self.layoutPip(usesArbitraryVideoViewCenter: true)
             } else {
-                self.videoView.layoutFullsized()
-            }
-        }, completion: {
-            if !isPipMode {
-                self.videoView.removeFromSuperview()
-                self.view.insertSubview(self.videoView, at: 0)
+                self.layoutFullsized()
             }
         })
     }
     
     @objc func closeAction() {
-        player.pause()
+        player.replaceCurrentItem(with: nil)
         if isPipMode {
             isPipMode = false
-            videoView.removeFromSuperview()
-            if let view = view {
-                view.insertSubview(videoView, at: 0)
-                videoView.frame = view.bounds
-                videoView.layoutFullsized()
-            }
-            GalleryVideoItemViewController.currentPipController = nil
+            layoutFullsized()
+            willMove(toParent: nil)
+            view.removeFromSuperview()
+            removeFromParent()
+            UIApplication.homeContainerViewController?.pipController = nil
         } else {
             galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
         }
@@ -270,6 +284,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
+        if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
+            if controller.item == self.item {
+                controller.pipAction()
+                return
+            } else {
+                controller.closeAction()
+            }
+        }
         guard let item = item else {
             return
         }
@@ -282,8 +304,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 player.seek(to: .zero)
             }
             addTimeObservers()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         } else if let url = item.url {
+            controlView.style.insert(.loading)
             loadAssetIfPlayable(url: url, playAfterLoaded: true)
         }
     }
@@ -299,12 +323,12 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             recognizer.setTranslation(.zero, in: view)
         case .changed:
             let translation = recognizer.translation(in: view)
-            videoView.center = CGPoint(x: videoView.center.x + translation.x,
-                                       y: videoView.center.y + translation.y)
+            view.center = CGPoint(x: view.center.x + translation.x,
+                                  y: view.center.y + translation.y)
             recognizer.setTranslation(.zero, in: view)
         case .ended, .cancelled:
             let velocity = recognizer.velocity(in: view).x
-            videoView.stickToSuperviewEdge(horizontalVelocity: velocity)
+            stickToParentEdge(horizontalVelocity: velocity)
         default:
             break
         }
@@ -386,22 +410,98 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         rateBeforeSeeking = nil
     }
     
+    func stickToParentEdge(horizontalVelocity: CGFloat) {
+        guard let parentView = parent?.view else {
+            return
+        }
+        let x: CGFloat
+        let shouldStickToRightEdge = view.center.x > parentView.bounds.midX && horizontalVelocity > -stickToEdgeVelocityLimit
+            || view.center.x < parentView.bounds.midX && horizontalVelocity > stickToEdgeVelocityLimit
+        if shouldStickToRightEdge {
+            x = parentView.bounds.width - pipModeMinInsets.right - view.frame.size.width / 2
+        } else {
+            x = pipModeMinInsets.left + view.frame.size.width / 2
+        }
+        let y: CGFloat = {
+            let halfHeight = view.frame.size.height / 2
+            let minY = pipModeLayoutInsets.top + pipModeMinInsets.top + halfHeight
+            let maxY = parentView.bounds.height - pipModeLayoutInsets.bottom - pipModeMinInsets.bottom - halfHeight
+            return min(maxY, max(minY, view.center.y))
+        }()
+        UIView.animate(withDuration: 0.3) {
+            self.view.center = CGPoint(x: x, y: y)
+        }
+    }
+    
+    func layoutPip(usesArbitraryVideoViewCenter: Bool) {
+        guard let parentView = parent?.view else {
+            return
+        }
+        let size: CGSize
+        if videoRatio > 1 {
+            let width = parentView.bounds.width * (2 / 3)
+            size = CGSize(width: width, height: width / videoRatio)
+        } else {
+            let height = parentView.bounds.height / 3
+            let width = height * videoRatio
+            if width <= parentView.bounds.width / 2 {
+                size = CGSize(width: width, height: height)
+            } else {
+                let width = parentView.bounds.width / 2
+                let height = width / videoRatio
+                size = CGSize(width: width, height: height)
+            }
+        }
+        view.frame.size = ceil(size)
+        if usesArbitraryVideoViewCenter {
+            view.center = CGPoint(x: parentView.bounds.width - pipModeMinInsets.right - size.width / 2,
+                                  y: pipModeLayoutInsets.top + pipModeDefaultTopMargin + size.height / 2)
+        } else {
+            var center = view.center
+            if view.frame.minX < parentView.bounds.minX + pipModeMinInsets.left {
+                center.x = parentView.bounds.minX + pipModeMinInsets.right + view.frame.width / 2
+            } else if view.frame.maxX > parentView.bounds.maxX - pipModeMinInsets.right {
+                center.x = parentView.bounds.maxX - pipModeMinInsets.right - view.frame.width / 2
+            }
+            if view.frame.minY < parentView.bounds.minY + pipModeMinInsets.top {
+                center.y = parentView.bounds.minY + pipModeMinInsets.top + view.frame.height / 2
+            } else if view.frame.maxY > parentView.bounds.maxY - pipModeMinInsets.bottom {
+                center.y = parentView.bounds.maxY - pipModeMinInsets.bottom - view.frame.height / 2
+            }
+            view.center = center
+        }
+    }
+    
+    func layoutFullsized() {
+        guard let parentView = parent?.view else {
+            return
+        }
+        view.frame = parentView.bounds
+    }
+    
     private func loadAssetIfPlayable(url: URL, playAfterLoaded: Bool) {
         let asset = AVURLAsset(url: url)
         let playableKey = #keyPath(AVAsset.isPlayable)
         var error: NSError?
         
+        func showReloadAndReport(error: Error?) {
+            if let error = error {
+                UIApplication.traceError(error)
+            }
+            controlView.style.remove(.loading)
+            controlView.playControlStyle = .reload
+            updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
+        
         if asset.statusOfValue(forKey: playableKey, error: &error) == .loaded {
             load(playableAsset: asset, playAfterLoaded: playAfterLoaded)
         } else if let error = error {
-            UIApplication.traceError(error)
-            controlView.playControlStyle = .reload
-            controlView.activityIndicatorView.isAnimating = false
+            showReloadAndReport(error: error)
         } else {
             asset.loadValuesAsynchronously(forKeys: [playableKey]) {
                 guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {
-                    if let error = error {
-                        UIApplication.traceError(error)
+                    DispatchQueue.main.async {
+                        showReloadAndReport(error: error)
                     }
                     return
                 }
@@ -428,6 +528,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             // 'change' are always nil here
             self?.updateControlView()
         }
+        itemPresentationSizeObserver = item.observe(\.presentationSize) { [weak self] (item, _) in
+            self?.updateVideoViewSize(with: item)
+        }
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(playerItemDidReachEnd(_:)),
@@ -440,12 +543,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()
-            self?.bringPlayerToFrontIfPlaying()
+            self?.hideCoverIfPlaying()
         })
         
         player.replaceCurrentItem(with: item)
         if playAfterLoaded {
             AudioManager.shared.pause()
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         }
     }
@@ -455,6 +559,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .playing:
             controlView.playControlStyle = .pause
             controlView.style.remove(.loading)
+            if hidePlayControlAfterPlaybackBegins {
+                hidePlayControlAfterPlaybackBegins = false
+                updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            }
         case .paused:
             if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play
@@ -469,11 +577,23 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    private func bringPlayerToFrontIfPlaying() {
+    private func hideCoverIfPlaying() {
         guard player.timeControlStatus == .playing else {
             return
         }
-        videoView.bringPlayerToFront()
+        videoView.coverImageView.isHidden = true
+    }
+    
+    private func updateVideoViewSize(with item: AVPlayerItem) {
+        let videoRatio = standardizedRatio(of: item.presentationSize)
+        self.videoRatio = videoRatio
+        videoView.videoRatio = videoRatio
+        videoView.setNeedsLayout()
+        if isPipMode {
+            layoutPip(usesArbitraryVideoViewCenter: false)
+        } else {
+            layoutFullsized()
+        }
     }
     
     private func updateSliderPosition(time: CMTime) {
@@ -537,14 +657,26 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private func removeAllObservers() {
         removeTimeObservers()
         itemStatusObserver?.invalidate()
+        itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
     
     private func updateControlView(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
         let hidePlayControls = playControlsHidden || !isPlayable
-        let hideOtherControls = otherControlsHidden || !isPlayable || !isFocused
+        let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || UIApplication.homeContainerViewController?.pipController == self)
         controlView.set(playControlsHidden: hidePlayControls, otherControlsHidden: hideOtherControls, animated: animated)
+    }
+    
+    private func standardizedRatio(of size: CGSize) -> CGFloat {
+        guard !size.height.isZero else {
+            return 1
+        }
+        let videoRatio = size.width / size.height
+        guard !videoRatio.isNaN && !videoRatio.isZero else {
+            return 1
+        }
+        return videoRatio
     }
     
 }

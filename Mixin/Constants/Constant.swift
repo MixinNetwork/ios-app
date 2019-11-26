@@ -75,8 +75,12 @@ enum ReportErrorCode: Int {
     case jobError = 100015
     case signalDatabaseResetFailed = 100016
     case databaseCorrupted = 100017
+    case databaseNoSuchTable = 100018
     case appUpgradeError = 100020
-
+    case loadAvatar = 100021
+    case restoreError = 100022
+    case badMessageDataError = 100030
+    
     var errorName: String {
         switch self {
         case .logoutError:
@@ -115,8 +119,16 @@ enum ReportErrorCode: Int {
             return "signalDatabaseResetFailed"
         case .databaseCorrupted:
             return "databaseCorrupted"
+        case .databaseNoSuchTable:
+            return "databaseNoSuchTable"
         case .appUpgradeError:
             return "appUpgradeError"
+        case .loadAvatar:
+            return "loadAvatar"
+        case .restoreError:
+            return "restoreError"
+        case .badMessageDataError:
+            return "badMessageDataError"
         }
     }
 }
@@ -223,14 +235,16 @@ struct MixinFile {
         return rootDirectory.appendingPathComponent("mixin.db")
     }
 
+    static var taskDatabaseURL: URL {
+        return rootDirectory.appendingPathComponent("task.db")
+    }
+
     static var signalDatabasePath: String {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         return dir.appendingPathComponent("signal.db").path
     }
 
-    static var backupDatabase: URL {
-        return rootDirectory.appendingPathComponent("mixin.backup.db")
-    }
+    static let backupDatabaseName = "mixin.db"
 
     static func url(ofChatDirectory directory: ChatDirectory, filename: String?) -> URL {
         let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
@@ -289,9 +303,12 @@ struct MixinFile {
 
 }
 
-let muteDuration8H: Int64 = 8 * 60 * 60
-let muteDuration1Week: Int64 = 7 * 24 * 60 * 60
-let muteDuration1Year: Int64 = 365 * 24 * 60 * 60
+enum MuteInterval {
+    static let none: Int64 = 0
+    static let eightHours: Int64 = 8 * 60 * 60
+    static let oneWeek: Int64 = 7 * 24 * 60 * 60
+    static let oneYear: Int64 = 365 * 24 * 60 * 60
+}
 
 enum ExtensionName: String {
     

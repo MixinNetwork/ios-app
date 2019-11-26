@@ -1,39 +1,39 @@
 import Foundation
 import AVFoundation
 
-class AudioManager {
+class AudioManager: NSObject {
     
-    struct Node {
-        let message: MessageItem
-        let path: String
-    }
-    
-    struct WeakReference<T: AnyObject> {
-        weak var object: T?
+    struct WeakCellBox {
+        weak var cell: AudioCell?
     }
     
     static let shared = AudioManager()
-    static let willPlayNextNodeNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
+    static let willPlayNextNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
+    static let willPlayPreviousNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_previous")
     static let conversationIdUserInfoKey = "conversation_id"
     static let messageIdUserInfoKey = "message_id"
     
     private(set) var player: AudioPlayer?
-    private(set) var playingNode: Node?
+    private(set) var playingMessage: MessageItem?
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.audio_manager")
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     
-    private var cells = [String: WeakReference<AudioMessageCell>]()
+    private var cells = [String: WeakCellBox]()
     
-    init() {
+    override init() {
+        super.init()
         queue.setSpecific(key: queueSpecificKey, value: ())
     }
     
-    func play(node: Node) {
+    func play(message: MessageItem) {
+        guard let mediaUrl = message.mediaUrl else {
+            return
+        }
         
         func handle(error: Error) {
             DispatchQueue.main.sync {
-                self.cells[node.message.messageId]?.object?.style = .stopped
+                self.cells[message.messageId]?.cell?.style = .stopped
             }
             NotificationCenter.default.removeObserver(self)
         }
@@ -48,14 +48,15 @@ class AudioManager {
             }
         }
         
-        if let controller = GalleryVideoItemViewController.currentPipController {
+        if let controller = UIApplication.homeContainerViewController?.pipController {
             controller.pauseAction(self)
             controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
         
-        cells[node.message.messageId]?.object?.style = .playing
+        let shouldUpdateMediaStatus = message.mediaStatus != MediaStatus.READ.rawValue && message.userId != AccountAPI.shared.accountUserId
+        cells[message.messageId]?.cell?.style = .playing
         
-        if node.message.messageId == playingNode?.message.messageId, let player = player {
+        if message.messageId == playingMessage?.messageId, let player = player {
             queue.async {
                 resetAudioSession()
                 player.play()
@@ -63,19 +64,19 @@ class AudioManager {
             return
         }
         
-        if let playingMessageId = playingNode?.message.messageId {
-            cells[playingMessageId]?.object?.style = .stopped
+        if let playingMessageId = playingMessage?.messageId {
+            cells[playingMessageId]?.cell?.style = .stopped
         }
         
         queue.async {
             do {
-                if node.message.mediaStatus != MediaStatus.READ.rawValue && node.message.userId != AccountAPI.shared.accountUserId {
-                    MessageDAO.shared.updateMediaStatus(messageId: node.message.messageId,
+                if shouldUpdateMediaStatus {
+                    MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
                                                         status: .READ,
-                                                        conversationId: node.message.conversationId)
+                                                        conversationId: message.conversationId)
                 }
                 
-                self.playingNode = nil
+                self.playingMessage = nil
                 self.player?.stop()
                 self.player = nil
                 
@@ -95,12 +96,25 @@ class AudioManager {
                                    name: AVAudioSession.mediaServicesWereResetNotification,
                                    object: nil)
                 
-                self.playingNode = node
-                self.player = try AudioPlayer(path: node.path)
-                self.player!.onStatusChanged = self.playerStatusChanged
+                let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
+                
+                self.playingMessage = message
+                self.player = try AudioPlayer(path: path)
+                self.player!.onStatusChanged = { [weak self] player in
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    if DispatchQueue.getSpecific(key: weakSelf.queueSpecificKey) == nil {
+                        weakSelf.queue.async {
+                            weakSelf.handleStatusChange(player: player)
+                        }
+                    } else {
+                        weakSelf.handleStatusChange(player: player)
+                    }
+                }
                 self.player!.play()
                 
-                self.preloadAudio(nextTo: node.message)
+                self.preloadAudio(nextTo: message)
             } catch {
                 handle(error: error)
             }
@@ -108,10 +122,10 @@ class AudioManager {
     }
     
     func pause() {
-        guard let playingNode = playingNode else {
+        guard let playingMessage = playingMessage else {
             return
         }
-        cells[playingNode.message.messageId]?.object?.style = .paused
+        cells[playingMessage.messageId]?.cell?.style = .paused
         queue.async {
             self.player?.pause()
         }
@@ -125,11 +139,11 @@ class AudioManager {
             guard player.status == .playing || player.status == .paused else {
                 return
             }
-            if let playingNode = self.playingNode {
+            if let playingMessage = self.playingMessage {
                 DispatchQueue.main.sync {
-                    self.cells[playingNode.message.messageId]?.object?.style = .stopped
+                    self.cells[playingMessage.messageId]?.cell?.style = .stopped
                 }
-                self.playingNode = nil
+                self.playingMessage = nil
             }
             player.stop()
             NotificationCenter.default.removeObserver(self)
@@ -137,9 +151,9 @@ class AudioManager {
         }
     }
     
-    func register(cell: AudioMessageCell, forMessageId messageId: String) {
-        cells[messageId] = WeakReference(object: cell)
-        if messageId == playingNode?.message.messageId, let player = player {
+    func register(cell: AudioCell, forMessageId messageId: String) {
+        cells[messageId] = WeakCellBox(cell: cell)
+        if messageId == playingMessage?.messageId, let player = player {
             switch player.status {
             case .playing:
                 cell.style = .playing
@@ -153,8 +167,32 @@ class AudioManager {
         }
     }
     
-    func unregister(cell: AudioMessageCell, forMessageId messageId: String) {
+    func unregister(cell: AudioCell, forMessageId messageId: String) {
         cells[messageId] = nil
+    }
+    
+    func playableMessage(nextTo message: MessageItem) -> MessageItem? {
+        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
+            return nil
+        }
+        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.mediaUrl != nil else {
+            return nil
+        }
+        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
+            return nil
+        }
+        return nextMessage
+    }
+    
+    func preloadAudio(nextTo message: MessageItem) {
+        guard let next = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
+            return
+        }
+        guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
+            return
+        }
+        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {
@@ -200,61 +238,27 @@ class AudioManager {
         player = nil
     }
     
-    private func playerStatusChanged(player: AudioPlayer) {
-        
-        func handleStatusChange() {
-            DispatchQueue.main.async {
-                UIApplication.shared.isIdleTimerDisabled = player.status == .playing
+    func handleStatusChange(player: AudioPlayer) {
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = player.status == .playing
+        }
+        if player.status == .didReachEnd, let playingMessage = playingMessage {
+            DispatchQueue.main.sync {
+                cells[playingMessage.messageId]?.cell?.style = .stopped
             }
-            if player.status == .didReachEnd, let playingNode = playingNode {
+            if let next = self.playableMessage(nextTo: playingMessage) {
                 DispatchQueue.main.sync {
-                    cells[playingNode.message.messageId]?.object?.style = .stopped
+                    let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
+                                    AudioManager.messageIdUserInfoKey: next.messageId]
+                    NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
+                    play(message: next)
                 }
-                if let nextNode = self.playableNode(nextTo: playingNode) {
-                    DispatchQueue.main.sync {
-                        let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
-                                        AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
-                        NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nil, userInfo: userInfo)
-                        play(node: nextNode)
-                    }
-                } else {
-                    self.playingNode = nil
-                    NotificationCenter.default.removeObserver(self)
-                    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-                }
+            } else {
+                self.playingMessage = nil
+                NotificationCenter.default.removeObserver(self)
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
             }
         }
-        
-        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
-            queue.async(execute: handleStatusChange)
-        } else {
-            handleStatusChange()
-        }
-    }
-    
-    private func playableNode(nextTo node: Node) -> Node? {
-        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
-            return nil
-        }
-        guard nextMessage.category.hasSuffix("_AUDIO"), let filename = nextMessage.mediaUrl else {
-            return nil
-        }
-        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
-            return nil
-        }
-        let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path
-        return Node(message: nextMessage, path: path)
-    }
-    
-    private func preloadAudio(nextTo message: MessageItem) {
-        guard let next = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
-            return
-        }
-        guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
-            return
-        }
-        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
-        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
 }

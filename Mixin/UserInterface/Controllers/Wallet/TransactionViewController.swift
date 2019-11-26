@@ -7,7 +7,7 @@ class TransactionViewController: UIViewController {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
-    @IBOutlet weak var usdValueLabel: UILabel!
+    @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
     @IBOutlet weak var avatarImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     
@@ -34,16 +34,22 @@ class TransactionViewController: UIViewController {
         } else {
             amountLabel.textColor = .walletGreen
         }
-        let usdBalance = asset.priceUsd.doubleValue * snapshot.amount.doubleValue
-        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            usdValueLabel.text = "≈ $" + localizedUSDBalance
+        let fiatMoneyValue = snapshot.amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+        if let value = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) {
+            fiatMoneyValueLabel.text = "≈ " + Currency.current.symbol + value
         } else {
-            usdValueLabel.text = nil
+            fiatMoneyValueLabel.text = nil
         }
         symbolLabel.text = snapshot.assetSymbol
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self
+        updateTableViewContentInsetBottom()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInsetBottom()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -83,24 +89,19 @@ extension TransactionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard snapshot.type == SnapshotType.transfer.rawValue else {
+        guard snapshot.type == SnapshotType.transfer.rawValue, indexPath.row == 3 else {
             return
         }
-        var transferUserId: String?
-        if indexPath.row == 3 && snapshot.amount.doubleValue > 0 {
-            transferUserId = snapshot.opponentId
-        } else if indexPath.row == 4 && snapshot.amount.doubleValue < 0 {
-            transferUserId = snapshot.opponentId
-        }
-        guard let userId = transferUserId, !userId.isEmpty else {
+        guard let userId = snapshot.opponentId, !userId.isEmpty else {
             return
         }
         DispatchQueue.global().async {
             guard let user = UserDAO.shared.getUser(userId: userId), user.isCreatedByMessenger else {
                 return
             }
-            DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user).presentView()
+            DispatchQueue.main.async { [weak self] in
+                let vc = UserProfileViewController(user: user)
+                self?.present(vc, animated: true, completion: nil)
             }
         }
     }
@@ -126,72 +127,73 @@ extension TransactionViewController: UITableViewDelegate {
 
 extension TransactionViewController {
     
+    private func updateTableViewContentInsetBottom() {
+        if view.safeAreaInsets.bottom > 20 {
+            tableView.contentInset.bottom = 0
+        } else {
+            tableView.contentInset.bottom = 20
+        }
+    }
+    
     private func makeContents() {
         contents = []
-        // 0
         contents.append((title: Localized.TRANSACTION_ID, subtitle: snapshot.snapshotId))
-        // 1
+        contents.append((title: Localized.TRANSACTION_ASSET, subtitle: asset.name))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_DEPOSIT))
+            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.sender))
+            if snapshot.hasMemo {
+                contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
+            }
         case SnapshotType.transfer.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_TRANSFER))
+            if snapshot.amount.doubleValue > 0 {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.opponentUserFullName))
+            } else {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.opponentUserFullName))
+            }
+            if snapshot.hasMemo {
+                contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
+            }
+        case SnapshotType.raw.rawValue:
+            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: R.string.localizable.transaction_type_raw()))
+            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
+            if snapshot.hasSender {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.sender))
+            }
+            if snapshot.hasReceiver {
+                contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.receiver))
+            }
+            if snapshot.hasMemo {
+                contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
+            }
         case SnapshotType.withdrawal.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_WITHDRAWAL))
+            contents.append((title: Localized.TRANSACTION_TYPE, subtitle:
+                Localized.TRANSACTION_TYPE_WITHDRAWAL))
+            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            if snapshot.hasMemo {
+                contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
+            }
         case SnapshotType.fee.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_FEE))
+            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            if snapshot.hasMemo {
+                contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
+            }
         case SnapshotType.rebate.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_REBATE))
-        default:
-            break
-        }
-        // 2
-        contents.append((title: Localized.TRANSACTION_ASSET, subtitle: asset.name))
-        // 3
-        switch snapshot.type {
-        case SnapshotType.deposit.rawValue:
-            if asset.isAccount {
-                contents.append((title: Localized.WALLET_ACCOUNT_NAME, subtitle: snapshot.sender))
-            } else {
-                contents.append((title: Localized.TRANSACTION_SENDER, subtitle: snapshot.sender))
-            }
-        case SnapshotType.transfer.rawValue:
-            if snapshot.amount.doubleValue > 0 {
-                contents.append((title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), subtitle: snapshot.opponentUserFullName))
-            } else {
-                contents.append((title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), subtitle: AccountAPI.shared.account?.full_name))
-            }
-        case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
             contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
-        default:
-            break
-        }
-        // 4
-        switch snapshot.type {
-        case SnapshotType.deposit.rawValue:
-            contents.append((title: Localized.TRANSACTION_TRANSACTION_HASH, subtitle: snapshot.transactionHash))
-        case SnapshotType.transfer.rawValue:
-            if snapshot.amount.doubleValue > 0 {
-                contents.append((title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), subtitle: AccountAPI.shared.account?.full_name))
-            } else {
-                contents.append((title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), subtitle: snapshot.opponentUserFullName))
-            }
-        case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-            if asset.isAccount {
-                contents.append((title: Localized.WALLET_ACCOUNT_NAME, subtitle: snapshot.receiver))
-            } else {
-                contents.append((title: Localized.TRANSACTION_RECEIVER, subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            if snapshot.hasMemo {
+                contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         default:
             break
         }
-        // 5
-        if asset.isAccount && (snapshot.type == SnapshotType.deposit.rawValue || snapshot.type == SnapshotType.withdrawal.rawValue || snapshot.type == SnapshotType.fee.rawValue || snapshot.type == SnapshotType.rebate.rawValue) {
-            contents.append((title: Localized.WALLET_ACCOUNT_MEMO, subtitle: snapshot.memo))
-        } else {
-            contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
-        }
-        // 6
         contents.append((title: Localized.TRANSACTION_DATE, subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
     }
     
@@ -200,22 +202,42 @@ extension TransactionViewController {
         case 0:
             return (true, snapshot.snapshotId)
         case 3:
-            switch snapshot.type {
-            case SnapshotType.deposit.rawValue:
-                return (true, snapshot.sender ?? "")
-            case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
+            if snapshot.type != SnapshotType.transfer.rawValue {
                 return (true, snapshot.transactionHash ?? "")
-            default:
-                break
             }
         case 4:
             switch snapshot.type {
             case SnapshotType.deposit.rawValue:
-                return (true, snapshot.transactionHash ?? "")
+                return (true, snapshot.sender ?? "")
             case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
                 return (true, snapshot.receiver ?? "")
+            case SnapshotType.transfer.rawValue:
+                if snapshot.hasMemo {
+                    return (true, snapshot.memo ?? "")
+                }
+            case SnapshotType.raw.rawValue:
+                if snapshot.hasSender {
+                    return (true, snapshot.sender ?? "")
+                } else if snapshot.hasReceiver {
+                    return (true, snapshot.receiver ?? "")
+                }
             default:
                 break
+            }
+        case 5:
+            switch snapshot.type {
+            case SnapshotType.raw.rawValue:
+                if snapshot.hasSender && snapshot.hasReceiver {
+                    return (true, snapshot.receiver ?? "")
+                } else if snapshot.hasMemo {
+                    return (true, snapshot.memo ?? "")
+                }
+            case SnapshotType.transfer.rawValue:
+                break
+            default:
+                if snapshot.hasMemo {
+                    return (true, snapshot.memo ?? "")
+                }
             }
         default:
             break

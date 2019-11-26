@@ -10,8 +10,6 @@ class PopupPresentationController: UIPresentationController {
         return button
     }()
     
-    let topMargin: CGFloat = 56
-    
     override var frameOfPresentedViewInContainerView: CGRect {
         let presentingBounds = presentingViewController.view.bounds
         if presentedViewController.preferredContentSize != .zero {

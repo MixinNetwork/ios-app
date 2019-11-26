@@ -27,14 +27,14 @@ final class ParticipantDAO {
     """
     static let sqlUpdateStatus = "UPDATE participants SET status = 1 WHERE conversation_id = ? AND user_id in (SELECT user_id FROM users)"
     private static let sqlQueryParticipantUsers = """
-    SELECT u.user_id, u.full_name, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, a.creator_id as appCreatorId, p.role
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.creator_id as appCreatorId, p.role
     FROM participants p
     INNER JOIN users u ON u.user_id = p.user_id
     LEFT JOIN apps a ON a.app_id = u.app_id
     WHERE p.conversation_id = ?
     ORDER BY p.created_at DESC
     """
-    private static let sqlQueryGroupIconParticipants = """
+    static let sqlQueryGroupIconParticipants = """
     SELECT u.user_id as userId, u.identity_number as userIdentityNumber, u.full_name as userFullName, u.avatar_url as userAvatarUrl, p.role, p.conversation_id as conversationId
     FROM participants p
     INNER JOIN users u ON u.user_id = p.user_id
@@ -43,8 +43,19 @@ final class ParticipantDAO {
     LIMIT 4
     """
 
+    static let sqlQueryParticipantId = """
+    SELECT u.user_id FROM users u
+    INNER JOIN participants p ON p.user_id = u.user_id
+    WHERE p.conversation_id = ? AND u.identity_number = ?
+    """
+
     func isAdmin(conversationId: String, userId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId && (Participant.Properties.role == ParticipantRole.ADMIN.rawValue || Participant.Properties.role == ParticipantRole.OWNER.rawValue))
+    }
+
+    func getParticipantId(conversationId: String, identityNumber: String) -> String? {
+        let value = MixinDatabase.shared.scalar(sql: ParticipantDAO.sqlQueryParticipantId, values: [conversationId, identityNumber])
+        return value.type == .null ? nil : value.stringValue
     }
 
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {

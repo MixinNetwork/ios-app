@@ -44,6 +44,18 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         return imageView.image
     }
     
+    override var isReusable: Bool {
+        return parent == nil
+    }
+    
+    override var respondsToLongPress: Bool {
+        return true
+    }
+    
+    override var canPerformInteractiveDismissal: Bool {
+        return abs(scrollView.contentOffset.y + scrollView.adjustedContentInset.top) < 1
+    }
+    
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
     }
@@ -51,6 +63,9 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.contentInsetAdjustmentBehavior = .never
+        if let interactiveDismissalGestureRecognizer = galleryViewController?.panRecognizer {
+            scrollView.panGestureRecognizer.require(toFail: interactiveDismissalGestureRecognizer)
+        }
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         view.insertSubview(scrollView, at: 0)
@@ -69,7 +84,6 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         scrollView.contentSize = pageSize
         detectedUrl = nil
         imageView.sd_cancelCurrentImageLoad()
-//        scrollViewDidDragAfterLoading = false
     }
     
     override func beginDownload() {
@@ -115,7 +129,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 }
                 let visionImage = VisionImage(image: image)
                 qrCodeDetector.detect(in: visionImage, completion: { (features, error) in
-                    guard let urlString = features?.first?.url?.url else {
+                    guard let urlString = features?.first?.rawValue else {
                         return
                     }
                     guard let weakSelf = self, weakSelf.item == item else {
@@ -161,6 +175,11 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 }
             }
         })
+    }
+    
+    override func layout(mediaStatus: MediaStatus) {
+        super.layout(mediaStatus: mediaStatus)
+        scrollView.isScrollEnabled = mediaStatus == .DONE || mediaStatus == .READ
     }
     
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {

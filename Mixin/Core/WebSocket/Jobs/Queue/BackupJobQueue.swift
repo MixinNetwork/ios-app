@@ -8,9 +8,17 @@ class BackupJobQueue: JobQueue {
     var isBackingUp: Bool {
         return backupJob != nil
     }
+
+    var isRestoring: Bool {
+        return restoreJob != nil
+    }
     
     var backupJob: BackupJob? {
         return findJobById(jodId: BackupJob.sharedId) as? BackupJob
+    }
+
+    var restoreJob: RestoreJob? {
+        return findJobById(jodId: RestoreJob.sharedId) as? RestoreJob
     }
     
     init() {

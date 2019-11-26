@@ -3,6 +3,8 @@ import Foundation
 class PreKeyUtil {
 
     static let localRegistrationId = "local_registration_id"
+    static let localPrivateKey = "local_private_key"
+    static let localPublicKey = "local_public_key"
     static let batchSize: Int = 700
     static let prekeyMiniNum = 500
 

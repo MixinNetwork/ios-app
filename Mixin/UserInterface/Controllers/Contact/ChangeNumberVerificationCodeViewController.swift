@@ -36,11 +36,8 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 return
             }
             switch result {
-            case .success:
-                if let old = AccountAPI.shared.account {
-                    let new = Account(withAccount: old, phone: context.newNumber)
-                    AccountAPI.shared.account = new
-                }
+            case .success(let account):
+                AccountAPI.shared.updateAccount(account: account)
                 weakSelf.verificationCodeField.resignFirstResponder()
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
@@ -48,7 +45,11 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case let .failure(error):
                 weakSelf.isBusy = false
                 weakSelf.verificationCodeField.clear()
-                weakSelf.alert(error.localizedDescription)
+                if error.code == 429 {
+                    weakSelf.alert(R.string.localizable.wallet_password_too_many_requests())
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                }
             }
         })
     }

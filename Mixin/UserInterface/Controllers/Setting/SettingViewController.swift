@@ -13,6 +13,7 @@ class SettingViewController: UIViewController {
          Localized.SETTING_NOTIFICATION,
          Localized.SETTING_BACKUP_TITLE,
          R.string.localizable.setting_data_and_storage()],
+        [R.string.localizable.wallet_setting()],
         [Localized.SETTING_DESKTOP],
         [Localized.SETTING_ABOUT]
     ]
@@ -26,6 +27,19 @@ class SettingViewController: UIViewController {
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.dataSource = self
         tableView.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(updateWalletSettingTitle), name: .AccountDidChange, object: nil)
+        updateWalletSettingTitle()
+    }
+    
+    @objc func updateWalletSettingTitle() {
+        DispatchQueue.main.async {
+            guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SettingCell else {
+                return
+            }
+            let hasPin = AccountAPI.shared.account?.has_pin ?? false
+            let title = hasPin ? R.string.localizable.wallet_setting() : R.string.localizable.wallet_pin_title()
+            cell.titleLabel.text = title
+        }
     }
     
     class func instance() -> UIViewController {
@@ -75,6 +89,12 @@ extension SettingViewController: UITableViewDelegate {
                 vc = DataStorageUsageViewController.instance()
             }
         case 1:
+            if AccountAPI.shared.account?.has_pin ?? false {
+                vc = WalletSettingViewController.instance()
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
+        case 2:
             vc = DesktopViewController.instance()
         default:
             vc = AboutViewController.instance()

@@ -27,7 +27,19 @@ class GalleryItemViewController: UIViewController {
     }
     
     var galleryViewController: GalleryViewController? {
-        return parent?.parent as? GalleryViewController
+        return UIApplication.homeContainerViewController?.galleryViewController
+    }
+    
+    var isReusable: Bool {
+        return parent == nil
+    }
+    
+    var respondsToLongPress: Bool {
+        return false
+    }
+    
+    var canPerformInteractiveDismissal: Bool {
+        return true
     }
     
     override func viewDidLoad() {
@@ -36,19 +48,15 @@ class GalleryItemViewController: UIViewController {
         expiredHintLabel.text = R.string.localizable.chat_file_expired()
         expiredHintLabel.font = .systemFont(ofSize: 13)
         expiredHintLabel.textColor = .white
+        expiredHintLabel.textAlignment = .center
+        mediaStatusView.axis = .vertical
+        mediaStatusView.alignment = .fill
+        mediaStatusView.spacing = 10
         [operationButton, expiredHintLabel].forEach(mediaStatusView.addArrangedSubview)
         mediaStatusView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mediaStatusView)
         mediaStatusView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-        }
-    }
-    
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if parent == nil {
-            item = nil
-            isFocused = false
         }
     }
     

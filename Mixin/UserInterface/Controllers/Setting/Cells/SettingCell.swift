@@ -1,6 +1,6 @@
 import UIKit
 
-final class SettingCell: UITableViewCell {
+final class SettingCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -8,7 +8,6 @@ final class SettingCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
         subtitleLabel.isHidden = true
     }
     

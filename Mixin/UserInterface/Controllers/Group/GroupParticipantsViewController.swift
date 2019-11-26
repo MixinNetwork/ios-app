@@ -5,7 +5,6 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     private var myRole = ""
     private var conversation: ConversationItem!
     
-    private lazy var userWindow = UserWindow.instance()
     private lazy var responseHandler: (APIResult<ConversationResponse>) -> Void = { result in
         if case let .failure(error) = result {
             showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -178,7 +177,8 @@ extension GroupParticipantsViewController {
     }
     
     private func showInfo(user: UserItem) {
-        userWindow.updateUser(user: user).presentView()
+        let vc = UserProfileViewController(user: user)
+        present(vc, animated: true, completion: nil)
     }
     
     private func sendMessage(to user: UserItem) {

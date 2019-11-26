@@ -7,19 +7,14 @@ class BaseDatabase {
 
     internal init() {
         trace()
-        configure()
-    }
-
-    func configure(reset: Bool = false) {
-
     }
 
     func close() {
         database?.close()
     }
 
-    func backup(path: String, progress: @escaping @convention (c) (Int32, Int32) -> Void) throws {
-        try database.backup(withFile: path, progress: progress)
+    func getDatabaseVersion() -> Int {
+        return try! database.getDatabaseVersion()
     }
 
     func trace() {
@@ -30,7 +25,7 @@ class BaseDatabase {
         #if DEBUG
             Database.globalTrace(ofPerformance: { (tag, sqls, cost) in
                 let millisecond = UInt64(cost) / NSEC_PER_MSEC
-                if millisecond > 100 {
+                if millisecond > 200 {
                     sqls.forEach({ (arg) in
                         print("[WCDB][Performance]SQL: \(arg.key)")
                     })
@@ -42,8 +37,19 @@ class BaseDatabase {
         Database.globalTrace(ofError: {(error) in
             switch error.type {
             case .warning, .sqliteGlobal:
-                break
+                return
             default:
+                if error.type == .sqlite && error.code.value == 9 {
+                    // interrupted
+                    return
+                } else if error.type == .sqlite && error.operationValue == 3 {
+                    if AccountAPI.shared.didLogin && (error.path?.hasSuffix("mixin.db") ?? false) {
+                        // no such table
+                        UIApplication.traceError(code: ReportErrorCode.databaseNoSuchTable, userInfo: ["error": "no such table"])
+                        DatabaseUserDefault.shared.forceUpgradeDatabase = true
+                        return
+                    }
+                }
                 UIApplication.traceWCDBError(error)
             }
         })
@@ -83,6 +89,10 @@ class BaseDatabase {
     
     func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = []) -> [T] {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
+    }
+
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset, limit: Limit) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, limit: limit, offset: offset)
     }
     
     func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
@@ -133,9 +143,7 @@ class BaseDatabase {
 
     @discardableResult
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) -> Bool {
-        try! database.run(transaction: {
-            try! database.update(maps: maps, tableName: tableName, condition: condition)
-        })
+        try! database.update(maps: maps, tableName: tableName, condition: condition)
         return true
     }
 
@@ -144,9 +152,7 @@ class BaseDatabase {
         guard objects.count > 0 else {
             return true
         }
-        try! database.run(transaction: {
-            try database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
-        })
+        try! database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         return true
     }
 
@@ -155,9 +161,7 @@ class BaseDatabase {
         guard objects.count > 0 else {
             return true
         }
-        try! database.run(transaction: {
-            try database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
-        })
+        try! database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         return true
     }
 
@@ -210,6 +214,18 @@ extension Database {
 
     func isColumnExist(tableName: String, columnName: String) throws -> Bool {
         return try getValue(on: Master.Properties.sql, fromTable: Master.builtinTableName, where: Master.Properties.tableName == tableName && Master.Properties.type == "table").stringValue.contains(columnName)
+    }
+
+}
+
+extension Database {
+
+    func setDatabaseVersion(version: Int) throws {
+        try prepareUpdateSQL(sql: "PRAGMA user_version = \(version)").execute()
+    }
+
+    func getDatabaseVersion() throws -> Int  {
+        return Int(try prepareSelectSQL(sql: "PRAGMA user_version").getValue().int32Value)
     }
 
 }

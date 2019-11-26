@@ -47,7 +47,7 @@
 "connection_hint_progress" = "同期中 %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "dd/MM/yyyy";
+"date_format_date" = "yyyy年M月dd日";
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
@@ -55,6 +55,7 @@
 "search_placeholder_number" = "Mixin IDか電話番号を検索: ";
 "search_placeholder_address" = "ラベル";
 "search_placeholder_asset" = "名前、シンボル";
+"search_placeholder_currency" = "通貨コード";
 "search_placeholder_home" = "連絡先、資産、チャット";
 "search_placeholder_contact" = "MIXIN ID、名前、電話番号";
 "search_related_messages_count" = "メッセージ";
@@ -86,6 +87,7 @@
 "toast_logined" = "ログインしました";
 "toast_authorized" = "許可された";
 "toast_changed" = "かわった";
+"toast_blocked" = "ブロックしました";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
@@ -95,7 +97,7 @@
 "clock_skew_tips" = "修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
 
 // Login
-"navigation_title_select_country" = "国を選択";
+"navigation_title_select_country" = "国または地域を選択";
 "navigation_title_enter_mobile_number" = "電話番号を入力してください";
 "navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください";
 "navigation_title_enter_name" = "お名前は何ですか？";
@@ -224,6 +226,17 @@
 "chat_restore" = "復元";
 "chat_restore_title" = "iCloudから\nチャット履歴を復元。";
 "chat_restore_subtitle" = "今実行しないと、後で復元することはできません。メッセージを復元した後、バックグラウンドでメディアを復元します。";
+"chat_shared_media" = "アタッチメント";
+"chat_media_category_media" = "メディア";
+"chat_media_category_audio" = "オーディオ";
+"chat_media_category_link" = "リンク";
+"chat_media_category_file" = "ファイル";
+"chat_shared_media_empty" = "メディアなし";
+"chat_shared_audio_empty" = "オーディオなし";
+"chat_shared_data_empty" = "ファイルなし";
+"chat_invited_by_stranger" = "招待者は連絡先にありません";
+"chat_exit_group_and_report_inviter" = "グループを退会しても招待者を報告する";
+"chat_exit_group_and_report_inviter_confirmation" = "グループを退会しても招待者を報告しますか";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";
@@ -313,8 +326,6 @@
 "wallet_change_password" = "PINを変更";
 "wallet_change_password_success" = "ウォレットのPINを正しく変更する";
 "wallet_set_password_success" = "ウォレットのPINを正しく設定する";
-"wallet_snapshot_from" = " %@ から";
-"wallet_snapshot_to" = " %@ まで";
 "wallet_caption_send" = "送金";
 "wallet_caption_receive" = "受取";
 "wallet_deposit" = "受取";
@@ -325,30 +336,30 @@
 "wallet_deposit_other" = "このアドレスは%@だけをサポートしています。";
 "wallet_deposit_confirmations" = "入金は少なくとも %@ ブロックの確認後に到着します。";
 "wallet_no_transaction" = "取引なし";
-"wallet_address" = "住所";
-"wallet_account_name" = "アカウント名";
-"wallet_account_memo" = "アカウントメモ";
+"wallet_address" = "アドレス";
+"wallet_address_destination" = "アドレス";
+"wallet_address_tag" = "タグ";
+"wallet_address_memo" = "メモ";
 "wallet_deposit_account_attention" = " 注意：アカウントメモとアカウント名の両方が、あなたの %@ をMixinに正常に入金するために必要とされ。";
 "wallet_menu_show_hidden_assets" = "隠し資産";
 "wallet_menu_show_asset" = "資産を表示";
 "wallet_menu_hide_asset" = "資産を隠す";
 "wallet_hide_asset_empty" = "隠し資産なし";
 "wallet_send_amount" = "金額";
-"wallet_send_memo" = "メモ";
-"wallet_send_tag" = "タグ";
 "wallet_button_add_address" = "タップして住所を追加";
 "wallet_hint_transaction_fee" = "%@ を引き出すには、%@ の取引手数料が必要です。";
 "wallet_password_address_tips" = "PINで保存します";
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
 "wallet_withdrawal_reserve" = "%@ には最低 %@ の予約要件があります。";
-"wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。";
+"wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。しばらくしてからもう一度お試しください。";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "あなたの最初のデジタルウォレットを作成するために6桁のウォレットPINを設定してください";
 "wallet_pin_confirm_title" = "6桁のPINを確認して覚えておいてください";
 "wallet_pin_confirm_subtitle" = "紛失した場合、財布を取り戻す方法はありません。";
 "wallet_pin_confirm_again_title" = "6桁のPINをもう一度確認してください";
 "wallet_pin_confirm_again_subtitle" = "再度表示されることはありませんので、紛失した場合、PINは元に戻せません。";
+"wallet_pin_confirm_again_subtitle" = "はい、これが最後のPIN確認です。これは、PINを忘れないようにするための最後の確認です。 紛失した場合、PINは回復不能です。";
 "wallet_pin_new_title" = "新しい6桁のPINを設定してください";
 "wallet_pin_inconsistency" = "PINは同じではありません、それをリセットしてください";
 "wallet_pin_too_simple" = "暗証番号は単純すぎて安全ではありません。";
@@ -357,7 +368,7 @@
 "wallet_all_transactions_title" = "全取引";
 "wallet_pin_touch_id_prompt" = "Touch Payを有効にするにはPINを確認してください";
 "wallet_pin_face_id_prompt" = "Face Pay を有効にするにはPINを確認してください";
-"wallet_setting" = "ウォレットの設定";
+"wallet_setting" = "ウォレット";
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = " %@ で支払う";
@@ -371,6 +382,7 @@
 "wallet_pin_pay_interval" = "PIN間隔で支払う";
 "wallet_pin_pay_interval_confirm" = "設定のセキュリティを保護するためにPINを確認してください。";
 "wallet_pin_pay_interval_tips" = "資産のセキュリティを確保するために、指定した期間内にPINを確認する必要があります。";
+"wallet_currency" = "通貨";
 "withdrawal_amount_too_small" = "引き出し金額が少なすぎる";
 "withdrawal_minimum_amount" = "最低出金額は %@ %@ です";
 "transactions_filter_sort_by" = "並び替え";
@@ -413,29 +425,25 @@
 "address_edit_title" = " %@ アドレスを編集";
 "address_delete_title" = "アドレス%@を削除します";
 "address_format_error" = "無効なアドレス形式です。";
-"address_asset_not_found" = "資産が見つかりませんでした。";
 "address_not_found" = "このアドレスは見つかりませんでした。";
+
+"asset_not_found" = "資産が見つかりませんでした。";
 
 // Transfer
 "transfer_title" = "振込";
-"transfer_title_to" = "に振込";
-"transfer_title_to_receiver" = " %@ へ";
 "transfer_balance" = "バランス";
-"transfer_transactions" = "取引";
-"transfer_transfer_type" = "取引タイプ";
-"transfer_transfer_amount" = "払込金額";
-"transfer_transfer_memo" = "メモ（オプション）";
+"transfer_memo" = "メモ（オプション）";
 "transfer_touch_id_reason" = "既存の指紋を使って支払いをする";
 "transfer_error_balance_insufficient" = "残高不足";
 "transfer_error_fee_insufficient" = "取引手数料が足りない";
 "transfer_error_amount_too_small" = "振込金額が少なすぎます";
 "transfer_error_pin_incorrect" = "PINが正しくありません";
 "transfer_paid" = "この支払いリンクは既に他のユーザーに使われました。重複支払いはできません。";
-"transfer_pay_password" = "PINで支払う";
 "pay_transfer_title" = " %@ に振込";
 "pay_withdrawal_title" = " %@ に送金";
-"pay_use_face" = "Face Payを使います";
-"pay_use_touch" = "Touch Payを使います";
+"transfer_by_pin" = "PINで支払う";
+"transfer_use_face" = "Face Payを使います";
+"transfer_use_touch" = "Touch Payを使います";
 
 // QRCode
 "myqrcode_title" = "私のQRコード";
@@ -463,6 +471,7 @@
 "profile_title" = "情報";
 "profile_send_message" = "メッセージを送る";
 "profile_share_card" = "共有する";
+"profile_search_conversation" = "メッセージ履歴を検索する";
 "profile_transactions" = "取引履歴";
 "profile_open_bot" = "アプリを開く";
 "profile_notification" = "通知";
@@ -473,28 +482,33 @@
 "profile_photo" = "プロフィール写真";
 "profile_full_name" = "名前";
 "profile_my_qrcode" = "私のQRコード";
-"profile_my_invitation_code" = "私の招待コード";
 "profile_change_number" = "変更電話番号";
-"profile_change_avatar" = "プロフィール写真の変更";
+"profile_change_avatar_camera" = "プロフィール写真を変更（カメラ）";
+"profile_change_avatar_library" = "プロフィール写真を変更（ライブラリ）";
 "profile_change_number_confirmation" = "電話番号を変更しますか？";
 "profile_change_number_succeeded" = "電話番号を変更しました";
 "profile_change_number_verify_pin" = "PINを確認";
 "profile_change_number_new_number" = "新しい電話番号を入力してください";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "評判スコア: %@";
-"profile_invitation_code_consumed_count" = "あなたは合計 %@ 人を招待しました。";
 "profile_edit_name" = "名前を編集";
 "profile_add_contact_fail" = "連絡先を追加できませんでした";
 "profile_remove_contact_fail" = "連絡先を削除できませんでした";
 "profile_mute_duration_8h" = "8時間";
 "profile_mute_duration_1week" = "1週間";
 "profile_mute_duration_1year" = "1年";
-"profile_unmute" = "消音を解除";
+"profile_mute_ends_at" = "%@まで";
 "profile_mute" = "消音";
+"profile_muted" = "消音しました";
+"profile_unmute" = "消音を解除";
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
-"profile_toast_muted" = " %@ まで消音しました";
-"profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
+"profile_toast_muted" = " %@まで消音しました";
+"profile_remove_hint" = "連絡先を削除しますか。会話内容は削除されません";
+"profile_exit_group_hint" = "チャットを削除しますか。会話内容も削除されます";
+"profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
+"profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
+"profile_join_in" = "%@から参加しました";
 
 // Emergency
 "emergency_view" = "緊急連絡先を表示";

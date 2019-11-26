@@ -8,8 +8,6 @@ class BlockUserViewController: UIViewController {
     
     private var users = [UserItem]()
     
-    private lazy var userWindow = UserWindow.instance()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
@@ -62,7 +60,8 @@ extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let user = users[indexPath.row]
         if user.isCreatedByMessenger {
-            userWindow.updateUser(user: user).presentView()
+            let vc = UserProfileViewController(user: user)
+            present(vc, animated: true, completion: nil)
         }
     }
     

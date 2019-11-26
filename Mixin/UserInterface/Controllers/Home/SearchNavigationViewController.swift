@@ -14,14 +14,14 @@ class SearchNavigationViewController: UINavigationController {
         navigationBar.shadowImage = image
         navigationBar.backIndicatorImage = R.image.ic_search_back()
         navigationBar.backIndicatorTransitionMaskImage = R.image.ic_search_back()
-        if let vc = viewControllers.first as? SearchableViewController {
+        if let vc = viewControllers.first as? HomeSearchViewController {
             searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)
         }
     }
     
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
-        if let vc = viewController as? (UIViewController & SearchableViewController) {
+        if let vc = viewController as? (UIViewController & HomeSearchViewController) {
             vc.transitionCoordinator?.animateAlongsideTransition(in: self.searchNavigationBar, animation: { (_) in
                 if vc.wantsNavigationSearchBox {
                     self.searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)
@@ -35,7 +35,7 @@ class SearchNavigationViewController: UINavigationController {
     
     override func popViewController(animated: Bool) -> UIViewController? {
         let popped = super.popViewController(animated: true)
-        if let vc = topViewController as? (UIViewController & SearchableViewController) {
+        if let vc = topViewController as? (UIViewController & HomeSearchViewController) {
             vc.transitionCoordinator?.animateAlongsideTransition(in: self.searchNavigationBar, animation: { (_) in
                 if vc.wantsNavigationSearchBox {
                     self.searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)

@@ -19,7 +19,9 @@ class VerticalPositioningImageView: UIView {
     
     var aspectRatio = CGSize.zero {
         didSet {
-            setNeedsLayout()
+            if aspectRatio != oldValue {
+                setNeedsLayout()
+            }
         }
     }
     
@@ -50,7 +52,7 @@ class VerticalPositioningImageView: UIView {
     }
     
     private func prepare() {
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         clipsToBounds = true
     }

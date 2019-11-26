@@ -34,7 +34,8 @@ class MessageItem: TableCodable {
 
     var userFullName: String = ""
     var userIdentityNumber: String = ""
-
+    var userAvatarUrl: String? = nil
+    
     var appId: String? = nil
 
     var snapshotAmount: String? = nil
@@ -154,7 +155,8 @@ class MessageItem: TableCodable {
 
         case userFullName
         case userIdentityNumber
-
+        case userAvatarUrl
+        
         case appId
 
         case participantFullName

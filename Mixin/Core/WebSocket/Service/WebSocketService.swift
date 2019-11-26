@@ -20,7 +20,6 @@ class WebSocketService: NSObject {
     private var recoverJobs = false
     private let websocketDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
     private let sendDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.send")
-    private let rotateSignedPrekeyInterval: TimeInterval = 3600 * 24 * 2
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
 
     private var reconnectWorkItem: DispatchWorkItem?
@@ -98,7 +97,7 @@ extension WebSocketService: SRWebSocketDelegate {
             }
             if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
                 if !AccountUserDefault.shared.hasClockSkew {
-                    AccountAPI.shared.logout()
+                    AccountAPI.shared.logout(from: "WebSocketService")
                 }
             }
         } else {
@@ -109,7 +108,7 @@ extension WebSocketService: SRWebSocketDelegate {
 
             if blazeMessage.data != nil {
                 if blazeMessage.isReceiveMessageAction() {
-                    ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage, rawData: unzipJson)
+                    ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage)
                 } else {
                     guard let data = blazeMessage.toBlazeMessageData() else {
                         return
@@ -126,7 +125,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        guard client != nil else {
+        guard client != nil, AccountAPI.shared.didLogin else {
             return
         }
         if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
@@ -138,7 +137,7 @@ extension WebSocketService: SRWebSocketDelegate {
                     AccountUserDefault.shared.hasClockSkew = true
                     DispatchQueue.main.async {
                         WebSocketService.shared.disconnect()
-                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                        AppDelegate.current.window.rootViewController = makeInitialViewController()
                     }
                 }
                 return
@@ -157,14 +156,6 @@ extension WebSocketService: SRWebSocketDelegate {
 
     private func refreshJobs() {
         let cur = Date().timeIntervalSince1970
-        let lastSignedPrekey = CryptoUserDefault.shared.rotateSignedPrekey
-        if lastSignedPrekey < 1 {
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        } else if cur - lastSignedPrekey > rotateSignedPrekeyInterval {
-            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        }
-
         let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
         if lastOneTimePreKey < 1 {
             CryptoUserDefault.shared.refreshOneTimePreKey = cur
@@ -174,17 +165,22 @@ extension WebSocketService: SRWebSocketDelegate {
             CryptoUserDefault.shared.refreshOneTimePreKey = cur
         }
 
-        if CommonUserDefault.shared.backupCategory != .off && NetworkManager.shared.isReachableOnWiFi {
-            BackupJobQueue.shared.addJob(job: BackupJob())
+        if NetworkManager.shared.isReachableOnWiFi {
+            if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
+                BackupJobQueue.shared.addJob(job: BackupJob())
+            }
+            if AccountUserDefault.shared.hasRestoreMedia {
+                BackupJobQueue.shared.addJob(job: RestoreJob())
+            }
         }
 
         ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        #if DEBUG
-        print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
-        #endif
+        if NetworkManager.shared.isReachable {
+            UIApplication.traceError(error)
+        }
         reconnect(didClose: false)
     }
 
@@ -287,7 +283,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: URL(string: "wss://blaze.mixin.one")!)
+        var request = URLRequest(url: URL(string: "wss://mixin-blaze.zeromesh.net")!)
         request.timeoutInterval = 5
         return SRWebSocket(urlRequest: request)
     }

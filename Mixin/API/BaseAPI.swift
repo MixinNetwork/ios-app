@@ -85,7 +85,7 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
-    static let rootURLString = "https://api.mixin.one/"
+    static let rootURLString = "https://mixin-api.zeromesh.net/"
     static let rootURL = URL(string: rootURLString)!
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
@@ -135,20 +135,15 @@ class BaseAPI {
                                     AccountUserDefault.shared.hasClockSkew = true
                                     DispatchQueue.main.async {
                                         WebSocketService.shared.disconnect()
-                                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                                        AppDelegate.current.window.rootViewController = makeInitialViewController()
                                     }
                                     return
                                 }
                             }
                         }
                         UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
-                        AccountAPI.shared.logout()
+                        AccountAPI.shared.logout(from: "AsyncRequest")
                         return
-                    case 429:
-                        if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
-                            UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
-                            return
-                        }
                     default:
                         break
                     }
@@ -169,6 +164,14 @@ class BaseAPI {
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
+                    if NetworkManager.shared.isReachable {
+                        switch error._code {
+                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                            UIApplication.traceError(error)
+                        default:
+                            break
+                        }
+                    }
                     handerError(APIError.createError(error: error, status: httpStatusCode))
                 }
             })
@@ -218,6 +221,14 @@ extension BaseAPI {
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
+                        if NetworkManager.shared.isReachable {
+                            switch error._code {
+                            case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                                UIApplication.traceError(error)
+                            default:
+                                break
+                            }
+                        }
                         result = .failure(APIError.createError(error: error, status: httpStatusCode))
                     }
                     semaphore.signal()
@@ -238,14 +249,14 @@ extension BaseAPI {
                         AccountUserDefault.shared.hasClockSkew = true
                         DispatchQueue.main.async {
                             WebSocketService.shared.disconnect()
-                            AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                            AppDelegate.current.window.rootViewController = makeInitialViewController()
                         }
                         return result
                     }
                 }
             }
             UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
-            AccountAPI.shared.logout()
+            AccountAPI.shared.logout(from: "SyncRequest")
         }
         return result
     }

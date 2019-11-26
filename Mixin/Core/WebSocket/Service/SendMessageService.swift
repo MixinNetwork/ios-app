@@ -40,33 +40,27 @@ class SendMessageService: MixinService {
         msg.userId = account.user_id
         msg.status = MessageStatus.SENDING.rawValue
 
+        var isSignalMessage = isGroupMessage
         if !isGroupMessage {
-            if let user = ownerUser {
-                if user.isBot {
-                    switch msg.category {
-                    case MessageCategory.SIGNAL_TEXT.rawValue:
-                        msg.category = MessageCategory.PLAIN_TEXT.rawValue
-                    case MessageCategory.SIGNAL_DATA.rawValue:
-                        msg.category = MessageCategory.PLAIN_DATA.rawValue
-                    case MessageCategory.SIGNAL_IMAGE.rawValue:
-                        msg.category = MessageCategory.PLAIN_IMAGE.rawValue
-                    case MessageCategory.SIGNAL_STICKER.rawValue:
-                        msg.category = MessageCategory.PLAIN_STICKER.rawValue
-                    case MessageCategory.SIGNAL_CONTACT.rawValue:
-                        msg.category = MessageCategory.PLAIN_CONTACT.rawValue
-                    case MessageCategory.SIGNAL_VIDEO.rawValue:
-                        msg.category = MessageCategory.PLAIN_VIDEO.rawValue
-                    case MessageCategory.SIGNAL_LIVE.rawValue:
-                        msg.category = MessageCategory.PLAIN_LIVE.rawValue
-                    case MessageCategory.SIGNAL_AUDIO.rawValue:
-                        msg.category = MessageCategory.PLAIN_AUDIO.rawValue
-                    default:
-                        break
-                    }
-                }
-            } else {
-                UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: ["error": "owner is nil"])
-            }
+            isSignalMessage = !(ownerUser?.isBot ?? true)
+        }
+
+        if msg.category.hasSuffix("_TEXT") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_TEXT.rawValue :  MessageCategory.PLAIN_TEXT.rawValue
+        } else if msg.category.hasSuffix("_IMAGE") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue :  MessageCategory.PLAIN_IMAGE.rawValue
+        } else if msg.category.hasSuffix("_VIDEO") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_VIDEO.rawValue :  MessageCategory.PLAIN_VIDEO.rawValue
+        } else if msg.category.hasSuffix("_DATA") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue :  MessageCategory.PLAIN_DATA.rawValue
+        } else if msg.category.hasSuffix("_STICKER") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_STICKER.rawValue :  MessageCategory.PLAIN_STICKER.rawValue
+        } else if msg.category.hasSuffix("_CONTACT") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_CONTACT.rawValue :  MessageCategory.PLAIN_CONTACT.rawValue
+        } else if msg.category.hasSuffix("_AUDIO") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue :  MessageCategory.PLAIN_AUDIO.rawValue
+        } else if msg.category.hasSuffix("_LIVE") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_LIVE.rawValue :  MessageCategory.PLAIN_LIVE.rawValue
         }
 
         if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
@@ -116,6 +110,7 @@ class SendMessageService: MixinService {
             ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: category, conversationId: conversationId, mediaUrl: mediaUrl)
 
             let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.quoteMessageId == messageId)
+
             MixinDatabase.shared.transaction { (database) in
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
                 try MessageDAO.shared.recallMessage(database: database, messageId: messageId, conversationId: conversationId, category: category, status: status, quoteMessageIds: quoteMessageIds)
@@ -230,12 +225,12 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendReadMessages(conversationId: String) {
+    func sendReadMessages(conversationId: String, force: Bool = false) {
         DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
+            guard force || UIApplication.shared.applicationState == .active else {
                 return
             }
-            DispatchQueue.global().async {
+            SendMessageService.shared.saveDispatchQueue.async {
                 let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0
                 let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
@@ -282,35 +277,6 @@ class SendMessageService: MixinService {
                 }
                 ConversationDAO.shared.showBadgeNumber()
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
-                SendMessageService.shared.processMessages()
-            }
-        }
-    }
-
-    func sendReadMessage(conversationId: String, messageId: String) {
-        DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
-                return
-            }
-            SendMessageService.shared.saveDispatchQueue.async {
-                let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-                var jobs = [Job]()
-                jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
-                if AccountUserDefault.shared.isDesktopLoggedIn {
-                    jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
-                }
-
-                MixinDatabase.shared.transaction(callback: { (database) in
-                    let updateStatment = try database.prepareUpdate(table: Message.tableName, on: Message.Properties.status).where(Message.Properties.messageId == messageId && Message.Properties.status == MessageStatus.DELIVERED.rawValue)
-                    try updateStatment.execute(with: [MessageStatus.READ.rawValue])
-                    guard updateStatment.changes ?? 0 > 0 else {
-                        return
-                    }
-                    try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
-                    try database.insert(objects: jobs, intoTable: Job.tableName)
-                })
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
-                ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.processMessages()
             }
         }
@@ -516,7 +482,7 @@ class SendMessageService: MixinService {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                             UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
-                            AccountAPI.shared.logout()
+                            AccountAPI.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
@@ -602,11 +568,20 @@ extension SendMessageService {
 
     private func sendMessage(blazeMessage: BlazeMessage) throws {
         var blazeMessage = blazeMessage
-        guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+        guard let messageId = blazeMessage.params?.messageId, var message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
+        }
+
+        if conversation.category == ConversationCategory.GROUP.rawValue,  message.category.hasSuffix("_TEXT"), let text = message.content, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
+            let identityNumber = text[botNumberRange].dropFirstAndLast()
+            if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+                message.category = MessageCategory.PLAIN_TEXT.rawValue
+                blazeMessage.params?.recipientId = recipientId
+                blazeMessage.params?.data = nil
+            }
         }
 
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {

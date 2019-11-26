@@ -12,6 +12,7 @@ extension DateFormatter {
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
     static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")
+    static let log = DateFormatter(dateFormat: "yyyy/MM/dd, hh:mm a")
     static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + Localized.DATE_FORMAT_DAY)
     static let dateAndTime = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE + " " + Localized.DATE_FORMAT_DAY)
     
@@ -70,6 +71,10 @@ extension Date {
         return Int64(self.timeIntervalSince1970 * 1000000000) + nanosecond
     }
 
+    func logDatetime() -> String {
+        return DateFormatter.log.string(from: self)
+    }
+
     func timeAgo() -> String {
         let now = Date()
         let nowDateComponents = Calendar.current.dateComponents([.day], from: now)
@@ -93,7 +98,7 @@ extension Date {
         let nowDateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: now)
         let dateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: self)
 
-        if nowDateComponents.day == dateComponents.day {
+        if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
             return Localized.CHAT_TIME_TODAY
         } else {
             if nowDateComponents.year == dateComponents.year && nowDateComponents.weekOfYear == dateComponents.weekOfYear {

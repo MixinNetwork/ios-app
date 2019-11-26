@@ -2,10 +2,34 @@ import UIKit
 import UserNotifications
 import Bugsnag
 import Crashlytics
+import DeviceCheck
 
 class HomeNavigationController: UINavigationController {
     
     private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
+    
+    override var childForStatusBarStyle: UIViewController? {
+        if let web = activeWebViewController {
+            return web
+        } else {
+            return super.childForStatusBarStyle
+        }
+    }
+    
+    override var childForStatusBarHidden: UIViewController? {
+        if let web = activeWebViewController {
+            return web
+        } else {
+            return super.childForStatusBarHidden
+        }
+    }
+    
+    private var activeWebViewController: WebViewController? {
+        return visibleViewController?.children
+            .compactMap({ $0 as? WebViewController })
+            .filter({ !$0.isBeingDismissedAsChild })
+            .last
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,6 +40,8 @@ class HomeNavigationController: UINavigationController {
         if CryptoUserDefault.shared.isLoaded && !AccountUserDefault.shared.hasClockSkew {
             WebSocketService.shared.connect()
             checkUser()
+            checkDevice()
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
         }
     }
     
@@ -86,8 +112,18 @@ extension HomeNavigationController {
             Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
-        if AccountUserDefault.shared.hasRestoreFilesAndVideos {
-            BackupJobQueue.shared.addJob(job: RestoreJob())
+    }
+
+    private func checkDevice() {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
+        DCDevice.current.generateToken { (data, error) in
+            guard let token = data?.base64EncodedString() else {
+                return
+            }
+
+            AccountAPI.shared.updateSession(deviceCheckToken: token)
         }
     }
     

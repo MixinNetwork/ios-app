@@ -22,7 +22,7 @@ class EmptyView: UIStackView {
 
 }
 
-extension UITableView {
+extension UIView {
 
     func checkEmpty(dataCount: Int, text: String, photo: UIImage) {
         if dataCount == 0 {

@@ -35,6 +35,8 @@ extension APIError {
         switch code {
         case 403:
             return Localized.TOAST_API_ERROR_FORBIDDEN
+        case 404:
+            return Localized.TOAST_API_ERROR_NOT_FOUND
         case 429:
             return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
         case 500:

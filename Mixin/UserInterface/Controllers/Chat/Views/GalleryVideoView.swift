@@ -9,30 +9,19 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     let playerView = PlayerView()
     let controlView = R.nib.galleryVideoControlView(owner: nil)!
     
+    var coverSize = CGSize(width: 1, height: 1)
     var videoRatio: CGFloat = 1
-    
-    private let stickToEdgeVelocityLimit: CGFloat = 800
-    private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
-    private let pipModeDefaultTopMargin: CGFloat = 61
-    
-    private var isPipMode = false
-    
-    private var adjustedSafeAreaInsets: UIEdgeInsets {
-        let insets = superview?.safeAreaInsets ?? .zero
-        return UIEdgeInsets(top: max(20, insets.top),
-                            left: insets.left,
-                            bottom: max(5, insets.bottom),
-                            right: insets.right)
-    }
-    
-    private var contentSubviewIndices: (cover: Int, player: Int)? {
-        guard let cover = contentView.subviews.firstIndex(of: coverImageView) else {
-            return nil
+    var isPipMode = false {
+        didSet {
+            if isPipMode {
+                controlView.style.insert(.pip)
+            } else {
+                controlView.style.remove(.pip)
+            }
+            setNeedsLayout()
+            layoutIfNeeded()
+            updateCornerRadiusAndShadow()
         }
-        guard let player = contentView.subviews.firstIndex(of: playerView) else {
-            return nil
-        }
-        return (cover, player)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,11 +41,15 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.bounds.size = CGSize(width: bounds.width , height: ceil(bounds.width / videoRatio))
+        
+        let contentHeight = min(bounds.height, ceil(bounds.width / videoRatio))
+        contentView.bounds.size = CGSize(width: bounds.width , height: contentHeight)
         contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        for view in [coverImageView, playerView] {
-            view.frame = contentView.bounds
-        }
+        
+        playerView.frame = contentView.bounds
+        
+        coverImageView.frame = coverSize.rect(fittingSize: contentView.bounds.size)
+        
         layoutControlView()
     }
     
@@ -65,90 +58,8 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         layoutControlView()
     }
     
-    func bringCoverToFront() {
-        guard let (cover, player) = contentSubviewIndices else {
-            return
-        }
-        guard cover < player else {
-            return
-        }
-        contentView.exchangeSubview(at: cover, withSubviewAt: player)
-    }
-    
-    func bringPlayerToFront() {
-        guard let (cover, player) = contentSubviewIndices else {
-            return
-        }
-        guard cover > player else {
-            return
-        }
-        contentView.exchangeSubview(at: cover, withSubviewAt: player)
-    }
-    
-    func stickToSuperviewEdge(horizontalVelocity: CGFloat) {
-        guard let superview = superview else {
-            return
-        }
-        let x: CGFloat
-        let shouldStickToRightEdge = center.x > superview.bounds.midX && horizontalVelocity > -stickToEdgeVelocityLimit
-            || center.x < superview.bounds.midX && horizontalVelocity > stickToEdgeVelocityLimit
-        if shouldStickToRightEdge {
-            x = superview.bounds.width - pipModeMinInsets.right - frame.size.width / 2
-        } else {
-            x = pipModeMinInsets.left + frame.size.width / 2
-        }
-        let y: CGFloat = {
-            let halfHeight = frame.size.height / 2
-            let minY = adjustedSafeAreaInsets.top + pipModeMinInsets.top + halfHeight
-            let maxY = superview.bounds.height - adjustedSafeAreaInsets.bottom - pipModeMinInsets.bottom - halfHeight
-            return min(maxY, max(minY, center.y))
-        }()
-        UIView.animate(withDuration: 0.3) {
-            self.center = CGPoint(x: x, y: y)
-        }
-    }
-    
-    func layoutFullsized() {
-        isPipMode = false
-        controlView.style.remove(.pip)
-        if let superview = superview {
-            frame = superview.bounds
-        }
-        setNeedsLayout()
-        layoutIfNeeded()
-        updateCornerRadiusAndShadow()
-    }
-    
-    func layoutPip() {
-        isPipMode = true
-        controlView.style.insert(.pip)
-        if let superview = superview {
-            var size: CGSize
-            if videoRatio > 1 {
-                let width = superview.bounds.width * (2 / 3)
-                size = CGSize(width: width, height: width / videoRatio)
-            } else {
-                let height = superview.bounds.height / 3
-                let width = height * videoRatio
-                if width <= superview.bounds.width / 2 {
-                    size = CGSize(width: width, height: height)
-                } else {
-                    let width = superview.bounds.width / 2
-                    let height = width / videoRatio
-                    size = CGSize(width: width, height: height)
-                }
-            }
-            size = ceil(size)
-            frame.size = size
-            center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
-                             y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)
-        }
-        setNeedsLayout()
-        layoutIfNeeded()
-        updateCornerRadiusAndShadow()
-    }
-    
     private func layoutControlView() {
+        let safeAreaInsets = AppDelegate.current.window.safeAreaInsets
         if isPipMode || safeAreaInsets.top <= 20 {
             controlView.frame = bounds
         } else {
@@ -186,12 +97,12 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         
         contentView.frame = bounds
         contentView.clipsToBounds = true
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .black
         
         coverImageView.contentMode = .scaleAspectFill
         
-        playerView.backgroundColor = .black
-        playerView.layer.videoGravity = .resize
+        playerView.backgroundColor = .clear
+        playerView.layer.videoGravity = .resizeAspect
         playerView.layer.player = player
         
         contentView.addSubview(coverImageView)

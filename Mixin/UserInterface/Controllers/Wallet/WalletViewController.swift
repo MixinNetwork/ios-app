@@ -36,7 +36,7 @@ class WalletViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
         fetchAssets()
-        fetchRemoteAssets()
+        ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -149,19 +149,6 @@ extension WalletViewController {
                 weakSelf.tableHeaderView.render(assets: assets)
                 weakSelf.tableHeaderView.sizeToFit()
                 weakSelf.tableView.reloadData()
-            }
-        }
-    }
-    
-    private func fetchRemoteAssets() {
-        DispatchQueue.global().async {
-            switch AssetAPI.shared.assets() {
-            case let .success(assets):
-                DispatchQueue.global().async {
-                    AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-                }
-            case .failure:
-                break
             }
         }
     }

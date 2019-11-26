@@ -72,7 +72,7 @@ class ConversationInputViewController: UIViewController {
     
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
-    private var opponentApp: App?
+    private(set) var opponentApp: App?
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -395,7 +395,7 @@ extension ConversationInputViewController {
             return
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
-        guard textView.isFirstResponder || (keyboardWillBeInvisible && customInputViewController == nil) else {
+        guard textView.isFirstResponder || (keyboardWillBeInvisible && customInputViewController == nil) || (presentedViewController?.isBeingDismissed ?? false) else {
             return
         }
         if !keyboardWillBeInvisible {
@@ -438,7 +438,7 @@ extension ConversationInputViewController {
             return
         }
         DispatchQueue.global().async {
-            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             DispatchQueue.main.sync {
                 self.extensionViewController.apps = apps
             }
@@ -587,6 +587,9 @@ extension ConversationInputViewController: UITextViewDelegate {
             textViewHeightConstraint.constant = newHeight
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
+        }
+        if dataSource.category == .group {
+            conversationViewController.inputTextViewDidChange(textView)
         }
     }
     

@@ -6,7 +6,6 @@ class CryptoUserDefault {
     private let mediumMaxValue: UInt32 = UInt32.max / 2
 
     private let keyIsLoaded = "prekey_is_loaded"
-    private let keyRotateSignedPrekey = "rotate_signed_pre_key"
     private let keyRefreshOneTimePreKey = "refresh_one_time_pre_key"
     private let keyStatusOffset = "status_offset"
     private let keyNextPrekeyID = "next_prekey_id"
@@ -21,15 +20,6 @@ class CryptoUserDefault {
         }
         set {
             session.set(newValue, forKey: keyIsLoaded)
-        }
-    }
-
-    var rotateSignedPrekey: TimeInterval {
-        get {
-            return session.double(forKey: keyRotateSignedPrekey)
-        }
-        set {
-            session.set(newValue, forKey: keyRotateSignedPrekey)
         }
     }
 
@@ -80,7 +70,6 @@ class CryptoUserDefault {
     
     func reset() {
         session.removeObject(forKey: keyIsLoaded)
-        session.removeObject(forKey: keyRotateSignedPrekey)
         session.removeObject(forKey: keyRefreshOneTimePreKey)
         session.removeObject(forKey: keyNextPrekeyID)
         session.removeObject(forKey: keyNextSignedPrekeyID)

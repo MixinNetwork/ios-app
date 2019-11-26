@@ -22,6 +22,13 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
+        static func pinLogs(offset: String? = nil) -> String {
+            var url = "pin_logs"
+            if let offset = offset {
+                url += "?offset=\(offset)"
+            }
+            return url
+        }
 
         static let sessions = "sessions/fetch"
     }
@@ -50,9 +57,13 @@ final class AccountAPI: BaseAPI {
         return account?.identity_number ?? "00000"
     }
     
-    var account: Account? = AccountUserDefault.shared.getAccount() {
-        didSet {
-            AccountUserDefault.shared.storeAccount(account: account)
+    var account = AccountUserDefault.shared.getAccount()
+
+    func updateAccount(account: Account) {
+        self.account = account
+        AccountUserDefault.shared.storeAccount(account: account)
+        DispatchQueue.global().async {
+            UserDAO.shared.updateAccount(account: account)
         }
     }
 
@@ -81,7 +92,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
     }
     
-    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
         let pin = accountRequest.pin!
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             var parameters = accountRequest
@@ -90,8 +101,8 @@ final class AccountAPI: BaseAPI {
         }
     }
     
-    func update(fullName: String?, avatarBase64: String? = nil, completion: @escaping (APIResult<Account>) -> Void) {
-        guard fullName != nil || avatarBase64 != nil else {
+    func update(fullName: String? = nil, biography: String? = nil, avatarBase64: String? = nil, completion: @escaping (APIResult<Account>) -> Void) {
+        guard fullName != nil || avatarBase64 != nil || biography != nil else {
             assertionFailure("nothing to update")
             return
         }
@@ -99,14 +110,17 @@ final class AccountAPI: BaseAPI {
         if let fullName = fullName {
             param["full_name"] = fullName
         }
+        if let biography = biography {
+            param["biography"] = biography
+        }
         if let avatarBase64 = avatarBase64 {
             param["avatar_base64"] = avatarBase64
         }
         request(method: .post, url: url.me, parameters: param, completion: completion)
     }
 
-    func updateSession(deviceToken: String, voip_token: String) {
-        let sessionRequest = SessionRequest(notification_token: deviceToken, voip_token: voip_token)
+    func updateSession(deviceToken: String? = nil, voipToken: String? = nil, deviceCheckToken: String? = nil) {
+        let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken ?? "", device_check_token: deviceCheckToken ?? "")
         request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: APIResult<Account>) in
 
         }
@@ -116,8 +130,8 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func preferences(userRequest: UserRequest, completion: @escaping (APIResult<UserResponse>) -> Void) {
-        request(method: .post, url: url.preferences, parameters: userRequest.toParameters(), encoding: EncodableParameterEncoding<UserRequest>(), completion: completion)
+    func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (APIResult<Account>) -> Void) {
+        request(method: .post, url: url.preferences, parameters: preferenceRequest.toParameters(), encoding: EncodableParameterEncoding<UserPreferenceRequest>(), completion: completion)
     }
 
     func verify(pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
@@ -146,22 +160,29 @@ final class AccountAPI: BaseAPI {
         param["pin"] = encryptedNewPin
         request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
-    
+
+    func pinLogs(offset: String? = nil, completion: @escaping (APIResult<[PINLogResponse]>) -> Void) {
+        request(method: .get, url: url.pinLogs(offset: offset), completion: completion)
+    }
+
     func logoutSession(sessionId: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     
-    func logout() {
+    func logout(from: String) {
         guard account != nil else {
             return
         }
+        UIApplication.shared.setShortcutItemsEnabled(false)
+        FileManager.default.writeLog(log: "===========logout...from:\(from)")
         CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {
+            MixinDatabase.shared.logout()
             self.account = nil
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
+            BackupJobQueue.shared.cancelAllOperations()
             AccountUserDefault.shared.clear()
-            MixinDatabase.shared.logout()
             SignalDatabase.shared.logout()
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = 1
@@ -170,8 +191,8 @@ final class AccountAPI: BaseAPI {
                 UIApplication.shared.unregisterForRemoteNotifications()
 
                 MixinWebView.clearCookies()
-                let oldRootViewController = AppDelegate.current.window?.rootViewController
-                AppDelegate.current.window?.rootViewController = LoginNavigationController.instance()
+                let oldRootViewController = AppDelegate.current.window.rootViewController
+                AppDelegate.current.window.rootViewController = LoginNavigationController.instance()
                 oldRootViewController?.navigationController?.removeFromParent()
             }
         }

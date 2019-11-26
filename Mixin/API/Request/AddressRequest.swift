@@ -4,21 +4,27 @@ import UIKit
 struct AddressRequest: Codable {
 
     let assetId: String
-    let publicKey: String?
-    let label: String?
+    let destination: String
+    let tag: String
+    let label: String
     var pin: String
 
-    let accountName: String?
-    let accountTag: String?
 
     enum CodingKeys: String, CodingKey {
         case assetId = "asset_id"
-        case publicKey = "public_key"
+        case destination
         case label
+        case tag
         case pin
-        case accountName = "account_name"
-        case accountTag = "account_tag"
     }
+}
+
+extension AddressRequest {
+
+    var fullAddress: String {
+        return tag.isEmpty ? destination : "\(destination):\(tag)"
+    }
+
 }
 
 

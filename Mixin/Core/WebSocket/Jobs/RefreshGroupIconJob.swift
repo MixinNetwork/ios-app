@@ -16,6 +16,9 @@ class RefreshGroupIconJob: AsynchronousJob {
 
     override func execute() -> Bool {
         let participants = ParticipantDAO.shared.getGroupIconParticipants(conversationId: conversationId)
+        guard participants.count >= 4 || participants.count == ParticipantDAO.shared.getParticipantCount(conversationId: conversationId) else {
+            return false
+        }
         let participantIds: [String] = participants.map { (participant) in
             if participant.userAvatarUrl.isEmpty {
                 return String(participant.userFullName.prefix(1))
@@ -29,14 +32,15 @@ class RefreshGroupIconJob: AsynchronousJob {
             updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             return false
         }
+        guard let groupImage = GroupIconMaker.make(participants: participants) else {
+            return false
+        }
 
         do {
-            if let groupImage = UIImage.makeGroupImage(participants: participants) {
-                try? FileManager.default.removeItem(atPath: imageUrl.path)
-                if let data = groupImage.pngData() {
-                    try data.write(to: imageUrl)
-                    updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
-                }
+            try? FileManager.default.removeItem(atPath: imageUrl.path)
+            if let data = groupImage.pngData() {
+                try data.write(to: imageUrl)
+                updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             }
         } catch {
             UIApplication.traceError(error)

@@ -1,7 +1,7 @@
 import UIKit
 import SDWebImage
 
-class ConversationCell: UITableViewCell {
+class ConversationCell: ModernSelectedBackgroundCell {
     
     static let contentLabelNormalFont = UIFont.systemFont(ofSize: 14)
     static let contentLabelItalicFont: UIFont = {
@@ -21,13 +21,7 @@ class ConversationCell: UITableViewCell {
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
-    }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()

@@ -15,7 +15,7 @@ class ConversationDataSource {
     var firstUnreadMessageId: String?
     weak var tableView: ConversationTableView?
     
-    private let windowRect = AppDelegate.current.window!.bounds
+    private let windowRect = AppDelegate.current.window.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = AccountAPI.shared.account!
@@ -38,6 +38,7 @@ class ConversationDataSource {
     private(set) var loadedMessageIds = Set<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
+    private(set) var myInvitation: Message?
     
     private var highlight: Highlight?
     private var viewModels = [String: [MessageViewModel]]()
@@ -77,10 +78,6 @@ class ConversationDataSource {
         self.category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         reload(completion: completion)
@@ -88,6 +85,7 @@ class ConversationDataSource {
     
     func cancelMessageProcessing() {
         messageProcessingIsCancelled = true
+        NotificationCenter.default.removeObserver(self)
     }
     
     func scrollToFirstUnreadMessageOrBottom() {
@@ -118,7 +116,10 @@ class ConversationDataSource {
             guard !self.messageProcessingIsCancelled else {
                 return
             }
-            self.reload(initialMessageId: initialMessageId, completion: completion)
+            self.reload(initialMessageId: initialMessageId, animatedReloading: false)
+            DispatchQueue.main.async {
+                completion?()
+            }
         }
     }
     
@@ -373,7 +374,7 @@ extension ConversationDataSource {
         }
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
-            SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
+            SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
         }
         if !didLoadLatestMessage {
             if messageIsSentByMe {
@@ -423,9 +424,6 @@ extension ConversationDataSource {
                 cell.updateOperationButtonStyle()
             }
         }
-        if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, let cell = cell as? PhotoRepresentableMessageCell {
-            cell.reloadMedia(viewModel: viewModel)
-        }
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
         }
@@ -466,7 +464,7 @@ extension ConversationDataSource {
             }
             
             if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId {
-                SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
+                SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
             }
             
             DispatchQueue.main.sync {
@@ -582,38 +580,54 @@ extension ConversationDataSource {
     }
     
     func send(image: GiphyImage, thumbnail: UIImage?) {
-        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
-                                            conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
-        message.mediaStatus = MediaStatus.PENDING.rawValue
-        message.mediaUrl = image.fullsizedUrl.absoluteString
-        message.mediaWidth = image.size.width
-        message.mediaHeight = image.size.height
-        if let thumbnail = thumbnail {
-            message.thumbImage = thumbnail.base64Thumbnail()
+        let conversationId = self.conversationId
+        let ownerUser = self.ownerUser
+        let isGroupMessage = category == .group
+        queue.async {
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
+                                                conversationId: conversationId,
+                                                userId: AccountAPI.shared.accountUserId)
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+            message.mediaUrl = image.fullsizedUrl.absoluteString
+            message.mediaWidth = image.size.width
+            message.mediaHeight = image.size.height
+            if let thumbnail = thumbnail {
+                message.thumbImage = thumbnail.base64Thumbnail()
+            }
+            message.mediaMimeType = "image/gif"
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
         }
-        message.mediaMimeType = "image/gif"
-        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: category == .group)
     }
     
     func send(asset: PHAsset) {
-        assert(asset.mediaType == .image || asset.mediaType == .video)
-        let assetMediaTypeIsImage = asset.mediaType == .image
-        let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
-        var message = Message.createMessage(category: category.rawValue,
-                                            conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
-        message.mediaStatus = MediaStatus.PENDING.rawValue
-        message.mediaLocalIdentifier = asset.localIdentifier
-        message.mediaWidth = asset.pixelWidth
-        message.mediaHeight = asset.pixelHeight
-        let thumbnailSize = CGSize(width: 48, height: 48)
-        PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: thumbnailRequestOptions) { (image, info) in
-            if let image = image {
-                message.thumbImage = image.base64Thumbnail()
+        let conversationId = self.conversationId
+        let ownerUser = self.ownerUser
+        let isGroupMessage = category == .group
+        let options = self.thumbnailRequestOptions
+        queue.async {
+            assert(asset.mediaType == .image || asset.mediaType == .video)
+            let assetMediaTypeIsImage = asset.mediaType == .image
+            let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
+            var message = Message.createMessage(category: category.rawValue,
+                                                conversationId: conversationId,
+                                                userId: AccountAPI.shared.accountUserId)
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+            message.mediaLocalIdentifier = asset.localIdentifier
+            message.mediaWidth = asset.pixelWidth
+            message.mediaHeight = asset.pixelHeight
+            if assetMediaTypeIsImage {
+                message.mediaMimeType = asset.isGif ? "image/gif" : "image/jpeg"
+            } else {
+                message.mediaMimeType = "video/mp4"
             }
+            let thumbnailSize = CGSize(width: 48, height: 48)
+            PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: options) { (image, info) in
+                if let image = image {
+                    message.thumbImage = image.base64Thumbnail()
+                }
+            }
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
         }
-        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)
     }
     
 }
@@ -703,6 +717,9 @@ extension ConversationDataSource {
                 initialIndexPath = unreadHintIndexPath
             }
             offset -= ConversationDateHeaderView.height
+        }
+        if category == .group {
+            myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: AccountAPI.shared.accountUserId)
         }
         performSynchronouslyOnMainThread {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -1004,7 +1021,11 @@ extension ConversationDataSource {
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
             if shouldScrollToNewMessage {
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                if tableView.tableFooterView == nil {
+                    tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                } else {
+                    tableView.scrollToBottom(animated: false)
+                }
             } else {
                 NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }

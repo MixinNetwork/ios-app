@@ -2,10 +2,10 @@ import UIKit
 
 class ClearStorageViewController: UITableViewController {
 
-    @IBOutlet weak var photoCell: UITableViewCell!
-    @IBOutlet weak var videoCell: UITableViewCell!
-    @IBOutlet weak var audioCell: UITableViewCell!
-    @IBOutlet weak var fileCell: UITableViewCell!
+    @IBOutlet weak var photoCell: ModernSelectedBackgroundCell!
+    @IBOutlet weak var videoCell: ModernSelectedBackgroundCell!
+    @IBOutlet weak var audioCell: ModernSelectedBackgroundCell!
+    @IBOutlet weak var fileCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var photoCheckmark: CheckmarkView!
     @IBOutlet weak var videoCheckmark: CheckmarkView!
     @IBOutlet weak var audioCheckmark: CheckmarkView!
@@ -26,9 +26,6 @@ class ClearStorageViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
-        for cell in [photoCell, videoCell, audioCell, fileCell] {
-            cell?.selectedBackgroundView = UIView.createSelectedBackgroundView()
-        }
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
             let categoryStorages = ConversationDAO.shared.getCategoryStorages(conversationId: conversationId)

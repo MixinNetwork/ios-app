@@ -5,7 +5,8 @@ class UsernameViewController: LoginInfoInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.navigation_title_enter_name()
-        textField.text = defaultUsername()
+        textField.text = makeDefaultUsername()
+        editingChangedAction(self)
     }
     
     override func continueAction(_ sender: Any) {
@@ -17,11 +18,8 @@ class UsernameViewController: LoginInfoInputViewController {
             weakSelf.continueButton.isBusy = false
             switch account {
             case let .success(account):
-                AccountAPI.shared.account = account
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: account)
-                }
-                AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                AccountAPI.shared.updateAccount(account: account)
+                AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
                 UIApplication.traceError(error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -29,7 +27,7 @@ class UsernameViewController: LoginInfoInputViewController {
         }
     }
     
-    private func defaultUsername() -> String? {
+    private func makeDefaultUsername() -> String? {
         let name = UIDevice.current.name
         let deviceName: String
         if name.range(of: "iPhone") != nil {

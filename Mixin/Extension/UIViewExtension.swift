@@ -41,16 +41,6 @@ extension UIView {
     }
 }
 
-extension UIView {
-
-    static func createSelectedBackgroundView(backgroundColor: UIColor = .modernCellSelection) -> UIView {
-        let view = UIView()
-        view.backgroundColor = backgroundColor
-        return view
-    }
-
-}
-
 extension UIView.AnimationCurve {
     
     static let overdamped = UIView.AnimationCurve(rawValue: 7) ?? .easeOut
@@ -66,6 +56,7 @@ extension UILayoutPriority {
 
 extension UIVisualEffect {
     
+    static let extraLightBlur = UIBlurEffect(style: .extraLight)
     static let lightBlur = UIBlurEffect(style: .light)
     static let darkBlur = UIBlurEffect(style: .dark)
     

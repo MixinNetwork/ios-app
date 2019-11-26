@@ -45,6 +45,9 @@ extension UIApplication {
     }
 
     static func traceError(_ error: Swift.Error) {
+        #if DEBUG
+        print(error)
+        #endif
         Bugsnag.notifyError(error)
         Crashlytics.sharedInstance().recordError(error)
     }
@@ -55,6 +58,9 @@ extension UIApplication {
     }
 
     static func traceWCDBError(_ error: WCDBSwift.Error) {
+        #if DEBUG
+        print(error)
+        #endif
         var userInfo = [String: Any]()
         userInfo["operationValue"] = error.operationValue ?? ""
         userInfo["extendedCode"] = error.extendedCode ?? ""
@@ -112,5 +118,45 @@ extension UIApplication {
             Bugsnag.notify(NSException(name: NSExceptionName(rawValue: "Unrecognized URL"), reason: nil, userInfo: ["URL": url.absoluteString]))
         }
     }
+    
+}
+
+extension UIApplication {
+    
+    func setShortcutItemsEnabled(_ enabled: Bool) {
+        DispatchQueue.main.async {
+            if enabled {
+                UIApplication.shared.shortcutItems = [.wallet, .scanQrCode, .myQrCode]
+            } else {
+                UIApplication.shared.shortcutItems = nil
+            }
+        }
+    }
+    
+}
+
+extension UIApplicationShortcutItem {
+    
+    enum ItemType: String {
+        case scanQrCode
+        case wallet
+        case myQrCode
+    }
+    
+    static let scanQrCode = UIApplicationShortcutItem(type: ItemType.scanQrCode.rawValue,
+                                                      localizedTitle: R.string.localizable.scan_qr_code(),
+                                                      localizedSubtitle: nil,
+                                                      icon: .init(templateImageName: "ic_shortcut_scan_qr_code"),
+                                                      userInfo: nil)
+    static let wallet = UIApplicationShortcutItem(type: ItemType.wallet.rawValue,
+                                                  localizedTitle: R.string.localizable.wallet_title(),
+                                                  localizedSubtitle: nil,
+                                                  icon: .init(templateImageName: "ic_shortcut_wallet"),
+                                                  userInfo: nil)
+    static let myQrCode = UIApplicationShortcutItem(type: ItemType.myQrCode.rawValue,
+                                                    localizedTitle: R.string.localizable.myqrcode_title(),
+                                                    localizedSubtitle: nil,
+                                                    icon: .init(templateImageName: "ic_shortcut_my_qr_code"),
+                                                    userInfo: nil)
     
 }

@@ -18,6 +18,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HPi-eF-W69">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                     <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_video_visual_control" translatesAutoresizingMaskIntoConstraints="NO" id="2mC-M8-6Y5">
+                            <rect key="frame" x="0.0" y="-56" width="414" height="88"/>
+                        </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-05-TmK">
                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                             <constraints>
@@ -40,6 +43,7 @@
                     <constraints>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="leading" secondItem="HPi-eF-W69" secondAttribute="leading" id="6fv-sK-AcP"/>
                         <constraint firstItem="OSM-5H-FgV" firstAttribute="centerX" secondItem="HPi-eF-W69" secondAttribute="centerX" id="Mgy-CF-54O"/>
+                        <constraint firstAttribute="bottom" secondItem="2mC-M8-6Y5" secondAttribute="bottom" constant="12" id="adl-kf-IhN"/>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="top" secondItem="HPi-eF-W69" secondAttribute="top" id="flc-7m-1k2"/>
                         <constraint firstAttribute="bottom" secondItem="ykM-27-EvN" secondAttribute="bottom" id="g7H-Vk-jge"/>
                         <constraint firstAttribute="height" constant="44" id="hVG-22-m5p"/>
@@ -141,8 +145,10 @@
                 <constraint firstItem="HPi-eF-W69" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="3yd-WU-6CA"/>
                 <constraint firstItem="jT8-96-b2D" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3zT-CU-pCw"/>
                 <constraint firstAttribute="trailing" secondItem="gga-kw-mqs" secondAttribute="trailing" constant="8" id="5P9-jS-nKh"/>
+                <constraint firstAttribute="trailing" secondItem="2mC-M8-6Y5" secondAttribute="trailing" id="ASP-f9-bWL"/>
                 <constraint firstItem="TKP-4B-OUV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="DLM-o6-VTX"/>
                 <constraint firstAttribute="bottom" secondItem="gga-kw-mqs" secondAttribute="bottom" constant="16" id="Fti-Ug-7nF"/>
+                <constraint firstItem="2mC-M8-6Y5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="G4O-7x-H1l"/>
                 <constraint firstItem="HPi-eF-W69" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="UxV-ZI-U3f"/>
                 <constraint firstItem="gga-kw-mqs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="gES-N4-V9M"/>
                 <constraint firstAttribute="trailing" secondItem="HPi-eF-W69" secondAttribute="trailing" id="j8F-lV-H4U"/>
@@ -163,6 +169,7 @@
                 <outlet property="remainingTimeLabel" destination="Hl0-e0-d3X" id="lvN-pH-SOc"/>
                 <outlet property="slider" destination="7CY-zg-LG0" id="WrQ-QJ-jgr"/>
                 <outlet property="timeControlWrapperView" destination="gga-kw-mqs" id="NdO-Li-2bE"/>
+                <outlet property="visualControlBackgroundImageView" destination="2mC-M8-6Y5" id="GSv-8k-VMz"/>
                 <outlet property="visualControlLeadingConstraint" destination="3yd-WU-6CA" id="E1u-UR-Gkq"/>
                 <outlet property="visualControlTopConstraint" destination="UxV-ZI-U3f" id="Gel-Vm-2pA"/>
                 <outlet property="visualControlTrailingConstraint" destination="j8F-lV-H4U" id="R2s-J7-vNF"/>
@@ -172,6 +179,7 @@
         </view>
     </objects>
     <resources>
+        <image name="bg_video_visual_control" width="20" height="88"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_pause_large" width="16" height="20"/>
         <image name="ic_play_large" width="22" height="22"/>

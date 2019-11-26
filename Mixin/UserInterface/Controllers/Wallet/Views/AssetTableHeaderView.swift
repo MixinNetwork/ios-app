@@ -5,7 +5,7 @@ class AssetTableHeaderView: InfiniteTopView {
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountTextView: UITextView!
-    @IBOutlet weak var usdValueLabel: UILabel!
+    @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var depositButton: BusyButton!
     @IBOutlet weak var transactionsHeaderView: UIView!
     
@@ -29,17 +29,12 @@ class AssetTableHeaderView: InfiniteTopView {
         let amount: String
         if asset.balance == "0" {
             amount = "0\(currentDecimalSeparator)00"
-            usdValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
+            fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
             amount = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
-            let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
-            if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-                usdValueLabel.text = "≈ $" + localizedUSDBalance
-            } else {
-                usdValueLabel.text = nil
-            }
+            fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalance
         }
-        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
+        depositButton.isBusy = asset.destination.isEmpty
         let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
         amountTextView.attributedText = attributedAmount
         

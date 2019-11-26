@@ -36,6 +36,8 @@ extension MessageItem {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.reply, .delete]
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+            actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             actions = [.delete]
         } else {
@@ -61,6 +63,22 @@ class ConversationTableView: UITableView {
     
     override var canBecomeFirstResponder: Bool {
         return true
+    }
+    
+    override var tableFooterView: UIView? {
+        get {
+            return super.tableFooterView
+        }
+        set {
+            let isAppendingFooterView  = super.tableFooterView == nil && newValue != nil
+            let reachesBottomBeforeAppending = abs(contentOffset.y - bottomContentOffset.y) < 1
+            super.tableFooterView = newValue
+            layoutIfNeeded()
+            let contentSizeBeyondsBottom = contentSize.height > frame.height - contentInset.vertical
+            if isAppendingFooterView && reachesBottomBeforeAppending && contentSizeBeyondsBottom {
+                contentOffset = bottomContentOffset
+            }
+        }
     }
     
     var bottomDistance: CGFloat {

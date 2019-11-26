@@ -20,7 +20,7 @@ class DepositTipWindow: BottomSheetView {
         self.asset = asset
         titleLabel.text = "\(asset.symbol) \(Localized.WALLET_DEPOSIT)"
         tipsLabel.text = asset.depositTips
-        if asset.isAccount {
+        if !asset.tag.isEmpty {
             warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             warningLabel.text = R.string.localizable.wallet_deposit_attention()
@@ -29,17 +29,6 @@ class DepositTipWindow: BottomSheetView {
     }
 
     @IBAction func okAction(_ sender: Any) {
-        canDismiss = true
-        dismissPopupControllerAnimated()
-    }
-
-    @IBAction func dontRemindAction(_ sender: Any) {
-        guard let assetId = asset?.chainId else {
-            return
-        }
-        WalletUserDefault.shared.depositTipRemind.removeAll( where: { $0 == assetId })
-        WalletUserDefault.shared.depositTipRemind.append(assetId)
-
         canDismiss = true
         dismissPopupControllerAnimated()
     }

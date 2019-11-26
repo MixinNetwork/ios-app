@@ -321,7 +321,6 @@ public class Localized {
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")
     public static let PROFILE_OPEN_BOT = LocalizedString("profile_open_bot", comment: "Open App")
-    public static let PROFILE_CHANGE_AVATAR = LocalizedString("profile_change_avatar", comment: "Change Profile Photo")
     public static func PROFILE_MIXIN_ID(id: String) -> String {
         return String(format: LocalizedString("profile_mixin_id", comment: "Mixin ID: %@"), id)
     }
@@ -334,9 +333,6 @@ public class Localized {
     public static let PROFILE_REMOVE = LocalizedString("profile_remove", comment: "Remove Contact")
     public static let PROFILE_BLOCK = LocalizedString("profile_block", comment: "Block")
     public static let PROFILE_UNBLOCK = LocalizedString("profile_unblock", comment: "Unblock")
-    public static func PROFILE_INVITATION_CODE_CONSUMED_COUNT(consumed_count: Int) -> String {
-        return String(format: LocalizedString("profile_invitation_code_consumed_count", comment: "You have invited a total of %@ people."), String(consumed_count))
-    }
     public static let PROFILE_FULL_NAME = LocalizedString("profile_full_name", comment: "Name")
     public static let PROFILE_EDIT_NAME = LocalizedString("profile_edit_name", comment: "Edit Name")
     public static let PROFILE_ADD_CONTACT_FAIL = LocalizedString("profile_add_contact_fail", comment: "Failed to add contact")
@@ -344,7 +340,6 @@ public class Localized {
     public static let PROFILE_MUTE_DURATION_8H = LocalizedString("profile_mute_duration_8h", comment: "8 hours")
     public static let PROFILE_MUTE_DURATION_1WEEK = LocalizedString("profile_mute_duration_1week", comment: "1 week")
     public static let PROFILE_MUTE_DURATION_1YEAR = LocalizedString("profile_mute_duration_1year", comment: "1 year")
-    public static let PROFILE_UNMUTE = LocalizedString("profile_unmute", comment: "Unmute")
     public static let PROFILE_MUTE = LocalizedString("profile_mute", comment: "Mute")
     public static let PROFILE_CHANGE_NUMBER = LocalizedString("profile_change_number", comment: "Change Number")
     public static let PROFILE_CHANGE_NUMBER_CONFIRMATION = LocalizedString("profile_change_number_confirmation", comment: "Do you want to change the phone number?")
@@ -376,20 +371,12 @@ public class Localized {
     public static let WALLET_PASSWORD_VERIFY_TITLE = LocalizedString("wallet_password_verify_title", comment: "Old PIN")
     public static let WALLET_CHANGE_PASSWORD_SUCCESS = LocalizedString("wallet_change_password_success", comment: "Change PIN successfully")
     public static let WALLET_SET_PASSWORD_SUCCESS = LocalizedString("wallet_set_password_success", comment: "Set PIN successfully")
-    public static func WALLET_SNAPSHOT_FROM(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_from", comment: "Transfer from %@"), fullName)
-    }
-    public static func WALLET_SNAPSHOT_TO(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_to", comment: "Transfer to %@"), fullName)
-    }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
     }
     public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
     public static let WALLET_ADDRESS = LocalizedString("wallet_address", comment: "Address")
-    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name (Address)")
-    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo (Tag)")
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")
@@ -417,7 +404,6 @@ public class Localized {
     public static let WALLET_PIN_TOO_SIMPLE = LocalizedString("wallet_pin_too_simple", comment: "The PIN is too simple and insecure.")
     public static let WALLET_PIN_REMEMBER_DESCRIPTION = LocalizedString("wallet_pin_remember_description", comment: "You'll be asked for it periodically to help you remember it.")
     public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
-    public static let WALLET_SETTING = LocalizedString("wallet_setting", comment: "Wallet Setting")
     public static let WALLET_PIN_TOUCH_ID_PROMPT = LocalizedString("wallet_pin_touch_id_prompt", comment: "Confirm PIN to enable Touch Pay")
     public static let WALLET_PIN_FACE_ID_PROMPT = LocalizedString("wallet_pin_face_id_prompt", comment: "Confirm PIN to enable Face Pay")
     public static let WALLET_TOUCH_ID = LocalizedString("wallet_touch_id", comment: "Touch ID")
@@ -488,9 +474,7 @@ public class Localized {
     public static let TRANSACTION_TYPE_WITHDRAWAL = LocalizedString("transaction_type_withdrawal", comment: "Withdrawal")
     public static let TRANSACTION_TYPE_FEE = LocalizedString("transaction_type_fee", comment: "Fee")
     public static let TRANSACTION_TYPE_REBATE = LocalizedString("transaction_type_rebate", comment: "Rebate")
-    public static let PAY_USE_FACE = LocalizedString("pay_use_face", comment: "Use Face Pay")
-    public static let PAY_USE_TOUCH = LocalizedString("pay_use_touch", comment: "Use Touch Pay")
-
+    
     // Address Book
     public static func ADDRESS_BOOK_TITLE(symbol: String) -> String {
         return String(format: LocalizedString("address_book_title", comment: "%@ Address Book"), symbol)
@@ -508,19 +492,10 @@ public class Localized {
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     
     // Transfer
-    public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")
-    public static func TRANSFER_TITLE_TO_RECEIVER(fullName: String) -> String {
-        return String(format: LocalizedString("transfer_title_to_receiver", comment: "to %@"), fullName)
-    }
-    public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
     public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "This payment link has already been paid by someone, you can not make a duplicate payment.")
-    public static let TRANSFER_PAY_PASSWORD = LocalizedString("transfer_pay_password", comment: "Pay with PIN")
     public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
         return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)
-    }
-    public static func PAY_WITHDRAWAL_TITLE(label: String) -> String {
-        return String(format: LocalizedString("pay_withdrawal_title", comment: "Withdrawal to %@"), label)
     }
 
     // Setting
@@ -561,7 +536,6 @@ public class Localized {
     public static let SETTING_BACKUP_TITLE = LocalizedString("setting_backup_title", comment: "Chat Backup")
     public static let SETTING_BACKUP_AUTO = LocalizedString("setting_backup_auto", comment: "Auto Backup")
     public static let SETTING_BACKUP_NOW = LocalizedString("setting_backup_now", comment: "Back Up Now")
-    public static let SETTING_BACKING = LocalizedString("setting_backing", comment: "Backing Up...")
     public static let SETTING_BACKUP_DAILY = LocalizedString("setting_backup_daily", comment: "Daily")
     public static let SETTING_BACKUP_WEEKLY = LocalizedString("setting_backup_weekly", comment: "Weekly")
     public static let SETTING_BACKUP_MONTHLY = LocalizedString("setting_backup_monthly", comment: "Monthly")

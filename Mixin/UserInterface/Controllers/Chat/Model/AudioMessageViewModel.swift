@@ -7,22 +7,23 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     var isLoading = false
     var progress: Double?
-    var showPlayIconAfterFinished: Bool = true
+    var showPlayIconOnMediaStatusDone: Bool = true
     var operationButtonStyle: NetworkOperationButton.Style = .expired
     var operationButtonIsHidden = false
     var playbackStateIsHidden = true
+    var downloadIsTriggeredByUser = false
     
     var isUnread: Bool {
         return message.userId != AccountAPI.shared.accountUserId
             && mediaStatus != MediaStatus.READ.rawValue
     }
     
-    var automaticallyLoadsAttachment: Bool {
+    var shouldAutoDownload: Bool {
         return true
     }
     
-    var automaticallyCancelAttachmentLoading: Bool {
-        return false
+    var automaticallyLoadsAttachment: Bool {
+        return true
     }
     
     var mediaStatus: String? {
@@ -57,11 +58,12 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateButtonsHidden()
     }
     
-    func beginAttachmentLoading() {
+    func beginAttachmentLoading(isTriggeredByUser: Bool) {
+        downloadIsTriggeredByUser = isTriggeredByUser
         defer {
             updateOperationButtonStyle()
         }
-        guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
+        guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
@@ -73,13 +75,19 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         isLoading = true
     }
     
-    func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
+    func cancelAttachmentLoading(isTriggeredByUser: Bool) {
+        guard mediaStatus == MediaStatus.PENDING.rawValue else {
+            return
+        }
+        guard isTriggeredByUser || !downloadIsTriggeredByUser else {
+            return
+        }
         if shouldUpload {
             UploaderQueue.shared.cancelJob(jobId: AudioUploadJob.jobId(messageId: message.messageId))
         } else {
             ConcurrentJobQueue.shared.cancelJob(jobId: AudioDownloadJob.jobId(messageId: message.messageId))
         }
-        if markMediaStatusCancelled {
+        if isTriggeredByUser {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }
     }

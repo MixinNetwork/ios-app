@@ -28,22 +28,21 @@ final class AssetAPI: BaseAPI {
         static func snapshots(opponentId: String) -> String {
             return "mutual_snapshots/\(opponentId)"
         }
-        
+
+        static let transactions = "transactions"
         static let transfers = "transfers"
         static let payments = "payments"
-        
-        static func pendingDeposits(assetId: String, publicKey: String) -> String {
-            return "external/transactions?asset=\(assetId)&public_key=\(publicKey)"
-        }
 
-        static func pendingDeposits(assetId: String, accountName: String, accountTag: String) -> String {
-            return "external/transactions?asset=\(assetId)&account_name=\(accountName)&account_tag=\(accountTag)"
+        static func pendingDeposits(assetId: String, destination: String, tag: String) -> String {
+            return "external/transactions?asset=\(assetId)&destination=\(destination)&tag=\(tag)"
         }
         
         static func search(keyword: String) -> String? {
             return "network/assets/search/\(keyword)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         }
         static let top = "network/assets/top"
+        
+        static let fiats = "fiats"
         
     }
 
@@ -61,6 +60,14 @@ final class AssetAPI: BaseAPI {
 
     func asset(assetId: String) -> APIResult<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
+    }
+
+    func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+        var transactionRequest = transactionRequest
+        KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
+            transactionRequest.pin = encryptedPin
+            self?.request(method: .post, url: url.transactions, parameters: transactionRequest.toParameters(), encoding: EncodableParameterEncoding<RawTransactionRequest>(), completion: completion)
+        }
     }
 
     func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
@@ -92,13 +99,9 @@ final class AssetAPI: BaseAPI {
     func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
     }
-    
-    func pendingDeposits(assetId: String, publicKey: String) -> APIResult<[PendingDeposit]> {
-        return request(method: .get, url: url.pendingDeposits(assetId: assetId, publicKey: publicKey))
-    }
 
-    func pendingDeposits(assetId: String, accountName: String, accountTag: String) -> APIResult<[PendingDeposit]> {
-        return request(method: .get, url: url.pendingDeposits(assetId: assetId, accountName: accountName, accountTag: accountTag))
+    func pendingDeposits(assetId: String, destination: String, tag: String) -> APIResult<[PendingDeposit]> {
+        return request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag))
     }
     
     func search(keyword: String) -> APIResult<[Asset]>  {
@@ -110,6 +113,10 @@ final class AssetAPI: BaseAPI {
     
     func topAssets() -> APIResult<[Asset]> {
         return request(method: .get, url: url.top)
+    }
+    
+    func fiats() -> APIResult<[FiatMoney]> {
+        return request(method: .get, url: url.fiats)
     }
     
 }

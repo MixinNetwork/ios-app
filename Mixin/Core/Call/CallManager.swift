@@ -274,7 +274,7 @@ extension CallManager {
             }
             semaphore.wait()
             performSynchronouslyOnMainThread {
-                GalleryVideoItemViewController.currentPipController?.pauseAction(self)
+                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 view.reload(user: user)
                 view.style = .calling
                 view.show()
@@ -395,16 +395,16 @@ extension CallManager {
     private func alertNetworkFailureOrLineBusy() {
         DispatchQueue.main.async {
             if !WebSocketService.shared.connected {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_NO_NETWORK)
+                AppDelegate.current.window.rootViewController?.alert(Localized.CALL_NO_NETWORK)
             } else if !self.lineIsIdle {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
+                AppDelegate.current.window.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
             }
         }
     }
     
     private func alertNoMicrophonePermission() {
         DispatchQueue.main.async {
-            AppDelegate.current.window?.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
+            AppDelegate.current.window.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
         }
     }
     

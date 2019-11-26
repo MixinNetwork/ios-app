@@ -4,9 +4,6 @@ class DatabaseUserDefault {
 
     static let shared = DatabaseUserDefault()
 
-    private var keySignalDatabaseVersion: String {
-        return "key_database_signal"
-    }
     private var keyMixinDatabaseVersion: String {
         return "key_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
@@ -16,8 +13,34 @@ class DatabaseUserDefault {
     private var keyRecoverMixinDatabaseVersion: String {
         return "key_recover_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyDatabaseVersion: String {
+        return "key_database_version_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyForceUpgradeDatabase: String {
+        return "key_force_upgrade_database_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyLastVacuumTime: String {
+        return "key_last_vacuum_time_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyClearSentSenderKey: String {
+        return "key_clear_sent_sender_key_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!
+    let currentDatabaseVersion = 4
+
+    var databaseVersion: Int {
+        get {
+            return session.integer(forKey: keyDatabaseVersion)
+        }
+        set {
+            session.set(newValue, forKey: keyDatabaseVersion)
+        }
+    }
+
+    func hasUpgradeDatabase() -> Bool {
+        return forceUpgradeDatabase || databaseVersion != currentDatabaseVersion
+    }
 
     var hasRecoverMixinDatabaseVersion: Bool {
         get {
@@ -29,23 +52,7 @@ class DatabaseUserDefault {
     }
 
     var mixinDatabaseVersion: Int {
-        get {
-            return session.integer(forKey: keyMixinDatabaseVersion)
-        }
-        set {
-            session.set(newValue, forKey: keyMixinDatabaseVersion)
-            session.synchronize()
-        }
-    }
-
-    var signalDatabaseVersion: Int {
-        get {
-            return session.integer(forKey: keySignalDatabaseVersion)
-        }
-        set {
-            session.set(newValue, forKey: keySignalDatabaseVersion)
-            session.synchronize()
-        }
+        return session.integer(forKey: keyMixinDatabaseVersion)
     }
 
     var upgradeStickers: Bool {
@@ -54,8 +61,33 @@ class DatabaseUserDefault {
         }
         set {
             session.set(newValue, forKey: keyUpgradeStickers)
-            session.synchronize()
         }
     }
 
+    var forceUpgradeDatabase: Bool {
+        get {
+            return session.bool(forKey: keyForceUpgradeDatabase)
+        }
+        set {
+            session.set(newValue, forKey: keyForceUpgradeDatabase)
+        }
+    }
+
+    var lastVacuumTime: TimeInterval {
+        get {
+            return session.double(forKey: keyLastVacuumTime)
+        }
+        set {
+            session.set(newValue, forKey: keyLastVacuumTime)
+        }
+    }
+
+    var clearSentSenderKey: Bool {
+        get {
+            return session.bool(forKey: keyClearSentSenderKey)
+        }
+        set {
+            session.set(newValue, forKey: keyClearSentSenderKey)
+        }
+    }
 }

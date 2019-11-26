@@ -151,7 +151,7 @@ final class MediaPreviewViewController: UIViewController {
             weakSelf.activityIndicator.stopAnimating()
             weakSelf.playButton.isHidden = asset.mediaType != .video
             weakSelf.view.layoutIfNeeded()
-            if let uti = info?["PHImageFileUTIKey"] as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+            if asset.isGif {
                 if let id = weakSelf.lastRequestId {
                     PHImageManager.default().cancelImageRequest(id)
                 }

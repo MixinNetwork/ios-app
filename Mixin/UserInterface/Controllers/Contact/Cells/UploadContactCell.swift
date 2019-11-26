@@ -1,12 +1,7 @@
 import UIKit
 
-class UploadContactCell: UITableViewCell {
+class UploadContactCell: ModernSelectedBackgroundCell {
     
     static let height: CGFloat = 64
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView.createSelectedBackgroundView()
-    }
     
 }

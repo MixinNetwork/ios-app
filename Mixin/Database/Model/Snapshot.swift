@@ -65,6 +65,7 @@ struct Snapshot: BaseCodable {
         case withdrawal
         case fee
         case rebate
+        case raw
         
         var snapshotTypes: [SnapshotType] {
             switch self {
@@ -80,6 +81,8 @@ struct Snapshot: BaseCodable {
                 return [.fee]
             case .rebate:
                 return [.rebate]
+            case .raw:
+                return [.raw]
             }
         }
     }
@@ -87,6 +90,7 @@ struct Snapshot: BaseCodable {
 }
 
 enum SnapshotType: String, CaseIterable {
+    case raw
     case deposit
     case transfer
     case withdrawal

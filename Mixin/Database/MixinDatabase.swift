@@ -2,11 +2,11 @@ import WCDBSwift
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 6
+    private static let databaseVersion: Int = 7
 
     static let shared = MixinDatabase()
 
-    private lazy var _database = Database(withPath: MixinFile.databaseURL.path)
+    private var _database = Database(withPath: MixinFile.databaseURL.path)
     override var database: Database! {
         get { return _database }
         set { }
@@ -18,15 +18,14 @@ class MixinDatabase: BaseDatabase {
 
     }
 
-    override func configure(reset: Bool = false) {
-        if MixinFile.databaseURL.path != _database.path {
-            _database.close()
-            _database = Database(withPath: MixinFile.databaseURL.path)
-        }
+    func initDatabase(clearSentSenderKey: Bool = false) {
+        _database = Database(withPath: MixinFile.databaseURL.path)
         do {
-            database.setSynchronous(isFull: true)
             try database.run(transaction: {
-                let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                var currentVersion = try database.getDatabaseVersion()
+                if currentVersion == 0 {
+                    currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                }
                 try self.createBefore(database: database, currentVersion: currentVersion)
 
                 try database.create(of: Asset.self)
@@ -35,7 +34,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Sticker.self)
                 try database.create(of: StickerRelationship.self)
                 try database.create(of: Album.self)
-                try database.create(of: MessageBlaze.self)
                 try database.create(of: MessageHistory.self)
                 try database.create(of: SentSenderKey.self)
                 try database.create(of: App.self)
@@ -44,7 +42,7 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Conversation.self)
                 try database.create(of: Message.self)
                 try database.create(of: Participant.self)
-                
+
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
@@ -55,12 +53,14 @@ class MixinDatabase: BaseDatabase {
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
-                DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
+                if clearSentSenderKey {
+                    try database.delete(fromTable: SentSenderKey.tableName)
+                }
+                try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
         } catch {
-            #if DEBUG
-                print("======MixinDatabase...configure...error:\(error)")
-            #endif
             UIApplication.traceError(error)
         }
     }
@@ -84,6 +84,12 @@ class MixinDatabase: BaseDatabase {
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_status_index").execute()
             try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_update").execute()
         }
+
+        if currentVersion < 7 {
+            try database.drop(table: Address.tableName)
+            try database.drop(table: Asset.tableName)
+            try database.drop(table: Asset.topAssetsTableName)
+        }
     }
 
     private func createAfter(database: Database, currentVersion: Int) throws {
@@ -97,8 +103,15 @@ class MixinDatabase: BaseDatabase {
     }
 
     func logout() {
-        deleteAll(table: SentSenderKey.tableName)
-        database.close()
+        do {
+            try database.run(transaction: {
+                try database.delete(fromTable: SentSenderKey.tableName)
+            })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
+        } catch {
+            UIApplication.traceError(error)
+        }
     }
     
 }

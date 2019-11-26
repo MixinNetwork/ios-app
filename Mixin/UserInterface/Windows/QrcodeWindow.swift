@@ -11,6 +11,8 @@ class QrcodeWindow: BottomSheetView {
     
     @IBOutlet weak var qrcodeView: UIView!
     
+    var isShowingMyQrCode = false
+    
     func render(conversation: ConversationItem) {
         guard let conversationCodeUrl = conversation.codeUrl else {
             return
@@ -29,6 +31,17 @@ class QrcodeWindow: BottomSheetView {
                description: Localized.MYQRCODE_PROMPT,
                qrcode: account.code_url,
                qrcodeForegroundColor: .systemTint)
+        avatarImageView.isHidden = false
+        assetIconView.isHidden = true
+        avatarImageView.setImage(with: account)
+        isShowingMyQrCode = true
+    }
+    
+    func renderMoneyReceivingCode(account: Account) {
+        render(title: R.string.localizable.contact_receive_money(),
+               description: R.string.localizable.transfer_qrcode_prompt(),
+               qrcode: "mixin://transfer/\(account.user_id)",
+               qrcodeForegroundColor: .black)
         avatarImageView.isHidden = false
         assetIconView.isHidden = true
         avatarImageView.setImage(with: account)

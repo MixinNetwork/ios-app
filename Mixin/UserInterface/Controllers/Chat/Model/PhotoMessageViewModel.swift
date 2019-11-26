@@ -4,25 +4,24 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     
     var isLoading = false
     var progress: Double?
+    var downloadIsTriggeredByUser = false
     
-    var automaticallyLoadsAttachment: Bool {
-        let shouldAutoDownload: Bool
+    var shouldAutoDownload: Bool {
         switch CommonUserDefault.shared.autoDownloadPhotos {
         case .never:
-            shouldAutoDownload = false
+            return false
         case .wifi:
-            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+            return NetworkManager.shared.isReachableOnWiFi
         case .wifiAndCellular:
-            shouldAutoDownload = true
+            return true
         }
+    }
+    
+    var automaticallyLoadsAttachment: Bool {
         return !shouldUpload && shouldAutoDownload
     }
     
-    var automaticallyCancelAttachmentLoading: Bool {
-        return true
-    }
-    
-    var showPlayIconAfterFinished: Bool {
+    var showPlayIconOnMediaStatusDone: Bool {
         return false
     }
     
@@ -32,11 +31,12 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         layoutPosition = GalleryItem.shouldLayoutImageOfRatioAsAriticle(aspectRatio) ? .relativeOffset(0) : .center
     }
     
-    func beginAttachmentLoading() {
+    func beginAttachmentLoading(isTriggeredByUser: Bool) {
+        downloadIsTriggeredByUser = isTriggeredByUser
         defer {
             updateOperationButtonStyle()
         }
-        guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
+        guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
@@ -49,13 +49,19 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         isLoading = true
     }
     
-    func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
+    func cancelAttachmentLoading(isTriggeredByUser: Bool) {
+        guard mediaStatus == MediaStatus.PENDING.rawValue else {
+            return
+        }
+        guard isTriggeredByUser || !downloadIsTriggeredByUser else {
+            return
+        }
         if shouldUpload {
             UploaderQueue.shared.cancelJob(jobId: ImageUploadJob.jobId(messageId: message.messageId))
         } else {
             ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(messageId: message.messageId))
         }
-        if markMediaStatusCancelled {
+        if isTriggeredByUser {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }
     }

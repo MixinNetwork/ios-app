@@ -40,7 +40,7 @@ class ProvisionManager {
     }
     
     static func alert(_ str: String) {
-        AppDelegate.current.window?.rootViewController?.alert(str)
+        AppDelegate.current.window.rootViewController?.alert(str)
     }
     
 }

@@ -2,6 +2,8 @@ import UIKit
 
 class HomeContainerViewController: UIViewController {
     
+    var pipController: GalleryVideoItemViewController?
+    
     let homeNavigationController: HomeNavigationController = {
         let home = R.storyboard.home.home()!
         return HomeNavigationController(rootViewController: home)
@@ -17,17 +19,21 @@ class HomeContainerViewController: UIViewController {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
+    override var childForStatusBarStyle: UIViewController? {
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+    }
+    
     override var childForHomeIndicatorAutoHidden: UIViewController? {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
+    
+    private(set) var isShowingGallery = false
     
     private var galleryIsOnTopMost: Bool {
         return isShowingGallery
             && galleryViewController.parent != nil
             && galleryViewController.parent == homeNavigationController.viewControllers.last
     }
-    
-    private var isShowingGallery = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +43,18 @@ class HomeContainerViewController: UIViewController {
         homeNavigationController.didMove(toParent: self)
     }
     
-    private func conversationViewController(of conversationId: String) -> ConversationViewController? {
-        return homeNavigationController.viewControllers
+    private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
+        let sharedMedia = homeNavigationController.viewControllers
+            .compactMap({ $0 as? ContainerViewController })
+            .compactMap({ $0.viewController as? SharedMediaViewController })
+            .first(where: { $0.conversationId == conversationId })?
+            .children
+            .compactMap({ $0 as? SharedMediaMediaViewController })
+            .first
+        let conversation = homeNavigationController.viewControllers
             .compactMap({ $0 as? ConversationViewController })
             .first(where: { $0.conversationId == conversationId })
+        return sharedMedia ?? conversation
     }
     
     private func removeGalleryFromItsParentIfNeeded() {
@@ -56,8 +70,8 @@ class HomeContainerViewController: UIViewController {
 
 extension HomeContainerViewController: GalleryViewControllerDelegate {
     
-    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell? {
-        return conversationViewController(of: item.conversationId)?.galleryViewController(viewController, cellFor: item)
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
+        return chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, cellFor: item)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
@@ -69,24 +83,18 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         viewController.didMove(toParent: topMostViewController)
         viewController.view.setNeedsLayout()
         viewController.view.layoutIfNeeded()
-        if let vc = conversationViewController(of: item.conversationId) {
-            vc.galleryViewController(viewController, willShow: item)
-        }
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
         isShowingGallery = true
         setNeedsStatusBarAppearanceUpdate()
         setNeedsUpdateOfHomeIndicatorAutoHidden()
-        if let vc = conversationViewController(of: item.conversationId) {
-            vc.galleryViewController(viewController, didShow: item)
-        }
+        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, willShow: item)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didShow: item)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
-        if let vc = conversationViewController(of: item.conversationId) {
-            vc.galleryViewController(viewController, willDismiss: item)
-        }
+        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, willDismiss: item)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
@@ -94,15 +102,11 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         isShowingGallery = false
         setNeedsStatusBarAppearanceUpdate()
         setNeedsUpdateOfHomeIndicatorAutoHidden()
-        if let vc = conversationViewController(of: item.conversationId) {
-            vc.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
-        }
+        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
-        if let vc = conversationViewController(of: item.conversationId) {
-            vc.galleryViewController(viewController, didCancelDismissalFor: item)
-        }
+        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didCancelDismissalFor: item)
     }
     
 }

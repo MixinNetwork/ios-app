@@ -1,7 +1,20 @@
 import UIKit
 
 extension UIColor {
-
+    
+    static let background = R.color.background()!
+    static let secondaryBackground = R.color.background_secondary()!
+    static let tertiaryBackground = R.color.background_tertiary()!
+    static let selectionBackground = R.color.background_selection()!
+    static let mixinBlue = R.color.blue()!
+    static let mixinGreen = R.color.green()!
+    static let mixinRed = R.color.red()!
+    static let title = R.color.title()!
+    static let text = R.color.text()!
+    static let text2 = R.color.text_2()!
+    static let text3 = R.color.text_3()!
+    static let text4 = R.color.text_4()!
+    
     static let theme = UIColor(rgbValue: 0x397EE4)
     static let darkTheme = UIColor(rgbValue: 0x0CAAF5)
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
@@ -14,9 +27,9 @@ extension UIColor {
     static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
     static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
-    static let darkText = UIColor(displayP3RgbValue: 0x333333)
+    static let darkText = R.color.dark_text()!
     static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
-    static let highlightedText = UIColor(displayP3RgbValue: 0x3D75E3)
+    static let highlightedText = R.color.highlighted_text()!
     static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
     static let shadow = UIColor(rgbValue: 0xC3C3C3)
     
@@ -97,16 +110,21 @@ extension UIColor {
     }
     
     convenience init?(hexString: String) {
-        var cString = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        if cString.hasPrefix("#") {
-            cString.remove(at: cString.startIndex)
-        }
-        if (cString.count) != 6 {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt32()
+        Scanner(string: hex).scanHexInt32(&int)
+        let a, r, g, b: UInt32
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
             return nil
         }
-        var rgbValue: UInt32 = 0
-        Scanner(string: cString).scanHexInt32(&rgbValue)
-        self.init(rgbValue: UInt(rgbValue))
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
     
     var image: UIImage? {
@@ -121,5 +139,14 @@ extension UIColor {
         UIGraphicsEndImageContext()
         return image
     }
-
+    
+    // https://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+    var w3cLightness: CGFloat {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: nil)
+        return 0.299 * r + 0.587 * g + 0.114 * b
+    }
+    
 }

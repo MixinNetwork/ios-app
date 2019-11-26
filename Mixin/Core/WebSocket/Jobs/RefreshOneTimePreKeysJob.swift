@@ -28,7 +28,7 @@ class RefreshOneTimePreKeysJob: BaseJob {
                 userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                 userInfo["signalError"] = "local identity nil"
                 UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
-                AccountAPI.shared.logout()
+                AccountAPI.shared.logout(from: "RefreshOneTimePreKeysJob")
             } else {
                 UIApplication.traceError(error)
             }

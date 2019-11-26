@@ -16,6 +16,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     }
     
     @IBOutlet weak var visualControlWrapperView: UIView!
+    @IBOutlet weak var visualControlBackgroundImageView: UIImageView!
     @IBOutlet weak var pipButton: UIButton!
     @IBOutlet weak var liveBadgeView: UIImageView!
     @IBOutlet weak var closeButton: UIButton!
@@ -61,9 +62,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     }
     
     func set(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self,
-                                               selector: #selector(hideControls),
-                                               object: nil)
         self.playControlsHidden = playControlsHidden
         self.otherControlsHidden = otherControlsHidden
         if animated {
@@ -74,10 +72,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         if animated {
             UIView.commitAnimations()
         }
-    }
-    
-    func scheduleControlsAutoHiddden() {
-        perform(#selector(hideControls), with: nil, afterDelay: 2)
     }
     
     @objc private func hideControls() {
@@ -108,6 +102,8 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
             || style.contains(.pip)
             || style.contains(.liveStream)
         timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
+        
+        visualControlBackgroundImageView.alpha = style.contains(.pip) ? 0 : 1
         
         let constraints = [
             visualControlLeadingConstraint,

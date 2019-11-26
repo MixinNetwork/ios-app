@@ -92,6 +92,16 @@ class ProfileViewController: UIViewController {
         updatePreferredContentSizeHeight(size: size)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.updatePreferredContentSizeHeight(size: self.size)
+        }
+    }
+    
     @IBAction func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }

@@ -285,8 +285,7 @@ extension AppDelegate {
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.cancelBackgroundTask()
         })
-        let timeInterval: TimeInterval = !isPushKit || BlazeMessageDAO.shared.getCount() + JobDAO.shared.getCount() > 50 ? 120 : 20
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { (time) in
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 20, repeats: false) { (time) in
             self.cancelBackgroundTask()
         }
     }

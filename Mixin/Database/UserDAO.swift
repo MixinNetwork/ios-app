@@ -60,7 +60,12 @@ final class UserDAO {
     func getUsers(ofAppIds ids: [String]) -> [UserItem] {
         let keys = ids.map { _ in "?" }.joined(separator: ",")
         let sql = "\(UserDAO.sqlQueryColumns) WHERE u.app_id in (\(keys))"
-        return MixinDatabase.shared.getCodables(sql: sql, values: ids)
+        let users: [UserItem] = MixinDatabase.shared.getCodables(sql: sql, values: ids)
+        var userMap = [String: UserItem]()
+        users.forEach { (user) in
+            userMap[user.userId] = user
+        }
+        return ids.compactMap { userMap[$0] }
     }
     
     func getAppUsers(inConversationOf conversationId: String) -> [User] {

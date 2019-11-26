@@ -19,15 +19,14 @@ class SignalProtocol {
     func initSignal() {
         let localRegistrationId = try! Signal.generateRegistrationId()
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
-
-        UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.localRegistrationId)
-        UserDefaults.standard.set(identityKeyPair.privateKey, forKey: PreKeyUtil.localPrivateKey)
-        UserDefaults.standard.set(identityKeyPair.publicKey, forKey: PreKeyUtil.localPublicKey)
+        
+        AppGroupUserDefaults.Signal.registrationId = localRegistrationId
+        AppGroupUserDefaults.Signal.privateKey = identityKeyPair.privateKey
+        AppGroupUserDefaults.Signal.publicKey = identityKeyPair.publicKey
     }
 
     func getRegistrationId() -> UInt32 {
-        let registrationId = UserDefaults.standard.value(forKey: PreKeyUtil.localRegistrationId) as! UInt32
-        return registrationId
+        return AppGroupUserDefaults.Signal.registrationId
     }
 
     func clearSenderKey(groupId: String, senderId: String) {

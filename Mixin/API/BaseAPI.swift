@@ -143,8 +143,6 @@ class BaseAPI {
                         UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
                         AccountAPI.shared.logout(from: "AsyncRequest")
                         return
-                    case NSURLErrorTimedOut:
-                        MixinServer.toggle(currentHttpUrl: rootURLString)
                     default:
                         break
                     }
@@ -262,7 +260,6 @@ extension BaseAPI {
             UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
             AccountAPI.shared.logout(from: "SyncRequest")
         }
-        
         return result
     }
 }

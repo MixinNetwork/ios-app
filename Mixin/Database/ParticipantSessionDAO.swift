@@ -8,8 +8,8 @@ final class ParticipantSessionDAO {
     WHERE p.conversation_id = ? AND p.session_id != ? AND ifnull(u.app_id,'') == '' AND ifnull(p.sent_to_server,'') == ''
     """
     private let sqlInsertParticipantSession = """
-    INSERT INTO participant_session(conversation_id, user_id, session_id, created_at)
-    SELECT c.conversation_id, ?, ?, ? FROM conversations c
+    INSERT OR REPLACE INTO participant_session(conversation_id, user_id, session_id, created_at)
+    SELECT c.conversation_id, '%@', '%@', '%@' FROM conversations c
     INNER JOIN users u ON c.owner_id = u.user_id
     LEFT JOIN participants p on p.conversation_id = c.conversation_id
     WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
@@ -43,16 +43,11 @@ final class ParticipantSessionDAO {
     }
 
     func provisionSession(userId: String, sessionId: String) {
-        MixinDatabase.shared.execute(sql: sqlInsertParticipantSession, values: [userId, sessionId, Date().toUTCString(), userId])
-//        let participantSessions = conversationIds.map { ParticipantSession(conversationId: $0, userId: userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString()) }
-//        MixinDatabase.shared.insertOrReplace(objects: participantSessions)
+        MixinDatabase.shared.execute(sql: String(format: sqlInsertParticipantSession, userId, sessionId, Date().toUTCString()), values: [userId])
     }
 
     func destorySession(userId: String, sessionId: String) {
         MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId, userId])
-//        MixinDatabase.shared.delete(table: ParticipantSession.tableName, condition: ParticipantSession.Properties.conversationId.in(conversationIds)
-//            && ParticipantSession.Properties.userId == userId
-//            && ParticipantSession.Properties.sessionId == sessionId)
     }
 
     func syncConversationParticipantSession(conversation: ConversationResponse) {

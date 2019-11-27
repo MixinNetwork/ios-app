@@ -60,6 +60,10 @@ class BaseDatabase {
         return values.map { $0.stringValue }
     }
 
+    func getStringValues(sql: String, values: [ColumnEncodable] = []) -> [String] {
+        return try! database.prepareSelectSQL(sql: sql, values: values).getStringValues()
+    }
+    
     func getInt32Values(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
         let values = try! database.getColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         return values.map { $0.int32Value }

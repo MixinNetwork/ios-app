@@ -165,6 +165,15 @@ class BaseAPI {
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
+                    if NetworkManager.shared.isReachable {
+                        switch error._code {
+                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                            MixinServer.toggle(currentHttpUrl: rootURLString)
+                            UIApplication.traceError(error)
+                        default:
+                            break
+                        }
+                    }
                     handerError(APIError.createError(error: error, status: httpStatusCode))
                 }
             })
@@ -215,16 +224,14 @@ extension BaseAPI {
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
-                        switch error._code {
-                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost:
-                            if NetworkManager.shared.isReachable {
-                                
+                        if NetworkManager.shared.isReachable {
+                            switch error._code {
+                            case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                                MixinServer.toggle(currentHttpUrl: rootURLString)
+                                UIApplication.traceError(error)
+                            default:
+                                break
                             }
-                        default:
-                            break
-                        }
-                        if error._code == NSURLErrorTimedOut {
-
                         }
                         result = .failure(APIError.createError(error: error, status: httpStatusCode))
                     }
@@ -254,10 +261,6 @@ extension BaseAPI {
             }
             UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
             AccountAPI.shared.logout(from: "SyncRequest")
-        }
-        
-        if case let .failure(error) = result, error.code == -1, error.status == NSURLErrorTimedOut {
-            MixinServer.toggle(currentHttpUrl: rootURLString)
         }
         
         return result

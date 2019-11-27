@@ -178,13 +178,12 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        #if DEBUG
-        print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
-        #endif
-        let nsError = error as NSError
-        if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
-            // Time out
-            MixinServer.toggle(currentWebSocketUrl: webSocket.url)
+        if NetworkManager.shared.isReachable {
+            let nsError = error as NSError
+            if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
+                MixinServer.toggle(currentWebSocketUrl: webSocket.url)
+            }
+            UIApplication.traceError(error)
         }
         reconnect(didClose: false)
     }

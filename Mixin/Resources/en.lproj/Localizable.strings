@@ -113,6 +113,8 @@
 "pin_log_read_emergency" = "View emergency contact";
 "pin_log_update_phone" = "Change phone number";
 "pin_log_update_pin" = "Change PIN";
+"pin_log_multisig_sign" = "Multisig Transaction";
+"pin_log_multisig_unlock" = "Revoke Multisig Transaction";
 
 // Login
 "navigation_title_select_country" = "Select a Country or Region";

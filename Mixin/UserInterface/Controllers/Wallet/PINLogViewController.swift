@@ -88,6 +88,10 @@ extension PINLogViewController {
             return R.string.localizable.pin_log_update_phone()
         case "UPDATE_PIN":
             return R.string.localizable.pin_log_update_pin()
+        case "MULTISIG_SIGN":
+            return R.string.localizable.pin_log_multisig_sign()
+        case "MULTISIG_UNLOCK":
+            return R.string.localizable.pin_log_multisig_unlock()
         default:
             return code
         }

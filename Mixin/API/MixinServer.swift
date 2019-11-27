@@ -3,11 +3,11 @@ import Foundation
 enum MixinServer {
     
     static var webSocketUrl: URL {
-        return all[MixinServer.serverIndex].0
+        return all[MixinServer.serverIndex.value].0
     }
     
     static var httpUrl: String {
-        return all[MixinServer.serverIndex].1
+        return all[MixinServer.serverIndex.value].1
     }
     
     private static let key = "server_index"
@@ -17,7 +17,7 @@ enum MixinServer {
         (URL(string: "wss://blaze.mixin.one")!, "https://api.mixin.one/")
     ]
 
-    private static var serverIndex = UserDefaults.standard.integer(forKey: key)
+    private static var serverIndex = Atomic<Int>(UserDefaults.standard.integer(forKey: key))
     
     static func toggle(currentWebSocketUrl url: URL) {
         guard url != webSocketUrl else {
@@ -34,11 +34,11 @@ enum MixinServer {
     }
     
     private static func toggleIndex() {
-        var nextIndex = serverIndex + 1
+        var nextIndex = serverIndex.value + 1
         if nextIndex >= all.count {
             nextIndex = 0
         }
-        serverIndex = nextIndex
+        serverIndex.value = nextIndex
         UserDefaults.standard.set(nextIndex, forKey: key)
     }
     

@@ -130,13 +130,13 @@ class SignalProtocol {
         if category == MessageCategory.SIGNAL_KEY.rawValue {
             if keyType == CiphertextMessage.MessageType.preKey.rawValue {
                 _ = try sessionCipher.decrypt(message: CiphertextMessage(type: .preKey, message: cipherText), callback: { (plain) in
-                    self.processGroupSession(groupId: groupId, sender: sourceAddress, data: plain)
+                    SignalProtocol.shared.processGroupSession(groupId: groupId, sender: sourceAddress, data: plain)
                     callback(plain)
                 })
 
             } else if keyType == CiphertextMessage.MessageType.signal.rawValue {
                 _ = try sessionCipher.decrypt(message: CiphertextMessage(type: .signal, message: cipherText), callback: { (plain) in
-                    self.processGroupSession(groupId: groupId, sender: sourceAddress, data: plain)
+                    SignalProtocol.shared.processGroupSession(groupId: groupId, sender: sourceAddress, data: plain)
                     callback(plain)
                 })
             }

@@ -32,10 +32,6 @@ class DatabaseUpgradeViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             }
 
-            if currentVersion < 5 {
-                AccountUserDefault.shared.extensionSession = nil
-            }
-
             DatabaseUserDefault.shared.forceUpgradeDatabase = false
             DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
             

@@ -230,27 +230,27 @@ class ReceiveMessageService: MixinService {
             }
         } catch {
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
-
-            var userInfo = UIApplication.getTrackUserInfo()
-            userInfo["conversationId"] = data.conversationId
-            userInfo["keyType"] = CiphertextMessage.MessageType.toString(rawValue: decoded.keyType)
-            userInfo["category"] = data.category
-            userInfo["messageId"] = data.messageId
-            userInfo["resendMessageId"] = decoded.resendMessageId ?? ""
-            userInfo["source"] = data.source
-            userInfo["error"] = "\(error)"
-            userInfo["senderUserId"] = data.userId
-            if let err = error as? SignalError {
+            if let err = error as? SignalError, err != SignalError.noSession {
+                var userInfo = UIApplication.getTrackUserInfo()
+                userInfo["conversationId"] = data.conversationId
+                userInfo["keyType"] = CiphertextMessage.MessageType.toString(rawValue: decoded.keyType)
+                userInfo["category"] = data.category
+                userInfo["messageId"] = data.messageId
+                userInfo["resendMessageId"] = decoded.resendMessageId ?? ""
+                userInfo["source"] = data.source
+                userInfo["sessionId"] = data.sessionId ?? ""
+                userInfo["error"] = "\(error)"
+                userInfo["senderUserId"] = data.userId
                 userInfo["signalErrorCode"] = "\(err.rawValue)"
+                if data.category == MessageCategory.SIGNAL_KEY.rawValue {
+                    userInfo["containsSession"] = "\(SignalProtocol.shared.containsSession(recipient: data.userId))"
+                    userInfo["sessionCount"] = "\(SessionDAO.shared.getCount())"
+                    userInfo["localIentity"] = IdentityDAO.shared.getLocalIdentity()?.address ?? ""
+                    userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
+                }
+                userInfo["createdAt"] = data.createdAt
+                UIApplication.traceErrorToFirebase(code: ReportErrorCode.decryptMessageError, userInfo: userInfo)
             }
-            if data.category == MessageCategory.SIGNAL_KEY.rawValue {
-                userInfo["containsSession"] = "\(SignalProtocol.shared.containsSession(recipient: data.userId))"
-                userInfo["sessionCount"] = "\(SessionDAO.shared.getCount())"
-                userInfo["localIentity"] = IdentityDAO.shared.getLocalIdentity()?.address ?? ""
-                userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
-            }
-            userInfo["createdAt"] = data.createdAt
-            UIApplication.traceErrorToFirebase(code: ReportErrorCode.decryptMessageError, userInfo: userInfo)
 
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
                 UIApplication.traceError(code: ReportErrorCode.receiveMessageError, userInfo: ["error": "duplicateMessage"])
@@ -594,7 +594,6 @@ class ReceiveMessageService: MixinService {
     private func requestResendMessage(conversationId: String, userId: String, sessionId: String?) {
         let messages: [String] = MessageDAO.shared.findFailedMessages(conversationId: conversationId, userId: userId).reversed()
         guard messages.count > 0 else {
-            RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, sessionId: sessionId)
             return
         }
 

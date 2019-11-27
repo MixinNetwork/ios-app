@@ -60,6 +60,7 @@ class SignalLoadingViewController: UIViewController {
             return
         }
 
+        AccountUserDefault.shared.extensionSession = nil
         let sessions = SessionDAO.shared.syncGetSessionAddress()
         let userIds = sessions.compactMap { $0.address }
 

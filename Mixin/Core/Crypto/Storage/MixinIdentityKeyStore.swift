@@ -31,7 +31,6 @@ class MixinIdentityKeyStore: IdentityKeyStore {
             UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: ["error": "Saving new identity failed, identity is nil"])
             return false
         }
-        FileManager.default.writeLog(log: "Saved new identity for: \(address.name)")
         IdentityDAO.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         return true
     }

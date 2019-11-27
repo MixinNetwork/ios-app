@@ -146,6 +146,7 @@
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "toast_update_tips" = "Please update Mixin from App Store to continue use the service.";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
+"desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 
 // Contacts
 "contact_title" = "Contacts";

@@ -266,7 +266,7 @@ class ReceiveMessageService: MixinService {
                 insertFailedMessage(data: data)
                 refreshKeys(conversationId: data.conversationId)
                 let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
-                if status != RatchetStatus.REQUESTING.rawValue {
+                if status == nil {
                     requestResendKey(conversationId: data.conversationId, recipientId: data.userId, messageId: data.messageId, sessionId: data.sessionId)
                 }
             }

@@ -20,10 +20,8 @@ struct Participant: BaseCodable {
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
-            let foreignKey = ForeignKey(withForeignTable: Conversation.tableName, and: conversationId).onDelete(.cascade)
             return  [
-                "_multi_primary": MultiPrimaryBinding(indexesBy: conversationId, userId),
-                "_foreign_key_constraint": ForeignKeyBinding(conversationId, foreignKey: foreignKey)
+                "_multi_primary": MultiPrimaryBinding(indexesBy: conversationId, userId)
             ]
         }
     }

@@ -143,9 +143,7 @@ class BaseDatabase {
 
     @discardableResult
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) -> Bool {
-        try! database.run(transaction: {
-            try! database.update(maps: maps, tableName: tableName, condition: condition)
-        })
+        try! database.update(maps: maps, tableName: tableName, condition: condition)
         return true
     }
 
@@ -167,27 +165,11 @@ class BaseDatabase {
         return true
     }
 
-    func deleteAll(table: String) {
-        try! database.run(transaction: {
-            guard try database.isTableExists(table) else {
-                return
-            }
-            try database.delete(fromTable: table)
-        })
-    }
-
     @discardableResult
-    func delete(table: String, condition: Condition, cascadeDelete: Bool = false) -> Int {
-        var result = 0
-        try! database.run(transaction: {
-            if cascadeDelete {
-                try database.exec(StatementPragma().pragma(Pragma.foreignKeys, to: true))
-            }
-            let delete = try database.prepareDelete(fromTable: table).where(condition)
-            try delete.execute()
-            result = delete.changes ?? 0
-        })
-        return result
+    func delete(table: String, condition: Condition) -> Int {
+        let delete = try! database.prepareDelete(fromTable: table).where(condition)
+        try! delete.execute()
+        return delete.changes ?? 0
     }
 
     func execute(sql: String, values: [ColumnEncodable]) {

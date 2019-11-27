@@ -146,6 +146,7 @@
 "toast_recaptcha_invalid" = "验证失败";
 "toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
+"desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 
 // Contacts
 "contact_title" = "联系人";

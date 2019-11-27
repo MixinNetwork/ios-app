@@ -445,6 +445,8 @@
 "transfer_by_pin" = "PINで支払う";
 "transfer_use_face" = "Face Payを使います";
 "transfer_use_touch" = "Touch Payを使います";
+"transfer_large_title" = "Large Amount Confirmation";
+"transfer_large_prompt" = "Are you sure you want to transfer %@ worth %@ to %@?";
 
 // QRCode
 "myqrcode_title" = "私のQRコード";

@@ -496,6 +496,8 @@
 "withdraw_by_pin" = "通过密码提现";
 "withdraw_use_face" = "使用面容提现";
 "withdraw_use_touch" = "使用指纹提现";
+"transfer_large_title" = "大额转账确认";
+"transfer_large_prompt" = "确定转 %@（价值 %@）给 %@ ？";
 
 // Multisig
 "multisig_by_pin" = "通过密码签名";

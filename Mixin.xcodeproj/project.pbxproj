@@ -771,6 +771,8 @@
 		E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */; };
 		E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E09C5EC023703FEE0095F729 /* ProfileShortcutView.xib */; };
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
+		E0A6F0B7238EA58B00E14782 /* LargeTransferConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A6F0B6238EA58B00E14782 /* LargeTransferConfirmationWindow.swift */; };
+		E0A6F0B9238EA5A400E14782 /* LargeTransferConfirmationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A6F0B8238EA5A400E14782 /* LargeTransferConfirmationWindow.xib */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
@@ -1588,6 +1590,8 @@
 		E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileShortcutView.swift; sourceTree = "<group>"; };
 		E09C5EC023703FEE0095F729 /* ProfileShortcutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileShortcutView.xib; sourceTree = "<group>"; };
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
+		E0A6F0B6238EA58B00E14782 /* LargeTransferConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeTransferConfirmationWindow.swift; sourceTree = "<group>"; };
+		E0A6F0B8238EA5A400E14782 /* LargeTransferConfirmationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LargeTransferConfirmationWindow.xib; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -2193,6 +2197,8 @@
 				DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */,
 				DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */,
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
+				E0A6F0B6238EA58B00E14782 /* LargeTransferConfirmationWindow.swift */,
+				E0A6F0B8238EA5A400E14782 /* LargeTransferConfirmationWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3145,6 +3151,7 @@
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
+				E0A6F0B9238EA5A400E14782 /* LargeTransferConfirmationWindow.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
@@ -4047,6 +4054,7 @@
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
+				E0A6F0B7238EA58B00E14782 /* LargeTransferConfirmationWindow.swift in Sources */,
 				E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,
 				DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */,

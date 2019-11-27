@@ -3,8 +3,19 @@ import UIKit
 class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     enum Opponent {
+        
         case contact(UserItem)
         case address(Address)
+        
+        var name: String {
+            switch self {
+            case let .contact(user):
+                return user.fullName
+            case let .address(address):
+                return address.label
+            }
+        }
+        
     }
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -178,49 +189,24 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         
         let memo = memoTextField.text?.trim() ?? ""
-        var amount = amountTextField.text?.trim() ?? ""
-        var fiatMoneyAmount: String? = nil
-        if !isInputAssetAmount {
-            fiatMoneyAmount = amount + " " + Currency.current.code
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .none
-            formatter.usesGroupingSeparator = false
-            formatter.maximumFractionDigits = 8
-            formatter.roundingMode = .down
-            let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
-            let number = NSNumber(value: amount.doubleValue / fiatMoneyPrice)
-            amount = formatter.string(from: number) ?? ""
+        let amount = amountTextField.text?.trim() ?? ""
+        
+        let usdValue: Double
+        if isInputAssetAmount {
+            usdValue = amount.doubleValue * asset.priceUsd.doubleValue
+        } else {
+            usdValue = amount.doubleValue / Currency.current.rate
         }
         
-        adjustBottomConstraintWhenKeyboardFrameChanges = false
-        let payWindow = PayWindow.instance()
-        payWindow.onDismiss = { [weak self] in
-            self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
-        }
-        switch opponent! {
-        case .contact(let user):
-            payWindow.render(asset: asset, action: .transfer(trackId: tranceId, user: user, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
-        case .address(let address):
-            guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
-                showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
-                return
+        if usdValue < 1000 {
+            showPayWindow(asset: asset, amount: amount, memo: memo)
+        } else {
+            let win = R.nib.largeTransferConfirmationWindow(owner: nil)!
+            win.load(asset: asset, amount: amount, amountIsAsset: isInputAssetAmount, receiver: opponent.name)
+            win.onConfirm = {
+                self.showPayWindow(asset: asset, amount: amount, memo: memo)
             }
-            guard !hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
-                newAddressTips = true
-                WithdrawalTipWindow.instance().render(asset: asset) { [weak self](isContinue: Bool) in
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    if isContinue {
-                        payWindow.render(asset: asset, action: .withdraw(trackId: weakSelf.tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
-                    } else {
-                        weakSelf.amountTextField.becomeFirstResponder()
-                    }
-                }.presentPopupControllerAnimated()
-                return
-            }
-
-            payWindow.render(asset: asset, action: .withdraw(trackId: tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
+            win.presentPopupControllerAnimated()
         }
     }
     
@@ -276,6 +262,53 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                     weakSelf.switchAssetButton.isUserInteractionEnabled = true
                 }
             }
+        }
+    }
+    
+    private func showPayWindow(asset: AssetItem, amount: String, memo: String) {
+        var amount = amount
+        var fiatMoneyAmount: String? = nil
+        if !isInputAssetAmount {
+            fiatMoneyAmount = amount + " " + Currency.current.code
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .none
+            formatter.usesGroupingSeparator = false
+            formatter.maximumFractionDigits = 8
+            formatter.roundingMode = .down
+            let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
+            let number = NSNumber(value: amount.doubleValue / fiatMoneyPrice)
+            amount = formatter.string(from: number) ?? ""
+        }
+        
+        adjustBottomConstraintWhenKeyboardFrameChanges = false
+        let payWindow = PayWindow.instance()
+        payWindow.onDismiss = { [weak self] in
+            self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
+        }
+        switch opponent! {
+        case .contact(let user):
+            payWindow.render(asset: asset, action: .transfer(trackId: tranceId, user: user, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
+        case .address(let address):
+            guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
+                showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
+                return
+            }
+            guard !hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
+                newAddressTips = true
+                WithdrawalTipWindow.instance().render(asset: asset) { [weak self](isContinue: Bool) in
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    if isContinue {
+                        payWindow.render(asset: asset, action: .withdraw(trackId: weakSelf.tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                    } else {
+                        weakSelf.amountTextField.becomeFirstResponder()
+                    }
+                }.presentPopupControllerAnimated()
+                return
+            }
+
+            payWindow.render(asset: asset, action: .withdraw(trackId: tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
         }
     }
     

@@ -2,7 +2,7 @@ import Foundation
 
 class Atomic<T> {
 
-    private let queue = DispatchQueue(label: "one.mixin.messager.atomic", attributes: .concurrent)
+    private let lock = NSLock()
     private var _value: T
 
     init (_ value: T) {
@@ -11,12 +11,15 @@ class Atomic<T> {
 
     var value: T {
         get {
-            return queue.sync { self._value }
+            lock.lock()
+            let val = _value
+            lock.unlock()
+            return val
         }
         set {
-            queue.async(flags: .barrier) {
-                self._value = newValue
-            }
+            lock.lock()
+            self._value = newValue
+            lock.unlock()
         }
     }
 }

@@ -773,10 +773,13 @@
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
+		E0BC7BB7238FADE000E3EF2C /* ProfileMenuMyFavoriteAppView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BC7BB6238FADE000E3EF2C /* ProfileMenuMyFavoriteAppView.xib */; };
+		E0BC7BB9238FAE0B00E3EF2C /* ProfileMenuMyFavoriteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BC7BB8238FAE0B00E3EF2C /* ProfileMenuMyFavoriteAppView.swift */; };
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
 		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
+		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
 		E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
@@ -1591,10 +1594,13 @@
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
+		E0BC7BB6238FADE000E3EF2C /* ProfileMenuMyFavoriteAppView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuMyFavoriteAppView.xib; sourceTree = "<group>"; };
+		E0BC7BB8238FAE0B00E3EF2C /* ProfileMenuMyFavoriteAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuMyFavoriteAppView.swift; sourceTree = "<group>"; };
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
+		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
 		E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedAvatarImageView.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1873,6 +1879,9 @@
 				E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */,
 				E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */,
 				E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */,
+				E0BC7BB6238FADE000E3EF2C /* ProfileMenuMyFavoriteAppView.xib */,
+				E0BC7BB8238FAE0B00E3EF2C /* ProfileMenuMyFavoriteAppView.swift */,
+				E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3177,6 +3186,7 @@
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
+				E0BC7BB7238FADE000E3EF2C /* ProfileMenuMyFavoriteAppView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
@@ -3498,6 +3508,7 @@
 				7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
+				E0BC7BB9238FAE0B00E3EF2C /* ProfileMenuMyFavoriteAppView.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
@@ -4004,6 +4015,7 @@
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
+				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				273FACC9205FB9A800513327 /* SenderKeyStoreWrapper.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileMenuMyFavoriteAppView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="avatarStackView" destination="eqF-Ko-hV5" id="f2w-Ts-ChJ"/>
+                <outlet property="button" destination="qBX-Rs-CFa" id="H4i-qO-2CF"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="j1o-H9-hkg">
+            <rect key="frame" x="0.0" y="0.0" width="380" height="64"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qBX-Rs-CFa">
+                    <rect key="frame" x="0.0" y="0.0" width="380" height="64"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </button>
+                <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="rnN-v6-ZF1">
+                    <rect key="frame" x="20" y="0.0" width="340" height="64"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="My Shared Apps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uHk-hq-Oyh">
+                            <rect key="frame" x="0.0" y="0.0" width="274" height="64"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_my_shared_apps"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="eqF-Ko-hV5" customClass="UserAvatarStackView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="280" y="0.0" width="60" height="64"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="QMK-gJ-b6I"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="rnN-v6-ZF1" secondAttribute="trailing" constant="20" id="6EI-KT-Vaa"/>
+                <constraint firstAttribute="trailing" secondItem="qBX-Rs-CFa" secondAttribute="trailing" id="CLK-4y-ps7"/>
+                <constraint firstItem="rnN-v6-ZF1" firstAttribute="leading" secondItem="j1o-H9-hkg" secondAttribute="leading" constant="20" id="EQm-zf-9IA"/>
+                <constraint firstAttribute="bottom" secondItem="rnN-v6-ZF1" secondAttribute="bottom" id="gt8-sS-xpT"/>
+                <constraint firstItem="qBX-Rs-CFa" firstAttribute="leading" secondItem="j1o-H9-hkg" secondAttribute="leading" id="iAd-Lh-NhO"/>
+                <constraint firstAttribute="bottom" secondItem="qBX-Rs-CFa" secondAttribute="bottom" id="l5s-lz-dAQ"/>
+                <constraint firstItem="qBX-Rs-CFa" firstAttribute="top" secondItem="j1o-H9-hkg" secondAttribute="top" id="l66-WY-KuW"/>
+                <constraint firstItem="rnN-v6-ZF1" firstAttribute="top" secondItem="j1o-H9-hkg" secondAttribute="top" id="rfx-mt-ohG"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="114" y="46"/>
+        </view>
+    </objects>
+</document>

@@ -205,6 +205,10 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
 // MARK: - Actions
 extension UserProfileViewController {
     
+    @objc func editFavoriteApps() {
+        
+    }
+    
     @objc func addContact() {
         relationshipView.isBusy = true
         UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
@@ -614,6 +618,11 @@ extension UserProfileViewController {
                                  action: #selector(changeNumber))]
             ]
             reloadMenu(groups: groups)
+            
+            let favoriteAppView = ProfileMenuMyFavoriteAppView()
+            favoriteAppView.button.removeTarget(nil, action: nil, for: .touchUpInside)
+            favoriteAppView.button.addTarget(self, action: #selector(editFavoriteApps), for: .touchUpInside)
+            menuStackView.insertArrangedSubview(favoriteAppView, at: 0)
             
             if let createdAt = user.createdAt?.toUTCDate() {
                 let rep = DateFormatter.dateSimple.string(from: createdAt)

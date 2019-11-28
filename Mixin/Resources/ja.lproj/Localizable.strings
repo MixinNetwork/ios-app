@@ -510,6 +510,7 @@
 "profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
 "profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";
+"profile_my_shared_apps" = "My Shared Apps";
 
 // Emergency
 "emergency_view" = "緊急連絡先を表示";

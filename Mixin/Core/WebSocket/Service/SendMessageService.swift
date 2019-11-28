@@ -215,7 +215,7 @@ class SendMessageService: MixinService {
                             jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
 
                             if let sessionId = AccountUserDefault.shared.extensionSession {
-                                let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, messages: messages), action: BlazeMessageAction.createMessage.rawValue)
+                                let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, ackMessages: messages), action: BlazeMessageAction.createMessage.rawValue)
                                 jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage))
                             }
                         }
@@ -301,7 +301,7 @@ class SendMessageService: MixinService {
                         continue
                     }
 
-                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, messages: messages), action: BlazeMessageAction.createMessage.rawValue)
+                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, ackMessages: messages), action: BlazeMessageAction.createMessage.rawValue)
                     if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
@@ -369,9 +369,7 @@ class SendMessageService: MixinService {
                 case JobAction.SEND_ACK_MESSAGES.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_SESSION_MESSAGES.rawValue:
-                    var blazeMessage = job.toBlazeMessage()
-                    blazeMessage.action = BlazeMessageAction.createMessage.rawValue
-                    try deliver(blazeMessage: blazeMessage)
+                    deliverNoThrow(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
                         return try sendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)

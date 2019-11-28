@@ -61,6 +61,7 @@ class SignalLoadingViewController: UIViewController {
         }
 
         AccountUserDefault.shared.extensionSession = nil
+        JobDAO.shared.clearSessionJob()
         let sessions = SessionDAO.shared.syncGetSessionAddress()
         let userIds = sessions.compactMap { $0.address }
 

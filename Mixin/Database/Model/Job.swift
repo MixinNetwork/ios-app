@@ -70,7 +70,7 @@ struct Job: BaseCodable {
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES:
+        case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES, .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
             self.priority = JobPriority.SEND_MESSAGE.rawValue

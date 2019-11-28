@@ -47,8 +47,8 @@ class NotificationController: NSObject {
                 present(text: urlString)
             case .upgradeDesktop:
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
-            case let .device(uuid, publicKey):
-                LoginConfirmWindow.instance(uuid: uuid, publicKey: publicKey).presentView()
+            case let .device(id, publicKey):
+                LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
             case .unknown:
                 present(text: urlString)
             }

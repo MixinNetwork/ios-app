@@ -71,11 +71,12 @@ class MixinService {
         }
     }
 
-    private func syncConversation(conversationId: String) {
+    internal func syncConversation(conversationId: String) {
         repeat {
             switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
+                return
             case let .failure(error):
                 if error.code == 401 {
                     return

@@ -51,7 +51,11 @@ final class ParticipantSessionDAO {
     }
 
     func syncConversationParticipantSession(conversation: ConversationResponse) {
+        let conversationId = conversation.conversationId
         MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+            let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
+            try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
         }
     }

@@ -429,6 +429,14 @@ extension SendMessageService {
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
         }
+        guard conversation.status == ConversationStatus.SUCCESS.rawValue else {
+            var userInfo = [String: Any]()
+            userInfo["error"] = "conversation status error"
+            userInfo["conversationStatus"] = "\(conversation.status)"
+            userInfo["conversationId"] = "\(message.conversationId)"
+            UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+            return
+        }
 
         if conversation.category == ConversationCategory.GROUP.rawValue,  message.category.hasSuffix("_TEXT"), let text = message.content, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
             let identityNumber = text[botNumberRange].dropFirstAndLast()
@@ -458,9 +466,7 @@ extension SendMessageService {
         } else {
             if !SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId) {
                 if conversation.isGroup() {
-                    guard try syncConversation(conversation: conversation) else {
-                        return
-                    }
+                    syncConversation(conversationId: message.conversationId)
                 } else {
                     try checkConversationExist(conversation: conversation)
                 }
@@ -472,23 +478,6 @@ extension SendMessageService {
         }
         try deliverMessage(blazeMessage: blazeMessage)
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
-    }
-
-    private func syncConversation(conversation: ConversationItem) throws -> Bool {
-        switch ConversationAPI.shared.getConversation(conversationId: conversation.conversationId) {
-        case let .success(response):
-            ConversationDAO.shared.updateConversation(conversation: response)
-            return true
-        case let .failure(error):
-            if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
-                try checkConversationExist(conversation: conversation)
-                return true
-            } else if error.code == 404 || error.code == 403 {
-                ParticipantDAO.shared.removeParticipant(conversationId: conversation.conversationId)
-                return false
-            }
-            throw error
-        }
     }
 
     private func checkConversationExist(conversation: ConversationItem) throws {

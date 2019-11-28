@@ -50,12 +50,12 @@ struct Job: BaseCodable {
         }
     }
 
-    init(action: JobAction, messageId: String, status: String) {
+    init(action: JobAction, conversationId: String, messageId: String, status: String) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         self.action = action.rawValue
         self.userId = nil
-        self.conversationId = nil
+        self.conversationId = conversationId
         self.resendMessageId = nil
         self.blazeMessage = nil
         self.messageId = messageId
@@ -146,6 +146,9 @@ enum JobAction: String {
     case SEND_ACK_MESSAGE
     case SEND_ACK_MESSAGES
     case SEND_DELIVERED_ACK_MESSAGE
+
+    case SEND_SESSION_MESSAGE
+    case SEND_SESSION_MESSAGES
 }
 
 

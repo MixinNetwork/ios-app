@@ -579,6 +579,20 @@ class ReceiveMessageService: MixinService {
                 SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, messageIds: messageIds)
             case PlainDataAction.NO_KEY.rawValue:
                 RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+            case PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue:
+                guard let ackMessages = plainData.ackMessages else {
+                    return
+                }
+                for message in ackMessages {
+                    guard message.status == MessageStatus.READ.rawValue else {
+                        continue
+                    }
+                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, updateUnseen: true) {
+                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
+                        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
+                    }
+                }
+                ConversationDAO.shared.showBadgeNumber()
             default:
                 break
             }
@@ -598,7 +612,7 @@ class ReceiveMessageService: MixinService {
         }
 
         FileManager.default.writeLog(conversationId: conversationId, log: "[ReceiveMessageService][REQUEST_REQUEST_MESSAGES]...messages:[\(messages.joined(separator: ","))]")
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, status: nil)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, ackMessages: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
@@ -607,7 +621,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func requestResendKey(conversationId: String, recipientId: String, messageId: String, sessionId: String?) {
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, status: nil)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, ackMessages: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
@@ -685,6 +699,7 @@ extension ReceiveMessageService {
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
 
+            JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         }

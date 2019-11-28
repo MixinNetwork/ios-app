@@ -71,11 +71,11 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
-    init(sessionId: String, messages: [TransferMessage]) {
+    init(sessionId: String, conversationId: String, messages: [TransferMessage]) {
         let accountId = AccountAPI.shared.accountUserId
         let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)
         self.messageId = UUID().uuidString.lowercased()
-        self.conversationId = accountId
+        self.conversationId = conversationId
         self.recipientId = accountId
         self.category = MessageCategory.PLAIN_JSON.rawValue
         self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""

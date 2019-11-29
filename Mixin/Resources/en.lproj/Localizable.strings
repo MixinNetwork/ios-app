@@ -575,6 +575,9 @@
 "profile_report_hint" = "Report and block this contact? This conversation will also be deleted";
 "profile_join_in" = "Joined in %@";
 "profile_my_shared_apps" = "My Shared Apps";
+"profile_share_app_hint" = "If you want to share an app, add it to your contacts first";
+"profile_shared_app_of_user" = "%@'s Shared Apps";
+"profile_shared_app_empty" = "NO APPS";
 
 // Emergency
 "emergency_view" = "View emergency contact";

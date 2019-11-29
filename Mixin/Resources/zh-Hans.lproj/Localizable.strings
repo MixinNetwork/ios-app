@@ -578,6 +578,9 @@
 "profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
 "profile_join_in" = "%@ 加入";
 "profile_my_shared_apps" = "分享的应用";
+"profile_share_app_hint" = "若要分享应用，请添加其为联系人";
+"profile_shared_app_of_user" = "%@分享的应用";
+"profile_shared_app_empty" = "暂无应用可分享";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

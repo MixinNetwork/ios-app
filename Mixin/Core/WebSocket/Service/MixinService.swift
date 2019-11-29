@@ -12,7 +12,7 @@ class MixinService {
     }
 
     internal func sendGroupSenderKey(conversationId: String) throws {
-        let participants = ParticipantDAO.shared.getNotAppParticipants(conversationId: conversationId, accountId: currentAccountId)
+        let participants = ParticipantDAO.shared.getNotSentKeyParticipants(conversationId: conversationId, accountId: currentAccountId)
         guard participants.count > 0 else {
             return
         }

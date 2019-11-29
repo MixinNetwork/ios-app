@@ -15,11 +15,6 @@ final class ParticipantDAO {
     AND p.user_id NOT IN (SELECT user_id FROM sent_sender_keys WHERE conversation_id = ?)
     AND p.user_id != ? AND ifnull(u.app_id, '') = ''
     """
-    static let sqlQueryNotAppParticipants = """
-    \(sqlQueryColumns)
-    LEFT JOIN users u ON p.user_id = u.user_id
-    WHERE p.conversation_id = ? AND p.user_id != ? AND ifnull(u.app_id, '') = ''
-    """
     static let sqlQueryParticipants = """
     \(sqlQueryColumns)
     LEFT JOIN users u ON p.user_id = u.user_id
@@ -107,10 +102,6 @@ final class ParticipantDAO {
 
     func getNotSentKeyParticipants(conversationId: String, accountId: String) -> [Participant] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryNotSentKeyParticipants, values: [conversationId, conversationId, accountId])
-    }
-
-    func getNotAppParticipants(conversationId: String, accountId: String) -> [Participant] {
-        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryNotAppParticipants, values: [conversationId, accountId])
     }
 
     func updateParticipantRole(message: Message, conversationId: String, participantId: String, role: String, source: String) -> Bool {

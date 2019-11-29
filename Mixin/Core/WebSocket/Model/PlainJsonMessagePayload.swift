@@ -1,6 +1,6 @@
 import Foundation
 
-struct TransferPlainData: Codable {
+struct PlainJsonMessagePayload: Codable {
 
     let action: String
     let messageId: String?

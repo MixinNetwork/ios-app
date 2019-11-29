@@ -72,7 +72,7 @@ extension BlazeMessageParam {
     }
 
     init(sessionId: String, conversationId: String, ackMessages: [TransferMessage]) {
-        let transferPlainData = TransferPlainData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messageId: nil, messages: nil, ackMessages: ackMessages)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messageId: nil, messages: nil, ackMessages: ackMessages)
         self.messageId = UUID().uuidString.lowercased()
         self.conversationId = conversationId
         self.recipientId = AccountAPI.shared.accountUserId

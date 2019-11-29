@@ -528,7 +528,7 @@
 		DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */; };
 		DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF2081B12005FF3500B87DB0 /* Camera.storyboard */; };
 		DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22092F1FFFE96500D470EF /* SessionRequest.swift */; };
-		DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */; };
+		DF22D94B1FDD33E700243CAE /* PlainJsonMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94A1FDD33E700243CAE /* PlainJsonMessagePayload.swift */; };
 		DF22D94D1FDE500500243CAE /* SystemConversationMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94C1FDE500500243CAE /* SystemConversationMessagePayload.swift */; };
 		DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2819742014669E001EE5FA /* RefreshAccountJob.swift */; };
 		DF2A0D952295721200CA0280 /* AddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF2A0D942295721200CA0280 /* AddressView.xib */; };
@@ -1335,7 +1335,7 @@
 		DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJobQueue.swift; sourceTree = "<group>"; };
 		DF2081B12005FF3500B87DB0 /* Camera.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		DF22092F1FFFE96500D470EF /* SessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
-		DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlainData.swift; sourceTree = "<group>"; };
+		DF22D94A1FDD33E700243CAE /* PlainJsonMessagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainJsonMessagePayload.swift; sourceTree = "<group>"; };
 		DF22D94C1FDE500500243CAE /* SystemConversationMessagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemConversationMessagePayload.swift; sourceTree = "<group>"; };
 		DF2819742014669E001EE5FA /* RefreshAccountJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAccountJob.swift; sourceTree = "<group>"; };
 		DF2A0D942295721200CA0280 /* AddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressView.xib; sourceTree = "<group>"; };
@@ -2763,7 +2763,7 @@
 				DF8DA1A31FD64C5800425CEC /* BlazeMessageData.swift */,
 				27D6E8D12045473300BA678A /* TransferMessage.swift */,
 				DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */,
-				DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */,
+				DF22D94A1FDD33E700243CAE /* PlainJsonMessagePayload.swift */,
 				DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */,
 				DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */,
 				DF7FB63922801B4E00F4782F /* TransferRecallData.swift */,
@@ -3567,7 +3567,7 @@
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
-				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
+				DF22D94B1FDD33E700243CAE /* PlainJsonMessagePayload.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,
 				DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */,
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,

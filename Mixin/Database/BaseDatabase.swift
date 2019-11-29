@@ -13,6 +13,15 @@ class BaseDatabase {
         database?.close()
     }
 
+    func removeDatabase(databaseURL: URL) {
+        let semaphore = DispatchSemaphore(value: 0)
+        database.close {
+            try? FileManager.default.removeItem(at: databaseURL)
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+
     func getDatabaseVersion() -> Int {
         return try! database.getDatabaseVersion()
     }

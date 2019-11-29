@@ -462,7 +462,8 @@ extension SendMessageService {
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
         }
-        guard conversation.status == ConversationStatus.SUCCESS.rawValue else {
+
+        if conversation.isGroup() && conversation.status != ConversationStatus.SUCCESS.rawValue {
             var userInfo = [String: Any]()
             userInfo["error"] = "conversation status error"
             userInfo["conversationStatus"] = "\(conversation.status)"
@@ -557,6 +558,9 @@ extension SendMessageService {
         do {
             try deliver(blazeMessage: blazeMessage)
         } catch {
+            #if DEBUG
+            print(error)
+            #endif
             if let err = error as? APIError, err.code == 403 {
                 return
             }

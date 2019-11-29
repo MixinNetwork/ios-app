@@ -80,6 +80,7 @@ class CryptoUserDefault {
     
     func reset() {
         session.removeObject(forKey: keyIsLoaded)
+        session.removeObject(forKey: keySyncSession)
         session.removeObject(forKey: keyRefreshOneTimePreKey)
         session.removeObject(forKey: keyNextPrekeyID)
         session.removeObject(forKey: keyNextSignedPrekeyID)

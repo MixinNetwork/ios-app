@@ -113,6 +113,9 @@
 "pin_log_read_emergency" = "查看紧急联系人";
 "pin_log_update_phone" = "修改手机号码";
 "pin_log_update_pin" = "修改支付密码";
+"pin_log_multisig_sign" = "签名多重签名交易";
+"pin_log_multisig_unlock" = "撤销多重签名交易";
+
 
 // Login
 "navigation_title_select_country" = "选择一个国家或地区";

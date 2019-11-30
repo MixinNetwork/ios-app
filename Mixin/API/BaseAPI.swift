@@ -164,6 +164,14 @@ class BaseAPI {
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
+                    if NetworkManager.shared.isReachable {
+                        switch error._code {
+                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                            UIApplication.traceError(error)
+                        default:
+                            break
+                        }
+                    }
                     handerError(APIError.createError(error: error, status: httpStatusCode))
                 }
             })
@@ -213,6 +221,14 @@ extension BaseAPI {
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
+                        if NetworkManager.shared.isReachable {
+                            switch error._code {
+                            case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                                UIApplication.traceError(error)
+                            default:
+                                break
+                            }
+                        }
                         result = .failure(APIError.createError(error: error, status: httpStatusCode))
                     }
                     semaphore.signal()

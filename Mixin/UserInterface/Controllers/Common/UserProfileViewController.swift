@@ -673,18 +673,11 @@ extension UserProfileViewController {
             
             let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
                 var group = [ProfileMenuItem]()
-                if user.isBot {
-                    if user.isSelfBot {
-                        group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_transfer(),
-                                                     subtitle: nil,
-                                                     style: [],
-                                                     action: #selector(transfer)))
-                    } else {
-                        group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_developer(),
+                if user.isBot && !user.isSelfBot {
+                    group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_developer(),
                                                      subtitle: nil,
                                                      style: [],
                                                      action: #selector(showDeveloper)))
-                    }
                 }
                 group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
                                              subtitle: nil,
@@ -735,7 +728,7 @@ extension UserProfileViewController {
         }
         
         view.frame = AppDelegate.current.window.bounds
-        updatePreferredContentSizeHeight()
+        updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {
             updateUserFromRemoteAfterReloaded = false
@@ -750,7 +743,13 @@ extension UserProfileViewController {
     
     private func handle(userResponse: UserResponse, postContactDidChangeNotificationOnSuccess: Bool) {
         user = UserItem.createUser(from: userResponse)
-        reloadData()
+        if let animator = sizeAnimator {
+            animator.addCompletion { _ in
+                self.reloadData()
+            }
+        } else {
+            reloadData()
+        }
         UserDAO.shared.updateUsers(users: [userResponse], notifyContact: postContactDidChangeNotificationOnSuccess)
     }
     

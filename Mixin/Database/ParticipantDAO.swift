@@ -8,11 +8,6 @@ final class ParticipantDAO {
     private static let sqlQueryColumns = """
     SELECT p.conversation_id, p.user_id, p.role, p.status, p.created_at FROM participants p
     """
-    static let sqlQueryNotAppParticipants = """
-    \(sqlQueryColumns)
-    LEFT JOIN users u ON p.user_id = u.user_id
-    WHERE p.conversation_id = ? AND p.user_id != ? AND ifnull(u.app_id, '') = ''
-    """
     static let sqlQueryParticipants = """
     \(sqlQueryColumns)
     LEFT JOIN users u ON p.user_id = u.user_id
@@ -100,10 +95,6 @@ final class ParticipantDAO {
 
     func getSyncParticipantIds() -> [String] {
         return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue)))
-    }
-
-    func getNotAppParticipants(conversationId: String, accountId: String) -> [Participant] {
-        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryNotAppParticipants, values: [conversationId, accountId])
     }
 
     func updateParticipantRole(message: Message, conversationId: String, participantId: String, role: String, source: String) -> Bool {

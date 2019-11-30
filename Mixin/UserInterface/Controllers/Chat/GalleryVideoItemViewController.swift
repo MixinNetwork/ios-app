@@ -253,7 +253,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         animate(animations: {
             self.videoView.isPipMode = isPipMode
             if isPipMode {
-                self.layoutPip(updateViewCenter: true)
+                self.layoutPip(usesArbitraryVideoViewCenter: true)
             } else {
                 self.layoutFullsized()
             }
@@ -433,7 +433,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    func layoutPip(updateViewCenter: Bool) {
+    func layoutPip(usesArbitraryVideoViewCenter: Bool) {
         guard let parentView = parent?.view else {
             return
         }
@@ -453,9 +453,22 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             }
         }
         view.frame.size = ceil(size)
-        if updateViewCenter {
+        if usesArbitraryVideoViewCenter {
             view.center = CGPoint(x: parentView.bounds.width - pipModeMinInsets.right - size.width / 2,
                                   y: pipModeLayoutInsets.top + pipModeDefaultTopMargin + size.height / 2)
+        } else {
+            var center = view.center
+            if view.frame.minX < parentView.bounds.minX + pipModeMinInsets.left {
+                center.x = parentView.bounds.minX + pipModeMinInsets.right + view.frame.width / 2
+            } else if view.frame.maxX > parentView.bounds.maxX - pipModeMinInsets.right {
+                center.x = parentView.bounds.maxX - pipModeMinInsets.right - view.frame.width / 2
+            }
+            if view.frame.minY < parentView.bounds.minY + pipModeMinInsets.top {
+                center.y = parentView.bounds.minY + pipModeMinInsets.top + view.frame.height / 2
+            } else if view.frame.maxY > parentView.bounds.maxY - pipModeMinInsets.bottom {
+                center.y = parentView.bounds.maxY - pipModeMinInsets.bottom - view.frame.height / 2
+            }
+            view.center = center
         }
     }
     
@@ -577,7 +590,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
         if isPipMode {
-            layoutPip(updateViewCenter: false)
+            layoutPip(usesArbitraryVideoViewCenter: false)
         } else {
             layoutFullsized()
         }

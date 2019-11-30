@@ -178,9 +178,9 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        #if DEBUG
-        print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
-        #endif
+        if NetworkManager.shared.isReachable {
+            UIApplication.traceError(error)
+        }
         reconnect(didClose: false)
     }
 

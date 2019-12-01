@@ -20,14 +20,14 @@ enum MixinServer {
     private static var serverIndex = Atomic<Int>(UserDefaults.standard.integer(forKey: key))
     
     static func toggle(currentWebSocketUrl url: URL) {
-        guard url != webSocketUrl else {
+        guard url == webSocketUrl else {
             return
         }
         toggleIndex()
     }
     
     static func toggle(currentHttpUrl url: String) {
-        guard url != httpUrl else {
+        guard url == httpUrl else {
             return
         }
         toggleIndex()

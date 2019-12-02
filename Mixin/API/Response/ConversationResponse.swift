@@ -9,7 +9,7 @@ struct ConversationResponse: Codable {
     let announcement: String
     let createdAt: String
     let participants: [ParticipantResponse]
-    let participantSessions: [ParticipantSessionResponse]?
+    let participantSessions: [UserSession]?
     let codeUrl: String
     let creatorId: String
     let muteUntil: String
@@ -40,24 +40,4 @@ struct ParticipantResponse: Codable {
         case role
         case createdAt = "created_at"
     }
-}
-
-struct ParticipantSessionResponse: Codable {
-
-    let userId: String
-    let sessionId: String
-
-    enum CodingKeys: String, CodingKey {
-        case userId = "user_id"
-        case sessionId = "session_id"
-    }
-}
-
-
-extension ParticipantSessionResponse {
-
-    var uniqueIdentifier: String {
-        return "\(userId)\(sessionId)"
-    }
-
 }

@@ -388,7 +388,7 @@ class ReceiveMessageService: MixinService {
         }
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
-            MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -396,7 +396,7 @@ class ReceiveMessageService: MixinService {
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
                 return
             }
-            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
         case MessageCategory.SIGNAL_DATA.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -404,24 +404,24 @@ class ReceiveMessageService: MixinService {
             guard transferMediaData.size > 0 else {
                 return
             }
-            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
         case MessageCategory.SIGNAL_AUDIO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
-            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
             let job = AudioDownloadJob(messageId: messageId, mediaMimeType: transferMediaData.mimeType)
             ConcurrentJobQueue.shared.addJob(job: job)
         case MessageCategory.SIGNAL_LIVE.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let liveData = (try? jsonDecoder.decode(TransferLiveData.self, from: base64Data)) else {
                 return
             }
-            MessageDAO.shared.updateLiveMessage(liveData: liveData, status:  MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            MessageDAO.shared.updateLiveMessage(liveData: liveData, status:  Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_STICKER.rawValue:
             guard let transferStickerData = parseSticker(plainText) else {
                 return
             }
-            MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_CONTACT.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferData = (try? jsonDecoder.decode(TransferContactData.self, from: base64Data)) else {
                 return
@@ -429,7 +429,7 @@ class ReceiveMessageService: MixinService {
             guard syncUser(userId: transferData.userId) else {
                 return
             }
-            MessageDAO.shared.updateContactMessage(transferData: transferData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         default:
             break
         }

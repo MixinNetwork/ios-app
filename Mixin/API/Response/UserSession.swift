@@ -10,3 +10,11 @@ struct UserSession: Codable {
         case sessionId = "session_id"
     }
 }
+
+extension UserSession {
+
+    var uniqueIdentifier: String {
+        return "\(userId)\(sessionId)"
+    }
+
+}

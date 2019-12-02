@@ -727,7 +727,7 @@ extension UserProfileViewController {
             reloadMenu(groups: groups)
         }
         
-        view.frame = AppDelegate.current.window.bounds
+        view.frame.size.width = AppDelegate.current.window.bounds.width
         updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {

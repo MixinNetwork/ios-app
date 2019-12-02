@@ -755,7 +755,9 @@ extension ReceiveMessageService {
             SentSenderKeyDAO.shared.delete(byConversationId: data.conversationId)
 
             guard participantId != currentAccountId else {
-                ConversationDAO.shared.deleteAndExitConversation(conversationId: data.conversationId, autoNotification: false)
+                DispatchQueue.global().async {
+                    ConversationDAO.shared.deleteAndExitConversation(conversationId: data.conversationId, autoNotification: false)
+                }
                 return
             }
 

@@ -19,6 +19,7 @@ struct Job: BaseCodable {
     var messageId: String?
     var status: String?
     var sessionId: String?
+    var isHttpMessage: Bool
 
     var isAutoIncrement = true
 
@@ -35,6 +36,7 @@ struct Job: BaseCodable {
         case messageId = "message_id"
         case status
         case sessionId = "session_id"
+        case isHttpMessage = "is_http_message"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -45,7 +47,7 @@ struct Job: BaseCodable {
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
                 "_index_id": IndexBinding(isUnique: true, indexesBy: jobId),
-                "_next_indexs": IndexBinding(indexesBy: [priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
+                "_next_indexs": IndexBinding(indexesBy: [isHttpMessage.asIndex(orderBy: .ascending), priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
             ]
         }
     }
@@ -61,18 +63,26 @@ struct Job: BaseCodable {
         self.messageId = messageId
         self.status = status
         self.sessionId = nil
+        self.isHttpMessage = true
     }
 
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
         switch action {
         case .RESEND_MESSAGE:
+            self.isHttpMessage = false
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
+            self.isHttpMessage = true
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES, .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
+        case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES:
+            self.isHttpMessage = true
+            self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
+        case .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
+            self.isHttpMessage = false
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
+            self.isHttpMessage = false
             self.priority = JobPriority.SEND_MESSAGE.rawValue
         }
         self.action = action.rawValue

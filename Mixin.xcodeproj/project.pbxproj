@@ -691,6 +691,7 @@
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
+		DFB8A06C239543F1007ACE7B /* AckMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB8A06B239543F1007ACE7B /* AckMessage.swift */; };
 		DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
 		DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCC433D206B53A5006F50BE /* AccountRequest.swift */; };
@@ -1506,6 +1507,7 @@
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
+		DFB8A06B239543F1007ACE7B /* AckMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AckMessage.swift; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		DFCC433D206B53A5006F50BE /* AccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
@@ -2773,6 +2775,7 @@
 				DF08F17F238529F5005CFD34 /* SystemSessionMessagePayload.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
+				DFB8A06B239543F1007ACE7B /* AckMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3971,6 +3974,7 @@
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
+				DFB8A06C239543F1007ACE7B /* AckMessage.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */,

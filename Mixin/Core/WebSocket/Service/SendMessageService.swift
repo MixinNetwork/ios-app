@@ -7,7 +7,9 @@ class SendMessageService: MixinService {
     static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send.messages")
+    private let httpDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send.http.messages")
     private let saveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send")
+    private var httpProcessing = false
 
     func restoreJobs() {
         DispatchQueue.global().async {
@@ -250,6 +252,79 @@ class SendMessageService: MixinService {
     }
 
     func processMessages() {
+        processHttpMessages()
+        processWebSocketMessages()
+    }
+
+    func processHttpMessages() {
+        guard !httpProcessing else {
+            return
+        }
+        httpProcessing = true
+
+        httpDispatchQueue.async {
+            defer {
+                SendMessageService.shared.httpProcessing = false
+            }
+            repeat {
+                guard AccountAPI.shared.didLogin else {
+                    return
+                }
+
+                let jobs = JobDAO.shared.nextBatchHttpJobs(limit: 100)
+                var ackMessages = [AckMessage]()
+                jobs.forEach { (job) in
+                    switch job.action {
+                    case JobAction.SEND_ACK_MESSAGE.rawValue, JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue:
+                        if let params = job.toBlazeMessage().params, let messageId = params.messageId, let status = params.status {
+                            ackMessages.append(AckMessage(jobId: job.jobId, messageId: messageId, status: status))
+                        }
+                    case JobAction.SEND_ACK_MESSAGES.rawValue:
+                        if let messages = job.toBlazeMessage().params?.messages {
+                            ackMessages += messages.map { AckMessage(jobId: job.jobId, messageId: $0.messageId, status: $0.status!) }
+                        }
+                    default:
+                        break
+                    }
+                }
+                
+                guard ackMessages.count > 0 else {
+                    JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
+                    return
+                }
+
+                for i in stride(from: 0, to: ackMessages.count, by: 100) {
+                    let by = i + 100 > ackMessages.count ? ackMessages.count : i + 100
+                    let messages = Array(ackMessages[i..<by])
+                    if SendMessageService.shared.sendAckMessages(ackMessages: messages) {
+                        JobDAO.shared.removeJobs(jobIds: messages.map{ $0.jobId })
+                    } else {
+                        return
+                    }
+                }
+            } while true
+        }
+    }
+
+    private func sendAckMessages(ackMessages: [AckMessage]) -> Bool {
+        repeat {
+            switch MessageAPI.shared.acknowledgements(ackMessages: ackMessages) {
+            case .success:
+                return true
+            case let .failure(error):
+                guard error.code != 401 else {
+                    return false
+                }
+                guard error.code != 403 else {
+                    return true
+                }
+                SendMessageService.shared.checkNetworkAndWebSocket()
+                Thread.sleep(forTimeInterval: 2)
+            }
+        } while true
+    }
+
+    func processWebSocketMessages() {
         guard !processing else {
             return
         }
@@ -261,34 +336,19 @@ class SendMessageService: MixinService {
             }
             var deleteJobId = ""
             repeat {
+                guard AccountAPI.shared.didLogin else {
+                    return
+                }
                 guard let job = JobDAO.shared.nextJob() else {
                     return
                 }
 
-                if job.action == JobAction.SEND_ACK_MESSAGE.rawValue || job.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue {
-                    let jobs = JobDAO.shared.nextBatchAckJobs(limit: 100)
-                    let messages: [TransferMessage] = jobs.compactMap {
-                        guard let params = $0.toBlazeMessage().params, let messageId = params.messageId, let status = params.status else {
-                            return nil
-                        }
-                        return TransferMessage(messageId: messageId, status: status)
-                    }
-
-                    guard messages.count > 0 else {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        continue
-                    }
-
-                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
-                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
-                        JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                    }
-                } else if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
+                if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
                     guard let sessionId = AccountUserDefault.shared.extensionSession else {
                         JobDAO.shared.removeJob(jobId: job.jobId)
                         continue
                     }
-                    let jobs = JobDAO.shared.nextBatchJobs(action: .SEND_SESSION_MESSAGE, limit: 100)
+                    let jobs = JobDAO.shared.nextBatchSessionJobs(limit: 100)
                     let messages: [TransferMessage] = jobs.compactMap {
                         guard let messageId = $0.messageId, let status = $0.status else {
                             return nil
@@ -364,10 +424,6 @@ class SendMessageService: MixinService {
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
                         try SendMessageService.shared.resendMessage(job: job)
                     }
-                case JobAction.SEND_ACK_MESSAGE.rawValue, JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue:
-                    try deliver(blazeMessage: job.toBlazeMessage())
-                case JobAction.SEND_ACK_MESSAGES.rawValue:
-                    try deliver(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_SESSION_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:

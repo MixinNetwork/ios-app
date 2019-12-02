@@ -6,19 +6,19 @@ final class JobDAO {
     static let shared = JobDAO()
 
     func nextJob() -> Job? {
-        return MixinDatabase.shared.getCodables(orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == false, orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
     }
 
     func clearSessionJob() {
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_SESSION_MESSAGES.rawValue)
+        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.isHttpMessage == false && (Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_SESSION_MESSAGES.rawValue))
     }
 
-    func nextBatchAckJobs(limit: Limit) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.action == JobAction.SEND_ACK_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    func nextBatchHttpJobs(limit: Limit) -> [Job] {
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == true, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
 
-    func nextBatchJobs(action: JobAction, limit: Limit) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    func nextBatchSessionJobs(limit: Limit) -> [Job] {
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == false && Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
 
     func getCount() -> Int {
@@ -30,6 +30,9 @@ final class JobDAO {
     }
 
     func removeJobs(jobIds: [String]) {
+        guard jobIds.count > 0 else {
+            return
+        }
         MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId.in(jobIds))
     }
 }

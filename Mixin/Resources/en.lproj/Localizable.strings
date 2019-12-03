@@ -574,6 +574,8 @@
 "profile_block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
 "profile_report_hint" = "Report and block this contact? This conversation will also be deleted";
 "profile_join_in" = "Joined in %@";
+"profile_call_with_mixin" = "Call with Mixin";
+"profile_call_phone" = "Call Phone";
 
 // Emergency
 "emergency_view" = "View emergency contact";

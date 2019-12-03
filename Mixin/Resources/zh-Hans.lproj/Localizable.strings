@@ -577,6 +577,8 @@
 "profile_block_hint" = "屏蔽后该联系人无法向您拨打电话或发送消息";
 "profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
 "profile_join_in" = "%@ 加入";
+"profile_call_with_mixin" = "呼叫 Mixin 语音";
+"profile_call_phone" = "呼叫电话";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

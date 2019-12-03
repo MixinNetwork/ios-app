@@ -41,6 +41,10 @@ class SignalProtocol {
         return data != nil
     }
 
+    func containsUserSession(recipientId: String) -> Bool {
+        return SessionDAO.shared.getSessions(address: recipientId).count > 0
+    }
+
     func containsSession(recipient: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) -> Bool {
         let address = SignalAddress(name: recipient, deviceId: deviceId)
         return store.sessionStore.containsSession(for: address)

@@ -568,7 +568,7 @@ class ReceiveMessageService: MixinService {
             }
             switch plainData.action {
             case PlainDataAction.RESEND_KEY.rawValue:
-                guard SignalProtocol.shared.containsSession(recipient: data.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId)) else {
+                guard SignalProtocol.shared.containsUserSession(recipientId: data.userId) else {
                     return
                 }
                 SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, action: .RESEND_KEY)

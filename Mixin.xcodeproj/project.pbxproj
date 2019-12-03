@@ -390,7 +390,6 @@
 		7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532720A41F6A00C36F69 /* RangeExtension.swift */; };
 		7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532920A435D300C36F69 /* CoreTextExtension.swift */; };
 		7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD127FB22D8892200BB5316 /* GalleryViewController.swift */; };
-		7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */; };
 		7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */; };
 		7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344082334CE12005C26E3 /* UserHandleCell.swift */; };
 		7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B5F20BEA03200D06E5C /* WaveformView.swift */; };
@@ -777,6 +776,7 @@
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
 		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
+		E0E32F432396118C00276746 /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32F422396118C00276746 /* GiphyAPI.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
@@ -1197,7 +1197,6 @@
 		7BD0532720A41F6A00C36F69 /* RangeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeExtension.swift; sourceTree = "<group>"; };
 		7BD0532920A435D300C36F69 /* CoreTextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextExtension.swift; sourceTree = "<group>"; };
 		7BD127FB22D8892200BB5316 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
-		7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCoreSDKExtension.swift; sourceTree = "<group>"; };
 		7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleViewController.swift; sourceTree = "<group>"; };
 		7BD344082334CE12005C26E3 /* UserHandleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleCell.swift; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
@@ -1594,6 +1593,7 @@
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
+		E0E32F422396118C00276746 /* GiphyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1831,7 +1831,6 @@
 				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
-				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
@@ -2395,7 +2394,6 @@
 				7BD0532720A41F6A00C36F69 /* RangeExtension.swift */,
 				7BD0532920A435D300C36F69 /* CoreTextExtension.swift */,
 				DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */,
-				7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */,
 				DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
 				DF9C9C6422C5E8720090873E /* SafeDictionary.swift */,
@@ -2547,6 +2545,7 @@
 				DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */,
 				DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */,
 				DF8A751E2362A65500765A82 /* MultisigAPI.swift */,
+				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2583,6 +2582,7 @@
 				7B5843442175D3EC0053332F /* PendingDeposit.swift */,
 				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
 				7BBDF3DC230D4B2300079979 /* FiatMoney.swift */,
+				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3318,7 +3318,6 @@
 				"${BUILT_PRODUCTS_DIR}/Bugsnag/Bugsnag.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceGuru/DeviceGuru.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GiphyCoreSDK/GiphyCoreSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
@@ -3347,7 +3346,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bugsnag.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceGuru.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GiphyCoreSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
@@ -3857,6 +3855,7 @@
 				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
+				E0E32F432396118C00276746 /* GiphyAPI.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
 				DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */,
 				DFCC4340206B60CE006F50BE /* KeyUtil.swift in Sources */,
@@ -3888,7 +3887,6 @@
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
-				7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */,
 				DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */,

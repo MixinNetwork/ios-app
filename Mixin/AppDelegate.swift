@@ -4,7 +4,6 @@ import UserNotifications
 import Firebase
 import SDWebImage
 import YYImage
-import GiphyCoreSDK
 import PushKit
 import Crashlytics
 import AVFoundation
@@ -40,9 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkLogin()
         checkJailbreak()
         configAnalytics()
-        if let key = MixinKeys.giphy {
-            GiphyCore.configure(apiKey: key)
-        }
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true

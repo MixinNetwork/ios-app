@@ -481,7 +481,7 @@ class ConversationViewController: UIViewController {
         }
         
         let conversationId = self.conversationId
-        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: nil, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinServer.httpUrl, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
             self?.report(conversationId: conversationId)
         }))

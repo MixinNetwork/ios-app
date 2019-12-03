@@ -32,6 +32,7 @@
 "action_filter" = "Filter";
 "action_skip" = "Skip";
 "action_send_to" = "Send To";
+"action_share" = "Share";
 "action_share_to" = "Share To";
 "action_copy" = "Copy";
 "action_authorize" = "Authorize";

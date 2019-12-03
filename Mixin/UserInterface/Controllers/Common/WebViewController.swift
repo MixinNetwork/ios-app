@@ -133,11 +133,12 @@ class WebViewController: UIViewController {
         let currentUrl = webView.url ?? .blank
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
-            self.forwardAction(currentUrl: currentUrl)
-        }))
         switch context.style {
         case .app:
+            controller.addAction(UIAlertAction(title: R.string.localizable.setting_about(), style: .default, handler: { (_) in
+                self.aboutAction()
+            }))
+
             controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
                 let request = URLRequest(url: currentUrl,
                                          cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -145,6 +146,9 @@ class WebViewController: UIViewController {
                 self.webView.load(request)
             }))
         case .webPage:
+            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
+                self.shareUrlAction(currentUrl: currentUrl)
+            }))
             controller.addAction(UIAlertAction(title: R.string.localizable.group_button_title_copy_link(), style: .default, handler: { (_) in
                 self.copyAction(currentUrl: currentUrl)
             }))
@@ -163,19 +167,45 @@ class WebViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
 
+    private func aboutAction() {
+        guard case let .app(appId, _, _) = context.style else {
+            return
+        }
+        DispatchQueue.global().async {
+            var userItem = UserDAO.shared.getUser(userId: appId)
+            var updateUserFromRemoteAfterReloaded = true
+
+            if userItem == nil {
+                if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                    updateUserFromRemoteAfterReloaded = false
+                    userItem = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                }
+            }
+
+            guard let user = userItem else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                let vc = UserProfileViewController(user: user)
+                vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+            }
+        }
+    }
+
     private func copyAction(currentUrl: URL) {
         UIPasteboard.general.string = currentUrl.absoluteString
         showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
     }
 
-    private func forwardAction(currentUrl: URL) {
-        let vc: UIViewController
-        switch context.style {
-        case .webPage:
-            vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-        case let .app(appId, _, _):
-            vc = MessageReceiverViewController.instance(content: .contact(appId))
+    private func shareUrlAction(currentUrl: URL) {
+        guard case .webPage = context.style else {
+            return
         }
+        
+        let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
         navigationController?.pushViewController(vc, animated: true)
     }
     

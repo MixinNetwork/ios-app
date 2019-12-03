@@ -179,6 +179,10 @@ extension WebSocketService: SRWebSocketDelegate {
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         if NetworkManager.shared.isReachable {
+            let nsError = error as NSError
+            if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
+                MixinServer.toggle(currentWebSocketUrl: webSocket.url)
+            }
             UIApplication.traceError(error)
         }
         reconnect(didClose: false)
@@ -283,7 +287,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: URL(string: "wss://mixin-blaze.zeromesh.net")!)
+        var request = URLRequest(url: MixinServer.webSocketUrl)
         request.timeoutInterval = 5
         return SRWebSocket(urlRequest: request)
     }

@@ -11,6 +11,7 @@ class ReCaptchaManager: NSObject {
     private let messageHandlerName = "recaptcha"
     private let executeReCaptchaJS = "gReCaptchaExecute();"
     private let scriptURL = "https://www.recaptcha.net/recaptcha/api.js"
+    private let baseURL = URL(string: "https://api.mixin.one/")!
     private let timeoutInterval: TimeInterval = 10
     
     private lazy var htmlFilePath = Bundle.main.path(forResource: "recaptcha", ofType: ExtensionName.html.rawValue)
@@ -31,7 +32,7 @@ class ReCaptchaManager: NSObject {
         let keyReplacedHTMLString = htmlString
             .replacingOccurrences(of: Replacement.apiKey, with: key)
             .replacingOccurrences(of: Replacement.scriptURL, with: scriptURL)
-        webView.loadHTMLString(keyReplacedHTMLString, baseURL: BaseAPI.rootURL)
+        webView.loadHTMLString(keyReplacedHTMLString, baseURL: baseURL)
         self.webView = webView
         self.requestingViewController = viewController
         self.completion = completion

@@ -54,6 +54,9 @@ class ProfileViewController: UIViewController {
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
     
+    weak var descriptionViewIfLoaded: ProfileDescriptionView?
+    weak var shortcutViewIfLoaded: ProfileShortcutView?
+    
     var conversationId: String {
         return ""
     }
@@ -68,8 +71,6 @@ class ProfileViewController: UIViewController {
     private var reusableMenuItemViews = Set<ProfileMenuItemView>()
     
     private weak var editNameController: UIAlertController?
-    private weak var descriptionViewIfLoaded: ProfileDescriptionView?
-    private weak var shortcutViewIfLoaded: ProfileShortcutView?
     
     override func viewDidLoad() {
         super.viewDidLoad()

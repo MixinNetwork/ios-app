@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileMenuMyFavoriteAppView: UIView, XibDesignable {
+class MyFavoriteAppProfileMenuItemView: UIView, XibDesignable {
     
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var avatarStackView: UserAvatarStackView!
@@ -28,6 +28,7 @@ class ProfileMenuMyFavoriteAppView: UIView, XibDesignable {
         loadXib()
         button.setBackgroundImage(UIColor.tertiaryBackground.image, for: .normal)
         button.setBackgroundImage(UIColor.secondaryBackground.image, for: .highlighted)
+        avatarStackView.avatarBackgroundColor = .tertiaryBackground
     }
     
 }

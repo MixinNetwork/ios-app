@@ -40,7 +40,9 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
-
+                
+                try database.create(of: FavoriteApp.self)
+                
                 try self.createAfter(database: database, currentVersion: currentVersion)
 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()

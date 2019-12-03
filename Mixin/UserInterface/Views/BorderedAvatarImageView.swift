@@ -2,7 +2,7 @@ import UIKit
 
 class BorderedAvatarImageView: AvatarImageView {
     
-    private let backgroundView = UIView()
+    let backgroundView = UIView()
     
     var borderWidth: CGFloat = 2 {
         didSet {

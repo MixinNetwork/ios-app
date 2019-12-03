@@ -2,6 +2,8 @@ import UIKit
 
 final class UserAvatarStackView: UIView {
     
+    var avatarBackgroundColor = UIColor.white
+    
     var iconLength: CGFloat = 34 {
         didSet {
             setNeedsLayout()
@@ -44,6 +46,7 @@ final class UserAvatarStackView: UIView {
         if imageViews.count < topUsers.count {
             for _ in 0..<(topUsers.count - imageViews.count) {
                 let imageView = BorderedAvatarImageView()
+                imageView.backgroundView.backgroundColor = avatarBackgroundColor
                 addSubview(imageView)
                 imageViews.insert(imageView, at: 0)
             }

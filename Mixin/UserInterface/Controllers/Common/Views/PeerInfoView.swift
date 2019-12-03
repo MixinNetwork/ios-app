@@ -92,6 +92,20 @@ class PeerInfoView: UIView, XibDesignable {
         descriptionLabel.isHidden = true
     }
     
+    func render(user: User, userBiographyAsSubtitle: Bool) {
+        avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
+        titleLabel.text = user.fullName
+        badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified ?? false, appId: user.appId)
+        superscriptLabel.text = nil
+        fileIcon.isHidden = true
+        if userBiographyAsSubtitle {
+            descriptionLabel.isHidden = false
+            descriptionLabel.text = user.biography
+        } else {
+            descriptionLabel.isHidden = true
+        }
+    }
+    
     func render(receiver: MessageReceiver) {
         switch receiver.item {
         case let .group(conversation):

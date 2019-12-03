@@ -5,7 +5,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     let shadowView = SeparatorShadowView()
     let labelInset = UIEdgeInsets(top: 12, left: 20, bottom: 16, right: 20)
     
-    private lazy var label: UILabel = {
+    lazy var label: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
         label.textColor = .accessoryText
@@ -56,13 +56,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        shadowView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
-        if text != nil {
-            label.frame = CGRect(x: labelInset.left,
-                                 y: labelInset.top,
-                                 width: bounds.width - labelInset.horizontal,
-                                 height: bounds.height - labelInset.vertical)
-        }
+        layoutShadowViewAndLabel()
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
@@ -83,7 +77,17 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         }
     }
     
-    private func prepare() {
+    func layoutShadowViewAndLabel() {
+        shadowView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        if text != nil {
+            label.frame = CGRect(x: labelInset.left,
+                                 y: labelInset.top,
+                                 width: bounds.width - labelInset.horizontal,
+                                 height: bounds.height - labelInset.vertical)
+        }
+    }
+    
+    func prepare() {
         contentView.addSubview(shadowView)
         clipsToBounds = true
         backgroundView = UIView(frame: bounds)

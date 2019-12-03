@@ -15,6 +15,15 @@ final class UserAPI: BaseAPI {
         static func users(id: String) -> String {
             return "users/\(id)"
         }
+        static func getFavorite(userId: String) -> String {
+            return "users/\(userId)/apps/favorite"
+        }
+        static func setFavorite(appId: String) -> String {
+            return "apps/\(appId)/favorite"
+        }
+        static func unfavorite(appId: String) -> String {
+            return "apps/\(appId)/unfavorite"
+        }
         static let users = "users/fetch"
         static let relationships = "relationships"
         static let reports = "reports"
@@ -99,5 +108,21 @@ final class UserAPI: BaseAPI {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .UNBLOCK)
         request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
     }
+    
+    func getFavoriteApps(ofUserWith id: String) -> APIResult<[FavoriteApp]> {
+        return request(method: .get, url: url.getFavorite(userId: id))
+    }
+    
+    func getFavoriteApps(ofUserWith id: String, completion: @escaping (APIResult<[FavoriteApp]>) -> Void) {
+        request(method: .get, url: url.getFavorite(userId: id), completion: completion)
+    }
+    
+    func setFavoriteApp(id: String, completion: @escaping (APIResult<FavoriteApp>) -> Void) {
+        request(method: .post, url: url.setFavorite(appId: id), completion: completion)
+    }
+    
+    func unfavoriteApp(id: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+        request(method: .post, url: url.unfavorite(appId: id), completion: completion)
+    }
+    
 }
-

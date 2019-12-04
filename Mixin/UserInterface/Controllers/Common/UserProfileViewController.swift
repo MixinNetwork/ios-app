@@ -684,21 +684,23 @@ extension UserProfileViewController {
                 return group
             }()
             groups.append(muteAndTransactionGroup)
-            
-            let callGroup: [ProfileMenuItem] = {
-                var group = [ProfileMenuItem(title: R.string.localizable.profile_call_with_mixin(),
-                                             subtitle: nil,
-                                             style: [],
-                                             action: #selector(callWithMixin))]
-                if let number = user.phone, !number.isEmpty {
-                    group.append(ProfileMenuItem(title: R.string.localizable.profile_call_phone(),
-                                                 subtitle: number,
+
+            if !user.isBot {
+                let callGroup: [ProfileMenuItem] = {
+                    var group = [ProfileMenuItem(title: R.string.localizable.profile_call_with_mixin(),
+                                                 subtitle: nil,
                                                  style: [],
-                                                 action: #selector(callPhone)))
-                }
-                return group
-            }()
-            groups.append(callGroup)
+                                                 action: #selector(callWithMixin))]
+                    if let number = user.phone, !number.isEmpty {
+                        group.append(ProfileMenuItem(title: R.string.localizable.profile_call_phone(),
+                                                     subtitle: number,
+                                                     style: [],
+                                                     action: #selector(callPhone)))
+                    }
+                    return group
+                }()
+                groups.append(callGroup)
+            }
             
             let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
                 var group = [ProfileMenuItem]()

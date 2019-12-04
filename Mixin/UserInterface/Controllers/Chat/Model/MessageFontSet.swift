@@ -17,12 +17,12 @@ class MessageFontSet {
         let font = UIFont(descriptor: descriptor, size: 13)
         return MessageFontSet(font: font)
     }()
-    static let normalConversationContent = MessageFontSet(size: 15, weight: .regular)
+    static let normalConversationContent = MessageFontSet(size: 14, weight: .regular)
     static let recalledConversationContent: MessageFontSet = {
-        let descriptor = UIFont.systemFont(ofSize: 15)
+        let descriptor = UIFont.systemFont(ofSize: 14)
             .fontDescriptor
             .withMatrix(.italic)
-        let font = UIFont(descriptor: descriptor, size: 15)
+        let font = UIFont(descriptor: descriptor, size: 14)
         return MessageFontSet(font: font)
     }()
     

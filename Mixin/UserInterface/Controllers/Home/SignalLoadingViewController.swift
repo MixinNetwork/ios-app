@@ -78,8 +78,10 @@ class SignalLoadingViewController: UIViewController {
                 var sessionMap = [String: Int32]()
                 var userSessionMap = [String: String]()
                 remoteSessions.forEach { (session) in
-                    sessionMap[session.userId] = SignalProtocol.convertSessionIdToDeviceId(session.sessionId)
-                    userSessionMap[session.userId] = session.sessionId
+                    if session.platform == "Android" || session.platform == "iOS" {
+                        sessionMap[session.userId] = SignalProtocol.convertSessionIdToDeviceId(session.sessionId)
+                        userSessionMap[session.userId] = session.sessionId
+                    }
                 }
 
                 guard sessionMap.count > 0 else {

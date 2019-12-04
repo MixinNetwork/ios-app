@@ -69,6 +69,9 @@ class MixinService {
         } else if retry {
             return try checkSessionSenderKey(conversationId: conversationId)
         }
+
+        FileManager.default.writeLog(conversationId: conversationId, log: "[CheckSessionSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
+        FileManager.default.writeLog(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
     }
 
     internal func syncConversation(conversationId: String) {
@@ -147,6 +150,7 @@ class MixinService {
     internal func resendSenderKey(conversationId: String, recipientId: String, sessionId: String?) throws {
         let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId, isForce: true)
         if !result {
+            FileManager.default.writeLog(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
             sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
         }
     }

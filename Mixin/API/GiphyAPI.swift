@@ -37,7 +37,6 @@ enum GiphyAPI {
             completion(.failure(Error.noApiKey))
             return nil
         }
-        print(language)
         let url = URL(string: "https://api.giphy.com/v1/gifs/search?q=\(keyword)&offset=\(offset)&limit=\(limit)&rating=r&lang=\(language)&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
         return request(url).responseJSON(completionHandler: handler)

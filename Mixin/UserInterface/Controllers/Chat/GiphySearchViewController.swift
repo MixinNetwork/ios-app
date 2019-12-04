@@ -1,5 +1,5 @@
 import UIKit
-import GiphyCoreSDK
+import Alamofire
 
 class GiphySearchViewController: UIViewController {
     
@@ -29,13 +29,12 @@ class GiphySearchViewController: UIViewController {
         }
     }
     
-    private weak var lastGiphyOperation: Operation?
+    private weak var lastGiphyRequest: DataRequest?
     
-    private lazy var reloadHandler = { [weak self] (response: GPHListMediaResponse?, error: Error?) in
-        guard let weakSelf = self, let data = response?.data else {
+    private lazy var reloadHandler = { [weak self] (result: Result<[GiphyImage]>) in
+        guard let weakSelf = self, case let .success(images) = result else {
             return
         }
-        let images = data.compactMap(GiphyImage.init)
         DispatchQueue.main.async {
             weakSelf.status = images.isEmpty ? .noResult : .loading
             weakSelf.images = images
@@ -43,11 +42,10 @@ class GiphySearchViewController: UIViewController {
         }
     }
     
-    private lazy var loadMoreHandler = { [weak self] (response: GPHListMediaResponse?, error: Error?) in
-        guard let weakSelf = self, let data = response?.data else {
+    private lazy var loadMoreHandler = { [weak self] (result: Result<[GiphyImage]>) in
+        guard let weakSelf = self, case let .success(images) = result else {
             return
         }
-        let images = data.compactMap(GiphyImage.init)
         DispatchQueue.main.async {
             if images.isEmpty {
                 weakSelf.status = .noMoreResult
@@ -95,7 +93,7 @@ class GiphySearchViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        lastGiphyOperation?.cancel()
+        lastGiphyRequest?.cancel()
         self.animated = false
         onDisappear?()
     }
@@ -115,7 +113,7 @@ extension GiphySearchViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        lastGiphyOperation?.cancel()
+        lastGiphyRequest?.cancel()
         if let keyword = keywordTextField.text, !keyword.isEmpty {
             search(keyword)
         } else {
@@ -174,13 +172,18 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        guard !images.isEmpty && elementKind == UICollectionView.elementKindSectionFooter && lastGiphyOperation == nil else {
+        guard !images.isEmpty && elementKind == UICollectionView.elementKindSectionFooter && lastGiphyRequest == nil else {
             return
         }
         if let keyword = keywordTextField.text, !keyword.isEmpty {
-            lastGiphyOperation = GiphyCore.shared.search(keyword, offset: images.count, limit: limit, lang: .current, completionHandler: loadMoreHandler)
+            lastGiphyRequest = GiphyAPI.search(keyword: keyword,
+                                               offset: images.count,
+                                               limit: limit,
+                                               completion: loadMoreHandler)
         } else {
-            lastGiphyOperation = GiphyCore.shared.trending(offset: images.count, limit: limit, completionHandler: loadMoreHandler)
+            lastGiphyRequest = GiphyAPI.trending(offset: images.count,
+                                                 limit: limit,
+                                                 completion: loadMoreHandler)
         }
     }
     
@@ -231,12 +234,15 @@ extension GiphySearchViewController {
     
     private func reload() {
         prepareCollectionViewForReuse()
-        lastGiphyOperation = GiphyCore.shared.trending(limit: limit, completionHandler: reloadHandler)
+        lastGiphyRequest = GiphyAPI.trending(limit: limit,
+                                             completion: reloadHandler)
     }
     
     private func search(_ keyword: String) {
         prepareCollectionViewForReuse()
-        lastGiphyOperation = GiphyCore.shared.search(keyword, limit: limit, lang: .current, completionHandler: reloadHandler)
+        lastGiphyRequest = GiphyAPI.search(keyword: keyword,
+                                           limit: limit,
+                                           completion: reloadHandler)
     }
     
 }

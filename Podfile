@@ -29,7 +29,6 @@ target 'Mixin' do
   pod 'Zip', '~> 1.1.0'
   pod 'SignalProtocolC', :git => 'https://github.com/MixinNetwork/SignalProtocolC.git', :submodules => true
   pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
-  pod 'GiphyCoreSDK'
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'

@@ -4,7 +4,7 @@ struct UserSession: Codable {
 
     let userId: String
     let sessionId: String
-    let platform: String
+    let platform: String?
 
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"

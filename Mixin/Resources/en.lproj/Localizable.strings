@@ -149,6 +149,7 @@
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "toast_update_tips" = "Please update Mixin from App Store to continue use the service.";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
+"desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 
 // Contacts
 "contact_title" = "Contacts";
@@ -321,6 +322,7 @@
 "group_remove_confirm" = "Remove %@ from the '%@' group?";
 "group_remove_button" = "Remove from Group";
 "group_role_admin" = "Admin";
+"group_role_owner" = "Owner";
 "group_participant_add_full" = "You can’t add this participant because this group is full.";
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 contacts at a time.";
 "group_participant_menu_info" = "Info";

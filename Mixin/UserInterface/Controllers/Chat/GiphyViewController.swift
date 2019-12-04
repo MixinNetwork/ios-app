@@ -1,5 +1,5 @@
 import UIKit
-import GiphyCoreSDK
+import Alamofire
 
 class GiphyViewController: StickersCollectionViewController, ConversationInputAccessible {
     
@@ -7,6 +7,8 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
     
     private let footerReuseId = "footer"
     private let loadingIndicator = ActivityIndicatorView()
+    
+    private var request: DataRequest?
     
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
@@ -25,6 +27,10 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         return images.isEmpty
     }
     
+    deinit {
+        request?.cancel()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.register(UINib(nibName: "GiphyPoweredFooterView", bundle: .main),
@@ -39,15 +45,14 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         loadingIndicator.startAnimating()
         view.addSubview(loadingIndicator)
         let numberOfCells = StickerInputModelController.maxNumberOfRecentStickers - 1
-        GiphyCore.shared.trending(limit: numberOfCells) { [weak self] (response, error) in
-            guard let weakSelf = self, let data = response?.data, error == nil else {
+        request = GiphyAPI.trending(limit: numberOfCells) { [weak self] (result) in
+            guard case let .success(images) = result, let self = self else {
                 return
             }
-            let images = data.compactMap(GiphyImage.init)
             DispatchQueue.main.async {
-                weakSelf.loadingIndicator.stopAnimating()
-                weakSelf.images = images
-                weakSelf.collectionView.reloadData()
+                self.loadingIndicator.stopAnimating()
+                self.images = images
+                self.collectionView.reloadData()
             }
         }
     }

@@ -37,7 +37,7 @@ class HomeNavigationController: UINavigationController {
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
         self.delegate = self
-        if CryptoUserDefault.shared.isLoaded && !AccountUserDefault.shared.hasClockSkew {
+        if CryptoUserDefault.shared.isLoaded && CryptoUserDefault.shared.isSyncSession && !AccountUserDefault.shared.hasClockSkew {
             WebSocketService.shared.connect()
             checkUser()
             checkDevice()

@@ -45,8 +45,10 @@ class NotificationController: NSObject {
                 present(text: Localized.CAMERA_QRCODE_CODES)
             case .send:
                 present(text: urlString)
-            case let .device(uuid, publicKey):
-                LoginConfirmWindow.instance(uuid: uuid, publicKey: publicKey).presentView()
+            case .upgradeDesktop:
+                UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
+            case let .device(id, publicKey):
+                LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
             case .unknown:
                 present(text: urlString)
             }

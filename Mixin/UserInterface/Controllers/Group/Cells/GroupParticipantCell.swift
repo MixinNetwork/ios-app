@@ -43,8 +43,10 @@ class GroupParticipantCell: PeerCell {
     
     private func renderUserRole(user: UserItem) {
         switch user.role {
-        case ParticipantRole.ADMIN.rawValue, ParticipantRole.OWNER.rawValue:
-            roleLabel.text = Localized.GROUP_ROLE_ADMIN
+        case ParticipantRole.ADMIN.rawValue:
+            roleLabel.text = R.string.localizable.group_role_admin()
+        case ParticipantRole.OWNER.rawValue:
+            roleLabel.text = R.string.localizable.group_role_owner()
         default:
             roleLabel.text = ""
         }

@@ -296,6 +296,7 @@
 "group_remove_confirm" = "'%@'グループから %@ を削除しますか？";
 "group_remove_button" = "グループから削除";
 "group_role_admin" = "管理者";
+"group_role_owner" = "Owner";
 "group_participant_menu_info" = "情報";
 "group_participant_menu_send" = "メッセージを送る";
 "group_participant_menu_admin" = "グループ管理者にする";

@@ -1,17 +1,17 @@
 import Foundation
 
-struct TransferPlainData: Codable {
+struct PlainJsonMessagePayload: Codable {
 
     let action: String
     let messageId: String?
     let messages: [String]?
-    var status: String?
+    var ackMessages: [TransferMessage]?
 
     enum CodingKeys: String, CodingKey {
         case action
         case messageId = "message_id"
         case messages
-        case status
+        case ackMessages = "ack_messages"
     }
 }
 

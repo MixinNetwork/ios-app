@@ -9,6 +9,7 @@ struct ConversationResponse: Codable {
     let announcement: String
     let createdAt: String
     let participants: [ParticipantResponse]
+    let participantSessions: [UserSession]?
     let codeUrl: String
     let creatorId: String
     let muteUntil: String
@@ -24,6 +25,7 @@ struct ConversationResponse: Codable {
         case codeUrl = "code_url"
         case creatorId = "creator_id"
         case muteUntil = "mute_until"
+        case participantSessions = "participant_sessions"
     }
 }
 

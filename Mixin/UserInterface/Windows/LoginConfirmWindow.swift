@@ -4,7 +4,7 @@ class LoginConfirmWindow: BottomSheetView {
 
     @IBOutlet weak var loginButton: RoundedButton!
 
-    private var uuid: String!
+    private var id: String!
     private var publicKey: String!
 
     @IBAction func loginAction(_ sender: Any) {
@@ -12,7 +12,7 @@ class LoginConfirmWindow: BottomSheetView {
             return
         }
         loginButton.isBusy = true
-        ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
+        ProvisionManager.updateProvision(id: id, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
             self?.loginButton.isBusy = false
             if success {
                 self?.loginSuccessAction()
@@ -36,9 +36,9 @@ class LoginConfirmWindow: BottomSheetView {
         dismissView()
     }
 
-    class func instance(uuid: String, publicKey: String) -> LoginConfirmWindow {
+    class func instance(id: String, publicKey: String) -> LoginConfirmWindow {
         let window = Bundle.main.loadNibNamed("LoginConfirmWindow", owner: nil, options: nil)?.first as! LoginConfirmWindow
-        window.uuid = uuid
+        window.id = id
         window.publicKey = publicKey
         return window
     }

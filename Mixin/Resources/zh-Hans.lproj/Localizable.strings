@@ -324,6 +324,7 @@
 "group_remove_confirm" = "从 '%@' 群组中移除 %@ 吗？";
 "group_remove_button" = "从群组中移除";
 "group_role_admin" = "管理员";
+"group_role_owner" = "群主";
 "group_participant_add_full" = "不能再添加成员，群已经满员了！";
 "group_participant_add_limit" = "不能再添加成员，一次最多只能加 50 个联系人。";
 "group_participant_menu_info" = "信息";

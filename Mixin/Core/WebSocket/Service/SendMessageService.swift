@@ -504,7 +504,7 @@ extension SendMessageService {
         blazeMessage.params?.category = message.category
         blazeMessage.params?.messageId = resendMessageId
         blazeMessage.params?.quoteMessageId = message.quoteMessageId
-        blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId)
+        blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId, sessionId: job.sessionId)
         try deliverMessage(blazeMessage: blazeMessage)
 
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")

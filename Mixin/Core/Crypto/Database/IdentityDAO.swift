@@ -19,4 +19,8 @@ class IdentityDAO: SignalDAO {
         let privateKey = UserDefaults.standard.value(forKey: PreKeyUtil.localPrivateKey) as! Data
         IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: registrationId, publicKey: publicKey, privateKey: privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
     }
+
+    func deleteIdentity(address: String) {
+        SignalDatabase.shared.delete(table: Identity.tableName, condition: Identity.Properties.address == address)
+    }
 }

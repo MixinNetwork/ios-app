@@ -19,6 +19,11 @@ final class UserAPI: BaseAPI {
         static let relationships = "relationships"
         static let reports = "reports"
         static let blockingUsers = "blocking_users"
+        static let sessionFetch = "sessions/fetch"
+    }
+
+    func fetchSessions(userIds: [String]) -> APIResult<[UserSession]> {
+         return request(method: .post, url: url.sessionFetch, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
 
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {

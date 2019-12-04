@@ -17,6 +17,13 @@ class MessageAPI: BaseAPI {
         static func messageStatus(offset: Int64) -> String {
             return "messages/status/\(offset)"
         }
+
+        static let acknowledgements = "acknowledgements"
+    }
+
+    func acknowledgements(ackMessages: [AckMessage]) -> APIResult<EmptyResponse> {
+        let parameters = ackMessages.map({ ["message_id": $0.messageId, "status": $0.status] }).toParameters()
+        return request(method: .post, url: url.acknowledgements, parameters: parameters, encoding: JSONArrayEncoding())
     }
 
     func messageStatus(offset: Int64) -> APIResult<[BlazeMessageData]> {

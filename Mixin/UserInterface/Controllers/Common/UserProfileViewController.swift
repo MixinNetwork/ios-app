@@ -381,6 +381,20 @@ extension UserProfileViewController {
         dismissAndPush(vc)
     }
     
+    @objc func callWithMixin() {
+        let user = self.user!
+        dismiss(animated: true) {
+            CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: user)
+        }
+    }
+    
+    @objc func callPhone() {
+        guard let phone = user.phone, !phone.isEmpty, let url = URL(string: "tel://" + phone) else {
+            return
+        }
+        UIApplication.shared.openURL(url: url)
+    }
+    
     @objc func removeFriend() {
         let userId = user.userId
         let alert = UIAlertController(title: R.string.localizable.profile_remove_hint(), message: nil, preferredStyle: .actionSheet)
@@ -670,6 +684,23 @@ extension UserProfileViewController {
                 return group
             }()
             groups.append(muteAndTransactionGroup)
+
+            if !user.isBot {
+                let callGroup: [ProfileMenuItem] = {
+                    var group = [ProfileMenuItem(title: R.string.localizable.profile_call_with_mixin(),
+                                                 subtitle: nil,
+                                                 style: [],
+                                                 action: #selector(callWithMixin))]
+                    if let number = user.phone, !number.isEmpty {
+                        group.append(ProfileMenuItem(title: R.string.localizable.profile_call_phone(),
+                                                     subtitle: number,
+                                                     style: [],
+                                                     action: #selector(callPhone)))
+                    }
+                    return group
+                }()
+                groups.append(callGroup)
+            }
             
             let editAliasAndBotRelatedGroup: [ProfileMenuItem] = {
                 var group = [ProfileMenuItem]()
@@ -727,7 +758,7 @@ extension UserProfileViewController {
             reloadMenu(groups: groups)
         }
         
-        view.frame = AppDelegate.current.window.bounds
+        view.frame.size.width = AppDelegate.current.window.bounds.width
         updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {

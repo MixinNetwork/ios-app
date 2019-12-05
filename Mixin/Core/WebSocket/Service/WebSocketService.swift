@@ -19,10 +19,10 @@ class WebSocketService {
     private let messageQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.message")
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
     
-    private var host: String!
+    private var host: String?
     private var rechability: NetworkReachabilityManager?
-    private var socket: WebSocket!
-    private var heartbeat: HeartbeatService!
+    private var socket: WebSocket?
+    private var heartbeat: HeartbeatService?
     
     private var status: Status = .disconnected
     private var networkWasRechableOnConnection = false
@@ -50,13 +50,13 @@ class WebSocketService {
             self.prepareForConnection(host: MixinServer.webSocketHost)
             self.networkWasRechableOnConnection = self.isReachable
             self.lastConnectionDate = Date()
-            let headers = MixinRequest.getHeaders(request: self.socket.request)
+            let headers = MixinRequest.getHeaders(request: self.socket!.request)
             self.httpUpgradeSigningDate = Date()
             self.httpUpgradeServerDate = nil
             for (field, value) in headers {
-                self.socket.request.setValue(value, forHTTPHeaderField: field)
+                self.socket!.request.setValue(value, forHTTPHeaderField: field)
             }
-            self.socket.connect()
+            self.socket!.connect()
         }
     }
     
@@ -66,8 +66,8 @@ class WebSocketService {
                 return
             }
             self.connectOnNetworkIsReachable = false
-            self.heartbeat.stop()
-            self.socket.disconnect(forceTimeout: nil, closeCode: CloseCode.exit)
+            self.heartbeat?.stop()
+            self.socket?.disconnect(forceTimeout: nil, closeCode: CloseCode.exit)
             self.needsJobRestoration = false
             ConcurrentJobQueue.shared.cancelAllOperations()
             self.messageHandlers.removeAll()
@@ -80,7 +80,7 @@ class WebSocketService {
             let shouldReconnect = self.isReachable
                 && AccountAPI.shared.didLogin
                 && self.status == .connected
-                && !self.socket.isConnected
+                && !(self.socket?.isConnected ?? false)
             if shouldReconnect {
                 self.reconnect(sendDisconnectToRemote: true)
             }
@@ -153,7 +153,7 @@ extension WebSocketService: WebSocketDelegate {
             ReceiveMessageService.shared.processReceiveMessages()
             requestListPendingMessages()
             ConcurrentJobQueue.shared.resume()
-            heartbeat.start()
+            heartbeat?.start()
             
             let now = Date().timeIntervalSince1970
             let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
@@ -257,26 +257,30 @@ extension WebSocketService {
     }
     
     private func prepareForConnection(host: String) {
-        rechability = NetworkReachabilityManager(host: host)
         var request = URLRequest(url: URL(string: "wss://" + host)!)
         request.timeoutInterval = 5
-        socket = WebSocket(request: request)
-        heartbeat = HeartbeatService(socket: socket)
+        let socket = WebSocket(request: request)
         socket.delegate = self
         socket.callbackQueue = queue
-        rechability?.listener = { [weak self] status in
-            guard case .reachable(_) = status else {
-                return
-            }
-            self?.networkBecomesReachable()
-        }
         socket.onHttpResponseHeaders = { [weak self] headers in
             // This is called from an arbitrary queue instead of designated callback queue
             // Probably a bug of Starscream
             self?.updateHttpUpgradeServerDate(headers: headers)
         }
+        self.socket = socket
+        
+        let heartbeat = HeartbeatService(socket: socket)
         heartbeat.onOffline = { [weak self] in
             self?.reconnect(sendDisconnectToRemote: true)
+        }
+        self.heartbeat = heartbeat
+        
+        rechability = NetworkReachabilityManager(host: host)
+        rechability?.listener = { [weak self] status in
+            guard case .reachable(_) = status else {
+                return
+            }
+            self?.networkBecomesReachable()
         }
         rechability?.startListening()
     }
@@ -307,9 +311,9 @@ extension WebSocketService {
             }
             self.messageHandlers.removeAll()
             ConcurrentJobQueue.shared.suspend()
-            self.heartbeat.stop()
+            self.heartbeat?.stop()
             if sendDisconnectToRemote {
-                self.socket.disconnect(forceTimeout: nil, closeCode: CloseCode.failure)
+                self.socket?.disconnect(forceTimeout: nil, closeCode: CloseCode.failure)
             }
             self.status = .disconnected
             NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
@@ -330,7 +334,7 @@ extension WebSocketService {
     
     @discardableResult
     private func send(message: BlazeMessage) -> Bool {
-        guard status == .connected else {
+        guard let socket = socket, status == .connected else {
             return false
         }
         guard let data = try? JSONEncoder.default.encode(message), let gzipped = try? data.gzipped() else {
@@ -352,7 +356,7 @@ extension WebSocketService {
                 }
             case .failure:
                 self.queue.asyncAfter(deadline: .now() + 2, execute: {
-                    guard self.socket.isConnected else {
+                    guard let socket = self.socket, socket.isConnected else {
                         return
                     }
                     self.requestListPendingMessages()

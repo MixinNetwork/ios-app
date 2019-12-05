@@ -27,6 +27,8 @@ class UrlWindow {
             return checkSendUrl(url: url)
         case .device:
             return false
+        case .upgradeDesktop:
+            return false
         case .unknown:
             return false
         }

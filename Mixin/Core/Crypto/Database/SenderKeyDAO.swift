@@ -15,5 +15,9 @@ class SenderKeyDAO: SignalDAO {
         FileManager.default.writeLog(conversationId: groupId, log: "[SenderKeyDAO][Delete]...senderId:\(senderId)...changes:\(changes)")
         return true
     }
+
+    func syncGetSenderKeys() -> [SenderKey] {
+        return SignalDatabase.shared.getCodables()
+    }
     
 }

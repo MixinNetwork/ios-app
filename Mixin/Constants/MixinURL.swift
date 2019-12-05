@@ -25,10 +25,11 @@ enum MixinURL {
     case pay
     case transfer(String)
     case send
-    case device(uuid: String, publicKey: String)
+    case device(id: String, publicKey: String)
     case unknown(URL)
     case withdrawal
     case address
+    case upgradeDesktop
     
     init?(url: URL) {
         if url.scheme == MixinURL.scheme {
@@ -45,8 +46,12 @@ enum MixinURL {
             } else if url.host == Host.send {
                 self = .send
             } else if url.host == Host.device {
-                if url.pathComponents.count == 2, url.pathComponents[1] == Path.auth, let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let uuid = items.first(where: { $0.name == "uuid" })?.value, let publicKey = items.first(where: { $0.name == "pub_key" })?.value, !uuid.isEmpty, !publicKey.isEmpty {
-                    self = .device(uuid: uuid, publicKey: publicKey)
+                if url.pathComponents.count == 2, url.pathComponents[1] == Path.auth, let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let publicKey = items.first(where: { $0.name == "pub_key" })?.value, !publicKey.isEmpty {
+                    if let id = items.first(where: { $0.name == "id" })?.value, !id.isEmpty {
+                        self = .device(id: id, publicKey: publicKey)
+                    } else {
+                        self = .upgradeDesktop
+                    }
                 } else {
                     self = .unknown(url)
                 }

@@ -13,14 +13,13 @@ struct BlazeMessageParam: Codable {
     var quoteMessageId: String? = nil
 
     var keys: SignalKeyRequest? = nil
-    var recipients: [BlazeSessionMessageParam]? = nil
+    var recipients: [BlazeMessageParamSession]? = nil
     var messages: [TransferMessage]? = nil
 
     var sessionId: String? = nil
-    var primitiveId: String? = nil
-    var primitiveMessageId: String? = nil
 
     var representativeId: String? = nil
+    var conversationChecksum: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -37,10 +36,9 @@ struct BlazeMessageParam: Codable {
         case messages
 
         case sessionId = "session_id"
-        case primitiveId = "primitive_id"
-        case primitiveMessageId = "primitive_message_id"
 
         case representativeId = "representative_id"
+        case conversationChecksum = "conversation_checksum"
     }
 }
 
@@ -51,16 +49,17 @@ extension BlazeMessageParam {
         self.status = status
     }
     
-    init(conversationId: String, recipientId: String, cipherText: String) {
+    init(conversationId: String, recipientId: String, cipherText: String, sessionId: String?) {
         self.messageId = UUID().uuidString.lowercased()
         self.status = MessageStatus.SENT.rawValue
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.data = cipherText
         self.category = MessageCategory.SIGNAL_KEY.rawValue
+        self.sessionId = sessionId
     }
 
-    init(consumeSignalKeys recipients: [BlazeSessionMessageParam]) {
+    init(consumeSignalKeys recipients: [BlazeMessageParamSession]) {
         self.recipients = recipients
     }
 
@@ -72,20 +71,18 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
-    init(sessionId: String, messages: [TransferMessage]) {
-        let accountId = AccountAPI.shared.accountUserId
-        let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)
+    init(sessionId: String, conversationId: String, ackMessages: [TransferMessage]) {
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messageId: nil, messages: nil, ackMessages: ackMessages)
         self.messageId = UUID().uuidString.lowercased()
-        self.conversationId = accountId
-        self.recipientId = accountId
+        self.conversationId = conversationId
+        self.recipientId = AccountAPI.shared.accountUserId
         self.category = MessageCategory.PLAIN_JSON.rawValue
         self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
         self.status = MessageStatus.SENDING.rawValue
         self.sessionId = sessionId
-        self.primitiveId = accountId
     }
 
-    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeMessageParamSession]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, representativeId: String? = nil, checksum: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.category = category
@@ -101,9 +98,8 @@ extension BlazeMessageParam {
         self.messages = messages
 
         self.sessionId = sessionId
-        self.primitiveId = primitiveId
-        self.primitiveMessageId = primitiveMessageId
 
         self.representativeId = representativeId
+        self.conversationChecksum = checksum
     }
 }

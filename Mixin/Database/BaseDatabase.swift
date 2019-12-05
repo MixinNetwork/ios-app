@@ -13,6 +13,15 @@ class BaseDatabase {
         database?.close()
     }
 
+    func removeDatabase(databaseURL: URL) {
+        let semaphore = DispatchSemaphore(value: 0)
+        database.close {
+            try? FileManager.default.removeItem(at: databaseURL)
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+
     func getDatabaseVersion() -> Int {
         return try! database.getDatabaseVersion()
     }
@@ -60,6 +69,10 @@ class BaseDatabase {
         return values.map { $0.stringValue }
     }
 
+    func getStringValues(sql: String, values: [ColumnEncodable] = []) -> [String] {
+        return try! database.prepareSelectSQL(sql: sql, values: values).getStringValues()
+    }
+    
     func getInt32Values(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
         let values = try! database.getColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         return values.map { $0.int32Value }
@@ -91,12 +104,8 @@ class BaseDatabase {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
 
-    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset, limit: Limit) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, limit: limit, offset: offset)
-    }
-    
-    func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
-        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit)
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, offset: Offset? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
     
     func getCodables<T: Codable>(on propertyConvertibleList: [PropertyConvertible] = [], fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, callback: (FundamentalRowXColumn) -> [T]) -> [T] {
@@ -165,34 +174,16 @@ class BaseDatabase {
         return true
     }
 
-    func deleteAll(table: String) {
-        try! database.run(transaction: {
-            guard try database.isTableExists(table) else {
-                return
-            }
-            try database.delete(fromTable: table)
-        })
-    }
-
-    @discardableResult
-    func delete(table: String, condition: Condition, cascadeDelete: Bool) -> Int {
-        var result = 0
-        try! database.run(transaction: {
-            if cascadeDelete {
-                try database.exec(StatementPragma().pragma(Pragma.foreignKeys, to: true))
-            }
-            let delete = try database.prepareDelete(fromTable: table).where(condition)
-            try delete.execute()
-            result = delete.changes ?? 0
-        })
-        return result
-    }
-
     @discardableResult
     func delete(table: String, condition: Condition) -> Int {
         let delete = try! database.prepareDelete(fromTable: table).where(condition)
         try! delete.execute()
         return delete.changes ?? 0
+    }
+
+    func execute(sql: String, values: [ColumnEncodable]) {
+        let stmt = try! database.prepareUpdateSQL(sql: sql)
+        try! stmt.execute(with: values)
     }
 }
 
@@ -204,13 +195,10 @@ extension Database {
 
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) throws {
         var keys = [PropertyConvertible]()
-        var values = [ColumnEncodable]()
+        var values = [ColumnEncodable?]()
         for (key, value) in maps {
-            guard let val = value else {
-                continue
-            }
             keys.append(key)
-            values.append(val)
+            values.append(value)
         }
         try update(table: tableName, on: keys, with: values, where: condition)
     }

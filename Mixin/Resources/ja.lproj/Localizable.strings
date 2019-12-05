@@ -296,6 +296,7 @@
 "group_remove_confirm" = "'%@'グループから %@ を削除しますか？";
 "group_remove_button" = "グループから削除";
 "group_role_admin" = "管理者";
+"group_role_owner" = "Owner";
 "group_participant_menu_info" = "情報";
 "group_participant_menu_send" = "メッセージを送る";
 "group_participant_menu_admin" = "グループ管理者にする";
@@ -512,6 +513,8 @@
 "profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
 "profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";
+"profile_call_with_mixin" = "Mixinで電話をかける";
+"profile_call_phone" = "電話をかける";
 
 // Emergency
 "emergency_view" = "緊急連絡先を表示";

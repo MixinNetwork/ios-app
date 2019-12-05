@@ -65,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         UNUserNotificationCenter.current().removeAllNotifications()
-        WebSocketService.shared.checkConnectStatus()
+        WebSocketService.shared.reconnectIfNeeded()
         cancelBackgroundTask()
 
         if let conversationId = UIApplication.currentConversationId() {
@@ -273,7 +273,7 @@ extension AppDelegate {
         guard !DatabaseUserDefault.shared.hasUpgradeDatabase() else {
             return
         }
-        WebSocketService.shared.checkConnectStatus()
+        WebSocketService.shared.reconnectIfNeeded()
 
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {

@@ -183,7 +183,7 @@ class MixinService {
     internal func deliverKeys(blazeMessage: BlazeMessage) -> BlazeMessage? {
         repeat {
             do {
-                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
+                return try WebSocketService.shared.respondedMessage(for: blazeMessage)
             } catch {
                 if let err = error as? APIError {
                     if err.code == 401 {
@@ -204,7 +204,7 @@ class MixinService {
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, retry: Bool) {
         repeat {
             do {
-                return (try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil, false)
+                return (try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil, false)
             } catch {
                 if let err = error as? APIError {
                     if err.code == 403 {
@@ -236,7 +236,7 @@ class MixinService {
             }
             
             do {
-                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
+                return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
@@ -271,7 +271,7 @@ class MixinService {
     }
 
     internal func checkNetworkAndWebSocket() {
-        while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.connected) {
+        while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
             Thread.sleep(forTimeInterval: 2)
         }
 

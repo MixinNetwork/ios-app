@@ -1,116 +1,228 @@
 import Foundation
-import SocketRocket
-import Gzip
-import Bugsnag
 import Alamofire
+import Starscream
+import Gzip
 
-class WebSocketService: NSObject {
-
+class WebSocketService {
+    
+    static let didConnectNotification = Notification.Name("one.mixin.messenger.ws.connect")
+    static let didDisconnectNotification = Notification.Name("one.mixin.messenger.ws.disconnect")
+    
     static let shared = WebSocketService()
-
-    private let exitCode = 9999
-    private let failCode = 9998
-    private let jsonEncoder = JSONEncoder()
-    private let jsonDecoder = JSONDecoder()
-
-    private(set) var client: SRWebSocket?
-    private(set) var connected = false
-
-    private var transactions = SafeDictionary<String, SendJobTransaction>()
-    private var recoverJobs = false
-    private let websocketDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
-    private let sendDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.send")
+    
+    var isConnected: Bool {
+        return status == .connected
+    }
+    
+    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
+    private let queueSpecificKey = DispatchSpecificKey<Void>()
+    private let messageQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.message")
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
-
-    private var reconnectWorkItem: DispatchWorkItem?
-    private var timer: Timer?
-    private var sentPingCount = 0
-    private var receivedPongCount = 0
-    private var awaitingPong: Bool = false
-    private var pingInterval: TimeInterval = 15
-    private var requestHeaderTime: TimeInterval = 0
-    private var lastConnectTime: TimeInterval = 0
-    private var lastNetworkReachabled = true
+    
+    private var host: String!
+    private var rechability: NetworkReachabilityManager?
+    private var socket: WebSocket!
+    private var heartbeat: HeartbeatService!
+    
+    private var status: Status = .disconnected
+    private var networkWasRechableOnConnection = false
+    private var lastConnectionDate: Date?
+    private var messageHandlers = [String: IncomingMessageHandler]()
+    private var needsJobRestoration = true
+    private var httpUpgradeSigningDate: Date?
+    private var httpUpgradeServerDate: Date?
+    private var connectOnNetworkIsReachable = false
+    
+    private var isReachable: Bool {
+        return rechability?.isReachable ?? false
+    }
+    
+    init() {
+        queue.setSpecific(key: queueSpecificKey, value: ())
+    }
     
     func connect() {
-        guard client == nil else {
-            return
-        }
-        lastNetworkReachabled = NetworkManager.shared.isReachable
-        lastConnectTime = Date().timeIntervalSince1970
-        client = instanceWebSocket()
-        client?.setDelegateDispatchQueue(websocketDispatchQueue)
-        client?.delegate = self
-        client?.open()
-    }
-
-    func disconnect() {
-        connected = false
-        tearDown()
-        client?.delegate = nil
-        client?.close(withCode: exitCode, reason: "disconnect")
-        client = nil
-        removeAllJob()
-        reconnectWorkItem?.cancel()
-        transactions.removeAll()
-    }
-
-    deinit {
-        removeAllJob()
-        transactions.removeAll()
-        reconnectWorkItem?.cancel()
-        client?.delegate = nil
-        client?.close()
-    }
-}
-
-extension WebSocketService {
-
-    @discardableResult
-    func sendData(message: BlazeMessage) -> Bool {
-        guard let websocket = self.client, websocket.readyState == .OPEN else {
-            return false
-        }
-        guard let jsonData = try? jsonEncoder.encode(message), let gzipData = try? jsonData.gzipped() else {
-            return false
-        }
-
-        websocket.send(gzipData)
-        return true
-    }
-}
-
-extension WebSocketService: SRWebSocketDelegate {
-
-    func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
-        guard let data = message as? Data, data.isGzipped, let unzipJson = try? data.gunzipped() else {
-            return
-        }
-        guard let blazeMessage = (try? jsonDecoder.decode(BlazeMessage.self, from: unzipJson)) else {
-            return
-        }
-
-        if let error = blazeMessage.error {
-            if let transaction = transactions[blazeMessage.id] {
-                transactions.removeValue(forKey: blazeMessage.id)
-                transaction.callback(.failure(error))
+        enqueueOperation {
+            guard self.status == .disconnected else {
+                return
             }
-            if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
-                if !AccountUserDefault.shared.hasClockSkew {
-                    AccountAPI.shared.logout(from: "WebSocketService")
+            self.status = .connecting
+            self.prepareForConnection(host: MixinServer.webSocketHost)
+            self.networkWasRechableOnConnection = self.isReachable
+            self.lastConnectionDate = Date()
+            let headers = MixinRequest.getHeaders(request: self.socket.request)
+            self.httpUpgradeSigningDate = Date()
+            self.httpUpgradeServerDate = nil
+            for (field, value) in headers {
+                self.socket.request.setValue(value, forHTTPHeaderField: field)
+            }
+            self.socket.connect()
+        }
+    }
+    
+    func disconnect() {
+        enqueueOperation {
+            guard self.status == .connecting || self.status == .connected else {
+                return
+            }
+            self.connectOnNetworkIsReachable = false
+            self.heartbeat.stop()
+            self.socket.disconnect(forceTimeout: nil, closeCode: CloseCode.exit)
+            self.needsJobRestoration = false
+            ConcurrentJobQueue.shared.cancelAllOperations()
+            self.messageHandlers.removeAll()
+            self.status = .disconnected
+        }
+    }
+    
+    func reconnectIfNeeded() {
+        enqueueOperation {
+            let shouldReconnect = self.isReachable
+                && AccountAPI.shared.didLogin
+                && self.status == .connected
+                && !self.socket.isConnected
+            if shouldReconnect {
+                self.reconnect(sendDisconnectToRemote: true)
+            }
+        }
+    }
+    
+    func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
+        return try messageQueue.sync {
+            guard AccountAPI.shared.didLogin else {
+                return nil
+            }
+            var response: BlazeMessage?
+            var err = APIError.createTimeoutError()
+            
+            let semaphore = DispatchSemaphore(value: 0)
+            try queue.sync {
+                messageHandlers[message.id] = { (jobResult) in
+                    switch jobResult {
+                    case let .success(blazeMessage):
+                        response = blazeMessage
+                    case let .failure(error):
+                        if error.code == 10002 {
+                            if let param = message.params, let messageId = param.messageId, messageId != messageId.lowercased() {
+                                MessageDAO.shared.deleteMessage(id: messageId)
+                                JobDAO.shared.removeJob(jobId: message.id)
+                            }
+                        }
+                        err = error
+                    }
+                    semaphore.signal()
+                }
+                if !send(message: message) {
+                    _ = messageHandlers.removeValue(forKey: message.id)
+                    throw err
+                }
+            }
+            _ = semaphore.wait(timeout: .now() + .seconds(5))
+            
+            guard let blazeMessage = response else {
+                throw err
+            }
+            return blazeMessage
+        }
+    }
+    
+}
+
+extension WebSocketService: WebSocketDelegate {
+    
+    func websocketDidConnect(socket: WebSocketClient) {
+        guard status == .connecting else {
+            return
+        }
+        guard let signingDate = httpUpgradeSigningDate, let serverDate = httpUpgradeServerDate else {
+            return
+        }
+        if abs(serverDate.timeIntervalSince(signingDate)) > 300 {
+            if -signingDate.timeIntervalSinceNow > 60 {
+                reconnect(sendDisconnectToRemote: true)
+            } else {
+                AccountUserDefault.shared.hasClockSkew = true
+                disconnect()
+                DispatchQueue.main.async {
+                    AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }
         } else {
-            if let transaction = transactions[blazeMessage.id] {
-                transactions.removeValue(forKey: blazeMessage.id)
-                transaction.callback(.success(blazeMessage))
+            status = .connected
+            NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
+            ReceiveMessageService.shared.processReceiveMessages()
+            requestListPendingMessages()
+            ConcurrentJobQueue.shared.resume()
+            heartbeat.start()
+            
+            let now = Date().timeIntervalSince1970
+            let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
+            if lastOneTimePreKey < 1 {
+                CryptoUserDefault.shared.refreshOneTimePreKey = now
+            } else if now - lastOneTimePreKey > refreshOneTimePreKeyInterval {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+                ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
+                CryptoUserDefault.shared.refreshOneTimePreKey = now
             }
-
-            if blazeMessage.data != nil {
-                if blazeMessage.isReceiveMessageAction() {
-                    ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage)
+            if rechability?.isReachableOnEthernetOrWiFi ?? false {
+                if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
+                    BackupJobQueue.shared.addJob(job: BackupJob())
+                }
+                if AccountUserDefault.shared.hasRestoreMedia {
+                    BackupJobQueue.shared.addJob(job: RestoreJob())
+                }
+            }
+            ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
+        }
+    }
+    
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        if let error = error, NetworkManager.shared.isReachable {
+            UIApplication.traceError(error)
+            if let error = error as? WSError, error.type == .writeTimeoutError {
+                MixinServer.toggle(currentWebSocketHost: host)
+            }
+        }
+        if status == .connecting || status == .connected {
+            reconnect(sendDisconnectToRemote: false)
+        }
+    }
+    
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        
+    }
+    
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        guard status == .connected else {
+            return
+        }
+        guard data.isGzipped, let unzipped = try? data.gunzipped() else {
+            return
+        }
+        guard let message = try? JSONDecoder.default.decode(BlazeMessage.self, from: unzipped) else {
+            return
+        }
+        if let error = message.error {
+            if let handler = messageHandlers[message.id] {
+                messageHandlers.removeValue(forKey: message.id)
+                handler(.failure(error))
+            }
+            let needsLogout = message.action == BlazeMessageAction.error.rawValue
+                && error.code == 401
+                && !AccountUserDefault.shared.hasClockSkew
+            if needsLogout {
+                AccountAPI.shared.logout(from: "WebSocketService")
+            }
+        } else {
+            if let handler = messageHandlers[message.id] {
+                messageHandlers.removeValue(forKey: message.id)
+                handler(.success(message))
+            }
+            if message.data != nil {
+                if message.isReceiveMessageAction() {
+                    ReceiveMessageService.shared.receiveMessage(blazeMessage: message)
                 } else {
-                    guard let data = blazeMessage.toBlazeMessageData() else {
+                    guard let data = message.toBlazeMessageData() else {
                         return
                     }
                     SendMessageService.shared.sendAckMessage(messageId: data.messageId, status: .READ)
@@ -118,264 +230,136 @@ extension WebSocketService: SRWebSocketDelegate {
             }
         }
     }
-
-    func webSocketRequestHeaders(_ request: URLRequest!) -> [String : String]! {
-        requestHeaderTime = Date().timeIntervalSince1970
-        return MixinRequest.getHeaders(request: request)
-    }
-
-    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        guard client != nil, AccountAPI.shared.didLogin else {
-            return
-        }
-        if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
-            let clientTime = Date().timeIntervalSince1970
-            if abs(serverTime / 1000000000 - clientTime) > 300 {
-                if clientTime - requestHeaderTime > 60 {
-                    WebSocketService.shared.reconnect(didClose: false)
-                } else {
-                    AccountUserDefault.shared.hasClockSkew = true
-                    DispatchQueue.main.async {
-                        WebSocketService.shared.disconnect()
-                        AppDelegate.current.window.rootViewController = makeInitialViewController()
-                    }
-                }
-                return
-            }
-        }
-
-        connected = true
-        NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: true)
-
-        ReceiveMessageService.shared.processReceiveMessages()
-        sendPendingMessage()
-        resumeAllJob()
-        pingRunnable()
-        refreshJobs()
-    }
-
-    private func refreshJobs() {
-        let cur = Date().timeIntervalSince1970
-        let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
-        if lastOneTimePreKey < 1 {
-            CryptoUserDefault.shared.refreshOneTimePreKey = cur
-        } else if cur - lastOneTimePreKey > refreshOneTimePreKeyInterval {
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
-            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
-            CryptoUserDefault.shared.refreshOneTimePreKey = cur
-        }
-
-        if NetworkManager.shared.isReachableOnWiFi {
-            if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
-                BackupJobQueue.shared.addJob(job: BackupJob())
-            }
-            if AccountUserDefault.shared.hasRestoreMedia {
-                BackupJobQueue.shared.addJob(job: RestoreJob())
-            }
-        }
-
-        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
-    }
-
-    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        if NetworkManager.shared.isReachable {
-            let nsError = error as NSError
-            if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
-                MixinServer.toggle(currentWebSocketUrl: webSocket.url)
-            }
-        }
-        reconnect(didClose: false)
-    }
-
-    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-        #if DEBUG
-        print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(String(describing: reason))")
-        #endif
-        guard code != exitCode && code != failCode else {
-            UIApplication.traceError(code: ReportErrorCode.websocketError, userInfo: ["code": "\(code)"])
-            tearDown()
-            return
-        }
-
-        reconnect(didClose: true)
-    }
-
-    func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
-        receivedPongCount += 1
-        awaitingPong = false
-    }
-
-    func pingRunnable() {
-        DispatchQueue.main.async {
-            self.timer = Timer.scheduledTimer(timeInterval: self.pingInterval, target: self, selector: #selector(self.writePingFrame), userInfo: nil, repeats: true)
-            self.timer?.fire()
-        }
-    }
-
-    func tearDown() {
-        awaitingPong = false
-        sentPingCount = 0
-        receivedPongCount = 0
-        DispatchQueue.main.async {
-            self.timer?.invalidate()
-            self.timer = nil
-        }
-    }
-
-    @objc func writePingFrame() {
-        let failedPing = awaitingPong ? sentPingCount : -1
-        sentPingCount += 1
-        awaitingPong = true
-        if failedPing != -1 {
-            #if DEBUG
-            print("sent ping but didn't receive pong within \(pingInterval)s after \(failedPing - 1) successful ping/pongs")
-            #endif
-            reconnect(didClose: false)
-            return
-        }
-        if let client = client, client.readyState == .OPEN {
-            client.sendPing(Data())
-        }
-    }
-
-    private func cancelTransactions() {
-        let ids = transactions.keys
-        for transactionId in ids {
-            let transaction = transactions[transactionId]
-            transaction?.callback(.failure(APIError.createTimeoutError()))
-            transactions.removeValue(forKey: transactionId)
-        }
-    }
-
-    func reconnect(didClose: Bool) {
-        connected = false
-        NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: false)
-        ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
-        cancelTransactions()
-        suspendAllJob()
-        tearDown()
-        client?.delegate = nil
-        if !didClose {
-            client?.close(withCode: failCode, reason: "OK")
-        }
-        client = nil
-        reconnectWorkItem?.cancel()
-
-
-        if AccountAPI.shared.didLogin && NetworkManager.shared.isReachable && (!lastNetworkReachabled || Date().timeIntervalSince1970 - lastConnectTime >= 1) {
-            WebSocketService.shared.connect()
-        } else {
-            let reconnectWorkItem = DispatchWorkItem(block: {
-                guard AccountAPI.shared.didLogin, let reconnectWorkItem = WebSocketService.shared.reconnectWorkItem, !reconnectWorkItem.isCancelled else {
-                    return
-                }
-                WebSocketService.shared.connect()
-            })
-            self.reconnectWorkItem = reconnectWorkItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: reconnectWorkItem)
-        }
-    }
-
-    func checkConnectStatus() {
-        guard AccountAPI.shared.didLogin, NetworkManager.shared.isReachable, WebSocketService.shared.connected, client?.readyState != .OPEN else {
-            return
-        }
-        reconnect(didClose: false)
-    }
-
-    func webSocketShouldConvertTextFrame(toString webSocket: SRWebSocket!) -> Bool {
-        return false
-    }
-
-    private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: MixinServer.webSocketUrl)
-        request.timeoutInterval = 5
-        return SRWebSocket(urlRequest: request)
-    }
+    
 }
-
 
 extension WebSocketService {
-
-    func resumeAllJob() {
-        ConcurrentJobQueue.shared.resume()
+    
+    private enum Status {
+        case disconnected
+        case connecting
+        case connected
     }
-
-    func suspendAllJob() {
-        ConcurrentJobQueue.shared.suspend()
+    
+    private enum CloseCode {
+        static let exit: UInt16 = 9999
+        static let failure: UInt16 = 9998
     }
-
-    func removeAllJob() {
-        recoverJobs = false
-        ConcurrentJobQueue.shared.cancelAllOperations()
-    }
-
-    func sendPendingMessage() {
-        let message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
-        let transaction = SendJobTransaction(callback: { (result) in
-            guard result.isSuccess else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                    guard WebSocketService.shared.connected else {
-                        return
-                    }
-                    WebSocketService.shared.sendPendingMessage()
-                })
-                return
-            }
-
-            if !WebSocketService.shared.recoverJobs {
-                WebSocketService.shared.recoverJobs = true
-
-                SendMessageService.shared.restoreJobs()
-                ConcurrentJobQueue.shared.restoreJobs()
-            }
-        })
-        transactions[message.id] = transaction
-        sendData(message: message)
-    }
-
-    func syncSendMessage(blazeMessage: BlazeMessage) throws -> BlazeMessage? {
-        return try sendDispatchQueue.sync {
-            guard AccountAPI.shared.didLogin else {
-                return nil
-            }
-            var result: BlazeMessage?
-            var err = APIError.createTimeoutError()
-
-            let semaphore = DispatchSemaphore(value: 0)
-            let transaction = SendJobTransaction(callback: { (jobResult) in
-                switch jobResult {
-                case let .success(blazeMessage):
-                    result = blazeMessage
-                case let .failure(error):
-                    if error.code == 10002 {
-                        if let param = blazeMessage.params, let messageId = param.messageId, messageId != messageId.lowercased() {
-                            MessageDAO.shared.deleteMessage(id: messageId)
-                            JobDAO.shared.removeJob(jobId: blazeMessage.id)
-                        }
-                    }
-                    err = error
-                }
-                semaphore.signal()
-            })
-            transactions[blazeMessage.id] = transaction
-            if !sendData(message: blazeMessage) {
-                transactions.removeValue(forKey: blazeMessage.id)
-                throw err
-            }
-            _ = semaphore.wait(timeout: .now() + .seconds(5))
-
-            guard let blazeMessage = result else {
-                throw err
-            }
-            return blazeMessage
+    
+    private typealias IncomingMessageHandler = (APIResult<BlazeMessage>) -> Void
+    
+    private func enqueueOperation(_ closure: @escaping () -> Void) {
+        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
+            queue.async(execute: closure)
+        } else {
+            closure()
         }
     }
-
-}
-
-private struct SendJobTransaction {
-
-    let callback: (APIResult<BlazeMessage>) -> Void
-
+    
+    private func prepareForConnection(host: String) {
+        rechability = NetworkReachabilityManager(host: host)
+        var request = URLRequest(url: URL(string: "wss://" + host)!)
+        request.timeoutInterval = 5
+        socket = WebSocket(request: request)
+        heartbeat = HeartbeatService(socket: socket)
+        socket.delegate = self
+        socket.callbackQueue = queue
+        rechability?.listener = { [weak self] status in
+            guard case .reachable(_) = status else {
+                return
+            }
+            self?.networkBecomesReachable()
+        }
+        socket.onHttpResponseHeaders = { [weak self] headers in
+            // This is called from an arbitrary queue instead of designated callback queue
+            // Probably a bug of Starscream
+            self?.updateHttpUpgradeServerDate(headers: headers)
+        }
+        heartbeat.onOffline = { [weak self] in
+            self?.reconnect(sendDisconnectToRemote: true)
+        }
+        rechability?.startListening()
+    }
+    
+    private func updateHttpUpgradeServerDate(headers: HTTPHeaders) {
+        enqueueOperation {
+            guard let xServerTime = headers["x-server-time"], let time = Double(xServerTime) else {
+                return
+            }
+            self.httpUpgradeServerDate = Date(timeIntervalSince1970: time / 1000000000)
+        }
+    }
+    
+    private func networkBecomesReachable() {
+        enqueueOperation {
+            guard self.connectOnNetworkIsReachable, AccountAPI.shared.didLogin else {
+                return
+            }
+            self.connect()
+        }
+    }
+    
+    private func reconnect(sendDisconnectToRemote: Bool) {
+        enqueueOperation {
+            ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
+            for handler in self.messageHandlers.values {
+                handler(.failure(APIError.createTimeoutError()))
+            }
+            self.messageHandlers.removeAll()
+            ConcurrentJobQueue.shared.suspend()
+            self.heartbeat.stop()
+            if sendDisconnectToRemote {
+                self.socket.disconnect(forceTimeout: nil, closeCode: CloseCode.failure)
+            }
+            self.status = .disconnected
+            NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
+            
+            let lastConnectionDate = self.lastConnectionDate ?? .distantPast
+            let shouldConnectImmediately = self.isReachable
+                && AccountAPI.shared.didLogin
+                && (!self.networkWasRechableOnConnection || -lastConnectionDate.timeIntervalSinceNow >= 1)
+            if shouldConnectImmediately {
+                self.connectOnNetworkIsReachable = false
+                self.connect()
+            } else {
+                self.status = .disconnected
+                self.connectOnNetworkIsReachable = true
+            }
+        }
+    }
+    
+    @discardableResult
+    private func send(message: BlazeMessage) -> Bool {
+        guard status == .connected else {
+            return false
+        }
+        guard let data = try? JSONEncoder.default.encode(message), let gzipped = try? data.gzipped() else {
+            return false
+        }
+        socket.write(data: gzipped)
+        return true
+    }
+    
+    private func requestListPendingMessages() {
+        let message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
+        messageHandlers[message.id] = { (result) in
+            switch result {
+            case .success:
+                if self.needsJobRestoration {
+                    self.needsJobRestoration = false
+                    SendMessageService.shared.restoreJobs()
+                    ConcurrentJobQueue.shared.restoreJobs()
+                }
+            case .failure:
+                self.queue.asyncAfter(deadline: .now() + 2, execute: {
+                    guard self.socket.isConnected else {
+                        return
+                    }
+                    self.requestListPendingMessages()
+                })
+            }
+        }
+        send(message: message)
+    }
+    
 }

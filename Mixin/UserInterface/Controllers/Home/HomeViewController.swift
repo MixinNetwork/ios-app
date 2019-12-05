@@ -74,7 +74,8 @@ class HomeViewController: UIViewController {
         view.layoutIfNeeded()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -107,7 +108,7 @@ class HomeViewController: UIViewController {
         guard AccountAPI.shared.didLogin else {
             return
         }
-        guard !WebSocketService.shared.connected else {
+        guard !WebSocketService.shared.isConnected else {
             return
         }
         AccountAPI.shared.me { [weak self](result) in
@@ -221,18 +222,18 @@ class HomeViewController: UIViewController {
         fetchConversations()
     }
     
-    @objc func socketStatusChange(_ sender: Any) {
-        if WebSocketService.shared.connected {
-            connectingView.stopAnimating()
-            titleLabel.text = "Mixin"
-        } else {
-            connectingView.startAnimating()
-            titleLabel.text = R.string.localizable.dialog_progress_connect()
-        }
+    @objc func webSocketDidConnect(_ notification: Notification) {
+        connectingView.stopAnimating()
+        titleLabel.text = "Mixin"
+    }
+    
+    @objc func webSocketDidDisconnect(_ notification: Notification) {
+        connectingView.startAnimating()
+        titleLabel.text = R.string.localizable.dialog_progress_connect()
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
-        guard WebSocketService.shared.connected, view?.isVisibleInScreen ?? false else {
+        guard WebSocketService.shared.isConnected, view?.isVisibleInScreen ?? false else {
             return
         }
         guard let progress = notification.object as? Int else {

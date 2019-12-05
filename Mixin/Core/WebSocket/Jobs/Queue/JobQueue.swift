@@ -31,7 +31,7 @@ class JobQueue {
             return false
         }
         queue.addOperation(job)
-        if WebSocketService.shared.connected && queue.isSuspended {
+        if WebSocketService.shared.isConnected && queue.isSuspended {
             resume()
         }
         return true

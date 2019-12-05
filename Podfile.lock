@@ -173,9 +173,9 @@ PODS:
     - YYImage/Core
   - SignalProtocolC (2.3.1)
   - SnapKit (5.0.1)
-  - SocketRocket (0.5.1)
   - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
+  - Starscream (3.1.1)
   - WCDB.swift (1.0.8.2):
     - SQLiteRepairKit (~> 1.2.0)
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -207,7 +207,7 @@ DEPENDENCIES:
   - SDWebImageYYPlugin/YYImage
   - SignalProtocolC (from `https://github.com/MixinNetwork/SignalProtocolC.git`)
   - SnapKit
-  - SocketRocket (from `https://github.com/over140/SocketRocket.git`, branch `feature/request`)
+  - Starscream
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
   - YYImage/WebP
   - Zip (~> 1.1.0)
@@ -253,6 +253,7 @@ SPEC REPOS:
     - SDWebImageYYPlugin
     - SnapKit
     - SQLiteRepairKit
+    - Starscream
     - WCDBOptimizedSQLCipher
     - YYImage
     - Zip
@@ -261,9 +262,6 @@ EXTERNAL SOURCES:
   SignalProtocolC:
     :git: https://github.com/MixinNetwork/SignalProtocolC.git
     :submodules: true
-  SocketRocket:
-    :branch: feature/request
-    :git: https://github.com/over140/SocketRocket.git
   WCDB.swift:
     :branch: bugfix/fts
     :git: https://github.com/MixinNetwork/wcdb.git
@@ -273,9 +271,6 @@ CHECKOUT OPTIONS:
     :commit: 31f5f56a03b54ecba250040e1c5cd8acf44ed50e
     :git: https://github.com/MixinNetwork/SignalProtocolC.git
     :submodules: true
-  SocketRocket:
-    :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
-    :git: https://github.com/over140/SocketRocket.git
   WCDB.swift:
     :commit: 6eab0d156a1e73125073c557b29566fd92910f34
     :git: https://github.com/MixinNetwork/wcdb.git
@@ -320,13 +315,13 @@ SPEC CHECKSUMS:
   SDWebImageYYPlugin: f6c1af162fb075efe5918d8caedee1f3d17c197e
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   WCDB.swift: 2e767b45d58cfca1b12e7e9ab6d65d357d5c85e7
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 24edd061bf2bfc004126776b4bf11f274db9ea0f
+PODFILE CHECKSUM: ff32b5e8c8df36c5d51bf8583d1ac379b957e3f5
 
 COCOAPODS: 1.8.4

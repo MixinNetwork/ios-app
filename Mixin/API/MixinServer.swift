@@ -2,7 +2,7 @@ import Foundation
 
 enum MixinServer {
     
-    static var webSocketUrl: URL {
+    static var webSocketHost: String {
         return all[MixinServer.serverIndex.value].0
     }
     
@@ -13,14 +13,14 @@ enum MixinServer {
     private static let key = "server_index"
     
     private static let all = [
-        (URL(string: "wss://mixin-blaze.zeromesh.net")!, "https://mixin-api.zeromesh.net/"),
-        (URL(string: "wss://blaze.mixin.one")!, "https://api.mixin.one/")
+        ("mixin-blaze.zeromesh.net", "https://mixin-api.zeromesh.net/"),
+        ("blaze.mixin.one", "https://api.mixin.one/")
     ]
-
+    
     private static var serverIndex = Atomic<Int>(UserDefaults.standard.integer(forKey: key))
     
-    static func toggle(currentWebSocketUrl url: URL) {
-        guard url == webSocketUrl else {
+    static func toggle(currentWebSocketHost host: String) {
+        guard host == webSocketHost else {
             return
         }
         toggleIndex()

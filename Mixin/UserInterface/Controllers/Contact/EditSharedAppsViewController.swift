@@ -37,25 +37,23 @@ class EditSharedAppsViewController: UIViewController {
     
     private func toggleSection(forCellAt indexPath: IndexPath) {
         let newIndexPath: IndexPath
+        let favoritesWereEmpty = favorites.isEmpty
+        let candidatesWereEmpty = candidates.isEmpty
         if indexPath.section == 0 {
             let user = favorites.remove(at: indexPath.row)
             candidates.insert(user, at: 0)
-            guard !favorites.isEmpty else {
-                tableView.reloadData()
-                return
-            }
             newIndexPath = IndexPath(row: 0, section: 1)
         } else {
             let user = candidates.remove(at: indexPath.row)
             favorites.append(user)
-            guard !candidates.isEmpty else {
-                tableView.reloadData()
-                return
-            }
             newIndexPath = IndexPath(row: favorites.count - 1, section: 0)
         }
-        tableView.moveRow(at: indexPath, to: newIndexPath)
-        tableView.reloadRows(at: [newIndexPath], with: .automatic)
+        if favoritesWereEmpty != favorites.isEmpty || candidatesWereEmpty != candidates.isEmpty {
+            tableView.reloadData()
+        } else {
+            tableView.moveRow(at: indexPath, to: newIndexPath)
+            tableView.reloadRows(at: [newIndexPath], with: .automatic)
+        }
     }
     
 }
@@ -110,8 +108,10 @@ extension EditSharedAppsViewController: UITableViewDelegate {
                 return nil
             } else {
                 if candidates.isEmpty {
+                    view.text = R.string.localizable.profile_share_app_hint()
                     view.style = .candidate
                 } else {
+                    view.text = nil
                     view.style = .favorite
                 }
                 return view

@@ -4,7 +4,7 @@ final class FavoriteAppsDAO {
     
     static let shared = FavoriteAppsDAO()
     
-    private static let query = """
+    private static let queryUsers = """
     SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
     FROM users u
     LEFT JOIN favorite_apps ON favorite_apps.app_id = u.app_id
@@ -12,8 +12,23 @@ final class FavoriteAppsDAO {
     ORDER BY favorite_apps.created_at ASC
     """
     
+    func favoriteAppsOfUser(withIds ids: [String]) -> [App] {
+        var wildcards = "?"
+        for _ in 0..<(ids.count - 1) {
+            wildcards += ",?"
+        }
+        let sql = """
+        SELECT \(AppDAO.sqlQueryColumns)
+        FROM apps a
+        LEFT JOIN favorite_apps fav ON fav.app_id = a.app_id
+        WHERE fav.user_id IN (\(wildcards))
+        ORDER BY a.name ASC
+        """
+        return MixinDatabase.shared.getCodables(on: App.Properties.all, sql: sql, values: ids)
+    }
+    
     func favoriteAppUsersOfUser(withId id: String) -> [User] {
-        return MixinDatabase.shared.getCodables(on: User.Properties.all, sql: FavoriteAppsDAO.query, values: [id])
+        return MixinDatabase.shared.getCodables(on: User.Properties.all, sql: FavoriteAppsDAO.queryUsers, values: [id])
     }
     
     func setFavoriteApp(_ app: FavoriteApp) {
@@ -26,10 +41,10 @@ final class FavoriteAppsDAO {
         MixinDatabase.shared.delete(table: FavoriteApp.tableName, condition: condition)
     }
     
-    func updateFavoriteApps(_ apps: [FavoriteApp]) {
+    func updateFavoriteApps(_ apps: [FavoriteApp], forUserWith userId: String) {
         let appIds = apps.compactMap({ $0.appId })
         MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: FavoriteApp.tableName, where: FavoriteApp.Properties.appId.notIn(appIds))
+            try db.delete(fromTable: FavoriteApp.tableName, where: FavoriteApp.Properties.userId == userId && FavoriteApp.Properties.appId.notIn(appIds))
             try db.insertOrReplace(objects: apps, intoTable: FavoriteApp.tableName)
         }
     }

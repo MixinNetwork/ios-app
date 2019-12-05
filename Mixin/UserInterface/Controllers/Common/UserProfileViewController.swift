@@ -824,7 +824,7 @@ extension UserProfileViewController {
                         return
                     }
                     DispatchQueue.global().async {
-                        FavoriteAppsDAO.shared.updateFavoriteApps(favApps)
+                        FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: userId)
                         let appUserIds = favApps.map({ $0.appId })
                         UserAPI.shared.showUsers(userIds: appUserIds) { (result) in
                             guard case let .success(users) = result else {

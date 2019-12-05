@@ -214,37 +214,38 @@ class MixinService {
     }
 
     @discardableResult
-    internal func deliver(blazeMessage: BlazeMessage) throws -> (success: Bool, retry: Bool) {
+    internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
             blazeMessage.params?.conversationChecksum = getCheckSum(conversationId: conversationId)
         }
         repeat {
             guard AccountAPI.shared.didLogin else {
-                return (false, false)
+                return false
             }
             
             do {
-                return (try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil, true)
+                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif
 
                 guard let err = error as? APIError else {
+                    UIApplication.traceError(error)
                     Thread.sleep(forTimeInterval: 2)
-                    return (false, false)
+                    return false
                 }
 
                 if err.code == 403 {
-                    return (true, false)
+                    return true
                 } else if err.code == 401 {
-                    return (false, false)
+                    return false
                 } else if err.code == 20140 {
                     if let conversationId = blazeMessage.params?.conversationId {
                         syncConversation(conversationId: conversationId)
                     }
-                    return (false, true)
+                    throw error
                 }
 
                 checkNetworkAndWebSocket()

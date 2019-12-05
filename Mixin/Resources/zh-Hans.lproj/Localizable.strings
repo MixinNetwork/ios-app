@@ -583,6 +583,7 @@
 "profile_share_app_hint" = "若要分享应用，请添加其为联系人";
 "profile_shared_app_of_user" = "%@分享的应用";
 "profile_shared_app_empty" = "暂无应用可分享";
+"profile_shared_app_reach_limit" = "已达到上限";
 "profile_call_with_mixin" = "语音通话";
 "profile_call_phone" = "电话呼叫";
 

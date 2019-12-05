@@ -666,10 +666,10 @@
                             <constraint firstItem="iqm-nl-x9S" firstAttribute="trailing" secondItem="N09-ZC-3VE" secondAttribute="trailing" id="CNt-Au-tWv"/>
                             <constraint firstItem="N09-ZC-3VE" firstAttribute="top" secondItem="yCf-E3-Am8" secondAttribute="bottom" id="Rwd-dg-T80"/>
                             <constraint firstItem="iqm-nl-x9S" firstAttribute="trailing" secondItem="yCf-E3-Am8" secondAttribute="trailing" id="VRV-IJ-4F7"/>
+                            <constraint firstAttribute="bottom" secondItem="N09-ZC-3VE" secondAttribute="bottom" id="WeA-2d-eR5"/>
                             <constraint firstItem="N09-ZC-3VE" firstAttribute="leading" secondItem="iqm-nl-x9S" secondAttribute="leading" id="f9I-iD-YeI"/>
                             <constraint firstItem="yCf-E3-Am8" firstAttribute="leading" secondItem="vcM-ez-pKq" secondAttribute="leading" constant="20" id="j8h-cI-yfD"/>
                             <constraint firstItem="yCf-E3-Am8" firstAttribute="top" secondItem="iqm-nl-x9S" secondAttribute="top" id="oXs-sN-mU3"/>
-                            <constraint firstItem="iqm-nl-x9S" firstAttribute="bottom" secondItem="N09-ZC-3VE" secondAttribute="bottom" id="sDn-Y9-qYE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iqm-nl-x9S"/>
                     </view>

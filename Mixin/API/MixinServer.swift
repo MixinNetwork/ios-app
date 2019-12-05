@@ -19,7 +19,7 @@ enum MixinServer {
     
     private static var serverIndex = Atomic<Int>(UserDefaults.standard.integer(forKey: key))
     
-    static func toggle(currentWebSocketHost host: String) {
+    static func toggle(currentWebSocketHost host: String?) {
         guard host == webSocketHost else {
             return
         }

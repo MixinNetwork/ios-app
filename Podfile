@@ -21,7 +21,7 @@ target 'Mixin' do
   pod 'SDWebImageYYPlugin/YYImage'
   pod 'YYImage/WebP'
   pod 'SnapKit'
-  pod 'SocketRocket', :git => 'https://github.com/over140/SocketRocket.git', :branch => 'feature/request'
+  pod 'Starscream'
   pod 'PhoneNumberKit'
   pod 'GzipSwift'
   pod 'RSKImageCropper'

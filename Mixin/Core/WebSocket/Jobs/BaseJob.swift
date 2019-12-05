@@ -1,5 +1,4 @@
 import Foundation
-import SocketRocket
 import Alamofire
 import UIKit
 import Bugsnag
@@ -46,7 +45,7 @@ class BaseJob: Operation {
             }
         }
         if requireWebSocket() {
-            while AccountAPI.shared.didLogin && !WebSocketService.shared.connected {
+            while AccountAPI.shared.didLogin && !WebSocketService.shared.isConnected {
                 Thread.sleep(forTimeInterval: 3)
             }
         }

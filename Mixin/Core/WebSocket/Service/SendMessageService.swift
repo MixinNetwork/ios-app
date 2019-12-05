@@ -382,7 +382,7 @@ class SendMessageService: MixinService {
 
     private func deliverLowPriorityMessages(blazeMessage: BlazeMessage) -> Bool {
         do {
-            return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
+            return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
         } catch {
             if let err = error as? APIError {
                 if err.code == 403 {
@@ -396,7 +396,7 @@ class SendMessageService: MixinService {
                 }
             }
 
-            while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.connected) {
+            while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
             return false

@@ -61,7 +61,7 @@ class CallManager {
     }
     
     func checkPreconditionsAndCallIfPossible(opponentUser: UserItem) {
-        guard WebSocketService.shared.connected && lineIsIdle else {
+        guard WebSocketService.shared.isConnected && lineIsIdle else {
             alertNetworkFailureOrLineBusy()
             return
         }
@@ -394,7 +394,7 @@ extension CallManager {
     
     private func alertNetworkFailureOrLineBusy() {
         DispatchQueue.main.async {
-            if !WebSocketService.shared.connected {
+            if !WebSocketService.shared.isConnected {
                 AppDelegate.current.window.rootViewController?.alert(Localized.CALL_NO_NETWORK)
             } else if !self.lineIsIdle {
                 AppDelegate.current.window.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
@@ -411,7 +411,7 @@ extension CallManager {
     private func call(opponentUser: UserItem) {
         AudioManager.shared.pause()
         queue.async {
-            guard WebSocketService.shared.connected && self.lineIsIdle else {
+            guard WebSocketService.shared.isConnected && self.lineIsIdle else {
                 self.alertNetworkFailureOrLineBusy()
                 return
             }

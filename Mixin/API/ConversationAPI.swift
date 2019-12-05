@@ -30,6 +30,7 @@ class ConversationAPI : BaseAPI {
         static func reset(conversationId: String) -> String {
             return "conversations/\(conversationId)/rotate"
         }
+
     }
 
     func createConversation(conversation: ConversationRequest, completion: @escaping (APIResult<ConversationResponse>) -> Void) {

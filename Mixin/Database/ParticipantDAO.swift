@@ -8,13 +8,6 @@ final class ParticipantDAO {
     private static let sqlQueryColumns = """
     SELECT p.conversation_id, p.user_id, p.role, p.status, p.created_at FROM participants p
     """
-    static let sqlQueryNotSentKeyParticipants = """
-    \(sqlQueryColumns)
-    LEFT JOIN users u ON p.user_id = u.user_id
-    WHERE p.conversation_id = ?
-    AND p.user_id NOT IN (SELECT user_id FROM sent_sender_keys WHERE conversation_id = ?)
-    AND p.user_id != ? AND ifnull(u.app_id, '') = ''
-    """
     static let sqlQueryParticipants = """
     \(sqlQueryColumns)
     LEFT JOIN users u ON p.user_id = u.user_id
@@ -60,6 +53,10 @@ final class ParticipantDAO {
     func getParticipants(conversationId: String) -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipantUsers, values: [conversationId])
     }
+
+    func getAllParticipants() -> [Participant] {
+        return MixinDatabase.shared.getCodables()
+    }
     
     func getParticipantCount(conversationId: String) -> Int {
         return MixinDatabase.shared.getCount(on: Participant.Properties.userId.count(),
@@ -100,10 +97,6 @@ final class ParticipantDAO {
         return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue)))
     }
 
-    func getNotSentKeyParticipants(conversationId: String, accountId: String) -> [Participant] {
-        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryNotSentKeyParticipants, values: [conversationId, conversationId, accountId])
-    }
-
     func updateParticipantRole(message: Message, conversationId: String, participantId: String, role: String, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             try db.update(table: Participant.tableName, on: [Participant.Properties.role], with: [role], where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == participantId)
@@ -124,6 +117,8 @@ final class ParticipantDAO {
     func removeParticipant(message: Message, conversationId: String, userId: String, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
+            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId && ParticipantSession.Properties.userId == userId)
+            try db.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.conversationId == conversationId)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }

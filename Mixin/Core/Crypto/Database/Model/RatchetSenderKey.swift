@@ -26,5 +26,4 @@ struct RatchetSenderKey: BaseCodable {
 
 enum RatchetStatus: String {
     case REQUESTING
-    case DONE
 }

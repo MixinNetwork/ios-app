@@ -2,7 +2,7 @@ import WCDBSwift
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 7
+    private static let databaseVersion: Int = 8
 
     static let shared = MixinDatabase()
 
@@ -29,7 +29,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: StickerRelationship.self)
                 try database.create(of: Album.self)
                 try database.create(of: MessageHistory.self)
-                try database.create(of: SentSenderKey.self)
                 try database.create(of: App.self)
 
                 try database.create(of: User.self)
@@ -40,9 +39,10 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
-                
+
                 try database.create(of: FavoriteApp.self)
-                
+                try database.create(of: ParticipantSession.self)
+
                 try self.createAfter(database: database, currentVersion: currentVersion)
 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
@@ -50,7 +50,7 @@ class MixinDatabase: BaseDatabase {
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
                 if clearSentSenderKey {
-                    try database.delete(fromTable: SentSenderKey.tableName)
+                    try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
                 }
                 try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
@@ -86,6 +86,11 @@ class MixinDatabase: BaseDatabase {
             try database.drop(table: Asset.tableName)
             try database.drop(table: Asset.topAssetsTableName)
         }
+
+        if currentVersion < 8 {
+            try database.drop(table: "sent_sender_keys")
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
+        }
     }
 
     private func createAfter(database: Database, currentVersion: Int) throws {
@@ -96,20 +101,11 @@ class MixinDatabase: BaseDatabase {
         if currentVersion < 4, try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
             try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
-    }
 
-    func logout() {
-        do {
-            try database.run(transaction: {
-                try database.delete(fromTable: SentSenderKey.tableName)
-            })
-        } catch let err as WCDBSwift.Error {
-            UIApplication.traceWCDBError(err)
-        } catch {
-            UIApplication.traceError(error)
+        if currentVersion < 8 {
+            try database.update(maps: [(Job.Properties.isHttpMessage, true)], tableName: Job.tableName, condition: Job.Properties.action == JobAction.SEND_ACK_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_ACK_MESSAGES.rawValue || Job.Properties.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue)
         }
     }
-    
 }
 
 extension MixinDatabase {

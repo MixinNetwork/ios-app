@@ -428,7 +428,7 @@ class SendMessageService: MixinService {
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
-                        return try sendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)
+                        return try sendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!, sessionId: job.sessionId)
                     }
                 case JobAction.RESEND_KEY.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {

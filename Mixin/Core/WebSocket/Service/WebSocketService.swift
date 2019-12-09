@@ -257,7 +257,11 @@ extension WebSocketService {
     }
     
     private func prepareForConnection(host: String) {
-        var request = URLRequest(url: URL(string: "wss://" + host)!)
+        let url: URL = URL(string: "wss://" + host)!
+        guard socket?.currentURL != url else {
+            return
+        }
+        var request = URLRequest(url: url)
         request.timeoutInterval = 5
         let socket = WebSocket(request: request)
         socket.delegate = self
@@ -275,6 +279,7 @@ extension WebSocketService {
         }
         self.heartbeat = heartbeat
         
+        rechability?.stopListening()
         rechability = NetworkReachabilityManager(host: host)
         rechability?.listener = { [weak self] status in
             guard case .reachable(_) = status else {

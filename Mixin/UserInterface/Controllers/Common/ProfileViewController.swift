@@ -53,6 +53,11 @@ class ProfileViewController: UIViewController {
     
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
+    var isResizeGestureEnabled = true {
+        didSet {
+            resizeRecognizerDelegate.isEnabled = isResizeGestureEnabled
+        }
+    }
     
     var conversationId: String {
         return ""
@@ -302,6 +307,8 @@ extension ProfileViewController {
     
     private class ResizeRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
         
+        var isEnabled = true
+        
         private unowned var scrollView: UIScrollView!
         
         init(scrollView: UIScrollView) {
@@ -310,6 +317,9 @@ extension ProfileViewController {
         }
         
         func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            guard isEnabled else {
+                return false
+            }
             let canDragDown: Bool
             if let recognizer = gestureRecognizer as? UIPanGestureRecognizer {
                 canDragDown = abs(scrollView.contentOffset.y) < 0.1 && recognizer.velocity(in: nil).y > 0

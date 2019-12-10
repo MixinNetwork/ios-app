@@ -371,7 +371,9 @@ extension GroupProfileViewController {
     private func showConversation(with response: ConversationResponse) {
         DispatchQueue.global().async { [weak self] in
             guard ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS), let conversation = ConversationDAO.shared.getConversation(conversationId: response.conversationId) else {
-                self?.dismiss(animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    self?.dismiss(animated: true, completion: nil)
+                }
                 return
             }
             DispatchQueue.main.async {

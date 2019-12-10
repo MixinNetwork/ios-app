@@ -18,6 +18,9 @@ class ReceiveMessageService: MixinService {
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
+            guard AccountAPI.shared.didLogin else {
+                return
+            }
             guard let data = blazeMessage.data?.data(using: .utf8), let blazeMessageData = try? self.jsonDecoder.decode(BlazeMessageData.self, from: data) else {
                 return
             }

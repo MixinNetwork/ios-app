@@ -74,8 +74,8 @@ extension FileManager {
             values.isExcludedFromBackup = true
             try dir.setResourceValues(values)
             return true
-        } catch let error {
-            print("======FileManagerExtension...error:\(error)")
+        } catch {
+            UIApplication.traceError(error)
             return false
         }
     }

@@ -38,7 +38,6 @@ class ConversationDataSource {
     private(set) var loadedMessageIds = Set<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
-    private(set) var myInvitation: Message?
     
     private var highlight: Highlight?
     private var viewModels = [String: [MessageViewModel]]()
@@ -717,9 +716,6 @@ extension ConversationDataSource {
                 initialIndexPath = unreadHintIndexPath
             }
             offset -= ConversationDateHeaderView.height
-        }
-        if category == .group {
-            myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: AccountAPI.shared.accountUserId)
         }
         performSynchronouslyOnMainThread {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {

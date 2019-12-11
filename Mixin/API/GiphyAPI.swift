@@ -37,7 +37,11 @@ enum GiphyAPI {
             completion(.failure(Error.noApiKey))
             return nil
         }
-        let url = URL(string: "https://api.giphy.com/v1/gifs/search?q=\(keyword)&offset=\(offset)&limit=\(limit)&rating=r&lang=\(language)&api_key=\(key)")!
+        guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            completion(.success([]))
+            return nil
+        }
+        let url = URL(string: "https://api.giphy.com/v1/gifs/search?q=\(encodedKeyword)&offset=\(offset)&limit=\(limit)&rating=r&lang=\(language)&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
         return request(url).responseJSON(completionHandler: handler)
     }

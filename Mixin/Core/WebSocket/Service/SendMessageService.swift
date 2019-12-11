@@ -207,7 +207,7 @@ class SendMessageService: MixinService {
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
 
                         if AccountUserDefault.shared.isDesktopLoggedIn {
-                            jobs.append(Job(action: .SEND_SESSION_MESSAGE, conversationId: conversationId, messageId: messageId, status: MessageStatus.READ.rawValue))
+                            jobs.append(Job(sessionRead: conversationId, messageId: messageId))
                         }
                     } else {
                         for i in stride(from: 0, to: ids.count, by: 100) {

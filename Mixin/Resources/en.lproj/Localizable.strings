@@ -476,6 +476,7 @@
 "address_not_found" = "Address not found.";
 
 "asset_not_found" = "Asset not found.";
+"snapshot_not_found" = "Snapshot not found.";
 
 // Transfer
 "transfer_title" = "Transfer";

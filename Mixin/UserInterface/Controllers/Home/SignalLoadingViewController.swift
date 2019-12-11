@@ -17,7 +17,6 @@ class SignalLoadingViewController: UIViewController {
             self.syncSession()
 
             DispatchQueue.main.async {
-                MixinWebView.clearCookies()
                 let time = Date().timeIntervalSince(startTime)
                 if time < 2 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
@@ -44,6 +43,9 @@ class SignalLoadingViewController: UIViewController {
             switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
                 CryptoUserDefault.shared.isLoaded = true
+                DispatchQueue.main.async {
+                    MixinWebView.clearCookies()
+                }
                 return
             case let .failure(error):
                 guard error.code != 401 else {

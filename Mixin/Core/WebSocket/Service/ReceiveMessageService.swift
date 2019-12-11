@@ -18,6 +18,9 @@ class ReceiveMessageService: MixinService {
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
+            guard AccountAPI.shared.didLogin else {
+                return
+            }
             guard let data = blazeMessage.data?.data(using: .utf8), let blazeMessageData = try? self.jsonDecoder.decode(BlazeMessageData.self, from: data) else {
                 return
             }
@@ -25,11 +28,11 @@ class ReceiveMessageService: MixinService {
             let status = blazeMessageData.status
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
-                MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status)
+                MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 CryptoUserDefault.shared.statusOffset = blazeMessageData.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty {
-                    MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status)
+                    MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 } else {
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
                         return
@@ -587,7 +590,7 @@ class ReceiveMessageService: MixinService {
                     guard message.status == MessageStatus.READ.rawValue else {
                         continue
                     }
-                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, updateUnseen: true) {
+                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, from: "\(data.category):\(plainData.action)", updateUnseen: true) {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
                         UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
                     }

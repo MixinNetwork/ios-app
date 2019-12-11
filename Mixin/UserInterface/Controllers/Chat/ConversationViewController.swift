@@ -59,6 +59,7 @@ class ConversationViewController: UIViewController {
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
+    private var myInvitation: Message?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
@@ -359,7 +360,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func exitGroupAndReportInviterAction(_ sender: Any) {
-        guard let inviterId = dataSource.myInvitation?.userId else {
+        guard let inviterId = myInvitation?.userId else {
             return
         }
 
@@ -1236,7 +1237,8 @@ extension ConversationViewController {
         let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
             let isInvitedByStranger: Bool
-            if let inviterId = self?.dataSource.myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {
+            let myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: AccountAPI.shared.accountUserId)
+            if let inviterId = myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {
                 isInvitedByStranger = true
             } else {
                 isInvitedByStranger = false
@@ -1245,6 +1247,7 @@ extension ConversationViewController {
                 guard let self = self else {
                     return
                 }
+                self.myInvitation = myInvitation
                 self.tableView.tableFooterView = isInvitedByStranger ? self.invitationHintView : nil
             }
         }

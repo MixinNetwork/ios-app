@@ -90,6 +90,7 @@ class PayWindow: BottomSheetView {
 
     deinit {
         bigAmountTimer?.invalidate()
+        bigAmountTimer = nil
     }
 
     override func awakeFromNib() {

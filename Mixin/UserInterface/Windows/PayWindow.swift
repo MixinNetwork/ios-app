@@ -441,6 +441,7 @@ class PayWindow: BottomSheetView {
         bigAmountTitleSpaceView.isHidden = true
         bigAmountIconSpaceView.isHidden = true
         showTransferView(user: user, showError: false, showBiometric: isAllowBiometricPay)
+        resetPinInput()
     }
 
 

@@ -477,7 +477,7 @@
                                     <rect key="frame" x="27.5" y="304.5" width="240" height="110"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bH7-jx-UjS" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="57" y="24" width="126" height="42"/>
+                                            <rect key="frame" x="0.0" y="24" width="240" height="42"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="42" id="VTV-Ng-XyO"/>
                                             </constraints>
@@ -522,7 +522,8 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </constraint>
-                                        <constraint firstItem="bH7-jx-UjS" firstAttribute="centerX" secondItem="RVF-bX-Nd3" secondAttribute="centerX" id="Z59-n8-Hi7"/>
+                                        <constraint firstAttribute="trailing" secondItem="bH7-jx-UjS" secondAttribute="trailing" id="LIP-Es-5ww"/>
+                                        <constraint firstItem="bH7-jx-UjS" firstAttribute="leading" secondItem="RVF-bX-Nd3" secondAttribute="leading" id="RJh-3B-7Ca"/>
                                         <constraint firstAttribute="bottom" secondItem="bH7-jx-UjS" secondAttribute="bottom" constant="44" id="hft-O5-euu"/>
                                     </constraints>
                                 </view>

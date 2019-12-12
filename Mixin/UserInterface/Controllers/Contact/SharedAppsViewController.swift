@@ -13,7 +13,7 @@ class SharedAppsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        preferredContentSize.height = 500
+        preferredContentSize.height = 340
         tableView.dataSource = self
         tableView.delegate = self
     }

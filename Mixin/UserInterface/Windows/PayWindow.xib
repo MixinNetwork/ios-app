@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bst-np-9j8" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="263.5" width="375" height="416.5"/>
+                    <rect key="frame" x="0.0" y="262.5" width="375" height="417.5"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cRa-Yx-aWD" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -52,7 +52,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qOs-Lg-MP3">
-                            <rect key="frame" x="40" y="70" width="295" height="333.5"/>
+                            <rect key="frame" x="40" y="70" width="295" height="334.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer to Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xfg-Lf-zjd">
                                     <rect key="frame" x="56" y="0.0" width="183" height="21.5"/>
@@ -67,9 +67,16 @@
                                         <constraint firstAttribute="height" constant="8" id="9iR-Qr-lZT"/>
                                     </constraints>
                                 </view>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cjm-q8-Bxd">
+                                    <rect key="frame" x="50" y="29.5" width="195" height="8"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="8" id="lEn-OV-tXF"/>
+                                    </constraints>
+                                </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="7000100102" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xua-9X-dAo">
-                                    <rect key="frame" x="109.5" y="29.5" width="76" height="16"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <rect key="frame" x="107" y="29.5" width="81" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -243,7 +250,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AaG-Kg-6yE">
-                                    <rect key="frame" x="50" y="45.5" width="195" height="16"/>
+                                    <rect key="frame" x="50" y="46.5" width="195" height="16"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="16" id="I1J-8x-ysP" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -261,8 +268,27 @@
                                         </constraint>
                                     </constraints>
                                 </view>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XDT-yW-kJB">
+                                    <rect key="frame" x="50" y="62.5" width="195" height="16"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="cbC-ph-m5I" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                                    <real key="value" value="4"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                                    <real key="value" value="6"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                                    <real key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                    </constraints>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2K-V8-QTR" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="112.5" y="61.5" width="70" height="70"/>
+                                    <rect key="frame" x="112.5" y="62.5" width="70" height="70"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="70" id="Foa-Ha-bhL" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -290,7 +316,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r4J-S9-Uqc">
-                                    <rect key="frame" x="50" y="131.5" width="195" height="10"/>
+                                    <rect key="frame" x="50" y="132.5" width="195" height="10"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="10" id="1Cw-JE-RWK" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -309,42 +335,42 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1.00032 ETH" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z51-ol-7We">
-                                    <rect key="frame" x="93" y="141.5" width="109.5" height="21.5"/>
+                                    <rect key="frame" x="93" y="142.5" width="109.5" height="21.5"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQ3-oR-Mlh">
-                                    <rect key="frame" x="10" y="163" width="275" height="4"/>
+                                    <rect key="frame" x="10" y="164" width="275" height="4"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="4" id="R7U-CA-MlH"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="≈ 0 CNY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2PH-Ch-c3M">
-                                    <rect key="frame" x="124" y="167" width="47.5" height="14.5"/>
+                                    <rect key="frame" x="124" y="168" width="47.5" height="14.5"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f3-GA-Aig">
-                                    <rect key="frame" x="10" y="181.5" width="275" height="4"/>
+                                    <rect key="frame" x="10" y="182.5" width="275" height="4"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="4" id="rGV-vx-zL5"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Happy Birthday!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3g0-U4-ZFa">
-                                    <rect key="frame" x="95.5" y="185.5" width="104" height="17"/>
+                                    <rect key="frame" x="95.5" y="186.5" width="104" height="17"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oXe-5X-NEr" userLabel="PINView">
-                                    <rect key="frame" x="27.5" y="202.5" width="240" height="101"/>
+                                    <rect key="frame" x="27.5" y="203.5" width="240" height="101"/>
                                     <subviews>
                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-FQ-P0s" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="34" y="26" width="172" height="10"/>
@@ -431,8 +457,62 @@
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="x3V-ed-5MN"/>
                                     </constraints>
                                 </view>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVF-bX-Nd3" userLabel="BigAmoutTips">
+                                    <rect key="frame" x="27.5" y="304.5" width="240" height="110"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bH7-jx-UjS" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="24" width="240" height="42"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="42" id="VTV-Ng-XyO"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                                            <state key="normal" title="Continue">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="bigAmountContinueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="eRx-wM-TqJ"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZE3-zW-4Tp">
+                                            <rect key="frame" x="97.5" y="81" width="45" height="29"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <state key="normal" title="Cancel"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="dismissTipsAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Coh-fD-igK"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="ZE3-zW-4Tp" secondAttribute="bottom" id="CDs-hT-qZu"/>
+                                        <constraint firstItem="ZE3-zW-4Tp" firstAttribute="centerX" secondItem="RVF-bX-Nd3" secondAttribute="centerX" id="Dbt-y2-k2z"/>
+                                        <constraint firstAttribute="height" constant="110" id="Goh-Xt-D0L" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                                    <real key="value" value="67"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                                    <real key="value" value="67"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                                    <real key="value" value="75"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                        <constraint firstAttribute="trailing" secondItem="bH7-jx-UjS" secondAttribute="trailing" id="LIP-Es-5ww"/>
+                                        <constraint firstItem="bH7-jx-UjS" firstAttribute="leading" secondItem="RVF-bX-Nd3" secondAttribute="leading" id="RJh-3B-7Ca"/>
+                                        <constraint firstAttribute="bottom" secondItem="bH7-jx-UjS" secondAttribute="bottom" constant="44" id="hft-O5-euu"/>
+                                    </constraints>
+                                </view>
                                 <button hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9LC-YO-0cd">
-                                    <rect key="frame" x="91" y="303.5" width="113" height="0.0"/>
+                                    <rect key="frame" x="91" y="304.5" width="113" height="0.0"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -448,7 +528,7 @@
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mes-3z-Cyg">
-                                    <rect key="frame" x="-170.5" y="303.5" width="636" height="118"/>
+                                    <rect key="frame" x="-170.5" y="304.5" width="636" height="118"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C06-9U-gZk" userLabel="ErrorView" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="16" width="636" height="28"/>
@@ -502,7 +582,7 @@
                                     </constraints>
                                 </view>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQV-om-Skc" userLabel="ResultView">
-                                    <rect key="frame" x="10" y="303.5" width="275" height="119"/>
+                                    <rect key="frame" x="10" y="304.5" width="275" height="119"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="gfw-v1-eUv">
                                             <rect key="frame" x="117.5" y="22" width="40" height="40"/>
@@ -543,7 +623,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE3-uC-G3Z">
-                                    <rect key="frame" x="10" y="303.5" width="275" height="30"/>
+                                    <rect key="frame" x="10" y="304.5" width="275" height="30"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="Blo-vS-RNo" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -594,6 +674,10 @@
                 <outlet property="amountExchangeLabel" destination="2PH-Ch-c3M" id="OEd-UD-9Xl"/>
                 <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
                 <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
+                <outlet property="bigAmountConfirmButton" destination="bH7-jx-UjS" id="ipg-LG-2dW"/>
+                <outlet property="bigAmountIconSpaceView" destination="XDT-yW-kJB" id="lPe-lw-GY3"/>
+                <outlet property="bigAmountTipsView" destination="RVF-bX-Nd3" id="QU3-OF-hzq"/>
+                <outlet property="bigAmountTitleSpaceView" destination="Cjm-q8-Bxd" id="Qa9-g4-UdR"/>
                 <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
                 <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
                 <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>

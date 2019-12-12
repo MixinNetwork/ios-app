@@ -43,7 +43,7 @@ enum MixinURL {
                 self = .users(url.pathComponents[1])
             } else if url.host == Host.snapshots && url.pathComponents.count == 2 {
                 self = .snapshots(url.pathComponents[1])
-            }else if url.host == Host.apps && url.pathComponents.count == 2 {
+            } else if url.host == Host.apps && url.pathComponents.count == 2 {
                 self = .apps(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
                 self = .transfer(url.pathComponents[1])

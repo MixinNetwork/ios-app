@@ -499,6 +499,8 @@
 "withdraw_by_pin" = "通过密码提现";
 "withdraw_use_face" = "使用面容提现";
 "withdraw_use_touch" = "使用指纹提现";
+"transfer_large_title" = "大额转账确认";
+"transfer_large_prompt" = "确定转价值 %@ 的 %@ 给%@ ？";
 
 // Multisig
 "multisig_by_pin" = "通过密码签名";
@@ -647,6 +649,8 @@
 "setting_notification_transfer" = "转账通知";
 "setting_notification_transfer_amount" = "转账金额（%@）";
 "setting_notification_transfer_summary" = "当收到不少于 %@ 转账时显示通知";
+"setting_transfer_large_title" = "大额转账确认（%@）";
+"setting_transfer_large_summary" = "当转账金额大于或等于 %@ 时显示确认弹窗";
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";

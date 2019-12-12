@@ -19,7 +19,7 @@ class NotificationSettingsViewController: UITableViewController {
     private lazy var hud = Hud()
     private lazy var editAmountController: UIAlertController = {
 
-    let vc = UIApplication.currentActivity()!.alertInput(title: R.string.localizable.setting_notification_transfer_amount(currentCurrency.symbol), placeholder: Localized.PROFILE_FULL_NAME, handler: { [weak self](_) in
+    let vc = UIApplication.currentActivity()!.alertInput(title: R.string.localizable.setting_notification_transfer_amount(currentCurrency.symbol), placeholder: R.string.localizable.wallet_send_amount(), handler: { [weak self](_) in
             self?.saveThresholdAction()
         })
         vc.textFields?.first?.keyboardType = .decimalPad

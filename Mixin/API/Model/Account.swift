@@ -22,6 +22,7 @@ struct Account: Encodable {
     let pin_token: String
     let fiat_currency: String
     let transfer_notification_threshold: Double
+    let transfer_confirmation_threshold: Double
 }
 
 extension Account: Decodable {
@@ -48,6 +49,7 @@ extension Account: Decodable {
         pin_token = container.getString(key: .pin_token)
         fiat_currency = container.getString(key: .fiat_currency)
         transfer_notification_threshold = container.getDouble(key: .transfer_notification_threshold)
+        transfer_confirmation_threshold = container.getDouble(key: .transfer_confirmation_threshold)
     }
 
 }

@@ -52,20 +52,6 @@ struct Job: BaseCodable {
         }
     }
 
-    init(action: JobAction, conversationId: String, messageId: String, status: String) {
-        self.jobId = UUID().uuidString.lowercased()
-        self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
-        self.action = action.rawValue
-        self.userId = nil
-        self.conversationId = conversationId
-        self.resendMessageId = nil
-        self.blazeMessage = nil
-        self.messageId = messageId
-        self.status = status
-        self.sessionId = nil
-        self.isHttpMessage = true
-    }
-
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
         switch action {
@@ -134,7 +120,20 @@ extension Job {
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
-    
+
+    init(sessionRead conversationId: String, messageId: String) {
+        self.jobId = UUID().uuidString.lowercased()
+        self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
+        self.action = JobAction.SEND_SESSION_MESSAGE.rawValue
+        self.userId = nil
+        self.conversationId = conversationId
+        self.resendMessageId = nil
+        self.blazeMessage = nil
+        self.messageId = messageId
+        self.status = MessageStatus.READ.rawValue
+        self.sessionId = nil
+        self.isHttpMessage = false
+    }
 }
 
 

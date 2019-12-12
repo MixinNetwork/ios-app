@@ -206,10 +206,13 @@ extension GroupProfileViewController {
         updateSubtitle()
         
         if !isMember && codeId != nil {
+            isResizeGestureEnabled = false
             relationshipView.style = .joinGroup
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(joinGroup), for: .touchUpInside)
             centerStackView.addArrangedSubview(relationshipView)
+        } else {
+            isResizeGestureEnabled = true
         }
         
         if !conversation.announcement.isEmpty {
@@ -371,7 +374,9 @@ extension GroupProfileViewController {
     private func showConversation(with response: ConversationResponse) {
         DispatchQueue.global().async { [weak self] in
             guard ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS), let conversation = ConversationDAO.shared.getConversation(conversationId: response.conversationId) else {
-                self?.dismiss(animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    self?.dismiss(animated: true, completion: nil)
+                }
                 return
             }
             DispatchQueue.main.async {

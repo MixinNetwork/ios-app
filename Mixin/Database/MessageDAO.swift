@@ -166,10 +166,19 @@ final class MessageDAO {
     }
 
     @discardableResult
-    func updateMessageStatus(messageId: String, status: String, updateUnseen: Bool = false) -> Bool {
+    func updateMessageStatus(messageId: String, status: String, from: String, updateUnseen: Bool = false) -> Bool {
         guard let oldMessage: Message = MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId) else {
             return false
         }
+
+        guard oldMessage.status != MessageStatus.FAILED.rawValue else {
+            UIApplication.traceError(code: ReportErrorCode.badMessageDataError, userInfo: [
+                "messageId": messageId,
+                "status" : status,
+                "from": from])
+            return false
+        }
+
         guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
             return false
         }

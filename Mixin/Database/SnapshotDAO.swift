@@ -1,11 +1,28 @@
 import WCDBSwift
 
 final class SnapshotDAO {
-    
+
+    private static let sqlQueryTable = """
+    SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
+    FROM snapshots s
+    LEFT JOIN users u ON u.user_id = s.opponent_id
+    LEFT JOIN assets a ON a.asset_id = s.asset_id
+    """
+    private static let sqlQueryById = "\(sqlQueryTable) WHERE s.snapshot_id = ?"
+
     static let shared = SnapshotDAO()
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
-    
+
+    func saveSnapshot(snapshot: Snapshot) -> SnapshotItem? {
+        var snapshotItem: SnapshotItem?
+        MixinDatabase.shared.transaction { (db) in
+            try db.insertOrReplace(objects: snapshot, intoTable: Snapshot.tableName)
+            snapshotItem = try db.prepareSelectSQL(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryById, values: [snapshot.snapshotId]).allObjects().first
+        }
+        return snapshotItem
+    }
+
     func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in

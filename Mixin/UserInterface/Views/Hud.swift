@@ -101,8 +101,8 @@ final class Hud: NSObject {
         if Thread.isMainThread {
             hide()
         } else {
-            DispatchQueue.main.async { [weak self] in
-                self?.hide()
+            DispatchQueue.main.async {
+                self.hide()
             }
         }
     }

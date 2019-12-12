@@ -19,6 +19,8 @@ class UrlWindow {
             return checkAddress(url: url)
         case let .users(id):
             return checkUser(id, clearNavigationStack: clearNavigationStack)
+        case let .snapshots(id):
+            return checkSnapshot(id)
         case let .apps(userId):
             return checkApp(url: url, userId: userId)
         case let .transfer(id):
@@ -91,6 +93,45 @@ class UrlWindow {
                     vc.updateUserFromRemoteAfterReloaded = refreshUser
                     UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 }
+            }
+        }
+        return true
+    }
+
+    class func checkSnapshot(_ snapshotId: String) -> Bool {
+        guard !snapshotId.isEmpty, UUID(uuidString: snapshotId) != nil else {
+            return false
+        }
+
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        DispatchQueue.global().async {
+            var snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
+            if snapshotItem == nil {
+                switch AssetAPI.shared.snapshot(snapshotId: snapshotId) {
+                    case let .success(snapshot):
+                        snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
+                    case let .failure(error):
+                        DispatchQueue.main.async {
+                            if error.code == 404 {
+                                hud.set(style: .error, text: R.string.localizable.snapshot_not_found())
+                            } else {
+                                hud.set(style: .error, text: error.localizedDescription)
+                            }
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                }
+            }
+
+            guard let snapshot = snapshotItem, let assetItem = syncAsset(assetId: snapshot.assetId, hud: hud) else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                hud.hide()
+                let vc = TransactionViewController.instance(asset: assetItem, snapshot: snapshot)
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
             }
         }
         return true

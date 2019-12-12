@@ -479,6 +479,7 @@
 "address_not_found" = "找不到该地址";
 
 "asset_not_found" = "找不到该资产.";
+"snapshot_not_found" = "找不到该转账记录.";
 
 // Transfer
 "transfer_title" = "转账";

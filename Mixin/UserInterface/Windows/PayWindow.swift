@@ -50,6 +50,8 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var multisigStackView: UIStackView!
     @IBOutlet weak var bigAmountTipsView: UIView!
     @IBOutlet weak var bigAmountConfirmButton: RoundedButton!
+    @IBOutlet weak var bigAmountTitleSpaceView: UIView!
+    @IBOutlet weak var bigAmountIconSpaceView: UIView!
 
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
@@ -108,23 +110,35 @@ class PayWindow: BottomSheetView {
         self.pinAction = action
         self.textfield = textfield
 
+        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
+        if let fiatMoneyAmount = fiatMoneyAmount {
+            amountLabel.text = fiatMoneyAmount
+            amountExchangeLabel.text = amountToken
+        } else {
+            amountLabel.text = amountToken
+            let value = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+        }
+
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
         var showBigAmountTips = false
         switch pinAction! {
         case let .transfer(_, user, _):
             multisigView.isHidden = true
-            if amount.doubleValue * asset.priceUsd.doubleValue < 1000 {
+            let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+            let threshold = AccountAPI.shared.account?.transfer_confirmation_threshold ?? 0
+            if fiatMoneyValue < threshold {
                 showTransferView(user: user, showError: showError, showBiometric: showBiometric)
             } else {
                 showBigAmountTips = true
-                let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-                let localizedFiatMoenyValue = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currentCurrency) ?? ""
                 nameLabel.text = R.string.localizable.transfer_large_title()
-                mixinIDLabel.text = R.string.localizable.transfer_large_prompt(asset.symbol, localizedFiatMoenyValue, user.fullName)
+                mixinIDLabel.text = R.string.localizable.transfer_large_prompt(amountExchangeLabel.text ?? "", asset.symbol, user.fullName)
                 mixinIDLabel.textColor = .walletRed
                 pinView.isHidden = true
                 bigAmountTipsView.isHidden = false
+                bigAmountTitleSpaceView.isHidden = false
+                bigAmountIconSpaceView.isHidden = false
                 updateContinueButton()
                 bigAmountTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] (timer) in
                     guard let self = self else {
@@ -180,16 +194,6 @@ class PayWindow: BottomSheetView {
         memoLabel.isHidden = memo.isEmpty
         memoPlaceView.isHidden = memo.isEmpty
         memoLabel.text = memo
-
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
-        if let fiatMoneyAmount = fiatMoneyAmount {
-            amountLabel.text = fiatMoneyAmount
-            amountExchangeLabel.text = amountToken
-        } else {
-            amountLabel.text = amountToken
-            let value = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        }
 
         dismissButton.isEnabled = true
         if showBigAmountTips {
@@ -434,6 +438,8 @@ class PayWindow: BottomSheetView {
             return
         }
         bigAmountTipsView.isHidden = true
+        bigAmountTitleSpaceView.isHidden = true
+        bigAmountIconSpaceView.isHidden = true
         showTransferView(user: user, showError: false, showBiometric: isAllowBiometricPay)
     }
 

@@ -2269,6 +2269,57 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="XJq-lO-npd">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="GlT-BY-7G8" customClass="ModernSelectedBackgroundCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="461.5" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GlT-BY-7G8" id="P32-nd-h4p">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cba-wc-HOU">
+                                                    <rect key="frame" x="20" y="0.0" width="313" height="64"/>
+                                                    <subviews>
+                                                        <label opaque="NO" contentMode="scaleToFill" text="Large Amount Confirmation" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5zt-Jw-MlB">
+                                                            <rect key="frame" x="0.0" y="0.0" width="259" height="64"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_large_title"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD ($)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lRy-Td-59j">
+                                                            <rect key="frame" x="267" y="0.0" width="46" height="64"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <color key="textColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="lLZ-tn-aLc">
+                                                    <rect key="frame" x="333" y="0.0" width="42" height="64"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="SdQ-ad-Wd9"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="cba-wc-HOU" firstAttribute="leading" secondItem="P32-nd-h4p" secondAttribute="leading" constant="20" id="Bzj-g6-qf0"/>
+                                                <constraint firstAttribute="trailing" secondItem="lLZ-tn-aLc" secondAttribute="trailing" id="C0T-ds-l74"/>
+                                                <constraint firstAttribute="bottom" secondItem="cba-wc-HOU" secondAttribute="bottom" id="Mqa-y9-Prj"/>
+                                                <constraint firstItem="cba-wc-HOU" firstAttribute="top" secondItem="P32-nd-h4p" secondAttribute="top" id="T3X-EF-OEq"/>
+                                                <constraint firstItem="lLZ-tn-aLc" firstAttribute="leading" secondItem="cba-wc-HOU" secondAttribute="trailing" id="VAF-v5-bgy"/>
+                                                <constraint firstAttribute="bottom" secondItem="lLZ-tn-aLc" secondAttribute="bottom" id="c6C-0K-1S0"/>
+                                                <constraint firstItem="lLZ-tn-aLc" firstAttribute="top" secondItem="P32-nd-h4p" secondAttribute="top" id="rtF-Kl-H3r"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="h0v-jb-TZN" id="TlL-u4-HIE"/>
@@ -2278,6 +2329,7 @@
                     <connections>
                         <outlet property="biometricsPaySwitch" destination="u34-vg-lzh" id="DW8-fZ-0kL"/>
                         <outlet property="currencySymbolLabel" destination="hfj-jI-PLy" id="vVu-Qb-xy6"/>
+                        <outlet property="largeAmountConfirmationLabel" destination="lRy-Td-59j" id="Mps-Yo-wVM"/>
                         <outlet property="payTitleLabel" destination="Tuh-GW-tc5" id="sl4-tx-erl"/>
                         <outlet property="pinIntervalLabel" destination="aZK-hB-ftp" id="x07-hf-GCb"/>
                     </connections>

@@ -7,10 +7,28 @@ class WalletSettingViewController: UITableViewController {
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
     @IBOutlet weak var currencySymbolLabel: UILabel!
+    @IBOutlet weak var largeAmountConfirmationLabel: UILabel!
     
     private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
     private let footerReuseId = "footer"
-    
+    private var currenyThreshold: String {
+        let threshold = AccountAPI.shared.account?.transfer_confirmation_threshold ?? 0
+        return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
+    }
+    private var currentCurrency: Currency {
+        return Currency.current
+    }
+    private lazy var hud = Hud()
+    private lazy var editAmountController: UIAlertController = {
+
+        let vc = UIApplication.currentActivity()!.alertInput(title: R.string.localizable.setting_transfer_large_title(currentCurrency.symbol), placeholder: R.string.localizable.wallet_send_amount(), handler: { [weak self](_) in
+            self?.saveThresholdAction()
+        })
+        vc.textFields?.first?.keyboardType = .decimalPad
+        vc.textFields?.first?.addTarget(self, action: #selector(alertInputChangedAction(_:)), for: .editingChanged)
+        return vc
+    }()
+
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.wallet()!
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.wallet_setting())
@@ -26,9 +44,9 @@ class WalletSettingViewController: UITableViewController {
             biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
             payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
         }
-        updateCurrencySymbolLabel()
+        updateLabels()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateCurrencySymbolLabel),
+                                               selector: #selector(updateLabels),
                                                name: Currency.currentCurrencyDidChangeNotification,
                                                object: nil)
     }
@@ -93,14 +111,17 @@ extension WalletSettingViewController {
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
         view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
-        if biometryType == .none {
-            return section == 0 ? nil : view
-        } else {
-            if section == 0 {
+
+        if section == 0 {
+            if biometryType == .none {
+                return nil
+            } else {
                 view.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
             }
-            return view
+        } else if section == 3 {
+            view.text = R.string.localizable.setting_transfer_large_summary("\(currentCurrency.symbol)\(currenyThreshold)")
         }
+        return view
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -119,8 +140,13 @@ extension WalletSettingViewController {
             }
             navigationController?.pushViewController(vc, animated: true)
         default:
-            let vc = CurrencySelectorViewController()
-            present(vc, animated: true, completion: nil)
+            if (biometryType == .none && indexPath.section == 2) || indexPath.section == 3 {
+                editAmountController.textFields?.first?.text = currenyThreshold
+                UIApplication.currentActivity()?.present(editAmountController, animated: true, completion: nil)
+            } else {
+                let vc = CurrencySelectorViewController()
+                present(vc, animated: true, completion: nil)
+            }
         }
     }
     
@@ -172,9 +198,40 @@ extension WalletSettingViewController {
         }
     }
     
-    @objc private func updateCurrencySymbolLabel() {
+    @objc private func updateLabels() {
         let currency = Currency.current
         currencySymbolLabel.text = currency.code + " (" + currency.symbol + ")"
+        largeAmountConfirmationLabel.text = "\(currency.symbol)\(currenyThreshold)"
+        tableView.reloadData()
     }
-    
+
+    @objc func alertInputChangedAction(_ sender: Any) {
+        guard let text = editAmountController.textFields?.first?.text else {
+            return
+        }
+        editAmountController.actions[1].isEnabled = !text.isEmpty && text.isNumeric
+    }
+
+    private func saveThresholdAction() {
+        guard let navigationController = navigationController else {
+            return
+        }
+        guard let thresholdText = editAmountController.textFields?.first?.text, !thresholdText.isEmpty, thresholdText.isNumeric else {
+            return
+        }
+        hud.show(style: .busy, text: "", on: navigationController.view)
+
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: Currency.current.code, transfer_confirmation_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
+            switch result {
+            case .success(let account):
+                AccountAPI.shared.updateAccount(account: account)
+                Currency.refreshCurrentCurrency()
+                self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                self?.updateLabels()
+            case let .failure(error):
+                self?.hud.set(style: .error, text: error.localizedDescription)
+            }
+            self?.hud.scheduleAutoHidden()
+        })
+    }
 }

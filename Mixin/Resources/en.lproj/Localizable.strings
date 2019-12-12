@@ -645,6 +645,8 @@
 "setting_notification_transfer" = "Transfer Notifications";
 "setting_notification_transfer_amount" = "Transfer Amount(%@)";
 "setting_notification_transfer_summary" = "Show notifications when receiving a transfer greater than or equal to %@.";
+"setting_transfer_large_title" = "Large Amount Confirmation(%@)";
+"setting_transfer_large_summary" = "Show confirmation dialog when transfer greater than or equal to %@.";
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";

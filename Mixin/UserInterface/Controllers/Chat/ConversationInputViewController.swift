@@ -305,13 +305,13 @@ class ConversationInputViewController: UIViewController {
         extensionViewController.loadViewIfNeeded()
         if dataSource.category == .group {
             let apps = AppDAO.shared.getConversationBots(conversationId: dataSource.conversationId)
-            extensionViewController.apps = apps
-        } else if let ownerId = dataSource.ownerUser?.userId {
-            if let app = AppDAO.shared.getApp(ofUserId: ownerId) {
+            extensionViewController.apps = apps.map { ($0, nil) }
+        } else if let ownerUser = dataSource.ownerUser {
+            if let app = AppDAO.shared.getApp(ofUserId: ownerUser.userId) {
                 opponentApp = app
                 CommonUserDefault.shared.insertRecentlyUsedAppId(id: app.appId)
             } else {
-                loadFavoriteApps(ownerId: ownerId)
+                loadFavoriteApps(ownerUser: ownerUser)
             }
         }
         if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
@@ -444,7 +444,7 @@ extension ConversationInputViewController {
         DispatchQueue.global().async {
             let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             DispatchQueue.main.sync {
-                self.extensionViewController.apps = apps
+                self.extensionViewController.apps = apps.map { ($0, nil) }
             }
         }
     }
@@ -629,10 +629,23 @@ extension ConversationInputViewController {
         }
     }
     
-    private func loadFavoriteApps(ownerId: String) {
-        let ids = [ownerId, AccountAPI.shared.accountUserId]
-        let sharedApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withIds: ids)
-        extensionViewController.apps = sharedApps
+    private func loadFavoriteApps(ownerUser: UserItem) {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        
+        let myUserItem = UserItem.createUser(from: account)
+        let ownerId = ownerUser.userId
+        
+        func makeApps() -> [(app: App, user: UserItem?)] {
+            let myFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: AccountAPI.shared.accountUserId)
+            let myFavoriteAppIds = Set(myFavoriteApps.map({ $0.appId }))
+            let ownerFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: ownerUser.userId)
+                .filter({ !myFavoriteAppIds.contains($0.appId) })
+            return myFavoriteApps.map({ ($0, myUserItem) }) + ownerFavoriteApps.map({ ($0, ownerUser) })
+        }
+        
+        extensionViewController.apps = makeApps()
         UserAPI.shared.getFavoriteApps(ofUserWith: ownerId) { [weak self] (result) in
             guard case let .success(favApps) = result else {
                 return
@@ -646,9 +659,9 @@ extension ConversationInputViewController {
                     }
                     UserDAO.shared.updateUsers(users: users)
                     DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-                        let sharedApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withIds: ids)
+                        let apps = makeApps()
                         DispatchQueue.main.async {
-                            self?.extensionViewController.apps = sharedApps
+                            self?.extensionViewController.apps = apps
                         }
                     }
                 }

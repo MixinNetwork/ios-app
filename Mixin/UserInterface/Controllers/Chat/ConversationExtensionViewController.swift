@@ -12,7 +12,7 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
             }
         }
     }
-    var apps = [App]() {
+    var apps = [(app: App, user: UserItem?)]() {
         didSet {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -20,7 +20,6 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
         }
     }
     
-    private let cellReuseId = "extension"
     private let itemCountPerLine: CGFloat = 4
     
     private var availableWidth: CGFloat = 0
@@ -67,15 +66,23 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! ConversationExtensionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.extension, for: indexPath)!
         if indexPath.row < fixedExtensions.count {
             let ext = fixedExtensions[indexPath.row]
             cell.imageView.image = ext.image
             cell.label.text = ext.title
+            cell.avatarImageView.isHidden = true
         } else {
-            let app = apps[indexPath.row - fixedExtensions.count]
+            let appAndUser = apps[indexPath.row - fixedExtensions.count]
+            let app = appAndUser.app
             cell.imageView.sd_setImage(with: URL(string: app.iconUrl))
             cell.label.text = app.name
+            if let user = appAndUser.user {
+                cell.avatarImageView.setImage(with: user)
+                cell.avatarImageView.isHidden = false
+            } else {
+                cell.avatarImageView.isHidden = true
+            }
         }
         return cell
     }
@@ -108,8 +115,8 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
         } else {
             let app = apps[indexPath.row - fixedExtensions.count]
             if let conversationId = dataSource?.conversationId, let parent = conversationViewController {
-                UIApplication.logEvent(eventName: "open_app", parameters: ["source": "ConversationExtension", "identityNumber": app.appNumber])
-                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                UIApplication.logEvent(eventName: "open_app", parameters: ["source": "ConversationExtension", "identityNumber": app.app.appNumber])
+                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app.app), asChildOf: parent)
             }
         }
     }

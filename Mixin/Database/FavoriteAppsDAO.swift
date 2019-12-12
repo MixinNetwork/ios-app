@@ -11,20 +11,16 @@ final class FavoriteAppsDAO {
     WHERE favorite_apps.user_id = ?
     ORDER BY favorite_apps.created_at ASC
     """
+    private static let queryApps = """
+    SELECT \(AppDAO.sqlQueryColumns)
+    FROM apps a
+    LEFT JOIN favorite_apps fav ON fav.app_id = a.app_id
+    WHERE fav.user_id = ?
+    ORDER BY a.name ASC
+    """
     
-    func favoriteAppsOfUser(withIds ids: [String]) -> [App] {
-        var wildcards = "?"
-        for _ in 0..<(ids.count - 1) {
-            wildcards += ",?"
-        }
-        let sql = """
-        SELECT \(AppDAO.sqlQueryColumns)
-        FROM apps a
-        LEFT JOIN favorite_apps fav ON fav.app_id = a.app_id
-        WHERE fav.user_id IN (\(wildcards))
-        ORDER BY a.name ASC
-        """
-        return MixinDatabase.shared.getCodables(on: App.Properties.all, sql: sql, values: ids)
+    func favoriteAppsOfUser(withId id: String) -> [App] {
+        return MixinDatabase.shared.getCodables(on: App.Properties.all, sql: FavoriteAppsDAO.queryApps, values: [id])
     }
     
     func favoriteAppUsersOfUser(withId id: String) -> [User] {

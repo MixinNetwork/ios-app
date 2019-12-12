@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1840,6 +1840,14 @@
                                                         <constraint firstAttribute="width" secondItem="kJg-NM-PUF" secondAttribute="height" id="B8F-cU-hqw"/>
                                                     </constraints>
                                                 </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JqL-kr-ldz" customClass="BorderedAvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="44" y="44" width="16" height="16"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="16" id="0dD-DC-a1X"/>
+                                                        <constraint firstAttribute="width" constant="16" id="2uC-in-TG4"/>
+                                                    </constraints>
+                                                </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P1J-EW-mcu">
                                                     <rect key="frame" x="0.0" y="73" width="60" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1849,18 +1857,21 @@
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="JqL-kr-ldz" firstAttribute="bottom" secondItem="kJg-NM-PUF" secondAttribute="bottom" id="1pm-ZY-w9a"/>
                                             <constraint firstAttribute="trailing" secondItem="kJg-NM-PUF" secondAttribute="trailing" id="689-2z-gc0"/>
                                             <constraint firstItem="P1J-EW-mcu" firstAttribute="top" secondItem="kJg-NM-PUF" secondAttribute="bottom" constant="13" id="6kZ-ag-Pmh"/>
                                             <constraint firstItem="mBM-DX-V7o" firstAttribute="centerX" secondItem="kJg-NM-PUF" secondAttribute="centerX" id="8pa-Ne-P2R"/>
                                             <constraint firstItem="kJg-NM-PUF" firstAttribute="leading" secondItem="ayx-Lh-ie8" secondAttribute="leading" id="ARg-mi-JXj"/>
                                             <constraint firstItem="kJg-NM-PUF" firstAttribute="top" secondItem="ayx-Lh-ie8" secondAttribute="top" id="Gk6-4T-bRR"/>
                                             <constraint firstItem="mBM-DX-V7o" firstAttribute="centerY" secondItem="kJg-NM-PUF" secondAttribute="centerY" id="MOW-aP-uUS"/>
+                                            <constraint firstItem="JqL-kr-ldz" firstAttribute="trailing" secondItem="kJg-NM-PUF" secondAttribute="trailing" id="aQb-WN-Oze"/>
                                             <constraint firstAttribute="trailing" secondItem="P1J-EW-mcu" secondAttribute="trailing" id="hjb-m2-uGo"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="P1J-EW-mcu" secondAttribute="bottom" id="oCn-Vg-vCs"/>
                                             <constraint firstItem="P1J-EW-mcu" firstAttribute="leading" secondItem="ayx-Lh-ie8" secondAttribute="leading" id="vm0-9g-3Ad"/>
                                         </constraints>
                                         <size key="customSize" width="60" height="105"/>
                                         <connections>
+                                            <outlet property="avatarImageView" destination="JqL-kr-ldz" id="Pk2-be-mpV"/>
                                             <outlet property="imageView" destination="kJg-NM-PUF" id="EQI-eQ-FWk"/>
                                             <outlet property="label" destination="P1J-EW-mcu" id="KHt-jh-25c"/>
                                         </connections>

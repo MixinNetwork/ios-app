@@ -72,6 +72,13 @@ final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryAppUserInConversation, values: [conversationId])
     }
     
+    func appFriends(notIn ids: [String]) -> [User] {
+        let condition = User.Properties.relationship == Relationship.FRIEND.rawValue
+            && User.Properties.appId.isNotNull()
+            && User.Properties.appId.notIn(ids)
+        return MixinDatabase.shared.getCodables(condition: condition)
+    }
+    
     func contacts() -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }

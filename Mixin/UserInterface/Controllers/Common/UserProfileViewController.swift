@@ -24,6 +24,9 @@ final class UserProfileViewController: ProfileViewController {
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
     private var menuDismissResponder: MenuDismissResponder?
+    private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
+    private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
+    private var sharedAppUsers: [User]?
     private var user: UserItem! {
         didSet {
             isMe = user.userId == AccountAPI.shared.accountUserId
@@ -55,6 +58,7 @@ final class UserProfileViewController: ProfileViewController {
         size = isMe ? .unavailable : .compressed
         super.viewDidLoad()
         reloadData()
+        reloadFavoriteApps(userId: user.userId, fromRemote: true)
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         recognizer.delegate = self
         view.addGestureRecognizer(recognizer)
@@ -204,6 +208,24 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
 
 // MARK: - Actions
 extension UserProfileViewController {
+    
+    @objc func showFavoriteApps() {
+        guard let users = sharedAppUsers else {
+            return
+        }
+        let vc = R.storyboard.contact.shared_apps()!
+        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.modalPresentationStyle = .custom
+        vc.loadViewIfNeeded()
+        vc.titleLabel.text = R.string.localizable.profile_shared_app_of_user(user.fullName)
+        vc.users = users
+        dismissAndPresent(vc)
+    }
+    
+    @objc func editFavoriteApps() {
+        let vc = EditSharedAppsViewController.instance()
+        dismissAndPush(vc)
+    }
     
     @objc func addContact() {
         relationshipView.isBusy = true
@@ -574,6 +596,10 @@ extension UserProfileViewController {
         }
         
         if !isMe {
+            if let view = favoriteAppViewIfLoaded {
+                centerStackView.addArrangedSubview(view)
+            }
+            
             if user.isBot {
                 shortcutView.leftShortcutButton.setImage(R.image.ic_open_app(), for: .normal)
                 shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
@@ -628,6 +654,15 @@ extension UserProfileViewController {
                                  action: #selector(changeNumber))]
             ]
             reloadMenu(groups: groups)
+            
+            if favoriteAppMenuItemViewIfLoaded == nil {
+                let view = MyFavoriteAppProfileMenuItemView()
+                view.avatarStackView.iconLength = 27
+                view.button.addTarget(self, action: #selector(editFavoriteApps), for: .touchUpInside)
+                menuStackView.insertArrangedSubview(view, at: 0)
+                favoriteAppMenuItemViewIfLoaded = view
+            }
+            menuStackView.insertArrangedSubview(favoriteAppMenuItemViewIfLoaded!, at: 0)
             
             if let createdAt = user.createdAt?.toUTCDate() {
                 let rep = DateFormatter.dateSimple.string(from: createdAt)
@@ -706,9 +741,9 @@ extension UserProfileViewController {
                 var group = [ProfileMenuItem]()
                 if user.isBot && !user.isSelfBot {
                     group.append(ProfileMenuItem(title: R.string.localizable.chat_menu_developer(),
-                                                     subtitle: nil,
-                                                     style: [],
-                                                     action: #selector(showDeveloper)))
+                                                 subtitle: nil,
+                                                 style: [],
+                                                 action: #selector(showDeveloper)))
                 }
                 group.append(ProfileMenuItem(title: R.string.localizable.profile_transactions(),
                                              subtitle: nil,
@@ -772,6 +807,40 @@ extension UserProfileViewController {
         }
     }
     
+    private func reloadFavoriteApps(userId: String, fromRemote: Bool) {
+        DispatchQueue.global().async { [weak self] in
+            let users = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: userId)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.sharedAppUsers = users
+                weakSelf.updateFavoriteAppView(users: users)
+                guard fromRemote else {
+                    return
+                }
+                UserAPI.shared.getFavoriteApps(ofUserWith: userId) { (result) in
+                    guard case let .success(favApps) = result else {
+                        return
+                    }
+                    DispatchQueue.global().async {
+                        FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: userId)
+                        let appUserIds = favApps.map({ $0.appId })
+                        UserAPI.shared.showUsers(userIds: appUserIds) { (result) in
+                            guard case let .success(users) = result else {
+                                return
+                            }
+                            UserDAO.shared.updateUsers(users: users)
+                            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+                                self?.reloadFavoriteApps(userId: userId, fromRemote: false)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     private func handle(userResponse: UserResponse, postContactDidChangeNotificationOnSuccess: Bool) {
         user = UserItem.createUser(from: userResponse)
         if let animator = sizeAnimator {
@@ -801,6 +870,31 @@ extension UserProfileViewController {
                 }
             }
             self?.developer = developer
+        }
+    }
+    
+    private func updateFavoriteAppView(users: [User]) {
+        if isMe {
+            favoriteAppMenuItemViewIfLoaded?.avatarStackView.users = users
+        } else {
+            if users.isEmpty {
+                favoriteAppViewIfLoaded?.removeFromSuperview()
+                favoriteAppViewIfLoaded = nil
+            } else {
+                if favoriteAppViewIfLoaded == nil {
+                    let view = R.nib.profileFavoriteAppsView(owner: nil)!
+                    view.button.addTarget(self, action: #selector(showFavoriteApps), for: .touchUpInside)
+                    if let shortcut = shortcutViewIfLoaded, let index = centerStackView.arrangedSubviews.firstIndex(of: shortcut) {
+                        centerStackView.insertArrangedSubview(view, at: index)
+                    } else {
+                        centerStackView.addArrangedSubview(view)
+                    }
+                    favoriteAppViewIfLoaded = view
+                }
+                favoriteAppViewIfLoaded?.avatarStackView.users = users
+            }
+            view.layoutIfNeeded()
+            updatePreferredContentSizeHeight(size: size)
         }
     }
     

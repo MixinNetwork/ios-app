@@ -40,6 +40,7 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
 
+                try database.create(of: FavoriteApp.self)
                 try database.create(of: ParticipantSession.self)
 
                 try self.createAfter(database: database, currentVersion: currentVersion)

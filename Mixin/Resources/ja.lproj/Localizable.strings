@@ -511,6 +511,11 @@
 "profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
 "profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";
+"profile_my_shared_apps" = "My Shared Apps";
+"profile_share_app_hint" = "If you want to share an app, add it to your contacts first";
+"profile_shared_app_of_user" = "%@'s Shared Apps";
+"profile_shared_app_empty" = "NO APPS";
+"profile_shared_app_reach_limit" = "The number has reached the limit";
 "profile_call_with_mixin" = "Mixinで電話をかける";
 "profile_call_phone" = "電話をかける";
 

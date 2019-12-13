@@ -16,6 +16,13 @@ class RefreshAccountJob: BaseJob {
         case let .failure(error):
             throw error
         }
+        let myId = AccountAPI.shared.accountUserId
+        switch UserAPI.shared.getFavoriteApps(ofUserWith: myId) {
+        case let .success(favApps):
+            FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: myId)
+        case let .failure(error):
+            throw error
+        }
     }
 
 }

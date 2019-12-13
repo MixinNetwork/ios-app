@@ -4,12 +4,9 @@ import WebRTC
 extension RTCIceServer {
     
     static var sharedServers: [RTCIceServer] {
-        var servers = loadIceServer()
-        servers.append(.fallback)
-        return servers
+        return loadIceServer()
     }
     
-    private static let fallback = RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])
     private static let semaphore = DispatchSemaphore(value: 0)
     private static let iceServerLoadingTimeoutInterval = DispatchTimeInterval.seconds(3)
     

@@ -457,6 +457,7 @@ extension WebViewController {
             let ctx: [String: Any] = [
                 "app_version": Bundle.main.shortVersion,
                 "immersive": isImmersive,
+                "appearance": "light",
                 "conversation_id": conversationId
             ]
             if let data = try? JSONSerialization.data(withJSONObject: ctx, options: []), let string = String(data: data, encoding: .utf8) {

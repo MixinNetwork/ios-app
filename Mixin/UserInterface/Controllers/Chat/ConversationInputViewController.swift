@@ -304,22 +304,27 @@ class ConversationInputViewController: UIViewController {
         
         extensionViewController.loadViewIfNeeded()
         if dataSource.category == .group {
-            let apps = AppDAO.shared.getConversationBots(conversationId: dataSource.conversationId)
-            extensionViewController.apps = apps.map { ($0, nil) }
-        } else if let ownerUser = dataSource.ownerUser {
-            if let app = AppDAO.shared.getApp(ofUserId: ownerUser.userId) {
-                opponentApp = app
-                CommonUserDefault.shared.insertRecentlyUsedAppId(id: app.appId)
-            } else {
-                loadFavoriteApps(ownerUser: ownerUser)
+            let conversationId = dataSource.conversationId
+            dataSource.queue.async {
+                let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
+                DispatchQueue.main.async { [weak self] in
+                    self?.extensionViewController.apps = apps.map { ($0, nil) }
+                    self?.reloadFixedExtensions()
+                }
             }
-        }
-        if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
-            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
-        } else if let app = opponentApp, app.creatorId == AccountAPI.shared.accountUserId {
-            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
-        } else {
-            extensionViewController.fixedExtensions = [.camera, .file, .contact]
+        } else if let ownerUser = dataSource.ownerUser {
+            dataSource.queue.async { [weak self] in
+                let app = AppDAO.shared.getApp(ofUserId: ownerUser.userId)
+                DispatchQueue.main.async {
+                    if let app = app {
+                        self?.opponentApp = app
+                        CommonUserDefault.shared.insertRecentlyUsedAppId(id: app.appId)
+                    } else {
+                        self?.loadFavoriteApps(ownerUser: ownerUser)
+                    }
+                    self?.reloadFixedExtensions()
+                }
+            }
         }
         
         quotePreviewView.dismissAction = { [weak self] in
@@ -616,6 +621,16 @@ extension ConversationInputViewController {
         reportHeightChangeWhenKeyboardFrameChanges = true
     }
     
+    private func reloadFixedExtensions() {
+        if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
+            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
+        } else if let app = opponentApp, app.creatorId == AccountAPI.shared.accountUserId {
+            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
+        } else {
+            extensionViewController.fixedExtensions = [.camera, .file, .contact]
+        }
+    }
+    
     private func loadCustomInputViewController(_ viewController: UIViewController) {
         if view.frame.height < regularHeight {
             setPreferredContentHeightAnimated(.regular)
@@ -637,16 +652,19 @@ extension ConversationInputViewController {
         let myUserItem = UserItem.createUser(from: account)
         let ownerId = ownerUser.userId
         
-        func makeApps() -> [(app: App, user: UserItem?)] {
+        func loadApps() {
             let myFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: AccountAPI.shared.accountUserId)
             let myFavoriteAppIds = Set(myFavoriteApps.map({ $0.appId }))
             let ownerFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: ownerUser.userId)
                 .filter({ !myFavoriteAppIds.contains($0.appId) })
-            return myFavoriteApps.map({ ($0, myUserItem) }) + ownerFavoriteApps.map({ ($0, ownerUser) })
+            let apps = myFavoriteApps.map({ ($0, myUserItem) }) + ownerFavoriteApps.map({ ($0, ownerUser) })
+            DispatchQueue.main.async { [weak self] in
+                self?.extensionViewController.apps = apps
+            }
         }
         
-        extensionViewController.apps = makeApps()
-        UserAPI.shared.getFavoriteApps(ofUserWith: ownerId) { [weak self] (result) in
+        DispatchQueue.global().async(execute: loadApps)
+        UserAPI.shared.getFavoriteApps(ofUserWith: ownerId) { (result) in
             guard case let .success(favApps) = result else {
                 return
             }
@@ -658,12 +676,7 @@ extension ConversationInputViewController {
                         return
                     }
                     UserDAO.shared.updateUsers(users: users)
-                    DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-                        let apps = makeApps()
-                        DispatchQueue.main.async {
-                            self?.extensionViewController.apps = apps
-                        }
-                    }
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 1, execute: loadApps)
                 }
             }
         }

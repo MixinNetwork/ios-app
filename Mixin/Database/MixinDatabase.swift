@@ -2,7 +2,7 @@ import WCDBSwift
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 8
+    private static let databaseVersion: Int = 9
 
     static let shared = MixinDatabase()
 
@@ -38,7 +38,7 @@ class MixinDatabase: BaseDatabase {
 
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
-                try database.create(of: ResendMessage.self)
+                try database.create(of: ResendSessionMessage.self)
 
                 try database.create(of: FavoriteApp.self)
                 try database.create(of: ParticipantSession.self)
@@ -90,6 +90,10 @@ class MixinDatabase: BaseDatabase {
         if currentVersion < 8 {
             try database.drop(table: "sent_sender_keys")
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
+        }
+
+        if currentVersion < 9 {
+            try database.drop(table: "resend_messages")
         }
     }
 

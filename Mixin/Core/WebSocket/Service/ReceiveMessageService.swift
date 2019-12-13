@@ -102,13 +102,9 @@ class ReceiveMessageService: MixinService {
         guard data.conversationId != User.systemUser && data.conversationId != currentAccountId else {
             return
         }
-        guard let sessionId = data.sessionId else {
-            return
-        }
-
-        let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: sessionId)
+        let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
         if participantSession == nil {
-            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())])
+            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, sentToServer: nil, createdAt: Date().toUTCString())])
         }
     }
 

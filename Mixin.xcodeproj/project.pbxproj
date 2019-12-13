@@ -666,8 +666,8 @@
 		DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */; };
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
-		DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */; };
-		DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */; };
+		DF92A51D20A5BBAF00427B80 /* ResendSessionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51C20A5BBAF00427B80 /* ResendSessionMessage.swift */; };
+		DF92A51F20A5BDAD00427B80 /* ResendSessionMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51E20A5BDAD00427B80 /* ResendSessionMessageDAO.swift */; };
 		DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9C9C6422C5E8720090873E /* SafeDictionary.swift */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
 		DF9E66E7205C0A7E00F1A0B9 /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */; };
@@ -790,8 +790,8 @@
 		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
 		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
 		E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */; };
-		E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */; };
 		E0E32F432396118C00276746 /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32F422396118C00276746 /* GiphyAPI.swift */; };
+		E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
@@ -1497,8 +1497,8 @@
 		DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshUserJob.swift; sourceTree = "<group>"; };
 		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
-		DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessage.swift; sourceTree = "<group>"; };
-		DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessageDAO.swift; sourceTree = "<group>"; };
+		DF92A51C20A5BBAF00427B80 /* ResendSessionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendSessionMessage.swift; sourceTree = "<group>"; };
+		DF92A51E20A5BDAD00427B80 /* ResendSessionMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendSessionMessageDAO.swift; sourceTree = "<group>"; };
 		DF9C9C6422C5E8720090873E /* SafeDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeDictionary.swift; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
 		DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
@@ -1622,8 +1622,8 @@
 		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
 		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
 		E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedAvatarImageView.swift; sourceTree = "<group>"; };
-		E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSharedAppsFooterView.swift; sourceTree = "<group>"; };
 		E0E32F422396118C00276746 /* GiphyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
+		E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSharedAppsFooterView.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2322,7 +2322,7 @@
 				DF121F2D1FA1C244000F701D /* ConversationDAO.swift */,
 				DF3C474D1FA1849500A07C71 /* MessageDAO.swift */,
 				DF03C85C1FF2BE6500C1ED6B /* MessageHistoryDAO.swift */,
-				DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */,
+				DF92A51E20A5BDAD00427B80 /* ResendSessionMessageDAO.swift */,
 				DF3C47511FA191A600A07C71 /* UserDAO.swift */,
 				DF191191208F103E00BD415D /* JobDAO.swift */,
 				DF114B052020551900EA8F9C /* AppDAO.swift */,
@@ -3008,7 +3008,7 @@
 				DF65AAF2205122A3004E3459 /* MessageBlaze.swift */,
 				DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */,
 				DF17B50B2052433B006447C2 /* MessageItem.swift */,
-				DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */,
+				DF92A51C20A5BBAF00427B80 /* ResendSessionMessage.swift */,
 				DF2A244D1FC84E3F003A8C1E /* Conversation.swift */,
 				DF17B51220525485006447C2 /* ConversationItem.swift */,
 				DFE48ADB20EB8165003E0BF8 /* ConversationStorageUsage.swift */,
@@ -3695,7 +3695,7 @@
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
-				DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */,
+				DF92A51D20A5BBAF00427B80 /* ResendSessionMessage.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */,
 				DF2A244A1FC7E25B003A8C1E /* ErrorExtension.swift in Sources */,
 				7BC28337234DCCF300005628 /* SharedMediaTableViewController.swift in Sources */,
@@ -4066,7 +4066,7 @@
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
-				DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */,
+				DF92A51F20A5BDAD00427B80 /* ResendSessionMessageDAO.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,

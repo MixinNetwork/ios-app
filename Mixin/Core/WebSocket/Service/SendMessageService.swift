@@ -558,7 +558,7 @@ extension SendMessageService {
                 if conversation.isGroup() {
                     syncConversation(conversationId: message.conversationId)
                 } else {
-                    try checkConversationExist(conversation: conversation)
+                    try createConversation(conversation: conversation)
                 }
             }
             try checkSessionSenderKey(conversationId: message.conversationId)
@@ -575,6 +575,10 @@ extension SendMessageService {
             return
         }
 
+        try createConversation(conversation: conversation)
+    }
+
+    private func createConversation(conversation: ConversationItem) throws {
         var participants: [ParticipantRequest]
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]

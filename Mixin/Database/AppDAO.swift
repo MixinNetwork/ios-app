@@ -7,12 +7,12 @@ final class AppDAO {
     static let sqlQueryColumns = "a.app_id, a.app_number, a.redirect_uri, u.full_name, a.icon_url, a.capabilites, a.app_secret, a.home_uri, a.creator_id"
     static let sqlQueryApps = """
         SELECT \(sqlQueryColumns) FROM participants p, apps a
-        LEFT JOIN users u ON a.app_id = u.app_id
+        INNER JOIN users u ON a.app_id = u.app_id
         WHERE p.conversation_id = ? AND p.user_id = u.user_id
     """
     static let sqlQueryAppsByUser = """
         SELECT \(sqlQueryColumns) FROM apps a
-        LEFT JOIN users u ON a.app_id = u.app_id
+        INNER JOIN users u ON a.app_id = u.app_id
         WHERE u.user_id = ?
     """
     

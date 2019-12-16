@@ -95,13 +95,13 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
             if account.full_name.isEmpty {
-                UIApplication.logEvent(eventName: AnalyticsEventSignUp)
+                Reporter.report(event: .fir(AnalyticsEventSignUp))
             } else if HomeViewController.showChangePhoneNumberTips {
-                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "emergency"])
+                Reporter.report(event: .fir(AnalyticsEventLogin), userInfo: ["source": "emergency"])
             } else {
-                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "normal"])
+                Reporter.report(event: .fir(AnalyticsEventLogin), userInfo: ["source": "normal"])
             }
-
+            
             DispatchQueue.main.sync {
                 let voipToken = UIApplication.appDelegate().voipToken
                 if !voipToken.isEmpty {

@@ -37,13 +37,7 @@ extension UIApplication {
         }
         return chatVC.dataSource?.conversationId
     }
-
-    static func logEvent(eventName: String, parameters: [String: Any]? = nil) {
-        #if RELEASE
-        Analytics.logEvent(eventName, parameters: parameters as? [String: NSObject])
-        #endif
-    }
-
+    
     static func traceError(_ error: Swift.Error) {
         #if DEBUG
         print(error)

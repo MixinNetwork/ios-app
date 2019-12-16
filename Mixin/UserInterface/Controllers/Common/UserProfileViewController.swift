@@ -333,7 +333,7 @@ extension UserProfileViewController {
                 DispatchQueue.main.async {
                     WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                 }
-                UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UserWindow", "identityNumber": app.appNumber])
+                Reporter.report(event: .openApp, userInfo: ["source": "UserWindow", "identityNumber": app.appNumber])
             }
         }
     }

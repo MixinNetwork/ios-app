@@ -788,6 +788,7 @@
 		E05DC14223A7638A00E32164 /* AutoBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC13F23A7638900E32164 /* AutoBackup.swift */; };
 		E05DC14323A7638A00E32164 /* AutoDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC14023A7638A00E32164 /* AutoDownload.swift */; };
 		E05DC14423A7638A00E32164 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC14123A7638A00E32164 /* Environment.swift */; };
+		E05DC14623A76E8100E32164 /* Reporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC14523A76E8100E32164 /* Reporter.swift */; };
 		E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */; };
 		E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */; };
 		E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */; };
@@ -1641,6 +1642,7 @@
 		E05DC13F23A7638900E32164 /* AutoBackup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoBackup.swift; sourceTree = "<group>"; };
 		E05DC14023A7638A00E32164 /* AutoDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoDownload.swift; sourceTree = "<group>"; };
 		E05DC14123A7638A00E32164 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		E05DC14523A76E8100E32164 /* Reporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reporter.swift; sourceTree = "<group>"; };
 		E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonView.swift; sourceTree = "<group>"; };
 		E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReceptionView.swift; sourceTree = "<group>"; };
 		E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppReceptionView.xib; sourceTree = "<group>"; };
@@ -3137,6 +3139,7 @@
 				E05DC13F23A7638900E32164 /* AutoBackup.swift */,
 				E05DC14023A7638A00E32164 /* AutoDownload.swift */,
 				E05DC14123A7638A00E32164 /* Environment.swift */,
+				E05DC14523A76E8100E32164 /* Reporter.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -4085,6 +4088,7 @@
 				DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
 				DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */,
+				E05DC14623A76E8100E32164 /* Reporter.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				7B4D112A205BA64B0074BF60 /* Address.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,

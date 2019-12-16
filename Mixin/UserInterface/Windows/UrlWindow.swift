@@ -84,7 +84,8 @@ class UrlWindow {
                     guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                         return
                     }
-                    UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UrlWindow", "identityNumber": app.appNumber])
+                    let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
+                    Reporter.report(event: .openApp, userInfo: userInfo)
                     DispatchQueue.main.async {
                         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }

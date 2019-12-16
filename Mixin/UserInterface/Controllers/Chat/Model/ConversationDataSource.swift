@@ -683,7 +683,7 @@ extension ConversationDataSource {
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId
             queue.async {
-                UIApplication.logEvent(eventName: "send_sticker", parameters: ["stickerId": sticker.stickerId])
+                Reporter.report(event: .sendSticker, userInfo: ["stickerId": sticker.stickerId])
                 let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()

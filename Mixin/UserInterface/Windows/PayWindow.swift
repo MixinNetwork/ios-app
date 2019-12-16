@@ -50,6 +50,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var multisigStackView: UIStackView!
     @IBOutlet weak var bigAmountTipsView: UIView!
     @IBOutlet weak var bigAmountConfirmButton: RoundedButton!
+    @IBOutlet weak var bigAmountCancelButton: UIButton!
     @IBOutlet weak var bigAmountTitleSpaceView: UIView!
     @IBOutlet weak var bigAmountIconSpaceView: UIView!
 
@@ -103,6 +104,7 @@ class PayWindow: BottomSheetView {
                           adjustForContentSize: true)
         errorLabel.setFont(scaledFor: .systemFont(ofSize: 14),
                            adjustForContentSize: true)
+        bigAmountCancelButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         if ScreenSize.current == .inch3_5 {
             pinField.cellLength = 8
         }

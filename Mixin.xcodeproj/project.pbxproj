@@ -1818,7 +1818,9 @@
 			children = (
 				DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */,
 				E05DBEAA23A760F000E32164 /* Foundation */,
-				DF30D7411FA22C9800683C1A /* Core */,
+				E07E389C23A7716C0005A538 /* Services */,
+				7BC8502120CBA68700A57B83 /* Audio */,
+				7BB3854C21E74B2B0070FF8F /* Provision */,
 				DF5D9F201F9C79110036D5FD /* API */,
 				DF3C47481FA0BC9A00A07C71 /* Database */,
 				275339881F975D9800DD4C26 /* Frameworks */,
@@ -2327,19 +2329,6 @@
 				9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */,
 			);
 			path = Camera;
-			sourceTree = "<group>";
-		};
-		DF30D7411FA22C9800683C1A /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				273FAC89205FB9A800513327 /* libsignal-protocol-swift */,
-				27567B891FBC48C30026CC92 /* Crypto */,
-				DF30D7421FA22CB200683C1A /* WebSocket */,
-				7BC8502120CBA68700A57B83 /* Audio */,
-				7BB788BB216CD1DA00EDE7B4 /* Call */,
-				7BB3854C21E74B2B0070FF8F /* Provision */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		DF30D7421FA22CB200683C1A /* WebSocket */ = {
@@ -3169,6 +3158,17 @@
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
 			);
 			path = Legacy;
+			sourceTree = "<group>";
+		};
+		E07E389C23A7716C0005A538 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				273FAC89205FB9A800513327 /* libsignal-protocol-swift */,
+				27567B891FBC48C30026CC92 /* Crypto */,
+				DF30D7421FA22CB200683C1A /* WebSocket */,
+				7BB788BB216CD1DA00EDE7B4 /* Call */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
@@ -4397,7 +4397,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Core/Audio/liboggopus",
+					"$(PROJECT_DIR)/Mixin/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.14.1;
 				OTHER_CFLAGS = (
@@ -4464,7 +4464,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Core/Audio/liboggopus",
+					"$(PROJECT_DIR)/Mixin/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.14.1;
 				OTHER_CFLAGS = (

@@ -40,9 +40,9 @@ class KeyUtil {
 
         var nowInterval = UInt64(Date().timeIntervalSince1970).littleEndian
         let timeData = Data(bytes: &nowInterval, count: MemoryLayout<UInt64>.size)
-        var iterator = CryptoUserDefault.shared.iterator.littleEndian
+        var iterator = AppGroupUserDefaults.Crypto.iterator.littleEndian
         let iteratorData = Data(bytes: &iterator, count: MemoryLayout<UInt64>.size)
-        CryptoUserDefault.shared.iterator = iterator + 1
+        AppGroupUserDefaults.Crypto.iterator += 1
 
         var dataOut = [UInt8](repeating: 0, count: kCCBlockSizeAES128 + timeData.count + iteratorData.count)
         var numBytesEncrypted = 0

@@ -155,15 +155,12 @@ extension WebSocketService: WebSocketDelegate {
             ConcurrentJobQueue.shared.resume()
             heartbeat?.start()
             
-            let now = Date().timeIntervalSince1970
-            let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
-            if lastOneTimePreKey < 1 {
-                CryptoUserDefault.shared.refreshOneTimePreKey = now
-            } else if now - lastOneTimePreKey > refreshOneTimePreKeyInterval {
+            if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > refreshOneTimePreKeyInterval {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
                 ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
-                CryptoUserDefault.shared.refreshOneTimePreKey = now
             }
+            AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
+            
             if rechability?.isReachableOnEthernetOrWiFi ?? false {
                 if CommonUserDefault.shared.backupCategory != .off || AccountUserDefault.shared.hasRebackup {
                     BackupJobQueue.shared.addJob(job: BackupJob())

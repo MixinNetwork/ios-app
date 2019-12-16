@@ -30,7 +30,7 @@ class SignalLoadingViewController: UIViewController {
     }
 
     private func syncSignalKeys() {
-        guard !CryptoUserDefault.shared.isLoaded else {
+        guard !AppGroupUserDefaults.Crypto.isPrekeyLoaded else {
             return
         }
 
@@ -42,7 +42,7 @@ class SignalLoadingViewController: UIViewController {
             }
             switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
-                CryptoUserDefault.shared.isLoaded = true
+                AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
                 DispatchQueue.main.async {
                     MixinWebView.clearCookies()
                 }
@@ -58,7 +58,7 @@ class SignalLoadingViewController: UIViewController {
     }
 
     private func syncSession() {
-        guard !CryptoUserDefault.shared.isSyncSession else {
+        guard !AppGroupUserDefaults.Crypto.isSessionSynchronized else {
             return
         }
 
@@ -75,7 +75,7 @@ class SignalLoadingViewController: UIViewController {
             switch UserAPI.shared.fetchSessions(userIds: userIds) {
             case let .success(remoteSessions):
                 defer {
-                    CryptoUserDefault.shared.isSyncSession = true
+                    AppGroupUserDefaults.Crypto.isSessionSynchronized = true
                 }
                 var sessionMap = [String: Int32]()
                 var userSessionMap = [String: String]()

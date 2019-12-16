@@ -41,7 +41,7 @@ class SignalDatabase: BaseDatabase {
         } catch {
             UIApplication.traceError(error)
         }
-        CryptoUserDefault.shared.reset()
+        AppGroupUserDefaults.Crypto.clearAll()
     }
 
 }

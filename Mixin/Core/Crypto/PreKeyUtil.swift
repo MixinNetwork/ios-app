@@ -9,9 +9,9 @@ class PreKeyUtil {
     static let prekeyMiniNum = 500
 
     static func generatePreKeys() throws -> [OneTimePreKey] {
-        let preKeyIdOffset = CryptoUserDefault.shared.prekeyOffset
+        let preKeyIdOffset = AppGroupUserDefaults.Crypto.Offset.prekey ?? makeRandomPrekeyOffset()
         let records = try Signal.generatePreKeys(start: preKeyIdOffset, count: batchSize)
-        CryptoUserDefault.shared.prekeyOffset = preKeyIdOffset + UInt32(batchSize) + 1
+        AppGroupUserDefaults.Crypto.Offset.prekey = preKeyIdOffset + UInt32(batchSize) + 1
         let preKeys = try records.map { PreKey(preKeyId: Int($0.id), record: try $0.data()) }
         MixinPreKeyStore().store(preKeys: preKeys)
         return records.map { OneTimePreKey(keyId: $0.id, preKey: $0) }
@@ -25,11 +25,11 @@ class PreKeyUtil {
     }
 
     static func generateSignedPreKey(identityKeyPair : KeyPair) throws -> SessionSignedPreKey {
-        let signedPreKeyOffset = CryptoUserDefault.shared.signedPrekeyOffset
+        let signedPreKeyOffset = AppGroupUserDefaults.Crypto.Offset.signedPrekey ?? makeRandomPrekeyOffset()
         let record = try Signal.generate(signedPreKey: signedPreKeyOffset, identity: identityKeyPair, timestamp: currentTimeInMiliseconds())
         let store = MixinSignedPreKeyStore()
         _ = store.store(signedPreKey: try record.data(), for: record.id)
-        CryptoUserDefault.shared.signedPrekeyOffset = signedPreKeyOffset + 1
+        AppGroupUserDefaults.Crypto.Offset.signedPrekey = signedPreKeyOffset + 1
         return record
     }
 
@@ -41,4 +41,11 @@ class PreKeyUtil {
                                 signedPreKey: SignedPreKeyRequest(signed: signedPreKey),
                                 oneTimePreKeys: oneTimePreKeys)
     }
+    
+    static func makeRandomPrekeyOffset() -> UInt32 {
+        let min: UInt32 = 1000
+        let max: UInt32 = .max / 2
+        return min + UInt32(arc4random_uniform(max - min))
+    }
+    
 }

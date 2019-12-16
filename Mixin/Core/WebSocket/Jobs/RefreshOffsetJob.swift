@@ -7,7 +7,7 @@ class RefreshOffsetJob: BaseJob {
     }
 
     override func run() throws {
-        var statusOffset = CryptoUserDefault.shared.statusOffset
+        var statusOffset = AppGroupUserDefaults.Crypto.Offset.status
         repeat {
             guard AccountAPI.shared.didLogin else {
                 return
@@ -19,7 +19,7 @@ class RefreshOffsetJob: BaseJob {
                 }
                 for data in blazeMessages {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status, from: "messageStatus")
-                    CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
+                    AppGroupUserDefaults.Crypto.Offset.status = data.updatedAt.toUTCDate().nanosecond()
                 }
                 if lastStatusOffset == statusOffset {
                     return

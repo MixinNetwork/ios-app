@@ -29,7 +29,7 @@ class ReceiveMessageService: MixinService {
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
-                CryptoUserDefault.shared.statusOffset = blazeMessageData.updatedAt.toUTCDate().nanosecond()
+                AppGroupUserDefaults.Crypto.Offset.status = blazeMessageData.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)

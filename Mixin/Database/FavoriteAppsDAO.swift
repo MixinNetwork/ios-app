@@ -14,6 +14,7 @@ final class FavoriteAppsDAO {
     private static let queryApps = """
     SELECT \(AppDAO.sqlQueryColumns)
     FROM apps a
+    INNER JOIN users u ON a.app_id = u.app_id
     LEFT JOIN favorite_apps fav ON fav.app_id = a.app_id
     WHERE fav.user_id = ?
     ORDER BY a.name ASC

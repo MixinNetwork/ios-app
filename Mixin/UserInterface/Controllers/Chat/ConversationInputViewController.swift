@@ -657,7 +657,7 @@ extension ConversationInputViewController {
             let myFavoriteAppIds = Set(myFavoriteApps.map({ $0.appId }))
             let ownerFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: ownerUser.userId)
                 .filter({ !myFavoriteAppIds.contains($0.appId) })
-            let apps = myFavoriteApps.map({ ($0, myUserItem) }) + ownerFavoriteApps.map({ ($0, ownerUser) })
+            let apps: [(app: App, user: UserItem?)] = myFavoriteApps.map({ ($0, myUserItem) }) + ownerFavoriteApps.map({ ($0, ownerUser) })
             DispatchQueue.main.async { [weak self] in
                 self?.extensionViewController.apps = apps
             }

@@ -777,6 +777,17 @@
 		E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */; };
 		E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */; };
 		E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */; };
+		E05DC06023A762CD00E32164 /* AppGroupUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05923A762CB00E32164 /* AppGroupUserDefaults.swift */; };
+		E05DC06123A762CD00E32164 /* AppGroupUserDefaults+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05A23A762CC00E32164 /* AppGroupUserDefaults+Crypto.swift */; };
+		E05DC06223A762CD00E32164 /* AppGroupUserDefaults+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05B23A762CC00E32164 /* AppGroupUserDefaults+User.swift */; };
+		E05DC06323A762CD00E32164 /* AppGroupUserDefaults+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05C23A762CC00E32164 /* AppGroupUserDefaults+Account.swift */; };
+		E05DC06423A762CD00E32164 /* AppGroupUserDefaults+Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05D23A762CC00E32164 /* AppGroupUserDefaults+Database.swift */; };
+		E05DC06523A762CD00E32164 /* AppGroupUserDefaults+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05E23A762CC00E32164 /* AppGroupUserDefaults+Signal.swift */; };
+		E05DC06623A762CD00E32164 /* AppGroupUserDefaults+Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC05F23A762CD00E32164 /* AppGroupUserDefaults+Wallet.swift */; };
+		E05DC06823A762E000E32164 /* AnyOptional.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC06723A762E000E32164 /* AnyOptional.swift */; };
+		E05DC14223A7638A00E32164 /* AutoBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC13F23A7638900E32164 /* AutoBackup.swift */; };
+		E05DC14323A7638A00E32164 /* AutoDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC14023A7638A00E32164 /* AutoDownload.swift */; };
+		E05DC14423A7638A00E32164 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DC14123A7638A00E32164 /* Environment.swift */; };
 		E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */; };
 		E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */; };
 		E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */; };
@@ -1619,6 +1630,17 @@
 		E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppCell.swift; sourceTree = "<group>"; };
 		E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileFavoriteAppsView.xib; sourceTree = "<group>"; };
 		E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFavoriteAppsView.swift; sourceTree = "<group>"; };
+		E05DC05923A762CB00E32164 /* AppGroupUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppGroupUserDefaults.swift; sourceTree = "<group>"; };
+		E05DC05A23A762CC00E32164 /* AppGroupUserDefaults+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+Crypto.swift"; sourceTree = "<group>"; };
+		E05DC05B23A762CC00E32164 /* AppGroupUserDefaults+User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+User.swift"; sourceTree = "<group>"; };
+		E05DC05C23A762CC00E32164 /* AppGroupUserDefaults+Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+Account.swift"; sourceTree = "<group>"; };
+		E05DC05D23A762CC00E32164 /* AppGroupUserDefaults+Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+Database.swift"; sourceTree = "<group>"; };
+		E05DC05E23A762CC00E32164 /* AppGroupUserDefaults+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+Signal.swift"; sourceTree = "<group>"; };
+		E05DC05F23A762CD00E32164 /* AppGroupUserDefaults+Wallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppGroupUserDefaults+Wallet.swift"; sourceTree = "<group>"; };
+		E05DC06723A762E000E32164 /* AnyOptional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyOptional.swift; sourceTree = "<group>"; };
+		E05DC13F23A7638900E32164 /* AutoBackup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoBackup.swift; sourceTree = "<group>"; };
+		E05DC14023A7638A00E32164 /* AutoDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoDownload.swift; sourceTree = "<group>"; };
+		E05DC14123A7638A00E32164 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonView.swift; sourceTree = "<group>"; };
 		E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReceptionView.swift; sourceTree = "<group>"; };
 		E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppReceptionView.xib; sourceTree = "<group>"; };
@@ -1765,7 +1787,6 @@
 				27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */,
 				27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */,
 				DFCC433F206B60CE006F50BE /* KeyUtil.swift */,
-				DFF353031FEE657000058453 /* CryptoUserDefault.swift */,
 				DF0E2D2320FDEB2500BB2658 /* Keychain.swift */,
 				7B66E51422B373F500FC25F8 /* JWT.swift */,
 			);
@@ -1794,6 +1815,7 @@
 			isa = PBXGroup;
 			children = (
 				DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */,
+				E05DBEAA23A760F000E32164 /* Foundation */,
 				DF30D7411FA22C9800683C1A /* Core */,
 				DF5D9F201F9C79110036D5FD /* API */,
 				DF3C47481FA0BC9A00A07C71 /* Database */,
@@ -2355,7 +2377,6 @@
 				DF2A24511FC8744A003A8C1E /* ParticipantDAO.swift */,
 				DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */,
 				E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */,
-				DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -2609,7 +2630,6 @@
 				7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */,
 				7B280DEF22B124450084E49E /* EmergencyAPI.swift */,
 				DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */,
-				DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */,
 				DF8A751E2362A65500765A82 /* MultisigAPI.swift */,
 				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 			);
@@ -2895,7 +2915,6 @@
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
-				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 				DFB19001233219650021CAF3 /* PINLogViewController.swift */,
@@ -2906,7 +2925,6 @@
 		DFD294301FA5D01900FADAAD /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */,
 				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
 			);
 			path = Base;
@@ -3109,6 +3127,45 @@
 				DF8A752423633F3A00765A82 /* MultisigResponse.swift */,
 			);
 			path = Response;
+			sourceTree = "<group>";
+		};
+		E05DBEAA23A760F000E32164 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				E05DBEAB23A7615000E32164 /* User Defaults */,
+				E05DC06723A762E000E32164 /* AnyOptional.swift */,
+				E05DC13F23A7638900E32164 /* AutoBackup.swift */,
+				E05DC14023A7638A00E32164 /* AutoDownload.swift */,
+				E05DC14123A7638A00E32164 /* Environment.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		E05DBEAB23A7615000E32164 /* User Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				E05DBEAC23A7615A00E32164 /* Legacy */,
+				E05DC05923A762CB00E32164 /* AppGroupUserDefaults.swift */,
+				E05DC05C23A762CC00E32164 /* AppGroupUserDefaults+Account.swift */,
+				E05DC05B23A762CC00E32164 /* AppGroupUserDefaults+User.swift */,
+				E05DC05E23A762CC00E32164 /* AppGroupUserDefaults+Signal.swift */,
+				E05DC05A23A762CC00E32164 /* AppGroupUserDefaults+Crypto.swift */,
+				E05DC05D23A762CC00E32164 /* AppGroupUserDefaults+Database.swift */,
+				E05DC05F23A762CD00E32164 /* AppGroupUserDefaults+Wallet.swift */,
+			);
+			path = "User Defaults";
+			sourceTree = "<group>";
+		};
+		E05DBEAC23A7615A00E32164 /* Legacy */ = {
+			isa = PBXGroup;
+			children = (
+				DFF353031FEE657000058453 /* CryptoUserDefault.swift */,
+				DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */,
+				DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */,
+				DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */,
+				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
+			);
+			path = Legacy;
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
@@ -3487,6 +3544,7 @@
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
+				E05DC06823A762E000E32164 /* AnyOptional.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioManager.swift in Sources */,
@@ -3502,6 +3560,7 @@
 				273FACB0205FB9A800513327 /* SignalError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
+				E05DC06523A762CD00E32164 /* AppGroupUserDefaults+Signal.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
 				273FACC6205FB9A800513327 /* SessionStoreWrapper.swift in Sources */,
@@ -3634,6 +3693,7 @@
 				7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */,
 				273FACC7205FB9A800513327 /* SignedPreKeyStoreWrapper.swift in Sources */,
 				DFD1FBC522FD809700C570D4 /* ContactSettingViewController.swift in Sources */,
+				E05DC06123A762CD00E32164 /* AppGroupUserDefaults+Crypto.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
@@ -3685,6 +3745,7 @@
 				DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				DFE63CA41FC6B6D300D6E028 /* ConversationRequest.swift in Sources */,
+				E05DC06423A762CD00E32164 /* AppGroupUserDefaults+Database.swift in Sources */,
 				DFD089E01FE4040500A7D815 /* AttachmentDownloadJob.swift in Sources */,
 				DF8DA1A21FD64C1E00425CEC /* BlazeMessageParam.swift in Sources */,
 				DF03C8631FF2C24300C1ED6B /* RatchetSenderKey.swift in Sources */,
@@ -3725,6 +3786,8 @@
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,
 				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
+				E05DC14223A7638A00E32164 /* AutoBackup.swift in Sources */,
+				E05DC14423A7638A00E32164 /* Environment.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
@@ -3831,6 +3894,7 @@
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				273FACAE205FB9A800513327 /* SignalSenderKeyName.swift in Sources */,
 				7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */,
+				E05DC06223A762CD00E32164 /* AppGroupUserDefaults+User.swift in Sources */,
 				7B75F50C22B76EE500619588 /* EmergencyResponse.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
@@ -3855,6 +3919,7 @@
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
+				E05DC06323A762CD00E32164 /* AppGroupUserDefaults+Account.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
 				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
@@ -3867,6 +3932,7 @@
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
+				E05DC06023A762CD00E32164 /* AppGroupUserDefaults.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
 				DFE63CA81FC6BED500D6E028 /* VerificationResponse.swift in Sources */,
@@ -4093,6 +4159,7 @@
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				DF08F25A23864C73005CFD34 /* UserSession.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,
+				E05DC14323A7638A00E32164 /* AutoDownload.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
@@ -4138,6 +4205,7 @@
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
 				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */,
+				E05DC06623A762CD00E32164 /* AppGroupUserDefaults+Wallet.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,

@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var pendingShortcutItem: UIApplicationShortcutItem?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        AppGroupUserDefaults.migrateIfNeeded()
         #if RELEASE
         initBugsnag()
         #endif

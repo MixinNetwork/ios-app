@@ -60,7 +60,7 @@ class DataStorageUsageViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
-            func setAutoDownload(_ value: CommonUserDefault.AutoDownload) {
+            func setAutoDownload(_ value: AutoDownload) {
                 switch indexPath.row {
                 case 0:
                     CommonUserDefault.shared.autoDownloadPhotos = value
@@ -95,6 +95,21 @@ class DataStorageUsageViewController: UITableViewController {
         view.shadowView.hasLowerShadow = isAutoDownloadSection
         view.text = isAutoDownloadSection ? R.string.localizable.setting_auto_download_hint() : nil
         return view
+    }
+    
+}
+
+fileprivate extension AutoDownload {
+    
+    var description: String {
+        switch self {
+        case .never:
+            return R.string.localizable.setting_auto_download_never()
+        case .wifi:
+            return R.string.localizable.setting_auto_download_wifi()
+        case .wifiAndCellular:
+            return R.string.localizable.setting_auto_download_wifi_cellular()
+        }
     }
     
 }

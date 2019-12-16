@@ -35,7 +35,7 @@ class CommonUserDefault {
     private var keyBackupFiles: String {
         return "backup_files_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyBackupCategory: String {
+    private var keyAutoBackup: String {
         return "backup_category_\(AccountAPI.shared.accountIdentityNumber)"
     }
     private var keyLastBackupTime: String {
@@ -64,30 +64,6 @@ class CommonUserDefault {
     }
     private var keyUploadContacts: String {
         return "auto_upload_contacts_\(AccountAPI.shared.accountIdentityNumber)"
-    }
-    
-    enum BackupCategory: String {
-        case daily
-        case weekly
-        case monthly
-        case off
-    }
-    
-    enum AutoDownload: Int {
-        case never = 0
-        case wifi
-        case wifiAndCellular
-        
-        var description: String {
-            switch self {
-            case .never:
-                return R.string.localizable.setting_auto_download_never()
-            case .wifi:
-                return R.string.localizable.setting_auto_download_wifi()
-            case .wifiAndCellular:
-                return R.string.localizable.setting_auto_download_wifi_cellular()
-            }
-        }
     }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
@@ -188,15 +164,15 @@ class CommonUserDefault {
     }
 
 
-    var backupCategory: BackupCategory {
+    var backupCategory: AutoBackup {
         get {
-            guard let category = session.string(forKey: keyBackupCategory) else {
+            guard let category = session.string(forKey: keyAutoBackup) else {
                 return .off
             }
-            return BackupCategory(rawValue: category) ?? .off
+            return AutoBackup(rawValue: category) ?? .off
         }
         set {
-            session.set(newValue.rawValue, forKey: keyBackupCategory)
+            session.set(newValue.rawValue, forKey: keyAutoBackup)
         }
     }
 
@@ -213,7 +189,7 @@ class CommonUserDefault {
         }
     }
     
-    private var conversationDraft: [String: Any] {
+    var conversationDraft: [String: Any] {
         get {
             return session.dictionary(forKey: keyConversationDraft) ?? [:]
         }
@@ -222,7 +198,7 @@ class CommonUserDefault {
         }
     }
 
-    private var hasUnreadAnnouncement: [String: Bool] {
+    var hasUnreadAnnouncement: [String: Bool] {
         get {
             return (session.dictionary(forKey: keyHasUnreadAnnouncement) as? [String : Bool]) ?? [:]
         }

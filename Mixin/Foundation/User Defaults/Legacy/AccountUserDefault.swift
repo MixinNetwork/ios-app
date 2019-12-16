@@ -16,7 +16,11 @@ class AccountUserDefault {
     static let shared = AccountUserDefault()
 
     private let session = UserDefaults.standard
-
+    
+    var serializedAccount: Data? {
+        return session.value(forKey: keyAccount) as? Data
+    }
+    
     func storeAccount(account: Account?) {
         if let account = account {
             if let data = try? JSONEncoder().encode(account) {

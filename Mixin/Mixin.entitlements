@@ -16,5 +16,9 @@
 	<array>
 		<string>iCloud.$(CFBundleIdentifier)</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.one.mixin.messenger</string>
+	</array>
 </dict>
 </plist>

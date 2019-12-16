@@ -1787,7 +1787,6 @@
 			isa = PBXGroup;
 			children = (
 				DF5CDA78205005EE004A52BA /* Database */,
-				DF503D3D1FED05F600C008E7 /* Storage */,
 				7B61EB8A209787DD001C1985 /* Attachment */,
 				27B84EE41FCDA34A0081DD12 /* MD5Digest.swift */,
 				27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */,
@@ -1823,10 +1822,10 @@
 				DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */,
 				E05DBEAA23A760F000E32164 /* Foundation */,
 				E07E389C23A7716C0005A538 /* Services */,
+				E07E38A223A7731D0005A538 /* Storage */,
 				7BC8502120CBA68700A57B83 /* Audio */,
 				7BB3854C21E74B2B0070FF8F /* Provision */,
 				DF5D9F201F9C79110036D5FD /* API */,
-				DF3C47481FA0BC9A00A07C71 /* Database */,
 				275339881F975D9800DD4C26 /* Frameworks */,
 				DF5D9F191F9C62140036D5FD /* Constants */,
 				DF5D9F121F9C53920036D5FD /* Extension */,
@@ -2347,12 +2346,10 @@
 			path = WebSocket;
 			sourceTree = "<group>";
 		};
-		DF3C47481FA0BC9A00A07C71 /* Database */ = {
+		DF3C47481FA0BC9A00A07C71 /* Mixin */ = {
 			isa = PBXGroup;
 			children = (
 				DFE63C961FC6B08E00D6E028 /* Model */,
-				DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */,
-				DFD659C520501858000696B0 /* BaseDatabase.swift */,
 				DF10709A2049BC3F00E20047 /* MixinDatabase.swift */,
 				DF10B9DA22E9B7F9005632A5 /* TaskDatabase.swift */,
 				7B4D112B205BC9160074BF60 /* AddressDAO.swift */,
@@ -2374,10 +2371,10 @@
 				DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */,
 				E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */,
 			);
-			path = Database;
+			path = Mixin;
 			sourceTree = "<group>";
 		};
-		DF503D3D1FED05F600C008E7 /* Storage */ = {
+		DF503D3D1FED05F600C008E7 /* Signal */ = {
 			isa = PBXGroup;
 			children = (
 				DF503D3E1FED060900C008E7 /* MixinIdentityKeyStore.swift */,
@@ -2386,7 +2383,7 @@
 				DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */,
 				DF503D481FED200300C008E7 /* MixinSessionStore.swift */,
 			);
-			path = Storage;
+			path = Signal;
 			sourceTree = "<group>";
 		};
 		DF53BB6620233647002BF028 /* Views */ = {
@@ -3175,6 +3172,17 @@
 				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		E07E38A223A7731D0005A538 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				DF503D3D1FED05F600C008E7 /* Signal */,
+				DF3C47481FA0BC9A00A07C71 /* Mixin */,
+				DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */,
+				DFD659C520501858000696B0 /* BaseDatabase.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {

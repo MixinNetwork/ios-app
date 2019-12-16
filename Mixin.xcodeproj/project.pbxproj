@@ -796,6 +796,7 @@
 		E07E38A123A772CC0005A538 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A023A772CC0005A538 /* CallError.swift */; };
 		E07E38A423A773F10005A538 /* WCDBError+CustomNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */; };
 		E07E38A623A774940005A538 /* MixinError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A523A774940005A538 /* MixinError.swift */; };
+		E07E38AA23A777180005A538 /* MixinFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A923A777180005A538 /* MixinFile.swift */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
@@ -1654,6 +1655,7 @@
 		E07E38A023A772CC0005A538 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
 		E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WCDBError+CustomNSError.swift"; sourceTree = "<group>"; };
 		E07E38A523A774940005A538 /* MixinError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinError.swift; sourceTree = "<group>"; };
+		E07E38A923A777180005A538 /* MixinFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinFile.swift; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
@@ -3130,6 +3132,7 @@
 		E05DBEAA23A760F000E32164 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				E07E38A823A777180005A538 /* Legacy */,
 				E05DBEAB23A7615000E32164 /* User Defaults */,
 				E05DC06723A762E000E32164 /* AnyOptional.swift */,
 				E05DC13F23A7638900E32164 /* AutoBackup.swift */,
@@ -3189,6 +3192,14 @@
 				E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		E07E38A823A777180005A538 /* Legacy */ = {
+			isa = PBXGroup;
+			children = (
+				E07E38A923A777180005A538 /* MixinFile.swift */,
+			);
+			path = Legacy;
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
@@ -4180,6 +4191,7 @@
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
 				E07E389F23A772BD0005A538 /* MixinServicesError.swift in Sources */,
+				E07E38AA23A777180005A538 /* MixinFile.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,
 				DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */,

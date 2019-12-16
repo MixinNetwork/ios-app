@@ -58,6 +58,15 @@
 		<string>exin</string>
 		<string>tbopen</string>
 		<string>openapp.jdmobile</string>
+		<string>pinduoduo</string>
+		<string>vipshop</string>
+		<string>dianping</string>
+		<string>imeituan</string>
+		<string>kaola</string>
+		<string>suning</string>
+		<string>yanxuan</string>
+		<string>taobaotravel</string>
+		<string>mogujie</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -88,6 +88,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func loadView() {
         view = GalleryView()
     }
@@ -116,11 +120,22 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         view.addGestureRecognizer(longPressRecognizer)
+        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         currentItemViewController?.isFocused = false
+    }
+    
+    @objc func willRecallMessage(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String else {
+            return
+        }
+        guard currentItemViewController?.item?.messageId == messageId else {
+            return
+        }
+        dismiss(transitionViewInitialOffsetY: 0)
     }
     
     func show(item: GalleryItem, from source: GalleryTransitionSource) {
@@ -245,12 +260,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }, completion: {
             self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
         })
-    }
-    
-    func handleMessageRecalling(messageId: String) {
-        if currentItemViewController?.item?.messageId == messageId {
-            dismiss(transitionViewInitialOffsetY: 0)
-        }
     }
     
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {

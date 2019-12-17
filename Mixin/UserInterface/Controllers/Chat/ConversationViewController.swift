@@ -167,6 +167,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -207,7 +208,7 @@ class ConversationViewController: UIViewController {
         if parent == nil {
             dataSource?.cancelMessageProcessing()
         }
-        SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
+        SendMessageService.shared.sendReadMessages(conversationId: conversationId)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -600,6 +601,19 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc func willRecallMessage(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[SendMessageService.UserInfoKey.conversationId] as? String, conversationId == self.conversationId else {
+            return
+        }
+        guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String, messageId == previewDocumentMessageId else {
+            return
+        }
+        previewDocumentController?.dismissPreview(animated: true)
+        previewDocumentController?.dismissMenu(animated: true)
+        previewDocumentController = nil
+        previewDocumentMessageId = nil
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
@@ -704,18 +718,6 @@ class ConversationViewController: UIViewController {
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         Reporter.report(event: .openApp, userInfo: userInfo)
         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
-    }
-    
-    func handleMessageRecalling(messageId: String) {
-        guard isViewLoaded else {
-            return
-        }
-        if messageId == previewDocumentMessageId {
-            previewDocumentController?.dismissPreview(animated: true)
-            previewDocumentController?.dismissMenu(animated: true)
-            previewDocumentController = nil
-            previewDocumentMessageId = nil
-        }
     }
     
     // MARK: - Class func

@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WebSocketService.shared.reconnectIfNeeded()
         cancelBackgroundTask()
 
-        if let conversationId = UIApplication.currentConversationId() {
+        if let conversationId = UIApplication.currentConversationId(), UIApplication.shared.applicationState == .active {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
         
@@ -204,7 +204,7 @@ extension AppDelegate {
             newMsg.quoteMessageId = userInfo["message_id"] as? String
             DispatchQueue.global().async {
                 SendMessageService.shared.sendMessage(message: newMsg, ownerUser: ownerUser, isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
-                SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
+                SendMessageService.shared.sendReadMessages(conversationId: conversationId)
             }
         default:
             return false

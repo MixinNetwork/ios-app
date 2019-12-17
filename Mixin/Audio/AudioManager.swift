@@ -24,6 +24,11 @@ class AudioManager: NSObject {
     override init() {
         super.init()
         queue.setSpecific(key: queueSpecificKey, value: ())
+        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func play(message: MessageItem) {
@@ -193,6 +198,16 @@ class AudioManager: NSObject {
         }
         let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
         ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
+    @objc func willRecallMessage(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String else {
+            return
+        }
+        guard playingMessage?.messageId == messageId else {
+            return
+        }
+        stop()
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {

@@ -2,7 +2,14 @@ import Foundation
 import UserNotifications
 
 class MixinService {
-
+    
+    enum UserInfoKey {
+        static let messageId = "msg_id"
+        static let conversationId = "conv_id"
+    }
+    
+    static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.ios.will.recall.msg")
+    
     var processing = false
     let jsonDecoder = JSONDecoder()
     let jsonEncoder = JSONEncoder()
@@ -277,25 +284,18 @@ class MixinService {
 
         Thread.sleep(forTimeInterval: 2)
     }
-
+    
     func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
         UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
-
+        
+        let userInfo = [SendMessageService.UserInfoKey.conversationId: conversationId,
+                        SendMessageService.UserInfoKey.messageId: messageId]
         DispatchQueue.main.sync {
-            if let chatVC = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
-                chatVC.handleMessageRecalling(messageId: messageId)
-            }
-            if let gallery = UIApplication.homeContainerViewController?.galleryViewController {
-                gallery.handleMessageRecalling(messageId: messageId)
-            }
+            NotificationCenter.default.post(name: SendMessageService.willRecallMessageNotification, object: self, userInfo: userInfo)
         }
-
-        if messageId == AudioManager.shared.playingMessage?.messageId {
-            AudioManager.shared.stop()
-        }
-
+        
         ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
-
+        
         if let attachmentCategory = AttachmentContainer.Category(messageCategory: category), let mediaUrl = mediaUrl {
             try? FileManager.default.removeItem(at: AttachmentContainer.url(for: attachmentCategory, filename: mediaUrl))
             if category.hasSuffix("_VIDEO") {
@@ -303,8 +303,6 @@ class MixinService {
                 try? FileManager.default.removeItem(at: thumbUrl)
             }
         }
-
-
     }
-
+    
 }

@@ -183,11 +183,8 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendReadMessages(conversationId: String, force: Bool = false) {
+    func sendReadMessages(conversationId: String) {
         DispatchQueue.main.async {
-            guard force || UIApplication.shared.applicationState == .active else {
-                return
-            }
             SendMessageService.shared.saveDispatchQueue.async {
                 let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0

@@ -195,7 +195,9 @@ class ConversationDataSource {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
             }
             ConversationViewController.positions[self.conversationId] = nil
-            SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
+            if UIApplication.shared.applicationState == .active {
+                SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
+            }
             self.didInitializedData = true
             completion?()
         }
@@ -486,7 +488,7 @@ extension ConversationDataSource {
             return
         }
         let messageIsSentByMe = message.userId == me.user_id
-        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
+        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue && UIApplication.shared.applicationState == .active {
             SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
         }
         if !didLoadLatestMessage {
@@ -576,7 +578,7 @@ extension ConversationDataSource {
                 return
             }
             
-            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId {
+            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId && UIApplication.shared.applicationState == .active {
                 SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
             }
             

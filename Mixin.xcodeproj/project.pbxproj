@@ -496,6 +496,7 @@
 		DF08F25A23864C73005CFD34 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF08F25923864C73005CFD34 /* UserSession.swift */; };
 		DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */; };
 		DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */; };
+		DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */; };
 		DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E2D2320FDEB2500BB2658 /* Keychain.swift */; };
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
@@ -1323,6 +1324,7 @@
 		DF08F25923864C73005CFD34 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalTipWindow.xib; sourceTree = "<group>"; };
 		DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalTipWindow.swift; sourceTree = "<group>"; };
+		DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTextSizeExtension.swift; sourceTree = "<group>"; };
 		DF0E2D2320FDEB2500BB2658 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
@@ -2444,6 +2446,7 @@
 				7BD0532720A41F6A00C36F69 /* RangeExtension.swift */,
 				7BD0532920A435D300C36F69 /* CoreTextExtension.swift */,
 				DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */,
+				DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */,
 				DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
 				DF9C9C6422C5E8720090873E /* SafeDictionary.swift */,
@@ -3534,6 +3537,7 @@
 				DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */,
 				DFF3530E1FEEA3DC00058453 /* SnapshotDAO.swift in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
+				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
 				7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */,

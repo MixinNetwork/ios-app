@@ -83,7 +83,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
             return digits.joined()
         }
         set {
-            if let value = Int(text.prefix(numberOfDigits)) {
+            if let value = Int(newValue.prefix(numberOfDigits)) {
                 digits = String(value).compactMap(String.init)
             } else {
                 digits = []

@@ -196,7 +196,7 @@ final class AccountAPI: BaseAPI {
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = 1
                 UIApplication.shared.applicationIconBadgeNumber = 0
-                UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                UNUserNotificationCenter.current().removeAllNotifications()
                 UIApplication.shared.unregisterForRemoteNotifications()
 
                 MixinWebView.clearCookies()

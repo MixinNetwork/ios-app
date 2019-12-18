@@ -286,7 +286,7 @@ class MixinService {
     }
     
     func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
-        UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
+        UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [messageId])
         
         let userInfo = [SendMessageService.UserInfoKey.conversationId: conversationId,
                         SendMessageService.UserInfoKey.messageId: messageId]

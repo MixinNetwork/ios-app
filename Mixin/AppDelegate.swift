@@ -32,8 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         updateSharedImageCacheConfig()
         NetworkManager.shared.startListening()
-        UNUserNotificationCenter.current().registerNotificationCategory()
-        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().setNotificationCategories([.message])
+        UNUserNotificationCenter.current().delegate = NotificationManager.shared
         let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
         pkpushRegistry.delegate = self
         pkpushRegistry.desiredPushTypes = [.voIP]
@@ -65,7 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        UNUserNotificationCenter.current().removeAllNotifications()
         WebSocketService.shared.reconnectIfNeeded()
         cancelBackgroundTask()
 
@@ -134,82 +133,6 @@ extension AppDelegate: PKPushRegistryDelegate {
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         checkServerData(isPushKit: true)
-    }
-    
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        if !handerQuickAction(response) {
-            dealWithRemoteNotification(response.notification.request.content.userInfo)
-        }
-        completionHandler()
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        if userInfo["fromWebSocket"] as? Bool ?? false {
-            completionHandler([.alert, .sound])
-            autoCanceleNotification?.cancel()
-            let workItem = DispatchWorkItem(block: {
-                guard let workItem = UIApplication.appDelegate().autoCanceleNotification, !workItem.isCancelled else {
-                    return
-                }
-                guard AccountAPI.shared.didLogin else {
-                    return
-                }
-                UNUserNotificationCenter.current().removeNotifications(identifier: NotificationRequestIdentifier.showInApp)
-            })
-            self.autoCanceleNotification = workItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: workItem)
-        } else {
-            completionHandler([])
-        }
-    }
-    
-}
-
-extension AppDelegate {
-    
-    func handerQuickAction(_ response: UNNotificationResponse) -> Bool {
-        let categoryIdentifier = response.notification.request.content.categoryIdentifier
-        let actionIdentifier = response.actionIdentifier
-        let inputText = (response as? UNTextInputNotificationResponse)?.userText
-        let userInfo = response.notification.request.content.userInfo
-        return handerQuickAction(categoryIdentifier: categoryIdentifier, actionIdentifier: actionIdentifier, inputText: inputText, userInfo: userInfo)
-    }
-    
-    @discardableResult
-    func handerQuickAction(categoryIdentifier: String, actionIdentifier: String, inputText: String?, userInfo: [AnyHashable : Any]) -> Bool {
-        guard categoryIdentifier == NotificationCategoryIdentifier.message, AccountAPI.shared.didLogin else {
-            return false
-        }
-
-        guard let conversationId = userInfo["conversation_id"] as? String, let conversationCategory = userInfo["conversation_category"] as? String else {
-            return false
-        }
-
-        switch actionIdentifier {
-        case NotificationActionIdentifier.reply:
-            guard let text = inputText?.trim(), !text.isEmpty else {
-                return false
-            }
-            var ownerUser: UserItem?
-            if let userId = userInfo["user_id"] as? String, let userFullName = userInfo["userFullName"] as? String, let userAvatarUrl = userInfo["userAvatarUrl"] as? String, let userIdentityNumber = userInfo["userIdentityNumber"] as? String {
-                ownerUser = UserItem.createUser(userId: userId, fullName: userFullName, identityNumber: userIdentityNumber, avatarUrl: userAvatarUrl, appId: userInfo["userAppId"] as? String)
-            }
-            var newMsg = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue, conversationId: conversationId, createdAt: Date().toUTCString(), userId: AccountAPI.shared.accountUserId)
-            newMsg.content = text
-            newMsg.quoteMessageId = userInfo["message_id"] as? String
-            DispatchQueue.global().async {
-                SendMessageService.shared.sendMessage(message: newMsg, ownerUser: ownerUser, isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
-                SendMessageService.shared.sendReadMessages(conversationId: conversationId)
-            }
-        default:
-            return false
-        }
-        return true
     }
     
 }
@@ -297,25 +220,6 @@ extension AppDelegate {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
-    }
-    
-    private func dealWithRemoteNotification(_ userInfo: [AnyHashable: Any]?, fromLaunch: Bool = false) {
-        guard let userInfo = userInfo, let conversationId = userInfo["conversation_id"] as? String else {
-            return
-        }
-        
-        DispatchQueue.global().async {
-            guard AccountAPI.shared.didLogin else {
-                return
-            }
-            guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
-                return
-            }
-            DispatchQueue.main.async {
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
-            }
-        }
-        UNUserNotificationCenter.current().removeAllNotifications()
     }
     
     private func pushCameraViewController() {

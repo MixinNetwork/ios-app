@@ -41,21 +41,6 @@ extension NSNotification.Name {
     static let UserSessionDidChange = NSNotification.Name("one.mixin.ios.session.changed")
 }
 
-enum NotificationActionIdentifier {
-    static let reply = "reply"
-    static let mute = "mute" // preserved
-}
-
-enum NotificationCategoryIdentifier {
-    static let message = "message"
-    static let call = "call"
-}
-
-enum NotificationRequestIdentifier {
-    static let showInApp = "show_in_app"
-    static let call = "call"
-}
-
 enum ReportErrorCode: Int {
     case logoutError = 100000
     case sendMessengerError = 100001
@@ -145,7 +130,6 @@ struct ConversationChange {
         case reload
         case update(conversation: ConversationItem)
         case updateConversation(conversation: ConversationResponse)
-        case addMessage(message: MessageItem)
         case updateGroupIcon(iconUrl: String)
         case updateMessage(messageId: String)
         case updateMessageStatus(messageId: String, newStatus: MessageStatus)

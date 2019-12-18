@@ -585,13 +585,14 @@ class ReceiveMessageService: MixinService {
                 guard let ackMessages = plainData.ackMessages else {
                     return
                 }
+                let messageIds = ackMessages.map({ $0.messageId })
+                UNUserNotificationCenter.current().removeNotifications(withIdentifiers: messageIds)
                 for message in ackMessages {
                     guard message.status == MessageStatus.READ.rawValue else {
                         continue
                     }
                     if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, from: "\(data.category):\(plainData.action)", updateUnseen: true) {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
-                        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
                     }
                 }
                 ConversationDAO.shared.showBadgeNumber()

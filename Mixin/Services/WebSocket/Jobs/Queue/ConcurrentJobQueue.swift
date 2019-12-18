@@ -36,22 +36,5 @@ class ConcurrentJobQueue: JobQueue {
             }
         }
     }
-
-    func sendNotifaction(message: MessageItem) {
-        guard message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId else {
-            return
-        }
-
-        DispatchQueue.main.async {
-            guard message.conversationId != UIApplication.currentConversationId() else {
-                return
-            }
-            guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_DATA") || message.category.hasSuffix("_VIDEO") || message.category.hasSuffix("_LIVE") || message.category.hasSuffix("_AUDIO") || message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue else {
-                return
-            }
-
-            ConcurrentJobQueue.shared.addJob(job: ShowNotificationJob(message: message))
-        }
-    }
     
 }

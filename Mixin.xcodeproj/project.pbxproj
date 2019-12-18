@@ -523,8 +523,8 @@
 		DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */; };
 		DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */; };
 		DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */; };
-		DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7D1FF2539600A95188 /* UserNotificationExtension.swift */; };
-		DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7F1FF25DB600A95188 /* ShowNotificationJob.swift */; };
+		DF1A9A7E1FF2539700A95188 /* UNUserNotificationCenterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7D1FF2539600A95188 /* UNUserNotificationCenterExtension.swift */; };
+		DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7F1FF25DB600A95188 /* RequestInAppNotificationJob.swift */; };
 		DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1ED8D820BBECFF003E10E8 /* AlbumViewController.swift */; };
 		DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1ED8DA20BBED24003E10E8 /* PickerViewController.swift */; };
 		DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF1ED8E120BC0794003E10E8 /* Photo.storyboard */; };
@@ -770,6 +770,7 @@
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
 		DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */; };
 		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
+		E029510C23AA21BA0090BB18 /* NotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029510B23AA21BA0090BB18 /* NotificationConstants.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
 		E04F759C238F950900BF6C0D /* FavoriteAppsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */; };
 		E04F759E238F959400BF6C0D /* FavoriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04F759D238F959400BF6C0D /* FavoriteApp.swift */; };
@@ -817,6 +818,8 @@
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
+		E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F423A9D803008F0189 /* NotificationManager.swift */; };
+		E0D4F5F723AA0CB2008F0189 /* UNNotificationContentExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F623AA0CB2008F0189 /* UNNotificationContentExtension.swift */; };
 		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
 		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
 		E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */; };
@@ -1376,8 +1379,8 @@
 		DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClockSkewViewController.swift; sourceTree = "<group>"; };
 		DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSnapshotsJob.swift; sourceTree = "<group>"; };
 		DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtension.swift; sourceTree = "<group>"; };
-		DF1A9A7D1FF2539600A95188 /* UserNotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationExtension.swift; sourceTree = "<group>"; };
-		DF1A9A7F1FF25DB600A95188 /* ShowNotificationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNotificationJob.swift; sourceTree = "<group>"; };
+		DF1A9A7D1FF2539600A95188 /* UNUserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNUserNotificationCenterExtension.swift; sourceTree = "<group>"; };
+		DF1A9A7F1FF25DB600A95188 /* RequestInAppNotificationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestInAppNotificationJob.swift; sourceTree = "<group>"; };
 		DF1ED8D820BBECFF003E10E8 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		DF1ED8DA20BBED24003E10E8 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		DF1ED8E120BC0794003E10E8 /* Photo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Photo.storyboard; sourceTree = "<group>"; };
@@ -1632,6 +1635,7 @@
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
 		DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeWindow.swift; sourceTree = "<group>"; };
 		DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecognizeWindow.xib; sourceTree = "<group>"; };
+		E029510B23AA21BA0090BB18 /* NotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationConstants.swift; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
 		E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppsDAO.swift; sourceTree = "<group>"; };
 		E04F759D238F959400BF6C0D /* FavoriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteApp.swift; sourceTree = "<group>"; };
@@ -1679,6 +1683,8 @@
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
+		E0D4F5F423A9D803008F0189 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		E0D4F5F623AA0CB2008F0189 /* UNNotificationContentExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationContentExtension.swift; sourceTree = "<group>"; };
 		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
 		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
 		E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedAvatarImageView.swift; sourceTree = "<group>"; };
@@ -1837,6 +1843,7 @@
 				E07E38A223A7731D0005A538 /* Storage */,
 				7BC8502120CBA68700A57B83 /* Audio */,
 				7BB3854C21E74B2B0070FF8F /* Provision */,
+				E0D4F5F323A9D7D3008F0189 /* Notification */,
 				DF5D9F201F9C79110036D5FD /* API */,
 				275339881F975D9800DD4C26 /* Frameworks */,
 				DF5D9F191F9C62140036D5FD /* Constants */,
@@ -2466,7 +2473,6 @@
 				DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */,
 				DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */,
 				DFE356261FB40C4700E0E3A8 /* NotificationCenterExtension.swift */,
-				DF1A9A7D1FF2539600A95188 /* UserNotificationExtension.swift */,
 				DF5D9F141F9C5B970036D5FD /* StringExtension.swift */,
 				DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */,
 				DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */,
@@ -2847,7 +2853,6 @@
 				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 				7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */,
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
-				DF1A9A7F1FF25DB600A95188 /* ShowNotificationJob.swift */,
 				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
 			);
 			path = Jobs;
@@ -3139,6 +3144,7 @@
 			isa = PBXGroup;
 			children = (
 				E07E38A823A777180005A538 /* Legacy */,
+				E072654823AA5B9E00E6EC81 /* Extension */,
 				E05DBEAB23A7615000E32164 /* User Defaults */,
 				E07E38AB23A777990005A538 /* File Management */,
 				E05DC06723A762E000E32164 /* AnyOptional.swift */,
@@ -3176,6 +3182,15 @@
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
 			);
 			path = Legacy;
+			sourceTree = "<group>";
+		};
+		E072654823AA5B9E00E6EC81 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				E0D4F5F623AA0CB2008F0189 /* UNNotificationContentExtension.swift */,
+				DF1A9A7D1FF2539600A95188 /* UNUserNotificationCenterExtension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		E07E389C23A7716C0005A538 /* Services */ = {
@@ -3217,6 +3232,16 @@
 				E07E38AD23A777990005A538 /* AttachmentContainer.swift */,
 			);
 			path = "File Management";
+			sourceTree = "<group>";
+		};
+		E0D4F5F323A9D7D3008F0189 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				E029510B23AA21BA0090BB18 /* NotificationConstants.swift */,
+				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
+				DF1A9A7F1FF25DB600A95188 /* RequestInAppNotificationJob.swift */,
+			);
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
@@ -3626,7 +3651,7 @@
 				DF2A0D972295734C00CA0280 /* AddressView.swift in Sources */,
 				DFEEE6F11FE14F44001CCFB5 /* RelationshipRequest.swift in Sources */,
 				7BDBDE5F22327698006220DF /* TransferTypeViewController.swift in Sources */,
-				DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */,
+				DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */,
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				DFCFAFC0237D66C600F0AFD5 /* ParticipantSession.swift in Sources */,
@@ -3760,6 +3785,7 @@
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				DF7A4B481FCDA6ED00F21BCB /* UserResponse.swift in Sources */,
 				273FACC3205FB9A800513327 /* GroupCipher.swift in Sources */,
+				E029510C23AA21BA0090BB18 /* NotificationConstants.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
@@ -3842,6 +3868,7 @@
 				E05DC14423A7638A00E32164 /* Environment.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */,
+				E0D4F5F723AA0CB2008F0189 /* UNNotificationContentExtension.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
@@ -3851,6 +3878,7 @@
 				7BC28337234DCCF300005628 /* SharedMediaTableViewController.swift in Sources */,
 				7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */,
 				273FACBD205FB9A800513327 /* GroupSessionBuilder.swift in Sources */,
+				E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */,
 				7BAB5D4020C5213C009F4EE6 /* AudioDownloadJob.swift in Sources */,
 				DFF3B68A20E25CB500DC82D9 /* Album.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
@@ -4183,7 +4211,7 @@
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
 				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
-				DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */,
+				DF1A9A7E1FF2539700A95188 /* UNUserNotificationCenterExtension.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,

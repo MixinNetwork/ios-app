@@ -3,9 +3,18 @@ import WCDBSwift
 import UIKit
 
 final class MessageDAO {
-
+    
+    enum UserInfoKey {
+        static let conversationId = "conv_id"
+        static let message = "msg"
+        static let messsageSource = "msg_source"
+    }
+    
     static let shared = MessageDAO()
-
+    
+    static let didInsertMessageNotification = Notification.Name("one.mixin.messenger.services.did.insert.msg")
+    static let didRedecryptMessageNotification = Notification.Name("one.mixin.messenger.services.did.redecrypt.msg")
+    
     static let sqlTriggerLastMessageInsert = """
     CREATE TRIGGER IF NOT EXISTS conversation_last_message_update AFTER INSERT ON messages
     BEGIN
@@ -490,11 +499,13 @@ final class MessageDAO {
         guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
             return
         }
-        let change = ConversationChange(conversationId: newMessage.conversationId, action: .addMessage(message: newMessage))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-
-        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
-            ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
+        let userInfo: [String: Any] = [
+            MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
+            MessageDAO.UserInfoKey.message: newMessage,
+            MessageDAO.UserInfoKey.messsageSource: messageSource
+        ]
+        performSynchronouslyOnMainThread {
+            NotificationCenter.default.post(name: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
         }
     }
 
@@ -617,11 +628,14 @@ extension MessageDAO {
         guard let message = newMessage else {
             return
         }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
         
-        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
-            ConcurrentJobQueue.shared.sendNotifaction(message: message)
+        let userInfo: [String: Any] = [
+            MessageDAO.UserInfoKey.conversationId: message.conversationId,
+            MessageDAO.UserInfoKey.message: message,
+            MessageDAO.UserInfoKey.messsageSource: messageSource
+        ]
+        performSynchronouslyOnMainThread {
+            NotificationCenter.default.post(name: MessageDAO.didRedecryptMessageNotification, object: self, userInfo: userInfo)
         }
     }
 

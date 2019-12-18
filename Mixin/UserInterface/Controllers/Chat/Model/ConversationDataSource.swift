@@ -80,6 +80,8 @@ class ConversationDataSource {
     
     func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -460,8 +462,6 @@ extension ConversationDataSource {
             reload()
         case .update(let conversation):
             self.conversation = conversation
-        case .addMessage(let message):
-            addMessage(message)
         case .updateGroupIcon(let iconUrl):
             conversation.iconUrl = iconUrl
         case .updateMessage(let messageId):
@@ -483,7 +483,16 @@ extension ConversationDataSource {
         }
     }
     
-    private func addMessage(_ message: MessageItem) {
+    @objc func messageDaoDidInsertMessage(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[MessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
+            return
+        }
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
@@ -513,6 +522,19 @@ extension ConversationDataSource {
                 self.addMessageAndDisplay(message: message)
             }
         }
+    }
+    
+    @objc func messageDaoDidRedecryptMessage(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[MessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
+            return
+        }
+        updateMessage(messageId: message.messageId)
     }
     
     private func updateMessageStatus(messageId: String, status: MessageStatus) {

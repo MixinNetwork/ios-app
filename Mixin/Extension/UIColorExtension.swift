@@ -31,7 +31,7 @@ extension UIColor {
     static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
     static let highlightedText = R.color.highlighted_text()!
     static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
-    static let shadow = UIColor(rgbValue: 0xC3C3C3)
+    static let shadow = R.color.table_shadow()!
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)

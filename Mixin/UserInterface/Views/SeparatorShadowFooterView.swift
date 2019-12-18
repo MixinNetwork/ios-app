@@ -92,7 +92,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         contentView.addSubview(shadowView)
         clipsToBounds = true
         backgroundView = UIView(frame: bounds)
-        backgroundView?.backgroundColor = .clear
+        backgroundView?.backgroundColor = .secondaryBackground
     }
     
 }

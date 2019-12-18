@@ -29,9 +29,7 @@ class ContactViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        accountNameLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)
-        tableView.register(ContactHeaderView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseId.header)
+        tableView.register(UINib(resource: R.nib.contactHeaderView), forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.sectionFooterHeight = UITableView.automaticDimension

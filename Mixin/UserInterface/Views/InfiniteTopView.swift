@@ -16,7 +16,7 @@ class InfiniteTopView: UIView {
     }
     
     private func prepare() {
-        topFillerView.backgroundColor = .white
+        topFillerView.backgroundColor = .clear
         topFillerView.frame = CGRect(x: 0, y: -topFillerHeight, width: bounds.width, height: topFillerHeight)
         topFillerView.autoresizingMask = [.flexibleWidth]
         insertSubview(topFillerView, at: 0)

@@ -41,11 +41,11 @@ final class EmergencyContactViewController: UITableViewController {
             case 0:
                 cell.titleLabel.text = R.string.localizable.emergency_view()
                 cell.accessoryImageView.isHidden = false
-                cell.titleLabel.textColor = .darkText
+                cell.titleLabel.textColor = .text
             case 1:
                 cell.titleLabel.text = R.string.localizable.emergency_change()
                 cell.accessoryImageView.isHidden = false
-                cell.titleLabel.textColor = .darkText
+                cell.titleLabel.textColor = .text
             default:
                 cell.titleLabel.text = R.string.localizable.emergency_remove()
                 cell.accessoryImageView.isHidden = true

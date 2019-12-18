@@ -13,9 +13,9 @@ extension UIButton {
             }
             switch style {
             case "regular16":
-                titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .regular), adjustForContentSize: true)
+                titleLabel?.font = .scaledFont(ofSize: 16, weight: .regular)
             case "regular14":
-                titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
+                titleLabel?.font = .scaledFont(ofSize: 14, weight: .regular)
             default:
                 break
             }
@@ -38,9 +38,9 @@ extension UITextField {
 
             switch style {
             case "regular18":
-                font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 18, weight: .regular))
+                font = .scaledFont(ofSize: 18, weight: .regular)
             case "regular16":
-                font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16, weight: .regular))
+                font = .scaledFont(ofSize: 16, weight: .regular)
             default:
                 return
             }
@@ -63,11 +63,15 @@ extension UILabel {
             }
             switch style {
             case "semibold18":
-                font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 18, weight: .semibold))
+                font = .scaledFont(ofSize: 18, weight: .semibold)
+            case "semibold16":
+                font = .scaledFont(ofSize: 16, weight: .semibold)
             case "regular16":
-                font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16, weight: .regular))
+                font = .scaledFont(ofSize: 16, weight: .regular)
+            case "regular14":
+                font = .scaledFont(ofSize: 14, weight: .regular)
             case "regular12":
-                font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 12, weight: .regular))
+                font = .scaledFont(ofSize: 12, weight: .regular)
             default:
                 return
             }
@@ -79,4 +83,12 @@ extension UILabel {
          self.font = UIFontMetrics.default.scaledFont(for: font)
          self.adjustsFontForContentSizeCategory = adjustForContentSize
      }
+}
+
+extension UIFont {
+
+    class func scaledFont(ofSize fontSize: CGFloat, weight: UIFont.Weight) -> UIFont {
+        return UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: fontSize, weight: weight))
+    }
+
 }

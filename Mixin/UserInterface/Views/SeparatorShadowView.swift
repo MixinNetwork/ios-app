@@ -31,7 +31,7 @@ class SeparatorShadowView: UIView {
     private func prepare() {
         for shadowProviderLayer in [upperShadowProviderLayer, lowerShadowProviderLayer] {
             layer.addSublayer(shadowProviderLayer)
-            shadowProviderLayer.backgroundColor = UIColor.white.cgColor
+            shadowProviderLayer.backgroundColor = UIColor.clear.cgColor
             shadowProviderLayer.shadowColor = UIColor.shadow.cgColor
             shadowProviderLayer.shadowOpacity = 0.2
             shadowProviderLayer.shadowOffset = CGSize(width: 0, height: 2)

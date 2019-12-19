@@ -9,6 +9,7 @@ class MixinService {
     }
     
     static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.ios.will.recall.msg")
+    static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.ios.msg.read.did.change")
     
     static var callMessageCoordinator: CallMessageCoordinator!
     

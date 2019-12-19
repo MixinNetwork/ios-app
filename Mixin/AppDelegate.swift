@@ -41,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkJailbreak()
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
+        NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
         Logger.write(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
@@ -138,6 +139,15 @@ extension AppDelegate: PKPushRegistryDelegate {
 }
 
 extension AppDelegate {
+    
+    @objc func updateApplicationIconBadgeNumber() {
+        DispatchQueue.global().async {
+            let number = min(99, ConversationDAO.shared.getUnreadMessageCount())
+            DispatchQueue.main.async {
+                UIApplication.shared.applicationIconBadgeNumber = number
+            }
+        }
+    }
     
     private func checkLogin() {
         window.backgroundColor = .black

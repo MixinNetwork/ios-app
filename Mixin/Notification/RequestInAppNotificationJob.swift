@@ -47,7 +47,7 @@ class RequestInAppNotificationJob: BaseJob {
         }
         
         DispatchQueue.main.sync {
-            ConversationDAO.shared.showBadgeNumber()
+            AppDelegate.current.updateApplicationIconBadgeNumber()
             let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
             let request = UNNotificationRequest(identifier: message.messageId, content: content, trigger: nil)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)

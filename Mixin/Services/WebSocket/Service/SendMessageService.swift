@@ -231,7 +231,7 @@ class SendMessageService: MixinService {
                         Thread.sleep(forTimeInterval: 0.1)
                     }
                 }
-                ConversationDAO.shared.showBadgeNumber()
+                NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 SendMessageService.shared.processMessages()
             }

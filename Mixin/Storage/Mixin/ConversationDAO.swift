@@ -42,7 +42,7 @@ final class ConversationDAO {
     SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
     WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
     """
-    private static let sqlBadgeNumber = """
+    private static let sqlUnreadMessageCount = """
     SELECT ifnull(SUM(unseen_message_count),0) FROM (
         SELECT c.unseen_message_count, CASE WHEN c.category = 'CONTACT' THEN u.mute_until ELSE c.mute_until END as muteUntil
         FROM conversations c
@@ -65,21 +65,11 @@ final class ConversationDAO {
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
     
-    func showBadgeNumber() {
-        DispatchQueue.global().async {
-            var badgeNumber = Int(MixinDatabase.shared.scalar(sql: ConversationDAO.sqlBadgeNumber, values: [Date().toUTCString()]).int32Value)
-            if badgeNumber > 99 {
-                badgeNumber = 99
-            }
-
-            DispatchQueue.main.async {
-                if badgeNumber != UIApplication.shared.applicationIconBadgeNumber {
-                    UIApplication.shared.applicationIconBadgeNumber = badgeNumber
-                }
-            }
-        }
+    func getUnreadMessageCount() -> Int {
+        let value = MixinDatabase.shared.scalar(sql: ConversationDAO.sqlUnreadMessageCount, values: [Date().toUTCString()]).int64Value
+        return Int(value)
     }
-
+    
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])
     }

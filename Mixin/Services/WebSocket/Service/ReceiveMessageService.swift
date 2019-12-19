@@ -609,7 +609,7 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
                     }
                 }
-                ConversationDAO.shared.showBadgeNumber()
+                NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
             default:
                 break
             }

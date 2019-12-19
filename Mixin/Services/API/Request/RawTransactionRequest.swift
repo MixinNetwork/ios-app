@@ -1,6 +1,6 @@
 import Foundation
 
-struct RawTransactionRequest: Encodable {
+public struct RawTransactionRequest: Encodable {
 
     enum CodingKeys: String, CodingKey {
         case assetId = "asset_id"
@@ -17,6 +17,7 @@ struct RawTransactionRequest: Encodable {
     var pin: String
     let traceId: String
     let memo: String
+    
 }
 
 struct OpponentMultisig: Encodable {

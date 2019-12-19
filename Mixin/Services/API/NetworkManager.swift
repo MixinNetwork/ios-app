@@ -1,26 +1,26 @@
 import Foundation
 import Alamofire
 
-class NetworkManager {
-
-    static let shared = NetworkManager()
-
+public class NetworkManager {
+    
+    public static let shared = NetworkManager()
+    
     private let reachabilityManager = Alamofire.NetworkReachabilityManager()
-
-    var isReachable: Bool {
+    
+    public var isReachable: Bool {
         return reachabilityManager?.isReachable ?? false
     }
-
-    var isReachableOnWiFi: Bool {
+    
+    public var isReachableOnWiFi: Bool {
         return reachabilityManager?.isReachableOnEthernetOrWiFi ?? false
     }
-
-    func startListening() {
+    
+    public func startListening() {
         reachabilityManager?.startListening()
     }
-
+    
     deinit {
         reachabilityManager?.stopListening()
     }
-
+    
 }

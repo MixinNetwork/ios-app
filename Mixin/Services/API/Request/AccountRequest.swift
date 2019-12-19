@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 
-struct AccountRequest: Codable {
-
+public struct AccountRequest: Codable {
+    
     let code: String?
     let registrationId: Int?
     let platform: String = "iOS"
@@ -12,7 +12,7 @@ struct AccountRequest: Codable {
     let purpose: String
     var pin: String?
     let sessionSecret: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case code
         case registrationId = "registration_id"
@@ -24,15 +24,16 @@ struct AccountRequest: Codable {
         case pin
         case sessionSecret = "session_secret"
     }
-
+    
     static func createAccountRequest(verificationCode: String, registrationId: Int?, pin: String?, sessionSecret: String?) -> AccountRequest {
         let appVersion = Bundle.main.shortVersion + "(" + Bundle.main.bundleVersion + ")"
         let purpose = pin == nil ? VerificationPurpose.session.rawValue : VerificationPurpose.phone.rawValue
         return AccountRequest(code: verificationCode, registrationId: registrationId, appVersion: appVersion, purpose: purpose, pin: pin, sessionSecret: sessionSecret)
     }
+    
 }
 
-enum VerificationPurpose: String {
+public enum VerificationPurpose: String {
     case session = "SESSION"
     case phone = "PHONE"
 }

@@ -1,7 +1,7 @@
 import Foundation
 
-struct ConversationResponse: Codable {
-
+public struct ConversationResponse: Codable {
+    
     let conversationId: String
     let name: String
     let category: String
@@ -13,7 +13,7 @@ struct ConversationResponse: Codable {
     let codeUrl: String
     let creatorId: String
     let muteUntil: String
-
+    
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case name
@@ -27,17 +27,19 @@ struct ConversationResponse: Codable {
         case muteUntil = "mute_until"
         case participantSessions = "participant_sessions"
     }
+    
 }
 
-struct ParticipantResponse: Codable {
-
+public struct ParticipantResponse: Codable {
+    
     let userId: String
     let role: String
     let createdAt: String
-
+    
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case role
         case createdAt = "created_at"
     }
+    
 }

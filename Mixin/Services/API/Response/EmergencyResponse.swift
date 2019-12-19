@@ -1,6 +1,6 @@
 import Foundation
 
-struct EmergencyResponse: Codable {
+public struct EmergencyResponse: Codable {
     
     let id: String
     

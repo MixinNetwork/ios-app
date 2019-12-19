@@ -1,8 +1,8 @@
 import Foundation
 
-final class EmergencyAPI: BaseAPI {
+public final class EmergencyAPI: BaseAPI {
     
-    static let shared = EmergencyAPI()
+    public static let shared = EmergencyAPI()
     
     private enum Url {
         static let create = "emergency_verifications"
@@ -13,7 +13,7 @@ final class EmergencyAPI: BaseAPI {
         }
     }
     
-    func createContact(identityNumber: String, completion: @escaping (APIResult<EmergencyResponse>) -> Void) {
+    public func createContact(identityNumber: String, completion: @escaping (APIResult<EmergencyResponse>) -> Void) {
         let req = EmergencyRequest(phone: nil,
                                    identityNumber: identityNumber,
                                    pin: nil,
@@ -26,7 +26,7 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func verifyContact(pin: String, id: String, code: String, completion: @escaping (APIResult<Account>) -> Void) {
+    public func verifyContact(pin: String, id: String, code: String, completion: @escaping (APIResult<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let req = EmergencyRequest(phone: nil,
                                        identityNumber: nil,
@@ -41,7 +41,7 @@ final class EmergencyAPI: BaseAPI {
         }
     }
     
-    func createSession(phoneNumber: String, identityNumber: String, completion: @escaping (APIResult<EmergencyResponse>) -> Void) {
+    public func createSession(phoneNumber: String, identityNumber: String, completion: @escaping (APIResult<EmergencyResponse>) -> Void) {
         let req = EmergencyRequest(phone: phoneNumber,
                                    identityNumber: identityNumber,
                                    pin: nil,
@@ -55,7 +55,7 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func verifySession(id: String, code: String, sessionSecret: String?, registrationId: Int?, completion: @escaping (APIResult<Account>) -> Void) {
+    public func verifySession(id: String, code: String, sessionSecret: String?, registrationId: Int?, completion: @escaping (APIResult<Account>) -> Void) {
         let req = EmergencySessionRequest(code: code,
                                           sessionSecret: sessionSecret,
                                           registrationId: registrationId)
@@ -67,14 +67,14 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func show(pin: String, completion: @escaping (APIResult<User>) -> Void) {
+    public func show(pin: String, completion: @escaping (APIResult<User>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, url: Url.show, parameters: param, completion: completion)
         }
     }
     
-    func delete(pin: String, completion: @escaping (APIResult<Account>) -> Void) {
+    public func delete(pin: String, completion: @escaping (APIResult<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, url: Url.delete, parameters: param, completion: completion)

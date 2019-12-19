@@ -67,7 +67,7 @@ struct JSONArrayEncoding: ParameterEncoding {
 
 }
 
-enum APIResult<ResultType: Codable> {
+public enum APIResult<ResultType: Codable> {
     case success(ResultType)
     case failure(APIError)
 
@@ -81,7 +81,7 @@ enum APIResult<ResultType: Codable> {
     }
 }
 
-class BaseAPI {
+public class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()

@@ -1,6 +1,6 @@
 import Foundation
 
-struct SignalKeyRequest: Codable {
+public struct SignalKeyRequest: Codable {
 
     let identityKey: String
     let signedPreKey: SignedPreKeyRequest
@@ -14,7 +14,7 @@ struct SignalKeyRequest: Codable {
 
 }
 
-struct OneTimePreKey: Codable {
+public struct OneTimePreKey: Codable {
     let key_id: UInt32
     let pub_key: String
 
@@ -24,7 +24,7 @@ struct OneTimePreKey: Codable {
     }
 }
 
-struct SignedPreKeyRequest: Codable {
+public struct SignedPreKeyRequest: Codable {
     let key_id: UInt32
     let pub_key: String
     var signature: String

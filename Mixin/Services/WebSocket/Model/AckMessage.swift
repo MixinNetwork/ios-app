@@ -1,6 +1,6 @@
 import Foundation
 
-struct AckMessage {
+public struct AckMessage {
 
     let jobId: String
     let messageId: String

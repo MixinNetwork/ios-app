@@ -1,9 +1,9 @@
 import Foundation
 import Alamofire
 
-final class AssetAPI: BaseAPI {
+public final class AssetAPI: BaseAPI {
 
-    static let shared = AssetAPI()
+    public static let shared = AssetAPI()
 
     private enum url {
 
@@ -53,23 +53,23 @@ final class AssetAPI: BaseAPI {
         
     }
 
-    func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
+    public func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
         request(method: .get, url: url.assets, completion: completion)
     }
 
-    func assets() -> APIResult<[Asset]> {
+    public func assets() -> APIResult<[Asset]> {
         return request(method: .get, url: url.assets)
     }
 
-    func asset(assetId: String, completion: @escaping (APIResult<Asset>) -> Void) {
+    public func asset(assetId: String, completion: @escaping (APIResult<Asset>) -> Void) {
         request(method: .get, url: url.assets(assetId: assetId), completion: completion)
     }
 
-    func asset(assetId: String) -> APIResult<Asset> {
+    public func asset(assetId: String) -> APIResult<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
 
-    func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+    public func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
         var transactionRequest = transactionRequest
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             transactionRequest.pin = encryptedPin
@@ -77,60 +77,60 @@ final class AssetAPI: BaseAPI {
         }
     }
 
-    func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+    public func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
             self?.request(method: .post, url: url.transfers, parameters: param, completion: completion)
         }
     }
 
-    func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
+    public func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
 
-    func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
+    public func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "address_id": addressId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
     
-    func snapshots(opponentId: String) -> APIResult<[Snapshot]> {
+    public func snapshots(opponentId: String) -> APIResult<[Snapshot]> {
         return request(method: .get, url: url.snapshots(opponentId: opponentId))
     }
 
-    func snapshot(snapshotId: String) -> APIResult<Snapshot> {
+    public func snapshot(snapshotId: String) -> APIResult<Snapshot> {
         return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
     }
 
-    func snapshot(traceId: String) -> APIResult<Snapshot> {
+    public func snapshot(traceId: String) -> APIResult<Snapshot> {
         return request(method: .get, url: url.snapshot(traceId: traceId))
     }
     
-    func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> APIResult<[Snapshot]> {
+    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> APIResult<[Snapshot]> {
         assert(limit <= 500)
         return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId))
     }
     
-    func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
+    public func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
     }
 
-    func pendingDeposits(assetId: String, destination: String, tag: String) -> APIResult<[PendingDeposit]> {
+    public func pendingDeposits(assetId: String, destination: String, tag: String) -> APIResult<[PendingDeposit]> {
         return request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag))
     }
     
-    func search(keyword: String) -> APIResult<[Asset]>  {
+    public func search(keyword: String) -> APIResult<[Asset]>  {
         guard let url = url.search(keyword: keyword) else {
             return .success([])
         }
         return request(method: .get, url: url)
     }
     
-    func topAssets() -> APIResult<[Asset]> {
+    public func topAssets() -> APIResult<[Asset]> {
         return request(method: .get, url: url.top)
     }
     
-    func fiats() -> APIResult<[FiatMoney]> {
+    public func fiats() -> APIResult<[FiatMoney]> {
         return request(method: .get, url: url.fiats)
     }
     

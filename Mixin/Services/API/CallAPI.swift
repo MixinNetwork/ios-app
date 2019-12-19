@@ -1,14 +1,14 @@
 import UIKit
 
-class CallAPI: BaseAPI {
+public class CallAPI: BaseAPI {
     
-    static let shared = CallAPI()
+    public static let shared = CallAPI()
     
     private enum url {
         static let turn = "turn"
     }
     
-    func turn(completion: @escaping (APIResult<[TurnServer]>) -> Void) {
+    public func turn(completion: @escaping (APIResult<[TurnServer]>) -> Void) {
         request(method: .get, url: url.turn, completion: completion)
     }
     

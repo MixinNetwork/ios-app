@@ -1,7 +1,7 @@
 import Foundation
 
-struct UserResponse: Codable {
-
+public struct UserResponse: Codable {
+    
     let userId: String
     let fullName: String
     let biography: String
@@ -13,7 +13,7 @@ struct UserResponse: Codable {
     let muteUntil: String?
     let createdAt: String
     let app: App?
-
+    
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case fullName = "full_name"
@@ -27,14 +27,16 @@ struct UserResponse: Codable {
         case createdAt = "created_at"
         case app
     }
+    
 }
 
 enum Relationship: String, Codable {
+    
     case ME
     case FRIEND
     case STRANGER
     case BLOCKING
-
+    
     init(from decoder: Decoder) throws {
         let relationship = (try? decoder.singleValueContainer().decode(String.self)) ?? ""
         switch relationship {
@@ -50,12 +52,13 @@ enum Relationship: String, Codable {
             self = .STRANGER
         }
     }
+    
 }
 
 extension UserResponse {
-
+    
     static func createUser(account: Account) -> UserResponse {
         return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil)
     }
-
+    
 }

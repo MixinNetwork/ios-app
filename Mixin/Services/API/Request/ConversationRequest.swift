@@ -1,6 +1,6 @@
 import Foundation
 
-struct ConversationRequest: Encodable {
+public struct ConversationRequest: Encodable {
     
     let conversationId: String
     let name: String?
@@ -8,7 +8,7 @@ struct ConversationRequest: Encodable {
     let participants: [ParticipantRequest]?
     let duration: Int64?
     let announcement: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case name
@@ -17,4 +17,5 @@ struct ConversationRequest: Encodable {
         case duration
         case announcement
     }
+    
 }

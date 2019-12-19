@@ -1,14 +1,14 @@
 import Foundation
 import Alamofire
 
-enum GiphyAPI {
+public enum GiphyAPI {
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case noApiKey
         case badResponse
     }
     
-    typealias Completion = (Result<[GiphyImage]>) -> Void
+    public typealias Completion = (Result<[GiphyImage]>) -> Void
     
     private static var apiKey = MixinKeys.giphy
     private static var language: String {
@@ -22,7 +22,7 @@ enum GiphyAPI {
         }
     }
     
-    static func trending(offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
+    public static func trending(offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
         guard let key = apiKey else {
             completion(.failure(Error.noApiKey))
             return nil
@@ -32,7 +32,7 @@ enum GiphyAPI {
         return request(url).responseJSON(completionHandler: handler)
     }
     
-    static func search(keyword: String, offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
+    public static func search(keyword: String, offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
         guard let key = apiKey else {
             completion(.failure(Error.noApiKey))
             return nil

@@ -1,6 +1,7 @@
 import Foundation
 
-struct Fee: Codable, NumberStringLocalizable {
+public struct Fee: Codable, NumberStringLocalizable {
+    
     let type: String
     let assetId: String
     let amount: String
@@ -11,7 +12,8 @@ struct Fee: Codable, NumberStringLocalizable {
         case amount
     }
     
-    var localizedAmount: String {
+    public var localizedAmount: String {
         return localizedNumberString(amount)
     }
+    
 }

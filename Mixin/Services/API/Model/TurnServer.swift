@@ -1,6 +1,6 @@
 import Foundation
 
-class TurnServer: Codable {
+public class TurnServer: Codable {
     
     let url: String
     let username: String

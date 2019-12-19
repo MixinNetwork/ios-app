@@ -1,6 +1,6 @@
 import Foundation
 
-struct PendingDeposit: Codable {
+public struct PendingDeposit: Codable {
     
     let transactionId: String
     let transactionHash: String
@@ -20,7 +20,7 @@ struct PendingDeposit: Codable {
         case createdAt = "created_at"
     }
     
-    func makeSnapshot(assetId: String) -> Snapshot {
+    public func makeSnapshot(assetId: String) -> Snapshot {
         return Snapshot(snapshotId: transactionId,
                         type: SnapshotType.pendingDeposit.rawValue,
                         assetId: assetId,

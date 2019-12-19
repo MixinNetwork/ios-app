@@ -1,6 +1,6 @@
 import Foundation
 
-struct APIError: Error, Codable {
+public struct APIError: Error, Codable {
 
     let status: Int
     let code: Int
@@ -114,7 +114,7 @@ extension APIError {
 
 extension APIError: CustomDebugStringConvertible {
     
-    var debugDescription: String {
+    public var debugDescription: String {
         return "status: \(status), code: \(code), description: \(description)"
     }
 

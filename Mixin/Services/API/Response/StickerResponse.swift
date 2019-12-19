@@ -1,7 +1,7 @@
 import Foundation
 
-struct StickerResponse: Codable {
-
+public struct StickerResponse: Codable {
+    
     let stickerId: String
     let name: String
     let assetUrl: String
@@ -9,7 +9,7 @@ struct StickerResponse: Codable {
     let assetWidth: Int
     let assetHeight: Int
     let createdAt: String
-
+    
     enum CodingKeys: String, CodingKey {
         case stickerId = "sticker_id"
         case name
@@ -19,5 +19,5 @@ struct StickerResponse: Codable {
         case assetHeight = "asset_height"
         case createdAt = "created_at"
     }
-
+    
 }

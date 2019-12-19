@@ -1,15 +1,14 @@
 import Foundation
 import UIKit
 
-struct AddressRequest: Codable {
-
+public struct AddressRequest: Codable {
+    
     let assetId: String
     let destination: String
     let tag: String
     let label: String
     var pin: String
-
-
+    
     enum CodingKeys: String, CodingKey {
         case assetId = "asset_id"
         case destination
@@ -17,14 +16,13 @@ struct AddressRequest: Codable {
         case tag
         case pin
     }
+    
 }
 
 extension AddressRequest {
-
+    
     var fullAddress: String {
         return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
-
+    
 }
-
-

@@ -1,6 +1,6 @@
 import Foundation
 
-struct VerificationResponse: Codable {
+public struct VerificationResponse: Codable {
 
     let type: String
     let id: String
@@ -11,4 +11,5 @@ struct VerificationResponse: Codable {
         case id
         case hasEmergencyContact = "has_emergency_contact"
     }
+    
 }

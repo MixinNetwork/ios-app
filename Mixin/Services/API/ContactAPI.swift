@@ -1,14 +1,14 @@
 import UIKit
 
-class ContactAPI: BaseAPI {
+public class ContactAPI: BaseAPI {
 
-    static let shared = ContactAPI()
+    public static let shared = ContactAPI()
 
     enum url {
         static let contacts = "friends"
     }
 
-    func syncContacts() {
+    public func syncContacts() {
         request(method: .get, url: url.contacts) { (result: APIResult<[UserResponse]>) in
             switch result {
             case let .success(contacts):

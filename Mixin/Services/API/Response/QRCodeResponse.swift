@@ -1,6 +1,6 @@
 import Foundation
 
-struct QRCodeResponse: Encodable {
+public struct QRCodeResponse: Encodable {
 
     let type: String
     var user: UserResponse? = nil
@@ -8,11 +8,12 @@ struct QRCodeResponse: Encodable {
     var authorization: AuthorizationResponse? = nil
     var multisig: MultisigResponse? = nil
     var payment: PaymentCodeResponse? = nil
+    
 }
 
 extension QRCodeResponse: Decodable {
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = container.getString(key: .type)
         switch type {

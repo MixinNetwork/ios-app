@@ -276,7 +276,7 @@ extension CallManager {
                     vibrator.startVibrating()
                     playRingtone(usesSpeaker: true)
                 } else if isNotificationAuthorized {
-                    UNUserNotificationCenter.current().sendCallNotification(callerName: user.fullName)
+                    NotificationManager.shared.requestCallNotification(messageId: data.messageId, callerName: user.fullName)
                     vibrator.startVibrating()
                     playRingtone(usesSpeaker: true)
                 }

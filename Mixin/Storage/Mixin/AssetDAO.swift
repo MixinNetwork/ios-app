@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class AssetDAO {
+public final class AssetDAO {
 
     static let shared = AssetDAO()
 

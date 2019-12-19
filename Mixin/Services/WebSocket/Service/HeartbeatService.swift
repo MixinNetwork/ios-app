@@ -1,7 +1,7 @@
 import Foundation
 import Starscream
 
-class HeartbeatService {
+internal class HeartbeatService {
     
     var onOffline: (() -> Void)?
     

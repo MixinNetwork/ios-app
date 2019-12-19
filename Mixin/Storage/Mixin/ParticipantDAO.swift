@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-final class ParticipantDAO {
+public final class ParticipantDAO {
 
     static let shared = ParticipantDAO()
 

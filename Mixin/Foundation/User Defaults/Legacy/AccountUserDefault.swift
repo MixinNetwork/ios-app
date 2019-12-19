@@ -1,6 +1,6 @@
 import Foundation
 
-class AccountUserDefault {
+internal class AccountUserDefault {
 
     private let keyAccount = "Account"
     private let keySessionSecret = "session_secret"

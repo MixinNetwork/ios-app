@@ -1,10 +1,10 @@
 import Foundation
 import WCDBSwift
 
-struct Album: BaseCodable {
-
+public struct Album: BaseCodable {
+    
     static var tableName: String = "albums"
-
+    
     let albumId: String
     let name: String
     let iconUrl: String
@@ -13,9 +13,9 @@ struct Album: BaseCodable {
     let userId: String
     let category: String
     let description: String
-
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Album
+    
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Album
         case albumId = "album_id"
         case name
         case iconUrl = "icon_url"
@@ -24,16 +24,17 @@ struct Album: BaseCodable {
         case userId = "user_id"
         case category
         case description
-
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
                 albumId: ColumnConstraintBinding(isPrimary: true)
             ]
         }
     }
-
+    
 }
+
 enum AlbumCategory: String {
     case PERSONAL
     case SYSTEM

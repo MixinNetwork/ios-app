@@ -1,6 +1,6 @@
 import Foundation
 
-class WalletUserDefault {
+internal class WalletUserDefault {
 
     static let shared = WalletUserDefault()
 

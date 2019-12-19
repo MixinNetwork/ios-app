@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-final class AppDAO {
+public final class AppDAO {
 
     static let shared = AppDAO()
     static let sqlQueryColumns = "a.app_id, a.app_number, a.redirect_uri, u.full_name, a.icon_url, a.capabilites, a.home_uri, a.creator_id"

@@ -2,7 +2,7 @@ import Foundation
 import WCDBSwift
 import SDWebImage
 
-struct StickerItem: TableCodable, BaseCodable {
+public struct StickerItem: TableCodable, BaseCodable {
     
     static var tableName: String = "stickers"
     
@@ -24,9 +24,9 @@ struct StickerItem: TableCodable, BaseCodable {
         return stickerLoadContext(persistent: shouldCachePersistently)
     }
     
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = StickerItem
-        static var objectRelationalMapping = TableBinding(CodingKeys.self)
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = StickerItem
+        public static var objectRelationalMapping = TableBinding(CodingKeys.self)
         
         case stickerId = "sticker_id"
         case name

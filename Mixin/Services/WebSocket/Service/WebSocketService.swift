@@ -3,7 +3,7 @@ import Alamofire
 import Starscream
 import Gzip
 
-class WebSocketService {
+public class WebSocketService {
     
     static let didConnectNotification = Notification.Name("one.mixin.messenger.ws.connect")
     static let didDisconnectNotification = Notification.Name("one.mixin.messenger.ws.disconnect")
@@ -130,7 +130,7 @@ class WebSocketService {
 
 extension WebSocketService: WebSocketDelegate {
     
-    func websocketDidConnect(socket: WebSocketClient) {
+    public func websocketDidConnect(socket: WebSocketClient) {
         guard status == .connecting else {
             return
         }
@@ -173,7 +173,7 @@ extension WebSocketService: WebSocketDelegate {
         }
     }
     
-    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         if let error = error, NetworkManager.shared.isReachable {
             Reporter.report(error: error)
             if let error = error as? WSError, error.type == .writeTimeoutError {
@@ -185,11 +185,11 @@ extension WebSocketService: WebSocketDelegate {
         }
     }
     
-    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         
     }
     
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         guard status == .connected else {
             return
         }

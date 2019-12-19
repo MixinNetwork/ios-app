@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class SnapshotDAO {
+public final class SnapshotDAO {
 
     private static let sqlQueryTable = """
     SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number

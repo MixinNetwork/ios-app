@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class ResendSessionMessageDAO {
+public final class ResendSessionMessageDAO {
 
     static let shared = ResendSessionMessageDAO()
 

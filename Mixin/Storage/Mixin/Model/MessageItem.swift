@@ -1,7 +1,7 @@
 import WCDBSwift
 
-class MessageItem: TableCodable {
-
+public class MessageItem: TableCodable {
+    
     static let jsonDecoder = JSONDecoder()
     
     var messageId: String = ""
@@ -29,22 +29,22 @@ class MessageItem: TableCodable {
     var name: String? = nil
     var stickerId: String? = nil
     var createdAt: String = ""
-
+    
     var actionName: String? = nil
-
+    
     var userFullName: String = ""
     var userIdentityNumber: String = ""
     var userAvatarUrl: String? = nil
     
     var appId: String? = nil
-
+    
     var snapshotAmount: String? = nil
     var snapshotAssetId: String? = nil
     var snapshotType: String = ""
-
+    
     var participantFullName: String? = nil
     var participantUserId: String? = nil
-
+    
     var assetUrl: String? = nil
     var assetSymbol: String? = nil
     
@@ -52,21 +52,21 @@ class MessageItem: TableCodable {
     var assetWidth: Int? = nil
     var assetHeight: Int? = nil
     var assetCategory: String? = nil
-
+    
     var sharedUserId: String? = nil
     var sharedUserFullName: String = ""
     var sharedUserIdentityNumber: String = ""
     var sharedUserAvatarUrl: String = ""
     var sharedUserAppId: String = ""
     var sharedUserIsVerified: Bool = false
-
+    
     var quoteMessageId: String? = nil
     var quoteContent: Data? = nil
-
+    
     var userIsBot: Bool {
         return !(appId?.isEmpty ?? true)
     }
-
+    
     lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
             return nil
@@ -112,21 +112,25 @@ class MessageItem: TableCodable {
             return ""
         }
     }()
-
+    
     var isExtensionMessage: Bool {
         return category == MessageCategory.EXT_UNREAD.rawValue || category == MessageCategory.EXT_ENCRYPTION.rawValue
     }
-
+    
     var isSystemMessage: Bool {
         return category == MessageCategory.SYSTEM_CONVERSATION.rawValue
     }
-
+    
     init() {
         
     }
-
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = MessageItem
+    
+    public enum CodingKeys: String, CodingTableKey {
+        
+        public typealias Root = MessageItem
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
         case messageId = "id"
         case conversationId = "conversation_id"
         case userId = "user_id"
@@ -152,20 +156,20 @@ class MessageItem: TableCodable {
         case name
         case stickerId = "sticker_id"
         case createdAt = "created_at"
-
+        
         case userFullName
         case userIdentityNumber
         case userAvatarUrl
         
         case appId
-
+        
         case participantFullName
         case participantUserId
-
+        
         case snapshotAmount
         case snapshotAssetId
         case snapshotType
-
+        
         case assetSymbol
         case assetIcon
         
@@ -175,23 +179,23 @@ class MessageItem: TableCodable {
         case assetCategory
         
         case actionName
-
+        
         case sharedUserId
         case sharedUserFullName
         case sharedUserIdentityNumber
         case sharedUserAvatarUrl
         case sharedUserAppId
         case sharedUserIsVerified
-
+        
         case quoteMessageId = "quote_message_id"
         case quoteContent = "quote_content"
-
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
     }
+    
 }
 
 extension MessageItem {
-
+    
     static func createMessage(category: String, conversationId: String, createdAt: String) -> MessageItem {
         let message = MessageItem()
         message.messageId = UUID().uuidString.lowercased()
@@ -201,11 +205,11 @@ extension MessageItem {
         message.createdAt = createdAt
         return message
     }
-
+    
 }
 
 extension MessageItem {
-
+    
     func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
         guard userId != AccountAPI.shared.accountUserId else {
             return false
@@ -215,7 +219,7 @@ extension MessageItem {
         }
         return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
     }
-
+    
     func canRecall() -> Bool {
         guard userId == AccountAPI.shared.accountUserId, status != MessageStatus.SENDING.rawValue else {
             return false
@@ -226,7 +230,8 @@ extension MessageItem {
         guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {
             return false
         }
-
+        
         return true
     }
+    
 }

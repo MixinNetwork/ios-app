@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class AssetItem: TableCodable, NumberStringLocalizable {
+public class AssetItem: TableCodable, NumberStringLocalizable {
     
     let assetId: String
     let type: String
@@ -22,10 +22,12 @@ class AssetItem: TableCodable, NumberStringLocalizable {
     let assetKey: String
     let chainName: String?
     
-    enum CodingKeys: String, CodingTableKey {
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
+    public enum CodingKeys: String, CodingTableKey {
         
-        typealias Root = AssetItem
+        public typealias Root = AssetItem
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
         case assetId = "asset_id"
         case type
         case symbol
@@ -42,6 +44,7 @@ class AssetItem: TableCodable, NumberStringLocalizable {
         case confirmations
         case assetKey = "asset_key"
         case chainName = "chain_name"
+        
     }
     
     lazy var localizedBalance = localizedNumberString(balance)
@@ -114,13 +117,14 @@ extension AssetItem {
 }
 
 extension AssetItem {
-
+    
     var isUseTag: Bool {
         // XRP 23dfb5a5-5d7b-48b6-905f-3970e3176e27
         return assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     }
-
+    
     var memoLabel: String {
         return isUseTag ? R.string.localizable.wallet_address_tag() : R.string.localizable.wallet_address_memo()
     }
+    
 }

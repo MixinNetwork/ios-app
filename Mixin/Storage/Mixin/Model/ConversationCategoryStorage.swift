@@ -1,15 +1,15 @@
 import Foundation
 import WCDBSwift
 
-struct ConversationCategoryStorage: TableCodable {
+public struct ConversationCategoryStorage: TableCodable {
 
     let category: String
     let mediaSize: Int64
     let messageCount: Int
 
-    enum CodingKeys: String, CodingTableKey {
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        typealias Root = ConversationCategoryStorage
+    public enum CodingKeys: String, CodingTableKey {
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public typealias Root = ConversationCategoryStorage
 
         case category
         case mediaSize

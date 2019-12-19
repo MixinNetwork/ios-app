@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct Asset: BaseCodable {
+public struct Asset: BaseCodable {
 
     static var tableName: String = "assets"
     static let topAssetsTableName = "top_assets"
@@ -21,8 +21,18 @@ struct Asset: BaseCodable {
     let confirmations: Int
     let assetKey: String
 
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Asset
+    public enum CodingKeys: String, CodingTableKey {
+        
+        public typealias Root = Asset
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+            return [
+                assetId: ColumnConstraintBinding(isPrimary: true)
+            ]
+        }
+        
         case assetId = "asset_id"
         case type
         case symbol
@@ -37,14 +47,9 @@ struct Asset: BaseCodable {
         case chainId = "chain_id"
         case confirmations
         case assetKey = "asset_key"
-
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                assetId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
+        
     }
+    
 }
 
 extension Asset {

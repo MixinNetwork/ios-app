@@ -1,6 +1,6 @@
 import Foundation
 
-class CommonUserDefault {
+internal class CommonUserDefault {
 
     static let shared = CommonUserDefault()
     

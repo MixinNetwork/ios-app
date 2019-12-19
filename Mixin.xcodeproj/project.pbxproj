@@ -1804,7 +1804,7 @@
 		27567B891FBC48C30026CC92 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				DF5CDA78205005EE004A52BA /* Database */,
+				DF503D3D1FED05F600C008E7 /* Store */,
 				7B61EB8A209787DD001C1985 /* Attachment */,
 				27B84EE41FCDA34A0081DD12 /* MD5Digest.swift */,
 				27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */,
@@ -2394,7 +2394,7 @@
 			path = Mixin;
 			sourceTree = "<group>";
 		};
-		DF503D3D1FED05F600C008E7 /* Signal */ = {
+		DF503D3D1FED05F600C008E7 /* Store */ = {
 			isa = PBXGroup;
 			children = (
 				DF503D3E1FED060900C008E7 /* MixinIdentityKeyStore.swift */,
@@ -2403,7 +2403,7 @@
 				DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */,
 				DF503D481FED200300C008E7 /* MixinSessionStore.swift */,
 			);
-			path = Signal;
+			path = Store;
 			sourceTree = "<group>";
 		};
 		DF53BB6620233647002BF028 /* Views */ = {
@@ -2443,7 +2443,7 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		DF5CDA78205005EE004A52BA /* Database */ = {
+		DF5CDA78205005EE004A52BA /* Signal */ = {
 			isa = PBXGroup;
 			children = (
 				DF5CDA75204FEBC6004A52BA /* Model */,
@@ -2456,7 +2456,7 @@
 				DF503D391FECFA5800C008E7 /* SignedPreKeyDAO.swift */,
 				DF503D3B1FECFD9800C008E7 /* SignalDatabase.swift */,
 			);
-			path = Database;
+			path = Signal;
 			sourceTree = "<group>";
 		};
 		DF5D9F121F9C53920036D5FD /* Extension */ = {
@@ -3208,7 +3208,7 @@
 		E07E38A223A7731D0005A538 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				DF503D3D1FED05F600C008E7 /* Signal */,
+				DF5CDA78205005EE004A52BA /* Signal */,
 				DF3C47481FA0BC9A00A07C71 /* Mixin */,
 				DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */,
 				DFD659C520501858000696B0 /* BaseDatabase.swift */,

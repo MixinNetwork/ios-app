@@ -1,7 +1,7 @@
 import WCDBSwift
 import UIKit
 
-final class MessageDAO {
+public final class MessageDAO {
     
     enum UserInfoKey {
         static let conversationId = "conv_id"

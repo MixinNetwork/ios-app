@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class AlbumDAO {
+public class AlbumDAO {
 
     private static let sqlQueryAlbumByStickerId = """
     SELECT a.album_id, a.name, a.icon_url, a.created_at, a.update_at, a.user_id, a.category, a.description FROM albums a

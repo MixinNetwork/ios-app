@@ -1,6 +1,6 @@
 import WCDBSwift
 
-struct FavoriteApp: BaseCodable {
+public struct FavoriteApp: BaseCodable {
     
     static let tableName: String = "favorite_apps"
     
@@ -12,17 +12,17 @@ struct FavoriteApp: BaseCodable {
 
 extension FavoriteApp {
     
-    enum CodingKeys: String, CodingTableKey {
+    public enum CodingKeys: String, CodingTableKey {
         
-        typealias Root = FavoriteApp
+        public typealias Root = FavoriteApp
         
         case userId = "user_id"
         case appId = "app_id"
         case createdAt = "created_at"
         
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
         
-        static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
+        public static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
             return  [
                 "_multi_primary": MultiPrimaryBinding(indexesBy: userId, appId)
             ]

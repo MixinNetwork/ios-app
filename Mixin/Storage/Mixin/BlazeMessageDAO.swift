@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class BlazeMessageDAO {
+public final class BlazeMessageDAO {
 
     static let shared = BlazeMessageDAO()
 

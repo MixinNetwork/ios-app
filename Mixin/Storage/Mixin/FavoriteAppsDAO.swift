@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class FavoriteAppsDAO {
+public final class FavoriteAppsDAO {
     
     static let shared = FavoriteAppsDAO()
     

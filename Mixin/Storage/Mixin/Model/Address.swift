@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct Address: BaseCodable {
+public struct Address: BaseCodable {
     
     static let tableName = "addresses"
     
@@ -16,8 +16,18 @@ struct Address: BaseCodable {
     let dust: String
     let updatedAt: String
     
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Address
+    public enum CodingKeys: String, CodingTableKey {
+        
+        public typealias Root = Address
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+            return [
+                addressId: ColumnConstraintBinding(isPrimary: true)
+            ]
+        }
+        
         case type
         case addressId = "address_id"
         case assetId = "asset_id"
@@ -29,12 +39,6 @@ struct Address: BaseCodable {
         case dust
         case updatedAt = "updated_at"
         
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                addressId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
     }
     
 }

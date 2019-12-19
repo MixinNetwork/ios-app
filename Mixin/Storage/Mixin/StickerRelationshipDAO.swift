@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class StickerRelationshipDAO {
+public final class StickerRelationshipDAO {
 
     static let shared = StickerRelationshipDAO()
 

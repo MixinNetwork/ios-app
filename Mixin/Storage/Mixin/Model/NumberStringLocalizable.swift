@@ -1,9 +1,9 @@
 
-protocol NumberStringLocalizable {
+public protocol NumberStringLocalizable {
     func localizedNumberString(_ str: String) -> String
 }
 
-extension NumberStringLocalizable {
+public extension NumberStringLocalizable {
     
     func localizedNumberString(_ str: String) -> String {
         if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {

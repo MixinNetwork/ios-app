@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class StickerDAO {
+public final class StickerDAO {
     
     private static let sqlQueryColumns = """
     SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category

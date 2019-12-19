@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class ConversationStorageUsage: TableCodable {
+public class ConversationStorageUsage: TableCodable {
 
     var conversationId: String = ""
     var ownerId: String = ""
@@ -16,9 +16,9 @@ class ConversationStorageUsage: TableCodable {
 
     var mediaSize: Int64 = 0
 
-    enum CodingKeys: String, CodingTableKey {
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        typealias Root = ConversationStorageUsage
+    public enum CodingKeys: String, CodingTableKey {
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public typealias Root = ConversationStorageUsage
 
         case conversationId
         case ownerId

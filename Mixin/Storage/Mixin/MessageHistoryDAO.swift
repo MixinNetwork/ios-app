@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class MessageHistoryDAO {
+public final class MessageHistoryDAO {
 
     static let shared = MessageHistoryDAO()
 

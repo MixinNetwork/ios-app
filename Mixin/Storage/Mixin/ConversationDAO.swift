@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class ConversationDAO {
+public final class ConversationDAO {
 
     static let shared = ConversationDAO()
 

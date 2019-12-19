@@ -1,7 +1,7 @@
 import Foundation
 import UserNotifications
 
-extension UNNotificationContent {
+public extension UNNotificationContent {
     
     enum UserInfoKey {
         static let conversationId = "mixin_conv_id"
@@ -16,7 +16,7 @@ extension UNNotificationContent {
     
 }
 
-extension UserItem {
+public extension UserItem {
     
     var notificationUserInfo: [String: String] {
         var userInfo = [
@@ -48,7 +48,7 @@ extension UserItem {
     
 }
 
-extension UNMutableNotificationContent {
+public extension UNMutableNotificationContent {
     
     convenience init(message: MessageItem, ownerUser: UserItem?, conversation: ConversationItem) {
         self.init()
@@ -85,7 +85,7 @@ extension UNMutableNotificationContent {
     
 }
 
-extension UNMutableNotificationContent {
+fileprivate extension UNMutableNotificationContent {
     
     private func messagePreview(conversationIsGroup: Bool, isRepresentativeMessage: Bool, message: MessageItem) -> String {
         if message.category.hasSuffix("_TEXT") {

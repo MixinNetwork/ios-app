@@ -1,6 +1,6 @@
 import Foundation
 
-class CryptoUserDefault {
+internal class CryptoUserDefault {
 
     static let shared = CryptoUserDefault()
     private let mediumMaxValue: UInt32 = UInt32.max / 2

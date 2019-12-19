@@ -1,10 +1,10 @@
 import Foundation
 import WCDBSwift
 
-struct Snapshot: BaseCodable {
-
+public struct Snapshot: BaseCodable {
+    
     static var tableName: String = "snapshots"
-
+    
     let snapshotId: String
     let type: String
     let assetId: String
@@ -17,9 +17,9 @@ struct Snapshot: BaseCodable {
     let confirmations: Int?
     let traceId: String?
     var createdAt: String
-
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Snapshot
+    
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Snapshot
         case snapshotId = "snapshot_id"
         case type
         case assetId = "asset_id"
@@ -32,9 +32,9 @@ struct Snapshot: BaseCodable {
         case confirmations
         case traceId = "trace_id"
         case createdAt = "created_at"
-
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
                 snapshotId: ColumnConstraintBinding(isPrimary: true)
             ]
@@ -89,7 +89,7 @@ struct Snapshot: BaseCodable {
             }
         }
     }
-
+    
 }
 
 enum SnapshotType: String, CaseIterable {

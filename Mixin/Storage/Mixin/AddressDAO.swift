@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-final class AddressDAO {
+public final class AddressDAO {
     
     static let shared = AddressDAO()
     

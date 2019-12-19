@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-final class JobDAO {
+public final class JobDAO {
 
     static let shared = JobDAO()
 

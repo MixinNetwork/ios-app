@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class ParticipantSessionDAO {
+public final class ParticipantSessionDAO {
 
     private let sqlQueryParticipantUsers = """
     SELECT p.* FROM participant_session p

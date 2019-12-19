@@ -2,7 +2,7 @@ import Foundation
 import UserNotifications
 import UIKit
 
-extension UNUserNotificationCenter {
+public extension UNUserNotificationCenter {
     
     func removeNotifications(withIdentifiers identifiers: [String]) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)

@@ -1,6 +1,6 @@
 import Foundation
 
-struct MixinFile {
+internal struct MixinFile {
     
     enum ChatDirectory: String {
         case photos = "Photos"

@@ -1,6 +1,6 @@
 import WCDBSwift
 
-final class TopAssetsDAO {
+public final class TopAssetsDAO {
     
     static let shared = TopAssetsDAO()
     static let didChangeNotification = Notification.Name(rawValue: "one.mixin.ios.top.assets.change")

@@ -1,6 +1,6 @@
 import Foundation
 
-class DatabaseUserDefault {
+internal class DatabaseUserDefault {
 
     static let shared = DatabaseUserDefault()
 

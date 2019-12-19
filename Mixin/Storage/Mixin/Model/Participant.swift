@@ -1,25 +1,25 @@
 import WCDBSwift
 
-struct Participant: BaseCodable {
-
+public struct Participant: BaseCodable {
+    
     static var tableName: String = "participants"
-
+    
     let conversationId: String
     let userId: String
     let role: String
     let status: Int
     let createdAt: String
-
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Participant
+    
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Participant
         case conversationId = "conversation_id"
         case userId = "user_id"
         case role
         case status
         case createdAt = "created_at"
-
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
             return  [
                 "_multi_primary": MultiPrimaryBinding(indexesBy: conversationId, userId)
             ]

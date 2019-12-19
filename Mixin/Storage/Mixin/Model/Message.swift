@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct Message: BaseCodable {
+public struct Message: BaseCodable {
 
     static var tableName: String = "messages"
 
@@ -35,8 +35,33 @@ struct Message: BaseCodable {
     var quoteContent: Data? = nil
     var createdAt: String
 
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Message
+    public enum CodingKeys: String, CodingTableKey {
+        
+        public typealias Root = Message
+        
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+            return [
+                messageId: ColumnConstraintBinding(isPrimary: true)
+            ]
+        }
+        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
+            return [
+                "_category_indexs": IndexBinding(indexesBy: [category, status]),
+                "_pending_indexs": IndexBinding(indexesBy: [userId, status, createdAt]),
+                "_page_indexs": IndexBinding(indexesBy: [conversationId, createdAt]),
+                "_user_indexs": IndexBinding(indexesBy: [conversationId, userId, createdAt]),
+                "_unread_indexs": IndexBinding(indexesBy: [conversationId, status, createdAt])
+            ]
+        }
+        public static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
+            let foreignKey = ForeignKey(withForeignTable: Conversation.tableName, and: conversationId).onDelete(.cascade)
+            return [
+                "_foreign_key_constraint": ForeignKeyBinding(conversationId, foreignKey: foreignKey)
+            ]
+        }
+        
         case messageId = "id"
         case conversationId = "conversation_id"
         case userId = "user_id"
@@ -67,28 +92,8 @@ struct Message: BaseCodable {
         case quoteContent = "quote_content"
         case createdAt = "created_at"
 
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                messageId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
-            return [
-                "_category_indexs": IndexBinding(indexesBy: [category, status]),
-                "_pending_indexs": IndexBinding(indexesBy: [userId, status, createdAt]),
-                "_page_indexs": IndexBinding(indexesBy: [conversationId, createdAt]),
-                "_user_indexs": IndexBinding(indexesBy: [conversationId, userId, createdAt]),
-                "_unread_indexs": IndexBinding(indexesBy: [conversationId, status, createdAt])
-            ]
-        }
-        static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
-            let foreignKey = ForeignKey(withForeignTable: Conversation.tableName, and: conversationId).onDelete(.cascade)
-            return [
-                "_foreign_key_constraint": ForeignKeyBinding(conversationId, foreignKey: foreignKey)
-            ]
-        }
     }
+    
 }
 
 extension Message {
@@ -240,7 +245,7 @@ enum MessageCategory: String {
     }
 }
 
-enum MessageStatus: String, Codable {
+public enum MessageStatus: String, Codable {
     case SENDING
     case SENT
     case DELIVERED
@@ -266,7 +271,7 @@ enum MessageStatus: String, Codable {
     }
 }
 
-enum MediaStatus: String {
+public enum MediaStatus: String {
     case PENDING
     case DONE
     case CANCELED

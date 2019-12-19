@@ -10,6 +10,8 @@ class MixinService {
     
     static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.ios.will.recall.msg")
     
+    static var callMessageCoordinator: CallMessageCoordinator!
+    
     var processing = false
     let jsonDecoder = JSONDecoder()
     let jsonEncoder = JSONEncoder()

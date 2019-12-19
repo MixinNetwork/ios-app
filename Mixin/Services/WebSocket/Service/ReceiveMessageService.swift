@@ -3,10 +3,22 @@ import UIKit
 import SDWebImage
 import UserNotifications
 
+protocol CallMessageCoordinator: class {
+    var hasActiveCall: Bool { get }
+    func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
+}
+
 class ReceiveMessageService: MixinService {
-
+    
     static let shared = ReceiveMessageService()
-
+    static let completeCallCategories: [MessageCategory] = [
+        .WEBRTC_AUDIO_END,
+        .WEBRTC_AUDIO_BUSY,
+        .WEBRTC_AUDIO_CANCEL,
+        .WEBRTC_AUDIO_FAILED,
+        .WEBRTC_AUDIO_DECLINE
+    ]
+    
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive")
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
@@ -18,6 +30,7 @@ class ReceiveMessageService: MixinService {
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
+            assert(MixinService.callMessageCoordinator != nil)
             guard AccountAPI.shared.didLogin else {
                 return
             }
@@ -131,14 +144,15 @@ class ReceiveMessageService: MixinService {
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= CallManager.unansweredTimeoutInterval {
+                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
                     let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
                 } else {
                     let workItem = DispatchWorkItem(block: {
-                        CallManager.shared.handleIncomingBlazeMessageData(data)
+                        let handler = MixinService.callMessageCoordinator.handleIncomingBlazeMessageData
+                        handler(data)
                         self.listPendingCallWorkItems.removeValue(forKey: data.messageId)
-                        self.listPendingCandidates[data.messageId]?.forEach(CallManager.shared.handleIncomingBlazeMessageData)
+                        self.listPendingCandidates[data.messageId]?.forEach(handler)
                         self.listPendingCandidates = [:]
                     })
                     listPendingCallWorkItems[data.messageId] = workItem
@@ -152,7 +166,7 @@ class ReceiveMessageService: MixinService {
                     } else {
                         listPendingCandidates[data.quoteMessageId]!.append(data)
                     }
-                } else if CallManager.completeCallCategories.contains(category) {
+                } else if Self.completeCallCategories.contains(category) {
                     workItem.cancel()
                     listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
                     listPendingCandidates.removeValue(forKey: data.quoteMessageId)
@@ -164,10 +178,10 @@ class ReceiveMessageService: MixinService {
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
                 }
             } else {
-                CallManager.shared.handleIncomingBlazeMessageData(data)
+                MixinService.callMessageCoordinator.handleIncomingBlazeMessageData(data)
             }
         } else {
-            CallManager.shared.handleIncomingBlazeMessageData(data)
+            MixinService.callMessageCoordinator.handleIncomingBlazeMessageData(data)
         }
     }
     

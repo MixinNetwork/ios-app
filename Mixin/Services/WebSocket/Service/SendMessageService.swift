@@ -606,7 +606,7 @@ extension SendMessageService {
         let onlySendWhenThereIsAnActiveCall = blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
             || blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue
             || blazeMessage.params?.category == MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue
-        guard CallManager.shared.call != nil || !onlySendWhenThereIsAnActiveCall else {
+        guard MixinService.callMessageCoordinator.hasActiveCall || !onlySendWhenThereIsAnActiveCall else {
             return
         }
         guard let conversationId = blazeMessage.params?.conversationId else {

@@ -6,7 +6,6 @@ import UserNotifications
 class CallManager {
     
     static let shared = CallManager()
-    static let unansweredTimeoutInterval: TimeInterval = 60
     
     private let rtcClient = WebRTCClient()
     private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
@@ -161,6 +160,14 @@ class CallManager {
         }
     }
     
+}
+
+extension CallManager: CallMessageCoordinator {
+    
+    var hasActiveCall: Bool {
+        call != nil
+    }
+    
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
         queue.async {
             switch data.category {
@@ -186,14 +193,6 @@ class CallManager {
 }
 
 extension CallManager {
-    
-    static let completeCallCategories: [MessageCategory] = [
-        .WEBRTC_AUDIO_END,
-        .WEBRTC_AUDIO_BUSY,
-        .WEBRTC_AUDIO_CANCEL,
-        .WEBRTC_AUDIO_FAILED,
-        .WEBRTC_AUDIO_DECLINE
-    ]
     
     private static let callObserver = CXCallObserver()
     
@@ -305,7 +304,7 @@ extension CallManager {
                     }
                 }
             }
-        } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
+        } else if let category = MessageCategory(rawValue: data.category), ReceiveMessageService.completeCallCategories.contains(category) {
             ringtonePlayer?.stop()
             DispatchQueue.main.sync {
                 view.style = .disconnecting
@@ -416,7 +415,7 @@ extension CallManager {
             let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
             let conversationId = call.conversationId
             self.call = call
-            let timer = Timer(timeInterval: CallManager.unansweredTimeoutInterval,
+            let timer = Timer(timeInterval: callTimeoutInterval,
                               target: self,
                               selector: #selector(self.unansweredTimeout),
                               userInfo: nil,

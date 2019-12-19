@@ -6,17 +6,16 @@ extension UIColor {
     static let secondaryBackground = R.color.background_secondary()!
     static let tertiaryBackground = R.color.background_tertiary()!
     static let selectionBackground = R.color.background_selection()!
-    static let mixinBlue = R.color.blue()!
     static let mixinGreen = R.color.green()!
     static let mixinRed = R.color.red()!
     static let title = R.color.title()!
     static let text = R.color.text()!
-    static let text2 = R.color.text_2()!
-    static let text3 = R.color.text_3()!
-    static let text4 = R.color.text_4()!
-    
-    static let theme = UIColor(rgbValue: 0x397EE4)
-    static let darkTheme = UIColor(rgbValue: 0x0CAAF5)
+    static let theme = R.color.theme()!
+
+    static let accessoryText = R.color.text_accessory()!
+    static let highlightedText = R.color.theme()!
+    static let shadow = R.color.table_shadow()!
+
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
     static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
@@ -26,12 +25,10 @@ extension UIColor {
     static let systemTint = UIColor(rgbValue: 0x007AFF)
     static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
-    static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
-    static let darkText = R.color.dark_text()!
+//    static let darkText = R.color.dark_text()!
     static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
-    static let highlightedText = R.color.highlighted_text()!
     static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
-    static let shadow = R.color.table_shadow()!
+
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)

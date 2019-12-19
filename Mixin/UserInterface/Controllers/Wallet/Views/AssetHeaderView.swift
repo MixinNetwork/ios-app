@@ -16,7 +16,7 @@ class AssetHeaderView: UITableViewHeaderFooterView {
     }
     
     private func prepare() {
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .background
         clipsToBounds = true
         label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontForContentSizeCategory = true

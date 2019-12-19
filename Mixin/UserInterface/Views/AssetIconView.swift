@@ -75,9 +75,6 @@ class AssetIconView: UIView {
         addSubview(chainBackgroundView)
         addSubview(chainImageView)
         updateShadowPath(chainIconIsHidden: false)
-        layer.shadowColor = R.color.shadow()!.cgColor
-        layer.shadowOpacity = 0.2
-        layer.shadowRadius = 6
     }
     
     private func updateShadowPath(chainIconIsHidden: Bool) {

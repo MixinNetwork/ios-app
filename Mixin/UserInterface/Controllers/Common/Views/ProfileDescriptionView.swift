@@ -15,7 +15,8 @@ final class ProfileDescriptionView: UIView {
     }
     
     private func prepare() {
-        label.backgroundColor = .white
+        label.textColor = .text
+        label.backgroundColor = .clear
         addSubview(label)
         let inset = UIEdgeInsets(top: 6, left: 28, bottom: 6, right: 28)
         label.snp.makeConstraints { (make) in

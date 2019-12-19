@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
-                    <rect key="frame" x="0.0" y="14" width="375" height="666"/>
+                    <rect key="frame" x="0.0" y="-36" width="375" height="716"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -31,7 +32,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="r5O-GW-Vde" secondAttribute="bottom" id="41c-2g-0VJ"/>
                                 <constraint firstAttribute="trailing" secondItem="r5O-GW-Vde" secondAttribute="trailing" id="GYv-Xd-Zdz"/>
@@ -45,10 +46,10 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="c8a-W9-LfK">
-                            <rect key="frame" x="142.5" y="132" width="90" height="94"/>
+                            <rect key="frame" x="74.5" y="132" width="226" height="144"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oH0-FK-y9T" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="129.5" y="461" width="116" height="42"/>
+                            <rect key="frame" x="129.5" y="511" width="116" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="ete-Ss-aOS"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="sc4-jz-UwM"/>
@@ -65,18 +66,18 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTp-rW-A9R">
-                            <rect key="frame" x="50" y="252" width="275" height="43"/>
+                            <rect key="frame" x="50" y="302" width="275" height="43"/>
                             <string key="text">Confirm login to 
 Mixin Messenger Desktop</string>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="desktop_login_confim"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-MT-YrZ">
-                            <rect key="frame" x="136.5" y="533" width="102" height="44"/>
+                            <rect key="frame" x="136.5" y="583" width="102" height="44"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Cancel">
@@ -91,7 +92,7 @@ Mixin Messenger Desktop</string>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="EXJ-y2-8uH" secondAttribute="trailing" id="0Mw-YQ-DUL"/>
                         <constraint firstItem="oH0-FK-y9T" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="Ec7-Lk-pmS"/>
@@ -154,7 +155,13 @@ Mixin Messenger Desktop</string>
         </view>
     </objects>
     <resources>
-        <image name="Setting/ic_desktop" width="90" height="94"/>
+        <image name="Setting/ic_desktop" width="113" height="72"/>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

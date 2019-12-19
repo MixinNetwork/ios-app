@@ -14,7 +14,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var statusImage: UIImage?
     var statusTintColor = UIColor.infoGray
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
-    var fullnameColor = UIColor.darkTheme
+    var fullnameColor = UIColor.text
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
@@ -46,7 +46,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 44
     private let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
-    private let statusHighlightTintColor = UIColor.darkTheme
+    private let statusHighlightTintColor = UIColor.theme
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)

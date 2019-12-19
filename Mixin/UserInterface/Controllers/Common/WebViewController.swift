@@ -80,8 +80,7 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
-        updateBackground(pageThemeColor: .white)
+        updateBackground(pageThemeColor: .background)
         buttonsBackgroundView.layer.borderWidth = 1
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
@@ -271,14 +270,14 @@ class WebViewController: UIViewController {
         let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
         buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
         titleLabel.textColor = themeColorIsDark ? .white : .darkText
-        
-        let tintColor: UIColor = themeColorIsDark ? .white : R.color.web_button()!
+
+        let tintColor: UIColor = themeColorIsDark ? .white : R.color.web_menu_button()!
         moreButton.tintColor = tintColor
         dismissButton.tintColor = tintColor
         
         let outlineColor: UIColor = themeColorIsDark
             ? UIColor.white.withAlphaComponent(0.1)
-            : UIColor.black.withAlphaComponent(0.06)
+            : R.color.web_menu_border()!
         buttonsSeparatorLineView.backgroundColor = outlineColor
         buttonsBackgroundView.layer.borderColor = outlineColor.cgColor
         

@@ -24,7 +24,7 @@
                     <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="search"/>
                 </textField>
             </subviews>
-            <color key="backgroundColor" name="background"/>
+            <color key="backgroundColor" name="text_field"/>
             <constraints>
                 <constraint firstItem="tjo-zD-yNg" firstAttribute="top" secondItem="PuW-kr-XkV" secondAttribute="top" id="8hL-8n-2a1"/>
                 <constraint firstAttribute="trailing" secondItem="tjo-zD-yNg" secondAttribute="trailing" constant="12" id="FxQ-oU-xJH"/>
@@ -41,8 +41,8 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_field">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -94,7 +94,8 @@ final class ProfileRelationshipView: UIView {
         button.backgroundColor = .tertiaryBackground
         button.layer.cornerRadius = 14
         button.clipsToBounds = true
-        button.setTitleColor(.mixinBlue, for: .normal)
+
+        button.setTitleColor(.theme, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 19, bottom: 0, right: 15)

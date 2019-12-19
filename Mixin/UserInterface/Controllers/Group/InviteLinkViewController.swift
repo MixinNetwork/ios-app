@@ -66,7 +66,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_more")
+        return R.image.ic_title_more()
     }
 
     private func revokeLink() {

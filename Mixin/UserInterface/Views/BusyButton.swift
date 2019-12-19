@@ -29,7 +29,7 @@ class BusyButton: UIButton {
     
     private func prepare() {
         busyIndicator.tintColor = .indicatorGray
-        busyIndicator.backgroundColor = .white
+        busyIndicator.backgroundColor = .clear
         busyIndicator.hidesWhenStopped = true
         busyIndicator.stopAnimating()
         addSubview(busyIndicator)

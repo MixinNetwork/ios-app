@@ -20,7 +20,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         clipsToBounds = true
         label = UILabel()
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        label.textColor = .text2
+        label.textColor = .text
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in

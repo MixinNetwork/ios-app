@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,11 +16,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuC-N5-Rgi">
-                    <rect key="frame" x="0.0" y="309.5" width="414" height="599.5"/>
+                    <rect key="frame" x="0.0" y="160.5" width="414" height="748.5"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eUF-TX-avq">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="o6A-Tl-RqM"/>
                             </constraints>
@@ -30,17 +31,17 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="65Q-3F-reP">
-                            <rect key="frame" x="30" y="70" width="354" height="264.5"/>
+                            <rect key="frame" x="30" y="70" width="354" height="413.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EOS Withdrawal" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bma-M8-FfU">
                                     <rect key="frame" x="109" y="0.0" width="136" height="21.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SKu-Fm-v5y">
                                     <rect key="frame" x="57" y="21.5" width="240" height="16"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="16" id="ibW-4P-Qjy"/>
                                     </constraints>
@@ -48,7 +49,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For the first withdraw to the new address, please try a small amount." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rm3-Re-MC5">
                                     <rect key="frame" x="8" y="37.5" width="338" height="38"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                    <color key="textColor" red="0.96470588239999999" green="0.43921568630000002" blue="0.43921568630000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="textColor" name="red"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_withdrawal_address_tips"/>
@@ -56,18 +57,18 @@
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZL-uy-KDo">
                                     <rect key="frame" x="57" y="75.5" width="240" height="40"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="MAG-Nu-cHg"/>
                                     </constraints>
                                 </view>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_withdrawal_tips" translatesAutoresizingMaskIntoConstraints="NO" id="J85-Um-8kl">
-                                    <rect key="frame" x="102" y="115.5" width="150" height="149"/>
+                                    <rect key="frame" x="27" y="115.5" width="300" height="298"/>
                                 </imageView>
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCZ-b5-DO0" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="105.5" y="410.5" width="203" height="42"/>
+                            <rect key="frame" x="105.5" y="559.5" width="203" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="0pe-Si-ppZ"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="3Ng-EL-Ic6"/>
@@ -84,7 +85,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-oD-oU5">
-                            <rect key="frame" x="153.5" y="482.5" width="107" height="40"/>
+                            <rect key="frame" x="153.5" y="631.5" width="107" height="40"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Continue">
@@ -102,7 +103,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="hCZ-b5-DO0" firstAttribute="top" secondItem="65Q-3F-reP" secondAttribute="bottom" constant="76" id="4ez-HI-OWm"/>
                         <constraint firstItem="hCZ-b5-DO0" firstAttribute="centerX" secondItem="fuC-N5-Rgi" secondAttribute="centerX" id="8FP-dx-iRY"/>
@@ -153,5 +154,14 @@
     </objects>
     <resources>
         <image name="ic_withdrawal_tips" width="150" height="149"/>
+        <namedColor name="background">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.23137254901960785" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

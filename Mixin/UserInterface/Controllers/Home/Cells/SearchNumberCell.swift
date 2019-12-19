@@ -8,7 +8,7 @@ class SearchNumberCell: UITableViewCell {
     
     private var numberAttributes: [NSAttributedString.Key: Any] {
         return [.font: UIFont.preferredFont(forTextStyle: .subheadline),
-                .foregroundColor: UIColor.mixinBlue]
+                .foregroundColor: UIColor.theme]
     }
     
     private var prefix: NSAttributedString {

@@ -4,8 +4,8 @@ class AssetCell: ModernSelectedBackgroundCell {
     
     static let height: CGFloat = 74
     static let symbolAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 12, weight: .medium)),
-        .foregroundColor: UIColor.darkText
+        .font: UIFont.scaledFont(ofSize: 12, weight: .medium),
+        .foregroundColor: UIColor.text
     ]
     
     @IBOutlet weak var assetIconView: AssetIconView!

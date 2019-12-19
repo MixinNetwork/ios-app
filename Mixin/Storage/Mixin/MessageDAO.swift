@@ -248,27 +248,27 @@ public final class MessageDAO {
     }
 
     func getPendingMessages() -> [Message] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [AccountAPI.shared.accountUserId])
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [myUserId])
     }
     
     func firstUnreadMessage(conversationId: String) -> Message? {
         guard hasUnreadMessage(conversationId: conversationId) else {
             return nil
         }
-        let myLastMessage: Message? = MixinDatabase.shared.getCodable(condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == AccountAPI.shared.accountUserId,
+        let myLastMessage: Message? = MixinDatabase.shared.getCodable(condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myUserId,
                                                                       orderBy: [Message.Properties.createdAt.asOrder(by: .descending)])
         let lastReadCondition: Condition
         if let myLastMessage = myLastMessage {
             lastReadCondition = Message.Properties.conversationId == conversationId
                 && Message.Properties.category != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.Properties.status == MessageStatus.READ.rawValue
-                && Message.Properties.userId != AccountAPI.shared.accountUserId
+                && Message.Properties.userId != myUserId
                 && Message.Properties.createdAt > myLastMessage.createdAt
         } else {
             lastReadCondition = Message.Properties.conversationId == conversationId
                 && Message.Properties.category != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.Properties.status == MessageStatus.READ.rawValue
-                && Message.Properties.userId != AccountAPI.shared.accountUserId
+                && Message.Properties.userId != myUserId
         }
         let lastReadMessage: Message? = MixinDatabase.shared.getCodable(condition: lastReadCondition,
                                                                         orderBy: [Message.Properties.createdAt.asOrder(by: .descending)])
@@ -276,17 +276,17 @@ public final class MessageDAO {
         if let lastReadMessage = lastReadMessage {
             firstUnreadCondition = Message.Properties.conversationId == conversationId
                 && Message.Properties.status == MessageStatus.DELIVERED.rawValue
-                && Message.Properties.userId != AccountAPI.shared.accountUserId
+                && Message.Properties.userId != myUserId
                 && Message.Properties.createdAt > lastReadMessage.createdAt
         } else if let myLastMessage = myLastMessage {
             firstUnreadCondition = Message.Properties.conversationId == conversationId
                 && Message.Properties.status == MessageStatus.DELIVERED.rawValue
-                && Message.Properties.userId != AccountAPI.shared.accountUserId
+                && Message.Properties.userId != myUserId
                 && Message.Properties.createdAt > myLastMessage.createdAt
         } else {
             firstUnreadCondition = Message.Properties.conversationId == conversationId
                 && Message.Properties.status == MessageStatus.DELIVERED.rawValue
-                && Message.Properties.userId != AccountAPI.shared.accountUserId
+                && Message.Properties.userId != myUserId
         }
         return MixinDatabase.shared.getCodable(condition: firstUnreadCondition,
                                                orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
@@ -447,7 +447,7 @@ public final class MessageDAO {
             
             let bindingCounter = Counter(value: 0)
             cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
-            cs.bind(AccountAPI.shared.accountUserId, toIndex: bindingCounter.advancedValue)
+            cs.bind(myUserId, toIndex: bindingCounter.advancedValue)
             
             while try cs.step() {
                 let counter = Counter(value: -1)
@@ -584,14 +584,14 @@ public final class MessageDAO {
     }
     
     func hasSentMessage(inConversationOf conversationId: String) -> Bool {
-        let myId = AccountAPI.shared.accountUserId
+        let myId = myUserId
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     
     func hasUnreadMessage(conversationId: String) -> Bool {
         let condition: Condition = Message.Properties.conversationId == conversationId
             && Message.Properties.status == MessageStatus.DELIVERED.rawValue
-            && Message.Properties.userId != AccountAPI.shared.accountUserId
+            && Message.Properties.userId != myUserId
         return MixinDatabase.shared.isExist(type: Message.self, condition: condition)
     }
     

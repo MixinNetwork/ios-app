@@ -75,7 +75,7 @@ extension BlazeMessageParam {
         let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messageId: nil, messages: nil, ackMessages: ackMessages)
         self.messageId = UUID().uuidString.lowercased()
         self.conversationId = conversationId
-        self.recipientId = AccountAPI.shared.accountUserId
+        self.recipientId = myUserId
         self.category = MessageCategory.PLAIN_JSON.rawValue
         self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
         self.status = MessageStatus.SENDING.rawValue

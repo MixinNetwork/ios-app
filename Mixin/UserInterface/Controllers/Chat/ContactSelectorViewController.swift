@@ -64,7 +64,7 @@ extension ContactSelectorViewController: ContainerViewControllerDelegate {
             for userId in userIds {
                 var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                                     conversationId: parentConversation.conversationId,
-                                                    userId: AccountAPI.shared.accountUserId)
+                                                    userId: myUserId)
                 message.sharedUserId = userId
                 let transferData = TransferContactData(userId: userId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()

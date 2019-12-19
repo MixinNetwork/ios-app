@@ -126,7 +126,7 @@ class PayWindow: BottomSheetView {
         case let .transfer(_, user, _):
             multisigView.isHidden = true
             let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-            let threshold = AccountAPI.shared.account?.transfer_confirmation_threshold ?? 0
+            let threshold = Account.current?.transfer_confirmation_threshold ?? 0
             if fiatMoneyValue < threshold {
                 showTransferView(user: user, showError: showError, showBiometric: showBiometric)
             } else {
@@ -165,7 +165,7 @@ class PayWindow: BottomSheetView {
                 }
             }
         case let .payment(payment, receivers):
-            guard let account = AccountAPI.shared.account else {
+            guard let account = Account.current else {
                 break
             }
             multisigView.isHidden = false

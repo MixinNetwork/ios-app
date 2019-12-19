@@ -261,9 +261,9 @@ public final class ConversationDAO {
 
     func createConversation(conversationId: String, name: String, members: [GroupUser]) -> Bool {
         let createdAt = Date().toUTCString()
-        let conversation = Conversation(conversationId: conversationId, ownerId: AccountAPI.shared.accountUserId, category: ConversationCategory.GROUP.rawValue, name: name, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: createdAt, lastReadMessageId: nil, unseenMessageCount: 0, status: ConversationStatus.START.rawValue, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
+        let conversation = Conversation(conversationId: conversationId, ownerId: myUserId, category: ConversationCategory.GROUP.rawValue, name: name, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: createdAt, lastReadMessageId: nil, unseenMessageCount: 0, status: ConversationStatus.START.rawValue, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
         var participants = members.map { Participant(conversationId: conversationId, userId: $0.userId, role: "", status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt) }
-        participants.append(Participant(conversationId: conversationId, userId: AccountAPI.shared.accountUserId, role: ParticipantRole.OWNER.rawValue, status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt))
+        participants.append(Participant(conversationId: conversationId, userId: myUserId, role: ParticipantRole.OWNER.rawValue, status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt))
 
         return MixinDatabase.shared.transaction { (db) in
             try db.insert(objects: conversation, intoTable: Conversation.tableName)
@@ -277,7 +277,7 @@ public final class ConversationDAO {
         var participantUsers = [ParticipantUser]()
 
         MixinDatabase.shared.transaction { (db) in
-            try db.insert(objects: Conversation.createConversation(from: response, ownerId: AccountAPI.shared.accountUserId, status: .SUCCESS), intoTable: Conversation.tableName)
+            try db.insert(objects: Conversation.createConversation(from: response, ownerId: myUserId, status: .SUCCESS), intoTable: Conversation.tableName)
 
             let participants = response.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.SUCCESS.rawValue, createdAt: $0.createdAt) }
             try db.insert(objects: participants, intoTable: Participant.tableName)
@@ -294,7 +294,7 @@ public final class ConversationDAO {
         var ownerId = conversation.creatorId
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let ownerParticipant = conversation.participants.first(where: { (participant) -> Bool in
-                return participant.userId != AccountAPI.shared.accountUserId
+                return participant.userId != myUserId
             }) {
                 ownerId = ownerParticipant.userId
             }
@@ -350,7 +350,7 @@ public final class ConversationDAO {
         var ownerId = conversation.creatorId
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let ownerParticipant = conversation.participants.first(where: { (participant) -> Bool in
-                return participant.userId != AccountAPI.shared.accountUserId
+                return participant.userId != myUserId
             }) {
                 ownerId = ownerParticipant.userId
             }

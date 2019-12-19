@@ -27,7 +27,7 @@ struct PendingDeposit: Codable {
                         amount: amount,
                         transactionHash: transactionHash,
                         sender: sender,
-                        opponentId: AccountAPI.shared.accountUserId,
+                        opponentId: myUserId,
                         memo: nil,
                         receiver: nil,
                         confirmations: confirmations,

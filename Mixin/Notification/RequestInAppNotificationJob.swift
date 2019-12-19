@@ -10,7 +10,7 @@ class RequestInAppNotificationJob: BaseJob {
         guard message.status == MessageStatus.DELIVERED.rawValue else {
             return nil
         }
-        guard message.userId != AccountAPI.shared.accountUserId else {
+        guard message.userId != myUserId else {
             return nil
         }
         let availableCategorySuffices = ["_TEXT", "_IMAGE", "_STICKER", "_CONTACT", "_DATA", "_VIDEO", "_LIVE", "_AUDIO"]
@@ -40,7 +40,7 @@ class RequestInAppNotificationJob: BaseJob {
             guard let user = UserDAO.shared.getUser(userId: message.userId) else {
                 return
             }
-            if AccountAPI.shared.account?.receive_message_source == ReceiveMessageSource.contacts.rawValue && user.relationship != Relationship.FRIEND.rawValue {
+            if Account.current?.receive_message_source == ReceiveMessageSource.contacts.rawValue && user.relationship != Relationship.FRIEND.rawValue {
                 return
             }
             ownerUser = user

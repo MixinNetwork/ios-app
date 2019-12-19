@@ -61,7 +61,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         EmergencyAPI.shared.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                Account.current = account
                 self?.showSuccessAlert()
             case .failure(let error):
                 if error.code == 429 {

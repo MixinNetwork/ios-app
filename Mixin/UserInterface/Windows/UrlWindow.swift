@@ -77,7 +77,7 @@ class UrlWindow {
                 return
             }
 
-            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: AccountAPI.shared.accountUserId)
+            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
 
             DispatchQueue.main.async {
                 if isOpenApp {
@@ -202,7 +202,7 @@ class UrlWindow {
     }
 
     class func checkTransferUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
-        guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != AccountAPI.shared.accountUserId else {
+        guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != myUserId else {
             return false
         }
 
@@ -242,7 +242,7 @@ class UrlWindow {
     }
 
     class func checkWithdrawal(url: URL) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard Account.current?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -300,7 +300,7 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard Account.current?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -338,7 +338,7 @@ class UrlWindow {
     }
 
     class func checkAddress(url: URL) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard Account.current?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -605,7 +605,7 @@ extension UrlWindow {
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
         DispatchQueue.global().async {
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
-            let accountUserId = AccountAPI.shared.accountUserId
+            let accountUserId = myUserId
             let conversationId = conversation.conversationId
             let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }

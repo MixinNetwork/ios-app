@@ -811,6 +811,7 @@
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
+		E0B47E7C23AB7DA2009E5738 /* AccountStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */; };
 		E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8AAC423BDA1C700E911CE /* AppButton.swift */; };
 		E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */; };
 		E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */; };
@@ -1676,6 +1677,7 @@
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
+		E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStorage.swift; sourceTree = "<group>"; };
 		E0B8AAC423BDA1C700E911CE /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
 		E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyFavoriteAppProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteAppProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -3201,6 +3203,7 @@
 				DF30D7421FA22CB200683C1A /* WebSocket */,
 				DF5D9F201F9C79110036D5FD /* API */,
 				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
+				E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4057,6 +4060,7 @@
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
+				E0B47E7C23AB7DA2009E5738 /* AccountStorage.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,

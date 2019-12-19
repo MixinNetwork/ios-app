@@ -78,7 +78,7 @@ public class WebSocketService {
     func reconnectIfNeeded() {
         enqueueOperation {
             let shouldReconnect = self.isReachable
-                && AccountAPI.shared.didLogin
+                && isLoggedIn
                 && self.status == .connected
                 && !(self.socket?.isConnected ?? false)
             if shouldReconnect {
@@ -89,7 +89,7 @@ public class WebSocketService {
     
     func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
         return try messageQueue.sync {
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return nil
             }
             var response: BlazeMessage?
@@ -298,7 +298,7 @@ extension WebSocketService {
     
     private func networkBecomesReachable() {
         enqueueOperation {
-            guard self.connectOnNetworkIsReachable, AccountAPI.shared.didLogin else {
+            guard self.connectOnNetworkIsReachable, isLoggedIn else {
                 return
             }
             self.connect()
@@ -322,7 +322,7 @@ extension WebSocketService {
             
             let lastConnectionDate = self.lastConnectionDate ?? .distantPast
             let shouldConnectImmediately = self.isReachable
-                && AccountAPI.shared.didLogin
+                && isLoggedIn
                 && (!self.networkWasRechableOnConnection || -lastConnectionDate.timeIntervalSinceNow >= 1)
             if shouldConnectImmediately {
                 self.connectOnNetworkIsReachable = false

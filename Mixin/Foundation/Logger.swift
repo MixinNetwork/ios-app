@@ -24,7 +24,7 @@ public enum Logger {
     }
     
     public static func write(conversationId: String, log: String, newSection: Bool = false) {
-        guard AccountAPI.shared.didLogin else {
+        guard isLoggedIn else {
             return
         }
         guard !conversationId.isEmpty else {
@@ -70,7 +70,7 @@ public enum Logger {
     
     public static func export(conversationId: String) -> URL? {
         let conversationFile = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
-        let filename = "\(AccountAPI.shared.accountIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
+        let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
         do {
             return try Zip.quickZipFiles([conversationFile], fileName: filename)
         } catch {

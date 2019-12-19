@@ -18,7 +18,7 @@ class UsernameViewController: LoginInfoInputViewController {
             weakSelf.continueButton.isBusy = false
             switch account {
             case let .success(account):
-                AccountAPI.shared.updateAccount(account: account)
+                Account.current = account
                 AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
                 Reporter.report(error: error)

@@ -208,7 +208,7 @@ enum PeriodicPinVerificationInterval {
 
 var backupUrl: URL? {
     FileManager.default.url(forUbiquityContainerIdentifier: nil)?
-        .appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
+        .appendingPathComponent(myIdentityNumber)
         .appendingPathComponent("Backup")
 }
 

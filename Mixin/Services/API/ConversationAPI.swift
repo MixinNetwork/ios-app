@@ -87,7 +87,7 @@ class ConversationAPI : BaseAPI {
     }
 
     func mute(userId: String, duration: Int64, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: userId)
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: userId)
         mute(conversationId: conversationId, duration: duration, completion: completion)
     }
     

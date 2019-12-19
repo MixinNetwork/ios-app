@@ -3,7 +3,7 @@ import UIKit
 class CallMessageViewModel: IconPrefixedTextMessageViewModel {
     
     override var rawContent: String {
-        let isRemote = message.userId != AccountAPI.shared.accountUserId
+        let isRemote = message.userId != myUserId
         switch message.category {
         case MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue:
             return isRemote ? Localized.CHAT_MESSAGE_CALL_REMOTE_CANCELLED : Localized.CHAT_MESSAGE_CALL_CANCELLED

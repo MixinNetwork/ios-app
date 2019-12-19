@@ -99,7 +99,7 @@ public class ConversationItem: TableCodable {
     
     convenience init(ownerUser: UserItem) {
         self.init()
-        conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
+        conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
         name = ownerUser.fullName
         iconUrl = ownerUser.avatarUrl
         ownerId = ownerUser.userId

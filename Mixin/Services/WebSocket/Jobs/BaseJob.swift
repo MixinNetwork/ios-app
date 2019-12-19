@@ -5,7 +5,7 @@ import UIKit
 class BaseJob: Operation {
 
     internal var currentAccountId: String {
-        return AccountAPI.shared.accountUserId
+        return myUserId
     }
     internal let jsonDecoder = JSONDecoder()
     internal let jsonEncoder = JSONEncoder()
@@ -15,7 +15,7 @@ class BaseJob: Operation {
     }
 
     override func main() {
-        guard AccountAPI.shared.didLogin, !isCancelled else {
+        guard isLoggedIn, !isCancelled else {
             return
         }
         repeat {
@@ -34,17 +34,17 @@ class BaseJob: Operation {
                 }
                 Thread.sleep(forTimeInterval: 2)
             }
-        } while AccountAPI.shared.didLogin && !isCancelled
+        } while isLoggedIn && !isCancelled
     }
 
     internal func checkNetworkAndWebSocket() {
         if requireNetwork() {
-            while AccountAPI.shared.didLogin && !NetworkManager.shared.isReachable {
+            while isLoggedIn && !NetworkManager.shared.isReachable {
                 Thread.sleep(forTimeInterval: 3)
             }
         }
         if requireWebSocket() {
-            while AccountAPI.shared.didLogin && !WebSocketService.shared.isConnected {
+            while isLoggedIn && !WebSocketService.shared.isConnected {
                 Thread.sleep(forTimeInterval: 3)
             }
         }

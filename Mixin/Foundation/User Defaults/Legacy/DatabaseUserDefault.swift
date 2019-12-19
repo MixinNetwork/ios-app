@@ -5,22 +5,22 @@ internal class DatabaseUserDefault {
     static let shared = DatabaseUserDefault()
 
     private var keyMixinDatabaseVersion: String {
-        return "key_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_database_mixin_version_\(myIdentityNumber)"
     }
     private var keyUpgradeStickers: String {
-        return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_upgrade_stickers_\(myIdentityNumber)"
     }
     private var keyDatabaseVersion: String {
-        return "key_database_version_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_database_version_\(myIdentityNumber)"
     }
     private var keyForceUpgradeDatabase: String {
-        return "key_force_upgrade_database_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_force_upgrade_database_\(myIdentityNumber)"
     }
     private var keyLastVacuumTime: String {
-        return "key_last_vacuum_time_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_last_vacuum_time_\(myIdentityNumber)"
     }
     private var keyClearSentSenderKey: String {
-        return "key_clear_sent_sender_key_\(AccountAPI.shared.accountIdentityNumber)"
+        return "key_clear_sent_sender_key_\(myIdentityNumber)"
     }
 
     private let session = UserDefaults(suiteName: SuiteName.database)!

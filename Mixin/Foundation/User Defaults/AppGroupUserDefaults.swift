@@ -21,11 +21,11 @@ public enum AppGroupUserDefaults {
             case .account:
                 return "account"
             case .user:
-                return "user." + AccountAPI.shared.accountIdentityNumber
+                return "user." + myIdentityNumber
             case .database:
-                return "database." + AccountAPI.shared.accountIdentityNumber
+                return "database." + myIdentityNumber
             case .wallet:
-                return "wallet." + AccountAPI.shared.accountIdentityNumber
+                return "wallet." + myIdentityNumber
             }
         }
     }

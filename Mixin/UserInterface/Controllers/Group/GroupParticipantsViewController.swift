@@ -58,7 +58,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
             return
         }
         let user = self.user(at: indexPath)
-        guard user.userId != AccountAPI.shared.accountUserId else {
+        guard user.userId != myUserId else {
             return
         }
         let alc = UIAlertController(title: nil, message: user.fullName, preferredStyle: .actionSheet)
@@ -157,7 +157,7 @@ extension GroupParticipantsViewController {
             }
             let participants = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
             let me = participants.first(where: { (user) -> Bool in
-                user.userId == AccountAPI.shared.accountUserId
+                user.userId == myUserId
             })
             DispatchQueue.main.sync {
                 guard !isCancelled, let viewController = viewController else {

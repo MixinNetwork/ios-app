@@ -37,11 +37,11 @@ internal struct MixinFile {
     }
 
     static var iCloudBackupDirectory: URL? {
-        return FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent(AccountAPI.shared.accountIdentityNumber).appendingPathComponent("Backup")
+        return FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent(myIdentityNumber).appendingPathComponent("Backup")
     }
 
     static var rootDirectory: URL {
-        let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
+        let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(myIdentityNumber)
         _ = FileManager.default.createNobackupDirectory(dir)
         return dir
     }

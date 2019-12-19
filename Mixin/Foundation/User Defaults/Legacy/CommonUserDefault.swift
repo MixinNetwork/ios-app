@@ -7,61 +7,61 @@ internal class CommonUserDefault {
     private let keyFirstLaunchSince1970 = "first_launch_since_1970"
     private let keyHasPerformedTransfer = "has_performed_transfer"
     private var keyConversationDraft: String {
-        return "defalut_conversation_draft_\(AccountAPI.shared.accountIdentityNumber)"
+        return "defalut_conversation_draft_\(myIdentityNumber)"
     }
     private var keyLastUpdateOrInstallVersion: String {
-        return "last_update_or_install_version_\(AccountAPI.shared.accountIdentityNumber)"
+        return "last_update_or_install_version_\(myIdentityNumber)"
     }
     private var keyLastUpdateOrInstallDate: String {
-        return "last_update_or_install_date_\(AccountAPI.shared.accountIdentityNumber)"
+        return "last_update_or_install_date_\(myIdentityNumber)"
     }
     private var keyHasUnreadAnnouncement: String {
-        return "default_unread_announcement_\(AccountAPI.shared.accountIdentityNumber)"
+        return "default_unread_announcement_\(myIdentityNumber)"
     }
     private var keyCameraQRCodeTips: String {
-        return "default_camera_qrcode_tips_\(AccountAPI.shared.accountIdentityNumber)"
+        return "default_camera_qrcode_tips_\(myIdentityNumber)"
     }
     private var keyHasPerformedQRCodeScanning : String {
-        return "has_scanned_qr_code_\(AccountAPI.shared.accountIdentityNumber)"
+        return "has_scanned_qr_code_\(myIdentityNumber)"
     }
     private var keyMessageNotificationShowPreview: String {
-        return "msg_notification_preview_\(AccountAPI.shared.accountIdentityNumber)"
+        return "msg_notification_preview_\(myIdentityNumber)"
     }
     private var keyBackupVideos: String {
-        return "backup_videos_\(AccountAPI.shared.accountIdentityNumber)"
+        return "backup_videos_\(myIdentityNumber)"
     }
     private var keyBackupFiles: String {
-        return "backup_files_\(AccountAPI.shared.accountIdentityNumber)"
+        return "backup_files_\(myIdentityNumber)"
     }
     private var keyAutoBackup: String {
-        return "backup_category_\(AccountAPI.shared.accountIdentityNumber)"
+        return "backup_category_\(myIdentityNumber)"
     }
     private var keyLastBackupTime: String {
-        return "last_backup_time_\(AccountAPI.shared.accountIdentityNumber)"
+        return "last_backup_time_\(myIdentityNumber)"
     }
     private var keyLastBackupSize: String {
-        return "last_backup_size_\(AccountAPI.shared.accountIdentityNumber)"
+        return "last_backup_size_\(myIdentityNumber)"
     }
     private var keyHasForceLogout: String {
-        return "has_force_logout_\(AccountAPI.shared.accountIdentityNumber)"
+        return "has_force_logout_\(myIdentityNumber)"
     }
     private var keyRecentlyUsedAppIds: String {
-        return "recently_used_app_ids_\(AccountAPI.shared.accountIdentityNumber)"
+        return "recently_used_app_ids_\(myIdentityNumber)"
     }
     private var keyRecallTips: String {
-        return "default_recall_tips_\(AccountAPI.shared.accountIdentityNumber)"
+        return "default_recall_tips_\(myIdentityNumber)"
     }
     private var keyAutoDownloadPhotos: String {
-        return "auto_download_photos_\(AccountAPI.shared.accountIdentityNumber)"
+        return "auto_download_photos_\(myIdentityNumber)"
     }
     private var keyAutoDownloadVideos: String {
-        return "auto_download_videos_\(AccountAPI.shared.accountIdentityNumber)"
+        return "auto_download_videos_\(myIdentityNumber)"
     }
     private var keyAutoDownloadFiles: String {
-        return "auto_download_files_\(AccountAPI.shared.accountIdentityNumber)"
+        return "auto_download_files_\(myIdentityNumber)"
     }
     private var keyUploadContacts: String {
-        return "auto_upload_contacts_\(AccountAPI.shared.accountIdentityNumber)"
+        return "auto_upload_contacts_\(myIdentityNumber)"
     }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!

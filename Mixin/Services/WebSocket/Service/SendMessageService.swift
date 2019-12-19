@@ -34,7 +34,7 @@ class SendMessageService: MixinService {
     }
 
     func sendMessage(message: Message, ownerUser: UserItem?, isGroupMessage: Bool) {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
 
@@ -186,7 +186,7 @@ class SendMessageService: MixinService {
     func sendReadMessages(conversationId: String) {
         DispatchQueue.main.async {
             SendMessageService.shared.saveDispatchQueue.async {
-                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
+                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != myUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0
                 let pageCount = AppGroupUserDefaults.Account.isDesktopLoggedIn ? 1000 : 2000
                 while messageIds.count > 0 && position < messageIds.count {
@@ -222,7 +222,7 @@ class SendMessageService: MixinService {
 
                     MixinDatabase.shared.transaction { (database) in
                         try database.insert(objects: jobs, intoTable: Job.tableName)
-                        try database.prepareUpdateSQL(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?").execute(with: [conversationId, MessageStatus.DELIVERED.rawValue, AccountAPI.shared.accountUserId, lastRowID])
+                        try database.prepareUpdateSQL(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?").execute(with: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     }
 
@@ -264,7 +264,7 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.httpProcessing = false
             }
             repeat {
-                guard AccountAPI.shared.didLogin else {
+                guard isLoggedIn else {
                     return
                 }
 
@@ -333,7 +333,7 @@ class SendMessageService: MixinService {
             }
             var deleteJobId = ""
             repeat {
-                guard AccountAPI.shared.didLogin else {
+                guard isLoggedIn else {
                     return
                 }
                 guard let job = JobDAO.shared.nextJob() else {
@@ -393,7 +393,7 @@ class SendMessageService: MixinService {
                 }
             }
 
-            while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+            while isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
             return false
@@ -402,7 +402,7 @@ class SendMessageService: MixinService {
 
     private func handlerJob(job: Job) -> Bool {
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return false
             }
 
@@ -465,7 +465,7 @@ class SendMessageService: MixinService {
                     }
 
                     #if DEBUG
-                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)....currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
+                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)....currentUserId:\(myUserId)...blazeMessage:\(blazeMessage)")
                     #endif
                     Logger.write(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...blazeMessage:\(blazeMessage)...\(error)")
                     var userInfo = [String: Any]()

@@ -99,7 +99,7 @@ public struct Message: BaseCodable {
 extension Message {
 
     func shouldUpload() -> Bool {
-        return userId == AccountAPI.shared.accountUserId && (mediaUrl != nil || mediaLocalIdentifier != nil)
+        return userId == myUserId && (mediaUrl != nil || mediaLocalIdentifier != nil)
     }
     
     static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String) -> Message {
@@ -107,7 +107,7 @@ extension Message {
     }
 
     static func getStatus(data: BlazeMessageData) -> String {
-        return data.userId == AccountAPI.shared.accountUserId ? MessageStatus.SENT.rawValue : MessageStatus.DELIVERED.rawValue
+        return data.userId == myUserId ? MessageStatus.SENT.rawValue : MessageStatus.DELIVERED.rawValue
     }
 
     static func createMessage(snapshotMesssage snapshot: Snapshot, data: BlazeMessageData) -> Message {
@@ -148,10 +148,10 @@ extension Message {
     }
     
     static func createWebRTCMessage(quote: BlazeMessageData, category: MessageCategory, status: MessageStatus) -> Message {
-        return createMessage(messageId: UUID().uuidString.lowercased(), conversationId: quote.conversationId, userId: AccountAPI.shared.accountUserId, category: category.rawValue, status: status.rawValue, quoteMessageId: quote.messageId, createdAt: Date().toUTCString())
+        return createMessage(messageId: UUID().uuidString.lowercased(), conversationId: quote.conversationId, userId: myUserId, category: category.rawValue, status: status.rawValue, quoteMessageId: quote.messageId, createdAt: Date().toUTCString())
     }
     
-    static func createWebRTCMessage(messageId: String = UUID().uuidString.lowercased(), conversationId: String, userId: String = AccountAPI.shared.accountUserId, category: MessageCategory, content: String? = nil, mediaDuration: Int64? = nil, status: MessageStatus, quoteMessageId: String? = nil) -> Message {
+    static func createWebRTCMessage(messageId: String = UUID().uuidString.lowercased(), conversationId: String, userId: String = myUserId, category: MessageCategory, content: String? = nil, mediaDuration: Int64? = nil, status: MessageStatus, quoteMessageId: String? = nil) -> Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category.rawValue, content: content, mediaDuration: mediaDuration, status: status.rawValue, quoteMessageId: quoteMessageId, createdAt: Date().toUTCString())
     }
     

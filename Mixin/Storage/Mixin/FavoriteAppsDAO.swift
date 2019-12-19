@@ -33,7 +33,7 @@ public final class FavoriteAppsDAO {
     }
     
     func unfavoriteApp(of id: String) {
-        let condition = FavoriteApp.Properties.userId == AccountAPI.shared.accountUserId
+        let condition = FavoriteApp.Properties.userId == myUserId
             && FavoriteApp.Properties.appId == id
         MixinDatabase.shared.delete(table: FavoriteApp.tableName, condition: condition)
     }

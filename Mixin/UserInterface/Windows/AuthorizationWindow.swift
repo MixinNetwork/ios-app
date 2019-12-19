@@ -23,7 +23,7 @@ class AuthorizationWindow: BottomSheetView {
         case SNAPSHOTS_READ = "SNAPSHOTS:READ"
     }
     private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return []
         }
         var result = [(scope: Scope, name: String, desc: String)]()

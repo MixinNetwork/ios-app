@@ -5,7 +5,7 @@ final class EmergencyContactViewController: UITableViewController {
     private let footerReuseId = "footer"
     
     private var hasEmergencyContact: Bool {
-        return AccountAPI.shared.account?.has_emergency_contact ?? false
+        return Account.current?.has_emergency_contact ?? false
     }
     
     deinit {
@@ -91,7 +91,7 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     private func changeEmergencyContact() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         if account.has_pin {
@@ -117,7 +117,7 @@ final class EmergencyContactViewController: UITableViewController {
     private func enableEmergencyContact() {
         let vc = EmergencyTipsViewController.instance()
         vc.onNext = { [weak self] in
-            guard let account = AccountAPI.shared.account else {
+            guard let account = Account.current else {
                 return
             }
             if account.has_pin {

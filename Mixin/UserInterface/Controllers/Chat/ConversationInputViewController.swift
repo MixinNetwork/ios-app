@@ -626,7 +626,7 @@ extension ConversationInputViewController {
     private func reloadFixedExtensions() {
         if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
             extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
-        } else if let app = opponentApp, app.creatorId == AccountAPI.shared.accountUserId {
+        } else if let app = opponentApp, app.creatorId == myUserId {
             extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
         } else {
             extensionViewController.fixedExtensions = [.camera, .file, .contact]
@@ -647,7 +647,7 @@ extension ConversationInputViewController {
     }
     
     private func loadFavoriteApps(ownerUser: UserItem) {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         
@@ -655,7 +655,7 @@ extension ConversationInputViewController {
         let ownerId = ownerUser.userId
         
         func loadApps() {
-            let myFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: AccountAPI.shared.accountUserId)
+            let myFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: myUserId)
             let myFavoriteAppIds = Set(myFavoriteApps.map({ $0.appId }))
             let ownerFavoriteApps = FavoriteAppsDAO.shared.favoriteAppsOfUser(withId: ownerUser.userId)
                 .filter({ !myFavoriteAppIds.contains($0.appId) })

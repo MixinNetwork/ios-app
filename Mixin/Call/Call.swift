@@ -10,8 +10,8 @@ class Call {
     var hasReceivedRemoteAnswer = false
     
     private(set) lazy var uuidString = uuid.uuidString.lowercased() // Message Id from offer message
-    private(set) lazy var conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: opponentUser.userId)
-    private(set) lazy var raisedByUserId = isOutgoing ? AccountAPI.shared.accountUserId : opponentUser.userId
+    private(set) lazy var conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: opponentUser.userId)
+    private(set) lazy var raisedByUserId = isOutgoing ? myUserId : opponentUser.userId
     
     init(uuid: UUID, opponentUser: UserItem, isOutgoing: Bool) {
         self.uuid = uuid

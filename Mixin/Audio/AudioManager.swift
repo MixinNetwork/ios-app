@@ -58,7 +58,7 @@ class AudioManager: NSObject {
             controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
         
-        let shouldUpdateMediaStatus = message.mediaStatus != MediaStatus.READ.rawValue && message.userId != AccountAPI.shared.accountUserId
+        let shouldUpdateMediaStatus = message.mediaStatus != MediaStatus.READ.rawValue && message.userId != myUserId
         cells[message.messageId]?.cell?.style = .playing
         
         if message.messageId == playingMessage?.messageId, let player = player {

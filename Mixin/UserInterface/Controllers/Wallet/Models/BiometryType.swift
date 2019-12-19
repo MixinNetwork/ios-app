@@ -24,7 +24,7 @@ var biometryType: BiometryType {
     guard !UIDevice.isJailbreak else {
         return .none
     }
-    guard AccountAPI.shared.account?.has_pin ?? false else {
+    guard Account.current?.has_pin ?? false else {
         return .none
     }
     var error: NSError?

@@ -13,7 +13,7 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {
         let transferReceiver = users.filter({ (user) -> Bool in
             if user.isBot {
-                return user.appCreatorId == AccountAPI.shared.accountUserId
+                return user.appCreatorId == myUserId
             } else {
                 return true
             }

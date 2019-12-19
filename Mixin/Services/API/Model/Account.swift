@@ -1,6 +1,16 @@
 import Foundation
 
-struct Account: Encodable {
+public enum ReceiveMessageSource: String {
+    case everybody = "EVERYBODY"
+    case contacts = "CONTACTS"
+}
+
+public enum AcceptConversationSource: String {
+    case everybody = "EVERYBODY"
+    case contacts = "CONTACTS"
+}
+
+public struct Account: Encodable {
     
     let user_id: String
     let session_id: String
@@ -23,11 +33,12 @@ struct Account: Encodable {
     let fiat_currency: String
     let transfer_notification_threshold: Double
     let transfer_confirmation_threshold: Double
+    
 }
 
 extension Account: Decodable {
-
-    init(from decoder: Decoder) throws {
+    
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         user_id = try container.decode(String.self, forKey: .user_id)
         session_id = try container.decode(String.self, forKey: .session_id)
@@ -51,15 +62,5 @@ extension Account: Decodable {
         transfer_notification_threshold = container.getDouble(key: .transfer_notification_threshold)
         transfer_confirmation_threshold = container.getDouble(key: .transfer_confirmation_threshold)
     }
-
-}
-
-enum ReceiveMessageSource: String {
-    case everybody = "EVERYBODY"
-    case contacts = "CONTACTS"
-}
-
-enum AcceptConversationSource: String {
-    case everybody = "EVERYBODY"
-    case contacts = "CONTACTS"
+    
 }

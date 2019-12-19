@@ -31,7 +31,7 @@ class DatabaseUpgradeViewController: UIViewController {
                 if let currency = AppGroupUserDefaults.Wallet.currencyCode, !currency.isEmpty {
                     AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency), completion: {  (result) in
                         if case let .success(account) = result {
-                            AccountAPI.shared.updateAccount(account: account)
+                            Account.current = account
                             Currency.refreshCurrentCurrency()
                         }
                     })

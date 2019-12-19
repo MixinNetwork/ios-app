@@ -112,7 +112,7 @@ class BaseAPI {
 
     @discardableResult
     func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
-        if checkLogin && !AccountAPI.shared.didLogin {
+        if checkLogin && !isLoggedIn {
             return nil
         }
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
@@ -198,7 +198,7 @@ extension BaseAPI {
         var responseServerTime = ""
         let requestTime = Date()
         let rootURLString = MixinServer.httpUrl
-        if AccountAPI.shared.didLogin {
+        if isLoggedIn {
             let semaphore = DispatchSemaphore(value: 0)
             getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
                 .validate(statusCode: 200...299)

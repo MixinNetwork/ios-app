@@ -60,7 +60,7 @@ public struct UserItem: BaseCodable {
         guard let appCreatorId = self.appCreatorId else {
             return false
         }
-        return appCreatorId == AccountAPI.shared.accountUserId
+        return appCreatorId == myUserId
     }
     
     var isCreatedByMessenger: Bool {

@@ -6,7 +6,6 @@ final class AccountAPI: BaseAPI {
     static let shared = AccountAPI()
     
     private let avatarJPEGCompressionQuality: CGFloat = 0.8
-    private let accountStorageKey = "Account"
     
     enum url {
         static let verifications = "verifications"
@@ -32,50 +31,6 @@ final class AccountAPI: BaseAPI {
         static let sessions = "sessions/fetch"
     }
     
-    private lazy var jsonEncoder = JSONEncoder()
-    
-    var didLogin: Bool {
-        guard account != nil else {
-            return false
-        }
-        guard let token = AppGroupUserDefaults.Account.sessionSecret, !token.isEmpty else {
-            return false
-        }
-        return true
-    }
-
-    var accountUserId: String {
-        return account?.user_id ?? ""
-    }
-
-    var accountSessionId: String {
-        return account?.session_id ?? ""
-    }
-
-    var accountIdentityNumber: String {
-        return account?.identity_number ?? "00000"
-    }
-    
-    // FIXME: Extend AppGroupUserDefaults for account r/w
-    var account: Account? = {
-        guard let data = AppGroupUserDefaults.Account.serializedAccount else {
-            return nil
-        }
-        return try? JSONDecoder.default.decode(Account.self, from: data)
-    }()
-    
-    // FIXME: Extend AppGroupUserDefaults for account r/w
-    func updateAccount(account: Account) {
-        self.account = account
-        if let data = try? JSONEncoder.default.encode(account) {
-            AppGroupUserDefaults.Account.serializedAccount = data
-        }
-        NotificationCenter.default.post(name: .AccountDidChange, object: nil)
-        DispatchQueue.global().async {
-            UserDAO.shared.updateAccount(account: account)
-        }
-    }
-
     func me() -> APIResult<Account> {
         return request(method: .get, url: url.me)
     }
@@ -179,14 +134,14 @@ final class AccountAPI: BaseAPI {
     }
     
     func logout(from: String) {
-        guard account != nil else {
+        guard Account.current != nil else {
             return
         }
         UIApplication.shared.setShortcutItemsEnabled(false)
         Logger.write(log: "===========logout...from:\(from)")
         AppGroupUserDefaults.User.isLogoutByServer = true
         DispatchQueue.main.async {
-            self.account = nil
+            Account.current = nil
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
             BackupJobQueue.shared.cancelAllOperations()

@@ -14,7 +14,7 @@ class RefreshConversationJob: BaseJob {
     }
 
     override func run() throws {
-        guard !conversationId.isEmpty && conversationId != User.systemUser && conversationId != AccountAPI.shared.accountUserId else {
+        guard !conversationId.isEmpty && conversationId != User.systemUser && conversationId != myUserId else {
             return
         }
 

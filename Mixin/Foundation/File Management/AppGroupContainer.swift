@@ -10,7 +10,7 @@ public enum AppGroupContainer {
     public static let signalDatabaseUrl = documentsUrl.appendingPathComponent("signal.db", isDirectory: false)
     
     public static var accountUrl: URL {
-        documentsUrl.appendingPathComponent(AccountAPI.shared.accountIdentityNumber, isDirectory: true)
+        documentsUrl.appendingPathComponent(myIdentityNumber, isDirectory: true)
     }
     
     public static var groupIconsUrl: URL {

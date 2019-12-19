@@ -46,7 +46,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             contentLabel.text = Localized.CHAT_DECRYPTION_FAILED_HINT(username: item.senderFullName)
         } else {
             showMessageIndicate(conversation: item)
-            let senderIsMe = item.senderId == AccountAPI.shared.accountUserId
+            let senderIsMe = item.senderId == myUserId
             let senderName = senderIsMe ? Localized.CHAT_MESSAGE_YOU : item.senderFullName
             
             let category = item.contentType
@@ -141,7 +141,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     private func showMessageIndicate(conversation: ConversationItem) {
         if conversation.contentType.hasPrefix("WEBRTC_") || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue {
             messageStatusImageView.isHidden = true
-        } else if conversation.senderId == AccountAPI.shared.accountUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
+        } else if conversation.senderId == myUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
             messageStatusImageView.isHidden = false
             switch conversation.messageStatus {
             case MessageStatus.SENDING.rawValue:

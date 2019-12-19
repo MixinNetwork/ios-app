@@ -9,7 +9,7 @@ class RefreshOffsetJob: BaseJob {
     override func run() throws {
         var statusOffset = AppGroupUserDefaults.Crypto.Offset.status
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return
             }
             switch MessageAPI.shared.messageStatus(offset: statusOffset) {

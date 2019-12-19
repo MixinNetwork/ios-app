@@ -103,20 +103,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return AccountAPI.shared.didLogin && UrlWindow.checkUrl(url: url)
+        return isLoggedIn && UrlWindow.checkUrl(url: url)
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
-        guard AccountAPI.shared.account == nil else {
+        guard Account.current == nil else {
             return
         }
-        // FIXME: Extend AppGroupUserDefaults for account r/w
         guard let data = AppGroupUserDefaults.Account.serializedAccount else {
             return
         }
-        AccountAPI.shared.account = try? JSONDecoder.default.decode(Account.self, from: data)
+        Account.current = try? JSONDecoder.default.decode(Account.self, from: data)
         configAnalytics()
-        if AccountAPI.shared.didLogin && !(window.rootViewController is HomeContainerViewController) {
+        if isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()
         }
     }
@@ -127,7 +126,7 @@ extension AppDelegate: PKPushRegistryDelegate {
     
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         voipToken = pushCredentials.token.toHexString()
-        if AccountAPI.shared.didLogin {
+        if isLoggedIn {
             AccountAPI.shared.updateSession(voipToken: voipToken)
         }
     }
@@ -151,7 +150,7 @@ extension AppDelegate {
     
     private func checkLogin() {
         window.backgroundColor = .black
-        if AccountAPI.shared.didLogin {
+        if isLoggedIn {
             window.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
@@ -165,7 +164,7 @@ extension AppDelegate {
                 window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
             }
         }
-        UIApplication.shared.setShortcutItemsEnabled(AccountAPI.shared.didLogin)
+        UIApplication.shared.setShortcutItemsEnabled(isLoggedIn)
         window.makeKeyAndVisible()
     }
     
@@ -174,7 +173,7 @@ extension AppDelegate {
             return
         }
 
-        if let account = AccountAPI.shared.account {
+        if let account = Account.current {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
             Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
             Crashlytics.sharedInstance().setUserName(account.full_name)
@@ -200,7 +199,7 @@ extension AppDelegate {
     }
     
     private func checkServerData(isPushKit: Bool = false) {
-        guard AccountAPI.shared.didLogin else {
+        guard isLoggedIn else {
             return
         }
         guard !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
@@ -277,7 +276,7 @@ extension AppDelegate {
         if let window = UIApplication.currentActivity()?.view.subviews.compactMap({ $0 as? QrcodeWindow }).first, window.isShowingMyQrCode {
             return
         }
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         let qrcodeWindow = QrcodeWindow.instance()

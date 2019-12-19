@@ -80,7 +80,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             }
             var reply = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                               conversationId: conversationId,
-                                              userId: AccountAPI.shared.accountUserId)
+                                              userId: myUserId)
             reply.content = trimmedUserText
             reply.quoteMessageId = messageId
             DispatchQueue.global().async {
@@ -91,7 +91,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             }
         } else {
             DispatchQueue.global().async {
-                guard AccountAPI.shared.didLogin else {
+                guard isLoggedIn else {
                     return
                 }
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
@@ -122,7 +122,7 @@ extension NotificationManager {
         guard let notificationWasAuthorized = notificationWasAuthorized, !notificationWasAuthorized else {
             return
         }
-        guard AccountAPI.shared.didLogin else {
+        guard isLoggedIn else {
             return
         }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in

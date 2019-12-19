@@ -52,7 +52,7 @@ class BaseDatabase {
                     // interrupted
                     return
                 } else if error.type == .sqlite && error.operationValue == 3 {
-                    if AccountAPI.shared.didLogin && (error.path?.hasSuffix("mixin.db") ?? false) {
+                    if isLoggedIn && (error.path?.hasSuffix("mixin.db") ?? false) {
                         // no such table
                         AppGroupUserDefaults.User.needsRebuildDatabase = true
                     }

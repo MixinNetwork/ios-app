@@ -30,7 +30,7 @@ class ReceiveMessageService: MixinService {
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
             assert(MixinService.callMessageCoordinator != nil)
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return
             }
             guard let data = blazeMessage.data?.data(using: .utf8), let blazeMessageData = try? self.jsonDecoder.decode(BlazeMessageData.self, from: data) else {
@@ -43,7 +43,7 @@ class ReceiveMessageService: MixinService {
                 MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 AppGroupUserDefaults.Crypto.Offset.status = blazeMessageData.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
-                if blazeMessageData.userId == AccountAPI.shared.accountUserId && blazeMessageData.category.isEmpty {
+                if blazeMessageData.userId == myUserId && blazeMessageData.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 } else {
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
@@ -82,7 +82,7 @@ class ReceiveMessageService: MixinService {
                 }
 
                 for data in blazeMessageDatas {
-                    guard AccountAPI.shared.didLogin else {
+                    guard isLoggedIn else {
                         return
                     }
                     if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
@@ -474,7 +474,7 @@ class ReceiveMessageService: MixinService {
                     }
                     checkNetworkAndWebSocket()
                 }
-            } while AccountAPI.shared.didLogin
+            } while isLoggedIn
             return nil
         } else if let stickerName = transferStickerData.name, let albumId = transferStickerData.albumId, let sticker = StickerDAO.shared.getSticker(albumId: albumId, name: stickerName) {
             return TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
@@ -483,7 +483,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func syncConversation(data: BlazeMessageData) {
-        guard data.conversationId != User.systemUser && data.conversationId != AccountAPI.shared.accountUserId else {
+        guard data.conversationId != User.systemUser && data.conversationId != myUserId else {
             return
         }
         if let status = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId) {
@@ -558,7 +558,7 @@ class ReceiveMessageService: MixinService {
                 }
                 checkNetworkAndWebSocket()
             }
-        } while AccountAPI.shared.didLogin
+        } while isLoggedIn
 
         return false
     }

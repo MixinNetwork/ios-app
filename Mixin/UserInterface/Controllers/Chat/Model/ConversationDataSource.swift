@@ -19,7 +19,7 @@ class ConversationDataSource {
     private let windowRect = AppDelegate.current.window.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
-    private let me = AccountAPI.shared.account!
+    private let me = Account.current!
     
     private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -600,7 +600,7 @@ extension ConversationDataSource {
                 return
             }
             
-            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId && UIApplication.shared.applicationState == .active {
+            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != myUserId && UIApplication.shared.applicationState == .active {
                 SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
             }
             
@@ -723,7 +723,7 @@ extension ConversationDataSource {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
-                                                userId: AccountAPI.shared.accountUserId)
+                                                userId: myUserId)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = image.fullsizedUrl.absoluteString
             message.mediaWidth = image.size.width
@@ -747,7 +747,7 @@ extension ConversationDataSource {
             let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
             var message = Message.createMessage(category: category.rawValue,
                                                 conversationId: conversationId,
-                                                userId: AccountAPI.shared.accountUserId)
+                                                userId: myUserId)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth

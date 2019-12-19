@@ -83,7 +83,7 @@ public final class ParticipantDAO {
         let joinClause = JoinClause(with: Participant.tableName)
             .join(User.tableName, with: .left)
             .on(userIdColumn == pUserIdColumn)
-        let statementSelect = StatementSelect().select(pUserIdColumn).from(joinClause).where(pConversationIdColumn == conversationId && identityNumberColumn.isNull() && pUserIdColumn != AccountAPI.shared.accountUserId)
+        let statementSelect = StatementSelect().select(pUserIdColumn).from(joinClause).where(pConversationIdColumn == conversationId && identityNumberColumn.isNull() && pUserIdColumn != myUserId)
         let coreStatement = try database.prepare(statementSelect)
 
         var result = [String]()
@@ -125,7 +125,7 @@ public final class ParticipantDAO {
     }
 
     func removeParticipant(conversationId: String) {
-        let userId = AccountAPI.shared.accountUserId
+        let userId = myUserId
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
             try db.update(table: Conversation.tableName, on: [Conversation.Properties.status], with: [ConversationStatus.QUIT.rawValue], where: Conversation.Properties.conversationId == conversationId)

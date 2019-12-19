@@ -5,34 +5,34 @@ internal class WalletUserDefault {
     static let shared = WalletUserDefault()
 
     private var keyDefalutTransferAssetId: String {
-        return "defalut_transfer_asset_id_\(AccountAPI.shared.accountIdentityNumber)"
+        return "defalut_transfer_asset_id_\(myIdentityNumber)"
     }
     private var keyLastInputPINSuccess: String {
-        return "last_input_pin_success_\(AccountAPI.shared.accountIdentityNumber)"
+        return "last_input_pin_success_\(myIdentityNumber)"
     }
     private var keyCheckPINInterval: String {
-        return "check_pin_interval_\(AccountAPI.shared.accountIdentityNumber)"
+        return "check_pin_interval_\(myIdentityNumber)"
     }
     private var keyHiddenAssets: String {
-        return "hidden_assets_\(AccountAPI.shared.accountIdentityNumber)"
+        return "hidden_assets_\(myIdentityNumber)"
     }
     private var keyIsBiometricPay: String {
-        return "is_biometric_pay_\(AccountAPI.shared.accountIdentityNumber)"
+        return "is_biometric_pay_\(myIdentityNumber)"
     }
     private var keyPINInterval: String {
-        return "is_pin_interval_\(AccountAPI.shared.accountIdentityNumber)"
+        return "is_pin_interval_\(myIdentityNumber)"
     }
     private var keyAllTransactionOffset: String {
-        return "all_transaction_offset_\(AccountAPI.shared.accountIdentityNumber)"
+        return "all_transaction_offset_\(myIdentityNumber)"
     }
     private var keyAssetTransactionOffset: String {
-        return "asset_transaction_offset_\(AccountAPI.shared.accountIdentityNumber)"
+        return "asset_transaction_offset_\(myIdentityNumber)"
     }
     private var keyWithdrawalTip: String {
-        return "asset_withdrawal_tip_\(AccountAPI.shared.accountIdentityNumber)"
+        return "asset_withdrawal_tip_\(myIdentityNumber)"
     }
     private var keyCurrencyCode: String {
-        return "currency_code_\(AccountAPI.shared.accountIdentityNumber)"
+        return "currency_code_\(myIdentityNumber)"
     }
     
     let session = UserDefaults(suiteName: SuiteName.wallet)!
@@ -74,7 +74,7 @@ internal class WalletUserDefault {
     }
 
     func initPinInterval() {
-        guard AccountAPI.shared.account?.has_pin ?? false, session.object(forKey: keyCheckPINInterval) == nil  else {
+        guard Account.current?.has_pin ?? false, session.object(forKey: keyCheckPINInterval) == nil  else {
             return
         }
 

@@ -31,7 +31,7 @@ class VideoUploadJob: AttachmentUploadJob {
     }
     
     override func execute() -> Bool {
-        guard !isCancelled, AccountAPI.shared.didLogin else {
+        guard !isCancelled, isLoggedIn else {
             return false
         }
         if message.mediaUrl != nil {

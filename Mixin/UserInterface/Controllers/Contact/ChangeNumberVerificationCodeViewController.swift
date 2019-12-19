@@ -37,7 +37,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             }
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                Account.current = account
                 weakSelf.verificationCodeField.resignFirstResponder()
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)

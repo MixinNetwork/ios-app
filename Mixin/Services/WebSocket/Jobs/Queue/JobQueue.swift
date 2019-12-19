@@ -23,7 +23,7 @@ class JobQueue {
 
     @discardableResult
     func addJob(job: BaseJob) -> Bool {
-        guard AccountAPI.shared.didLogin else {
+        guard isLoggedIn else {
             return false
         }
         let jobId = job.getJobId()

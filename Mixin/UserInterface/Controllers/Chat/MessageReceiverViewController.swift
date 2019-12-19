@@ -239,7 +239,7 @@ extension MessageReceiverViewController {
     static func makeMessage(message: MessageItem, to conversationId: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
-                                               userId: AccountAPI.shared.accountUserId)
+                                               userId: myUserId)
         if message.category.hasSuffix("_TEXT") {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
@@ -301,7 +301,7 @@ extension MessageReceiverViewController {
     static func makeMessage(userId: String, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         message.sharedUserId = userId
         let transferData = TransferContactData(userId: userId)
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
@@ -311,7 +311,7 @@ extension MessageReceiverViewController {
     static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         let filename = message.messageId + ExtensionName.jpeg.withDot
         let path = AttachmentContainer.url(for: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
@@ -331,7 +331,7 @@ extension MessageReceiverViewController {
     static func makeMessage(text: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         message.content = text
         return message
     }
@@ -343,7 +343,7 @@ extension MessageReceiverViewController {
         }
         var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         let filename = videoUrl.lastPathComponent.substring(endChar: ".")
         let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: videoUrl) {

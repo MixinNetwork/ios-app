@@ -35,7 +35,7 @@ class MessageReceiver {
         name = user.fullName
         badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         item = .user(user)
-        conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: AccountAPI.shared.accountUserId)
+        conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
     }
     
     func matches(lowercasedKeyword keyword: String) -> Bool {

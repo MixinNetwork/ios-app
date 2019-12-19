@@ -5,7 +5,7 @@ final class UserProfileViewController: ProfileViewController {
     var updateUserFromRemoteAfterReloaded = true
     
     override var conversationId: String {
-        return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
+        return ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: user.userId)
     }
     
     override var isMuted: Bool {
@@ -29,7 +29,7 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var user: UserItem! {
         didSet {
-            isMe = user.userId == AccountAPI.shared.accountUserId
+            isMe = user.userId == myUserId
             relationship = Relationship(rawValue: user.relationship) ?? .ME
             updateDeveloper()
         }
@@ -141,7 +141,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     @objc func accountDidChange(_ notification: Notification) {
-        guard let account = AccountAPI.shared.account, account.user_id == user.userId else {
+        guard let account = Account.current, account.user_id == user.userId else {
             return
         }
         self.user = UserItem.createUser(from: account)
@@ -195,7 +195,7 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
-                AccountAPI.shared.updateAccount(account: account)
+                Account.current = account
                 hud.set(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -255,7 +255,7 @@ extension UserProfileViewController {
     }
     
     @objc func showMyQrCode() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         let window = QrcodeWindow.instance()
@@ -266,7 +266,7 @@ extension UserProfileViewController {
     }
     
     @objc func showMyMoneyReceivingCode() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         let window = QrcodeWindow.instance()
@@ -289,7 +289,7 @@ extension UserProfileViewController {
             AccountAPI.shared.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
-                    AccountAPI.shared.updateAccount(account: account)
+                    Account.current = account
                     hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -305,7 +305,7 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        if AccountAPI.shared.account?.has_pin ?? false {
+        if Account.current?.has_pin ?? false {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             dismissAndPresent(vc)
         } else {
@@ -340,7 +340,7 @@ extension UserProfileViewController {
     
     @objc func transfer() {
         let viewController: UIViewController
-        if AccountAPI.shared.account?.has_pin ?? false {
+        if Account.current?.has_pin ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
@@ -371,7 +371,7 @@ extension UserProfileViewController {
             return
         }
         let vc = UserProfileViewController(user: user)
-        if user.appCreatorId == AccountAPI.shared.accountUserId, let account = AccountAPI.shared.account {
+        if user.appCreatorId == myUserId, let account = Account.current {
             vc.user = UserItem.createUser(from: account)
         } else {
             vc.user = developer

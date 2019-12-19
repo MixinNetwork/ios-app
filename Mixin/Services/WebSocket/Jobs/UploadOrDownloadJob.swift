@@ -10,7 +10,7 @@ class UploadOrDownloadJob: AsynchronousJob {
         guard let weakSelf = self else {
             return
         }
-        if weakSelf.isCancelled || !AccountAPI.shared.didLogin {
+        if weakSelf.isCancelled || !isLoggedIn {
             weakSelf.finishJob()
             return
         } else if let err = error {

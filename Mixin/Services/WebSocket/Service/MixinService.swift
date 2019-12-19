@@ -17,11 +17,11 @@ class MixinService {
     let jsonEncoder = JSONEncoder()
 
     internal var currentAccountId: String {
-        return AccountAPI.shared.accountUserId
+        return myUserId
     }
 
     internal func checkSessionSenderKey(conversationId: String) throws {
-        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: AccountAPI.shared.accountSessionId)
+        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: Account.current?.session_id ?? "")
         guard participants.count > 0 else {
             return
         }
@@ -160,7 +160,7 @@ class MixinService {
     func refreshParticipantSession(conversationId: String, userId: String, retry: Bool) -> Bool {
         Logger.write(conversationId: conversationId, log: "[RefreshSession]...userId:\(userId)...retry:\(retry)")
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return false
             }
 
@@ -240,7 +240,7 @@ class MixinService {
             blazeMessage.params?.conversationChecksum = getCheckSum(conversationId: conversationId)
         }
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard isLoggedIn else {
                 return false
             }
             
@@ -280,7 +280,7 @@ class MixinService {
     }
 
     internal func checkNetworkAndWebSocket() {
-        while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+        while isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
             Thread.sleep(forTimeInterval: 2)
         }
 

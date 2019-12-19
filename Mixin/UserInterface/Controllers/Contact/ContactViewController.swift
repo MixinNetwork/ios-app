@@ -49,7 +49,7 @@ class ContactViewController: UITableViewController {
     }
     
     @IBAction func showAccountAction(_ sender: Any) {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         let user = UserItem.createUser(from: account)
@@ -68,7 +68,7 @@ class ContactViewController: UITableViewController {
     }
     
     @objc func reloadAccount() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = Account.current else {
             return
         }
         DispatchQueue.main.async {

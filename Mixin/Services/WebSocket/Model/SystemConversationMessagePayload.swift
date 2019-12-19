@@ -31,8 +31,8 @@ enum SystemConversationAction: String {
 
     static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
         let action = actionName ?? ""
-        let uFullName = userId == AccountAPI.shared.accountUserId ? Localized.CHAT_MESSAGE_YOU : userFullName
-        let pFullName = participantId == AccountAPI.shared.accountUserId ? Localized.CHAT_MESSAGE_YOU : participantFullName ?? ""
+        let uFullName = userId == myUserId ? Localized.CHAT_MESSAGE_YOU : userFullName
+        let pFullName = participantId == myUserId ? Localized.CHAT_MESSAGE_YOU : participantFullName ?? ""
         switch action {
         case SystemConversationAction.CREATE.rawValue:
             return Localized.CHAT_MESSAGE_CREATED(fullName: uFullName)

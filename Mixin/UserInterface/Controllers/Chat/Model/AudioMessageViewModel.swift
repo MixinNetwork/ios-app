@@ -14,7 +14,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var downloadIsTriggeredByUser = false
     
     var isUnread: Bool {
-        return message.userId != AccountAPI.shared.accountUserId
+        return message.userId != myUserId
             && mediaStatus != MediaStatus.READ.rawValue
     }
     

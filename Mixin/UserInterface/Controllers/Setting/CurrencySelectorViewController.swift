@@ -67,7 +67,7 @@ extension CurrencySelectorViewController: UITableViewDelegate {
         AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                Account.current = account
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.dismiss(animated: true, completion: nil)

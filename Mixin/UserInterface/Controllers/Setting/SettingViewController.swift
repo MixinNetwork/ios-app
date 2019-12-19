@@ -36,7 +36,7 @@ class SettingViewController: UIViewController {
             guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SettingCell else {
                 return
             }
-            let hasPin = AccountAPI.shared.account?.has_pin ?? false
+            let hasPin = Account.current?.has_pin ?? false
             let title = hasPin ? R.string.localizable.wallet_setting() : R.string.localizable.wallet_pin_title()
             cell.titleLabel.text = title
         }
@@ -89,7 +89,7 @@ extension SettingViewController: UITableViewDelegate {
                 vc = DataStorageUsageViewController.instance()
             }
         case 1:
-            if AccountAPI.shared.account?.has_pin ?? false {
+            if Account.current?.has_pin ?? false {
                 vc = WalletSettingViewController.instance()
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)

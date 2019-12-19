@@ -3,20 +3,20 @@ import Foundation
 class RefreshAccountJob: BaseJob {
 
     override func getJobId() -> String {
-        return "refresh-account-\(AccountAPI.shared.accountUserId)"
+        return "refresh-account-\(myUserId)"
     }
 
     override func run() throws {
-        guard AccountAPI.shared.didLogin else {
+        guard isLoggedIn else {
             return
         }
         switch AccountAPI.shared.me() {
         case let .success(account):
-            AccountAPI.shared.updateAccount(account: account)
+            Account.current = account
         case let .failure(error):
             throw error
         }
-        let myId = AccountAPI.shared.accountUserId
+        let myId = myUserId
         switch UserAPI.shared.getFavoriteApps(ofUserWith: myId) {
         case let .success(favApps):
             FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: myId)

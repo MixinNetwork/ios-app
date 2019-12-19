@@ -211,7 +211,7 @@ extension MessageItem {
 extension MessageItem {
     
     func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
-        guard userId != AccountAPI.shared.accountUserId else {
+        guard userId != myUserId else {
             return false
         }
         guard conversation.category != ConversationCategory.GROUP.rawValue else {
@@ -221,7 +221,7 @@ extension MessageItem {
     }
     
     func canRecall() -> Bool {
-        guard userId == AccountAPI.shared.accountUserId, status != MessageStatus.SENDING.rawValue else {
+        guard userId == myUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }
         guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {

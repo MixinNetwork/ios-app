@@ -9,6 +9,7 @@ enum MixinError: Error {
     case requestLoginVerificationCode([String: Any])
     case generateRsaKeyPair
     case unrecognizedReCaptchaMessage(String)
+    case unrecognizedUrl(URL)
     
 }
 
@@ -34,6 +35,8 @@ extension MixinError: CustomNSError {
             return 5
         case .unrecognizedReCaptchaMessage:
             return 6
+        case .unrecognizedUrl:
+            return 7
         }
     }
     
@@ -49,6 +52,8 @@ extension MixinError: CustomNSError {
             return info
         case let .unrecognizedReCaptchaMessage(body):
             return ["body": body]
+        case let .unrecognizedUrl(url):
+            return ["url": url.absoluteString]
         }
     }
     

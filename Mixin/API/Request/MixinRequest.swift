@@ -3,7 +3,6 @@ import Alamofire
 import Goutils
 import DeviceGuru
 import UIKit
-import Bugsnag
 
 class MixinRequest {
 

@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import UserNotifications
 
 final class AccountAPI: BaseAPI {
     

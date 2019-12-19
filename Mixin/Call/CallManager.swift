@@ -1,7 +1,6 @@
 import Foundation
 import WebRTC
 import CallKit
-import UserNotifications
 
 class CallManager {
     

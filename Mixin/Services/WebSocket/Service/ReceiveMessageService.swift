@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import SDWebImage
-import UserNotifications
 
 protocol CallMessageCoordinator: class {
     var hasActiveCall: Bool { get }

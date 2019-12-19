@@ -1,6 +1,4 @@
 import Foundation
-import Bugsnag
-import UserNotifications
 import Firebase
 import SafariServices
 import Crashlytics
@@ -62,7 +60,8 @@ extension UIApplication {
         } else if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
-            Bugsnag.notify(NSException(name: NSExceptionName(rawValue: "Unrecognized URL"), reason: nil, userInfo: ["URL": url.absoluteString]))
+            let error = MixinError.unrecognizedUrl(url)
+            Reporter.report(error: error)
         }
     }
     

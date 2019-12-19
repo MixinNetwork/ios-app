@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 import UIKit
-import Bugsnag
 
 class BaseJob: Operation {
 

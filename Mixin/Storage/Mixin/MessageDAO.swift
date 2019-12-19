@@ -1,4 +1,3 @@
-import UserNotifications
 import WCDBSwift
 import UIKit
 

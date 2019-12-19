@@ -1,5 +1,4 @@
 import UIKit
-import UserNotifications
 import Bugsnag
 import Crashlytics
 import DeviceCheck

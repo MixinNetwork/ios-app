@@ -1,5 +1,4 @@
 import Foundation
-import Bugsnag
 
 class UploadOrDownloadJob: AsynchronousJob {
 

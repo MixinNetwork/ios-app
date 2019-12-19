@@ -10,14 +10,12 @@ enum MixinServer {
         return all[MixinServer.serverIndex.value].1
     }
     
-    private static let key = "server_index"
-    
     private static let all = [
         ("mixin-blaze.zeromesh.net", "https://mixin-api.zeromesh.net/"),
         ("blaze.mixin.one", "https://api.mixin.one/")
     ]
     
-    private static var serverIndex = Atomic<Int>(UserDefaults.standard.integer(forKey: key))
+    private static var serverIndex = Atomic<Int>(AppGroupUserDefaults.serverIndex)
     
     static func toggle(currentWebSocketHost host: String?) {
         guard host == webSocketHost else {
@@ -39,7 +37,7 @@ enum MixinServer {
             nextIndex = 0
         }
         serverIndex.value = nextIndex
-        UserDefaults.standard.set(nextIndex, forKey: key)
+        AppGroupUserDefaults.serverIndex = nextIndex
     }
     
 }

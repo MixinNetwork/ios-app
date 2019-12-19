@@ -117,6 +117,9 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "currency_rates", defaultValue: [:])
     public static var currencyRates: [String: Double]
     
+    @Default(namespace: nil, key: "server_index", defaultValue: 0)
+    public static var serverIndex: Int
+    
 }
 
 extension AppGroupUserDefaults {

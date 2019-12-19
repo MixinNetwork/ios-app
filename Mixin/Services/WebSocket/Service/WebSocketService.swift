@@ -208,7 +208,7 @@ extension WebSocketService: WebSocketDelegate {
                 && error.code == 401
                 && !AppGroupUserDefaults.Account.isClockSkewed
             if needsLogout {
-                AccountAPI.shared.logout(from: "WebSocketService")
+                logout(from: "WebSocketService")
             }
         } else {
             if let handler = messageHandlers[message.id] {

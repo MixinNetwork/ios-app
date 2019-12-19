@@ -141,7 +141,7 @@ class BaseAPI {
                             }
                         }
                         Reporter.report(error: MixinError.logout(isAsyncRequest: true))
-                        AccountAPI.shared.logout(from: "AsyncRequest")
+                        logout(from: "AsyncRequest")
                         return
                     default:
                         break
@@ -256,7 +256,7 @@ extension BaseAPI {
                 }
             }
             Reporter.report(error: MixinError.logout(isAsyncRequest: false))
-            AccountAPI.shared.logout(from: "SyncRequest")
+            logout(from: "SyncRequest")
         }
         return result
     }

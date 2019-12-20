@@ -8,6 +8,7 @@ class AssetFilterConditionCell: UICollectionViewCell {
         super.awakeFromNib()
         
         backgroundView = UIView()
+        backgroundView!.backgroundColor = R.color.text_field()
         backgroundView!.clipsToBounds = true
         backgroundView!.layer.borderColor = UIColor.disabledGray.cgColor
         backgroundView!.layer.borderWidth = 1

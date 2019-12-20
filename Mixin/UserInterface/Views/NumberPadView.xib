@@ -26,7 +26,7 @@
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ace-dV-Ufg" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="1"/>
@@ -38,7 +38,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IDe-df-6wP" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="123" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="2"/>
@@ -50,7 +50,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BJi-dP-dcG" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="246" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="3"/>
@@ -67,7 +67,7 @@
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vc3-93-UYA" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="4"/>
@@ -79,7 +79,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DIX-ma-Ccx" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="123" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="5"/>
@@ -91,7 +91,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qnm-QB-D6g" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="246" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="6"/>
@@ -108,7 +108,7 @@
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ee-NU-nWb" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="7"/>
@@ -120,7 +120,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tcp-xH-jsN" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="123" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="8"/>
@@ -132,7 +132,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IyS-r3-gHl" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="246" y="0.0" width="117" height="50"/>
-                                    <color key="backgroundColor" name="keyboard_button_background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="9"/>
@@ -153,6 +153,7 @@
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KMT-73-JmU" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="123" y="0.0" width="117" height="50"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="number">
                                             <integer key="value" value="0"/>
@@ -192,9 +193,6 @@
         <image name="ic_keyboard_delete" width="23" height="17"/>
         <namedColor name="keyboard_background">
             <color red="0.7803921568627451" green="0.79607843137254897" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="keyboard_button_background">
-            <color red="1" green="0.99993687868118286" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

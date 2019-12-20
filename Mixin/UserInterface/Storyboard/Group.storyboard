@@ -332,7 +332,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_field">
             <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

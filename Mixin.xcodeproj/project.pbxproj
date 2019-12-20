@@ -1847,6 +1847,7 @@
 				E05DBEAA23A760F000E32164 /* Foundation */,
 				E07E389C23A7716C0005A538 /* Services */,
 				E07E38A223A7731D0005A538 /* Storage */,
+				E01BC6E423ACD7D1005D3FF3 /* Job */,
 				7BB788BB216CD1DA00EDE7B4 /* Call */,
 				7BC8502120CBA68700A57B83 /* Audio */,
 				7BB3854C21E74B2B0070FF8F /* Provision */,
@@ -2330,7 +2331,6 @@
 			children = (
 				DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */,
 				DFA606302013AA4F0006EEE4 /* UploaderQueue.swift */,
-				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF6ED3ED1FE37D0400E958A3 /* ConcurrentJobQueue.swift */,
 			);
 			path = Queue;
@@ -2828,8 +2828,6 @@
 				DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */,
 				DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */,
 				DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */,
-				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
-				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
 				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
@@ -3145,6 +3143,16 @@
 				DF9C9C6422C5E8720090873E /* SafeDictionary.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		E01BC6E423ACD7D1005D3FF3 /* Job */ = {
+			isa = PBXGroup;
+			children = (
+				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
+				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
+				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
+			);
+			path = Job;
 			sourceTree = "<group>";
 		};
 		E05DBEAA23A760F000E32164 /* Foundation */ = {

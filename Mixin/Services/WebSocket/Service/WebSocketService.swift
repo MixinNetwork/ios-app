@@ -160,15 +160,6 @@ extension WebSocketService: WebSocketDelegate {
                 ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
             }
             AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
-            
-            if rechability?.isReachableOnEthernetOrWiFi ?? false {
-                if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
-                    BackupJobQueue.shared.addJob(job: BackupJob())
-                }
-                if AppGroupUserDefaults.Account.canRestoreMedia {
-                    BackupJobQueue.shared.addJob(job: RestoreJob())
-                }
-            }
             ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
         }
     }

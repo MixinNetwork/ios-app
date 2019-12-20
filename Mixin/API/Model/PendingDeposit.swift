@@ -31,6 +31,7 @@ struct PendingDeposit: Codable {
                         memo: nil,
                         receiver: nil,
                         confirmations: confirmations,
+                        traceId: "",
                         createdAt: createdAt)
     }
     

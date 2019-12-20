@@ -32,6 +32,9 @@ final class AssetAPI: BaseAPI {
         static func snapshot(snapshotId: String) -> String {
             return "snapshots/\(snapshotId)"
         }
+        static func snapshot(traceId: String) -> String {
+            return "transfers/trace/\(traceId)"
+        }
 
         static let transactions = "transactions"
         static let transfers = "transfers"
@@ -97,6 +100,10 @@ final class AssetAPI: BaseAPI {
 
     func snapshot(snapshotId: String) -> APIResult<Snapshot> {
         return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
+    }
+
+    func snapshot(traceId: String) -> APIResult<Snapshot> {
+        return request(method: .get, url: url.snapshot(traceId: traceId))
     }
     
     func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> APIResult<[Snapshot]> {

@@ -1,6 +1,6 @@
 import WCDBSwift
 
-struct SnapshotItem: TableDecodable {
+struct SnapshotItem: TableCodable {
 
     let snapshotId: String
     let type: String
@@ -12,6 +12,7 @@ struct SnapshotItem: TableDecodable {
     let receiver: String?
     let memo: String?
     let confirmations: Int?
+    let traceId: String?
     let createdAt: String
     
     let assetSymbol: String?
@@ -33,6 +34,7 @@ struct SnapshotItem: TableDecodable {
         case receiver
         case memo
         case confirmations
+        case traceId = "trace_id"
         case createdAt = "created_at"
         
         case assetSymbol = "symbol"

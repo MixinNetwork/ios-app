@@ -192,7 +192,13 @@ extension Optional where Wrapped == String {
             return true
         }
     }
-    
+
+    var uuidString: String? {
+        guard let value = self, UUID(uuidString: value) != nil else {
+            return nil
+        }
+        return value
+    }
 }
 
 extension NSAttributedString.Key {

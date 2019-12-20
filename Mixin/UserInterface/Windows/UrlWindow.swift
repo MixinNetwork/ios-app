@@ -19,8 +19,8 @@ class UrlWindow {
             return checkAddress(url: url)
         case let .users(id):
             return checkUser(id, clearNavigationStack: clearNavigationStack)
-        case let .snapshots(id):
-            return checkSnapshot(id)
+        case let .snapshots:
+            return checkSnapshot(url: url)
         case let .apps(userId):
             return checkApp(url: url, userId: userId)
         case let .transfer(id):
@@ -98,17 +98,22 @@ class UrlWindow {
         return true
     }
 
-    class func checkSnapshot(_ snapshotId: String) -> Bool {
-        guard !snapshotId.isEmpty, UUID(uuidString: snapshotId) != nil else {
+    class func checkSnapshot(url: URL) -> Bool {
+        let snapshotId: String? = (url.pathComponents.count > 1 ? url.pathComponents[1] : nil).uuidString
+        let traceId: String? = url.getKeyVals()?["trace"].uuidString
+
+        guard !snapshotId.isNilOrEmpty || !traceId.isNilOrEmpty else {
             return false
         }
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         DispatchQueue.global().async {
-            var snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
-            if snapshotItem == nil {
-                switch AssetAPI.shared.snapshot(snapshotId: snapshotId) {
+            var snapshotItem: SnapshotItem?
+            if let traceId = traceId  {
+                snapshotItem = SnapshotDAO.shared.getSnapshot(traceId: traceId)
+                if snapshotItem == nil {
+                    switch AssetAPI.shared.snapshot(traceId: traceId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -121,6 +126,25 @@ class UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                         return
+                    }
+                }
+            } else if let snapshotId = snapshotId {
+                snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
+                if snapshotItem == nil {
+                    switch AssetAPI.shared.snapshot(snapshotId: snapshotId) {
+                    case let .success(snapshot):
+                        snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
+                    case let .failure(error):
+                        DispatchQueue.main.async {
+                            if error.code == 404 {
+                                hud.set(style: .error, text: R.string.localizable.snapshot_not_found())
+                            } else {
+                                hud.set(style: .error, text: error.localizedDescription)
+                            }
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
                 }
             }
 

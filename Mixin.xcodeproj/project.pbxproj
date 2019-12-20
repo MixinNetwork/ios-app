@@ -2056,7 +2056,6 @@
 				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
 				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
-				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3167,7 +3166,6 @@
 				E05DC14523A76E8100E32164 /* Reporter.swift */,
 				E07E38B023A779140005A538 /* Logger.swift */,
 				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
-				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -3226,6 +3224,8 @@
 				DF5D9F201F9C79110036D5FD /* API */,
 				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
 				E0B47E7B23AB7DA2009E5738 /* LoginManager.swift */,
+				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
+				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3560,6 +3560,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
+				"${BUILT_PRODUCTS_DIR}/MixinServices/MixinServices.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
@@ -3588,6 +3589,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MixinServices.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",

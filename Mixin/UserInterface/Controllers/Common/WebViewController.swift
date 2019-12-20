@@ -27,6 +27,7 @@ class WebViewController: UIViewController {
     private(set) var isBeingDismissedAsChild = false
     
     private let messageHandlerName = "MixinContext"
+    private let reloadThemeHandlerName = "reloadTheme"
     
     private lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
@@ -39,6 +40,7 @@ class WebViewController: UIViewController {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
         config.userContentController.add(self, name: messageHandlerName)
+        config.userContentController.add(self, name: reloadThemeHandlerName)
         let frame = CGRect(x: 0, y: 0, width: 375, height: 667)
         return WKWebView(frame: frame, configuration: config)
     }()
@@ -127,6 +129,7 @@ class WebViewController: UIViewController {
         super.viewDidDisappear(animated)
         imageRequest?.cancel()
         webView.configuration.userContentController.removeScriptMessageHandler(forName: messageHandlerName)
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: reloadThemeHandlerName)
     }
     
     @IBAction func moreAction(_ sender: Any) {
@@ -331,7 +334,9 @@ class WebViewController: UIViewController {
 extension WebViewController: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // Necessary for message handling DO NOT DELETE
+        if message.name == reloadThemeHandlerName {
+            reloadTheme(webView: webView)
+        }
     }
     
 }
@@ -384,13 +389,7 @@ extension WebViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        webView.evaluateJavaScript(Script.getThemeColor) { (result, error) in
-            guard let colorString = result as? String else {
-                return
-            }
-            let color = UIColor(hexString: colorString) ?? .white
-            self.updateBackground(pageThemeColor: color)
-        }
+        reloadTheme(webView: webView)
     }
     
 }
@@ -490,4 +489,18 @@ extension WebViewController {
         
     }
     
+}
+
+extension WebViewController {
+
+    func reloadTheme(webView: WKWebView) {
+        webView.evaluateJavaScript(Script.getThemeColor) { [weak self](result, error) in
+            guard let colorString = result as? String else {
+                return
+            }
+            let color = UIColor(hexString: colorString) ?? .white
+            self?.updateBackground(pageThemeColor: color)
+        }
+    }
+
 }

@@ -33,7 +33,7 @@ class AsynchronousJob: BaseJob {
     }
 
     override func start() {
-        guard !isCancelled, isLoggedIn else {
+        guard !isCancelled, LoginManager.shared.isLoggedIn else {
             finishJob()
             return
         }

@@ -40,7 +40,7 @@ final class PrivacyViewController: UITableViewController {
         case 1:
             vc = AuthorizationsViewController.instance()
         case 2:
-            if Account.current?.has_pin ?? false {
+            if LoginManager.shared.account?.has_pin ?? false {
                 vc = EmergencyContactViewController.instance()
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)

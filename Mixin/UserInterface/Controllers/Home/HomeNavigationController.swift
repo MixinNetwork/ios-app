@@ -102,10 +102,10 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
 extension HomeNavigationController {
     
     private func checkUser() {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
-        if let account = Account.current {
+        if let account = LoginManager.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
             Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
             Crashlytics.sharedInstance().setUserName(account.full_name)
@@ -115,7 +115,7 @@ extension HomeNavigationController {
     }
 
     private func checkDevice() {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         DCDevice.current.generateToken { (data, error) in

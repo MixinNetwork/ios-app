@@ -24,7 +24,7 @@ public enum Logger {
     }
     
     public static func write(conversationId: String, log: String, newSection: Bool = false) {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         guard !conversationId.isEmpty else {

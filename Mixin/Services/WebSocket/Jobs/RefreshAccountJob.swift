@@ -7,12 +7,12 @@ class RefreshAccountJob: BaseJob {
     }
 
     override func run() throws {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         switch AccountAPI.shared.me() {
         case let .success(account):
-            Account.current = account
+            LoginManager.shared.account = account
         case let .failure(error):
             throw error
         }

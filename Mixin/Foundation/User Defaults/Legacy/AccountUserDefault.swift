@@ -21,17 +21,6 @@ internal class AccountUserDefault {
         return session.value(forKey: keyAccount) as? Data
     }
     
-    func storeAccount(account: Account?) {
-        if let account = account {
-            if let data = try? JSONEncoder().encode(account) {
-                session.setValue(data, forKey: keyAccount)
-            }
-            NotificationCenter.default.post(name: .AccountDidChange, object: nil)
-        } else {
-            session.removeObject(forKey: keyAccount)
-        }
-    }
-
     func getAccount() -> Account? {
         guard let data = session.value(forKey: keyAccount) as? Data, let account = try? JSONDecoder().decode(Account.self, from: data) else {
             return nil

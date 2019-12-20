@@ -12,7 +12,7 @@ class WalletSettingViewController: UITableViewController {
     private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
     private let footerReuseId = "footer"
     private var currenyThreshold: String {
-        let threshold = Account.current?.transfer_confirmation_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     private var currentCurrency: Currency {
@@ -224,7 +224,7 @@ extension WalletSettingViewController {
         AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: Currency.current.code, transfer_confirmation_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                Account.current = account
+                LoginManager.shared.account = account
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.updateLabels()

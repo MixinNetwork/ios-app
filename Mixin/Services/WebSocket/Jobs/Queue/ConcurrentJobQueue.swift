@@ -10,7 +10,7 @@ class ConcurrentJobQueue: JobQueue {
     }
 
     func restoreJobs() {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
 

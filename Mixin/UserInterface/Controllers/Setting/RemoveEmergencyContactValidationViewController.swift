@@ -21,7 +21,7 @@ class RemoveEmergencyContactValidationViewController: PinValidationViewControlle
             weakSelf.loadingIndicator.stopAnimating()
             switch result {
             case .success(let account):
-                Account.current = account
+                LoginManager.shared.account = account
                 weakSelf.dismiss(animated: true, completion: nil)
             case .failure(let error):
                 weakSelf.handle(error: error)

@@ -8,8 +8,6 @@ extension NSNotification.Name {
 
     static let ConversationDidChange = NSNotification.Name("one.mixin.ios.sqlite.messages.changed")
 
-    static let AccountDidChange = NSNotification.Name("one.mixin.ios.account.changed")
-
     static let ContactsDidChange = NSNotification.Name("one.mixin.ios.contacts.changed")
 
     static let UserDidChange = NSNotification.Name("one.mixin.ios.user.changed")

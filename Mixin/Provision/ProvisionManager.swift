@@ -11,7 +11,7 @@ class ProvisionManager {
         ProvisioningAPI.shared.code { (response) in
             switch response {
             case .success(let response):
-                guard let account = Account.current else {
+                guard let account = LoginManager.shared.account else {
                     return
                 }
                 let message = ProvisionMessage(identityKeyPublic: identityKeyPair.publicKey,

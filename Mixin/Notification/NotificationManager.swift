@@ -91,7 +91,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             }
         } else {
             DispatchQueue.global().async {
-                guard isLoggedIn else {
+                guard LoginManager.shared.isLoggedIn else {
                     return
                 }
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
@@ -122,7 +122,7 @@ extension NotificationManager {
         guard let notificationWasAuthorized = notificationWasAuthorized, !notificationWasAuthorized else {
             return
         }
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in

@@ -34,7 +34,7 @@ class SendMessageService: MixinService {
     }
 
     func sendMessage(message: Message, ownerUser: UserItem?, isGroupMessage: Bool) {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
 
@@ -264,7 +264,7 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.httpProcessing = false
             }
             repeat {
-                guard isLoggedIn else {
+                guard LoginManager.shared.isLoggedIn else {
                     return
                 }
 
@@ -333,7 +333,7 @@ class SendMessageService: MixinService {
             }
             var deleteJobId = ""
             repeat {
-                guard isLoggedIn else {
+                guard LoginManager.shared.isLoggedIn else {
                     return
                 }
                 guard let job = JobDAO.shared.nextJob() else {
@@ -393,7 +393,7 @@ class SendMessageService: MixinService {
                 }
             }
 
-            while isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+            while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
             return false
@@ -402,7 +402,7 @@ class SendMessageService: MixinService {
 
     private func handlerJob(job: Job) -> Bool {
         repeat {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return false
             }
 
@@ -479,7 +479,7 @@ class SendMessageService: MixinService {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                             Reporter.report(error: MixinServicesError.sendMessage(userInfo))
-                            logout(from: "SendMessengerError")
+                            LoginManager.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }

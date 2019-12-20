@@ -4,7 +4,7 @@ public enum MixinServicesError: Error {
     
     private static var basicUserInfo: [String: Any] {
         var userInfo = Reporter.basicUserInfo
-        userInfo["didLogin"] = isLoggedIn
+        userInfo["didLogin"] = LoginManager.shared.isLoggedIn
         return userInfo
     }
     

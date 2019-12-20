@@ -19,7 +19,7 @@ class ConversationDataSource {
     private let windowRect = AppDelegate.current.window.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
-    private let me = Account.current!
+    private let me = LoginManager.shared.account!
     
     private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()

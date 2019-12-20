@@ -112,7 +112,7 @@ public class BaseAPI {
 
     @discardableResult
     func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
-        if checkLogin && !isLoggedIn {
+        if checkLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
@@ -141,7 +141,7 @@ public class BaseAPI {
                             }
                         }
                         Reporter.report(error: MixinError.logout(isAsyncRequest: true))
-                        logout(from: "AsyncRequest")
+                        LoginManager.shared.logout(from: "AsyncRequest")
                         return
                     default:
                         break
@@ -198,7 +198,7 @@ extension BaseAPI {
         var responseServerTime = ""
         let requestTime = Date()
         let rootURLString = MixinServer.httpUrl
-        if isLoggedIn {
+        if LoginManager.shared.isLoggedIn {
             let semaphore = DispatchSemaphore(value: 0)
             getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
                 .validate(statusCode: 200...299)
@@ -256,7 +256,7 @@ extension BaseAPI {
                 }
             }
             Reporter.report(error: MixinError.logout(isAsyncRequest: false))
-            logout(from: "SyncRequest")
+            LoginManager.shared.logout(from: "SyncRequest")
         }
         return result
     }

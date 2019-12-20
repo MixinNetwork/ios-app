@@ -63,7 +63,7 @@ final class UserProfileViewController: ProfileViewController {
         recognizer.delegate = self
         view.addGestureRecognizer(recognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: .AccountDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -141,7 +141,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     @objc func accountDidChange(_ notification: Notification) {
-        guard let account = Account.current, account.user_id == user.userId else {
+        guard let account = LoginManager.shared.account, account.user_id == user.userId else {
             return
         }
         self.user = UserItem.createUser(from: account)
@@ -195,7 +195,7 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
-                Account.current = account
+                LoginManager.shared.account = account
                 hud.set(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -255,7 +255,7 @@ extension UserProfileViewController {
     }
     
     @objc func showMyQrCode() {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         let window = QrcodeWindow.instance()
@@ -266,7 +266,7 @@ extension UserProfileViewController {
     }
     
     @objc func showMyMoneyReceivingCode() {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         let window = QrcodeWindow.instance()
@@ -289,7 +289,7 @@ extension UserProfileViewController {
             AccountAPI.shared.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
-                    Account.current = account
+                    LoginManager.shared.account = account
                     hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -305,7 +305,7 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        if Account.current?.has_pin ?? false {
+        if LoginManager.shared.account?.has_pin ?? false {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             dismissAndPresent(vc)
         } else {
@@ -340,7 +340,7 @@ extension UserProfileViewController {
     
     @objc func transfer() {
         let viewController: UIViewController
-        if Account.current?.has_pin ?? false {
+        if LoginManager.shared.account?.has_pin ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
@@ -371,7 +371,7 @@ extension UserProfileViewController {
             return
         }
         let vc = UserProfileViewController(user: user)
-        if user.appCreatorId == myUserId, let account = Account.current {
+        if user.appCreatorId == myUserId, let account = LoginManager.shared.account {
             vc.user = UserItem.createUser(from: account)
         } else {
             vc.user = developer

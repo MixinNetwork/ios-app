@@ -468,7 +468,7 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
                 conversationInputViewController.dismiss()
                 if shareUserId == myUserId {
-                    guard let account = Account.current else {
+                    guard let account = LoginManager.shared.account else {
                         return
                     }
                     let user = UserItem.createUser(from: account)
@@ -678,7 +678,7 @@ class ConversationViewController: UIViewController {
             return
         }
         let viewController: UIViewController
-        if Account.current?.has_pin ?? false {
+        if LoginManager.shared.account?.has_pin ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))

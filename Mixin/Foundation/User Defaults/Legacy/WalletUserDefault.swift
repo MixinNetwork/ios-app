@@ -74,7 +74,7 @@ internal class WalletUserDefault {
     }
 
     func initPinInterval() {
-        guard Account.current?.has_pin ?? false, session.object(forKey: keyCheckPINInterval) == nil  else {
+        guard LoginManager.shared.account?.has_pin ?? false, session.object(forKey: keyCheckPINInterval) == nil  else {
             return
         }
 

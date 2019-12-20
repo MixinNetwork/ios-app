@@ -78,7 +78,7 @@ public class WebSocketService {
     func reconnectIfNeeded() {
         enqueueOperation {
             let shouldReconnect = self.isReachable
-                && isLoggedIn
+                && LoginManager.shared.isLoggedIn
                 && self.status == .connected
                 && !(self.socket?.isConnected ?? false)
             if shouldReconnect {
@@ -89,7 +89,7 @@ public class WebSocketService {
     
     func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
         return try messageQueue.sync {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return nil
             }
             var response: BlazeMessage?
@@ -208,7 +208,7 @@ extension WebSocketService: WebSocketDelegate {
                 && error.code == 401
                 && !AppGroupUserDefaults.Account.isClockSkewed
             if needsLogout {
-                logout(from: "WebSocketService")
+                LoginManager.shared.logout(from: "WebSocketService")
             }
         } else {
             if let handler = messageHandlers[message.id] {
@@ -298,7 +298,7 @@ extension WebSocketService {
     
     private func networkBecomesReachable() {
         enqueueOperation {
-            guard self.connectOnNetworkIsReachable, isLoggedIn else {
+            guard self.connectOnNetworkIsReachable, LoginManager.shared.isLoggedIn else {
                 return
             }
             self.connect()
@@ -322,7 +322,7 @@ extension WebSocketService {
             
             let lastConnectionDate = self.lastConnectionDate ?? .distantPast
             let shouldConnectImmediately = self.isReachable
-                && isLoggedIn
+                && LoginManager.shared.isLoggedIn
                 && (!self.networkWasRechableOnConnection || -lastConnectionDate.timeIntervalSinceNow >= 1)
             if shouldConnectImmediately {
                 self.connectOnNetworkIsReachable = false

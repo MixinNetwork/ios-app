@@ -12,7 +12,7 @@ class NotificationSettingsViewController: UITableViewController {
         return Currency.current
     }
     private var currenyThreshold: String {
-        let threshold = Account.current?.transfer_notification_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transfer_notification_threshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
 
@@ -78,7 +78,7 @@ class NotificationSettingsViewController: UITableViewController {
         AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: Currency.current.code, transfer_notification_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                Account.current = account
+                LoginManager.shared.account = account
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.tableView.reloadData()

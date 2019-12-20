@@ -23,7 +23,7 @@ class JobQueue {
 
     @discardableResult
     func addJob(job: BaseJob) -> Bool {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return false
         }
         let jobId = job.getJobId()

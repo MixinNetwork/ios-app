@@ -220,7 +220,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     switch result {
                     case .success(let account):
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                        Account.current = account
+                        LoginManager.shared.account = account
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
                         if error.code == 429 {
@@ -289,7 +289,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         }
                         AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                        Account.current = account
+                        LoginManager.shared.account = account
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
                         if error.code == 429 {

@@ -67,7 +67,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     }
     
     private func loadGroupIcon() {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         var participants: [ParticipantUser] = members.map { (user) in

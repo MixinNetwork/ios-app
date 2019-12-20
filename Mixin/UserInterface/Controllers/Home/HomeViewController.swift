@@ -95,7 +95,7 @@ class HomeViewController: UIViewController {
     }
 
     private func checkServerStatus() {
-        guard isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         guard !WebSocketService.shared.isConnected else {
@@ -159,7 +159,7 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func walletAction(_ sender: Any) {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         if account.has_pin {

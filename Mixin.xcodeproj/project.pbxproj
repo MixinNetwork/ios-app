@@ -813,8 +813,7 @@
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
 		E0B4586723AC7EEA00EF4FD4 /* String+GoUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4586623AC7EEA00EF4FD4 /* String+GoUUID.swift */; };
 		E0B45B1B23AC841700EF4FD4 /* UNMutableNotificationContent+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B45B1A23AC841700EF4FD4 /* UNMutableNotificationContent+Convenience.swift */; };
-		E0B47E7C23AB7DA2009E5738 /* AccountStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */; };
-		E0B47E7E23AB983C009E5738 /* Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7D23AB983C009E5738 /* Logout.swift */; };
+		E0B47E7C23AB7DA2009E5738 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7B23AB7DA2009E5738 /* LoginManager.swift */; };
 		E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8AAC423BDA1C700E911CE /* AppButton.swift */; };
 		E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */; };
 		E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */; };
@@ -1682,8 +1681,7 @@
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
 		E0B4586623AC7EEA00EF4FD4 /* String+GoUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+GoUUID.swift"; sourceTree = "<group>"; };
 		E0B45B1A23AC841700EF4FD4 /* UNMutableNotificationContent+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNMutableNotificationContent+Convenience.swift"; sourceTree = "<group>"; };
-		E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStorage.swift; sourceTree = "<group>"; };
-		E0B47E7D23AB983C009E5738 /* Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logout.swift; sourceTree = "<group>"; };
+		E0B47E7B23AB7DA2009E5738 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		E0B8AAC423BDA1C700E911CE /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
 		E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyFavoriteAppProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteAppProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -1860,7 +1858,6 @@
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
-				E0B47E7D23AB983C009E5738 /* Logout.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
 			);
@@ -3212,7 +3209,7 @@
 				DF30D7421FA22CB200683C1A /* WebSocket */,
 				DF5D9F201F9C79110036D5FD /* API */,
 				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
-				E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */,
+				E0B47E7B23AB7DA2009E5738 /* LoginManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3930,7 +3927,6 @@
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				273FACBC205FB9A800513327 /* IdentityKeyStore.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
-				E0B47E7E23AB983C009E5738 /* Logout.swift in Sources */,
 				DF5D9F271F9C79E10036D5FD /* Bundle+Info.swift in Sources */,
 				7B280DF022B124450084E49E /* EmergencyAPI.swift in Sources */,
 				DF8DA1891FD4F5D700425CEC /* DictionaryExtension.swift in Sources */,
@@ -4071,7 +4067,7 @@
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
-				E0B47E7C23AB7DA2009E5738 /* AccountStorage.swift in Sources */,
+				E0B47E7C23AB7DA2009E5738 /* LoginManager.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,

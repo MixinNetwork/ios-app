@@ -16,7 +16,7 @@ class BiographyViewController: AnnouncementViewController {
         AccountAPI.shared.update(biography: newAnnouncement) { [weak self] (result) in
             switch result {
             case let .success(account):
-                Account.current = account
+                LoginManager.shared.account = account
                 self?.saveSuccessAction()
             case let .failure(error):
                 self?.saveFailedAction(error: error)

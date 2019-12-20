@@ -57,7 +57,7 @@ extension Currency {
     
     private static var map = [String: Currency](uniqueKeysWithValues: all.map({ ($0.code, $0) }))
     private static var currentCurrencyStorage: Currency {
-        if let code = Account.current?.fiat_currency, let currency = map[code] {
+        if let code = LoginManager.shared.account?.fiat_currency, let currency = map[code] {
             return currency
         } else {
             return all[0] // USD for default

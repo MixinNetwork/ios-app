@@ -11,7 +11,7 @@ func makeInitialViewController() -> UIViewController {
             }
             return ClockSkewViewController.instance()
         }
-    } else if Account.current?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
+    } else if LoginManager.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
         return UsernameViewController()
     } else if AppGroupUserDefaults.Account.canRestoreChat {
         return RestoreViewController.instance()

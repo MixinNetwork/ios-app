@@ -46,7 +46,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 checkNetworkAndWebSocket()
                 Thread.sleep(forTimeInterval: 2)
             }
-        } while isLoggedIn && !isCancelled
+        } while LoginManager.shared.isLoggedIn && !isCancelled
         return false
     }
 

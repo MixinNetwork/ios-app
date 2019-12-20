@@ -5,7 +5,7 @@ final class EmergencyContactViewController: UITableViewController {
     private let footerReuseId = "footer"
     
     private var hasEmergencyContact: Bool {
-        return Account.current?.has_emergency_contact ?? false
+        return LoginManager.shared.account?.has_emergency_contact ?? false
     }
     
     deinit {
@@ -23,7 +23,7 @@ final class EmergencyContactViewController: UITableViewController {
         tableView.register(R.nib.settingCell)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: footerReuseId)
-        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: .AccountDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -91,7 +91,7 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     private func changeEmergencyContact() {
-        guard let account = Account.current else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         if account.has_pin {
@@ -117,7 +117,7 @@ final class EmergencyContactViewController: UITableViewController {
     private func enableEmergencyContact() {
         let vc = EmergencyTipsViewController.instance()
         vc.onNext = { [weak self] in
-            guard let account = Account.current else {
+            guard let account = LoginManager.shared.account else {
                 return
             }
             if account.has_pin {

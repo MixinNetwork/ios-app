@@ -89,7 +89,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 // FIXME: Extend AppGroupUserDefaults for account r/w
                 AppGroupUserDefaults.Account.serializedAccount = data
             }
-            Account.current = account
+            LoginManager.shared.account = account
             MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
             TaskDatabase.shared.initDatabase()
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

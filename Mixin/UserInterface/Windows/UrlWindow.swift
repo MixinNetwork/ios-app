@@ -242,7 +242,7 @@ class UrlWindow {
     }
 
     class func checkWithdrawal(url: URL) -> Bool {
-        guard Account.current?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -300,7 +300,7 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
-        guard Account.current?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -338,7 +338,7 @@ class UrlWindow {
     }
 
     class func checkAddress(url: URL) -> Bool {
-        guard Account.current?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }

@@ -27,7 +27,7 @@ class ConversationSettingViewController: UITableViewController {
             $0.status = .selected
             $0.alpha = 0
         }
-        if let account = Account.current {
+        if let account = LoginManager.shared.account {
             switch account.receive_message_source {
             case ReceiveMessageSource.everybody.rawValue:
                 messageSourceEverybodyCheckmarkView.alpha = 1
@@ -70,7 +70,7 @@ extension ConversationSettingViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let newSource: ReceiveMessageSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != Account.current?.receive_message_source {
+            if newSource.rawValue != LoginManager.shared.account?.receive_message_source {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setMessageSourceEverybody()
@@ -80,7 +80,7 @@ extension ConversationSettingViewController {
             }
         } else if indexPath.section == 1 {
             let newSource: AcceptConversationSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != Account.current?.accept_conversation_source {
+            if newSource.rawValue != LoginManager.shared.account?.accept_conversation_source {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setConversationSourceEverybody()
@@ -120,7 +120,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
-                Account.current = account
+                LoginManager.shared.account = account
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceContactsCheckmarkView.alpha = 1
@@ -139,7 +139,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.messageSourceContactsCheckmarkView.alpha = 1
-                Account.current = account
+                LoginManager.shared.account = account
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
@@ -158,7 +158,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1
-                Account.current = account
+                LoginManager.shared.account = account
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
@@ -177,7 +177,7 @@ extension ConversationSettingViewController {
             switch result {
             case .success(let account):
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
-                Account.current = account
+                LoginManager.shared.account = account
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1

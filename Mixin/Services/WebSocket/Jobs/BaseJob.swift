@@ -15,7 +15,7 @@ class BaseJob: Operation {
     }
 
     override func main() {
-        guard isLoggedIn, !isCancelled else {
+        guard LoginManager.shared.isLoggedIn, !isCancelled else {
             return
         }
         repeat {
@@ -34,17 +34,17 @@ class BaseJob: Operation {
                 }
                 Thread.sleep(forTimeInterval: 2)
             }
-        } while isLoggedIn && !isCancelled
+        } while LoginManager.shared.isLoggedIn && !isCancelled
     }
 
     internal func checkNetworkAndWebSocket() {
         if requireNetwork() {
-            while isLoggedIn && !NetworkManager.shared.isReachable {
+            while LoginManager.shared.isLoggedIn && !NetworkManager.shared.isReachable {
                 Thread.sleep(forTimeInterval: 3)
             }
         }
         if requireWebSocket() {
-            while isLoggedIn && !WebSocketService.shared.isConnected {
+            while LoginManager.shared.isLoggedIn && !WebSocketService.shared.isConnected {
                 Thread.sleep(forTimeInterval: 3)
             }
         }

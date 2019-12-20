@@ -37,7 +37,7 @@ class SignalLoadingViewController: UIViewController {
         IdentityDAO.shared.saveLocalIdentity()
 
         repeat {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return
             }
             switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
@@ -68,7 +68,7 @@ class SignalLoadingViewController: UIViewController {
         let userIds = sessions.compactMap { $0.address }
 
         repeat {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return
             }
 

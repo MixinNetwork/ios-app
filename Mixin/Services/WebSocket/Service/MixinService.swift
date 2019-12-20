@@ -21,7 +21,7 @@ class MixinService {
     }
 
     internal func checkSessionSenderKey(conversationId: String) throws {
-        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: Account.current?.session_id ?? "")
+        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
         guard participants.count > 0 else {
             return
         }
@@ -160,7 +160,7 @@ class MixinService {
     func refreshParticipantSession(conversationId: String, userId: String, retry: Bool) -> Bool {
         Logger.write(conversationId: conversationId, log: "[RefreshSession]...userId:\(userId)...retry:\(retry)")
         repeat {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return false
             }
 
@@ -240,7 +240,7 @@ class MixinService {
             blazeMessage.params?.conversationChecksum = getCheckSum(conversationId: conversationId)
         }
         repeat {
-            guard isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn else {
                 return false
             }
             
@@ -280,7 +280,7 @@ class MixinService {
     }
 
     internal func checkNetworkAndWebSocket() {
-        while isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+        while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
             Thread.sleep(forTimeInterval: 2)
         }
 

@@ -45,12 +45,6 @@ extension DateFormatter {
     }()
 }
 
-func currentTimeInMiliseconds() -> UInt64 {
-    let currentDate = Date()
-    let since1970 = currentDate.timeIntervalSince1970
-    return UInt64(since1970 * 1000)
-}
-
 extension Date {
 
     private static let sourceTimeZone = TimeZone(identifier: "UTC")!

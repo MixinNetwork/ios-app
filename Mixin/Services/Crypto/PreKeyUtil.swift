@@ -23,7 +23,8 @@ class PreKeyUtil {
 
     static func generateSignedPreKey(identityKeyPair : KeyPair) throws -> SessionSignedPreKey {
         let signedPreKeyOffset = AppGroupUserDefaults.Crypto.Offset.signedPrekey ?? makeRandomPrekeyOffset()
-        let record = try Signal.generate(signedPreKey: signedPreKeyOffset, identity: identityKeyPair, timestamp: currentTimeInMiliseconds())
+        let timestamp = UInt64(Date().timeIntervalSince1970 * 1000)
+        let record = try Signal.generate(signedPreKey: signedPreKeyOffset, identity: identityKeyPair, timestamp: timestamp)
         let store = MixinSignedPreKeyStore()
         _ = store.store(signedPreKey: try record.data(), for: record.id)
         AppGroupUserDefaults.Crypto.Offset.signedPrekey = signedPreKeyOffset + 1

@@ -169,20 +169,6 @@ enum MuteInterval {
     static let oneYear: Int64 = 365 * 24 * 60 * 60
 }
 
-enum ExtensionName: String {
-    
-    case jpeg = "jpg"
-    case mp4
-    case html
-    case ogg
-    case gif
-    
-    var withDot: String {
-        return "." + rawValue
-    }
-    
-}
-
 enum StatusBarHeight {
     static let normal: CGFloat = 20
     static let inCall: CGFloat = 40

@@ -1,4 +1,5 @@
 import Foundation
+import CommonCrypto
 
 enum AttachmentCryptographyError: Error {
     case keyGeneration(OSStatus)

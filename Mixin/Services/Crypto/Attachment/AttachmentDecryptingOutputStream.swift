@@ -1,4 +1,5 @@
 import UIKit
+import CommonCrypto
 
 class AttachmentDecryptingOutputStream: OutputStream {
     

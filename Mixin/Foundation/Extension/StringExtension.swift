@@ -1,4 +1,5 @@
 import UIKit
+import CommonCrypto
 import CoreText
 
 extension String {

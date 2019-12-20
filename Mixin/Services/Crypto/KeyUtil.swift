@@ -1,4 +1,5 @@
 import Foundation
+import CommonCrypto
 import Security
 import UIKit
 import Goutils

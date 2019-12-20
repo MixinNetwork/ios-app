@@ -10,6 +10,7 @@ protocol CallMessageCoordinator: class {
 class ReceiveMessageService: MixinService {
     
     static let shared = ReceiveMessageService()
+    static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.messenger.group.participant.did.change")
     static let completeCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,
@@ -742,11 +743,11 @@ extension ReceiveMessageService {
         let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
 
         defer {
-            if operSuccess {
-                if sysMessage.action != SystemConversationAction.UPDATE.rawValue && sysMessage.action != SystemConversationAction.ROLE.rawValue {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: data.conversationId))
-                }
-            }
+            let participantDidChange = operSuccess
+                && sysMessage.action != SystemConversationAction.UPDATE.rawValue
+                && sysMessage.action != SystemConversationAction.ROLE.rawValue
+            let userInfo = [MixinService.UserInfoKey.conversationId: data.conversationId]
+            NotificationCenter.default.post(name: Self.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
         }
         
         switch sysMessage.action {

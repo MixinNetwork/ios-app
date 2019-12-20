@@ -613,7 +613,6 @@
 		DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F461F9CD29A0036D5FD /* Localizable.strings */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */; };
-		DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BD2223985C00624609 /* ProvisionManager.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF6175C72223E5D000624609 /* BlazeMessageParamSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C62223E5D000624609 /* BlazeMessageParamSession.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
@@ -772,6 +771,8 @@
 		E01BC60D23ACCCF0005D3FF3 /* ExtensionName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */; };
 		E01BCB8A23ACF2CE005D3FF3 /* SuiteName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */; };
 		E01BCC6223ACF5E2005D3FF3 /* NotificationNameExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */; };
+		E01BCE2623ACFA33005D3FF3 /* LoginManager+Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */; };
+		E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */; };
 		E029510C23AA21BA0090BB18 /* NotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029510B23AA21BA0090BB18 /* NotificationConstants.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
 		E04F759C238F950900BF6C0D /* FavoriteAppsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */; };
@@ -1478,7 +1479,6 @@
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
 		DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNProvisionCryptor.h; sourceTree = "<group>"; };
 		DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNProvisionCryptor.m; sourceTree = "<group>"; };
-		DF6175BD2223985C00624609 /* ProvisionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisionManager.swift; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF6175C62223E5D000624609 /* BlazeMessageParamSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageParamSession.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
@@ -1642,6 +1642,8 @@
 		E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionName.swift; sourceTree = "<group>"; };
 		E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuiteName.swift; sourceTree = "<group>"; };
 		E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExtension.swift; sourceTree = "<group>"; };
+		E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Logout.swift"; sourceTree = "<group>"; };
+		E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Provision.swift"; sourceTree = "<group>"; };
 		E029510B23AA21BA0090BB18 /* NotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationConstants.swift; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
 		E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppsDAO.swift; sourceTree = "<group>"; };
@@ -1854,7 +1856,7 @@
 				E01BC6E423ACD7D1005D3FF3 /* Job */,
 				7BB788BB216CD1DA00EDE7B4 /* Call */,
 				7BC8502120CBA68700A57B83 /* Audio */,
-				7BB3854C21E74B2B0070FF8F /* Provision */,
+				7BB3854C21E74B2B0070FF8F /* Login */,
 				E0D4F5F323A9D7D3008F0189 /* Notification */,
 				275339881F975D9800DD4C26 /* Frameworks */,
 				DF5D9F191F9C62140036D5FD /* Constants */,
@@ -2060,6 +2062,7 @@
 				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
 				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
+				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2139,15 +2142,16 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		7BB3854C21E74B2B0070FF8F /* Provision */ = {
+		7BB3854C21E74B2B0070FF8F /* Login */ = {
 			isa = PBXGroup;
 			children = (
 				DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */,
 				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
-				DF6175BD2223985C00624609 /* ProvisionManager.swift */,
 				7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */,
+				E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */,
+				E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */,
 			);
-			path = Provision;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		7BB788BB216CD1DA00EDE7B4 /* Call */ = {
@@ -2848,7 +2852,6 @@
 				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 				7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */,
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
-				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
 			);
 			path = Jobs;
 			sourceTree = "<group>";
@@ -3154,6 +3157,7 @@
 				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
 				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
+				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3231,7 +3235,6 @@
 				E07E389E23A772BD0005A538 /* MixinServicesError.swift */,
 				E0B47E7B23AB7DA2009E5738 /* LoginManager.swift */,
 				7BE1109322FD986B0017BA06 /* StickerPrefetcher.swift */,
-				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3894,6 +3897,7 @@
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
+				E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,
 				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
@@ -4032,6 +4036,7 @@
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
+				E01BCE2623ACFA33005D3FF3 /* LoginManager+Logout.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				E05DC06323A762CD00E32164 /* AppGroupUserDefaults+Account.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
@@ -4299,7 +4304,6 @@
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,
-				DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */,
 				7B746B4022A628ED0097D18A /* Counter.swift in Sources */,
 				DFCFAFC4237D7CF900F0AFD5 /* ParticipantSessionDAO.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,

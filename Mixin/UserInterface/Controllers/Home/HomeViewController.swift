@@ -79,6 +79,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
@@ -254,6 +255,14 @@ class HomeViewController: UIViewController {
             titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
             connectingView.startAnimating()
         }
+    }
+    
+    @objc func groupConversationParticipantDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        let job = RefreshGroupIconJob(conversationId: conversationId)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc func hideSearch() {

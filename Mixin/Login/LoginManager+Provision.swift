@@ -1,8 +1,13 @@
 import Foundation
 
-class ProvisionManager {
-
-    static func updateProvision(id: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
+extension LoginManager {
+    
+    func updateProvision(id: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
+        
+        func alert(_ str: String) {
+            AppDelegate.current.window.rootViewController?.alert(str)
+        }
+        
         let cryptor = MXNProvisionCryptor(signalContext: Signal.context,
                                           base64EncodedPublicKey: base64EncodedPublicKey)
         guard let identityKeyPair = try? PreKeyUtil.getIdentityKeyPair() else {
@@ -38,11 +43,6 @@ class ProvisionManager {
                 completion(false)
             }
         }
-
-    }
-    
-    static func alert(_ str: String) {
-        AppDelegate.current.window.rootViewController?.alert(str)
     }
     
 }

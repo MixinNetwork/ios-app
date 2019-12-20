@@ -203,7 +203,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "new_address") as! NewAddressViewController
+        let vc = R.storyboard.wallet.new_address()!
         vc.asset = asset
         vc.successCallback = successCallback
         vc.address = address

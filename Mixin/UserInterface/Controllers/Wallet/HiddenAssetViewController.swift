@@ -64,7 +64,7 @@ class HiddenAssetViewController: UIViewController {
     }
 
     class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "hidden_assets")
+        let vc = R.storyboard.wallet.hidden_assets()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS)
         return container
     }

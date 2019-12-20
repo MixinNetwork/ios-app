@@ -82,14 +82,14 @@ class WalletPasswordViewController: ContinueButtonViewController {
     }
     
     class func instance(walletPasswordType: WalletPasswordType, dismissTarget: DismissTarget?) -> WalletPasswordViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
+        let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = walletPasswordType
         vc.dismissTarget = dismissTarget
         return vc
     }
     
     class func instance(dismissTarget: DismissTarget) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
+        let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = .initPinStep1
         vc.dismissTarget = dismissTarget
         return vc

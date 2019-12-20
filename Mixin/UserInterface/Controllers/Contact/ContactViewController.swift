@@ -93,7 +93,7 @@ class ContactViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.contact.instantiateInitialViewController()!
+        let vc = R.storyboard.contact.instantiateInitialViewController()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.CONTACT_TITLE)
         return container
     }

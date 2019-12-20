@@ -4,7 +4,7 @@ import WCDBSwift
 class DatabaseUpgradeViewController: UIViewController {
 
     class func instance() -> DatabaseUpgradeViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "database") as! DatabaseUpgradeViewController
+        return R.storyboard.home.database()!
     }
 
     override func viewDidLoad() {

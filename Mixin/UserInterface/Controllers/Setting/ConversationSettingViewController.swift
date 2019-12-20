@@ -48,7 +48,7 @@ class ConversationSettingViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.setting.instantiateViewController(withIdentifier: "conversation"), title: Localized.SETTING_CONVERSATION)
+        return ContainerViewController.instance(viewController: R.storyboard.setting.conversation()!, title: Localized.SETTING_CONVERSATION)
     }
 
 }

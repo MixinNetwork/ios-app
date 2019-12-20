@@ -8,7 +8,7 @@ class DesktopViewController: UITableViewController {
     @IBOutlet weak var footerLabel: UILabel!
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
+        let vc = R.storyboard.setting.desktop()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
         return container
     }

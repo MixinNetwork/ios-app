@@ -43,7 +43,7 @@ class SettingViewController: UIViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateInitialViewController()!
+        let vc = R.storyboard.setting.instantiateInitialViewController()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
     }
     

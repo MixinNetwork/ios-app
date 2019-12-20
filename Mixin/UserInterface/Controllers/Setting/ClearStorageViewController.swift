@@ -53,7 +53,7 @@ class ClearStorageViewController: UITableViewController {
     }
 
     class func instance(conversation: ConversationStorageUsage) -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "clear_storage") as! ClearStorageViewController
+        let vc = R.storyboard.setting.clear_storage()!
         vc.conversation = conversation
         let container = ContainerViewController.instance(viewController: vc, title: conversation.getConversationName())
         return container

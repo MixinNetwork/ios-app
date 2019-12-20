@@ -3,7 +3,7 @@ import UIKit
 class SignalLoadingViewController: UIViewController {
     
     class func instance() -> SignalLoadingViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "signal") as! SignalLoadingViewController
+        return R.storyboard.home.signal()!
     }
     
     override func viewDidLoad() {

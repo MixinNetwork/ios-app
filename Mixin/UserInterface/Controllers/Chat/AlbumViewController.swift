@@ -36,7 +36,7 @@ class AlbumViewController: UITableViewController {
     }
 
     class func instance(isFilterCustomSticker: Bool = false) -> UIViewController {
-        let vc = Storyboard.photo.instantiateViewController(withIdentifier: "album") as! AlbumViewController
+        let vc = R.storyboard.photo.album()!
         vc.loadAlbums()
         vc.isFilterCustomSticker = isFilterCustomSticker
         return ContainerViewController.instance(viewController: vc, title: Localized.IMAGE_PICKER_TITLE_ALBUMS)

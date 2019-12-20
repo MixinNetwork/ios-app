@@ -255,7 +255,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
 
     class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
-       let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
+       let vc = R.storyboard.chat.send_asset()!
         vc.image = image
         vc.asset = asset
         vc.videoAsset = videoAsset

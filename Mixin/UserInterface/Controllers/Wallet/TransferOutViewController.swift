@@ -379,7 +379,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "send") as! TransferOutViewController
+        let vc = R.storyboard.wallet.send()!
         vc.opponent = type
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: "")

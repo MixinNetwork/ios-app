@@ -54,7 +54,7 @@ class DepositViewController: UIViewController {
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "deposit") as! DepositViewController
+        let vc = R.storyboard.wallet.deposit()!
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_DEPOSIT)
     }

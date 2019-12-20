@@ -10,8 +10,7 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var progressLabel: UILabel!
 
     class func instance() -> UIViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "restore")
-    }
+        return R.storyboard.home.restore()!    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

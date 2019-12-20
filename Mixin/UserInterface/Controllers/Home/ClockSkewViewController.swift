@@ -7,7 +7,7 @@ class ClockSkewViewController: UIViewController {
     
 
     class func instance() -> ClockSkewViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "clock") as! ClockSkewViewController
+        return R.storyboard.home.clock()!
     }
 
     override func viewDidLoad() {

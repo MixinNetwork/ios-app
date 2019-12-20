@@ -71,7 +71,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.contact.instantiateViewController(withIdentifier: "add_people")
+        let vc = R.storyboard.contact.add_people()!
         return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_ADD)
     }
     

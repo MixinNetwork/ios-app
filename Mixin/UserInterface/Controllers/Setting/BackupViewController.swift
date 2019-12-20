@@ -43,7 +43,7 @@ class BackupViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "backup")
+        let vc = R.storyboard.setting.backup()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BACKUP_TITLE)
     }
 

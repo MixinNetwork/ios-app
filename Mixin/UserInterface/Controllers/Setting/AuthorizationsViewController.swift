@@ -20,7 +20,7 @@ class AuthorizationsViewController: UIViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "authorization")
+        let vc = R.storyboard.setting.authorization()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_AUTHORIZATIONS)
     }
     

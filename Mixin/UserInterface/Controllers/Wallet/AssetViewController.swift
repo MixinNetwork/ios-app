@@ -93,7 +93,7 @@ class AssetViewController: UIViewController {
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "asset") as! AssetViewController
+        let vc = R.storyboard.wallet.asset()!
         vc.asset = asset
         vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: asset.assetId))
         let container = ContainerViewController.instance(viewController: vc, title: asset.name)

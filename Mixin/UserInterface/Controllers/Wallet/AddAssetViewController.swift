@@ -29,7 +29,7 @@ class AddAssetViewController: UIViewController {
     }
     
     static func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
+        let vc = R.storyboard.wallet.add_asset()!
         return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_TITLE_ADD_ASSET)
     }
     

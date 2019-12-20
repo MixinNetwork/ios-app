@@ -54,7 +54,7 @@ class TransactionViewController: UIViewController {
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "transaction") as! TransactionViewController
+        let vc = R.storyboard.wallet.transaction()!
         vc.asset = asset
         vc.snapshot = snapshot
         let container = ContainerViewController.instance(viewController: vc, title: Localized.TRANSACTION_TITLE)

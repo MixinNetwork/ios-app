@@ -36,7 +36,7 @@ class StickerManagerViewController: UICollectionViewController {
     }
 
     class func instance() -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_manager") as! StickerManagerViewController
+        let vc = R.storyboard.chat.sticker_manager()!
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
     }
 

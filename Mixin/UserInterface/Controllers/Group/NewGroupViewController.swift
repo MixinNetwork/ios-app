@@ -147,7 +147,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(members: [GroupUser]) -> UIViewController {
-        let vc = Storyboard.group.instantiateViewController(withIdentifier: "new_group") as! NewGroupViewController
+        let vc = R.storyboard.group.new_group()!
         vc.members = members
         return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_NEW_GROUP)
     }

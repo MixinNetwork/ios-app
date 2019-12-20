@@ -41,7 +41,7 @@ class NotificationSettingsViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "notification")
+        let vc = R.storyboard.setting.notification()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
     }
 

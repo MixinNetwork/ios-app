@@ -21,7 +21,7 @@ class WalletViewController: UIViewController {
     }
     
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
+        return ContainerViewController.instance(viewController: R.storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
     }
     
     override func viewDidLoad() {

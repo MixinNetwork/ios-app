@@ -56,13 +56,13 @@ class StickerAddViewController: UIViewController {
     }
 
     class func instance(message: MessageItem) -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_add") as! StickerAddViewController
+        let vc = R.storyboard.chat.sticker_add()!
         vc.message = message
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_ADD_TITLE)
     }
 
     class func instance(asset: PHAsset) -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_add") as! StickerAddViewController
+        let vc = R.storyboard.chat.sticker_add()!
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_ADD_TITLE)
     }

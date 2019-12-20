@@ -770,6 +770,8 @@
 		DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */; };
 		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
 		E01BC60D23ACCCF0005D3FF3 /* ExtensionName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */; };
+		E01BCB8A23ACF2CE005D3FF3 /* SuiteName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */; };
+		E01BCC6223ACF5E2005D3FF3 /* NotificationNameExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */; };
 		E029510C23AA21BA0090BB18 /* NotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029510B23AA21BA0090BB18 /* NotificationConstants.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
 		E04F759C238F950900BF6C0D /* FavoriteAppsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */; };
@@ -1638,6 +1640,8 @@
 		DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeWindow.swift; sourceTree = "<group>"; };
 		DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecognizeWindow.xib; sourceTree = "<group>"; };
 		E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionName.swift; sourceTree = "<group>"; };
+		E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuiteName.swift; sourceTree = "<group>"; };
+		E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExtension.swift; sourceTree = "<group>"; };
 		E029510B23AA21BA0090BB18 /* NotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationConstants.swift; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
 		E04F759B238F950900BF6C0D /* FavoriteAppsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppsDAO.swift; sourceTree = "<group>"; };
@@ -3188,6 +3192,7 @@
 		E05DBEAC23A7615A00E32164 /* Legacy */ = {
 			isa = PBXGroup;
 			children = (
+				E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */,
 				DFF353031FEE657000058453 /* CryptoUserDefault.swift */,
 				DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */,
 				DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */,
@@ -3211,6 +3216,7 @@
 				DF5D9F141F9C5B970036D5FD /* StringExtension.swift */,
 				DF3C47491FA0BECA00A07C71 /* DataExtension.swift */,
 				DFD87C841FD9881900BBCFFC /* FileManagerExtension.swift */,
+				E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3560,7 +3566,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
-				"${BUILT_PRODUCTS_DIR}/MixinServices/MixinServices.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
@@ -3589,7 +3594,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MixinServices.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
@@ -3629,6 +3633,7 @@
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */,
 				DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */,
+				E01BCC6223ACF5E2005D3FF3 /* NotificationNameExtension.swift in Sources */,
 				DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */,
 				DF08F180238529F5005CFD34 /* SystemSessionMessagePayload.swift in Sources */,
 				273FACC1205FB9A800513327 /* SessionPreKey.swift in Sources */,
@@ -3894,6 +3899,7 @@
 				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
 				E05DC14223A7638A00E32164 /* AutoBackup.swift in Sources */,
 				E05DC14423A7638A00E32164 /* Environment.swift in Sources */,
+				E01BCB8A23ACF2CE005D3FF3 /* SuiteName.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */,
 				E0D4F5F723AA0CB2008F0189 /* UNNotificationContent+UserInfoKey.swift in Sources */,

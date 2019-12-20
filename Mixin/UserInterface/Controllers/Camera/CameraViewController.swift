@@ -280,7 +280,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
     
     class func instance() -> CameraViewController {
-        return Storyboard.camera.instantiateViewController(withIdentifier: "camera") as! CameraViewController
+        R.storyboard.camera.camera()!
     }
     
     override var prefersStatusBarHidden: Bool {

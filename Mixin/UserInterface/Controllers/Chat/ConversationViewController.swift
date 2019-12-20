@@ -722,7 +722,7 @@ class ConversationViewController: UIViewController {
     
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
+        let vc = R.storyboard.chat.conversation()!
         let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
         if dataSource.category == .contact {
             vc.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
@@ -732,7 +732,7 @@ class ConversationViewController: UIViewController {
     }
     
     class func instance(ownerUser: UserItem) -> ConversationViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
+        let vc = R.storyboard.chat.conversation()!
         vc.ownerUser = ownerUser
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
         let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)

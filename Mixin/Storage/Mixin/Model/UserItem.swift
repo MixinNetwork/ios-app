@@ -67,6 +67,17 @@ public struct UserItem: BaseCodable {
         return identityNumber != "0"
     }
     
+    var notificationUserInfo: [String: String] {
+        var userInfo = [
+            UNNotificationContent.UserInfoKey.ownerUserId: userId,
+            UNNotificationContent.UserInfoKey.ownerUserFullname: fullName,
+            UNNotificationContent.UserInfoKey.ownerUserIdentityNumber: identityNumber,
+            UNNotificationContent.UserInfoKey.ownerUserAvatarUrl: avatarUrl,
+        ]
+        userInfo[UNNotificationContent.UserInfoKey.ownerUserAppId] = appId
+        return userInfo
+    }
+    
     func matches(lowercasedKeyword keyword: String) -> Bool {
         return fullName.lowercased().contains(keyword)
             || identityNumber.contains(keyword)
@@ -91,6 +102,23 @@ extension UserItem {
     
     static func createUser(from account: Account) -> UserItem {
         return UserItem(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: "", role: "", appCreatorId: nil)
+    }
+    
+    static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {
+        guard let userId = userInfo[UNNotificationContent.UserInfoKey.ownerUserId] as? String else {
+            return nil
+        }
+        guard let fullName = userInfo[UNNotificationContent.UserInfoKey.ownerUserFullname] as? String else {
+            return nil
+        }
+        guard let identityNumber = userInfo[UNNotificationContent.UserInfoKey.ownerUserIdentityNumber] as? String else {
+            return nil
+        }
+        guard let avatarUrl = userInfo[UNNotificationContent.UserInfoKey.ownerUserAvatarUrl] as? String else {
+            return nil
+        }
+        let appId = userInfo[UNNotificationContent.UserInfoKey.ownerUserAppId] as? String
+        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, appId: appId)
     }
     
 }

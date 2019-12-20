@@ -1,53 +1,6 @@
 import Foundation
 import UserNotifications
 
-public extension UNNotificationContent {
-    
-    enum UserInfoKey {
-        static let conversationId = "mixin_conv_id"
-        static let conversationCategory = "mixin_conv_catg"
-        static let messageId = "mixin_msg_id"
-        static let ownerUserId = "mixin_usr_id"
-        static let ownerUserFullname = "mixin_usr_name"
-        static let ownerUserIdentityNumber = "mixin_usr_idnum"
-        static let ownerUserAvatarUrl = "mixin_usr_avtr"
-        static let ownerUserAppId = "mixin_usr_app_id"
-    }
-    
-}
-
-public extension UserItem {
-    
-    var notificationUserInfo: [String: String] {
-        var userInfo = [
-            UNNotificationContent.UserInfoKey.ownerUserId: userId,
-            UNNotificationContent.UserInfoKey.ownerUserFullname: fullName,
-            UNNotificationContent.UserInfoKey.ownerUserIdentityNumber: identityNumber,
-            UNNotificationContent.UserInfoKey.ownerUserAvatarUrl: avatarUrl,
-        ]
-        userInfo[UNNotificationContent.UserInfoKey.ownerUserAppId] = appId
-        return userInfo
-    }
-    
-    static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {
-        guard let userId = userInfo[UNNotificationContent.UserInfoKey.ownerUserId] as? String else {
-            return nil
-        }
-        guard let fullName = userInfo[UNNotificationContent.UserInfoKey.ownerUserFullname] as? String else {
-            return nil
-        }
-        guard let identityNumber = userInfo[UNNotificationContent.UserInfoKey.ownerUserIdentityNumber] as? String else {
-            return nil
-        }
-        guard let avatarUrl = userInfo[UNNotificationContent.UserInfoKey.ownerUserAvatarUrl] as? String else {
-            return nil
-        }
-        let appId = userInfo[UNNotificationContent.UserInfoKey.ownerUserAppId] as? String
-        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, appId: appId)
-    }
-    
-}
-
 public extension UNMutableNotificationContent {
     
     convenience init(message: MessageItem, ownerUser: UserItem?, conversation: ConversationItem) {
@@ -82,10 +35,6 @@ public extension UNMutableNotificationContent {
         sound = .mixin
         categoryIdentifier = NotificationCategoryIdentifier.message
     }
-    
-}
-
-fileprivate extension UNMutableNotificationContent {
     
     private func messagePreview(conversationIsGroup: Bool, isRepresentativeMessage: Bool, message: MessageItem) -> String {
         if message.category.hasSuffix("_TEXT") {

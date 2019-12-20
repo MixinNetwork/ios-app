@@ -811,6 +811,7 @@
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
+		E0B4586723AC7EEA00EF4FD4 /* String+GoUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4586623AC7EEA00EF4FD4 /* String+GoUUID.swift */; };
 		E0B47E7C23AB7DA2009E5738 /* AccountStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */; };
 		E0B47E7E23AB983C009E5738 /* Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B47E7D23AB983C009E5738 /* Logout.swift */; };
 		E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8AAC423BDA1C700E911CE /* AppButton.swift */; };
@@ -1678,6 +1679,7 @@
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
+		E0B4586623AC7EEA00EF4FD4 /* String+GoUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+GoUUID.swift"; sourceTree = "<group>"; };
 		E0B47E7B23AB7DA2009E5738 /* AccountStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStorage.swift; sourceTree = "<group>"; };
 		E0B47E7D23AB983C009E5738 /* Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logout.swift; sourceTree = "<group>"; };
 		E0B8AAC423BDA1C700E911CE /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
@@ -3194,6 +3196,7 @@
 			children = (
 				E0D4F5F623AA0CB2008F0189 /* UNNotificationContentExtension.swift */,
 				DF1A9A7D1FF2539600A95188 /* UNUserNotificationCenterExtension.swift */,
+				E0B4586623AC7EEA00EF4FD4 /* String+GoUUID.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3810,6 +3813,7 @@
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
 				DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */,
+				E0B4586723AC7EEA00EF4FD4 /* String+GoUUID.swift in Sources */,
 				E04F759E238F959400BF6C0D /* FavoriteApp.swift in Sources */,
 				7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,

@@ -156,6 +156,8 @@ enum JobAction: String {
     case SEND_ACK_MESSAGES
     case SEND_DELIVERED_ACK_MESSAGE
 
+    case REFRESH_SESSION
+
     case SEND_SESSION_MESSAGE
     case SEND_SESSION_MESSAGES
 }

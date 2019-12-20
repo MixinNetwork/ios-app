@@ -237,7 +237,7 @@ class ReceiveMessageService: MixinService {
                 userInfo["messageId"] = data.messageId
                 userInfo["resendMessageId"] = decoded.resendMessageId ?? ""
                 userInfo["source"] = data.source
-                userInfo["sessionId"] = data.sessionId ?? ""
+                userInfo["sessionId"] = data.sessionId
                 userInfo["error"] = "\(error)"
                 userInfo["senderUserId"] = data.userId
                 userInfo["signalErrorCode"] = "\(err.rawValue)"
@@ -740,34 +740,25 @@ extension ReceiveMessageService {
             let status = checkUser(userId: participantId, tryAgain: true)
             operSuccess = ParticipantDAO.shared.addParticipant(message: message, conversationId: data.conversationId, participantId: participantId, updatedAt: data.updatedAt, status: status, source: data.source)
 
-            if participantId != currentAccountId {
-                ConcurrentJobQueue.shared.addJob(job: RefreshSessionJob(conversationId: data.conversationId, userId: participantId))
-            }
-
-            if participantId != currentAccountId && SignalProtocol.shared.isExistSenderKey(groupId: data.conversationId, senderId: currentAccountId) {
-                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, sessionId: data.sessionId, action: .SEND_KEY)
+            if participantId == currentAccountId {
+                ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+            } else {
+                if !refreshParticipantSession(conversationId: data.conversationId, userId: participantId, retry: false) {
+                    SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, sessionId: data.sessionId, action: .REFRESH_SESSION)
+                }
             }
             return
-        case SystemConversationAction.REMOVE.rawValue:
-            guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
-                return
-            }
-            SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
-
-            operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)
-             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [participantId]))
-            return
-        case SystemConversationAction.EXIT.rawValue:
+        case SystemConversationAction.REMOVE.rawValue, SystemConversationAction.EXIT.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
                 return
             }
 
-            SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
             if participantId == currentAccountId {
                 DispatchQueue.global().async {
                     ConversationDAO.shared.deleteAndExitConversation(conversationId: data.conversationId, autoNotification: false)
                 }
             } else {
+                SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
                 operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)
             }
             return

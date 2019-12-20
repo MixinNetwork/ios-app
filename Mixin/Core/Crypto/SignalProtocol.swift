@@ -54,15 +54,11 @@ class SignalProtocol {
         SessionDAO.shared.delete(address: userId)
     }
 
-    func processSession(userId: String, key: SignalKey, deviceId: Int32 = 0) throws {
-        var dId = SignalProtocol.convertSessionIdToDeviceId(key.sessionId)
-        if deviceId != 0 {
-            dId = deviceId
-        }
-        let address = SignalAddress(name: userId, deviceId: dId)
+    func processSession(userId: String, key: SignalKey) throws {
+        let address = SignalAddress(name: userId, deviceId: key.deviceId)
         let sessionBuilder = SessionBuilder(for: address, in: store)
         let preKeyBundle = SessionPreKeyBundle(registrationId: key.registrationId,
-                                                     deviceId: SignalProtocol.convertSessionIdToDeviceId(key.sessionId),
+                                                     deviceId: key.deviceId,
                                                      preKeyId: key.preKey.key_id,
                                                      preKey: key.getPreKeyPublic(),
                                                      signedPreKeyId: UInt32(key.signedPreKey.key_id),

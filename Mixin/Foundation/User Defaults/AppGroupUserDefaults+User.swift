@@ -95,7 +95,7 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.recentlyUsedAppIds, defaultValue: [])
         public private(set) static var recentlyUsedAppIds: [String]
         
-        @Default(namespace: .user, key: Key.autoUploadsContacts, defaultValue: true)
+        @Default(namespace: .user, key: Key.autoUploadsContacts, defaultValue: false)
         public static var autoUploadsContacts: Bool
         
         @RawRepresentableDefault(namespace: .user, key: Key.autoDownloadPhotos, defaultValue: .wifiAndCellular)

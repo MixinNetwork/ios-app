@@ -3,14 +3,7 @@ import Zip
 import ImageIO
 
 extension FileManager {
-
-    func fileSize(_ path: String) -> Int64 {
-        guard let fileSize = try? FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as? NSNumber else {
-            return 0
-        }
-        return fileSize.int64Value
-    }
-
+    
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
     }

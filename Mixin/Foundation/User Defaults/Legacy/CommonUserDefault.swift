@@ -71,7 +71,7 @@ internal class CommonUserDefault {
             if session.object(forKey: keyUploadContacts) != nil {
                 return session.bool(forKey: keyUploadContacts)
             } else {
-                return ContactsManager.shared.authorization == .authorized
+                return false
             }
         }
         set {

@@ -2627,7 +2627,6 @@
 				DF5D9F3C1F9CA3160036D5FD /* UserAPI.swift */,
 				DF1148461FED45E200023CAF /* AssetAPI.swift */,
 				DFDC7E421FAC8D50003233EE /* ContactAPI.swift */,
-				DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */,
 				DF8CED011FC6790400E40064 /* MessageAPI.swift */,
 				27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */,
 				DF68F1852014CF5E001C4225 /* StickerAPI.swift */,
@@ -2834,14 +2833,9 @@
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
 				DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */,
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
-				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
-				7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */,
-				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
 				DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */,
-				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
 				7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */,
-				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 				7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */,
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
 			);
@@ -3150,6 +3144,11 @@
 				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
 				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
 				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
+				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
+				7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */,
+				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
+				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
+				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3284,6 +3283,7 @@
 				E0D4F5F323A9D7D3008F0189 /* Notification */,
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				E0E32F422396118C00276746 /* GiphyAPI.swift */,
+				DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";

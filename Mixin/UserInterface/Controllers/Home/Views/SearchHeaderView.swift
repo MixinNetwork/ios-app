@@ -21,7 +21,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
     
     lazy var topFillingBackgroundView: InfiniteTopView = {
         let view = InfiniteTopView()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         return view
     }()
     
@@ -46,7 +46,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
     }
     
     private func prepare() {
-        normalBackgroundView.backgroundColor = .white
+        normalBackgroundView.backgroundColor = .background
         backgroundView = normalBackgroundView
         clipsToBounds = false
         topShadowView.clipsToBounds = true

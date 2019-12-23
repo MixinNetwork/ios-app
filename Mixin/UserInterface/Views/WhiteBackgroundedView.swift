@@ -4,7 +4,7 @@ class WhiteBackgroundedView: UIView {
     
     override var backgroundColor: UIColor? {
         get {
-            return .white
+            return .background
         }
         set {
             
@@ -13,7 +13,7 @@ class WhiteBackgroundedView: UIView {
     
     convenience init() {
         self.init(frame: .zero)
-        super.backgroundColor = .white
+        super.backgroundColor = .background
     }
     
 }

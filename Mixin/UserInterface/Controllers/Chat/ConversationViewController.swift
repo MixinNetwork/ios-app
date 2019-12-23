@@ -296,7 +296,7 @@ class ConversationViewController: UIViewController {
                 if newHeight < conversationInputViewController.minimizedHeight {
                     newHeight = conversationInputViewController.minimizedHeight
                     if shouldMoveDown && conversationInputViewController.view.backgroundColor == .clear {
-                        conversationInputViewController.view.backgroundColor = .white
+                        conversationInputViewController.view.backgroundColor = .background
                     }
                 }
                 if conversationInputViewController.isMaximizable {

@@ -32,7 +32,7 @@ class BorderedAvatarImageView: AvatarImageView {
     }
     
     private func prepare() {
-        backgroundView.backgroundColor = .white
+        backgroundView.backgroundColor = .background
         backgroundView.clipsToBounds = true
         insertSubview(backgroundView, at: 0)
     }

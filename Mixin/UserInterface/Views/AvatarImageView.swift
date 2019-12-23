@@ -126,7 +126,7 @@ class AvatarImageView: UIView {
         imageView.frame = bounds
         addSubview(imageView)
         
-        titleLabel.textColor = .white
+        titleLabel.textColor = .background
         titleLabel.font = .systemFont(ofSize: titleFontSize)
         titleLabel.textAlignment = .center
         addSubview(titleLabel)

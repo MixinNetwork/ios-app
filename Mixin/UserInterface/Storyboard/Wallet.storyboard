@@ -120,13 +120,13 @@
                                                                                                 <constraint firstAttribute="height" constant="9" id="uLo-og-43t"/>
                                                                                             </constraints>
                                                                                         </imageView>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="77V-eY-DVx">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="77V-eY-DVx">
                                                                                             <rect key="frame" x="8" y="0.3333333333333286" width="22" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tnh-04-JMO">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tnh-04-JMO">
                                                                                             <rect key="frame" x="35.999999999999993" y="0.3333333333333286" width="22.333333333333336" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -165,13 +165,13 @@
                                                                                                 <constraint firstAttribute="width" constant="3" id="gz8-f9-KOw"/>
                                                                                             </constraints>
                                                                                         </imageView>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39J-2W-ONo">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39J-2W-ONo">
                                                                                             <rect key="frame" x="8" y="0.3333333333333286" width="22" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbE-kR-GOQ">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbE-kR-GOQ">
                                                                                             <rect key="frame" x="36" y="0.3333333333333286" width="22.333333333333329" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -210,13 +210,13 @@
                                                                                                 <constraint firstAttribute="width" constant="3" id="7we-yB-muO"/>
                                                                                             </constraints>
                                                                                         </imageView>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="laD-AH-fHv">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="laD-AH-fHv">
                                                                                             <rect key="frame" x="8" y="0.3333333333333286" width="22" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bdz-eK-Rbu">
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bdz-eK-Rbu">
                                                                                             <rect key="frame" x="36" y="0.3333333333333286" width="22.333333333333329" height="13.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -314,14 +314,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-vv-2fj">
-                                                    <rect key="frame" x="162" y="28" width="90.333333333333314" height="18"/>
+                                                    <rect key="frame" x="157" y="27" width="100.33333333333331" height="20"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Wallet/ic_add" translatesAutoresizingMaskIntoConstraints="NO" id="L46-g3-KvM">
-                                                            <rect key="frame" x="0.0" y="4" width="10" height="10"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                                             <color key="tintColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Add asset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XGc-3R-RCZ">
-                                                            <rect key="frame" x="22" y="0.0" width="68.333333333333329" height="18"/>
+                                                            <rect key="frame" x="31.999999999999993" y="1" width="68.333333333333314" height="18"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                             <color key="textColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <nil key="highlightedColor"/>
@@ -667,13 +667,13 @@
                                 <rect key="frame" x="0.0" y="74" width="414" height="534"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="rt0-Mp-iwA">
-                                        <rect key="frame" x="144.66666666666666" y="209.66666666666669" width="124.99999999999997" height="169"/>
+                                        <rect key="frame" x="82" y="147" width="250" height="294"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_no_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
-                                                <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO RESULT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6w-Mn-l1z">
-                                                <rect key="frame" x="22" y="151" width="81" height="18"/>
+                                                <rect key="frame" x="84.666666666666657" y="276" width="81" height="18"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <color key="textColor" red="0.73725490196078436" green="0.75294117647058822" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -1133,7 +1133,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ep-Xb-7bV">
-                                <rect key="frame" x="133.66666666666666" y="348.66666666666669" width="146.99999999999997" height="39"/>
+                                <rect key="frame" x="128.66666666666666" y="347" width="156.99999999999997" height="42"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                 <color key="tintColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <inset key="contentEdgeInsets" minX="32" minY="11" maxX="20" maxY="11"/>

@@ -37,7 +37,7 @@ class SearchNumberCell: UITableViewCell {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        let color: UIColor = highlighted ? .selectionBackground : .secondaryBackground
+        let color: UIColor = highlighted ? .selectionBackground : .background
         let work = {
             self.labelBackgroundView.backgroundColor = color
         }

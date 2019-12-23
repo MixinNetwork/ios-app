@@ -65,7 +65,7 @@
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="4:03 pm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dc-8H-fbP">
                                                                             <rect key="frame" x="78.5" y="0.0" width="190.5" height="22"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                                            <color key="textColor" name="text_3"/>
+                                                                            <color key="textColor" name="text_accessory"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
@@ -82,7 +82,7 @@
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="You added OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSl-Co-y1G">
                                                                             <rect key="frame" x="0.0" y="0.0" width="248.5" height="18"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                                            <color key="textColor" name="text_3"/>
+                                                                            <color key="textColor" name="text_accessory"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_chat_pin" translatesAutoresizingMaskIntoConstraints="NO" id="p7w-4E-Qsn">
@@ -427,7 +427,7 @@
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfp-PT-D7P" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="75" width="375" height="10"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" name="background_secondary"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="10" id="8gQ-Gw-oN6"/>
                                                     </constraints>
@@ -591,7 +591,7 @@
                                                         </cells>
                                                     </collectionView>
                                                 </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" name="background"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="eAo-ZX-i9D" secondAttribute="bottom" constant="10" id="4Lh-m1-izJ"/>
                                                     <constraint firstItem="eAo-ZX-i9D" firstAttribute="top" secondItem="yi5-ew-n4K" secondAttribute="top" constant="18" id="Cun-Pa-gN8"/>
@@ -718,7 +718,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UZU-WD-WHb">
                                         <rect key="frame" x="153.5" y="28" width="68.5" height="18"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                        <color key="textColor" name="text_3"/>
+                                        <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
@@ -817,7 +817,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upgrading" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4EI-aO-sXG">
                                         <rect key="frame" x="151.5" y="28" width="72.5" height="18"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                        <color key="textColor" name="text_3"/>
+                                        <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="database_upgrade_progress"/>
@@ -1103,11 +1103,8 @@ chat history from icloud</string>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_3">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -432,7 +432,7 @@ extension ConversationInputViewController {
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         UIView.performWithoutAnimation {
-            self.view.backgroundColor = .white
+            self.view.backgroundColor = .background
         }
     }
     
@@ -567,7 +567,7 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         return true
     }
     

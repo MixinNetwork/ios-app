@@ -25,7 +25,6 @@
                         </constraints>
                     </view>
                 </subviews>
-                <color key="backgroundColor" name="table_shadow"/>
                 <constraints>
                     <constraint firstItem="51o-YT-Bb2" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Ci5-oI-I3g"/>
                     <constraint firstAttribute="trailing" secondItem="51o-YT-Bb2" secondAttribute="trailing" constant="20" id="G6C-iQ-50e"/>
@@ -43,9 +42,6 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="table_shadow">
-            <color red="0.76470588235294112" green="0.76470588235294112" blue="0.76470588235294112" alpha="0.20000000298023224" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

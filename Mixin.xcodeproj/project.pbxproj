@@ -549,7 +549,6 @@
 		DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A3CD72016DC860095F024 /* Sticker.swift */; };
 		DF2A3CDA20173F2D0095F024 /* TransferStickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */; };
 		DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7431FA22D4E00683C1A /* WebSocketService.swift */; };
-		DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7471FA2BDD200683C1A /* CodableExtension.swift */; };
 		DF3AF36F22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
@@ -1411,7 +1410,6 @@
 		DF2A3CD72016DC860095F024 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
 		DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferStickerData.swift; sourceTree = "<group>"; };
 		DF30D7431FA22D4E00683C1A /* WebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketService.swift; sourceTree = "<group>"; };
-		DF30D7471FA2BDD200683C1A /* CodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableExtension.swift; sourceTree = "<group>"; };
 		DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshOneTimePreKeysJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -2473,7 +2471,6 @@
 			children = (
 				DF17B51420525B47006447C2 /* ArrayExtension.swift */,
 				DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */,
-				DF30D7471FA2BDD200683C1A /* CodableExtension.swift */,
 				DF2A24491FC7E25B003A8C1E /* ErrorExtension.swift */,
 				DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */,
 				DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */,
@@ -4047,7 +4044,6 @@
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
-				DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,

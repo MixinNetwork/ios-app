@@ -15,7 +15,7 @@ extension QRCodeResponse: Decodable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        type = container.getString(key: .type)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
         switch type {
         case "user":
             user = try UserResponse(from: decoder)

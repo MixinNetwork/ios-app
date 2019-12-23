@@ -43,24 +43,24 @@ extension Account: Decodable {
         user_id = try container.decode(String.self, forKey: .user_id)
         session_id = try container.decode(String.self, forKey: .session_id)
         identity_number = try container.decode(String.self, forKey: .identity_number)
-        type = container.getString(key: .type)
-        full_name = container.getString(key: .full_name)
-        biography = container.getString(key: .biography)
-        avatar_url = container.getString(key: .avatar_url)
-        phone = container.getString(key: .phone)
-        authentication_token = container.getString(key: .authentication_token)
-        code_id = container.getString(key: .code_id)
-        reputation = container.getInt(key: .reputation)
-        created_at = container.getString(key: .created_at)
-        receive_message_source = container.getString(key: .receive_message_source)
-        accept_conversation_source = container.getString(key: .accept_conversation_source)
-        has_pin = container.getBool(key: .has_pin)
-        has_emergency_contact = container.getBool(key: .has_emergency_contact)
-        code_url = container.getString(key: .code_url)
-        pin_token = container.getString(key: .pin_token)
-        fiat_currency = container.getString(key: .fiat_currency)
-        transfer_notification_threshold = container.getDouble(key: .transfer_notification_threshold)
-        transfer_confirmation_threshold = container.getDouble(key: .transfer_confirmation_threshold)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        full_name = try container.decodeIfPresent(String.self, forKey: .full_name) ?? ""
+        biography = try container.decodeIfPresent(String.self, forKey: .biography) ?? ""
+        avatar_url = try container.decodeIfPresent(String.self, forKey: .avatar_url) ?? ""
+        phone = try container.decodeIfPresent(String.self, forKey: .phone) ?? ""
+        authentication_token = try container.decodeIfPresent(String.self, forKey: .authentication_token) ?? ""
+        code_id = try container.decodeIfPresent(String.self, forKey: .code_id) ?? ""
+        reputation = try container.decodeIfPresent(Int.self, forKey: .reputation) ?? 0
+        created_at = try container.decodeIfPresent(String.self, forKey: .created_at) ?? ""
+        receive_message_source = try container.decodeIfPresent(String.self, forKey: .receive_message_source) ?? ""
+        accept_conversation_source = try container.decodeIfPresent(String.self, forKey: .accept_conversation_source) ?? ""
+        has_pin = try container.decodeIfPresent(Bool.self, forKey: .has_pin) ?? false
+        has_emergency_contact = try container.decodeIfPresent(Bool.self, forKey: .has_emergency_contact) ?? false
+        code_url = try container.decodeIfPresent(String.self, forKey: .code_url) ?? ""
+        pin_token = try container.decodeIfPresent(String.self, forKey: .pin_token) ?? ""
+        fiat_currency = try container.decodeIfPresent(String.self, forKey: .fiat_currency) ?? ""
+        transfer_notification_threshold = try container.decodeIfPresent(Double.self, forKey: .transfer_notification_threshold) ?? 0
+        transfer_confirmation_threshold = try container.decodeIfPresent(Double.self, forKey: .transfer_confirmation_threshold) ?? 0
     }
     
 }

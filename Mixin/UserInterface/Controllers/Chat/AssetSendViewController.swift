@@ -62,7 +62,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             }
         } else if let asset = self.videoAsset {
             DispatchQueue.global().async { [weak self] in
-                let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
+                let thumbnail = UIImage(withFirstFrameOf: asset)
                 DispatchQueue.main.async {
                     self?.loadAsset(asset: asset, thumbnail: thumbnail)
                 }
@@ -73,7 +73,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     guard let avasset = avasset else {
                         return
                     }
-                    let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: avasset)
+                    let thumbnail = UIImage(withFirstFrameOf: avasset)
                     DispatchQueue.main.async {
                         self?.loadAsset(asset: avasset, thumbnail: thumbnail)
                     }

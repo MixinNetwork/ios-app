@@ -591,6 +591,9 @@ public class Localized {
     public static func ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: String) -> String {
         return String(format: LocalizedString("alert_key_group_audio_message", comment: "%@ send a audio"), fullname)
     }
+    public static func ALERT_KEY_GROUP_LIVE_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_live_message", comment: "%@ send a live stream"), fullname)
+    }
     public static let ALERT_KEY_CONTACT_MESSAGE = LocalizedString("alert_key_contact_message", comment: "send you a message")
     public static let ALERT_KEY_CONTACT_TEXT_MESSAGE = LocalizedString("alert_key_contact_text_message", comment: "send you a message")
     public static let ALERT_KEY_CONTACT_IMAGE_MESSAGE = LocalizedString("alert_key_contact_image_message", comment: "send you a photo")
@@ -601,7 +604,8 @@ public class Localized {
     public static let ALERT_KEY_CONTACT_CONTACT_MESSAGE = LocalizedString("alert_key_contact_contact_message", comment: "send you a contact")
     public static let ALERT_KEY_CONTACT_AUDIO_MESSAGE = LocalizedString("alert_key_contact_audio_message", comment: "send you a audio")
     public static let ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE = LocalizedString("alert_key_contact_audio_call_message", comment: "invites you to a voice call")
-
+    public static let ALERT_KEY_CONTACT_LIVE_MESSAGE = LocalizedString("alert_key_contact_live_message", comment: "send you a live stream")
+    
     // About
     public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")
     public static let ABOUT_LOGOUT_MESSAGE = LocalizedString("about_logout_message", comment: "All messages sent to you during the withdrawal will be discarded and can not be retrieved!")

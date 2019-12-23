@@ -57,9 +57,9 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category.hasSuffix("_LIVE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_live_message(message.userFullName)
+                return Localized.ALERT_KEY_GROUP_LIVE_MESSAGE(fullname: message.userFullName)
             } else {
-                return R.string.localizable.alert_key_contact_live_message()
+                return Localized.ALERT_KEY_CONTACT_LIVE_MESSAGE
             }
         } else if message.category.hasSuffix("_AUDIO") {
             if conversationIsGroup || isRepresentativeMessage {

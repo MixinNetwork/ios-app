@@ -22,6 +22,7 @@ public enum MixinServicesError: Error {
     case initOutputStream
     case decryptMessage([String: Any])
     case badMessageData(id: String, status: String, from: String)
+    case logout(isAsyncRequest: Bool)
     
 }
 
@@ -61,6 +62,8 @@ extension MixinServicesError: CustomNSError {
             return 12
         case .badMessageData:
             return 13
+        case .logout:
+            return 14
         }
     }
     
@@ -91,6 +94,8 @@ extension MixinServicesError: CustomNSError {
             userInfo = ["messageId": id,
                         "status" : status,
                         "from": from]
+        case let .logout(isAsyncRequest):
+            return ["isAsyncRequest": isAsyncRequest]
         default:
             userInfo = [:]
         }

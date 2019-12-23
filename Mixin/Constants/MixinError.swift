@@ -2,7 +2,6 @@ import Foundation
 
 enum MixinError: Error {
     
-    case logout(isAsyncRequest: Bool)
     case loadAvatar(url: URL, error: Error?)
     case invalidPin
     case missingBackup
@@ -21,8 +20,6 @@ extension MixinError: CustomNSError {
     
     public var errorCode: Int {
         switch self {
-        case .logout:
-            return 0
         case .loadAvatar:
             return 1
         case .invalidPin:
@@ -42,8 +39,6 @@ extension MixinError: CustomNSError {
     
     public var errorUserInfo: [String : Any] {
         switch self {
-        case let .logout(isAsyncRequest):
-            return ["isAsyncRequest": isAsyncRequest]
         case let .loadAvatar(url, error):
             return ["url": url, "error": error ?? "(null)"]
         case .invalidPin, .missingBackup, .generateRsaKeyPair:

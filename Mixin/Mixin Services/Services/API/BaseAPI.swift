@@ -140,7 +140,7 @@ public class BaseAPI {
                                 }
                             }
                         }
-                        Reporter.report(error: MixinError.logout(isAsyncRequest: true))
+                        Reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
                         LoginManager.shared.logout(from: "AsyncRequest")
                         return
                     default:
@@ -255,7 +255,7 @@ extension BaseAPI {
                     }
                 }
             }
-            Reporter.report(error: MixinError.logout(isAsyncRequest: false))
+            Reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
             LoginManager.shared.logout(from: "SyncRequest")
         }
         return result

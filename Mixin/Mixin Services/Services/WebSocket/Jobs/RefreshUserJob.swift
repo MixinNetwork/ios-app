@@ -1,40 +1,40 @@
 import Foundation
 
-class RefreshUserJob: BaseJob {
-
+public class RefreshUserJob: BaseJob {
+    
     private let updateParticipantStatus: Bool
     private let jobId: String
     private let userIds: [String]
-
-    init(userIds: [String], updateParticipantStatus: Bool = false) {
+    
+    public init(userIds: [String], updateParticipantStatus: Bool = false) {
         self.userIds = userIds
         self.updateParticipantStatus = updateParticipantStatus
         jobId = userIds.sorted().joined(separator: ",").md5()
     }
-
-    override func getJobId() -> String {
+    
+    override public func getJobId() -> String {
         return "refresh-user-\(jobId)"
     }
-
-    override func run() throws {
+    
+    override public func run() throws {
         guard userIds.count > 0 else {
             return
         }
-
+        
         if userIds.count == 1 {
             let userId = userIds[0]
             guard !userId.isEmpty && UUID(uuidString: userId) != nil else {
                 return
             }
             switch UserAPI.shared.showUser(userId: userId) {
-                case let .success(response):
-                    UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
-                case let .failure(error):
-                    guard error.code != 404 else {
-                        processNotFoundUser(userId: userId)
-                        return
-                    }
-                    throw error
+            case let .success(response):
+                UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
+            case let .failure(error):
+                guard error.code != 404 else {
+                    processNotFoundUser(userId: userId)
+                    return
+                }
+                throw error
             }
         } else {
             switch UserAPI.shared.showUsers(userIds: userIds) {
@@ -51,7 +51,7 @@ class RefreshUserJob: BaseJob {
             }
         }
     }
-
+    
     private func processNotFoundUser(userId: String) {
         UserDAO.shared.deleteUser(userId: userId)
         if updateParticipantStatus {
@@ -60,4 +60,3 @@ class RefreshUserJob: BaseJob {
     }
     
 }
-

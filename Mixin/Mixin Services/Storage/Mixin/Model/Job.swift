@@ -1,28 +1,26 @@
 import Foundation
 import WCDBSwift
 
-struct Job: BaseCodable {
-
-    static var tableName: String = "jobs"
-    static let encoder = JSONEncoder()
-    static let decoder = JSONDecoder()
-
-    public var orderId: Int?
-    public let jobId: String
-    public let priority: Int
-    public let action: String
-
-    public let userId: String?
-    public let blazeMessage: Data?
-    public let conversationId: String?
-    public let resendMessageId: String?
-    public var messageId: String?
-    public var status: String?
-    public var sessionId: String?
-    public var isHttpMessage: Bool
-
-    public var isAutoIncrement = true
-
+internal struct Job: BaseCodable {
+    
+    static let tableName: String = "jobs"
+    
+    var orderId: Int?
+    let jobId: String
+    let priority: Int
+    let action: String
+    
+    let userId: String?
+    let blazeMessage: Data?
+    let conversationId: String?
+    let resendMessageId: String?
+    var messageId: String?
+    var status: String?
+    var sessionId: String?
+    var isHttpMessage: Bool
+    
+    var isAutoIncrement = true
+    
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Job
         case orderId
@@ -37,7 +35,7 @@ struct Job: BaseCodable {
         case status
         case sessionId = "session_id"
         case isHttpMessage = "is_http_message"
-
+        
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
@@ -51,7 +49,7 @@ struct Job: BaseCodable {
             ]
         }
     }
-
+    
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
         switch action {
@@ -76,7 +74,7 @@ struct Job: BaseCodable {
         self.conversationId = conversationId
         self.resendMessageId = resendMessageId
         if let message = blazeMessage {
-            self.blazeMessage = try! Job.encoder.encode(message)
+            self.blazeMessage = try! JSONEncoder.default.encode(message)
         } else {
             self.blazeMessage = nil
         }
@@ -88,15 +86,15 @@ struct Job: BaseCodable {
 
 
 extension Job {
-
-    public func toBlazeMessage() -> BlazeMessage {
-        return try! Job.decoder.decode(BlazeMessage.self, from: blazeMessage!)
+    
+    func toBlazeMessage() -> BlazeMessage {
+        return try! JSONDecoder.default.decode(BlazeMessage.self, from: blazeMessage!)
     }
-
+    
 }
 
 extension Job {
-
+    
     init(message: Message, representativeId: String? = nil, data: String? = nil) {
         let param = BlazeMessageParam(conversationId: message.conversationId,
                                       category: message.category,
@@ -120,7 +118,7 @@ extension Job {
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
-
+    
     init(sessionRead conversationId: String, messageId: String) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
@@ -134,6 +132,7 @@ extension Job {
         self.sessionId = nil
         self.isHttpMessage = false
     }
+    
 }
 
 

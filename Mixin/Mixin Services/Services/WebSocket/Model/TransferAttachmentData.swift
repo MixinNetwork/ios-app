@@ -1,19 +1,19 @@
 import Foundation
 
 public struct TransferAttachmentData: Codable {
-
-    var key: Data?
-    var digest: Data?
-    let attachmentId: String
-    let mimeType: String?
-    let width: Int?
-    let height: Int?
-    let size: Int64
-    let thumbnail: String?
-    let name: String?
-    let duration: Int64?
-    let waveform: Data?
-
+    
+    public var key: Data?
+    public var digest: Data?
+    public let attachmentId: String
+    public let mimeType: String?
+    public let width: Int?
+    public let height: Int?
+    public let size: Int64
+    public let thumbnail: String?
+    public let name: String?
+    public let duration: Int64?
+    public let waveform: Data?
+    
     enum CodingKeys: String, CodingKey {
         case key
         case digest
@@ -27,5 +27,19 @@ public struct TransferAttachmentData: Codable {
         case duration
         case waveform
     }
-
+    
+    public init(key: Data?, digest: Data?, attachmentId: String, mimeType: String?, width: Int?, height: Int?, size: Int64, thumbnail: String?, name: String?, duration: Int64?, waveform: Data?) {
+        self.key = key
+        self.digest = digest
+        self.attachmentId = attachmentId
+        self.mimeType = mimeType
+        self.width = width
+        self.height = height
+        self.size = size
+        self.thumbnail = thumbnail
+        self.name = name
+        self.duration = duration
+        self.waveform = waveform
+    }
+    
 }

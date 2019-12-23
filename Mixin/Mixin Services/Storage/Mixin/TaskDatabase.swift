@@ -4,7 +4,7 @@ public final class TaskDatabase: BaseDatabase {
     
     private static let databaseVersion: Int = 1
     
-    static let shared = TaskDatabase()
+    public static let shared = TaskDatabase()
     
     private lazy var _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
     
@@ -13,7 +13,7 @@ public final class TaskDatabase: BaseDatabase {
         set { }
     }
     
-    func initDatabase() {
+    public func initDatabase() {
         _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
         do {
             try database.run(transaction: {

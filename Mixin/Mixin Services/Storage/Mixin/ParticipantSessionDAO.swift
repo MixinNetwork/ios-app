@@ -24,33 +24,33 @@ public final class ParticipantSessionDAO {
     )
     """
     
-    static let shared = ParticipantSessionDAO()
+    public static let shared = ParticipantSessionDAO()
     
-    func getParticipantSessions(conversationId: String) -> [ParticipantSession] {
+    public func getParticipantSessions(conversationId: String) -> [ParticipantSession] {
         return MixinDatabase.shared.getCodables(condition: ParticipantSession.Properties.conversationId == conversationId)
     }
     
-    func getParticipantSession(conversationId: String, userId: String, sessionId: String) -> ParticipantSession? {
+    public func getParticipantSession(conversationId: String, userId: String, sessionId: String) -> ParticipantSession? {
         return MixinDatabase.shared.getCodable(condition: ParticipantSession.Properties.conversationId == conversationId && ParticipantSession.Properties.userId == userId && ParticipantSession.Properties.sessionId == sessionId)
     }
     
-    func getNotSendSessionParticipants(conversationId: String, sessionId: String) -> [ParticipantSession] {
+    public func getNotSendSessionParticipants(conversationId: String, sessionId: String) -> [ParticipantSession] {
         return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: sqlQueryParticipantUsers, values: [conversationId, sessionId])
     }
     
-    func updateStatusByUserId(userId: String) {
+    public func updateStatusByUserId(userId: String) {
         MixinDatabase.shared.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.userId == userId)
     }
     
-    func provisionSession(userId: String, sessionId: String) {
+    public func provisionSession(userId: String, sessionId: String) {
         MixinDatabase.shared.execute(sql: String(format: sqlInsertParticipantSession, userId, sessionId, Date().toUTCString()), values: [userId])
     }
     
-    func destorySession(userId: String, sessionId: String) {
+    public func destorySession(userId: String, sessionId: String) {
         MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId, userId])
     }
     
-    func syncConversationParticipantSession(conversation: ConversationResponse) {
+    public func syncConversationParticipantSession(conversation: ConversationResponse) {
         let conversationId = conversation.conversationId
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
@@ -60,7 +60,7 @@ public final class ParticipantSessionDAO {
         }
     }
     
-    func syncConversationParticipantSession(conversation: ConversationResponse, db: Database) throws {
+    public func syncConversationParticipantSession(conversation: ConversationResponse, db: Database) throws {
         let conversationId = conversation.conversationId
         var sentToServerMap = [String: Int?]()
         

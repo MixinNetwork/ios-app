@@ -10,3 +10,7 @@ public var isAppExtension: Bool {
 public var currentDecimalSeparator: String {
     Locale.current.decimalSeparator ?? "."
 }
+
+public var globalSignalContext: OpaquePointer {
+    return Signal.context
+}

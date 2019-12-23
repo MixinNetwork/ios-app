@@ -2,18 +2,18 @@ import Foundation
 
 public struct BlazeMessageData: Codable {
     
-    let conversationId: String
-    var userId: String
-    var messageId: String
-    let category: String
-    let data: String
-    let status: String
-    let createdAt: String
-    let updatedAt: String
-    let source: String
-    let quoteMessageId: String
-    let representativeId: String
-    let sessionId: String
+    public let conversationId: String
+    public var userId: String
+    public var messageId: String
+    public let category: String
+    public let data: String
+    public let status: String
+    public let createdAt: String
+    public let updatedAt: String
+    public let source: String
+    public let quoteMessageId: String
+    public let representativeId: String
+    public let sessionId: String
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -32,7 +32,7 @@ public struct BlazeMessageData: Codable {
     
 }
 
-extension BlazeMessageData {
+public extension BlazeMessageData {
     
     func getSenderId() -> String {
         guard !representativeId.isEmpty else {

@@ -2,9 +2,9 @@ import Foundation
 
 public struct AttachmentResponse: Codable {
     
-    let attachmentId: String
-    let uploadUrl: String?
-    let viewUrl: String?
+    public let attachmentId: String
+    public let uploadUrl: String?
+    public let viewUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case attachmentId = "attachment_id"

@@ -1,18 +1,18 @@
 import Foundation
 
 public struct QRCodeResponse: Encodable {
-
-    let type: String
-    var user: UserResponse? = nil
-    var conversation: ConversationResponse? = nil
-    var authorization: AuthorizationResponse? = nil
-    var multisig: MultisigResponse? = nil
-    var payment: PaymentCodeResponse? = nil
+    
+    public let type: String
+    public var user: UserResponse? = nil
+    public var conversation: ConversationResponse? = nil
+    public var authorization: AuthorizationResponse? = nil
+    public var multisig: MultisigResponse? = nil
+    public var payment: PaymentCodeResponse? = nil
     
 }
 
 extension QRCodeResponse: Decodable {
-
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
@@ -30,7 +30,6 @@ extension QRCodeResponse: Decodable {
         default:
             break
         }
-
     }
-
+    
 }

@@ -1,30 +1,30 @@
 import Foundation
 import UIKit
 
-class RefreshConversationJob: BaseJob {
-
+public class RefreshConversationJob: BaseJob {
+    
     let conversationId: String
-
-    init(conversationId: String) {
+    
+    public init(conversationId: String) {
         self.conversationId = conversationId
     }
-
-    override func getJobId() -> String {
+    
+    override public func getJobId() -> String {
         return "refresh-coversation-\(conversationId)"
     }
-
-    override func run() throws {
+    
+    override public func run() throws {
         guard !conversationId.isEmpty && conversationId != User.systemUser && conversationId != myUserId else {
             return
         }
-
+        
         guard let conversationStatus = ConversationDAO.shared.getConversationStatus(conversationId: conversationId) else {
             return
         }
-
+        
         switch conversationStatus {
         case ConversationStatus.START.rawValue:
-
+            
             let category = ConversationDAO.shared.getConversationCategory(conversationId: conversationId) ?? ""
             if category.isEmpty {
                 try updateConversation(conversationStatus)
@@ -37,7 +37,7 @@ class RefreshConversationJob: BaseJob {
             break
         }
     }
-
+    
     private func createConversation(conversation: ConversationItem) throws {
         var participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
         if participants.count == 0 && conversation.category == ConversationCategory.CONTACT.rawValue && conversation.ownerId != currentAccountId {
@@ -47,10 +47,10 @@ class RefreshConversationJob: BaseJob {
             ConversationDAO.shared.deleteAndExitConversation(conversationId: conversationId, autoNotification: false)
             return
         }
-
+        
         let name = conversation.category == ConversationCategory.CONTACT.rawValue ? nil : conversation.name
         let request = ConversationRequest(conversationId: conversation.conversationId, name: name, category: conversation.category, participants: participants, duration: nil, announcement: nil)
-
+        
         switch ConversationAPI.shared.createConversation(conversation: request) {
         case let .success(response):
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
@@ -58,7 +58,7 @@ class RefreshConversationJob: BaseJob {
             throw error
         }
     }
-
+    
     private func updateConversation(_ status: Int) throws {
         switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
         case let .success(response):
@@ -75,4 +75,5 @@ class RefreshConversationJob: BaseJob {
             }
         }
     }
+    
 }

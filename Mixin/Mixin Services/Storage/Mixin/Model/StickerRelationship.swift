@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct StickerRelationship: BaseCodable {
     
-    static var tableName: String = "sticker_relationships"
+    public static let tableName: String = "sticker_relationships"
     
     public let albumId: String
     public let stickerId: String

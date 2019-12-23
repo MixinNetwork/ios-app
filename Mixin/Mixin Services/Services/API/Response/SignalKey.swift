@@ -2,12 +2,12 @@ import Foundation
 
 struct SignalKey: Codable {
 
-    let identityKey: String
-    let signedPreKey: SignedPreKeyRequest
-    let preKey: OneTimePreKey
-    let registrationId: UInt32
-    let userId: String?
-    let sessionId: String?
+    public let identityKey: String
+    public let signedPreKey: SignedPreKeyRequest
+    public let preKey: OneTimePreKey
+    public let registrationId: UInt32
+    public let userId: String?
+    public let sessionId: String?
 
     enum CodingKeys: String, CodingKey {
         case identityKey = "identity_key"

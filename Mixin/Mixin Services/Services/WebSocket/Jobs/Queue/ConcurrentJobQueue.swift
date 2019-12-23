@@ -3,7 +3,7 @@ import UIKit
 
 public class ConcurrentJobQueue: JobQueue {
 
-    static let shared = ConcurrentJobQueue()
+    public static let shared = ConcurrentJobQueue()
 
     init() {
         super.init(maxConcurrentOperationCount: 6)

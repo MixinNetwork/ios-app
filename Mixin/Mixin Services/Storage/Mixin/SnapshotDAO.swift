@@ -2,7 +2,7 @@ import WCDBSwift
 
 public final class SnapshotDAO {
     
-    static let shared = SnapshotDAO()
+    public static let shared = SnapshotDAO()
     
     private static let sqlQueryTable = """
     SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
@@ -15,7 +15,7 @@ public final class SnapshotDAO {
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func saveSnapshot(snapshot: Snapshot) -> SnapshotItem? {
+    public func saveSnapshot(snapshot: Snapshot) -> SnapshotItem? {
         var snapshotItem: SnapshotItem?
         MixinDatabase.shared.transaction { (db) in
             try db.insertOrReplace(objects: snapshot, intoTable: Snapshot.tableName)
@@ -24,7 +24,7 @@ public final class SnapshotDAO {
         return snapshotItem
     }
     
-    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
+    public func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -65,7 +65,7 @@ public final class SnapshotDAO {
         }
     }
     
-    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
+    public func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -104,20 +104,20 @@ public final class SnapshotDAO {
         }
     }
     
-    func getSnapshot(snapshotId: String) -> SnapshotItem? {
+    public func getSnapshot(snapshotId: String) -> SnapshotItem? {
         return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryById, values: [snapshotId]).first
     }
-
-    func getSnapshot(traceId: String) -> SnapshotItem? {
+    
+    public func getSnapshot(traceId: String) -> SnapshotItem? {
         return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryByTrace, values: [traceId]).first
     }
     
-    func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
+    public func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
         MixinDatabase.shared.insertOrReplace(objects: snapshots)
         NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil, userInfo: userInfo)
     }
     
-    func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
+    public func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
         let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Snapshot.tableName,
@@ -128,7 +128,7 @@ public final class SnapshotDAO {
         }
     }
     
-    func removePendingDeposits(assetId: String, transactionHash: String) {
+    public func removePendingDeposits(assetId: String, transactionHash: String) {
         let condition = Snapshot.Properties.assetId == assetId
             && Snapshot.Properties.transactionHash == transactionHash
             && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue

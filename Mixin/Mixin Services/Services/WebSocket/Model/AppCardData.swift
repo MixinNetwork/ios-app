@@ -1,11 +1,11 @@
 import Foundation
 
-struct AppCardData: Codable {
+public struct AppCardData: Codable {
     
-    let iconUrl: URL
-    let title: String
-    let description: String
-    let action: URL
+    public let iconUrl: URL
+    public let title: String
+    public let description: String
+    public let action: URL
     
     enum CodingKeys: String, CodingKey {
         case iconUrl = "icon_url"

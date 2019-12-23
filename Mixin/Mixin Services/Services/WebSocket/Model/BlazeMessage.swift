@@ -18,7 +18,7 @@ struct BlazeMessage: Encodable {
     
 }
 
-enum BlazeMessageAction: String {
+public enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
     case createSignalKeyMessage = "CREATE_SIGNAL_KEY_MESSAGES"
     case createCall = "CREATE_CALL"

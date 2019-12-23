@@ -2,7 +2,7 @@ import WCDBSwift
 
 public struct App: BaseCodable {
     
-    static var tableName: String = "apps"
+    public static let tableName: String = "apps"
     
     public let appId: String
     public let appNumber: String

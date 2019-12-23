@@ -4,7 +4,7 @@ import SDWebImage
 
 public struct StickerItem: TableCodable, BaseCodable {
     
-    static var tableName: String = "stickers"
+    public static let tableName: String = "stickers"
     
     public let stickerId: String
     public let name: String

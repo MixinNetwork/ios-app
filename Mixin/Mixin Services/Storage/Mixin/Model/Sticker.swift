@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct Sticker: BaseCodable {
     
-    static var tableName: String = "stickers"
+    public static let tableName: String = "stickers"
     
     public let stickerId: String
     public let name: String
@@ -30,12 +30,25 @@ public struct Sticker: BaseCodable {
             ]
         }
     }
-}
-
-extension Sticker {
     
-    static public func createSticker(from sticker: StickerResponse) -> Sticker {
-        return Sticker(stickerId: sticker.stickerId, name: sticker.name, assetUrl: sticker.assetUrl, assetType: sticker.assetType, assetWidth: sticker.assetWidth, assetHeight: sticker.assetHeight, lastUseAt: nil)
+    public init(stickerId: String, name: String, assetUrl: String, assetType: String, assetWidth: Int, assetHeight: Int, lastUseAt: String?) {
+        self.stickerId = stickerId
+        self.name = name
+        self.assetUrl = assetUrl
+        self.assetType = assetType
+        self.assetWidth = assetWidth
+        self.assetHeight = assetHeight
+        self.lastUseAt = lastUseAt
+    }
+    
+    public init(response: StickerResponse) {
+        self.init(stickerId: response.stickerId,
+                  name: response.name,
+                  assetUrl: response.assetUrl,
+                  assetType: response.assetType,
+                  assetWidth: response.assetWidth,
+                  assetHeight: response.assetHeight,
+                  lastUseAt: nil)
     }
     
 }

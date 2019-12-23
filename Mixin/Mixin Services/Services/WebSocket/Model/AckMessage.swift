@@ -2,8 +2,8 @@ import Foundation
 
 public struct AckMessage {
 
-    let jobId: String
-    let messageId: String
-    let status: String
+    public let jobId: String
+    public let messageId: String
+    public let status: String
     
 }

@@ -831,7 +831,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         case .delete:
             conversationInputViewController.textView.resignFirstResponder()
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if message.canRecall() {
+            if message.canRecall {
                 controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
                     if AppGroupUserDefaults.User.hasShownRecallTips {
                         self.deleteForEveryone(viewModel: viewModel)

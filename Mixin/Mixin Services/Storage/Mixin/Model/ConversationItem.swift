@@ -36,14 +36,14 @@ public class ConversationItem: TableCodable {
     public var appId: String? = nil
     public var actionName: String? = nil
     
-    lazy var appButtons: [AppButtonData]? = {
+    public lazy var appButtons: [AppButtonData]? = {
         guard let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder().decode([AppButtonData].self, from: data)
     }()
     
-    lazy var appCard: AppCardData? = {
+    public lazy var appCard: AppCardData? = {
         guard let data = Data(base64Encoded: content) else {
             return nil
         }
@@ -97,7 +97,7 @@ public class ConversationItem: TableCodable {
         return muteUntil > Date().toUTCString()
     }
     
-    convenience init(ownerUser: UserItem) {
+    public convenience init(ownerUser: UserItem) {
         self.init()
         conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
         name = ownerUser.fullName
@@ -108,7 +108,7 @@ public class ConversationItem: TableCodable {
         contentType = MessageCategory.SIGNAL_TEXT.rawValue
     }
     
-    convenience init(response: ConversationResponse) {
+    public convenience init(response: ConversationResponse) {
         self.init()
         conversationId = response.conversationId
         ownerId = response.creatorId

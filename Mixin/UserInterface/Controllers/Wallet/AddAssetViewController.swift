@@ -85,7 +85,7 @@ class AddAssetViewController: UIViewController {
             }
             let assetItems = result.map({ (asset) -> (AssetItem, Bool) in
                 let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
-                let item = AssetItem.createAsset(asset: asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
+                let item = AssetItem(asset: asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let alreadyHasTheAsset = AssetDAO.shared.isExist(assetId: asset.assetId)
                 return (item, alreadyHasTheAsset)
             })
@@ -173,7 +173,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             }
         }
         DispatchQueue.global().async { [weak navigationController] in
-            let assets = items.map(Asset.createAsset)
+            let assets = items.map(Asset.init)
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)

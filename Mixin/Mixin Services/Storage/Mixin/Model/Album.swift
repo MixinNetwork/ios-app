@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct Album: BaseCodable {
     
-    static var tableName: String = "albums"
+    public static let tableName: String = "albums"
     
     public let albumId: String
     public let name: String
@@ -35,7 +35,7 @@ public struct Album: BaseCodable {
     
 }
 
-enum AlbumCategory: String {
+public enum AlbumCategory: String {
     case PERSONAL
     case SYSTEM
 }

@@ -5,7 +5,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     enum Quote {
         static let backgroundMargin = Margin(leading: 9, trailing: 2, top: 1, bottom: 4)
         static let contentMargin = Margin(leading: 11, trailing: 11, top: 6, bottom: 6)
-        static let iconSize = MessageCategory.maxIconSize
+        static let iconSize = CGSize(width: 15, height: 15)
         static let iconTrailingMargin: CGFloat = 4
         static let subtitleTopMargin: CGFloat = 4
         static let subtitleNumberOfLines = 3

@@ -16,7 +16,7 @@ class MixinRequest {
 
     private(set) var request: URLRequest!
 
-    init(url: String, method: HTTPMethod, parameters: Parameters?, encoding: ParameterEncoding) throws {
+    public init(url: String, method: HTTPMethod, parameters: Parameters?, encoding: ParameterEncoding) throws {
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = MixinRequest.baseHeaders

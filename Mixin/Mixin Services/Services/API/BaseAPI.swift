@@ -4,74 +4,11 @@ import Goutils
 import DeviceGuru
 import UIKit
 
-fileprivate let jsonContentKey = "jsonArray"
-
-extension Array {
-
-    func toParameters() -> Parameters {
-        return [jsonContentKey: self]
-    }
-
-}
-
-extension Encodable {
-
-    func toParameters() -> Parameters {
-        return [jsonContentKey: self]
-    }
-
-}
-
-struct EncodableParameterEncoding<T: Encodable>: ParameterEncoding {
-
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
-        var urlRequest = try urlRequest.asURLRequest()
-        guard let parameters = parameters, let encodable = parameters[jsonContentKey] as? T else {
-            return urlRequest
-        }
-        if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        do {
-            let data = try JSONEncoder().encode(encodable)
-            urlRequest.httpBody = data
-        } catch {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
-        }
-        return urlRequest
-    }
-}
-
-struct JSONArrayEncoding: ParameterEncoding {
-
-    let options: JSONSerialization.WritingOptions
-
-    init(options: JSONSerialization.WritingOptions = []) {
-        self.options = options
-    }
-
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
-        var urlRequest = try urlRequest.asURLRequest()
-        guard let parameters = parameters, let array = parameters[jsonContentKey] else { return urlRequest }
-        do {
-            let data = try JSONSerialization.data(withJSONObject: array, options: options)
-            if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            }
-            urlRequest.httpBody = data
-        } catch {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
-        }
-        return urlRequest
-    }
-
-}
-
 public enum APIResult<ResultType: Codable> {
     case success(ResultType)
     case failure(APIError)
 
-    var isSuccess: Bool {
+    public var isSuccess: Bool {
         switch self {
         case .success:
             return true
@@ -81,13 +18,15 @@ public enum APIResult<ResultType: Codable> {
     }
 }
 
-public class BaseAPI {
+open class BaseAPI {
     
-    static let jsonDecoder = JSONDecoder()
-    static let jsonEncoder = JSONEncoder()
+    public static let jsonEncoding = JSONEncoding()
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.api")
-    private static let jsonEncoding = JSONEncoding()
+    
+    public init() {
+        
+    }
     
     private struct ResponseObject<ResultType: Codable>: Codable {
         let data: ResultType?
@@ -111,7 +50,7 @@ public class BaseAPI {
     }
 
     @discardableResult
-    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
+    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
         if checkLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -151,13 +90,13 @@ public class BaseAPI {
                 switch response.result {
                 case .success(let data):
                     do {
-                        let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<ResultType>.self, from: data)
+                        let responseObject = try JSONDecoder.default.decode(ResponseObject<ResultType>.self, from: data)
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if let error = responseObject.error {
                             handerError(error)
                         } else {
-                            completion(.success(try BaseAPI.jsonDecoder.decode(ResultType.self, from: data)))
+                            completion(.success(try JSONDecoder.default.decode(ResultType.self, from: data)))
                         }
                     } catch {
                         handerError(APIError.createError(error: error, status: httpStatusCode))
@@ -187,7 +126,7 @@ extension BaseAPI {
     }()
 
     @discardableResult
-    func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
+    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
         return dispatchQueue.sync {
             return self.syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         }
@@ -208,13 +147,13 @@ extension BaseAPI {
                     switch response.result {
                     case let .success(data):
                         do {
-                            let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<T>.self, from: data)
+                            let responseObject = try JSONDecoder.default.decode(ResponseObject<T>.self, from: data)
                             if let data = responseObject.data {
                                 result = .success(data)
                             } else if let error = responseObject.error {
                                 result = .failure(error)
                             } else {
-                                let model = try BaseAPI.jsonDecoder.decode(T.self, from: data)
+                                let model = try JSONDecoder.default.decode(T.self, from: data)
                                 result = .success(model)
                             }
                         } catch {

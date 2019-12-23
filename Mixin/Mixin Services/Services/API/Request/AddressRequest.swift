@@ -3,11 +3,11 @@ import UIKit
 
 public struct AddressRequest: Codable {
     
-    let assetId: String
-    let destination: String
-    let tag: String
-    let label: String
-    var pin: String
+    public let assetId: String
+    public let destination: String
+    public let tag: String
+    public let label: String
+    public var pin: String
     
     enum CodingKeys: String, CodingKey {
         case assetId = "asset_id"
@@ -17,11 +17,19 @@ public struct AddressRequest: Codable {
         case pin
     }
     
+    public init(assetId: String, destination: String, tag: String, label: String, pin: String) {
+        self.assetId = assetId
+        self.destination = destination
+        self.tag = tag
+        self.label = label
+        self.pin = pin
+    }
+    
 }
 
 extension AddressRequest {
     
-    var fullAddress: String {
+    public var fullAddress: String {
         return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
     

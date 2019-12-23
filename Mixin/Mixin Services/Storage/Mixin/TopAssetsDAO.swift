@@ -2,8 +2,8 @@ import WCDBSwift
 
 public final class TopAssetsDAO {
     
-    static let shared = TopAssetsDAO()
-    static let didChangeNotification = Notification.Name(rawValue: "one.mixin.services.top.assets.change")
+    public static let shared = TopAssetsDAO()
+    public static let didChangeNotification = Notification.Name(rawValue: "one.mixin.services.top.assets.change")
     
     private let sqlQueryAssets = """
     SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations, a1.asset_key, a2.name as chain_name
@@ -13,11 +13,11 @@ public final class TopAssetsDAO {
     ORDER BY a1.ROWID ASC
     """
     
-    func getAssets() -> [AssetItem] {
+    public func getAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: sqlQueryAssets)
     }
     
-    func replaceAssets(_ assets: [Asset]) {
+    public func replaceAssets(_ assets: [Asset]) {
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Asset.topAssetsTableName)
             try db.insert(objects: assets, intoTable: Asset.topAssetsTableName)

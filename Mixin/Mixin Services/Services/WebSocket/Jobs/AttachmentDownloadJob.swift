@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public class AttachmentDownloadJob: UploadOrDownloadJob {
+open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private(set) var stream: OutputStream!
     
@@ -34,16 +34,16 @@ public class AttachmentDownloadJob: UploadOrDownloadJob {
         return AttachmentContainer.url(for: .photos, filename: fileName)
     }
     
-    init(messageId: String, mediaMimeType: String?) {
+    public init(messageId: String, mediaMimeType: String?) {
         super.init(messageId: messageId)
         self.mediaMimeType = mediaMimeType
     }
     
-    class func jobId(messageId: String) -> String {
+    open class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
     
-    class func jobId(category: String, messageId: String) -> String {
+    open class func jobId(category: String, messageId: String) -> String {
         if category.hasSuffix("_IMAGE") {
             return AttachmentDownloadJob.jobId(messageId: messageId)
         } else if category.hasSuffix("_DATA") {
@@ -56,11 +56,11 @@ public class AttachmentDownloadJob: UploadOrDownloadJob {
         return ""
     }
     
-    override func getJobId() -> String {
+    override open func getJobId() -> String {
         return AttachmentDownloadJob.jobId(messageId: messageId)
     }
     
-    override func execute() -> Bool {
+    override open func execute() -> Bool {
         guard !self.messageId.isEmpty else {
             return false
         }
@@ -127,7 +127,7 @@ public class AttachmentDownloadJob: UploadOrDownloadJob {
         return true
     }
     
-    override func taskFinished() {
+    override open func taskFinished() {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
             Reporter.report(error: error)
@@ -137,7 +137,7 @@ public class AttachmentDownloadJob: UploadOrDownloadJob {
         }
     }
     
-    override func downloadExpired() {
+    override open func downloadExpired() {
         MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .EXPIRED, conversationId: message.conversationId)
     }
     

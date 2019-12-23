@@ -1,6 +1,6 @@
 import Foundation
 
-class RefreshOffsetJob: BaseJob {
+internal class RefreshOffsetJob: BaseJob {
 
     override func getJobId() -> String {
         return "refresh-offset"

@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct UserItem: BaseCodable {
     
-    static var tableName: String = "users"
+    public static let tableName: String = "users"
     
     public let userId: String
     public var fullName = ""
@@ -88,23 +88,23 @@ public struct UserItem: BaseCodable {
 
 extension UserItem {
     
-    static public func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
+    public static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
         return UserItem(userId: userId, fullName: fullName, biography: "", identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: appId, createdAt: nil, relationship: "", role: "", appCreatorId: nil)
     }
     
-    static public func createUser(from user: UserResponse) -> UserItem {
+    public static func createUser(from user: UserResponse) -> UserItem {
         return UserItem(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appCreatorId: user.app?.creatorId)
     }
     
-    static public func createUser(from user: User) -> UserItem {
+    public static func createUser(from user: User) -> UserItem {
         return UserItem(userId: user.userId, fullName: user.fullName ?? "", biography: user.biography ?? "", identityNumber: user.identityNumber, avatarUrl: user.avatarUrl ?? "", phone: user.phone, isVerified: user.isVerified ?? false, muteUntil: user.muteUntil, appId: user.appId ?? "", createdAt: user.createdAt, relationship: user.relationship, role: "", appCreatorId: user.app?.creatorId)
     }
     
-    static public func createUser(from account: Account) -> UserItem {
+    public static func createUser(from account: Account) -> UserItem {
         return UserItem(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: "", role: "", appCreatorId: nil)
     }
     
-    static public func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {
+    public static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {
         guard let userId = userInfo[UNNotificationContent.UserInfoKey.ownerUserId] as? String else {
             return nil
         }

@@ -2,28 +2,28 @@ import Foundation
 
 public struct APIError: Error, Codable {
 
-    let status: Int
-    let code: Int
-    var description: String
+    public let status: Int
+    public let code: Int
+    public var description: String
 
 }
 
 extension APIError {
 
-    static func createError(error: Error, status: Int) -> APIError {
+    public static func createError(error: Error, status: Int) -> APIError {
         let err = error as NSError
         return APIError(status: status, code: err.errorCode, description: err.localizedDescription)
     }
 
-    static func createAuthenticationError() -> APIError {
+    public static func createAuthenticationError() -> APIError {
         return APIError(status: 401, code: 401, description: "")
     }
 
-    static func createTimeoutError() -> APIError {
+    public static func createTimeoutError() -> APIError {
         return APIError(status: NSURLErrorTimedOut, code: NSURLErrorTimedOut, description: "")
     }
     
-    var isClientError: Bool {
+    public var isClientError: Bool {
         switch status {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost:
             return true
@@ -32,7 +32,7 @@ extension APIError {
         }
     }
 
-    var isServerError: Bool {
+    public var isServerError: Bool {
         return (code >= 500 && code < 600) || (status >= 500 && status < 600)
     }
 

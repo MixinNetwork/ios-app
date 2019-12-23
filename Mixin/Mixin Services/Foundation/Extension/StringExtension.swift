@@ -171,7 +171,7 @@ public extension String {
     
 }
 
-extension Optional where Wrapped == String {
+public extension Optional where Wrapped == String {
     
     var isNilOrEmpty: Bool {
         switch self {
@@ -188,21 +188,6 @@ extension Optional where Wrapped == String {
         }
         return value
     }
-}
-
-extension NSAttributedString.Key {
-    static let ctFont = kCTFontAttributeName as NSAttributedString.Key
-    static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedString.Key
-    static let ctParagraphStyle = kCTParagraphStyleAttributeName as NSAttributedString.Key
-}
-
-extension NSMutableAttributedString {
-    
-    func setCTForegroundColor(_ color: UIColor, for range: NSRange) {
-        removeAttribute(.ctForegroundColor, range: range)
-        addAttributes([.ctForegroundColor: color.cgColor], range: range)
-    }
-    
 }
 
 extension Substring {

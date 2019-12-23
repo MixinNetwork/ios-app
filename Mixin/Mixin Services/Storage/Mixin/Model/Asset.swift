@@ -2,9 +2,9 @@ import Foundation
 import WCDBSwift
 
 public struct Asset: BaseCodable {
-
-    static var tableName: String = "assets"
-    static let topAssetsTableName = "top_assets"
+    
+    public static let tableName: String = "assets"
+    public static let topAssetsTableName = "top_assets"
     
     public let assetId: String
     public let type: String
@@ -20,7 +20,7 @@ public struct Asset: BaseCodable {
     public let chainId: String
     public let confirmations: Int
     public let assetKey: String
-
+    
     public enum CodingKeys: String, CodingTableKey {
         
         public typealias Root = Asset
@@ -50,12 +50,38 @@ public struct Asset: BaseCodable {
         
     }
     
-}
-
-extension Asset {
-
-    static public func createAsset(asset: AssetItem) -> Asset {
-        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, destination: asset.destination, tag: asset.tag, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, assetKey: asset.assetKey)
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String) {
+        self.assetId = assetId
+        self.type = type
+        self.symbol = symbol
+        self.name = name
+        self.iconUrl = iconUrl
+        self.balance = balance
+        self.destination = destination
+        self.tag = tag
+        self.priceBtc = priceBtc
+        self.priceUsd = priceUsd
+        self.changeUsd = changeUsd
+        self.chainId = chainId
+        self.confirmations = confirmations
+        self.assetKey = assetKey
     }
-
+    
+    public init(item: AssetItem) {
+        self.init(assetId: item.assetId,
+                  type: item.type,
+                  symbol: item.symbol,
+                  name: item.name,
+                  iconUrl: item.iconUrl,
+                  balance: item.balance,
+                  destination: item.destination,
+                  tag: item.tag,
+                  priceBtc: item.priceBtc,
+                  priceUsd: item.priceUsd,
+                  changeUsd: item.changeUsd,
+                  chainId: item.chainId,
+                  confirmations: item.confirmations,
+                  assetKey: item.assetKey)
+    }
+    
 }

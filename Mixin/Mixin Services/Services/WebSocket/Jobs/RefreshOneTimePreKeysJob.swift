@@ -1,11 +1,11 @@
 import Foundation
 
-class RefreshOneTimePreKeysJob: BaseJob {
-
+internal class RefreshOneTimePreKeysJob: BaseJob {
+    
     override func getJobId() -> String {
         return "onetime-prekey"
     }
-
+    
     override func run() throws {
         guard case let .success(response) = SignalKeyAPI.shared.getSignalKeyCount() else {
             return
@@ -15,7 +15,7 @@ class RefreshOneTimePreKeysJob: BaseJob {
         }
         refreshKeys()
     }
-
+    
     private func refreshKeys() {
         do {
             let request = try PreKeyUtil.generateKeys()
@@ -29,4 +29,5 @@ class RefreshOneTimePreKeysJob: BaseJob {
             Reporter.report(error: error)
         }
     }
+    
 }

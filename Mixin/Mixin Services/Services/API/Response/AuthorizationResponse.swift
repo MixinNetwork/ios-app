@@ -2,11 +2,11 @@ import Foundation
 
 public struct AuthorizationResponse: Codable {
     
-    let authorizationId: String
-    let authorizationCode: String
-    let scopes: [String]
-    let codeId: String
-    let app: App
+    public let authorizationId: String
+    public let authorizationCode: String
+    public let scopes: [String]
+    public let codeId: String
+    public let app: App
     
     enum CodingKeys: String, CodingKey {
         case authorizationId = "authorization_id"

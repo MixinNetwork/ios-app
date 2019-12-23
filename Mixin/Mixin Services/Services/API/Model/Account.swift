@@ -12,27 +12,27 @@ public enum AcceptConversationSource: String {
 
 public struct Account: Encodable {
     
-    let user_id: String
-    let session_id: String
-    let type: String
-    let identity_number: String
-    let full_name: String
-    let biography: String
-    let avatar_url: String
-    let phone: String
-    let authentication_token: String
-    let code_id: String
-    let code_url: String
-    let reputation: Int
-    let created_at: String
-    let receive_message_source: String
-    let accept_conversation_source: String
-    let has_pin: Bool
-    var has_emergency_contact: Bool
-    let pin_token: String
-    let fiat_currency: String
-    let transfer_notification_threshold: Double
-    let transfer_confirmation_threshold: Double
+    public let user_id: String
+    public let session_id: String
+    public let type: String
+    public let identity_number: String
+    public let full_name: String
+    public let biography: String
+    public let avatar_url: String
+    public let phone: String
+    public let authentication_token: String
+    public let code_id: String
+    public let code_url: String
+    public let reputation: Int
+    public let created_at: String
+    public let receive_message_source: String
+    public let accept_conversation_source: String
+    public let has_pin: Bool
+    public var has_emergency_contact: Bool
+    public let pin_token: String
+    public let fiat_currency: String
+    public let transfer_notification_threshold: Double
+    public let transfer_confirmation_threshold: Double
     
 }
 

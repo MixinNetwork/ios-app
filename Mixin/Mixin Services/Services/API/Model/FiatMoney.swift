@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct FiatMoney: Codable {
     
-    let code: String
-    let rate: Double
+    public let code: String
+    public let rate: Double
     
 }

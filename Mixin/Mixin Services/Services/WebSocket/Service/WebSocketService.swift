@@ -5,13 +5,13 @@ import Gzip
 
 public class WebSocketService {
     
-    static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")
-    static let didDisconnectNotification = Notification.Name("one.mixin.services.ws.disconnect")
-    static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.services.pending.msg.upload.available")
+    public static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")
+    public static let didDisconnectNotification = Notification.Name("one.mixin.services.ws.disconnect")
+    public static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.services.pending.msg.upload.available")
     
-    static let shared = WebSocketService()
+    public static let shared = WebSocketService()
     
-    var isConnected: Bool {
+    public var isConnected: Bool {
         return status == .connected
     }
     
@@ -38,11 +38,11 @@ public class WebSocketService {
         return rechability?.isReachable ?? false
     }
     
-    init() {
+    internal init() {
         queue.setSpecific(key: queueSpecificKey, value: ())
     }
     
-    func connect() {
+    public func connect() {
         enqueueOperation {
             guard self.status == .disconnected else {
                 return
@@ -61,7 +61,7 @@ public class WebSocketService {
         }
     }
     
-    func disconnect() {
+    public func disconnect() {
         enqueueOperation {
             guard self.status == .connecting || self.status == .connected else {
                 return
@@ -76,7 +76,7 @@ public class WebSocketService {
         }
     }
     
-    func reconnectIfNeeded() {
+    public func reconnectIfNeeded() {
         enqueueOperation {
             let shouldReconnect = self.isReachable
                 && LoginManager.shared.isLoggedIn
@@ -88,7 +88,7 @@ public class WebSocketService {
         }
     }
     
-    func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
+    internal func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
         return try messageQueue.sync {
             guard LoginManager.shared.isLoggedIn else {
                 return nil

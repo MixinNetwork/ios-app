@@ -2,7 +2,7 @@ import WCDBSwift
 
 public struct FavoriteApp: BaseCodable {
     
-    static let tableName: String = "favorite_apps"
+    public static let tableName: String = "favorite_apps"
     
     public let userId: String
     public let appId: String

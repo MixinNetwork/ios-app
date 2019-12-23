@@ -8,7 +8,7 @@ public enum ExtensionName: String {
     case ogg
     case gif
     
-    var withDot: String {
+    public var withDot: String {
         return "." + rawValue
     }
     

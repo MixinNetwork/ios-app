@@ -71,7 +71,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     }
     
     func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
-        let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
+        let request = AccountRequest(code: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
         AccountAPI.shared.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             DispatchQueue.global().async {
                 self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)

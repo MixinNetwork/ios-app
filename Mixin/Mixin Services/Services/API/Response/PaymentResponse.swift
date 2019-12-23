@@ -2,10 +2,10 @@ import Foundation
 
 public struct PaymentResponse: Codable {
     
-    let recipient: UserResponse
-    let asset: Asset
-    let amount: String
-    let status: String
+    public let recipient: UserResponse
+    public let asset: Asset
+    public let amount: String
+    public let status: String
     
 }
 

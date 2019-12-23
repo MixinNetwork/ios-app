@@ -2,20 +2,20 @@ import Foundation
 import SDWebImage
 import YYImage
 
-enum StickerPrefetcher {
+public enum StickerPrefetcher {
     
-    static let persistentPrefetcher: SDWebImagePrefetcher = {
+    public static let persistent: SDWebImagePrefetcher = {
         let prefetcher = SDWebImagePrefetcher(imageManager: .persistentSticker)
         prefetcher.animatedImageClass = YYImage.self
         return prefetcher
     }()
-    static let purgablePrefetcher: SDWebImagePrefetcher = {
+    public static let purgable: SDWebImagePrefetcher = {
         let prefetcher = SDWebImagePrefetcher(imageManager: .shared)
         prefetcher.animatedImageClass = YYImage.self
         return prefetcher
     }()
     
-    static func prefetch(stickers: [StickerItem]) {
+    public static func prefetch(stickers: [StickerItem]) {
         let persistentUrls = stickers
             .filter({ $0.shouldCachePersistently })
             .map({ $0.assetUrl })
@@ -24,13 +24,13 @@ enum StickerPrefetcher {
             .filter({ !$0.shouldCachePersistently })
             .map({ $0.assetUrl })
             .compactMap(URL.init)
-        persistentPrefetcher.prefetchURLs(persistentUrls)
-        purgablePrefetcher.prefetchURLs(purgableUrls)
+        persistent.prefetchURLs(persistentUrls)
+        purgable.prefetchURLs(purgableUrls)
     }
     
 }
 
-fileprivate extension SDWebImagePrefetcher {
+public extension SDWebImagePrefetcher {
     
     var animatedImageClass: UIImage.Type? {
         get {

@@ -9,29 +9,29 @@ public class AlbumDAO {
     LIMIT 1
     """
     
-    static let shared = AlbumDAO()
+    public static let shared = AlbumDAO()
     
-    func getAlbum(stickerId: String) -> Album? {
+    public func getAlbum(stickerId: String) -> Album? {
         return MixinDatabase.shared.getCodables(on: Album.Properties.all, sql: AlbumDAO.sqlQueryAlbumByStickerId, values: [stickerId]).first
     }
     
-    func getSelfAlbum() -> Album? {
+    public func getSelfAlbum() -> Album? {
         return MixinDatabase.shared.getCodable(condition: Album.Properties.category == AlbumCategory.PERSONAL.rawValue)
     }
     
-    func getSelfAlbumId() -> String? {
+    public func getSelfAlbumId() -> String? {
         return getSelfAlbum()?.albumId
     }
     
-    func getAlbums() -> [Album] {
+    public func getAlbums() -> [Album] {
         return MixinDatabase.shared.getCodables(condition: Album.Properties.category != AlbumCategory.PERSONAL.rawValue, orderBy: [Album.Properties.updatedAt.asOrder(by: .descending)])
     }
     
-    func getAblumsUpdateAt() -> [String: String] {
+    public func getAblumsUpdateAt() -> [String: String] {
         return MixinDatabase.shared.getDictionary(key: Album.Properties.albumId.asColumnResult(), value: Album.Properties.updatedAt.asColumnResult(), tableName: Album.tableName)
     }
     
-    func insertOrUpdateAblum(album: Album) {
+    public func insertOrUpdateAblum(album: Album) {
         MixinDatabase.shared.insertOrReplace(objects: [album])
     }
         

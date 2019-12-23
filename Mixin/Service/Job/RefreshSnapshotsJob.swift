@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public class RefreshSnapshotsJob: BaseJob {
+class RefreshSnapshotsJob: BaseJob {
     
     enum Category {
         case all

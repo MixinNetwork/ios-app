@@ -28,16 +28,16 @@ extension SDImageCache {
     
 }
 
-let localImageContext: [SDWebImageContextOption: Any] = [
+public let localImageContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.localImage,
     .storeCacheType: SDImageCacheType.memory.rawValue,
     .originalStoreCacheType: SDImageCacheType.memory.rawValue
 ]
 
-let assetIconContext: [SDWebImageContextOption: Any] = [
+public let assetIconContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.assetIcon
 ]
 
-let persistentStickerContext: [SDWebImageContextOption: Any] = [
+public let persistentStickerContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.persistentSticker
 ]

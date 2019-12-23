@@ -2,27 +2,27 @@ import Foundation
 import UIKit
 
 open class JobQueue {
-
-    internal let queue = OperationQueue()
-
-    init(maxConcurrentOperationCount: Int) {
+    
+    public let queue = OperationQueue()
+    
+    public init(maxConcurrentOperationCount: Int) {
         queue.maxConcurrentOperationCount = maxConcurrentOperationCount
     }
-
-    func cancelAllOperations() {
+    
+    open func cancelAllOperations() {
         queue.cancelAllOperations()
     }
-
-    func suspend() {
+    
+    open func suspend() {
         queue.isSuspended = true
     }
-
-    func resume() {
+    
+    open func resume() {
         queue.isSuspended = false
     }
-
+    
     @discardableResult
-    func addJob(job: BaseJob) -> Bool {
+    open func addJob(job: BaseJob) -> Bool {
         guard LoginManager.shared.isLoggedIn else {
             return false
         }
@@ -36,23 +36,23 @@ open class JobQueue {
         }
         return true
     }
-
+    
     @discardableResult
-    func cancelJob(jobId: String) -> Bool {
+    open func cancelJob(jobId: String) -> Bool {
         guard let job = findJobById(jodId: jobId) else {
             return false
         }
         job.cancel()
         return true
     }
-
-    func findJobById(jodId: String) -> BaseJob? {
+    
+    open func findJobById(jodId: String) -> BaseJob? {
         return queue.operations.first { (operation) -> Bool in
             return (operation as? BaseJob)?.getJobId() == jodId
-        } as? BaseJob
+            } as? BaseJob
     }
-
-    func isExistJob(jodId: String) -> Bool {
+    
+    open func isExistJob(jodId: String) -> Bool {
         guard queue.operations.count > 0 else {
             return false
         }
@@ -60,5 +60,5 @@ open class JobQueue {
             (operation as? BaseJob)?.getJobId() == jodId && !operation.isCancelled
         })
     }
+    
 }
-

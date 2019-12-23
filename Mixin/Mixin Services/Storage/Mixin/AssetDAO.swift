@@ -2,7 +2,7 @@ import WCDBSwift
 
 public final class AssetDAO {
     
-    static let shared = AssetDAO()
+    public static let shared = AssetDAO()
     
     private static let sqlQueryTable = """
     SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations, a1.asset_key, a2.name as chain_name
@@ -20,15 +20,15 @@ public final class AssetDAO {
     """
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
     
-    func getAsset(assetId: String) -> AssetItem? {
+    public func getAsset(assetId: String) -> AssetItem? {
         return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId]).first
     }
     
-    func isExist(assetId: String) -> Bool {
+    public func isExist(assetId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId)
     }
     
-    func insertOrUpdateAssets(assets: [Asset]) {
+    public func insertOrUpdateAssets(assets: [Asset]) {
         guard assets.count > 0 else {
             return
         }
@@ -40,7 +40,7 @@ public final class AssetDAO {
         }
     }
     
-    func saveAsset(asset: Asset) -> AssetItem? {
+    public func saveAsset(asset: Asset) -> AssetItem? {
         var assetItem: AssetItem?
         MixinDatabase.shared.transaction { (db) in
             try db.insertOrReplace(objects: asset, intoTable: Asset.tableName)
@@ -49,7 +49,7 @@ public final class AssetDAO {
         return assetItem
     }
     
-    func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
+    public func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
         let keyword = "%\(keyword)%"
         var sql = AssetDAO.sqlQuerySearch
         if let limit = limit {
@@ -58,11 +58,11 @@ public final class AssetDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword])
     }
     
-    func getAssets() -> [AssetItem] {
+    public func getAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery)
     }
     
-    func getDefaultTransferAsset() -> AssetItem? {
+    public func getDefaultTransferAsset() -> AssetItem? {
         if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
             return asset
         }
@@ -72,7 +72,7 @@ public final class AssetDAO {
         return nil
     }
     
-    func getAvailableAssets() -> [AssetItem] {
+    public func getAvailableAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailableList)
     }
     

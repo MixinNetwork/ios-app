@@ -2,9 +2,9 @@ import Foundation
 
 public struct Fee: Codable, NumberStringLocalizable {
     
-    let type: String
-    let assetId: String
-    let amount: String
+    public let type: String
+    public let assetId: String
+    public let amount: String
     
     enum CodingKeys: String, CodingKey {
         case type

@@ -1,19 +1,19 @@
-struct MultisigResponse: Codable {
-
-    let codeId: String
-    let requestId: String
-    let action: String
-    let userId: String
-    let assetId: String
-    let amount: String
-    let senders: [String]
-    let receivers: [String]
-    let state: String
-    let transactionHash: String
-    let rawTransaction: String
-    let createdAt: String
-    let memo: String?
-
+public struct MultisigResponse: Codable {
+    
+    public let codeId: String
+    public let requestId: String
+    public let action: String
+    public let userId: String
+    public let assetId: String
+    public let amount: String
+    public let senders: [String]
+    public let receivers: [String]
+    public let state: String
+    public let transactionHash: String
+    public let rawTransaction: String
+    public let createdAt: String
+    public let memo: String?
+    
     enum CodingKeys: String, CodingKey {
         case codeId = "code_id"
         case requestId = "request_id"
@@ -29,16 +29,16 @@ struct MultisigResponse: Codable {
         case createdAt = "created_at"
         case memo
     }
+    
 }
 
-
-enum MultisigState: String {
+public enum MultisigState: String {
     case initial
     case unlocked
     case signed
 }
 
-enum MultisigAction: String {
+public enum MultisigAction: String {
     case sign
     case unlock
 }

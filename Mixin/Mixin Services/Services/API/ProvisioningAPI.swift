@@ -2,7 +2,7 @@ import UIKit
 
 public class ProvisioningAPI: BaseAPI {
     
-    static let shared = ProvisioningAPI()
+    public static let shared = ProvisioningAPI()
     
     private enum url {
         static let code = "device/provisioning/code"

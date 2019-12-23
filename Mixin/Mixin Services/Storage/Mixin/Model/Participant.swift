@@ -2,7 +2,7 @@ import WCDBSwift
 
 public struct Participant: BaseCodable {
     
-    static var tableName: String = "participants"
+    public static let tableName: String = "participants"
     
     public let conversationId: String
     public let userId: String
@@ -27,12 +27,12 @@ public struct Participant: BaseCodable {
     }
 }
 
-enum ParticipantRole: String {
+public enum ParticipantRole: String {
     case OWNER
     case ADMIN
 }
 
-enum ParticipantAction: String {
+public enum ParticipantAction: String {
     case ADD
     case REMOVE
     case JOIN
@@ -40,7 +40,7 @@ enum ParticipantAction: String {
     case ROLE
 }
 
-enum ParticipantStatus: Int {
+public enum ParticipantStatus: Int {
     case START = 0
     case SUCCESS = 1
     case ERROR = 2

@@ -61,35 +61,36 @@ public class MessageItem: TableCodable {
     public var quoteMessageId: String? = nil
     public var quoteContent: Data? = nil
     
-    public var userIsBot: Bool {
-        return !(appId?.isEmpty ?? true)
-    }
-    
-    lazy var appButtons: [AppButtonData]? = {
+    public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder.default.decode([AppButtonData].self, from: data)
     }()
     
-    lazy var appCard: AppCardData? = {
+    public lazy var appCard: AppCardData? = {
         guard category == MessageCategory.APP_CARD.rawValue, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder.default.decode(AppCardData.self, from: data)
     }()
     
-    public var isExtensionMessage: Bool {
-        return category == MessageCategory.EXT_UNREAD.rawValue || category == MessageCategory.EXT_ENCRYPTION.rawValue
-    }
-    
-    public var isSystemMessage: Bool {
-        return category == MessageCategory.SYSTEM_CONVERSATION.rawValue
-    }
-    
-    init() {
+    public init() {
         
     }
+    
+    public convenience init(category: String, conversationId: String, createdAt: String) {
+        self.init()
+        self.messageId = UUID().uuidString.lowercased()
+        self.status = MessageStatus.SENDING.rawValue
+        self.category = category
+        self.conversationId = conversationId
+        self.createdAt = createdAt
+    }
+    
+}
+
+extension MessageItem {
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -162,31 +163,19 @@ public class MessageItem: TableCodable {
 
 extension MessageItem {
     
-    static public func createMessage(category: String, conversationId: String, createdAt: String) -> MessageItem {
-        let message = MessageItem()
-        message.messageId = UUID().uuidString.lowercased()
-        message.status = MessageStatus.SENDING.rawValue
-        message.category = category
-        message.conversationId = conversationId
-        message.createdAt = createdAt
-        return message
+    public var isExtensionMessage: Bool {
+        return category == MessageCategory.EXT_UNREAD.rawValue || category == MessageCategory.EXT_ENCRYPTION.rawValue
     }
     
-}
-
-extension MessageItem {
-    
-    public func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
-        guard userId != myUserId else {
-            return false
-        }
-        guard conversation.category != ConversationCategory.GROUP.rawValue else {
-            return true
-        }
-        return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
+    public var isSystemMessage: Bool {
+        return category == MessageCategory.SYSTEM_CONVERSATION.rawValue
     }
     
-    public func canRecall() -> Bool {
+    public var userIsBot: Bool {
+        return !(appId?.isEmpty ?? true)
+    }
+    
+    public var canRecall: Bool {
         guard userId == myUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }
@@ -196,8 +185,17 @@ extension MessageItem {
         guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {
             return false
         }
-        
         return true
+    }
+    
+    public func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
+        guard userId != myUserId else {
+            return false
+        }
+        guard conversation.category != ConversationCategory.GROUP.rawValue else {
+            return true
+        }
+        return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
     }
     
 }

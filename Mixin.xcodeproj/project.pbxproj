@@ -745,7 +745,6 @@
 		DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */; };
 		DFEEE6F11FE14F44001CCFB5 /* RelationshipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEEE6F01FE14F44001CCFB5 /* RelationshipRequest.swift */; };
 		DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7B22254C6E0087173D /* R.generated.swift */; };
-		DFF1AD802227D7CA0087173D /* TransferPlainAckData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */; };
 		DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF2145C209AC7D400612234 /* ConerLabel.swift */; };
 		DFF353001FEE516F00058453 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF352FF1FEE516F00058453 /* Asset.swift */; };
 		DFF353021FEE532300058453 /* AssetDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353011FEE532300058453 /* AssetDAO.swift */; };
@@ -794,6 +793,8 @@
 		E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */; };
 		E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */; };
 		E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */; };
+		E061E36723B1FD0500598FC3 /* JSONArrayEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E061E36623B1FD0500598FC3 /* JSONArrayEncoding.swift */; };
+		E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */; };
 		E07E389F23A772BD0005A538 /* MixinServicesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E389E23A772BD0005A538 /* MixinServicesError.swift */; };
 		E07E38A123A772CC0005A538 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A023A772CC0005A538 /* CallError.swift */; };
 		E07E38A423A773F10005A538 /* WCDBError+CustomNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */; };
@@ -1625,7 +1626,6 @@
 		DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationResponse.swift; sourceTree = "<group>"; };
 		DFEEE6F01FE14F44001CCFB5 /* RelationshipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationshipRequest.swift; sourceTree = "<group>"; };
 		DFF1AD7B22254C6E0087173D /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
-		DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlainAckData.swift; sourceTree = "<group>"; };
 		DFF2145C209AC7D400612234 /* ConerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConerLabel.swift; sourceTree = "<group>"; };
 		DFF352FF1FEE516F00058453 /* Asset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
 		DFF353011FEE532300058453 /* AssetDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDAO.swift; sourceTree = "<group>"; };
@@ -1674,6 +1674,8 @@
 		E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonView.swift; sourceTree = "<group>"; };
 		E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReceptionView.swift; sourceTree = "<group>"; };
 		E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppReceptionView.xib; sourceTree = "<group>"; };
+		E061E36623B1FD0500598FC3 /* JSONArrayEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONArrayEncoding.swift; sourceTree = "<group>"; };
+		E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+CoreText.swift"; sourceTree = "<group>"; };
 		E07E389E23A772BD0005A538 /* MixinServicesError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinServicesError.swift; sourceTree = "<group>"; };
 		E07E38A023A772CC0005A538 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
 		E07E38A323A773F00005A538 /* WCDBError+CustomNSError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WCDBError+CustomNSError.swift"; sourceTree = "<group>"; };
@@ -2502,6 +2504,7 @@
 				DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
 				E0B53A6623B0C26E008DA9F1 /* APIError+Description.swift */,
+				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2631,6 +2634,7 @@
 				DFE63C981FC6B14B00D6E028 /* Response */,
 				DF5D9F371F9C997F0036D5FD /* Model */,
 				E0D65E0C238BF99A00DC780A /* MixinServer.swift */,
+				E061E36623B1FD0500598FC3 /* JSONArrayEncoding.swift */,
 				DF5D9F211F9C79660036D5FD /* BaseAPI.swift */,
 				DFEE2159200CACB300D9B3F7 /* AuthorizeAPI.swift */,
 				DF5D9F3A1F9C9A400036D5FD /* AccountAPI.swift */,
@@ -2642,9 +2646,7 @@
 				DF68F1852014CF5E001C4225 /* StickerAPI.swift */,
 				DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */,
 				7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */,
-				7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */,
 				7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */,
-				7B280DEF22B124450084E49E /* EmergencyAPI.swift */,
 				DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */,
 				DF8A751E2362A65500765A82 /* MultisigAPI.swift */,
 			);
@@ -2681,7 +2683,6 @@
 				DF5D9F381F9C998F0036D5FD /* Account.swift */,
 				7BBF395D205A624F00390712 /* Fee.swift */,
 				7B5843442175D3EC0053332F /* PendingDeposit.swift */,
-				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
 				7BBDF3DC230D4B2300079979 /* FiatMoney.swift */,
 			);
 			path = Model;
@@ -2835,10 +2836,6 @@
 				DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */,
 				DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */,
 				DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */,
-				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
-				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
-				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
-				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
 				DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */,
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
@@ -2861,7 +2858,6 @@
 				27D6E8D12045473300BA678A /* TransferMessage.swift */,
 				DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */,
 				DF22D94A1FDD33E700243CAE /* PlainJsonMessagePayload.swift */,
-				DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */,
 				DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */,
 				DF7FB63922801B4E00F4782F /* TransferRecallData.swift */,
 				DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */,
@@ -3097,8 +3093,6 @@
 				DFEE215B200CAD8800D9B3F7 /* AuthorizationRequest.swift */,
 				DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */,
 				DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */,
-				7B280DF122B1286C0084E49E /* EmergencyRequest.swift */,
-				7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */,
 				DF4D15CB217EE93200CA602F /* MixinRequest.swift */,
 				DFCFAFC7237E863D00F0AFD5 /* RawTransactionRequest.swift */,
 			);
@@ -3159,6 +3153,10 @@
 				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
 				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 				DF1A9A7F1FF25DB600A95188 /* RequestInAppNotificationJob.swift */,
+				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
+				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
+				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
+				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3303,6 +3301,11 @@
 				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 				DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */,
+				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
+				7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */,
+				7B280DF122B1286C0084E49E /* EmergencyRequest.swift */,
+				7B75F50D22B775C400619588 /* EmergencySessionRequest.swift */,
+				7B280DEF22B124450084E49E /* EmergencyAPI.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -3876,7 +3879,6 @@
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
-				DFF1AD802227D7CA0087173D /* TransferPlainAckData.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
@@ -3983,6 +3985,7 @@
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
+				E061E36723B1FD0500598FC3 /* JSONArrayEncoding.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,
 				7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */,
@@ -4224,6 +4227,7 @@
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,
+				E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */,
 				7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */,
 				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7BE6E16C218089F100C32EE5 /* MainThreadDispatcher.swift in Sources */,

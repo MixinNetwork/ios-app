@@ -2,13 +2,13 @@ import Foundation
 
 public struct PendingDeposit: Codable {
     
-    let transactionId: String
-    let transactionHash: String
-    let sender: String
-    let amount: String
-    let confirmations: Int
-    let threshold: Int
-    let createdAt: String
+    public let transactionId: String
+    public let transactionHash: String
+    public let sender: String
+    public let amount: String
+    public let confirmations: Int
+    public let threshold: Int
+    public let createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case transactionId = "transaction_id"

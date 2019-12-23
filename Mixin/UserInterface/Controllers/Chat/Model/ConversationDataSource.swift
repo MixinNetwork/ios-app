@@ -124,7 +124,7 @@ class ConversationDataSource {
         loadedMessageIds = Set(messages.map({ $0.messageId }))
         if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
             let firstUnreadMessge = messages[firstUnreadIndex]
-            let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
+            let hint = MessageItem(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
             messages.insert(hint, at: firstUnreadIndex)
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
@@ -352,7 +352,7 @@ class ConversationDataSource {
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
                 let firstUnreadMessage = messages[index]
-                let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
+                let hint = MessageItem(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
                 messages.insert(hint, at: index)
                 self.canInsertUnreadHint = false
             }

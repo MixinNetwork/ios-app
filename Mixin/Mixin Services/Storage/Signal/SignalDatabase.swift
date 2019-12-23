@@ -1,20 +1,20 @@
 import Foundation
 import WCDBSwift
 
-class SignalDatabase: BaseDatabase {
-
+public class SignalDatabase: BaseDatabase {
+    
     private static let databaseVersion: Int = 2
-
-    static let shared = SignalDatabase()
-
+    
+    public static let shared = SignalDatabase()
+    
     private var _database = Database(withPath: AppGroupContainer.signalDatabaseUrl.path)
     
     override var database: Database! {
         get { return _database }
         set { }
     }
-
-    func initDatabase() throws {
+    
+    public func initDatabase() throws {
         database.setSynchronous(isFull: true)
         try database.run(transaction: {
             try database.create(of: Identity.self)
@@ -26,8 +26,8 @@ class SignalDatabase: BaseDatabase {
             try database.setDatabaseVersion(version: SignalDatabase.databaseVersion)
         })
     }
-
-    func logout() {
+    
+    public func logout() {
         do {
             try database.run(transaction: {
                 try database.delete(fromTable: Identity.tableName)
@@ -42,5 +42,5 @@ class SignalDatabase: BaseDatabase {
         }
         AppGroupUserDefaults.Crypto.clearAll()
     }
-
+    
 }

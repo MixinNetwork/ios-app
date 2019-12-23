@@ -1,8 +1,10 @@
 import Foundation
 import LocalAuthentication
 
-class Keychain {
-
+public class Keychain {
+    
+    public static let shared = Keychain()
+    
     private let secKeySize = 256
     private let secKeyType = kSecAttrKeyTypeECSECPrimeRandom
     private let secLabel = "one.mixin.ios.keychain.secureenclave"
@@ -10,9 +12,7 @@ class Keychain {
     private let keyDeviceId = "device_id"
     private let keyEncryptedPIN = "encrypted_pin"
     private let authenticationService = "one.mixin.ios.authentication"
-
-    static let shared = Keychain()
-
+    
     private func getData(_ key: String) -> Data? {
         let query: [CFString: Any] = [kSecAttrService: authenticationService,
                                       kSecClass: kSecClassGenericPassword,
@@ -72,7 +72,7 @@ class Keychain {
     }
 }
 
-extension Keychain {
+public extension Keychain {
 
     func getDeviceId() -> String {
         var deviceId = getString(keyDeviceId) ?? ""
@@ -85,7 +85,7 @@ extension Keychain {
 
 }
 
-extension Keychain {
+public extension Keychain {
 
     @discardableResult
     func storePIN(pin: String) -> Bool {

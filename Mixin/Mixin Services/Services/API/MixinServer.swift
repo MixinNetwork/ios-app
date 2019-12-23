@@ -1,12 +1,12 @@
 import Foundation
 
-enum MixinServer {
+public enum MixinServer {
     
-    static var webSocketHost: String {
+    public static var webSocketHost: String {
         return all[MixinServer.serverIndex.value].0
     }
     
-    static var httpUrl: String {
+    public static var httpUrl: String {
         return all[MixinServer.serverIndex.value].1
     }
     
@@ -17,14 +17,14 @@ enum MixinServer {
     
     private static var serverIndex = Atomic<Int>(AppGroupUserDefaults.serverIndex)
     
-    static func toggle(currentWebSocketHost host: String?) {
+    public static func toggle(currentWebSocketHost host: String?) {
         guard host == webSocketHost else {
             return
         }
         toggleIndex()
     }
     
-    static func toggle(currentHttpUrl url: String) {
+    public static func toggle(currentHttpUrl url: String) {
         guard url == httpUrl else {
             return
         }

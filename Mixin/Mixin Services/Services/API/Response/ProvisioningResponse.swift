@@ -2,11 +2,11 @@ import Foundation
 
 public struct ProvisioningResponse: Codable {
     
-    let type: String
-    let deviceId: String
-    let description: String
-    let secret: String
-    let createdAt: String
+    public let type: String
+    public let deviceId: String
+    public let description: String
+    public let secret: String
+    public let createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case type

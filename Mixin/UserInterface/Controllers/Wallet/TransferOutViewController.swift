@@ -258,7 +258,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
                     self?.asset = defaultAsset
                 } else {
-                    self?.asset = AssetItem.createDefaultAsset()
+                    self?.asset = .xin
                 }
                 DispatchQueue.main.async {
                     self?.updateAssetUI()

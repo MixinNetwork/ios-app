@@ -1,6 +1,6 @@
 import Foundation
 
-class ExitConversationJob: BaseJob {
+internal class ExitConversationJob: BaseJob {
 
     let conversationId: String
 

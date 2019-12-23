@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct Snapshot: BaseCodable {
     
-    static var tableName: String = "snapshots"
+    public static let tableName: String = "snapshots"
     
     public let snapshotId: String
     public let type: String
@@ -41,7 +41,7 @@ public struct Snapshot: BaseCodable {
         }
     }
     
-    init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String) {
+    public init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String) {
         self.snapshotId = snapshotId
         self.type = type
         self.assetId = assetId
@@ -56,12 +56,12 @@ public struct Snapshot: BaseCodable {
         self.createdAt = createdAt
     }
     
-    enum Sort {
+    public enum Sort {
         case createdAt
         case amount
     }
     
-    enum Filter {
+    public enum Filter {
         case all
         case deposit
         case transfer
@@ -70,7 +70,7 @@ public struct Snapshot: BaseCodable {
         case rebate
         case raw
         
-        var snapshotTypes: [SnapshotType] {
+        public var snapshotTypes: [SnapshotType] {
             switch self {
             case .all:
                 return SnapshotType.allCases
@@ -92,7 +92,7 @@ public struct Snapshot: BaseCodable {
     
 }
 
-enum SnapshotType: String, CaseIterable {
+public enum SnapshotType: String, CaseIterable {
     case raw
     case deposit
     case transfer

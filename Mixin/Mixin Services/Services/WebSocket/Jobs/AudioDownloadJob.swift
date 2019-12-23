@@ -6,11 +6,11 @@ public class AudioDownloadJob: AttachmentDownloadJob {
         return AttachmentContainer.url(for: .audios, filename: fileName)
     }
     
-    override class func jobId(messageId: String) -> String {
+    override public class func jobId(messageId: String) -> String {
         return "audio-download-\(messageId)"
     }
     
-    override func getJobId() -> String {
+    override public func getJobId() -> String {
         return FileDownloadJob.jobId(messageId: messageId)
     }
     

@@ -1,9 +1,9 @@
 import Foundation
 
-struct AppButtonData: Codable {
-
-    let action: String
-    let label: String
-    let color: String
-
+public struct AppButtonData: Codable {
+    
+    public let action: String
+    public let label: String
+    public let color: String
+    
 }

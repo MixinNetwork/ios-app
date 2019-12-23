@@ -4,8 +4,10 @@ import Security
 import UIKit
 import Goutils
 
-class KeyUtil {
-
+public enum KeyUtil {
+    
+    public typealias RSAKeyPair = (privateKeyPem: String, publicKey: String)
+    
     static func stripRsaPrivateKeyHeaders(_ pemString: String) -> String {
         let lines = pemString.components(separatedBy: "\n").filter { line in
             return !line.hasPrefix("-----BEGIN") && !line.hasPrefix("-----END")
@@ -26,7 +28,7 @@ class KeyUtil {
         return iv
     }
     
-    static func aesEncrypt<ResultType>(pin: String, completion: @escaping (APIResult<ResultType>) -> Void, callback: (String) -> Void) {
+    public static func aesEncrypt<ResultType>(pin: String, completion: @escaping (APIResult<ResultType>) -> Void, callback: (String) -> Void) {
         guard let pinToken = AppGroupUserDefaults.Account.pinToken, let encryptedPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: pin) else {
             completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
             return
@@ -56,7 +58,7 @@ class KeyUtil {
         return Data(iv + dataOut.prefix(numBytesEncrypted)).base64EncodedString()
     }
 
-    static func rsaDecrypt(pkString: String, sessionId: String, pinToken: String) -> String {
+    public static func rsaDecrypt(pkString: String, sessionId: String, pinToken: String) -> String {
         var error: NSError?
         defer {
             if let err = error  {
@@ -77,8 +79,7 @@ class KeyUtil {
         return SecKeyCreateWithData(keyData as CFData, parameters as CFDictionary, nil)
     }
     
-    typealias RSAKeyPair = (privateKeyPem: String, publicKey: String)
-    static func generateRSAKeyPair(keySize: Int = 1024) -> RSAKeyPair? {
+    public static func generateRSAKeyPair(keySize: Int = 1024) -> RSAKeyPair? {
         var publicKey, privateKey: SecKey?
         let pubKeyAttrs: [CFString: Any] = [kSecAttrIsPermanent: NSNumber(value: true), kSecAttrApplicationTag: "one.mixin.messenger.publickey".data(using: .utf8)!]
         let privKeyAttrs: [CFString: Any] = [kSecAttrIsPermanent: NSNumber(value: true), kSecAttrApplicationTag: "one.mixin.messenger.privatekey".data(using: .utf8)!]
@@ -98,6 +99,7 @@ class KeyUtil {
 
         return ("-----BEGIN RSA PRIVATE KEY-----\n\(prData.base64EncodedString())\n-----END RSA PRIVATE KEY-----", pbData.dataByPrependingX509Header().base64EncodedString())
     }
+    
 }
 
 fileprivate extension Data {

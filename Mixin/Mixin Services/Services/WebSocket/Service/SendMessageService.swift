@@ -3,7 +3,7 @@ import WCDBSwift
 
 public class SendMessageService: MixinService {
 
-    static let shared = SendMessageService()
+    public static let shared = SendMessageService()
     static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
@@ -11,7 +11,7 @@ public class SendMessageService: MixinService {
     private let saveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send")
     private var httpProcessing = false
     
-    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {
+    public func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {
         guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return
         }
@@ -33,7 +33,7 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func sendMessage(message: Message, data: String?) {
+    public func sendMessage(message: Message, data: String?) {
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
@@ -41,21 +41,13 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func sendWebRTCMessage(message: Message, recipientId: String) {
+    public func sendWebRTCMessage(message: Message, recipientId: String) {
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(webRTCMessage: message, recipientId: recipientId)])
             SendMessageService.shared.processMessages()
         }
     }
-
-    func sendMessage(action: JobAction) {
-        saveDispatchQueue.async {
-            let job = Job(jobId: UUID().uuidString.lowercased(), action: action)
-            MixinDatabase.shared.insertOrReplace(objects: [job])
-            SendMessageService.shared.processMessages()
-        }
-    }
-
+    
     func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         saveDispatchQueue.async {
             let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
@@ -72,7 +64,7 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func resendMessages(conversationId: String, userId: String, sessionId: String, messageIds: [String]) {
+    public func resendMessages(conversationId: String, userId: String, sessionId: String, messageIds: [String]) {
         var jobs = [Job]()
         var resendMessages = [ResendSessionMessage]()
         for messageId in messageIds {
@@ -99,7 +91,7 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func sendReadMessages(conversationId: String) {
+    public func sendReadMessages(conversationId: String) {
         DispatchQueue.main.async {
             SendMessageService.shared.saveDispatchQueue.async {
                 let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != myUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
@@ -154,7 +146,7 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func sendAckMessage(messageId: String, status: MessageStatus) {
+    public func sendAckMessage(messageId: String, status: MessageStatus) {
         saveDispatchQueue.async {
             let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: status.rawValue)
             let action: JobAction = status == .DELIVERED ? .SEND_DELIVERED_ACK_MESSAGE : .SEND_ACK_MESSAGE
@@ -164,12 +156,12 @@ public class SendMessageService: MixinService {
         }
     }
 
-    func processMessages() {
+    public func processMessages() {
         processHttpMessages()
         processWebSocketMessages()
     }
 
-    func processHttpMessages() {
+    public func processHttpMessages() {
         guard !httpProcessing else {
             return
         }
@@ -237,7 +229,7 @@ public class SendMessageService: MixinService {
         } while true
     }
 
-    func processWebSocketMessages() {
+    public func processWebSocketMessages() {
         guard !processing else {
             return
         }

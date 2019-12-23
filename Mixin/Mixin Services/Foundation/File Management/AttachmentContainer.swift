@@ -43,16 +43,16 @@ public enum AttachmentContainer {
     
 }
 
-extension AttachmentContainer {
+public extension AttachmentContainer {
     
-    public enum Category {
+    enum Category {
         
         case audios
         case files
         case photos
         case videos
         
-        internal var pathComponent: String {
+        public var pathComponent: String {
             switch self {
             case .audios:
                 return "Audios"
@@ -65,7 +65,7 @@ extension AttachmentContainer {
             }
         }
         
-        internal var messageCategorySuffix: String {
+        public var messageCategorySuffix: String {
             switch self {
             case .photos:
                 return "_IMAGE"
@@ -78,7 +78,7 @@ extension AttachmentContainer {
             }
         }
         
-        init?(messageCategory: String) {
+        public init?(messageCategory: String) {
             if messageCategory.hasSuffix("_IMAGE") {
                 self = .photos
             } else if messageCategory.hasSuffix("_DATA") {

@@ -2,32 +2,32 @@ import Foundation
 import UIKit
 
 open class AttachmentUploadJob: UploadOrDownloadJob {
-
-    internal var attachResponse: AttachmentResponse?
     
-    private var stream: InputStream?
-
-    internal var fileUrl: URL? {
+    public var attachResponse: AttachmentResponse?
+    
+    public var fileUrl: URL? {
         guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
             return nil
         }
         return AttachmentContainer.url(for: .photos, filename: mediaUrl)
     }
     
-    init(message: Message) {
+    private var stream: InputStream?
+    
+    public init(message: Message) {
         super.init(messageId: message.messageId)
         super.message = message
     }
-
+    
     class func jobId(messageId: String) -> String {
         return "attachment-upload-\(messageId)"
     }
     
-    override func getJobId() -> String {
+    override open func getJobId() -> String {
         return type(of: self).jobId(messageId: message.messageId)
     }
     
-    override func execute() -> Bool {
+    override open func execute() -> Bool {
         guard !self.message.messageId.isEmpty, !isCancelled else {
             return false
         }
@@ -49,7 +49,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false
     }
-
+    
     private func uploadAttachment(attachResponse: AttachmentResponse) -> Bool {
         guard let uploadUrl = attachResponse.uploadUrl, !uploadUrl.isEmpty, var request = try? URLRequest(url: uploadUrl, method: .put) else {
             return false
@@ -58,7 +58,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
             MessageDAO.shared.deleteMessage(id: messageId)
             return false
         }
-
+        
         let contentLength: Int
         if message.category.hasPrefix("SIGNAL_") {
             if let inputStream = AttachmentEncryptingInputStream(url: fileUrl) {
@@ -99,8 +99,8 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         session.finishTasksAndInvalidate()
         return true
     }
-
-    override func taskFinished() {
+    
+    override open func taskFinished() {
         guard let attachResponse = self.attachResponse else {
             return
         }
@@ -109,23 +109,24 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         let content = getMediaDataText(attachmentId: attachResponse.attachmentId, key: key, digest: digest)
         message.content = content
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
-
+        
         SendMessageService.shared.sendMessage(message: message, data: content)
     }
-
-    internal func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
+    
+    public func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
         let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mimeType: message.mediaMimeType ?? "", width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize ?? 0, thumbnail: message.thumbImage, name: message.name, duration: message.mediaDuration, waveform: message.mediaWaveform)
-        return (try? jsonEncoder.encode(transferMediaData).base64EncodedString()) ?? ""
+        return (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
     }
+    
 }
 
 extension AttachmentUploadJob: URLSessionTaskDelegate {
-
+    
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateUploadProgress(messageId: message.messageId, progress: progress))
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
     }
-
+    
 }

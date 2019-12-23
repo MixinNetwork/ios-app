@@ -1,19 +1,19 @@
 import Foundation
 import UIKit
 
-class RefreshAssetsJob: BaseJob {
-
+public class RefreshAssetsJob: BaseJob {
+    
     private let assetId: String?
-
-    init(assetId: String? = nil) {
+    
+    public init(assetId: String? = nil) {
         self.assetId = assetId
     }
-
-    override func getJobId() -> String {
+    
+    override public func getJobId() -> String {
         return "refresh-assets-\(assetId ?? "all")"
     }
-
-    override func run() throws {
+    
+    override public func run() throws {
         if let assetId = self.assetId {
             switch AssetAPI.shared.asset(assetId: assetId) {
             case let .success(asset):
@@ -45,7 +45,7 @@ class RefreshAssetsJob: BaseJob {
             Reporter.report(error: error)
         }
     }
-
+    
     private func updateSnapshots(assetId: String) {
         switch AssetAPI.shared.snapshots(limit: 200, assetId: assetId) {
         case let .success(snapshots):

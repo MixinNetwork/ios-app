@@ -1,10 +1,12 @@
 import Foundation
 import UIKit
 
-class SignalProtocol {
-
+public class SignalProtocol {
+    
+    public static let shared = SignalProtocol()
+    
     let DEFAULT_DEVICE_ID: Int32 = 1
-    static let shared = SignalProtocol()
+    
     private var store: SignalStore
 
     init() {
@@ -16,7 +18,7 @@ class SignalProtocol {
             senderKeyStore: MixinSenderKeyStore())
     }
 
-    func initSignal() {
+    public func initSignal() {
         let localRegistrationId = try! Signal.generateRegistrationId()
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
         
@@ -25,7 +27,7 @@ class SignalProtocol {
         AppGroupUserDefaults.Signal.publicKey = identityKeyPair.publicKey
     }
 
-    func getRegistrationId() -> UInt32 {
+    public func getRegistrationId() -> UInt32 {
         return AppGroupUserDefaults.Signal.registrationId
     }
 
@@ -201,7 +203,7 @@ class SignalProtocol {
 
 extension SignalProtocol {
 
-    static func convertSessionIdToDeviceId(_ sessionId: String?) -> Int32 {
+    public static func convertSessionIdToDeviceId(_ sessionId: String?) -> Int32 {
         guard let sessionId = sessionId, !sessionId.isEmpty else {
             return 1
         }

@@ -20,7 +20,8 @@ enum SystemSessionMessageAction: String {
     case DESTROY
 }
 
-enum SystemConversationAction: String {
+public enum SystemConversationAction: String {
+    
     case CREATE
     case UPDATE
     case ADD
@@ -29,7 +30,7 @@ enum SystemConversationAction: String {
     case EXIT
     case ROLE
 
-    static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
+    public static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
         let action = actionName ?? ""
         let uFullName = userId == myUserId ? Localized.CHAT_MESSAGE_YOU : userFullName
         let pFullName = participantId == myUserId ? Localized.CHAT_MESSAGE_YOU : participantFullName ?? ""
@@ -50,4 +51,5 @@ enum SystemConversationAction: String {
             return content
         }
     }
+    
 }

@@ -2,11 +2,11 @@ import Foundation
 
 open class UploadOrDownloadJob: AsynchronousJob {
     
-    let messageId: String
-    var message: Message!
-    var task: URLSessionTask?
+    public let messageId: String
+    public var message: Message!
+    public var task: URLSessionTask?
     
-    lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
+    public lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
             return
         }
@@ -45,7 +45,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
         weakSelf.finishJob()
     }
     
-    init(messageId: String) {
+    public init(messageId: String) {
         self.messageId = messageId
     }
     
@@ -54,7 +54,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
         super.cancel()
     }
     
-    func downloadExpired() {
+    open func downloadExpired() {
         
     }
     
@@ -71,7 +71,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
         return false
     }
     
-    func taskFinished() {
+    open func taskFinished() {
         
     }
     

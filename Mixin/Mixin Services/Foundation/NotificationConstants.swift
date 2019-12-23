@@ -1,28 +1,28 @@
 import Foundation
 import UserNotifications
 
-enum NotificationActionIdentifier {
-    static let reply = "reply"
-    static let mute = "mute" // preserved
+public enum NotificationActionIdentifier {
+    public static let reply = "reply"
+    public static let mute = "mute" // preserved
 }
 
-enum NotificationCategoryIdentifier {
-    static let message = "message"
-    static let call = "call"
+public enum NotificationCategoryIdentifier {
+    public static let message = "message"
+    public static let call = "call"
 }
 
-enum NotificationRequestIdentifier {
-    static let call = "call"
+public enum NotificationRequestIdentifier {
+    public static let call = "call"
 }
 
-extension UNNotificationSound {
+public extension UNNotificationSound {
     
     static let mixin = UNNotificationSound(named: UNNotificationSoundName("mixin.caf"))
     static let call = UNNotificationSound(named: UNNotificationSoundName("call.caf"))
     
 }
 
-extension UNNotificationAction {
+public extension UNNotificationAction {
     
     static let reply = UNTextInputNotificationAction(identifier: NotificationActionIdentifier.reply,
                                                      title: Localized.NOTIFICATION_REPLY,

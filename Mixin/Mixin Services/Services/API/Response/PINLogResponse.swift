@@ -2,10 +2,10 @@ import Foundation
 
 public struct PINLogResponse: Codable {
     
-    let logId: String
-    let code: String
-    let ipAddress: String
-    let createdAt: String
+    public let logId: String
+    public let code: String
+    public let ipAddress: String
+    public let createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case logId = "log_id"

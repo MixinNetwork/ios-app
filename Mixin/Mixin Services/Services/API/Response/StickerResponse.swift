@@ -2,13 +2,13 @@ import Foundation
 
 public struct StickerResponse: Codable {
     
-    let stickerId: String
-    let name: String
-    let assetUrl: String
-    let assetType: String
-    let assetWidth: Int
-    let assetHeight: Int
-    let createdAt: String
+    public let stickerId: String
+    public let name: String
+    public let assetUrl: String
+    public let assetType: String
+    public let assetWidth: Int
+    public let assetHeight: Int
+    public let createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case stickerId = "sticker_id"

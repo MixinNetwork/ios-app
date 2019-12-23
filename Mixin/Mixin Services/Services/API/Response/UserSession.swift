@@ -2,9 +2,9 @@ import Foundation
 
 public struct UserSession: Codable {
     
-    let userId: String
-    let sessionId: String
-    let platform: String?
+    public let userId: String
+    public let sessionId: String
+    public let platform: String?
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -16,7 +16,7 @@ public struct UserSession: Codable {
 
 extension UserSession {
     
-    var uniqueIdentifier: String {
+    public var uniqueIdentifier: String {
         return "\(userId)\(sessionId)"
     }
     

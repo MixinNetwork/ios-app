@@ -326,7 +326,7 @@ class UrlWindow {
             case let .success(payment):
                 hud.hide()
                 let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
-                let asset = AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
+                let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
                 PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
             case let .failure(error):
@@ -613,7 +613,7 @@ extension UrlWindow {
             switch UserAPI.shared.showUsers(userIds: userIds) {
             case let .success(users):
                 participants = users.map {
-                    ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
+                    ParticipantUser(conversationId: conversationId, user: $0)
                 }
             case let .failure(error):
                 DispatchQueue.main.async {

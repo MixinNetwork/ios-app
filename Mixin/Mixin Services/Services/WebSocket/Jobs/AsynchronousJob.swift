@@ -43,11 +43,11 @@ open class AsynchronousJob: BaseJob {
         }
     }
     
-    func execute() -> Bool {
+    open func execute() -> Bool {
         fatalError("Subclasses must implement `execute`.")
     }
     
-    func finishJob() {
+    open func finishJob() {
         isFinishedStatus = true
     }
     

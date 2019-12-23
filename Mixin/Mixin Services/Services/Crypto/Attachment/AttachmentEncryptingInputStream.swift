@@ -3,9 +3,9 @@ import CommonCrypto
 
 public class AttachmentEncryptingInputStream: InputStream {
     
-    private(set) var key: Data? // available after initialized
-    private(set) var digest: Data? // available after closed
-    private(set) var contentLength = -1
+    private(set) public var key: Data? // available after initialized
+    private(set) public var digest: Data? // available after closed
+    private(set) public var contentLength = -1
     
     private let inputStream: InputStream
     private let plainDataSize: Int

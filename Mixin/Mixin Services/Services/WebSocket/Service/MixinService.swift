@@ -2,21 +2,19 @@ import Foundation
 
 public class MixinService {
     
-    enum UserInfoKey {
-        static let messageId = "msg_id"
-        static let conversationId = "conv_id"
+    public enum UserInfoKey {
+        public static let messageId = "msg_id"
+        public static let conversationId = "conv_id"
     }
     
-    static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
-    static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.msg.read.did.change")
-    static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
+    public static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
+    public static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.msg.read.did.change")
+    public static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
     
-    static var callMessageCoordinator: CallMessageCoordinator!
+    public static var callMessageCoordinator: CallMessageCoordinator!
     
     var processing = false
-    let jsonDecoder = JSONDecoder()
-    let jsonEncoder = JSONEncoder()
-
+    
     internal var currentAccountId: String {
         return myUserId
     }
@@ -152,7 +150,7 @@ public class MixinService {
 
     func sendNoKeyMessage(conversationId: String, recipientId: String) {
         let plainData = PlainJsonMessagePayload(action: PlainDataAction.NO_KEY.rawValue, messageId: nil, messages: nil, ackMessages: nil)
-        let encoded = (try? jsonEncoder.encode(plainData))?.base64EncodedString() ?? ""
+        let encoded = (try? JSONEncoder.default.encode(plainData))?.base64EncodedString() ?? ""
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased())
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .SEND_NO_KEY)
@@ -288,7 +286,7 @@ public class MixinService {
         Thread.sleep(forTimeInterval: 2)
     }
     
-    func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
+    public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [messageId])
         
         let userInfo = [SendMessageService.UserInfoKey.conversationId: conversationId,

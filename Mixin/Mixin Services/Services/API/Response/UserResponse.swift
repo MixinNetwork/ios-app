@@ -2,17 +2,17 @@ import Foundation
 
 public struct UserResponse: Codable {
     
-    let userId: String
-    let fullName: String
-    let biography: String
-    let relationship: Relationship
-    let identityNumber: String
-    let avatarUrl: String
-    let phone: String?
-    let isVerified: Bool
-    let muteUntil: String?
-    let createdAt: String
-    let app: App?
+    public let userId: String
+    public let fullName: String
+    public let biography: String
+    public let relationship: Relationship
+    public let identityNumber: String
+    public let avatarUrl: String
+    public let phone: String?
+    public let isVerified: Bool
+    public let muteUntil: String?
+    public let createdAt: String
+    public let app: App?
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -30,14 +30,14 @@ public struct UserResponse: Codable {
     
 }
 
-enum Relationship: String, Codable {
+public enum Relationship: String, Codable {
     
     case ME
     case FRIEND
     case STRANGER
     case BLOCKING
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let relationship = (try? decoder.singleValueContainer().decode(String.self)) ?? ""
         switch relationship {
         case "ME":
@@ -55,7 +55,7 @@ enum Relationship: String, Codable {
     
 }
 
-extension UserResponse {
+public extension UserResponse {
     
     static func createUser(account: Account) -> UserResponse {
         return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil)

@@ -1,8 +1,9 @@
 import Foundation
 import WCDBSwift
 
-class SessionDAO: SignalDAO {
-    static let shared = SessionDAO()
+public class SessionDAO: SignalDAO {
+    
+    public static let shared = SessionDAO()
 
     func getSession(address: String, device: Int) -> Session? {
         return SignalDatabase.shared.getCodable(condition: Session.Properties.address == address && Session.Properties.device == device)
@@ -34,7 +35,7 @@ class SessionDAO: SignalDAO {
         return SignalDatabase.shared.getCount(on: Session.Properties.id.count(), fromTable: Session.tableName)
     }
 
-    func syncGetSessionAddress() -> [Session] {
+    public func syncGetSessionAddress() -> [Session] {
         return SignalDatabase.shared.getCodables(condition: Session.Properties.device == 1)
     }
 

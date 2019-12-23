@@ -1,22 +1,22 @@
 import Foundation
 import SDWebImage
 
-class RefreshStickerJob: BaseJob {
-
+public class RefreshStickerJob: BaseJob {
+    
     private let albumId: String?
-
-    init(albumId: String? = nil) {
+    
+    public init(albumId: String? = nil) {
         self.albumId = albumId
     }
-
-    override func getJobId() -> String {
+    
+    override public func getJobId() -> String {
         guard let albumId = self.albumId else {
             return "refresh-sticker"
         }
         return "refresh-sticker-\(albumId)"
     }
-
-    override func run() throws {
+    
+    override public func run() throws {
         if let albumId = self.albumId {
             try RefreshStickerJob.cacheStickers(albumId: albumId)
         } else {
@@ -24,7 +24,7 @@ class RefreshStickerJob: BaseJob {
             switch StickerAPI.shared.albums() {
             case let .success(albums):
                 let icons = albums.compactMap({ URL(string: $0.iconUrl) })
-                StickerPrefetcher.persistentPrefetcher.prefetchURLs(icons)
+                StickerPrefetcher.persistent.prefetchURLs(icons)
                 for album in albums {
                     guard stickerAlbums[album.albumId] != album.updatedAt else {
                         continue
@@ -32,7 +32,7 @@ class RefreshStickerJob: BaseJob {
                     try RefreshStickerJob.cacheStickers(albumId: album.albumId)
                     AlbumDAO.shared.insertOrUpdateAblum(album: album)
                 }
-
+                
                 if !AppGroupUserDefaults.Database.isStickersUpgraded {
                     MessageDAO.shared.updateOldStickerMessages()
                     AppGroupUserDefaults.Database.isStickersUpgraded = true
@@ -42,7 +42,7 @@ class RefreshStickerJob: BaseJob {
             }
         }
     }
-
+    
     static func cacheStickers(albumId: String) throws {
         switch StickerAPI.shared.stickers(albumId: albumId) {
         case let .success(stickers):
@@ -55,4 +55,3 @@ class RefreshStickerJob: BaseJob {
     }
     
 }
-

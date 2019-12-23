@@ -1,9 +1,9 @@
 import Foundation
 import WCDBSwift
 
-class SenderKeyDAO: SignalDAO {
+public class SenderKeyDAO: SignalDAO {
 
-    static let shared = SenderKeyDAO()
+    public static let shared = SenderKeyDAO()
 
     func getSenderKey(groupId: String, senderId: String) -> SenderKey? {
         return SignalDatabase.shared.getCodable(condition: SenderKey.Properties.groupId == groupId && SenderKey.Properties.senderId == senderId)
@@ -16,7 +16,7 @@ class SenderKeyDAO: SignalDAO {
         return true
     }
 
-    func syncGetSenderKeys() -> [SenderKey] {
+    public func syncGetSenderKeys() -> [SenderKey] {
         return SignalDatabase.shared.getCodables()
     }
     

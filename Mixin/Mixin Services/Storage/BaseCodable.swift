@@ -1,7 +1,7 @@
 import WCDBSwift
 
-protocol BaseCodable: TableCodable {
-
+public protocol BaseCodable: TableCodable {
+    
     static var tableName: String { get }
-
+    
 }

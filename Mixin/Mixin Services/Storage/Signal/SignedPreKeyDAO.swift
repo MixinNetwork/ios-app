@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class SignedPreKeyDAO: SignalDAO {
+internal class SignedPreKeyDAO: SignalDAO {
 
     static let shared = SignedPreKeyDAO()
 

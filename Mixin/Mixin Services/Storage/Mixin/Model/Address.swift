@@ -3,7 +3,7 @@ import WCDBSwift
 
 public struct Address: BaseCodable {
     
-    static let tableName = "addresses"
+    public static let tableName = "addresses"
     
     public let type: String
     public let addressId: String
@@ -44,9 +44,9 @@ public struct Address: BaseCodable {
 }
 
 extension Address {
-
+    
     public var fullAddress: String {
         return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
-
+    
 }

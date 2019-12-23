@@ -37,10 +37,10 @@ public extension NSNotification.Name {
 
 public struct ConversationChange {
     
-    let conversationId: String
-    let action: Action
+    public let conversationId: String
+    public let action: Action
     
-    enum Action {
+    public enum Action {
         case reload
         case update(conversation: ConversationItem)
         case updateConversation(conversation: ConversationResponse)
@@ -53,6 +53,11 @@ public struct ConversationChange {
         case updateMediaContent(messageId: String, message: Message)
         case startedUpdateConversation
         case recallMessage(messageId: String)
+    }
+    
+    public init(conversationId: String, action: ConversationChange.Action) {
+        self.conversationId = conversationId
+        self.action = action
     }
     
 }

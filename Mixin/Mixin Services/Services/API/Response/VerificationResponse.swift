@@ -2,9 +2,9 @@ import Foundation
 
 public struct VerificationResponse: Codable {
 
-    let type: String
-    let id: String
-    let hasEmergencyContact: Bool
+    public let type: String
+    public let id: String
+    public let hasEmergencyContact: Bool
 
     enum CodingKeys: String, CodingKey {
         case type

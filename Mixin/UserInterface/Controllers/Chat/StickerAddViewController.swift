@@ -100,7 +100,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    StickerPrefetcher.persistentPrefetcher.prefetchURLs([URL(string: sticker.assetUrl)!])
+                    StickerPrefetcher.persistent.prefetchURLs([URL(string: sticker.assetUrl)!])
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {

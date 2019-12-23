@@ -6,21 +6,21 @@ public struct StickerItem: TableCodable, BaseCodable {
     
     static var tableName: String = "stickers"
     
-    let stickerId: String
-    let name: String
-    let assetUrl: String
-    let assetType: String
-    let assetWidth: Int
-    let assetHeight: Int
-    var lastUseAt: String?
+    public let stickerId: String
+    public let name: String
+    public let assetUrl: String
+    public let assetType: String
+    public let assetWidth: Int
+    public let assetHeight: Int
+    public var lastUseAt: String?
     
-    let category: String?
+    public let category: String?
     
-    var shouldCachePersistently: Bool {
+    public var shouldCachePersistently: Bool {
         return shouldCacheStickerWithCategoryPersistently(category: category)
     }
     
-    var imageLoadContext: [SDWebImageContextOption: Any]? {
+    public var imageLoadContext: [SDWebImageContextOption: Any]? {
         return stickerLoadContext(persistent: shouldCachePersistently)
     }
     
@@ -40,7 +40,7 @@ public struct StickerItem: TableCodable, BaseCodable {
     
 }
 
-@inlinable func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
+@inlinable public func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
     if let category = category {
         return !category.isEmpty
     } else {
@@ -48,11 +48,11 @@ public struct StickerItem: TableCodable, BaseCodable {
     }
 }
 
-func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: Any]? {
+public func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: Any]? {
     return persistent ? persistentStickerContext : nil
 }
 
-func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
+public func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
     let persistent = shouldCacheStickerWithCategoryPersistently(category: category)
     return stickerLoadContext(persistent: persistent)
 }

@@ -2,66 +2,66 @@ import WCDBSwift
 
 public class MessageItem: TableCodable {
     
-    var messageId: String = ""
-    var conversationId: String = ""
-    var userId: String = ""
-    var category: String = ""
-    var content = ""
-    var mediaUrl: String? = nil
-    var mediaMimeType: String? = nil
-    var mediaSize: Int64? = nil
-    var mediaDuration: Int64? = nil
-    var mediaWidth: Int? = nil
-    var mediaHeight: Int? = nil
-    var mediaHash: String? = nil
-    var mediaKey: Data? = nil
-    var mediaDigest: Data? = nil
-    var mediaStatus: String? = nil
-    var mediaWaveform: Data? = nil
-    var mediaLocalIdentifier: String? = nil
-    var thumbImage: String? = nil
-    var thumbUrl: String? = nil
-    var status: String = ""
-    var participantId: String? = nil
-    var snapshotId: String? = nil
-    var name: String? = nil
-    var stickerId: String? = nil
-    var createdAt: String = ""
+    public var messageId: String = ""
+    public var conversationId: String = ""
+    public var userId: String = ""
+    public var category: String = ""
+    public var content = ""
+    public var mediaUrl: String? = nil
+    public var mediaMimeType: String? = nil
+    public var mediaSize: Int64? = nil
+    public var mediaDuration: Int64? = nil
+    public var mediaWidth: Int? = nil
+    public var mediaHeight: Int? = nil
+    public var mediaHash: String? = nil
+    public var mediaKey: Data? = nil
+    public var mediaDigest: Data? = nil
+    public var mediaStatus: String? = nil
+    public var mediaWaveform: Data? = nil
+    public var mediaLocalIdentifier: String? = nil
+    public var thumbImage: String? = nil
+    public var thumbUrl: String? = nil
+    public var status: String = ""
+    public var participantId: String? = nil
+    public var snapshotId: String? = nil
+    public var name: String? = nil
+    public var stickerId: String? = nil
+    public var createdAt: String = ""
     
-    var actionName: String? = nil
+    public var actionName: String? = nil
     
-    var userFullName: String = ""
-    var userIdentityNumber: String = ""
-    var userAvatarUrl: String? = nil
+    public var userFullName: String = ""
+    public var userIdentityNumber: String = ""
+    public var userAvatarUrl: String? = nil
     
-    var appId: String? = nil
+    public var appId: String? = nil
     
-    var snapshotAmount: String? = nil
-    var snapshotAssetId: String? = nil
-    var snapshotType: String = ""
+    public var snapshotAmount: String? = nil
+    public var snapshotAssetId: String? = nil
+    public var snapshotType: String = ""
     
-    var participantFullName: String? = nil
-    var participantUserId: String? = nil
+    public var participantFullName: String? = nil
+    public var participantUserId: String? = nil
     
-    var assetUrl: String? = nil
-    var assetSymbol: String? = nil
+    public var assetUrl: String? = nil
+    public var assetSymbol: String? = nil
     
-    var assetIcon: String? = nil
-    var assetWidth: Int? = nil
-    var assetHeight: Int? = nil
-    var assetCategory: String? = nil
+    public var assetIcon: String? = nil
+    public var assetWidth: Int? = nil
+    public var assetHeight: Int? = nil
+    public var assetCategory: String? = nil
     
-    var sharedUserId: String? = nil
-    var sharedUserFullName: String = ""
-    var sharedUserIdentityNumber: String = ""
-    var sharedUserAvatarUrl: String = ""
-    var sharedUserAppId: String = ""
-    var sharedUserIsVerified: Bool = false
+    public var sharedUserId: String? = nil
+    public var sharedUserFullName: String = ""
+    public var sharedUserIdentityNumber: String = ""
+    public var sharedUserAvatarUrl: String = ""
+    public var sharedUserAppId: String = ""
+    public var sharedUserIsVerified: Bool = false
     
-    var quoteMessageId: String? = nil
-    var quoteContent: Data? = nil
+    public var quoteMessageId: String? = nil
+    public var quoteContent: Data? = nil
     
-    var userIsBot: Bool {
+    public var userIsBot: Bool {
         return !(appId?.isEmpty ?? true)
     }
     
@@ -79,11 +79,11 @@ public class MessageItem: TableCodable {
         return try? JSONDecoder.default.decode(AppCardData.self, from: data)
     }()
     
-    var isExtensionMessage: Bool {
+    public var isExtensionMessage: Bool {
         return category == MessageCategory.EXT_UNREAD.rawValue || category == MessageCategory.EXT_ENCRYPTION.rawValue
     }
     
-    var isSystemMessage: Bool {
+    public var isSystemMessage: Bool {
         return category == MessageCategory.SYSTEM_CONVERSATION.rawValue
     }
     
@@ -162,7 +162,7 @@ public class MessageItem: TableCodable {
 
 extension MessageItem {
     
-    static func createMessage(category: String, conversationId: String, createdAt: String) -> MessageItem {
+    static public func createMessage(category: String, conversationId: String, createdAt: String) -> MessageItem {
         let message = MessageItem()
         message.messageId = UUID().uuidString.lowercased()
         message.status = MessageStatus.SENDING.rawValue
@@ -176,7 +176,7 @@ extension MessageItem {
 
 extension MessageItem {
     
-    func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
+    public func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
         guard userId != myUserId else {
             return false
         }
@@ -186,7 +186,7 @@ extension MessageItem {
         return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
     }
     
-    func canRecall() -> Bool {
+    public func canRecall() -> Bool {
         guard userId == myUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }

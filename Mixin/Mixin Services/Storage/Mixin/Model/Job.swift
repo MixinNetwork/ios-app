@@ -7,21 +7,21 @@ struct Job: BaseCodable {
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()
 
-    var orderId: Int?
-    let jobId: String
-    let priority: Int
-    let action: String
+    public var orderId: Int?
+    public let jobId: String
+    public let priority: Int
+    public let action: String
 
-    let userId: String?
-    let blazeMessage: Data?
-    let conversationId: String?
-    let resendMessageId: String?
-    var messageId: String?
-    var status: String?
-    var sessionId: String?
-    var isHttpMessage: Bool
+    public let userId: String?
+    public let blazeMessage: Data?
+    public let conversationId: String?
+    public let resendMessageId: String?
+    public var messageId: String?
+    public var status: String?
+    public var sessionId: String?
+    public var isHttpMessage: Bool
 
-    var isAutoIncrement = true
+    public var isAutoIncrement = true
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Job
@@ -89,7 +89,7 @@ struct Job: BaseCodable {
 
 extension Job {
 
-    func toBlazeMessage() -> BlazeMessage {
+    public func toBlazeMessage() -> BlazeMessage {
         return try! Job.decoder.decode(BlazeMessage.self, from: blazeMessage!)
     }
 

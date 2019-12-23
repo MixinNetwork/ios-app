@@ -3,24 +3,24 @@ import WCDBSwift
 
 public class AssetItem: TableCodable, NumberStringLocalizable {
     
-    let assetId: String
-    let type: String
-    let symbol: String
-    let name: String
-    let iconUrl: String
-    let balance: String
-    let destination: String
-    let tag: String
-    let priceBtc: String
-    let priceUsd: String
-    let chainId: String
-    let chainIconUrl: String?
-    let changeUsd: String
-    let confirmations: Int
-    var accountName: String?
-    var accountTag: String?
-    let assetKey: String
-    let chainName: String?
+    public let assetId: String
+    public let type: String
+    public let symbol: String
+    public let name: String
+    public let iconUrl: String
+    public let balance: String
+    public let destination: String
+    public let tag: String
+    public let priceBtc: String
+    public let priceUsd: String
+    public let chainId: String
+    public let chainIconUrl: String?
+    public let changeUsd: String
+    public let confirmations: Int
+    public var accountName: String?
+    public var accountTag: String?
+    public let assetKey: String
+    public let chainName: String?
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -91,11 +91,11 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
 
 extension AssetItem {
     
-    static func createAsset(asset: Asset, chainIconUrl: String?, chainName: String?) -> AssetItem {
+    static public func createAsset(asset: Asset, chainIconUrl: String?, chainName: String?) -> AssetItem {
         return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, destination: asset.destination, tag: asset.tag, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, assetKey: asset.assetKey, chainName: chainName)
     }
     
-    static func createDefaultAsset() -> AssetItem  {
+    static public func createDefaultAsset() -> AssetItem  {
         return AssetItem(assetId: "c94ac88f-4671-3976-b60a-09064f1811e8", type: "", symbol: "XIN", name: "Mixin", iconUrl: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128", balance: "0", destination: "", tag: "", priceBtc: "0", priceUsd: "0", chainId: "43d61dcd-e413-450d-80b8-101d5e903357", chainIconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128", changeUsd: "0", confirmations: 100, assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33", chainName: "Ether")
     }
     
@@ -103,7 +103,7 @@ extension AssetItem {
 
 extension AssetItem {
     
-    var isUseTag: Bool {
+    public var isUseTag: Bool {
         // XRP 23dfb5a5-5d7b-48b6-905f-3970e3176e27
         return assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     }

@@ -2,12 +2,12 @@ import Foundation
 
 public class GroupUser: NSObject {
     
-    let userId: String
-    let identityNumber: String
-    let fullName: String
-    let avatarUrl: String
-    let isVerified: Bool
-    let isBot: Bool
+    public let userId: String
+    public let identityNumber: String
+    public let fullName: String
+    public let avatarUrl: String
+    public let isVerified: Bool
+    public let isBot: Bool
     
     init(userId: String, identityNumber: String, fullName: String, avatarUrl: String, isVerified: Bool, isBot: Bool) {
         self.userId = userId

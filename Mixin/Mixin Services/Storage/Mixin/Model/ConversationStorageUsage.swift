@@ -3,18 +3,18 @@ import WCDBSwift
 
 public class ConversationStorageUsage: TableCodable {
 
-    var conversationId: String = ""
-    var ownerId: String = ""
-    var category: String? = nil
-    var name: String = ""
-    var iconUrl: String = ""
+    public var conversationId: String = ""
+    public var ownerId: String = ""
+    public var category: String? = nil
+    public var name: String = ""
+    public var iconUrl: String = ""
 
-    var ownerIdentityNumber: String = ""
-    var ownerFullName: String = ""
-    var ownerAvatarUrl: String = ""
-    var ownerIsVerified = false
+    public var ownerIdentityNumber: String = ""
+    public var ownerFullName: String = ""
+    public var ownerAvatarUrl: String = ""
+    public var ownerIsVerified = false
 
-    var mediaSize: Int64 = 0
+    public var mediaSize: Int64 = 0
 
     public enum CodingKeys: String, CodingTableKey {
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -34,7 +34,7 @@ public class ConversationStorageUsage: TableCodable {
         case mediaSize
     }
 
-    func getConversationName() -> String {
+    public func getConversationName() -> String {
         guard category == ConversationCategory.CONTACT.rawValue else {
             return name
         }

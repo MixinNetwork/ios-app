@@ -4,9 +4,9 @@ public struct FavoriteApp: BaseCodable {
     
     static let tableName: String = "favorite_apps"
     
-    let userId: String
-    let appId: String
-    let createdAt: String
+    public let userId: String
+    public let appId: String
+    public let createdAt: String
     
 }
 

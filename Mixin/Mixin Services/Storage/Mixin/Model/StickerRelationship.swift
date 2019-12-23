@@ -5,9 +5,9 @@ public struct StickerRelationship: BaseCodable {
     
     static var tableName: String = "sticker_relationships"
     
-    let albumId: String
-    let stickerId: String
-    let createdAt: String
+    public let albumId: String
+    public let stickerId: String
+    public let createdAt: String
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = StickerRelationship

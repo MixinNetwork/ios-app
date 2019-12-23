@@ -5,18 +5,18 @@ public struct Snapshot: BaseCodable {
     
     static var tableName: String = "snapshots"
     
-    let snapshotId: String
-    let type: String
-    let assetId: String
-    let amount: String
-    let opponentId: String?
-    let transactionHash: String?
-    let sender: String?
-    let receiver: String?
-    let memo: String?
-    let confirmations: Int?
-    let traceId: String?
-    var createdAt: String
+    public let snapshotId: String
+    public let type: String
+    public let assetId: String
+    public let amount: String
+    public let opponentId: String?
+    public let transactionHash: String?
+    public let sender: String?
+    public let receiver: String?
+    public let memo: String?
+    public let confirmations: Int?
+    public let traceId: String?
+    public var createdAt: String
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Snapshot

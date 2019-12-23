@@ -6,20 +6,20 @@ public struct Asset: BaseCodable {
     static var tableName: String = "assets"
     static let topAssetsTableName = "top_assets"
     
-    let assetId: String
-    let type: String
-    let symbol: String
-    let name: String
-    let iconUrl: String
-    let balance: String
-    let destination: String
-    let tag: String
-    let priceBtc: String
-    let priceUsd: String
-    let changeUsd: String
-    let chainId: String
-    let confirmations: Int
-    let assetKey: String
+    public let assetId: String
+    public let type: String
+    public let symbol: String
+    public let name: String
+    public let iconUrl: String
+    public let balance: String
+    public let destination: String
+    public let tag: String
+    public let priceBtc: String
+    public let priceUsd: String
+    public let changeUsd: String
+    public let chainId: String
+    public let confirmations: Int
+    public let assetKey: String
 
     public enum CodingKeys: String, CodingTableKey {
         
@@ -54,7 +54,7 @@ public struct Asset: BaseCodable {
 
 extension Asset {
 
-    static func createAsset(asset: AssetItem) -> Asset {
+    static public func createAsset(asset: AssetItem) -> Asset {
         return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, destination: asset.destination, tag: asset.tag, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, assetKey: asset.assetKey)
     }
 

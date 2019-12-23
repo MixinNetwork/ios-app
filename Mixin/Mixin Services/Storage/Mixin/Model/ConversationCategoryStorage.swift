@@ -3,9 +3,9 @@ import WCDBSwift
 
 public struct ConversationCategoryStorage: TableCodable {
 
-    let category: String
-    let mediaSize: Int64
-    let messageCount: Int
+    public let category: String
+    public let mediaSize: Int64
+    public let messageCount: Int
 
     public enum CodingKeys: String, CodingTableKey {
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)

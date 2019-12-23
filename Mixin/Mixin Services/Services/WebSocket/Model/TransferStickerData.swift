@@ -1,6 +1,6 @@
 import Foundation
 
-struct TransferStickerData: Codable {
+public struct TransferStickerData: Codable {
 
     let stickerId: String?
     let name: String?

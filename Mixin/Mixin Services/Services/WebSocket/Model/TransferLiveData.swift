@@ -1,6 +1,6 @@
 import Foundation
 
-struct TransferLiveData: Codable {
+public struct TransferLiveData: Codable {
     
     let width: Int
     let height: Int

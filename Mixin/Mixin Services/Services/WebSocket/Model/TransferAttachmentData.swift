@@ -1,6 +1,6 @@
 import Foundation
 
-struct TransferAttachmentData: Codable {
+public struct TransferAttachmentData: Codable {
 
     var key: Data?
     var digest: Data?

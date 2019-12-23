@@ -1,6 +1,6 @@
 import Foundation
 
-struct TransferContactData: Codable {
+public struct TransferContactData: Codable {
 
     let userId: String
 

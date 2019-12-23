@@ -5,10 +5,10 @@ struct ResendSessionMessage: BaseCodable {
 
     static var tableName: String = "resend_session_messages"
 
-    let messageId: String
-    let userId: String
-    let sessionId: String
-    let status: Int
+    public let messageId: String
+    public let userId: String
+    public let sessionId: String
+    public let status: Int
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = ResendSessionMessage

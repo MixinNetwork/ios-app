@@ -5,10 +5,10 @@ struct MessageBlaze: BaseCodable {
 
     static var tableName: String = "messages_blaze"
 
-    let messageId: String
-    let conversationId: String
-    let message: Data
-    let createdAt: String
+    public let messageId: String
+    public let conversationId: String
+    public let message: Data
+    public let createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = MessageBlaze

@@ -4,11 +4,11 @@ public struct Participant: BaseCodable {
     
     static var tableName: String = "participants"
     
-    let conversationId: String
-    let userId: String
-    let role: String
-    let status: Int
-    let createdAt: String
+    public let conversationId: String
+    public let userId: String
+    public let role: String
+    public let status: Int
+    public let createdAt: String
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Participant

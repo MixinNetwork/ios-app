@@ -5,21 +5,21 @@ struct Conversation: BaseCodable {
 
     static var tableName: String = "conversations"
 
-    let conversationId: String
-    var ownerId: String? = nil
-    var category: String? = nil
-    var name: String? = nil
-    var iconUrl: String? = nil
-    var announcement: String? = nil
-    var lastMessageId: String? = nil
-    var lastMessageCreatedAt: String? = nil
-    var lastReadMessageId: String? = nil
-    var unseenMessageCount: Int? = nil
-    var status: Int
-    var draft: String? = nil
-    var muteUntil: String? = nil
-    var codeUrl: String? = nil
-    var pinTime: String? = nil
+    public let conversationId: String
+    public var ownerId: String? = nil
+    public var category: String? = nil
+    public var name: String? = nil
+    public var iconUrl: String? = nil
+    public var announcement: String? = nil
+    public var lastMessageId: String? = nil
+    public var lastMessageCreatedAt: String? = nil
+    public var lastReadMessageId: String? = nil
+    public var unseenMessageCount: Int? = nil
+    public var status: Int
+    public var draft: String? = nil
+    public var muteUntil: String? = nil
+    public var codeUrl: String? = nil
+    public var pinTime: String? = nil
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Conversation
@@ -52,17 +52,17 @@ struct Conversation: BaseCodable {
         }
     }
 
-    static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
+    static public func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
         return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil)
     }
 
-    static func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
+    static public func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
         return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
     }
 }
 
 extension Conversation {
-    func isGroup() -> Bool {
+    public func isGroup() -> Bool {
         return category == ConversationCategory.GROUP.rawValue
     }
 }

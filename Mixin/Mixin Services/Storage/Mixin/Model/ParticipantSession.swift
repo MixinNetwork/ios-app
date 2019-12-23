@@ -4,11 +4,11 @@ struct ParticipantSession: BaseCodable {
 
     static var tableName: String = "participant_session"
 
-    let conversationId: String
-    let userId: String
-    let sessionId: String
-    let sentToServer: Int?
-    let createdAt: String
+    public let conversationId: String
+    public let userId: String
+    public let sessionId: String
+    public let sentToServer: Int?
+    public let createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = ParticipantSession
@@ -29,7 +29,7 @@ struct ParticipantSession: BaseCodable {
 
 extension ParticipantSession {
 
-    var uniqueIdentifier: String {
+    public var uniqueIdentifier: String {
         return "\(userId)\(sessionId)"
     }
 

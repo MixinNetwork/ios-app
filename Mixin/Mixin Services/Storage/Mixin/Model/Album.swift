@@ -5,14 +5,14 @@ public struct Album: BaseCodable {
     
     static var tableName: String = "albums"
     
-    let albumId: String
-    let name: String
-    let iconUrl: String
-    let createdAt: String
-    let updatedAt: String
-    let userId: String
-    let category: String
-    let description: String
+    public let albumId: String
+    public let name: String
+    public let iconUrl: String
+    public let createdAt: String
+    public let updatedAt: String
+    public let userId: String
+    public let category: String
+    public let description: String
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Album

@@ -3,38 +3,38 @@ import WCDBSwift
 
 public class ConversationItem: TableCodable {
     
-    var conversationId: String = ""
-    var ownerId: String = ""
-    var category: String? = nil
-    var name: String = ""
-    var iconUrl: String = ""
-    var announcement: String = ""
-    var lastReadMessageId: String? = nil
-    var unseenMessageCount: Int = 0
-    var status: Int = ConversationStatus.START.rawValue
-    var muteUntil: String? = nil
-    var codeUrl: String? = nil
-    var pinTime: String? = nil
-    var createdAt: String = ""
+    public var conversationId: String = ""
+    public var ownerId: String = ""
+    public var category: String? = nil
+    public var name: String = ""
+    public var iconUrl: String = ""
+    public var announcement: String = ""
+    public var lastReadMessageId: String? = nil
+    public var unseenMessageCount: Int = 0
+    public var status: Int = ConversationStatus.START.rawValue
+    public var muteUntil: String? = nil
+    public var codeUrl: String? = nil
+    public var pinTime: String? = nil
+    public var createdAt: String = ""
     
-    var ownerIdentityNumber: String = ""
-    var ownerFullName: String = ""
-    var ownerAvatarUrl: String = ""
-    var ownerIsVerified = false
+    public var ownerIdentityNumber: String = ""
+    public var ownerFullName: String = ""
+    public var ownerAvatarUrl: String = ""
+    public var ownerIsVerified = false
     
-    var messageStatus: String = ""
-    var messageId: String = ""
-    var content: String = ""
-    var contentType: String = ""
+    public var messageStatus: String = ""
+    public var messageId: String = ""
+    public var content: String = ""
+    public var contentType: String = ""
     
-    var senderId: String = ""
-    var senderFullName: String = ""
+    public var senderId: String = ""
+    public var senderFullName: String = ""
     
-    var participantFullName: String? = nil
-    var participantUserId: String? = nil
+    public var participantFullName: String? = nil
+    public var participantUserId: String? = nil
     
-    var appId: String? = nil
-    var actionName: String? = nil
+    public var appId: String? = nil
+    public var actionName: String? = nil
     
     lazy var appButtons: [AppButtonData]? = {
         guard let data = Data(base64Encoded: content) else {
@@ -86,11 +86,11 @@ public class ConversationItem: TableCodable {
         
     }
     
-    var ownerIsBot: Bool {
+    public var ownerIsBot: Bool {
         return !(appId?.isEmpty ?? true)
     }
     
-    var isMuted: Bool {
+    public var isMuted: Bool {
         guard let muteUntil = self.muteUntil else {
             return false
         }
@@ -122,18 +122,18 @@ public class ConversationItem: TableCodable {
         createdAt = response.createdAt
     }
     
-    func getConversationName() -> String {
+    public func getConversationName() -> String {
         guard category == ConversationCategory.CONTACT.rawValue else {
             return name
         }
         return ownerFullName
     }
     
-    func isGroup() -> Bool {
+    public func isGroup() -> Bool {
         return category == ConversationCategory.GROUP.rawValue
     }
     
-    func isNeedCachedGroupIcon() -> Bool {
+    public func isNeedCachedGroupIcon() -> Bool {
         return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl).path))
     }
     

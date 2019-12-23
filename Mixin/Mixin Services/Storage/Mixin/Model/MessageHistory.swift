@@ -5,7 +5,7 @@ struct MessageHistory: BaseCodable {
 
     static var tableName: String = "messages_history"
 
-    let messageId: String
+    public let messageId: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = MessageHistory

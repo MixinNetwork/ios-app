@@ -5,16 +5,16 @@ public struct Address: BaseCodable {
     
     static let tableName = "addresses"
     
-    let type: String
-    let addressId: String
-    let assetId: String
-    let destination: String
-    let label: String
-    let tag: String
-    let fee: String
-    let reserve: String
-    let dust: String
-    let updatedAt: String
+    public let type: String
+    public let addressId: String
+    public let assetId: String
+    public let destination: String
+    public let label: String
+    public let tag: String
+    public let fee: String
+    public let reserve: String
+    public let dust: String
+    public let updatedAt: String
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -45,7 +45,7 @@ public struct Address: BaseCodable {
 
 extension Address {
 
-    var fullAddress: String {
+    public var fullAddress: String {
         return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
 

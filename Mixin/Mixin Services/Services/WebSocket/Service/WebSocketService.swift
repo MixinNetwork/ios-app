@@ -7,6 +7,7 @@ public class WebSocketService {
     
     static let didConnectNotification = Notification.Name("one.mixin.messenger.ws.connect")
     static let didDisconnectNotification = Notification.Name("one.mixin.messenger.ws.disconnect")
+    static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.messenger.pending.msg.upload.available")
     
     static let shared = WebSocketService()
     
@@ -344,7 +345,10 @@ extension WebSocketService {
             case .success:
                 if self.needsJobRestoration {
                     self.needsJobRestoration = false
-                    SendMessageService.shared.restoreJobs()
+                    DispatchQueue.global().async {
+                        NotificationCenter.default.post(name: WebSocketService.pendingMessageUploadingDidBecomeAvailableNotification, object: self)
+                        SendMessageService.shared.processMessages()
+                    }
                     ConcurrentJobQueue.shared.restoreJobs()
                 }
             case .failure:

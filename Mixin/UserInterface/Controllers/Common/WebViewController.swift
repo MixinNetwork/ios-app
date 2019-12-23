@@ -27,6 +27,7 @@ class WebViewController: UIViewController {
     private(set) var isBeingDismissedAsChild = false
     
     private let messageHandlerName = "MixinContext"
+    private let buttonDarkColor = UIColor(displayP3RgbValue: 0x24262A)
     
     private lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
@@ -271,13 +272,13 @@ class WebViewController: UIViewController {
         buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
         titleLabel.textColor = themeColorIsDark ? .white : .darkText
 
-        let tintColor: UIColor = themeColorIsDark ? .white : R.color.web_menu_button()!
+        let tintColor: UIColor = themeColorIsDark ? .white : buttonDarkColor
         moreButton.tintColor = tintColor
         dismissButton.tintColor = tintColor
         
         let outlineColor: UIColor = themeColorIsDark
             ? UIColor.white.withAlphaComponent(0.1)
-            : R.color.web_menu_border()!
+            : UIColor.black.withAlphaComponent(0.06)
         buttonsSeparatorLineView.backgroundColor = outlineColor
         buttonsBackgroundView.layer.borderColor = outlineColor.cgColor
         

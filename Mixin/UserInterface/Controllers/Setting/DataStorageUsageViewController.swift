@@ -18,7 +18,7 @@ class DataStorageUsageViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = .secondaryBackground
         tableView.separatorStyle = .none
         tableView.rowHeight = 64
         tableView.estimatedSectionFooterHeight = 10

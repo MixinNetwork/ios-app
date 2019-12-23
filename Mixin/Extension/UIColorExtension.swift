@@ -15,6 +15,7 @@ extension UIColor {
     static let accessoryText = R.color.text_accessory()!
     static let highlightedText = R.color.theme()!
     static let shadow = R.color.table_shadow()!
+    static let chatText = R.color.chat_text()!
 
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
     static let infoGray = UIColor(rgbValue: 0x7799A9)

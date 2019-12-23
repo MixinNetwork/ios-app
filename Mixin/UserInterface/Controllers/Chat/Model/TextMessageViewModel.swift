@@ -11,7 +11,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     class var textColor: UIColor {
-        return .black
+        return .chatText
     }
     
     var content: CoreTextLabel.Content?

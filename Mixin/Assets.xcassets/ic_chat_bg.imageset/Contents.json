@@ -21,7 +21,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_chat_bg@2x-1.png",
+      "filename" : "ic_chat_bg_dark@2x.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -37,7 +37,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_chat_bg@3x-1.png",
+      "filename" : "ic_chat_bg_dark@3x.png",
       "appearances" : [
         {
           "appearance" : "luminosity",

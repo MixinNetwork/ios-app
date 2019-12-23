@@ -1850,14 +1850,8 @@
 			isa = PBXGroup;
 			children = (
 				DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */,
-				E05DBEAA23A760F000E32164 /* Foundation */,
-				E07E389C23A7716C0005A538 /* Services */,
-				E07E38A223A7731D0005A538 /* Storage */,
-				E01BC6E423ACD7D1005D3FF3 /* Job */,
-				7BB788BB216CD1DA00EDE7B4 /* Call */,
-				7BC8502120CBA68700A57B83 /* Audio */,
-				7BB3854C21E74B2B0070FF8F /* Login */,
-				E0D4F5F323A9D7D3008F0189 /* Notification */,
+				E090B90B23B0B1E20012C7E9 /* Mixin Services */,
+				E090B90C23B0B1FA0012C7E9 /* Service */,
 				275339881F975D9800DD4C26 /* Frameworks */,
 				DF5D9F191F9C62140036D5FD /* Constants */,
 				DF5D9F121F9C53920036D5FD /* Extension */,
@@ -3149,7 +3143,6 @@
 		E01BC6E423ACD7D1005D3FF3 /* Job */ = {
 			isa = PBXGroup;
 			children = (
-				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
 				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
@@ -3266,6 +3259,29 @@
 				E07E38AD23A777990005A538 /* AttachmentContainer.swift */,
 			);
 			path = "File Management";
+			sourceTree = "<group>";
+		};
+		E090B90B23B0B1E20012C7E9 /* Mixin Services */ = {
+			isa = PBXGroup;
+			children = (
+				E05DBEAA23A760F000E32164 /* Foundation */,
+				E07E389C23A7716C0005A538 /* Services */,
+				E07E38A223A7731D0005A538 /* Storage */,
+			);
+			path = "Mixin Services";
+			sourceTree = "<group>";
+		};
+		E090B90C23B0B1FA0012C7E9 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				E01BC6E423ACD7D1005D3FF3 /* Job */,
+				7BB788BB216CD1DA00EDE7B4 /* Call */,
+				7BC8502120CBA68700A57B83 /* Audio */,
+				7BB3854C21E74B2B0070FF8F /* Login */,
+				E0D4F5F323A9D7D3008F0189 /* Notification */,
+				E0E32F422396118C00276746 /* GiphyAPI.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		E0D4F5F323A9D7D3008F0189 /* Notification */ = {
@@ -4521,7 +4537,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Audio/liboggopus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.14.1;
 				OTHER_CFLAGS = (
@@ -4588,7 +4604,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Audio/liboggopus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.14.1;
 				OTHER_CFLAGS = (

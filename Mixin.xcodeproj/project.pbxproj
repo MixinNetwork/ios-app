@@ -2503,7 +2503,6 @@
 				DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */,
 				DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
-				DF401225238E634E0056A6E8 /* Atomic.swift */,
 				E0B53A6623B0C26E008DA9F1 /* APIError+Description.swift */,
 			);
 			path = Extension;
@@ -3146,6 +3145,7 @@
 				7BBDF3E1230D6CBA00079979 /* Currency.swift */,
 				E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */,
 				DF9C9C6422C5E8720090873E /* SafeDictionary.swift */,
+				DF401225238E634E0056A6E8 /* Atomic.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

@@ -1,14 +1,14 @@
 import Foundation
 
-class Atomic<T> {
-
+internal class Atomic<T> {
+    
     private let lock = NSLock()
     private var _value: T
-
+    
     init (_ value: T) {
         _value = value
     }
-
+    
     var value: T {
         get {
             lock.lock()
@@ -22,4 +22,5 @@ class Atomic<T> {
             lock.unlock()
         }
     }
+    
 }

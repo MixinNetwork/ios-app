@@ -2683,7 +2683,6 @@
 				7B5843442175D3EC0053332F /* PendingDeposit.swift */,
 				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
 				7BBDF3DC230D4B2300079979 /* FiatMoney.swift */,
-				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3301,6 +3300,7 @@
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E015A91C23B0CCBC009E94F4 /* SendMessageService+Sending.swift */,
+				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 				DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */,
 			);

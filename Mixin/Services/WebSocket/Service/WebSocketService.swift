@@ -144,7 +144,7 @@ extension WebSocketService: WebSocketDelegate {
                 AppGroupUserDefaults.Account.isClockSkewed = true
                 disconnect()
                 DispatchQueue.main.async {
-                    AppDelegate.current.window.rootViewController = makeInitialViewController()
+                    NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                 }
             }
         } else {

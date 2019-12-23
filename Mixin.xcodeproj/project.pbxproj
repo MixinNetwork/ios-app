@@ -587,7 +587,6 @@
 		DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D421FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift */; };
 		DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */; };
 		DF503D491FED200300C008E7 /* MixinSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D481FED200300C008E7 /* MixinSessionStore.swift */; };
-		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
 		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
@@ -770,7 +769,6 @@
 		E01BC60D23ACCCF0005D3FF3 /* ExtensionName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */; };
 		E01BCB8A23ACF2CE005D3FF3 /* SuiteName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */; };
 		E01BCC6223ACF5E2005D3FF3 /* NotificationNameExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */; };
-		E01BCE2623ACFA33005D3FF3 /* LoginManager+Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */; };
 		E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */; };
 		E029510C23AA21BA0090BB18 /* NotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029510B23AA21BA0090BB18 /* NotificationConstants.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
@@ -823,6 +821,7 @@
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
+		E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */; };
 		E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F423A9D803008F0189 /* NotificationManager.swift */; };
 		E0D4F5F723AA0CB2008F0189 /* UNNotificationContent+UserInfoKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F623AA0CB2008F0189 /* UNNotificationContent+UserInfoKey.swift */; };
 		E0D65E0D238BF99A00DC780A /* MixinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D65E0C238BF99A00DC780A /* MixinServer.swift */; };
@@ -1450,7 +1449,6 @@
 		DF503D421FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSignedPreKeyStore.swift; sourceTree = "<group>"; };
 		DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSenderKeyStore.swift; sourceTree = "<group>"; };
 		DF503D481FED200300C008E7 /* MixinSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSessionStore.swift; sourceTree = "<group>"; };
-		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
 		DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHeaderView.swift; sourceTree = "<group>"; };
@@ -1642,7 +1640,6 @@
 		E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionName.swift; sourceTree = "<group>"; };
 		E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuiteName.swift; sourceTree = "<group>"; };
 		E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExtension.swift; sourceTree = "<group>"; };
-		E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Logout.swift"; sourceTree = "<group>"; };
 		E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Provision.swift"; sourceTree = "<group>"; };
 		E029510B23AA21BA0090BB18 /* NotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationConstants.swift; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
@@ -1695,6 +1692,7 @@
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
+		E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebsiteDataStore+Clear.swift"; sourceTree = "<group>"; };
 		E0D4F5F423A9D803008F0189 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E0D4F5F623AA0CB2008F0189 /* UNNotificationContent+UserInfoKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNNotificationContent+UserInfoKey.swift"; sourceTree = "<group>"; };
 		E0D65E0C238BF99A00DC780A /* MixinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinServer.swift; sourceTree = "<group>"; };
@@ -2150,7 +2148,6 @@
 				DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */,
 				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
 				7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */,
-				E01BCE2523ACFA33005D3FF3 /* LoginManager+Logout.swift */,
 				E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */,
 			);
 			path = Login;
@@ -2421,7 +2418,6 @@
 			isa = PBXGroup;
 			children = (
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
-				DF53BB6720233657002BF028 /* MixinWebView.swift */,
 				DF2A0D962295734C00CA0280 /* AddressView.swift */,
 				DF2A0D942295721200CA0280 /* AddressView.xib */,
 				7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */,
@@ -2473,6 +2469,7 @@
 		DF5D9F121F9C53920036D5FD /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */,
 				DF17B51420525B47006447C2 /* ArrayExtension.swift */,
 				DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */,
 				DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */,
@@ -4023,6 +4020,7 @@
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				DF6175C72223E5D000624609 /* BlazeMessageParamSession.swift in Sources */,
+				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
 				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
@@ -4041,7 +4039,6 @@
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
-				E01BCE2623ACFA33005D3FF3 /* LoginManager+Logout.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				E05DC06323A762CD00E32164 /* AppGroupUserDefaults+Account.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
@@ -4326,7 +4323,6 @@
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
-				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
 				7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */,
 				273FACB2205FB9A800513327 /* Fingerprint.swift in Sources */,

@@ -10,6 +10,7 @@ public final class LoginManager {
     
     public static let shared = LoginManager()
     public static let accountDidChangeNotification = Notification.Name("one.mixin.services.account.did.change")
+    public static let didLogoutNotification = Notification.Name("one.mixin.services.did.logout")
     
     private let darwinNotifyCenter = CFNotificationCenterGetDarwinNotifyCenter()
     
@@ -75,6 +76,22 @@ public final class LoginManager {
             return account
         } else {
             return nil
+        }
+    }
+    
+    public func logout(from: String) {
+        guard account != nil else {
+            return
+        }
+        Logger.write(log: "===========logout...from:\(from)")
+        AppGroupUserDefaults.User.isLogoutByServer = true
+        DispatchQueue.main.async {
+            self.account = nil
+            Keychain.shared.clearPIN()
+            WebSocketService.shared.disconnect()
+            AppGroupUserDefaults.Account.clearAll()
+            SignalDatabase.shared.logout()
+            NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
         }
     }
     

@@ -7,6 +7,7 @@ import YYImage
 import PushKit
 import Crashlytics
 import AVFoundation
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -42,6 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
         Logger.write(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
@@ -66,6 +69,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        guard LoginManager.shared.isLoggedIn || !(window.rootViewController is HomeContainerViewController) else {
+            cleanForLogout()
+            return
+        }
         WebSocketService.shared.reconnectIfNeeded()
         cancelBackgroundTask()
 
@@ -147,6 +154,33 @@ extension AppDelegate {
             }
         }
     }
+    
+    @objc func cleanForLogout() {
+        WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
+        BackupJobQueue.shared.cancelAllOperations()
+        
+        UIApplication.shared.setShortcutItemsEnabled(false)
+        UIApplication.shared.applicationIconBadgeNumber = 1
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        
+        UNUserNotificationCenter.current().removeAllNotifications()
+        UIApplication.shared.unregisterForRemoteNotifications()
+        
+        let oldRootViewController = window.rootViewController
+        window.rootViewController = LoginNavigationController.instance()
+        oldRootViewController?.navigationController?.removeFromParent()
+    }
+    
+    @objc func handleClockSkew() {
+        guard !(window.rootViewController is ClockSkewViewController) else {
+            return
+        }
+        window.rootViewController = makeInitialViewController()
+    }
+    
+}
+
+extension AppDelegate {
     
     private func checkLogin() {
         window.backgroundColor = .black

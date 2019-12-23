@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 
 class SignalLoadingViewController: UIViewController {
     
@@ -44,7 +45,7 @@ class SignalLoadingViewController: UIViewController {
             case .success:
                 AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
                 DispatchQueue.main.async {
-                    MixinWebView.clearCookies()
+                    WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
                 }
                 return
             case let .failure(error):

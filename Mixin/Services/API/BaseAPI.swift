@@ -134,7 +134,7 @@ public class BaseAPI {
                                     AppGroupUserDefaults.Account.isClockSkewed = true
                                     DispatchQueue.main.async {
                                         WebSocketService.shared.disconnect()
-                                        AppDelegate.current.window.rootViewController = makeInitialViewController()
+                                        NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                                     }
                                     return
                                 }
@@ -249,7 +249,7 @@ extension BaseAPI {
                         AppGroupUserDefaults.Account.isClockSkewed = true
                         DispatchQueue.main.async {
                             WebSocketService.shared.disconnect()
-                            AppDelegate.current.window.rootViewController = makeInitialViewController()
+                            NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                         }
                         return result
                     }

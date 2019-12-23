@@ -1,6 +1,6 @@
 import Foundation
 
-class GroupUser: NSObject {
+public class GroupUser: NSObject {
     
     let userId: String
     let identityNumber: String

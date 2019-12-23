@@ -1,6 +1,6 @@
 import Foundation
 
-struct AssetSearchResult {
+public struct AssetSearchResult {
     
     static let highlightedAttributes: [NSAttributedString.Key: Any] = {
         var attrs = AssetCell.symbolAttributes

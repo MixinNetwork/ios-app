@@ -1,6 +1,6 @@
 import UIKit
 
-class ConversationSearchResult: SearchResult {
+public class ConversationSearchResult: SearchResult {
     
     let conversation: ConversationItem
     

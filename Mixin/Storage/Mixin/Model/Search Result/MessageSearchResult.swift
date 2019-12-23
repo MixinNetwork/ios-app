@@ -1,6 +1,6 @@
 import UIKit
 
-class MessageSearchResult: SearchResult {
+public class MessageSearchResult: SearchResult {
     
     let conversationId: String
     let messageId: String

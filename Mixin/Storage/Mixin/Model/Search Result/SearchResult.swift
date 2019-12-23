@@ -1,6 +1,6 @@
 import Foundation
 
-class SearchResult {
+public class SearchResult {
     
     let iconUrl: String
     let badgeImage: UIImage?

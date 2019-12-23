@@ -1,6 +1,6 @@
 import Foundation
 
-class UserSearchResult: SearchResult {
+public class UserSearchResult: SearchResult {
     
     let user: UserItem
     

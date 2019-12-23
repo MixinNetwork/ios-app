@@ -1,6 +1,6 @@
 import UIKit
 
-class MessagesWithGroupSearchResult: MessagesWithinConversationSearchResult {
+public class MessagesWithGroupSearchResult: MessagesWithinConversationSearchResult {
     
     init(conversationId: String, name: String, iconUrl: String, relatedMessageCount: Int, keyword: String) {
         super.init(conversationId: conversationId,

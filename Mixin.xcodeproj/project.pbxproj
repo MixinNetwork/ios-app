@@ -1882,7 +1882,7 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		7B04FAB6226832B1004F8F04 /* Models */ = {
+		7B04FAB6226832B1004F8F04 /* Search Result */ = {
 			isa = PBXGroup;
 			children = (
 				7B04FAB722684242004F8F04 /* AssetSearchResult.swift */,
@@ -1894,7 +1894,7 @@
 				7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */,
 				7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */,
 			);
-			path = Models;
+			path = "Search Result";
 			sourceTree = "<group>";
 		};
 		7B07923821AF96E800316BD2 /* Models */ = {
@@ -2704,7 +2704,6 @@
 		DF5D9F491F9CDC200036D5FD /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				7B04FAB6226832B1004F8F04 /* Models */,
 				7B9553322243757400CE95E6 /* Views */,
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				7B34A19622C0B59200665F41 /* MixinNavigationAnimating.swift */,
@@ -2884,7 +2883,6 @@
 			isa = PBXGroup;
 			children = (
 				DFA5B5881FADC37A00549728 /* Cells */,
-				7BEFDC201FB08E9B00F66885 /* GroupUser.swift */,
 				7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */,
 				7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */,
 				7B81BF2422893F5D00266A77 /* GroupParticipantsViewController.swift */,
@@ -3058,6 +3056,7 @@
 		DFE63C961FC6B08E00D6E028 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7B04FAB6226832B1004F8F04 /* Search Result */,
 				7B4D1129205BA64B0074BF60 /* Address.swift */,
 				DFF352FF1FEE516F00058453 /* Asset.swift */,
 				DFF70F612079FC4900A5FA8B /* AssetItem.swift */,
@@ -3085,6 +3084,7 @@
 				DF191193208F104800BD415D /* Job.swift */,
 				E04F759D238F959400BF6C0D /* FavoriteApp.swift */,
 				7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */,
+				7BEFDC201FB08E9B00F66885 /* GroupUser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

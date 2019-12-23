@@ -1,6 +1,7 @@
 import UIKit
 import MediaPlayer
 import SDWebImage
+import MixinServices
 
 protocol SharedMediaAudioManagerDelegate: class {
     func sharedMediaAudioManager(_ manager: SharedMediaAudioManager, playableMessageNextTo message: MessageItem) -> MessageItem?

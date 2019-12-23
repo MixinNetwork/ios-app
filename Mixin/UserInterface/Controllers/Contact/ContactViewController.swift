@@ -1,5 +1,6 @@
 import UIKit
 import MessageUI
+import MixinServices
 
 class ContactViewController: UITableViewController {
     

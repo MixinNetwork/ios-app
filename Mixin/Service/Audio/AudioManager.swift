@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import MixinServices
 
 class AudioManager: NSObject {
     
@@ -201,7 +202,7 @@ class AudioManager: NSObject {
     }
     
     @objc func willRecallMessage(_ notification: Notification) {
-        guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String else {
+        guard let messageId = notification.userInfo?[MixinService.UserInfoKey.messageId] as? String else {
             return
         }
         guard playingMessage?.messageId == messageId else {

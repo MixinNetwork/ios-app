@@ -1,6 +1,7 @@
 import UIKit
 import AVFoundation
 import Photos
+import MixinServices
 
 final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAnimatable {
     

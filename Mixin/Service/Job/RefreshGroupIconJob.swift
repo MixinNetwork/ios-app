@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import MixinServices
 
 class RefreshGroupIconJob: AsynchronousJob {
 

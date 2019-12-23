@@ -2,6 +2,7 @@ import UIKit
 import Foundation
 import LocalAuthentication
 import AudioToolbox
+import MixinServices
 
 class PayWindow: BottomSheetView {
 

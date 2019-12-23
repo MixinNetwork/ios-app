@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 protocol GalleryItemRepresentable {
     var conversationId: String { get }

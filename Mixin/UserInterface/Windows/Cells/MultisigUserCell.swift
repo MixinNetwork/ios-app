@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 class MultisigUserCell: ModernSelectedBackgroundCell {
 

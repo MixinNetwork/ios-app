@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import MixinServices
 
 class ReCaptchaManager: NSObject {
     

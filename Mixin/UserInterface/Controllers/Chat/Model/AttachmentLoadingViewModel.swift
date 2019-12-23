@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 protocol AttachmentLoadingViewModel: class {
     var isLoading: Bool { get set }

@@ -1,5 +1,6 @@
 import UIKit
 import Photos
+import MixinServices
 
 class QrcodeWindow: BottomSheetView {
     

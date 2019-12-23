@@ -1,5 +1,6 @@
 import Foundation
 import WCDBSwift
+import MixinServices
 
 extension ConversationDAO {
     

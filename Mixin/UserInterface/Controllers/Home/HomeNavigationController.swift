@@ -2,6 +2,7 @@ import UIKit
 import Bugsnag
 import Crashlytics
 import DeviceCheck
+import MixinServices
 
 class HomeNavigationController: UINavigationController {
     

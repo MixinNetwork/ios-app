@@ -2,6 +2,7 @@ import UIKit
 import YYImage
 import Photos
 import SDWebImage
+import MixinServices
 
 class StickerAddViewController: UIViewController {
 

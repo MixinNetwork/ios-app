@@ -3,6 +3,7 @@ import Photos
 import CoreServices
 import Alamofire
 import WCDBSwift
+import MixinServices
 
 class ImageUploadJob: AttachmentUploadJob {
     

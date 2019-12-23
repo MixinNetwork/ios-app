@@ -1,5 +1,6 @@
 import UIKit
 import Photos
+import MixinServices
 
 protocol GalleryViewControllerDelegate: class {
     func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource?

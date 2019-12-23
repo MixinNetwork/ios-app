@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 protocol SnapshotCellDelegate: class {
     func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell)

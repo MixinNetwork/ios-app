@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserItem, CellType, UserSearchResult> {
     

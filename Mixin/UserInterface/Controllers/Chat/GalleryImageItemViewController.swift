@@ -2,6 +2,7 @@ import UIKit
 import YYImage
 import FirebaseMLVision
 import Photos
+import MixinServices
 
 final class GalleryImageItemViewController: GalleryItemViewController {
     

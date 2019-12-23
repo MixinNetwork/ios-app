@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import Photos
 import AVKit
+import MixinServices
 
 enum DetechStatus {
     case detecting

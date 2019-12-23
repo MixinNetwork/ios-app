@@ -1,5 +1,5 @@
 import UIKit
-import Foundation
+import MixinServices
 
 class AddressView: UIStackView {
 

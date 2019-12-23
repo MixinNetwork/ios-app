@@ -1,5 +1,6 @@
 import Foundation
 import Zip
+import MixinServices
 
 class RestoreJob: BaseJob {
 

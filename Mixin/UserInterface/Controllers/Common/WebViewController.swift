@@ -4,6 +4,7 @@ import Photos
 import Alamofire
 import FirebaseMLCommon
 import FirebaseMLVision
+import MixinServices
 
 class WebViewController: UIViewController {
     

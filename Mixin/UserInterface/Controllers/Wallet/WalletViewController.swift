@@ -1,5 +1,6 @@
 import UIKit
 import LocalAuthentication
+import MixinServices
 
 class WalletViewController: UIViewController {
     

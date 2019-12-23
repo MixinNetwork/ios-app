@@ -1,5 +1,6 @@
 import Foundation
 import UserNotifications
+import MixinServices
 
 class NotificationManager: NSObject {
     

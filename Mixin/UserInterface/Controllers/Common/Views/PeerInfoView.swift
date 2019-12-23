@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class PeerInfoView: UIView, XibDesignable {
     

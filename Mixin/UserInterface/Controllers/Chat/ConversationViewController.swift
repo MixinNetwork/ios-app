@@ -2,6 +2,7 @@ import UIKit
 import MobileCoreServices
 import AVKit
 import Photos
+import MixinServices
 
 class ConversationViewController: UIViewController {
     

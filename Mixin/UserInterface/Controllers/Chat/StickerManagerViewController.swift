@@ -1,6 +1,7 @@
 import UIKit
 import YYImage
 import Photos
+import MixinServices
 
 class StickerManagerViewController: UICollectionViewController {
 

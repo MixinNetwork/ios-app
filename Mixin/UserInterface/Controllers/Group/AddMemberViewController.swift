@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell, UserSearchResult> {
     

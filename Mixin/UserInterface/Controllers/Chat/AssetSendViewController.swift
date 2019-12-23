@@ -3,6 +3,7 @@ import WebKit
 import Photos
 import YYImage
 import FirebaseMLVision
+import MixinServices
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 

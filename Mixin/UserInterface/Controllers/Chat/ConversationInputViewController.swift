@@ -1,5 +1,6 @@
 import UIKit
 import Photos
+import MixinServices
 
 protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }

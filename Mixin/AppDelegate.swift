@@ -8,6 +8,7 @@ import PushKit
 import Crashlytics
 import AVFoundation
 import WebKit
+import MixinServices
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

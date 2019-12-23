@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import WCDBSwift
+import MixinServices
 
 class RestoreViewController: UIViewController {
 

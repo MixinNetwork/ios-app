@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import MixinServices
 
 open class AttachmentUploadJob: UploadOrDownloadJob {
     

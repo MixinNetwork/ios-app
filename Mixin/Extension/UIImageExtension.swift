@@ -89,18 +89,5 @@ extension UIImage {
         let targetHeight: CGFloat = size.width > size.height ? maxLongSideLength / scale : maxLongSideLength
         return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
-
-    @discardableResult
-    func saveToFile(path: URL, quality: CGFloat = jpegCompressionQuality) -> Bool {
-        guard let data = self.jpegData(compressionQuality: quality) else {
-            return false
-        }
-        do {
-            try data.write(to: path)
-            return true
-        } catch {
-            return false
-        }
-    }
     
 }

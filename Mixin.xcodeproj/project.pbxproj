@@ -766,7 +766,8 @@
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
 		DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */; };
 		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
-		E015A91D23B0CCBC009E94F4 /* SendMessageService+UploadPendingMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E015A91C23B0CCBC009E94F4 /* SendMessageService+UploadPendingMessages.swift */; };
+		E015A91D23B0CCBC009E94F4 /* SendMessageService+Sending.swift in Sources */ = {isa = PBXBuildFile; fileRef = E015A91C23B0CCBC009E94F4 /* SendMessageService+Sending.swift */; };
+		E015AAF523B0D0C4009E94F4 /* UIImage+FileSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = E015AAF423B0D0C4009E94F4 /* UIImage+FileSave.swift */; };
 		E01BC60D23ACCCF0005D3FF3 /* ExtensionName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */; };
 		E01BCB8A23ACF2CE005D3FF3 /* SuiteName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */; };
 		E01BCC6223ACF5E2005D3FF3 /* NotificationNameExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */; };
@@ -1646,7 +1647,8 @@
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
 		DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeWindow.swift; sourceTree = "<group>"; };
 		DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecognizeWindow.xib; sourceTree = "<group>"; };
-		E015A91C23B0CCBC009E94F4 /* SendMessageService+UploadPendingMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SendMessageService+UploadPendingMessages.swift"; sourceTree = "<group>"; };
+		E015A91C23B0CCBC009E94F4 /* SendMessageService+Sending.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SendMessageService+Sending.swift"; sourceTree = "<group>"; };
+		E015AAF423B0D0C4009E94F4 /* UIImage+FileSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FileSave.swift"; sourceTree = "<group>"; };
 		E01BC60C23ACCCF0005D3FF3 /* ExtensionName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionName.swift; sourceTree = "<group>"; };
 		E01BCB8923ACF2CE005D3FF3 /* SuiteName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuiteName.swift; sourceTree = "<group>"; };
 		E01BCC6123ACF5E2005D3FF3 /* NotificationNameExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameExtension.swift; sourceTree = "<group>"; };
@@ -3227,6 +3229,7 @@
 				E0DDB92E23B0916C0030A22A /* URL+ResourceValue.swift */,
 				E0DDB93023B091DC0030A22A /* FileManager+Utilities.swift */,
 				E0B53B5A23B0C9CD008DA9F1 /* UIImage+VideoCover.swift */,
+				E015AAF423B0D0C4009E94F4 /* UIImage+FileSave.swift */,
 				DFD294361FA6EF4500FADAAD /* DateExtension.swift */,
 				DF5D9F141F9C5B970036D5FD /* StringExtension.swift */,
 				DF3C47491FA0BECA00A07C71 /* DataExtension.swift */,
@@ -3300,7 +3303,7 @@
 				7BB3854C21E74B2B0070FF8F /* Login */,
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
-				E015A91C23B0CCBC009E94F4 /* SendMessageService+UploadPendingMessages.swift */,
+				E015A91C23B0CCBC009E94F4 /* SendMessageService+Sending.swift */,
 				E0E32F422396118C00276746 /* GiphyAPI.swift */,
 				DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */,
 			);
@@ -4089,6 +4092,7 @@
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				E05DC06323A762CD00E32164 /* AppGroupUserDefaults+Account.swift in Sources */,
+				E015AAF523B0D0C4009E94F4 /* UIImage+FileSave.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
 				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
@@ -4160,7 +4164,7 @@
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
-				E015A91D23B0CCBC009E94F4 /* SendMessageService+UploadPendingMessages.swift in Sources */,
+				E015A91D23B0CCBC009E94F4 /* SendMessageService+Sending.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */,

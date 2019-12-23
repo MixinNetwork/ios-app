@@ -10,7 +10,7 @@ protocol CallMessageCoordinator: class {
 class ReceiveMessageService: MixinService {
     
     static let shared = ReceiveMessageService()
-    static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.messenger.group.participant.did.change")
+    static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")
     static let completeCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,
@@ -19,13 +19,13 @@ class ReceiveMessageService: MixinService {
         .WEBRTC_AUDIO_DECLINE
     ]
     
-    private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive.messages")
-    private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive")
+    private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
+    private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private var listPendingCallWorkItems = [String: DispatchWorkItem]()
     private var listPendingCandidates = [String: [BlazeMessageData]]()
     
-    let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
+    let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
 
     func receiveMessage(blazeMessage: BlazeMessage) {

@@ -5,9 +5,9 @@ import Gzip
 
 public class WebSocketService {
     
-    static let didConnectNotification = Notification.Name("one.mixin.messenger.ws.connect")
-    static let didDisconnectNotification = Notification.Name("one.mixin.messenger.ws.disconnect")
-    static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.messenger.pending.msg.upload.available")
+    static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")
+    static let didDisconnectNotification = Notification.Name("one.mixin.services.ws.disconnect")
+    static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.services.pending.msg.upload.available")
     
     static let shared = WebSocketService()
     
@@ -15,9 +15,9 @@ public class WebSocketService {
         return status == .connected
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
+    private let queue = DispatchQueue(label: "one.mixin.services.queue.websocket")
     private let queueSpecificKey = DispatchSpecificKey<Void>()
-    private let messageQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.message")
+    private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
     
     private var host: String?

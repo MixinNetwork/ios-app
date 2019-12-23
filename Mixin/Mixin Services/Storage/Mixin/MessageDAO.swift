@@ -11,8 +11,8 @@ public final class MessageDAO {
     
     static let shared = MessageDAO()
     
-    static let didInsertMessageNotification = Notification.Name("one.mixin.messenger.services.did.insert.msg")
-    static let didRedecryptMessageNotification = Notification.Name("one.mixin.messenger.services.did.redecrypt.msg")
+    static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
+    static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
     
     static let sqlTriggerLastMessageInsert = """
     CREATE TRIGGER IF NOT EXISTS conversation_last_message_update AFTER INSERT ON messages

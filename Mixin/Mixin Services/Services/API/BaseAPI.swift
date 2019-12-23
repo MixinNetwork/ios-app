@@ -86,7 +86,7 @@ public class BaseAPI {
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
     
-    private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
+    private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.api")
     private static let jsonEncoding = JSONEncoding()
     
     private struct ResponseObject<ResultType: Codable>: Codable {

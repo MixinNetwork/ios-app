@@ -7,9 +7,9 @@ class MixinService {
         static let conversationId = "conv_id"
     }
     
-    static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.ios.will.recall.msg")
-    static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.ios.msg.read.did.change")
-    static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.ios.clock.skew.detected")
+    static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
+    static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.msg.read.did.change")
+    static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
     
     static var callMessageCoordinator: CallMessageCoordinator!
     

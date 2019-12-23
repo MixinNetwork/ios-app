@@ -10,7 +10,7 @@ class LocalImageLoader: NSObject {
         case generateImage
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.chat.photo.loader")
+    private let queue = DispatchQueue(label: "one.mixin.services.local_image_loader")
     private let tokens = NSHashTable<LocalImageLoadToken>(options: .weakMemory)
     
 }

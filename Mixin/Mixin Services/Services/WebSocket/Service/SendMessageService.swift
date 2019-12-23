@@ -6,9 +6,9 @@ class SendMessageService: MixinService {
     static let shared = SendMessageService()
     static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]
     
-    private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send.messages")
-    private let httpDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send.http.messages")
-    private let saveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send")
+    private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
+    private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
+    private let saveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send")
     private var httpProcessing = false
     
     func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {

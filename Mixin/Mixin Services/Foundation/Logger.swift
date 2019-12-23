@@ -3,7 +3,7 @@ import Zip
 
 public enum Logger {
     
-    private static let queue = DispatchQueue(label: "one.mixin.messenger.queue.log")
+    private static let queue = DispatchQueue(label: "one.mixin.services.queue.log")
     
     public static func write(log: String, newSection: Bool = false) {
         DispatchQueue.global().async {

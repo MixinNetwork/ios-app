@@ -24,7 +24,7 @@ class Currency: CustomDebugStringConvertible {
 
 extension Currency {
     
-    static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.ios.current.currency.did.change")
+    static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.current.currency.did.change")
     
     private(set) static var current = currentCurrencyStorage {
         didSet {

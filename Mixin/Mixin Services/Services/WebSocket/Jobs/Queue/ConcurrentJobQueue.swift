@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class ConcurrentJobQueue: JobQueue {
+public class ConcurrentJobQueue: JobQueue {
 
     static let shared = ConcurrentJobQueue()
 

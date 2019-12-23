@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class JobQueue {
+open class JobQueue {
 
     internal let queue = OperationQueue()
 

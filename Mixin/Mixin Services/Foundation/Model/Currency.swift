@@ -1,12 +1,12 @@
 import UIKit
 
-class Currency: CustomDebugStringConvertible {
+public class Currency: CustomDebugStringConvertible {
     
-    let code: String
-    let symbol: String
-    var rate: Double
+    public let code: String
+    public let symbol: String
+    public var rate: Double
     
-    var icon: UIImage {
+    public var icon: UIImage {
         return UIImage(named: "CurrencyIcon/\(code)")!
     }
     
@@ -16,13 +16,13 @@ class Currency: CustomDebugStringConvertible {
         self.rate = rate
     }
     
-    var debugDescription: String {
+    public var debugDescription: String {
         return "<Currency: \(Unmanaged.passUnretained(self).toOpaque()), code: \(code), symbol: \(symbol), rate: \(rate)>"
     }
     
 }
 
-extension Currency {
+public extension Currency {
     
     static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.current.currency.did.change")
     

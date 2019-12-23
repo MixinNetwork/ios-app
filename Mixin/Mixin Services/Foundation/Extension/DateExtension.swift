@@ -1,7 +1,7 @@
 import UIKit
 import CoreMedia
 
-extension DateFormatter {
+public extension DateFormatter {
 
     static let dayDate = DateFormatter(dateFormat: Localized.DATE_FORMAT_DAY)
     static let weekDate = DateFormatter(dateFormat: "EEEE")
@@ -45,7 +45,7 @@ extension DateFormatter {
     }()
 }
 
-extension Date {
+public extension Date {
 
     private static let sourceTimeZone = TimeZone(identifier: "UTC")!
     private static let destinationTimeZone = NSTimeZone.local
@@ -106,7 +106,7 @@ extension Date {
     }
 }
 
-let mediaDurationFormatter: DateComponentsFormatter = {
+public let mediaDurationFormatter: DateComponentsFormatter = {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = [.minute, .second]
     formatter.zeroFormattingBehavior = [.pad]
@@ -114,5 +114,4 @@ let mediaDurationFormatter: DateComponentsFormatter = {
     return formatter
 }()
 
-let millisecondsPerSecond: Double = 1000
-let nanosecondsPerSecond: CMTimeScale = 1000000000
+public let millisecondsPerSecond: Double = 1000

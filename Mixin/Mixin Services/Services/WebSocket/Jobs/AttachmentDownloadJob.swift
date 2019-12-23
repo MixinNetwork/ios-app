@@ -1,23 +1,23 @@
 import Foundation
 import UIKit
 
-class AttachmentDownloadJob: UploadOrDownloadJob {
-
+public class AttachmentDownloadJob: UploadOrDownloadJob {
+    
     private(set) var stream: OutputStream!
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
     private var mediaMimeType: String?
-
+    
     internal var fileName: String {
         var pathExtension = message.name?.pathExtension()?.lowercased()
-
+        
         if pathExtension == nil {
             if let mimeType = message.mediaMimeType?.lowercased(), let ext = FileManager.default.pathExtension(mimeType: mimeType)?.lowercased() {
                 pathExtension = ".\(ext)"
             }
         }
-
+        
         if pathExtension == nil {
             if message.category.hasSuffix("_VIDEO") {
                 pathExtension = ExtensionName.mp4.withDot
@@ -38,11 +38,11 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         super.init(messageId: messageId)
         self.mediaMimeType = mediaMimeType
     }
-
+    
     class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
-
+    
     class func jobId(category: String, messageId: String) -> String {
         if category.hasSuffix("_IMAGE") {
             return AttachmentDownloadJob.jobId(messageId: messageId)
@@ -59,7 +59,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     override func getJobId() -> String {
         return AttachmentDownloadJob.jobId(messageId: messageId)
     }
-
+    
     override func execute() -> Bool {
         guard !self.messageId.isEmpty else {
             return false
@@ -70,8 +70,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         guard let attachmentId = message.content, !attachmentId.isEmpty else {
             return false
         }
-
-
+        
         self.message = message
         repeat {
             switch MessageAPI.shared.getAttachment(id: attachmentId) {
@@ -90,12 +89,12 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false
     }
-
+    
     private func downloadAttachment(attachResponse: AttachmentResponse) -> Bool {
         guard let viewUrl = attachResponse.viewUrl, let downloadUrl = URL(string: viewUrl) else {
             return false
         }
-
+        
         if message.category.hasPrefix("SIGNAL_") {
             guard let key = message.mediaKey, let digest = message.mediaDigest else {
                 return false
@@ -120,14 +119,14 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         configuration.timeoutIntervalForRequest = 30
         var request = URLRequest(url: downloadUrl)
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-
+        
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         task = session.dataTask(with: request)
         task?.resume()
         session.finishTasksAndInvalidate()
         return true
     }
-
+    
     override func taskFinished() {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
@@ -141,17 +140,17 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     override func downloadExpired() {
         MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .EXPIRED, conversationId: message.conversationId)
     }
-
+    
 }
 
 extension AttachmentDownloadJob: URLSessionDataDelegate {
     
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
         contentLength = Double(response.expectedContentLength)
         completionHandler(.allow)
     }
-
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         data.withUnsafeUInt8Pointer {
             _ = stream.write($0!, maxLength: data.count)
         }
@@ -164,10 +163,9 @@ extension AttachmentDownloadJob: URLSessionDataDelegate {
         }
     }
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         stream.close()
         completionHandler(nil, task.response, error)
     }
-
+    
 }
-

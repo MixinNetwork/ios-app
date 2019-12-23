@@ -2,7 +2,7 @@ import Foundation
 import Zip
 import ImageIO
 
-extension FileManager {
+public extension FileManager {
     
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)

@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 
-extension UIImage {
+public extension UIImage {
     
     convenience init?(withFirstFrameOf asset: AVAsset) {
         let generator = AVAssetImageGenerator(asset: asset)

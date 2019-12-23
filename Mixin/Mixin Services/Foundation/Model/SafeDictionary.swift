@@ -1,6 +1,6 @@
 import Foundation
 
-class SafeDictionary<Key, Value> where Key : Hashable {
+internal class SafeDictionary<Key, Value> where Key : Hashable {
 
     private let queue = DispatchQueue(label: "one.mixin.services.dictionary", attributes: .concurrent)
     private var dictionary = [Key: Value]()

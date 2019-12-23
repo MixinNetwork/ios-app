@@ -1,6 +1,6 @@
 import Foundation
 
-func performSynchronouslyOnMainThread<T>(_ work: (() -> T)) -> T {
+public func performSynchronouslyOnMainThread<T>(_ work: (() -> T)) -> T {
     if Thread.isMainThread {
         return work()
     } else {

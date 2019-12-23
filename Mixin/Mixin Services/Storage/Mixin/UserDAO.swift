@@ -1,15 +1,15 @@
 import WCDBSwift
 
 public final class UserDAO {
-
+    
     static let shared = UserDAO()
-
+    
     private static let sqlQueryColumns = """
     SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
-
+    
     private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
@@ -31,19 +31,19 @@ public final class UserDAO {
         }
         MixinDatabase.shared.insertOrReplace(objects: [User.createSystemUser()])
     }
-
+    
     func isExist(userId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: User.self, condition: User.Properties.userId == userId)
     }
-
+    
     func getBlockUsers() -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryBlockedUsers)
     }
-
+    
     func getUser(userId: String) -> UserItem? {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserById, values: [userId]).first
     }
-
+    
     func getUser(identityNumber: String) -> UserItem? {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByIdentityNumber, values: [identityNumber]).first
     }
@@ -85,11 +85,11 @@ public final class UserDAO {
     func contacts() -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }
-
+    
     func updateAccount(account: Account) {
         MixinDatabase.shared.insertOrReplace(objects: [User.createUser(from: account)])
     }
-
+    
     func updateUsers(users: [UserResponse], sendNotificationAfterFinished: Bool = true, updateParticipantStatus: Bool = false, notifyContact: Bool = false) {
         guard users.count > 0 else {
             return
@@ -105,7 +105,7 @@ public final class UserDAO {
                     if let app = user.app {
                         try db.insertOrReplace(objects: app, intoTable: App.tableName)
                     }
-
+                    
                     if updateParticipantStatus {
                         try db.update(table: Participant.tableName, on: [Participant.Properties.status], with: [ParticipantStatus.SUCCESS.rawValue], where: Participant.Properties.userId == user.userId)
                     }
@@ -120,9 +120,9 @@ public final class UserDAO {
                 NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)
             }
         }
-
+        
     }
-
+    
     func updateNotificationEnabled(userId: String, muteUntil: String) {
         DispatchQueue.global().async { [weak self] in
             MixinDatabase.shared.update(maps: [(User.Properties.muteUntil, muteUntil)], tableName: User.tableName, condition: User.Properties.userId == userId)
@@ -133,4 +133,3 @@ public final class UserDAO {
     }
     
 }
-

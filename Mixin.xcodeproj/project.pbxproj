@@ -751,7 +751,6 @@
 		DFF353021FEE532300058453 /* AssetDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353011FEE532300058453 /* AssetDAO.swift */; };
 		DFF353041FEE657000058453 /* CryptoUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353031FEE657000058453 /* CryptoUserDefault.swift */; };
 		DFF353061FEE6A3400058453 /* RefreshAssetsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */; };
-		DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353091FEE9E1200058453 /* TransferResponse.swift */; };
 		DFF3530E1FEEA3DC00058453 /* SnapshotDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */; };
 		DFF353121FEEB72C00058453 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353111FEEB72C00058453 /* Snapshot.swift */; };
 		DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353181FEEC83100058453 /* WalletUserDefault.swift */; };
@@ -1632,7 +1631,6 @@
 		DFF353011FEE532300058453 /* AssetDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDAO.swift; sourceTree = "<group>"; };
 		DFF353031FEE657000058453 /* CryptoUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUserDefault.swift; sourceTree = "<group>"; };
 		DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAssetsJob.swift; sourceTree = "<group>"; };
-		DFF353091FEE9E1200058453 /* TransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferResponse.swift; sourceTree = "<group>"; };
 		DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotDAO.swift; sourceTree = "<group>"; };
 		DFF353111FEEB72C00058453 /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		DFF353181FEEC83100058453 /* WalletUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletUserDefault.swift; sourceTree = "<group>"; };
@@ -3120,7 +3118,6 @@
 				DF7A4B471FCDA6ED00F21BCB /* UserResponse.swift */,
 				DF8DA1991FD562E200425CEC /* AttachmentResponse.swift */,
 				DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */,
-				DFF353091FEE9E1200058453 /* TransferResponse.swift */,
 				DF138974200493C300869685 /* QRCodeResponse.swift */,
 				DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */,
 				DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */,
@@ -4083,7 +4080,6 @@
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
-				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFCFAFC8237E863D00F0AFD5 /* RawTransactionRequest.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,

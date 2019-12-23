@@ -1,9 +1,9 @@
 import WCDBSwift
 
 public final class ConversationDAO {
-
+    
     static let shared = ConversationDAO()
-
+    
     private static let sqlQueryColumns = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
     c.announcement as announcement, c.category as category, c.name as name, c.status as status,
@@ -59,15 +59,15 @@ public final class ConversationDAO {
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])
     }
-
+    
     func storageUsageConversations() -> [ConversationStorageUsage] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryStorageUsage)
     }
-
+    
     func isExist(conversationId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Conversation.self, condition: Conversation.Properties.conversationId == conversationId)
     }
-
+    
     func hasValidConversation() -> Bool {
         return MixinDatabase.shared.isExist(type: Conversation.self, condition: Conversation.Properties.status != ConversationStatus.QUIT.rawValue)
     }
@@ -76,11 +76,11 @@ public final class ConversationDAO {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.codeUrl, conversation.codeUrl)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversation.conversationId)
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation)))
     }
-
+    
     func getConversationIconUrl(conversationId: String) -> String? {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.iconUrl, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
-
+    
     func updateIconUrl(conversationId: String, iconUrl: String) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.iconUrl, iconUrl)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
@@ -88,24 +88,24 @@ public final class ConversationDAO {
     func getStartStatusConversations() -> [String] {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue)
     }
-
+    
     func getProblemConversations() -> [String] {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull())
     }
-
+    
     func getQuitStatusConversations() -> [String] {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue)
     }
-
+    
     func makeQuitConversation(conversationId: String) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.status, ConversationStatus.QUIT.rawValue)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
         ConcurrentJobQueue.shared.addJob(job: ExitConversationJob(conversationId: conversationId))
     }
-
+    
     func updateConversationOwnerId(conversationId: String, ownerId: String) -> Bool {
         return MixinDatabase.shared.update(maps: [(Conversation.Properties.ownerId, ownerId)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
-
+    
     func updateConversationMuteUntil(conversationId: String, muteUntil: String) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.muteUntil, muteUntil)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
         guard let conversation = getConversation(conversationId: conversationId) else {
@@ -138,11 +138,11 @@ public final class ConversationDAO {
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
         }
     }
-
+    
     func getConversation(ownerUserId: String) -> ConversationItem? {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByOwnerId, values: [ownerUserId]).first
     }
-
+    
     func getConversation(conversationId: String) -> ConversationItem? {
         guard !conversationId.isEmpty else {
             return nil
@@ -162,14 +162,14 @@ public final class ConversationDAO {
     func getOriginalConversation(conversationId: String) -> Conversation? {
         return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId)
     }
-
+    
     func getConversationStatus(conversationId: String) -> Int? {
         guard let result = MixinDatabase.shared.scalar(on: Conversation.Properties.status, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.int32Value else {
             return nil
         }
         return Int(result)
     }
-
+    
     func getConversationCategory(conversationId: String) -> String? {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.category, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
@@ -181,7 +181,7 @@ public final class ConversationDAO {
         }
         return MixinDatabase.shared.getCodables(sql: sql)
     }
-
+    
     func createPlaceConversation(conversationId: String, ownerId: String) {
         guard !conversationId.isEmpty else {
             return
@@ -192,37 +192,37 @@ public final class ConversationDAO {
         let conversation = Conversation.createConversation(conversationId: conversationId, category: nil, recipientId: ownerId, status: ConversationStatus.START.rawValue)
         MixinDatabase.shared.insert(objects: [conversation])
     }
-
+    
     func createConversation(conversationId: String, name: String, members: [GroupUser]) -> Bool {
         let createdAt = Date().toUTCString()
         let conversation = Conversation(conversationId: conversationId, ownerId: myUserId, category: ConversationCategory.GROUP.rawValue, name: name, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: createdAt, lastReadMessageId: nil, unseenMessageCount: 0, status: ConversationStatus.START.rawValue, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
         var participants = members.map { Participant(conversationId: conversationId, userId: $0.userId, role: "", status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt) }
         participants.append(Participant(conversationId: conversationId, userId: myUserId, role: ParticipantRole.OWNER.rawValue, status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt))
-
+        
         return MixinDatabase.shared.transaction { (db) in
             try db.insert(objects: conversation, intoTable: Conversation.tableName)
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
         }
     }
-
+    
     func createNewConversation(response: ConversationResponse) -> (ConversationItem, [ParticipantUser]) {
         let conversationId = response.conversationId
         var conversation: ConversationItem!
         var participantUsers = [ParticipantUser]()
-
+        
         MixinDatabase.shared.transaction { (db) in
             try db.insert(objects: Conversation.createConversation(from: response, ownerId: myUserId, status: .SUCCESS), intoTable: Conversation.tableName)
-
+            
             let participants = response.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.SUCCESS.rawValue, createdAt: $0.createdAt) }
             try db.insert(objects: participants, intoTable: Participant.tableName)
-
+            
             conversation = try db.prepareSelectSQL(on: ConversationItem.Properties.all, sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).allObjects().first
             participantUsers = try db.prepareSelectSQL(on: ParticipantUser.Properties.all, sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId]).allObjects()
         }
-
+        
         return (conversation, participantUsers)
     }
-
+    
     @discardableResult
     func createConversation(conversation: ConversationResponse, targetStatus: ConversationStatus) -> Bool {
         var ownerId = conversation.creatorId
@@ -239,7 +239,7 @@ public final class ConversationDAO {
         guard oldStatus == nil || oldStatus! != targetStatus.rawValue else {
             return true
         }
-
+        
         return MixinDatabase.shared.transaction { (db) in
             if oldStatus == nil {
                 let targetConversation = Conversation.createConversation(from: conversation, ownerId: ownerId, status: targetStatus)
@@ -247,11 +247,11 @@ public final class ConversationDAO {
             } else {
                 try db.update(table: Conversation.tableName, on: [Conversation.Properties.ownerId, Conversation.Properties.category, Conversation.Properties.name, Conversation.Properties.announcement, Conversation.Properties.status, Conversation.Properties.muteUntil, Conversation.Properties.codeUrl], with: [ownerId, conversation.category, conversation.name, conversation.announcement, targetStatus.rawValue, conversation.muteUntil, conversation.codeUrl], where: Conversation.Properties.conversationId == conversationId)
             }
-
+            
             if conversation.participants.count > 0 {
                 let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
                 try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
-
+                
                 if conversation.category == ConversationCategory.GROUP.rawValue {
                     let creatorId = conversation.creatorId
                     if !conversation.participants.contains(where: { $0.userId == creatorId }) {
@@ -259,7 +259,7 @@ public final class ConversationDAO {
                     }
                 }
             }
-
+            
             if let participantSessions = conversation.participantSessions, participantSessions.count > 0 {
                 let sessionParticipants = participantSessions.map {
                     ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
@@ -274,11 +274,11 @@ public final class ConversationDAO {
             if userIds.count > 0 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
-
+            
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
     }
-
+    
     func updateConversation(conversation: ConversationResponse) {
         let conversationId = conversation.conversationId
         var ownerId = conversation.creatorId
@@ -292,34 +292,34 @@ public final class ConversationDAO {
         guard let oldConversation: Conversation = MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId) else {
             return
         }
-
+        
         if oldConversation.announcement != conversation.announcement, !conversation.announcement.isEmpty {
             AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] = true
         }
-
+        
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
             let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
-
+            
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
-
+            
             let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
             try statment.execute(with: [conversationId])
-
+            
             try db.update(table: Conversation.tableName, on: [Conversation.Properties.ownerId, Conversation.Properties.category, Conversation.Properties.name, Conversation.Properties.announcement, Conversation.Properties.status, Conversation.Properties.muteUntil, Conversation.Properties.codeUrl], with: [ownerId, conversation.category, conversation.name, conversation.announcement, ConversationStatus.SUCCESS.rawValue, conversation.muteUntil, conversation.codeUrl], where: Conversation.Properties.conversationId == conversationId)
-
+            
             let userIds = try ParticipantDAO.shared.getNeedSyncParticipantIds(database: db, conversationId: conversationId)
             if userIds.count > 0 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
-
+            
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
     }
-
+    
     func makeConversationId(userId: String, ownerUserId: String) -> String {
         return (min(userId, ownerUserId) + max(userId, ownerUserId)).toUUID()
     }
-
+    
 }

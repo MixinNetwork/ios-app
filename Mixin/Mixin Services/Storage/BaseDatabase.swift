@@ -1,6 +1,6 @@
 import WCDBSwift
 
-class BaseDatabase {
+public class BaseDatabase {
 
     internal var database: Database!
     private static var isTraced = false

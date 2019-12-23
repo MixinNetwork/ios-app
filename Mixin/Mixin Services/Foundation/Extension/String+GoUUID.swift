@@ -1,7 +1,7 @@
 import Foundation
 import Goutils
 
-extension String {
+internal extension String {
     
     func toUUID() -> String {
         var digestData = self.utf8.md5.data

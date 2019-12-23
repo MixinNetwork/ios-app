@@ -30,7 +30,7 @@ extension UNNotificationAction {
     
 }
 
-extension UNNotificationCategory {
+public extension UNNotificationCategory {
     
     static let message = UNNotificationCategory(identifier: NotificationCategoryIdentifier.message,
                                                 actions: [.reply],

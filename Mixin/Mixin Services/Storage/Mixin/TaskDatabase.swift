@@ -1,17 +1,18 @@
 import WCDBSwift
 
-class TaskDatabase: BaseDatabase {
-
+public final class TaskDatabase: BaseDatabase {
+    
     private static let databaseVersion: Int = 1
-
+    
     static let shared = TaskDatabase()
-
+    
     private lazy var _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
+    
     override var database: Database! {
         get { return _database }
         set { }
     }
-
+    
     func initDatabase() {
         _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
         do {
@@ -23,4 +24,5 @@ class TaskDatabase: BaseDatabase {
             Reporter.report(error: error)
         }
     }
+    
 }

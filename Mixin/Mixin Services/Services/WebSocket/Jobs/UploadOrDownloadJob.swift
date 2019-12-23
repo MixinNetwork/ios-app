@@ -1,11 +1,11 @@
 import Foundation
 
-class UploadOrDownloadJob: AsynchronousJob {
-
+open class UploadOrDownloadJob: AsynchronousJob {
+    
     let messageId: String
     var message: Message!
     var task: URLSessionTask?
-
+    
     lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
             return
@@ -26,7 +26,7 @@ class UploadOrDownloadJob: AsynchronousJob {
                 return
             }
         }
-
+        
         let statusCode = (response as? HTTPURLResponse)?.statusCode
         guard statusCode != 404 else {
             weakSelf.downloadExpired()
@@ -40,27 +40,27 @@ class UploadOrDownloadJob: AsynchronousJob {
             weakSelf.finishJob()
             return
         }
-
+        
         weakSelf.taskFinished()
         weakSelf.finishJob()
     }
-
+    
     init(messageId: String) {
         self.messageId = messageId
     }
-
-    override func cancel() {
+    
+    override open func cancel() {
         task?.cancel()
         super.cancel()
     }
-
+    
     func downloadExpired() {
-
+        
     }
-
+    
     private func retry() -> Bool {
         checkNetworkAndWebSocket()
-
+        
         Thread.sleep(forTimeInterval: 2)
         if !isCancelled {
             if !execute() {
@@ -70,9 +70,9 @@ class UploadOrDownloadJob: AsynchronousJob {
         }
         return false
     }
-
+    
     func taskFinished() {
-
+        
     }
-
+    
 }

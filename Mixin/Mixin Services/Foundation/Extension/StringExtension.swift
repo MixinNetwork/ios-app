@@ -2,7 +2,7 @@ import UIKit
 import CommonCrypto
 import CoreText
 
-extension String {
+public extension String {
 
     private static var hashCodeMaps = SafeDictionary<String, Int>()
 

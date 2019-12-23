@@ -2,8 +2,6 @@ import WCDBSwift
 
 public class MessageItem: TableCodable {
     
-    static let jsonDecoder = JSONDecoder()
-    
     var messageId: String = ""
     var conversationId: String = ""
     var userId: String = ""
@@ -71,14 +69,14 @@ public class MessageItem: TableCodable {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
             return nil
         }
-        return try? MessageItem.jsonDecoder.decode([AppButtonData].self, from: data)
+        return try? JSONDecoder.default.decode([AppButtonData].self, from: data)
     }()
     
     lazy var appCard: AppCardData? = {
         guard category == MessageCategory.APP_CARD.rawValue, let data = Data(base64Encoded: content) else {
             return nil
         }
-        return try? MessageItem.jsonDecoder.decode(AppCardData.self, from: data)
+        return try? JSONDecoder.default.decode(AppCardData.self, from: data)
     }()
     
     var isExtensionMessage: Bool {

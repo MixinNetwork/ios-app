@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class AttachmentUploadJob: UploadOrDownloadJob {
+open class AttachmentUploadJob: UploadOrDownloadJob {
 
     internal var attachResponse: AttachmentResponse?
     
@@ -121,7 +121,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
 
 extension AttachmentUploadJob: URLSessionTaskDelegate {
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateUploadProgress(messageId: message.messageId, progress: progress))

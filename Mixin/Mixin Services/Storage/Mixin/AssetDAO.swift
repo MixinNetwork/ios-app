@@ -1,9 +1,9 @@
 import WCDBSwift
 
 public final class AssetDAO {
-
+    
     static let shared = AssetDAO()
-
+    
     private static let sqlQueryTable = """
     SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations, a1.asset_key, a2.name as chain_name
     FROM assets a1
@@ -19,15 +19,15 @@ public final class AssetDAO {
     ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(sqlOrder)
     """
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
-
+    
     func getAsset(assetId: String) -> AssetItem? {
         return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId]).first
     }
-
+    
     func isExist(assetId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId)
     }
-
+    
     func insertOrUpdateAssets(assets: [Asset]) {
         guard assets.count > 0 else {
             return
@@ -39,7 +39,7 @@ public final class AssetDAO {
             NotificationCenter.default.afterPostOnMain(name: .AssetsDidChange)
         }
     }
-
+    
     func saveAsset(asset: Asset) -> AssetItem? {
         var assetItem: AssetItem?
         MixinDatabase.shared.transaction { (db) in
@@ -61,7 +61,7 @@ public final class AssetDAO {
     func getAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery)
     }
-
+    
     func getDefaultTransferAsset() -> AssetItem? {
         if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
             return asset
@@ -71,9 +71,9 @@ public final class AssetDAO {
         }
         return nil
     }
-
+    
     func getAvailableAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailableList)
     }
-
+    
 }

@@ -8,7 +8,7 @@ public final class AddressDAO {
     func getAddress(addressId: String) -> Address? {
         return MixinDatabase.shared.getCodable(condition: Address.Properties.addressId == addressId)
     }
-
+    
     func getAddress(assetId: String, destination: String, tag: String) -> Address? {
         return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.destination == destination && Address.Properties.tag == tag)
     }
@@ -24,9 +24,10 @@ public final class AddressDAO {
         MixinDatabase.shared.insertOrReplace(objects: addresses)
         NotificationCenter.default.afterPostOnMain(name: .AddressDidChange)
     }
-
+    
     func deleteAddress(assetId: String, addressId: String) {
         MixinDatabase.shared.delete(table: Address.tableName, condition: Address.Properties.addressId == addressId)
         NotificationCenter.default.postOnMain(name: .AddressDidChange)
     }
+    
 }

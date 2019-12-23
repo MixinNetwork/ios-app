@@ -1,7 +1,7 @@
 import UIKit
 import CommonCrypto
 
-class AttachmentEncryptingInputStream: InputStream {
+public class AttachmentEncryptingInputStream: InputStream {
     
     private(set) var key: Data? // available after initialized
     private(set) var digest: Data? // available after closed
@@ -19,7 +19,7 @@ class AttachmentEncryptingInputStream: InputStream {
     
     internal let isLogEnabled: Bool = false
     
-    override var delegate: StreamDelegate? {
+    override public var delegate: StreamDelegate? {
         get {
             return inputStream.delegate
         }
@@ -28,15 +28,15 @@ class AttachmentEncryptingInputStream: InputStream {
         }
     }
     
-    override var streamStatus: Stream.Status {
+    override public var streamStatus: Stream.Status {
         return error != nil ? .error : inputStream.streamStatus
     }
     
-    override var streamError: Error? {
+    override public var streamError: Error? {
         return error ?? inputStream.streamError
     }
     
-    override var hasBytesAvailable: Bool {
+    override public var hasBytesAvailable: Bool {
         let hasBytesAvailable = !didFinalizedEncryption || inputStream.hasBytesAvailable || !outputBuffer.isEmpty
         return hasBytesAvailable
     }
@@ -58,31 +58,31 @@ class AttachmentEncryptingInputStream: InputStream {
         prepare()
     }
     
-    override func open() {
+    override public func open() {
         inputStream.open()
     }
     
-    override func close() {
+    override public func close() {
         inputStream.close()
     }
     
-    override func property(forKey key: Stream.PropertyKey) -> Any? {
+    override public func property(forKey key: Stream.PropertyKey) -> Any? {
         return inputStream.property(forKey: key)
     }
     
-    override func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
+    override public func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
         return inputStream.setProperty(property, forKey: key)
     }
     
-    override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
+    override public func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         inputStream.schedule(in: aRunLoop, forMode: mode)
     }
     
-    override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
+    override public func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         inputStream.remove(from: aRunLoop, forMode: mode)
     }
     
-    override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
+    override public func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
         guard outputBuffer.isEmpty else {
             return writeOutputBuffer(to: buffer, maxLength: len)
         }
@@ -133,7 +133,7 @@ class AttachmentEncryptingInputStream: InputStream {
         return numberOfBytesWritten
     }
     
-    override func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
+    override public func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
         return false
     }
     

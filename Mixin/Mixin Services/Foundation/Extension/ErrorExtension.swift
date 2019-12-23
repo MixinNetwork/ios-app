@@ -1,6 +1,6 @@
 import Foundation
 
-extension Error {
+internal extension Error {
     
     var errorCode: Int {
         return (self as NSError).code

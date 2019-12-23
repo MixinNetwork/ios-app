@@ -1,6 +1,6 @@
 import Foundation
 
-extension Bundle {
+public extension Bundle {
     
     var shortVersion: String {
         return infoDictionary?["CFBundleShortVersionString"] as? String ?? ""

@@ -7,7 +7,7 @@ protocol CallMessageCoordinator: class {
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
 }
 
-class ReceiveMessageService: MixinService {
+public class ReceiveMessageService: MixinService {
     
     static let shared = ReceiveMessageService()
     static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")

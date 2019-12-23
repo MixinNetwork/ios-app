@@ -1,6 +1,6 @@
 import Foundation
 
-extension URL {
+public extension URL {
     
     var isDownloaded: Bool {
         return (try? resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current) ?? false

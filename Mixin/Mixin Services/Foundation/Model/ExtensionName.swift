@@ -1,6 +1,6 @@
 import Foundation
 
-enum ExtensionName: String {
+public enum ExtensionName: String {
     
     case jpeg = "jpg"
     case mp4

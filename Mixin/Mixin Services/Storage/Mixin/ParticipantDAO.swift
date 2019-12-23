@@ -2,9 +2,9 @@ import Foundation
 import WCDBSwift
 
 public final class ParticipantDAO {
-
+    
     static let shared = ParticipantDAO()
-
+    
     private static let sqlQueryColumns = """
     SELECT p.conversation_id, p.user_id, p.role, p.status, p.created_at FROM participants p
     """
@@ -30,30 +30,30 @@ public final class ParticipantDAO {
     ORDER BY p.created_at ASC
     LIMIT 4
     """
-
+    
     static let sqlQueryParticipantId = """
     SELECT u.user_id FROM users u
     INNER JOIN participants p ON p.user_id = u.user_id
     WHERE p.conversation_id = ? AND u.identity_number = ?
     """
-
+    
     func isAdmin(conversationId: String, userId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId && (Participant.Properties.role == ParticipantRole.ADMIN.rawValue || Participant.Properties.role == ParticipantRole.OWNER.rawValue))
     }
-
+    
     func getParticipantId(conversationId: String, identityNumber: String) -> String? {
         let value = MixinDatabase.shared.scalar(sql: ParticipantDAO.sqlQueryParticipantId, values: [conversationId, identityNumber])
         return value.type == .null ? nil : value.stringValue
     }
-
+    
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId])
     }
-
+    
     func getParticipants(conversationId: String) -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipantUsers, values: [conversationId])
     }
-
+    
     func getAllParticipants() -> [Participant] {
         return MixinDatabase.shared.getCodables()
     }
@@ -73,30 +73,30 @@ public final class ParticipantDAO {
     func updateParticipantStatus(userId: String, status: ParticipantStatus) {
         MixinDatabase.shared.update(maps: [(Participant.Properties.status, status.rawValue)], tableName: Participant.tableName, condition: Participant.Properties.userId == userId)
     }
-
+    
     func getNeedSyncParticipantIds(database: Database, conversationId: String) throws -> [String] {
         let pUserIdColumn = Participant.Properties.userId.in(table: Participant.tableName)
         let pConversationIdColumn = Participant.Properties.conversationId.in(table: Participant.tableName)
         let userIdColumn = User.Properties.userId.in(table: User.tableName)
         let identityNumberColumn = User.Properties.identityNumber.in(table: User.tableName)
-
+        
         let joinClause = JoinClause(with: Participant.tableName)
             .join(User.tableName, with: .left)
             .on(userIdColumn == pUserIdColumn)
         let statementSelect = StatementSelect().select(pUserIdColumn).from(joinClause).where(pConversationIdColumn == conversationId && identityNumberColumn.isNull() && pUserIdColumn != myUserId)
         let coreStatement = try database.prepare(statementSelect)
-
+        
         var result = [String]()
         while try coreStatement.step() {
             result.append(coreStatement.value(atIndex: 0).stringValue)
         }
         return result
     }
-
+    
     func getSyncParticipantIds() -> [String] {
         return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue)))
     }
-
+    
     func updateParticipantRole(message: Message, conversationId: String, participantId: String, role: String, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             try db.update(table: Participant.tableName, on: [Participant.Properties.role], with: [role], where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == participantId)
@@ -104,7 +104,7 @@ public final class ParticipantDAO {
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }
     }
-
+    
     func addParticipant(message : Message, conversationId: String, participantId: String, updatedAt: String, status: ParticipantStatus, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             let participant = Participant(conversationId: conversationId, userId: participantId, role: "", status: status.rawValue, createdAt: updatedAt)
@@ -113,7 +113,7 @@ public final class ParticipantDAO {
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }
     }
-
+    
     func removeParticipant(message: Message, conversationId: String, userId: String, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
@@ -123,7 +123,7 @@ public final class ParticipantDAO {
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }
     }
-
+    
     func removeParticipant(conversationId: String) {
         let userId = myUserId
         MixinDatabase.shared.transaction { (db) in
@@ -132,16 +132,16 @@ public final class ParticipantDAO {
         }
         NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
-
+    
     func participants(conversationId: String) -> [Participant] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipants, values: [conversationId])
     }
-
+    
     func participantRequests(conversationId: String, currentAccountId: String) -> [ParticipantRequest] {
         let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
         return participants
             .filter({ $0.userId != currentAccountId })
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
-
+    
 }

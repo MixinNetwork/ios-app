@@ -1,6 +1,6 @@
 import Foundation
 
-extension NumberFormatter {
+public extension NumberFormatter {
     
     static let decimal = NumberFormatter(numberStyle: .decimal)
     
@@ -44,7 +44,7 @@ extension NumberFormatter {
     }
 }
 
-extension Int64 {
+public extension Int64 {
 
     func sizeRepresentation() -> String {
         let sizeInBytes = self

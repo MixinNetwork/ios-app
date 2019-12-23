@@ -1,7 +1,7 @@
 import Foundation
 
-class AsynchronousJob: BaseJob {
-
+open class AsynchronousJob: BaseJob {
+    
     private var isExecutingStatus: Bool = false {
         willSet {
             willChangeValue(forKey: "isExecuting")
@@ -10,7 +10,7 @@ class AsynchronousJob: BaseJob {
             didChangeValue(forKey: "isExecuting")
         }
     }
-
+    
     private var isFinishedStatus: Bool = false {
         willSet {
             willChangeValue(forKey: "isFinished")
@@ -19,20 +19,20 @@ class AsynchronousJob: BaseJob {
             didChangeValue(forKey: "isFinished")
         }
     }
-
-    override var isFinished: Bool {
+    
+    override open var isFinished: Bool {
         return isFinishedStatus
     }
-
-    override var isExecuting: Bool {
+    
+    override open var isExecuting: Bool {
         return isExecutingStatus
     }
-
-    override var isAsynchronous: Bool {
+    
+    override open var isAsynchronous: Bool {
         return true
     }
-
-    override func start() {
+    
+    override open func start() {
         guard !isCancelled, LoginManager.shared.isLoggedIn else {
             finishJob()
             return
@@ -42,12 +42,13 @@ class AsynchronousJob: BaseJob {
             finishJob()
         }
     }
-
+    
     func execute() -> Bool {
         fatalError("Subclasses must implement `execute`.")
     }
-
+    
     func finishJob() {
         isFinishedStatus = true
     }
+    
 }

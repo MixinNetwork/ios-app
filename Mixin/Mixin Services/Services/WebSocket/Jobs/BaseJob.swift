@@ -2,7 +2,7 @@ import Foundation
 import Alamofire
 import UIKit
 
-class BaseJob: Operation {
+open class BaseJob: Operation {
 
     internal var currentAccountId: String {
         return myUserId
@@ -14,7 +14,7 @@ class BaseJob: Operation {
         fatalError("Subclasses must implement `getJobId`.")
     }
 
-    override func main() {
+    override open func main() {
         guard LoginManager.shared.isLoggedIn, !isCancelled else {
             return
         }

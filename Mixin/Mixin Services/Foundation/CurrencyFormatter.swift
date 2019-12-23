@@ -1,6 +1,29 @@
 import Foundation
 
-struct CurrencyFormatter {
+public extension Locale {
+    static let us = Locale(identifier: "US")
+}
+
+public struct CurrencyFormatter {
+    
+    public enum Format {
+        case precision
+        case pretty
+        case fiatMoney
+        case fiatMoneyPrice
+    }
+    
+    public enum SignBehavior {
+        case always
+        case never
+        case whenNegative
+    }
+    
+    public enum Symbol {
+        case btc
+        case currentCurrency
+        case custom(String)
+    }
     
     static let precisionFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8, roundingMode: .down, locale: .current)
@@ -19,33 +42,14 @@ struct CurrencyFormatter {
     }()
     static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
     
-    enum Format {
-        case precision
-        case pretty
-        case fiatMoney
-        case fiatMoneyPrice
-    }
-    
-    enum SignBehavior {
-        case always
-        case never
-        case whenNegative
-    }
-    
-    enum Symbol {
-        case btc
-        case currentCurrency
-        case custom(String)
-    }
-    
-    static func localizedString(from string: String?, locale: Locale = .us, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
+    public static func localizedString(from string: String?, locale: Locale = .us, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         guard let string = string, let decimal = Decimal(string: string, locale: locale), decimal.isZero || decimal.isNormal else {
             return nil
         }
         return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
     
-    static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
+    public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         let decimal = Decimal(number)
         return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
@@ -112,8 +116,4 @@ struct CurrencyFormatter {
         }
     }
     
-}
-
-extension Locale {
-    static let us = Locale(identifier: "US")
 }

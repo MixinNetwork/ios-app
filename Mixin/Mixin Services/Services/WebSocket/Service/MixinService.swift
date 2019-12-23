@@ -1,6 +1,6 @@
 import Foundation
 
-class MixinService {
+public class MixinService {
     
     enum UserInfoKey {
         static let messageId = "msg_id"

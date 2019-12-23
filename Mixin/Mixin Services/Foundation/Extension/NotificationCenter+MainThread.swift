@@ -1,6 +1,6 @@
 import UIKit
 
-extension NotificationCenter {
+public extension NotificationCenter {
 
     func postOnMain(name: NSNotification.Name, object: Any? = nil) {
         if Thread.isMainThread {

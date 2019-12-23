@@ -1,13 +1,13 @@
 import Foundation
 
-class VideoDownloadJob: AttachmentDownloadJob {
+public class VideoDownloadJob: AttachmentDownloadJob {
     
     override var fileUrl: URL {
         return AttachmentContainer.url(for: .videos, filename: fileName)
     }
     
     private lazy var thumbnailUrl = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.jpeg.withDot)
-
+    
     override class func jobId(messageId: String) -> String {
         return "video-download-\(messageId)"
     }

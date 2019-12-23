@@ -1,6 +1,6 @@
 import Foundation
 
-class AudioDownloadJob: AttachmentDownloadJob {
+public class AudioDownloadJob: AttachmentDownloadJob {
     
     override var fileUrl: URL {
         return AttachmentContainer.url(for: .audios, filename: fileName)

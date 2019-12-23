@@ -1,7 +1,9 @@
 import WCDBSwift
 
 public final class SnapshotDAO {
-
+    
+    static let shared = SnapshotDAO()
+    
     private static let sqlQueryTable = """
     SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
     FROM snapshots s
@@ -10,11 +12,9 @@ public final class SnapshotDAO {
     """
     private static let sqlQueryById = "\(sqlQueryTable) WHERE s.snapshot_id = ?"
     private static let sqlQueryByTrace = "\(sqlQueryTable) WHERE s.trace_id = ?"
-
-    static let shared = SnapshotDAO()
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
-
+    
     func saveSnapshot(snapshot: Snapshot) -> SnapshotItem? {
         var snapshotItem: SnapshotItem?
         MixinDatabase.shared.transaction { (db) in
@@ -23,7 +23,7 @@ public final class SnapshotDAO {
         }
         return snapshotItem
     }
-
+    
     func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in

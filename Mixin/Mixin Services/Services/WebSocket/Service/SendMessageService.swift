@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-class SendMessageService: MixinService {
+public class SendMessageService: MixinService {
 
     static let shared = SendMessageService()
     static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]

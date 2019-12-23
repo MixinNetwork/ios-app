@@ -1,6 +1,6 @@
 import Foundation
 
-extension Data {
+public extension Data {
     
     var bytes : [UInt8] {
         return [UInt8](self)
@@ -45,14 +45,14 @@ extension Data {
         return str
     }
     
-    @inlinable public func withUnsafeUInt8Pointer<ResultType>(_ body: (UnsafePointer<UInt8>?) throws -> ResultType) rethrows -> ResultType {
+    @inlinable func withUnsafeUInt8Pointer<ResultType>(_ body: (UnsafePointer<UInt8>?) throws -> ResultType) rethrows -> ResultType {
         return try withUnsafeBytes({ (buffer) -> ResultType in
             let ptr = buffer.bindMemory(to: UInt8.self).baseAddress
             return try body(ptr)
         })
     }
     
-    @inlinable public mutating func withUnsafeMutableUInt8Pointer<ResultType>(_ body: (UnsafeMutablePointer<UInt8>?) throws -> ResultType) rethrows -> ResultType {
+    @inlinable mutating func withUnsafeMutableUInt8Pointer<ResultType>(_ body: (UnsafeMutablePointer<UInt8>?) throws -> ResultType) rethrows -> ResultType {
         return try withUnsafeMutableBytes({ (buffer) -> ResultType in
             let ptr = buffer.bindMemory(to: UInt8.self).baseAddress
             return try body(ptr)

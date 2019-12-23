@@ -1,6 +1,6 @@
 import Foundation
 
-extension Encodable {
+public extension Encodable {
     
     var jsonRepresentation: String? {
         let encoder = JSONEncoder()
@@ -12,7 +12,7 @@ extension Encodable {
     
 }
 
-extension JSONEncoder {
+public extension JSONEncoder {
     
     static let `default` = JSONEncoder()
     static let snakeCase: JSONEncoder = {
@@ -23,7 +23,7 @@ extension JSONEncoder {
     
 }
 
-extension JSONDecoder {
+public extension JSONDecoder {
     
     static let `default` = JSONDecoder()
     static let snakeCase: JSONDecoder = {

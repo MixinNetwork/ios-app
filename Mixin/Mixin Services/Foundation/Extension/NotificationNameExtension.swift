@@ -1,6 +1,6 @@
 import Foundation
 
-extension NSNotification.Name {
+public extension NSNotification.Name {
 
     static let ConversationDidChange = NSNotification.Name("one.mixin.services.sqlite.messages.changed")
 
@@ -35,7 +35,7 @@ extension NSNotification.Name {
     static let UserSessionDidChange = NSNotification.Name("one.mixin.services.session.changed")
 }
 
-struct ConversationChange {
+public struct ConversationChange {
     
     let conversationId: String
     let action: Action

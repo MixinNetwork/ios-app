@@ -2071,8 +2071,6 @@
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
-				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
-				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 			);
 			path = Models;
@@ -3181,6 +3179,8 @@
 				E07E38B023A779140005A538 /* Logger.swift */,
 				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
 				7BE6E16B218089F100C32EE5 /* MainThreadDispatcher.swift */,
+				7B14DFFB22F9AE3F009CCC45 /* LocalImageLoadToken.swift */,
+				7B14DFFD22F9AE79009CCC45 /* LocalImageLoader.swift */,
 				7B46843222FC069300A8D03C /* ImageManagers.swift */,
 			);
 			path = Foundation;

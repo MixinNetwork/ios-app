@@ -2,7 +2,7 @@ install! 'cocoapods',
 :generate_multiple_pod_projects => true,
 :incremental_installation => true
 
-platform :ios, '10.0'
+platform :ios, '11.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Mixin' do
@@ -34,5 +34,5 @@ target 'Mixin' do
   pod 'R.swift'
   pod 'Fabric'
   pod 'Crashlytics'
-
+  pod 'MixinServices', :path => './MixinServices'
 end

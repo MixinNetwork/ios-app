@@ -149,6 +149,17 @@ PODS:
   - GTMSessionFetcher/Full (1.3.0):
     - GTMSessionFetcher/Core (= 1.3.0)
   - GzipSwift (5.1.1)
+  - MixinServices (0.1.0):
+    - Alamofire
+    - DeviceGuru
+    - GzipSwift
+    - SDWebImage
+    - SDWebImageYYPlugin/YYImage
+    - SignalProtocolC
+    - Starscream
+    - WCDB.swift
+    - YYImage/WebP
+    - Zip
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
     - nanopb/encode (= 0.3.9011)
@@ -200,6 +211,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - GoogleWebRTC
   - GzipSwift
+  - MixinServices (from `./MixinServices`)
   - PhoneNumberKit
   - R.swift
   - RSKImageCropper
@@ -259,6 +271,8 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  MixinServices:
+    :path: "./MixinServices"
   SignalProtocolC:
     :git: https://github.com/MixinNetwork/SignalProtocolC.git
     :submodules: true
@@ -305,6 +319,7 @@ SPEC CHECKSUMS:
   GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
+  MixinServices: aa52f871cbc979dfda30981d95eda8f969a39e9f
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: adffe4e128af1918386e09e7421d3d851a2987af
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
@@ -322,6 +337,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: ff32b5e8c8df36c5d51bf8583d1ac379b957e3f5
+PODFILE CHECKSUM: 122c13fc90f3c6ba15080ea4fdb1ecc218a58546
 
 COCOAPODS: 1.8.4

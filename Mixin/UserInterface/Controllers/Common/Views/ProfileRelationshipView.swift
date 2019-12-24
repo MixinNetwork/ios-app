@@ -91,7 +91,7 @@ final class ProfileRelationshipView: UIView {
     }
     
     private func prepare() {
-        button.backgroundColor = .tertiaryBackground
+        button.backgroundColor = .inputBackground
         button.layer.cornerRadius = 14
         button.clipsToBounds = true
 

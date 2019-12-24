@@ -62,7 +62,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     }
     
     @IBInspectable
-    var indicatorUnhighlightedColor: UIColor = .disabledGray {
+    var indicatorUnhighlightedColor: UIColor = R.color.line()! {
         didSet {
             updateCursor()
         }

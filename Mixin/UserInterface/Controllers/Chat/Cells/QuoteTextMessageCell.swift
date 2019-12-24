@@ -71,7 +71,7 @@ class QuoteTextMessageCell: TextMessageCell {
         quoteIconImageView.contentMode = .center
         contentView.addSubview(quoteIconImageView)
         
-        quoteSubtitleLabel.textColor = UIColor.gray
+        quoteSubtitleLabel.textColor = .accessoryText
         quoteSubtitleLabel.numberOfLines = QuoteTextMessageViewModel.Quote.subtitleNumberOfLines
         contentView.addSubview(quoteSubtitleLabel)
         

@@ -83,7 +83,7 @@ extension AlbumViewController {
 
 }
 
-class AlbumCell: UITableViewCell {
+class AlbumCell: ModernSelectedBackgroundCell {
 
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!

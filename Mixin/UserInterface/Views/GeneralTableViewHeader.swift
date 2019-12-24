@@ -29,7 +29,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         }
         labelTopConstraint = label.topAnchor.constraint(equalTo: topAnchor)
         labelTopConstraint.isActive = true
-        contentView.backgroundColor = .secondaryBackground
+        contentView.backgroundColor = .background
     }
     
 }

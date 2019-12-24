@@ -59,7 +59,7 @@
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="search"/>
                                             </textField>
                                         </subviews>
-                                        <color key="backgroundColor" name="text_field"/>
+                                        <color key="backgroundColor" name="background_input"/>
                                         <constraints>
                                             <constraint firstItem="bEz-0j-gMl" firstAttribute="centerY" secondItem="eip-Pa-aoX" secondAttribute="centerY" id="5U5-dN-HAQ"/>
                                             <constraint firstAttribute="height" constant="54" id="J0N-Y0-VIM"/>
@@ -79,7 +79,7 @@
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9TK-h6-NEJ" userLabel="Keyboard Placeholder">
                                 <rect key="frame" x="0.0" y="768" width="414" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="VBJ-C7-Unv"/>
                                 </constraints>
@@ -328,14 +328,14 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_field">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

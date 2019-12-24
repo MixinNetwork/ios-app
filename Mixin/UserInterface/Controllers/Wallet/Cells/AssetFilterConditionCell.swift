@@ -8,14 +8,13 @@ class AssetFilterConditionCell: UICollectionViewCell {
         super.awakeFromNib()
         
         backgroundView = UIView()
-        backgroundView!.backgroundColor = R.color.text_field()
         backgroundView!.clipsToBounds = true
-        backgroundView!.layer.borderColor = UIColor.disabledGray.cgColor
+        backgroundView!.layer.borderColor = R.color.line()!.cgColor
         backgroundView!.layer.borderWidth = 1
         backgroundView!.layer.cornerRadius = 8
         
         selectedBackgroundView = UIView()
-        selectedBackgroundView!.backgroundColor = UIColor(rgbValue: 0xF5F7FA)
+        selectedBackgroundView!.backgroundColor = .inputBackground
         selectedBackgroundView!.clipsToBounds = true
         selectedBackgroundView!.layer.cornerRadius = 8
     }

@@ -26,7 +26,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bW5-0R-e3W" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="15" width="306" height="40"/>
-                            <color key="backgroundColor" name="text_field"/>
+                            <color key="backgroundColor" name="background_input"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="16"/>
@@ -89,7 +89,7 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_field">
+        <namedColor name="background_input">
             <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>

@@ -32,11 +32,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages to this conversation are encrypted end-to-end, click for more information" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBC-s8-Ynl">
-                                                    <rect key="frame" x="58.5" y="6" width="258.5" height="58"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages to this conversation are encrypted end-to-end, click for more information" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBC-s8-Ynl">
+                                                    <rect key="frame" x="41" y="6" width="293.5" height="33.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" name="text"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -74,7 +74,7 @@
                                                             <rect key="frame" x="8" y="4" width="359" height="20"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="textColor" name="text_accessory"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_cell_title_unread_messages"/>
@@ -690,14 +690,14 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="hzm-Vh-1BZ" secondAttribute="height" multiplier="1:1" id="2tX-U0-LhA"/>
                                                 </constraints>
-                                                <state key="normal" image="ic_bottom"/>
+                                                <state key="normal" image="Conversation/ic_chat_bottom"/>
                                                 <connections>
                                                     <action selector="scrollToBottomAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="DMf-S2-UdJ"/>
                                                 </connections>
                                             </button>
                                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x2d-vg-jlV" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="13" y="0.0" width="18" height="18"/>
-                                                <color key="backgroundColor" red="0.20000000000000001" green="0.52941176469999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" name="theme"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="18" id="qYn-YT-Izr"/>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="x2d-vg-jlV" secondAttribute="height" multiplier="1:1" id="rPQ-p9-sNa"/>
@@ -847,7 +847,7 @@
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="56" y="7" width="200" height="36"/>
-                                        <color key="backgroundColor" name="text_field"/>
+                                        <color key="backgroundColor" name="background_input"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="Kzm-2u-qAF"/>
                                         </constraints>
@@ -1078,7 +1078,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </textField>
                                         </subviews>
-                                        <color key="backgroundColor" name="text_field"/>
+                                        <color key="backgroundColor" name="background_input"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="Y2e-Zn-GCo" secondAttribute="bottom" id="BaG-qf-4nT"/>
                                             <constraint firstItem="Y2e-Zn-GCo" firstAttribute="top" secondItem="aLB-Ba-I93" secondAttribute="top" id="EA2-je-Wfr"/>
@@ -1543,7 +1543,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="52" estimatedRowHeight="-1" sectionHeaderHeight="7" sectionFooterHeight="7" id="neZ-O6-7Wz" customClass="TableHeaderBypassTableView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="user_handle" rowHeight="52" id="t5n-SY-bXR" customClass="UserHandleCell" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="52"/>
@@ -1561,24 +1561,24 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2ui-1P-Jut">
-                                            <rect key="frame" x="74" y="8.5" width="285" height="35"/>
+                                            <rect key="frame" x="74" y="8" width="285" height="36.5"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="TMD-7Z-E08">
-                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="20.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Latin Poems" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9u-Oj-cdT">
-                                                            <rect key="frame" x="0.0" y="0.0" width="94" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="94" height="22"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                            <color key="textColor" name="dark_text"/>
+                                                            <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="c9C-SK-bFF">
-                                                            <rect key="frame" x="98" y="0.0" width="187" height="20.5"/>
+                                                            <rect key="frame" x="98" y="0.0" width="187" height="22"/>
                                                         </imageView>
                                                     </subviews>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000101986" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuN-iN-kAk">
-                                                    <rect key="frame" x="0.0" y="20.5" width="285" height="14.5"/>
+                                                    <rect key="frame" x="0.0" y="22" width="285" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1586,10 +1586,10 @@
                                             </subviews>
                                         </stackView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-NS-eJs">
-                                            <rect key="frame" x="74" y="29" width="40.5" height="14.5"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <rect key="frame" x="74" y="30" width="40.5" height="14.5"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" name="theme"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -1604,6 +1604,7 @@
                                         <constraint firstAttribute="trailing" secondItem="2ui-1P-Jut" secondAttribute="trailing" constant="16" id="xrt-qj-yoa"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" name="background"/>
                                 <connections>
                                     <outlet property="avatarImageView" destination="gA8-EG-juZ" id="amX-9l-MTF"/>
                                     <outlet property="badgeImageView" destination="c9C-SK-bFF" id="ySk-tT-zgO"/>
@@ -2219,7 +2220,7 @@
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8B8-G1-vxK">
                                                 <rect key="frame" x="0.0" y="354" width="355" height="1"/>
-                                                <color key="backgroundColor" name="text_field"/>
+                                                <color key="backgroundColor" name="text_accessory"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="KGJ-c0-GB7"/>
                                                 </constraints>
@@ -2316,6 +2317,7 @@
     </scenes>
     <resources>
         <image name="Conversation/ic_app" width="26" height="26"/>
+        <image name="Conversation/ic_chat_bottom" width="44" height="44"/>
         <image name="Conversation/ic_keyboard" width="26" height="26"/>
         <image name="Conversation/ic_mic_off" width="26" height="26"/>
         <image name="Conversation/ic_photo_off" width="20" height="20"/>
@@ -2325,7 +2327,6 @@
         <image name="Conversation/ic_sticker" width="26" height="26"/>
         <image name="bg_extension" width="60" height="60"/>
         <image name="ic_announcement" width="44" height="44"/>
-        <image name="ic_bottom" width="44" height="44"/>
         <image name="ic_camera_close" width="20" height="20"/>
         <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
@@ -2340,11 +2341,11 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="dark_text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2352,8 +2353,8 @@
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_field">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

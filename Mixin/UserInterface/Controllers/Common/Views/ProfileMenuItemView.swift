@@ -47,7 +47,7 @@ final class ProfileMenuItemView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
-        button.setBackgroundImage(UIColor.tertiaryBackground.image, for: .normal)
+        button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
         button.setBackgroundImage(UIColor.secondaryBackground.image, for: .highlighted)
         subtitleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
     }

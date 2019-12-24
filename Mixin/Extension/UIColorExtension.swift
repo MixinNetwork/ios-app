@@ -4,7 +4,7 @@ extension UIColor {
     
     static let background = R.color.background()!
     static let secondaryBackground = R.color.background_secondary()!
-    static let tertiaryBackground = R.color.background_tertiary()!
+    static let inputBackground = R.color.background_input()!
     static let selectionBackground = R.color.background_selection()!
     static let mixinGreen = R.color.green()!
     static let mixinRed = R.color.red()!
@@ -20,7 +20,6 @@ extension UIColor {
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
     static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
-    static let placeholder = UIColor(red: 0, green: 0, blue: 0.1, alpha: 0.22)
     static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)

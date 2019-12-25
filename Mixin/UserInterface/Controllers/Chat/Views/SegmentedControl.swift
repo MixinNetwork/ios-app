@@ -27,7 +27,7 @@ class SegmentedControl: UIControl {
             let button = UIButton()
             button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             button.setTitle(title, for: .normal)
-            button.setTitleColor(UIColor(displayP3RgbValue: 0xB8BDC7), for: .normal)
+            button.setTitleColor(.text, for: .normal)
             button.setTitleColor(.highlightedText, for: .selected)
             button.tag = index
             button.addTarget(self, action: #selector(tapAction(_:)), for: .touchUpInside)

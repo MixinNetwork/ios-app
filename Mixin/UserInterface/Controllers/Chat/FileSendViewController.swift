@@ -41,7 +41,7 @@ extension FileSendViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return R.image.ic_chat_send()
+        return R.image.conversation.ic_send()
     }
 
 }

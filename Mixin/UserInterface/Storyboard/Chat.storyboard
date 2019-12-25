@@ -1279,10 +1279,11 @@
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UBO-Zd-xp3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B6N-wO-EBn" customClass="SegmentedControl" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="dGY-bY-8QD"/>
                                 </constraints>
@@ -1291,7 +1292,7 @@
                                 </connections>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="UBO-Zd-xp3" firstAttribute="leading" secondItem="uMu-BL-Lrn" secondAttribute="leading" id="KHs-gt-EmC"/>
                             <constraint firstItem="hFa-gF-Bgp" firstAttribute="bottom" secondItem="B6N-wO-EBn" secondAttribute="bottom" id="M0G-VN-8d5"/>
@@ -1359,6 +1360,7 @@
                                                 </view>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="7vo-N8-nNF" firstAttribute="top" secondItem="O1Y-Sq-OYc" secondAttribute="top" id="4Fc-Ow-b75"/>
                                             <constraint firstItem="OHb-5X-LEp" firstAttribute="top" secondItem="O1Y-Sq-OYc" secondAttribute="top" id="Dpk-tu-sio"/>
@@ -1386,11 +1388,11 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-fl-cjF">
                                                     <rect key="frame" x="5" y="0.0" width="360" height="40"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="textColor" name="text_accessory"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="6Kj-fl-cjF" firstAttribute="top" secondItem="oot-mE-CFF" secondAttribute="top" id="DPN-7t-wvU"/>
                                                 <constraint firstAttribute="trailing" secondItem="6Kj-fl-cjF" secondAttribute="trailing" id="R6Y-GX-wLw"/>
@@ -1399,7 +1401,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" name="background"/>
                                     <constraints>
                                         <constraint firstItem="oot-mE-CFF" firstAttribute="top" secondItem="RII-cZ-869" secondAttribute="top" id="B9V-Zx-u9L"/>
                                         <constraint firstAttribute="bottom" secondItem="oot-mE-CFF" secondAttribute="bottom" id="HCp-1i-aHT"/>
@@ -1638,7 +1640,7 @@
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="40" placeholderIntrinsicHeight="200" translatesAutoresizingMaskIntoConstraints="NO" id="I2m-Ir-vYO" customClass="RecorderLockView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="10" y="300" width="40" height="200"/>
-                                        <color key="backgroundColor" name="background"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

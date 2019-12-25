@@ -99,7 +99,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     func prepareNavigationBar() {
         navigationTitleLabel?.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
                                       adjustForContentSize: true)
-        navigationTitleLabel?.textColor = .darkText
+        navigationTitleLabel?.textColor = .title
         let rightButton = UIBarButtonItem(customView: iconView)
         rightButton.width = 44
         navigationItem.title = " "

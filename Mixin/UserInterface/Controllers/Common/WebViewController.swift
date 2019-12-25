@@ -270,7 +270,7 @@ class WebViewController: UIViewController {
         
         let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
         buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
-        titleLabel.textColor = themeColorIsDark ? .white : .darkText
+        titleLabel.textColor = themeColorIsDark ? .white : .title
 
         let tintColor: UIColor = themeColorIsDark ? .white : buttonDarkColor
         moreButton.tintColor = tintColor

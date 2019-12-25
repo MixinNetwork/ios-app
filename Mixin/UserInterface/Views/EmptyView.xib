@@ -35,7 +35,7 @@
         </stackView>
     </objects>
     <resources>
-        <image name="ic_empty_blocked_users" width="90" height="90"/>
+        <image name="ic_empty_blocked_users" width="68" height="69"/>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

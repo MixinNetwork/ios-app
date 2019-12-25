@@ -52,7 +52,7 @@ class StateResponsiveButton: CornerButton {
     
     private func prepare() {
         enabledColor = .theme
-        disabledColor = .backgroundGray
+        disabledColor = R.color.button_background_disabled()
         activityIndicator.tintColor = .indicatorGray
         addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { (make) in

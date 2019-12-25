@@ -10,6 +10,7 @@ class SharedMediaTableViewController: UIViewController, SharedMediaContentViewCo
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
+        tableView.backgroundColor = .clear
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.register(SharedMediaTableHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.rowHeight = 90

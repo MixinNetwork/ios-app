@@ -17,7 +17,6 @@ extension UIColor {
     static let shadow = R.color.table_shadow()!
     static let chatText = R.color.chat_text()!
 
-    static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
     static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
     static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
@@ -25,19 +24,12 @@ extension UIColor {
     static let systemTint = UIColor(rgbValue: 0x007AFF)
     static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
-//    static let darkText = R.color.dark_text()!
     static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
-    static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
 
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
-    
-    static let hintBlue = UIColor(rgbValue: 0x1FB4FC)
-    static let hintRed = UIColor(rgbValue: 0xFF7070)
-    static let hintGreen = UIColor(rgbValue: 0x48CF94)
-    
     static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
     
     static let indicatorGray = UIColor(displayP3RgbValue: 0xBCBEC3)

@@ -24,7 +24,7 @@ class ProfileDescriptionLabel: CoreTextLabel {
             typesetIfNeeded(oldValue: oldValue, newValue: font)
         }
     }
-    var textColor = UIColor.darkText {
+    var textColor = UIColor.text {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: textColor)
         }

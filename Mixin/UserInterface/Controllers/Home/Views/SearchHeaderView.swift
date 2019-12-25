@@ -53,7 +53,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        label.textColor = .darkText
+        label.textColor = .text
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         button.setTitle(R.string.localizable.action_more(), for: .normal)

@@ -28,7 +28,7 @@
                     <subviews>
                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eX3-Xf-rFf" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="165.5" height="45.5"/>
-                            <color key="backgroundColor" name="background"/>
+                            <color key="backgroundColor" name="chat_button_background"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <state key="normal" title="Block">
                                 <color key="titleColor" name="theme"/>
@@ -43,7 +43,7 @@
                         </button>
                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bpb-Vp-utS" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="177.5" y="0.0" width="165.5" height="45.5"/>
-                            <color key="backgroundColor" name="background"/>
+                            <color key="backgroundColor" name="chat_button_background"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <state key="normal" title="Add to contacts">
                                 <color key="titleColor" name="theme"/>
@@ -78,7 +78,7 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="background">
+        <namedColor name="chat_button_background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">

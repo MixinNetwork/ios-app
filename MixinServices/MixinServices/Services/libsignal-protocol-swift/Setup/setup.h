@@ -15,4 +15,6 @@ void signal_destroy(void *global_context);
 
 int setup_crypto_provider(void *context);
 
+extern void (*printSignalLog)(const char *);
+
 #endif /* setup_h */

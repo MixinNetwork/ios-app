@@ -204,6 +204,10 @@ extension AppDelegate {
         }
         Reporter.registerUserInformation()
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
+        MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
+            let log = String(cString: message)
+            Logger.write(log: log)
+        }
     }
     
     private func checkJailbreak() {

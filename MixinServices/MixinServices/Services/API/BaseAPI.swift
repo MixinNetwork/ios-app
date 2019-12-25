@@ -173,7 +173,7 @@ extension BaseAPI {
                 })
 
             if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= 8 {
-                result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
+                result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: localized("toast_api_error_connection_timeout")))
             }
         }
 

@@ -25,7 +25,7 @@ public extension UNNotificationSound {
 public extension UNNotificationAction {
     
     static let reply = UNTextInputNotificationAction(identifier: NotificationActionIdentifier.reply,
-                                                     title: Localized.NOTIFICATION_REPLY,
+                                                     title: localized("notification_reply"),
                                                      options: [])
     
 }

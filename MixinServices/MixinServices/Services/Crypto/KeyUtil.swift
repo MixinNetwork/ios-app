@@ -30,7 +30,7 @@ public enum KeyUtil {
     
     public static func aesEncrypt<ResultType>(pin: String, completion: @escaping (APIResult<ResultType>) -> Void, callback: (String) -> Void) {
         guard let pinToken = AppGroupUserDefaults.Account.pinToken, let encryptedPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: pin) else {
-            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            completion(.failure(APIError(status: 200, code: 400, description: localized("toast_operation_failed"))))
             return
         }
         callback(encryptedPin)

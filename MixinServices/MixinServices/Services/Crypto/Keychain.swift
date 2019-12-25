@@ -93,9 +93,9 @@ public extension Keychain {
         var error: NSError?
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             if context.biometryType == .touchID {
-                return storePIN(pin: pin, prompt: Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_TOUCH_ID))
+                return storePIN(pin: pin, prompt: localized("wallet_store_encrypted_pin", arguments: [localized("wallet_touch_id")]))
             } else if context.biometryType == .faceID {
-                return storePIN(pin: pin, prompt: Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID))
+                return storePIN(pin: pin, prompt: localized("wallet_store_encrypted_pin", arguments: [localized("wallet_face_id")]))
             }
         }
 

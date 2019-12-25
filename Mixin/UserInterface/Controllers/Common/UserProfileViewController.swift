@@ -196,7 +196,7 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
         AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
-                LoginManager.shared.account = account
+                LoginManager.shared.setAccount(account)
                 hud.set(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -290,7 +290,7 @@ extension UserProfileViewController {
             AccountAPI.shared.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
-                    LoginManager.shared.account = account
+                    LoginManager.shared.setAccount(account)
                     hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)

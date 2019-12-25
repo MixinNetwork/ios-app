@@ -1,8 +1,12 @@
 import Foundation
 
-// TODO: Thread safety?
-fileprivate(set) public var myUserId = ""
-fileprivate(set) public var myIdentityNumber = "00000"
+public var myUserId: String {
+    LoginManager.shared.account?.user_id ?? ""
+}
+
+public var myIdentityNumber: String {
+    LoginManager.shared.account?.identity_number ?? "00000"
+}
 
 fileprivate let accountDidChangeDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.account.did.change" as CFString)
 
@@ -33,30 +37,10 @@ public final class LoginManager {
     }
     
     public var account: Account? {
-        get {
-            pthread_rwlock_rdlock(&lock)
-            let account = _account
-            pthread_rwlock_unlock(&lock)
-            return account
-        }
-        set {
-            pthread_rwlock_wrlock(&lock)
-            _account = newValue
-            pthread_rwlock_unlock(&lock)
-            if let newValue = newValue {
-                if let data = try? JSONEncoder.default.encode(newValue) {
-                    AppGroupUserDefaults.Account.serializedAccount = data
-                }
-                NotificationCenter.default.post(name: LoginManager.accountDidChangeNotification, object: self)
-                DispatchQueue.global().async {
-                    UserDAO.shared.updateAccount(account: newValue)
-                }
-            } else {
-                AppGroupUserDefaults.Account.serializedAccount = nil
-            }
-            ignoreNextDarwinNotification = true
-            CFNotificationCenterPostNotification(darwinNotifyCenter, accountDidChangeDarwinNotificationName, nil, nil, true)
-        }
+        pthread_rwlock_rdlock(&lock)
+        let account = _account
+        pthread_rwlock_unlock(&lock)
+        return account
     }
     
     private init() {
@@ -70,13 +54,32 @@ public final class LoginManager {
     }
     
     fileprivate static func getAccountFromUserDefaults() -> Account? {
-        if let data = AppGroupUserDefaults.Account.serializedAccount, let account = try? JSONDecoder.default.decode(Account.self, from: data) {
-            myUserId = account.user_id
-            myIdentityNumber = account.identity_number
-            return account
+        if let data = AppGroupUserDefaults.Account.serializedAccount {
+            return try? JSONDecoder.default.decode(Account.self, from: data)
         } else {
             return nil
         }
+    }
+    
+    public func setAccount(_ account: Account?, updateUserTable: Bool = true) {
+        pthread_rwlock_wrlock(&lock)
+        _account = account
+        pthread_rwlock_unlock(&lock)
+        if let account = account {
+            if let data = try? JSONEncoder.default.encode(account) {
+                AppGroupUserDefaults.Account.serializedAccount = data
+            }
+            NotificationCenter.default.post(name: LoginManager.accountDidChangeNotification, object: self)
+            if updateUserTable {
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
+                }
+            }
+        } else {
+            AppGroupUserDefaults.Account.serializedAccount = nil
+        }
+        ignoreNextDarwinNotification = true
+        CFNotificationCenterPostNotification(darwinNotifyCenter, accountDidChangeDarwinNotificationName, nil, nil, true)
     }
     
     public func logout(from: String) {
@@ -86,7 +89,7 @@ public final class LoginManager {
         Logger.write(log: "===========logout...from:\(from)")
         AppGroupUserDefaults.User.isLogoutByServer = true
         DispatchQueue.main.async {
-            self.account = nil
+            self.setAccount(nil)
             Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
             AppGroupUserDefaults.Account.clearAll()

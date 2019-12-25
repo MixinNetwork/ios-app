@@ -116,7 +116,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let data = AppGroupUserDefaults.Account.serializedAccount else {
             return
         }
-        LoginManager.shared.account = try? JSONDecoder.default.decode(Account.self, from: data)
+        let account = try? JSONDecoder.default.decode(Account.self, from: data)
+        LoginManager.shared.setAccount(account)
         configAnalytics()
         if LoginManager.shared.isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()

@@ -37,7 +37,7 @@ extension AppGroupUserDefaults {
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         
-        @Default(namespace: .user, key: Key.localVersion, defaultValue: 0)
+        @Default(namespace: .user, key: Key.localVersion, defaultValue: version)
         public static var localVersion: Int
         
         @Default(namespace: .user, key: Key.needsRebuildDatabase, defaultValue: false)

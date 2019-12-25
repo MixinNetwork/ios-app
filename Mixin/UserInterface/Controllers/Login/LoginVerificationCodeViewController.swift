@@ -85,9 +85,9 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)
             AppGroupUserDefaults.Account.pinToken = pinToken
             AppGroupUserDefaults.Account.sessionSecret = privateKeyPem
+            LoginManager.shared.setAccount(account, updateUserTable: false)
             MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
             TaskDatabase.shared.initDatabase()
-            LoginManager.shared.account = account
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
             if account.full_name.isEmpty {

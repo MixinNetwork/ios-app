@@ -13,7 +13,7 @@ class RefreshAccountJob: BaseJob {
         }
         switch AccountAPI.shared.me() {
         case let .success(account):
-            LoginManager.shared.account = account
+            LoginManager.shared.setAccount(account)
         case let .failure(error):
             throw error
         }

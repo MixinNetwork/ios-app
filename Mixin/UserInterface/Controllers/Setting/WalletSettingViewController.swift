@@ -225,7 +225,7 @@ extension WalletSettingViewController {
         AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: Currency.current.code, transfer_confirmation_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                LoginManager.shared.account = account
+                LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.updateLabels()

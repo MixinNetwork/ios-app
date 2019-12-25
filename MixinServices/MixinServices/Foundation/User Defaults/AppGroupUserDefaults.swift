@@ -57,7 +57,12 @@ public enum AppGroupUserDefaults {
         
         public var wrappedValue: Value {
             get {
-                defaults.object(forKey: wrappedKey) as? Value ?? defaultValue
+                if let value = defaults.object(forKey: wrappedKey) as? Value {
+                    return value
+                } else {
+                    defaults.set(defaultValue, forKey: wrappedKey)
+                    return defaultValue
+                }
             }
             set {
                 if let newValue = newValue as? AnyOptional, newValue.isNil {
@@ -78,6 +83,7 @@ public enum AppGroupUserDefaults {
                 if let rawValue = defaults.object(forKey: wrappedKey) as? Value.RawValue, let value = Value(rawValue: rawValue) {
                     return value
                 } else {
+                    defaults.set(defaultValue.rawValue, forKey: wrappedKey)
                     return defaultValue
                 }
             }
@@ -99,7 +105,7 @@ extension AppGroupUserDefaults {
     
     // Indicates that user defaults are in Main app's container and needs to migrate to AppGroup's container
     public static var needsMigration: Bool {
-        localVersion == 0
+        localVersion == 0 && AccountUserDefault.shared.serializedAccount != nil
     }
     
     public static var canMigrate: Bool {
@@ -125,6 +131,9 @@ extension AppGroupUserDefaults {
 extension AppGroupUserDefaults {
     
     public static func migrateIfNeeded() {
+        defer {
+            localVersion = version
+        }
         guard needsMigration else {
             return
         }
@@ -134,7 +143,6 @@ extension AppGroupUserDefaults {
         Crypto.migrate()
         Database.migrate()
         Wallet.migrate()
-        localVersion = version
     }
     
 }

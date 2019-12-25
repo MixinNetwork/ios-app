@@ -1,5 +1,4 @@
 import UIKit
-import Firebase
 import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
@@ -92,11 +91,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
             if account.full_name.isEmpty {
-                Reporter.report(event: .fir(AnalyticsEventSignUp))
+                Reporter.report(event: .signUp)
             } else if HomeViewController.showChangePhoneNumberTips {
-                Reporter.report(event: .fir(AnalyticsEventLogin), userInfo: ["source": "emergency"])
+                Reporter.report(event: .login, userInfo: ["source": "emergency"])
             } else {
-                Reporter.report(event: .fir(AnalyticsEventLogin), userInfo: ["source": "normal"])
+                Reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             
             DispatchQueue.main.sync {

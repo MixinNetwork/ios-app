@@ -1,6 +1,6 @@
 import Foundation
 import SDWebImage
-import Firebase
+import FirebaseMLVision
 import MixinServices
 
 enum GroupIconMaker {

@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 import Goutils
-import DeviceGuru
 import UIKit
 
 public enum APIResult<ResultType: Codable> {

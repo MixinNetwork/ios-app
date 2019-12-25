@@ -1,6 +1,5 @@
 import UIKit
 import Bugsnag
-import Crashlytics
 import DeviceCheck
 import MixinServices
 
@@ -40,7 +39,9 @@ class HomeNavigationController: UINavigationController {
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed {
             MixinService.callMessageCoordinator = CallManager.shared
             WebSocketService.shared.connect()
-            checkUser()
+            if LoginManager.shared.isLoggedIn {
+                Reporter.registerUserInformation()
+            }
             checkDevice()
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
         }
@@ -102,19 +103,6 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
 
 extension HomeNavigationController {
     
-    private func checkUser() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        if let account = LoginManager.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
-        }
-    }
-
     private func checkDevice() {
         guard LoginManager.shared.isLoggedIn else {
             return

@@ -4,8 +4,12 @@ import Foundation
 import Bugsnag
 #endif
 
-#if canImport(Firebase)
-import Firebase
+#if canImport(FirebaseCore)
+import FirebaseCore
+#endif
+
+#if canImport(FirebaseAnalytics)
+import FirebaseAnalytics
 #endif
 
 #if canImport(Crashlytics)
@@ -17,14 +21,25 @@ public enum Reporter {
     public typealias UserInfo = [String: Any]
     
     public enum Event {
-        case fir(String)
+        case signUp
+        case login
         case sendSticker
         case openApp
         
         var name: String {
             switch self {
-            case .fir(let name):
-                return name
+            case .signUp:
+                #if canImport(FirebaseAnalytics)
+                return AnalyticsEventSignUp
+                #else
+                return "sign_up"
+                #endif
+            case .login:
+                #if canImport(FirebaseAnalytics)
+                return AnalyticsEventLogin
+                #else
+                return "login"
+                #endif
             case .sendSticker:
                 return "send_sticker"
             case .openApp:
@@ -38,16 +53,42 @@ public enum Reporter {
                 "clientTime": DateFormatter.filename.string(from: Date())]
     }
     
+    public static func configure(bugsnagApiKey key: String?) {
+        #if canImport(Bugsnag) && RELEASE
+        if let key = key {
+            Bugsnag.start(withApiKey: key)
+        }
+        #endif
+        #if canImport(FirebaseCore)
+        FirebaseApp.configure()
+        #endif
+    }
+    
+    public static func registerUserInformation() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        #if canImport(Bugsnag)
+        Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
+        #endif
+        #if canImport(Crashlytics)
+        Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
+        Crashlytics.sharedInstance().setUserName(account.full_name)
+        Crashlytics.sharedInstance().setUserEmail(account.identity_number)
+        Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+        #endif
+    }
+    
     public static func report(event: Event, userInfo: UserInfo? = nil) {
         #if RELEASE
         if isAppExtension {
-            var content = "[Event] " + event
+            var content = "[Event] " + event.name
             if let userInfo = userInfo {
                 content += ", userInfo: \(userInfo)"
             }
             write(content: content, to: .event)
         } else {
-            #if canImport(Firebase)
+            #if canImport(FirebaseAnalytics)
             Analytics.logEvent(event.name, parameters: userInfo)
             #endif
         }
@@ -74,7 +115,7 @@ public enum Reporter {
             let content = "[Error] " + error.localizedDescription
             write(content: content, to: .firebaseOnlyError)
         } else {
-            #if canImport(Firebase)
+            #if canImport(Crashlytics)
             Crashlytics.sharedInstance().recordError(error)
             #endif
         }

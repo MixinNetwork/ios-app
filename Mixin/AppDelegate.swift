@@ -1,11 +1,8 @@
 import UIKit
-import Bugsnag
 import UserNotifications
-import Firebase
 import SDWebImage
 import YYImage
 import PushKit
-import Crashlytics
 import AVFoundation
 import WebKit
 import MixinServices
@@ -28,10 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         AppGroupUserDefaults.migrateIfNeeded()
-        #if RELEASE
-        initBugsnag()
-        #endif
-        FirebaseApp.configure()
+        Reporter.configure(bugsnagApiKey: MixinKeys.bugsnag)
         updateSharedImageCacheConfig()
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().setNotificationCategories([.message])
@@ -208,15 +202,7 @@ extension AppDelegate {
         guard UIApplication.shared.isProtectedDataAvailable else {
             return
         }
-
-        if let account = LoginManager.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
-        }
-        
+        Reporter.registerUserInformation()
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
     }
     
@@ -225,13 +211,6 @@ extension AppDelegate {
             return
         }
         Keychain.shared.clearPIN()
-    }
-    
-    private func initBugsnag() {
-        guard let apiKey = MixinKeys.bugsnag else {
-            return
-        }
-        Bugsnag.start(withApiKey: apiKey)
     }
     
     private func checkServerData(isPushKit: Bool = false) {

@@ -1,7 +1,5 @@
 import Foundation
-import Firebase
 import SafariServices
-import Crashlytics
 import WCDBSwift
 import MixinServices
 

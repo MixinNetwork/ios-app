@@ -1,5 +1,4 @@
 import Foundation
-import SignalProtocolC
 
 @objc class ProvisionMessage: NSObject, Codable {
     

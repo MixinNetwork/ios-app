@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  A `SignalStore` provides access to all required data stores for a client.

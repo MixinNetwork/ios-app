@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  Main entry point for initialization of a client.

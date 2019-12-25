@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  The `SessionStore`protocol must be adopted to provide the storage for sessions.

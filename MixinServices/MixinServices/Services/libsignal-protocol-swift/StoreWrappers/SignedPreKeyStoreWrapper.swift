@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  This class acts as a bridge between the Swift implementation and the C API for the signed pre key store

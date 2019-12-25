@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  The identifier of a party in a group conversation setting.

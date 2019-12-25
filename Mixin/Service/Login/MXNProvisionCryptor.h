@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
-#import <SignalProtocolC/curve.h>
-#import <SignalProtocolC/hkdf.h>
+#import <libsignal_protocol_c/curve.h>
+#import <libsignal_protocol_c/hkdf.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

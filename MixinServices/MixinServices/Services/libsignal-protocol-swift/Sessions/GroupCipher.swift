@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  The main entry point for Signal Protocol group encrypt/decrypt operations.

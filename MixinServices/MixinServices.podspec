@@ -40,6 +40,6 @@ Mixin Core Services.
   s.dependency 'Starscream'
   s.dependency 'GzipSwift'
   s.dependency 'Zip'
-  s.dependency 'SignalProtocolC'
+  s.dependency 'libsignal-protocol-c'
   s.dependency 'WCDB.swift'
 end

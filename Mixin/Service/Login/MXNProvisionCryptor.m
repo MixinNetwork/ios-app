@@ -1,6 +1,6 @@
 #import "MXNProvisionCryptor.h"
 #import "Mixin-Swift.h"
-#import <SignalProtocolC/signal_protocol.h>
+#import <libsignal_protocol_c/signal_protocol.h>
 #import <CommonCrypto/CommonCrypto.h>
 
 const size_t ivLength = 16;

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SignalProtocolC
+import libsignal_protocol_c
 
 /**
  A `CiphertextMessage` is an encrypted message ready for delivery. It can be one

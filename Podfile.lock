@@ -149,6 +149,7 @@ PODS:
   - GTMSessionFetcher/Full (1.3.0):
     - GTMSessionFetcher/Core (= 1.3.0)
   - GzipSwift (5.1.1)
+  - libsignal-protocol-c (2.3.2)
   - MixinServices (0.1.0):
     - Alamofire
     - Bugsnag
@@ -159,9 +160,9 @@ PODS:
     - Firebase/Core
     - Firebase/Performance
     - GzipSwift
+    - libsignal-protocol-c
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
-    - SignalProtocolC
     - Starscream
     - WCDB.swift
     - YYImage/WebP
@@ -188,7 +189,6 @@ PODS:
   - SDWebImageYYPlugin/YYImage (0.3.0):
     - SDWebImage/Core (~> 5.4)
     - YYImage/Core
-  - SignalProtocolC (2.3.1)
   - SnapKit (5.0.1)
   - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -210,13 +210,13 @@ DEPENDENCIES:
   - Firebase/MLVisionBarcodeModel
   - Firebase/MLVisionFaceModel
   - GoogleWebRTC
+  - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit
   - R.swift
   - RSKImageCropper
   - SDWebImage
   - SDWebImageYYPlugin/YYImage
-  - SignalProtocolC (from `https://github.com/MixinNetwork/SignalProtocolC.git`)
   - SnapKit
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
   - YYImage/WebP
@@ -269,20 +269,18 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  libsignal-protocol-c:
+    :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
   MixinServices:
     :path: "./MixinServices"
-  SignalProtocolC:
-    :git: https://github.com/MixinNetwork/SignalProtocolC.git
-    :submodules: true
   WCDB.swift:
     :branch: bugfix/fts
     :git: https://github.com/MixinNetwork/wcdb.git
 
 CHECKOUT OPTIONS:
-  SignalProtocolC:
-    :commit: 31f5f56a03b54ecba250040e1c5cd8acf44ed50e
-    :git: https://github.com/MixinNetwork/SignalProtocolC.git
-    :submodules: true
+  libsignal-protocol-c:
+    :commit: 03bf83f6b5a6ef71419c0e93c222e16efdf6bb0b
+    :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
   WCDB.swift:
     :commit: 6eab0d156a1e73125073c557b29566fd92910f34
     :git: https://github.com/MixinNetwork/wcdb.git
@@ -317,7 +315,8 @@ SPEC CHECKSUMS:
   GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
-  MixinServices: 951b1f9688c2a22f64a0a96303b415d892a4eeee
+  libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
+  MixinServices: aaecee9757d383800503fe47b7aab322110ca553
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: adffe4e128af1918386e09e7421d3d851a2987af
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
@@ -326,7 +325,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: 29c340dbdcef342bb13125553f4e19ce056b07a7
   SDWebImageYYPlugin: f6c1af162fb075efe5918d8caedee1f3d17c197e
-  SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
@@ -335,6 +333,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 74bb7b86929e515f0cd72ea85eb6b63a247234e4
+PODFILE CHECKSUM: 4c4d0975acfd5ece775697908aa5713ef89ccb1b
 
 COCOAPODS: 1.8.4

@@ -73,7 +73,7 @@ enum MixinURL {
                 self = .pay
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.users {
                 self = .users(url.pathComponents[2])
-            } else if url.pathComponents[1] == Path.snapshots {
+            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.snapshots {
                 self = .snapshots
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.apps {
                 self = .apps(url.pathComponents[2])

@@ -152,13 +152,7 @@ PODS:
   - libsignal-protocol-c (2.3.2)
   - MixinServices (0.1.0):
     - Alamofire
-    - Bugsnag
-    - Crashlytics
     - DeviceGuru
-    - Fabric
-    - Firebase/Analytics
-    - Firebase/Core
-    - Firebase/Performance
     - GzipSwift
     - libsignal-protocol-c
     - SDWebImage
@@ -205,10 +199,15 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - AlignedCollectionViewFlowLayout
+  - Bugsnag
+  - Crashlytics
+  - Fabric
+  - Firebase/Analytics
   - Firebase/Core
   - Firebase/MLVision
   - Firebase/MLVisionBarcodeModel
   - Firebase/MLVisionFaceModel
+  - Firebase/Performance
   - GoogleWebRTC
   - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
   - MixinServices (from `./MixinServices`)
@@ -316,7 +315,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
-  MixinServices: aaecee9757d383800503fe47b7aab322110ca553
+  MixinServices: c253feccc34b160d3c14d0c54add2597cc216e44
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: adffe4e128af1918386e09e7421d3d851a2987af
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
@@ -333,6 +332,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 4c4d0975acfd5ece775697908aa5713ef89ccb1b
+PODFILE CHECKSUM: ecc067e0bfefac7800ade1e32374669455a1233b
 
 COCOAPODS: 1.8.4

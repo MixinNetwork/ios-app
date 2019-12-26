@@ -5,15 +5,26 @@ install! 'cocoapods',
 platform :ios, '11.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
+def mixin_services
+  pod 'libsignal-protocol-c', :git => 'https://github.com/wuyuehyang/libsignal-protocol-c.git'
+  pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
+  pod 'MixinServices', :path => './MixinServices'
+end
+
 target 'Mixin' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'Alamofire'
+  pod 'Bugsnag'
   pod 'Firebase/Core'
   pod 'Firebase/MLVision'
   pod 'Firebase/MLVisionBarcodeModel'
   pod 'Firebase/MLVisionFaceModel'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Performance'
+  pod 'Fabric'
+  pod 'Crashlytics'
+  pod 'Alamofire'
   pod 'SDWebImage'
   pod 'SDWebImageYYPlugin/YYImage'
   pod 'YYImage/WebP'
@@ -24,7 +35,12 @@ target 'Mixin' do
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
-  pod 'libsignal-protocol-c', :git => 'https://github.com/wuyuehyang/libsignal-protocol-c.git'
-  pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
-  pod 'MixinServices', :path => './MixinServices'
+  mixin_services
+end
+
+target 'MixinNotificationService' do
+  use_frameworks!
+  inhibit_all_warnings!
+  
+  mixin_services
 end

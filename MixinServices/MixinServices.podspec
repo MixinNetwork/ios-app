@@ -26,12 +26,6 @@ Mixin Core Services.
 
   s.static_framework = true
   
-  s.dependency 'Bugsnag'
-  s.dependency 'Firebase/Core'
-  s.dependency 'Firebase/Analytics'
-  s.dependency 'Firebase/Performance'
-  s.dependency 'Fabric'
-  s.dependency 'Crashlytics'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
   s.dependency 'SDWebImageYYPlugin/YYImage'

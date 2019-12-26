@@ -12,6 +12,7 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
 		7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB722684242004F8F04 /* AssetSearchResult.swift */; };
@@ -563,6 +564,8 @@
 		E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */; };
 		E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */; };
 		E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */; };
+		E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9F923B3957E0088355B /* NotificationService.swift */; };
+		E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E090B9F723B3957E0088355B /* MixinNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
 		E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB72370057B0095F729 /* UserProfileViewController.swift */; };
 		E09C5EBD237007650095F729 /* ProfileDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EBB237007650095F729 /* ProfileDescriptionView.swift */; };
@@ -591,6 +594,16 @@
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E090B9FC23B3957E0088355B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E090B9F623B3957E0088355B;
+			remoteInfo = MixinNotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		273E29431FCBED580043A6F9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -600,6 +613,17 @@
 			files = (
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E090B9FF23B3957E0088355B /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -614,6 +638,7 @@
 		277FF70E1F909A1200DBB2EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
@@ -1024,6 +1049,8 @@
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
 		9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationDateHeaderView.xib; sourceTree = "<group>"; };
+		C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.release.xcconfig"; sourceTree = "<group>"; };
+		DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinNotificationService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
 		DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSelectedBackgroundCell.swift; sourceTree = "<group>"; };
@@ -1189,6 +1216,9 @@
 		E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationDAO+Search.swift"; sourceTree = "<group>"; };
 		E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+Search.swift"; sourceTree = "<group>"; };
 		E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+Gallery.swift"; sourceTree = "<group>"; };
+		E090B9F723B3957E0088355B /* MixinNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MixinNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E090B9F923B3957E0088355B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		E090B9FB23B3957E0088355B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
 		E09C5EB72370057B0095F729 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		E09C5EBB237007650095F729 /* ProfileDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionView.swift; sourceTree = "<group>"; };
@@ -1233,6 +1263,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E090B9F423B3957E0088355B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1248,6 +1286,7 @@
 			isa = PBXGroup;
 			children = (
 				277FF7011F909A1200DBB2EB /* Mixin */,
+				E090B9F823B3957E0088355B /* MixinNotificationService */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -1258,6 +1297,7 @@
 			isa = PBXGroup;
 			children = (
 				277FF6FF1F909A1200DBB2EB /* Mixin.app */,
+				E090B9F723B3957E0088355B /* MixinNotificationService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1287,6 +1327,8 @@
 				621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */,
 				4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */,
 				8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */,
+				4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */,
+				C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1678,6 +1720,7 @@
 				DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */,
 				273A5E0B1F95EA4500AE802F /* Contacts.framework */,
 				23987C4F141F7C6E533A683D /* Pods_Mixin.framework */,
+				DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2303,6 +2346,15 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
+		E090B9F823B3957E0088355B /* MixinNotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				E090B9F923B3957E0088355B /* NotificationService.swift */,
+				E090B9FB23B3957E0088355B /* Info.plist */,
+			);
+			path = MixinNotificationService;
+			sourceTree = "<group>";
+		};
 		E0FE4CCC237421CE009A14F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2328,15 +2380,35 @@
 				DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */,
 				DF1BD0B42292AF2900EBDC22 /* Fabric */,
 				776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */,
+				E090B9FF23B3957E0088355B /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E090B9FD23B3957E0088355B /* PBXTargetDependency */,
 			);
 			name = Mixin;
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
 			productType = "com.apple.product-type.application";
+		};
+		E090B9F623B3957E0088355B /* MixinNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E090BA0223B3957E0088355B /* Build configuration list for PBXNativeTarget "MixinNotificationService" */;
+			buildPhases = (
+				FED24911AA9C3341EB83FB9E /* [CP] Check Pods Manifest.lock */,
+				E090B9F323B3957E0088355B /* Sources */,
+				E090B9F423B3957E0088355B /* Frameworks */,
+				E090B9F523B3957E0088355B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MixinNotificationService;
+			productName = MixinNotificationService;
+			productReference = E090B9F723B3957E0088355B /* MixinNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -2344,7 +2416,7 @@
 		277FF6F71F909A1200DBB2EB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0910;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
@@ -2364,6 +2436,10 @@
 							};
 						};
 					};
+					E090B9F623B3957E0088355B = {
+						CreatedOnToolsVersion = 11.3;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 277FF6FA1F909A1200DBB2EB /* Build configuration list for PBXProject "Mixin" */;
@@ -2382,6 +2458,7 @@
 			projectRoot = "";
 			targets = (
 				277FF6FE1F909A1200DBB2EB /* Mixin */,
+				E090B9F623B3957E0088355B /* MixinNotificationService */,
 			);
 		};
 /* End PBXProject section */
@@ -2482,6 +2559,13 @@
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E090B9F523B3957E0088355B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2641,6 +2725,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FED24911AA9C3341EB83FB9E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MixinNotificationService-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3135,7 +3241,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E090B9F323B3957E0088355B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E090B9FD23B3957E0088355B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E090B9F623B3957E0088355B /* MixinNotificationService */;
+			targetProxy = E090B9FC23B3957E0088355B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */ = {
@@ -3286,6 +3408,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
@@ -3353,6 +3476,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
@@ -3415,6 +3539,45 @@
 			};
 			name = Release;
 		};
+		E090BA0023B3957E0088355B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinNotificationService/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.MixinNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E090BA0123B3957E0088355B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinNotificationService/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.MixinNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3432,6 +3595,15 @@
 			buildConfigurations = (
 				277FF7141F909A1200DBB2EB /* Debug */,
 				277FF7151F909A1200DBB2EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E090BA0223B3957E0088355B /* Build configuration list for PBXNativeTarget "MixinNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E090BA0023B3957E0088355B /* Debug */,
+				E090BA0123B3957E0088355B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

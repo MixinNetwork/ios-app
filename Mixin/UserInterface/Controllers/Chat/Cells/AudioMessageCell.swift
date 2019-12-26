@@ -104,8 +104,8 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
             waveformView.tintColor = .highlightedText
             lengthLabel.textColor = .highlightedText
         } else {
-            waveformView.tintColor = .disabledGray
-            lengthLabel.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
+            waveformView.tintColor = .accessoryText
+            lengthLabel.textColor = .accessoryText
         }
     }
     

@@ -16,15 +16,18 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="time_bubble" translatesAutoresizingMaskIntoConstraints="NO" id="mIX-06-On9">
                     <rect key="frame" x="127.5" y="10.5" width="120" height="26"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rpU-LN-n1Q">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rpU-LN-n1Q">
                     <rect key="frame" x="137.5" y="10.5" width="100" height="24"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="G4i-0V-z1F"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="VDU-aH-4i6"/>
                     </constraints>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                    </userDefinedRuntimeAttributes>
                 </label>
             </subviews>
             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

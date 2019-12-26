@@ -28,7 +28,7 @@ class BusyButton: UIButton {
     }
     
     private func prepare() {
-        busyIndicator.tintColor = .indicatorGray
+        busyIndicator.tintColor = .accessoryText
         busyIndicator.backgroundColor = .clear
         busyIndicator.hidesWhenStopped = true
         busyIndicator.stopAnimating()

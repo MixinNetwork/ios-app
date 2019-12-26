@@ -54,7 +54,7 @@ final class EmergencyContactViewController: UITableViewController {
         } else {
             cell.titleLabel.text = R.string.localizable.enable_emergency_contact()
             cell.accessoryImageView.isHidden = true
-            cell.titleLabel.textColor = .actionText
+            cell.titleLabel.textColor = .theme
         }
         return cell
     }

@@ -19,22 +19,15 @@ extension UIColor {
 
     static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
-    static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)
     static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
-    static let selection = UIColor(rgbValue: 0xEDEEEE)
-    static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
 
-    
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
     static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
-    
-    static let indicatorGray = UIColor(displayP3RgbValue: 0xBCBEC3)
-    static let disabledGray = UIColor(displayP3RgbValue: 0xE5E7EC)
-    
+
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),
                                  UIColor(rgbValue: 0xEF8A44),

@@ -70,7 +70,7 @@ final class ProfileRelationshipView: UIView {
             if busyIndicator == nil {
                 let frame = CGRect(origin: center, size: .zero).insetBy(dx: -10, dy: -10)
                 busyIndicator = ActivityIndicatorView(frame: frame)
-                busyIndicator!.tintColor = .indicatorGray
+                busyIndicator!.tintColor = .accessoryText
             }
             if let indicator = busyIndicator {
                 if indicator.superview == nil {

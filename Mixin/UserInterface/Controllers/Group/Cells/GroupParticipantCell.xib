@@ -18,24 +18,27 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cPb-sP-2YF" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="36" y="10" width="286" height="50"/>
+                        <rect key="frame" x="36" y="10" width="283.5" height="50"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="fm9-w2-pkg"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FfY-FX-rgJ">
-                        <rect key="frame" x="322" y="0.0" width="33" height="70"/>
+                        <rect key="frame" x="319.5" y="0.0" width="35.5" height="70"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OAC-h1-oxV">
-                                <rect key="frame" x="0.0" y="0.0" width="33" height="70"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                <color key="textColor" name="text_desc"/>
+                                <rect key="frame" x="0.0" y="0.0" width="35.5" height="70"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_accessory"/>
                                 <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0QQ-i2-PZ2" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="13" y="25" width="20" height="20"/>
-                                <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <rect key="frame" x="15.5" y="25" width="20" height="20"/>
+                                <color key="tintColor" name="text_accessory"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="4Kd-bZ-5Xj"/>
                                     <constraint firstAttribute="height" constant="20" id="81U-bX-8I6"/>
@@ -76,8 +79,8 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_desc">
-            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

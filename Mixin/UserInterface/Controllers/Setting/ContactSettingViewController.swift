@@ -41,7 +41,7 @@ final class ContactSettingViewController: UITableViewController {
         let hasUploadMobileContacts = self.hasUploadMobileContacts
         cell.titleLabel.text = hasUploadMobileContacts ?  R.string.localizable.setting_contacts_delete() : R.string.localizable.setting_contacts_upload()
         cell.accessoryImageView.isHidden = true
-        cell.titleLabel.textColor = hasUploadMobileContacts ? .walletRed : .actionText
+        cell.titleLabel.textColor = hasUploadMobileContacts ? .walletRed : .theme
         return cell
     }
 

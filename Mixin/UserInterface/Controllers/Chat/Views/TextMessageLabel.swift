@@ -6,7 +6,7 @@ class TextMessageLabel: CoreTextLabel {
 
     var highlightPaths = [UIBezierPath]()
     
-    private let highlightColor = UIColor.messageKeywordHighlight
+    private let highlightColor = R.color.chat_text_highlighted()!
 
     override func additionalDrawings() {
         highlightColor.setFill()

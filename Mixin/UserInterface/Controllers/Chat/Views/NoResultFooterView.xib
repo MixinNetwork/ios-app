@@ -16,7 +16,7 @@
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No result" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X6L-In-g5v">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                     <color key="textColor" name="text_accessory"/>
                     <nil key="highlightedColor"/>
                     <userDefinedRuntimeAttributes>

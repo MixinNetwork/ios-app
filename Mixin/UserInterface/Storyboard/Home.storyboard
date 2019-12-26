@@ -48,22 +48,22 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="bUb-Bj-2TW">
-                                                            <rect key="frame" x="86" y="18.5" width="269" height="45"/>
+                                                            <rect key="frame" x="86" y="20" width="269" height="42.5"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="A9Y-Y8-Hwn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="269" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="269" height="19.5"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="67N-Qm-IWN">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="72.5" height="22"/>
-                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="68.5" height="19.5"/>
+                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                             <color key="textColor" name="text"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="Jnj-lJ-Kay">
-                                                                            <rect key="frame" x="75.5" y="0.0" width="0.0" height="22"/>
+                                                                            <rect key="frame" x="71.5" y="0.0" width="0.0" height="19.5"/>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="4:03 pm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dc-8H-fbP">
-                                                                            <rect key="frame" x="78.5" y="0.0" width="190.5" height="22"/>
+                                                                            <rect key="frame" x="74.5" y="0.0" width="194.5" height="19.5"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="textColor" name="text_accessory"/>
                                                                             <nil key="highlightedColor"/>
@@ -74,13 +74,13 @@
                                                                     </subviews>
                                                                 </stackView>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="3zy-aD-gFS">
-                                                                    <rect key="frame" x="0.0" y="28" width="269" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="25.5" width="269" height="17"/>
                                                                     <subviews>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_time" translatesAutoresizingMaskIntoConstraints="NO" id="bjN-Qt-WnU">
-                                                                            <rect key="frame" x="0.0" y="-0.5" width="0.0" height="18"/>
+                                                                            <rect key="frame" x="0.0" y="4" width="0.0" height="9"/>
                                                                         </imageView>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_message_photo" translatesAutoresizingMaskIntoConstraints="NO" id="lWU-l1-a3S">
-                                                                            <rect key="frame" x="0.0" y="-3.5" width="0.0" height="24"/>
+                                                                            <rect key="frame" x="0.0" y="2.5" width="0.0" height="12"/>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="You added OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSl-Co-y1G">
                                                                             <rect key="frame" x="0.0" y="0.0" width="248.5" height="17"/>
@@ -98,7 +98,7 @@
                                                                             <rect key="frame" x="251.5" y="-5.5" width="0.0" height="28"/>
                                                                         </imageView>
                                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="1" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQr-Dj-Umd" customClass="ConversationUnreadCountLabel" customModule="Mixin" customModuleProvider="target">
-                                                                            <rect key="frame" x="254.5" y="1.5" width="14.5" height="14.5"/>
+                                                                            <rect key="frame" x="254.5" y="1" width="14.5" height="14.5"/>
                                                                             <color key="backgroundColor" name="theme"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="cQr-Dj-Umd" secondAttribute="height" multiplier="1:1" id="jxo-v0-cqk"/>
@@ -141,11 +141,11 @@
                                         </prototypes>
                                     </tableView>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L82-pj-DlR">
-                                        <rect key="frame" x="40" y="286.5" width="295" height="94.5"/>
+                                        <rect key="frame" x="40" y="287.5" width="295" height="92.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can chat with contacts who have Mixin installed on their phone" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ihi-Yl-qaN">
-                                                <rect key="frame" x="0.0" y="0.0" width="295" height="42.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="295" height="40.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <color key="textColor" name="text"/>
                                                 <color key="highlightedColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <userDefinedRuntimeAttributes>
@@ -153,7 +153,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mGh-0e-UXt">
-                                                <rect key="frame" x="88" y="62.5" width="119" height="32"/>
+                                                <rect key="frame" x="88" y="60.5" width="119" height="32"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <state key="normal" title="Start Messaging">
                                                     <color key="titleColor" name="blue"/>
@@ -220,7 +220,7 @@
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
-                                                <rect key="frame" x="22" y="23" width="36" height="34"/>
+                                                <rect key="frame" x="31" y="31.5" width="18" height="17"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -711,7 +711,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="CZJ-hH-T5C">
-                                <rect key="frame" x="107.5" y="94" width="160" height="160"/>
+                                <rect key="frame" x="147.5" y="94" width="80" height="80"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
                                 <rect key="frame" x="0.0" y="501" width="375" height="46"/>
@@ -736,7 +736,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages between users are protected with an end- to-end encryption" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YgL-nK-KrB">
-                                <rect key="frame" x="36" y="270" width="303" height="38.5"/>
+                                <rect key="frame" x="36" y="190" width="303" height="38.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
@@ -902,7 +902,9 @@
                                 <rect key="frame" x="135.5" y="483" width="104" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
-                                <state key="normal" title="Continue"/>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" name="theme"/>
+                                </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
@@ -967,11 +969,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
-                                        <rect key="frame" x="301" y="0.0" width="74" height="44"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <rect key="frame" x="303" y="0.0" width="72" height="44"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                         <state key="normal" title="Skip">
-                                            <color key="titleColor" name="blue"/>
+                                            <color key="titleColor" name="theme"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_skip"/>
@@ -1036,7 +1038,9 @@ chat history from icloud</string>
                                         <rect key="frame" x="120.5" y="0.0" width="94" height="44"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
-                                        <state key="normal" title="Restore"/>
+                                        <state key="normal" title="Restore">
+                                            <color key="titleColor" name="theme"/>
+                                        </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>

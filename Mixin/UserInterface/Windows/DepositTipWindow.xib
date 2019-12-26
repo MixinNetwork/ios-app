@@ -98,7 +98,7 @@ confirmations. </string>
                                 <constraint firstAttribute="height" constant="42" id="inB-MU-RBI"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="m8r-95-hgP"/>
                             </constraints>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
                             <state key="normal" title="Got it"/>
                             <userDefinedRuntimeAttributes>
@@ -160,7 +160,7 @@ confirmations. </string>
     <resources>
         <image name="ic_deposit_tips" width="180" height="128"/>
         <namedColor name="background">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -169,7 +169,7 @@ confirmations. </string>
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
-            <color red="0.23137254901960785" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -183,7 +183,6 @@ extension WebSocketService: SRWebSocketDelegate {
             if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
                 MixinServer.toggle(currentWebSocketUrl: webSocket.url)
             }
-            UIApplication.traceError(error)
         }
         reconnect(didClose: false)
     }

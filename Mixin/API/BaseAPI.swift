@@ -167,7 +167,6 @@ class BaseAPI {
                         switch error._code {
                         case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
                             MixinServer.toggle(currentHttpUrl: rootURLString)
-                            UIApplication.traceError(error)
                         default:
                             break
                         }
@@ -226,7 +225,6 @@ extension BaseAPI {
                             switch error._code {
                             case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
                                 MixinServer.toggle(currentHttpUrl: rootURLString)
-                                UIApplication.traceError(error)
                             default:
                                 break
                             }

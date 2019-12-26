@@ -249,17 +249,19 @@ extension FileManager {
     private static let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.log")
 
     func writeLog(log: String, newSection: Bool = false) {
-        guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
-            return
-        }
-        for file in files {
-            let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
-            if log.hasPrefix("No sender key for:") {
-                if log.contains(filename) {
+        DispatchQueue.global().async {
+            guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
+                return
+            }
+            for file in files {
+                let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
+                if log.hasPrefix("No sender key for:") {
+                    if log.contains(filename) {
+                        FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
+                    }
+                } else {
                     FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
                 }
-            } else {
-                FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
             }
         }
     }

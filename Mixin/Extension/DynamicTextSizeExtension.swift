@@ -97,4 +97,8 @@ extension UIFont {
         return UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: fontSize, weight: weight))
     }
 
+    func scaled() -> UIFont {
+        return UIFontMetrics.default.scaledFont(for: self)
+    }
+
 }

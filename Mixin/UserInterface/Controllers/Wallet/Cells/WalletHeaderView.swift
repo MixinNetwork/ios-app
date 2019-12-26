@@ -22,10 +22,13 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
     private var contentHeight: CGFloat = 159
+    private let btcValueAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFont.dinCondensedBold(ofSize: 14).scaled(),
+        .kern: 0.7
+    ]
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        btcValueLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 12), adjustForContentSize: true)
         fiatMoneyValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
@@ -57,8 +60,9 @@ class WalletHeaderView: InfiniteTopView {
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
         contentHeight = usdBalanceIsMoreThanZero ? 159 : 107
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
-        let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never)
-        btcValueLabel.text = btcValue ?? "0.00"
+        let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
+        let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
+        btcValueLabel.attributedText = attributedBTCValue
         assetChartWrapperView.isHidden = !usdBalanceIsMoreThanZero
         switch assetPortions.count {
         case 0:

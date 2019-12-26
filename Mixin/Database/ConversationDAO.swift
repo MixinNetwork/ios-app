@@ -250,8 +250,12 @@ final class ConversationDAO {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.category, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
     
-    func conversationList() -> [ConversationItem] {
-        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList)
+    func conversationList(limit: Int? = nil) -> [ConversationItem] {
+        var sql = ConversationDAO.sqlQueryConversationList
+        if let limit = limit {
+            sql = sql + " LIMIT \(limit)"
+        }
+        return MixinDatabase.shared.getCodables(sql: sql)
     }
 
     func createPlaceConversation(conversationId: String, ownerId: String) {

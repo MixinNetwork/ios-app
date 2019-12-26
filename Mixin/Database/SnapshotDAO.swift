@@ -3,12 +3,13 @@ import WCDBSwift
 final class SnapshotDAO {
 
     private static let sqlQueryTable = """
-    SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
+    SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
     FROM snapshots s
     LEFT JOIN users u ON u.user_id = s.opponent_id
     LEFT JOIN assets a ON a.asset_id = s.asset_id
     """
     private static let sqlQueryById = "\(sqlQueryTable) WHERE s.snapshot_id = ?"
+    private static let sqlQueryByTrace = "\(sqlQueryTable) WHERE s.trace_id = ?"
 
     static let shared = SnapshotDAO()
     
@@ -104,11 +105,11 @@ final class SnapshotDAO {
     }
     
     func getSnapshot(snapshotId: String) -> SnapshotItem? {
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(prepare: { (stmt) -> (StatementSelect) in
-            stmt.where(Snapshot.Properties.snapshotId.in(table: Snapshot.tableName) == snapshotId)
-                .order(by: createdAt.asOrder(by: .descending))
-                .limit(1)
-        }).first
+        return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryById, values: [snapshotId]).first
+    }
+
+    func getSnapshot(traceId: String) -> SnapshotItem? {
+        return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryByTrace, values: [traceId]).first
     }
     
     func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {

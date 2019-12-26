@@ -15,6 +15,7 @@ struct Snapshot: BaseCodable {
     let receiver: String?
     let memo: String?
     let confirmations: Int?
+    let traceId: String?
     var createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
@@ -29,6 +30,7 @@ struct Snapshot: BaseCodable {
         case receiver
         case memo
         case confirmations
+        case traceId = "trace_id"
         case createdAt = "created_at"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -39,7 +41,7 @@ struct Snapshot: BaseCodable {
         }
     }
     
-    init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, createdAt: String) {
+    init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String) {
         self.snapshotId = snapshotId
         self.type = type
         self.assetId = assetId
@@ -50,6 +52,7 @@ struct Snapshot: BaseCodable {
         self.memo = memo
         self.receiver = receiver
         self.confirmations = confirmations
+        self.traceId = traceId
         self.createdAt = createdAt
     }
     

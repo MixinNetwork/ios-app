@@ -11,7 +11,7 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     private lazy var tableHeaderView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 100)
         let view = UserHandleTableHeaderView(frame: frame)
-        view.backgroundColor = .background
+        view.backgroundColor = .clear
         view.clipsToBounds = true
         return view
     }()

@@ -24,7 +24,6 @@ class PhotoInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         DispatchQueue.global().async { [weak self] in

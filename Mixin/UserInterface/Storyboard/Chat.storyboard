@@ -1520,7 +1520,7 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_sticker_normal" translatesAutoresizingMaskIntoConstraints="NO" id="7Mx-fi-w5O">
-                                            <rect key="frame" x="74" y="6" width="20" height="20"/>
+                                            <rect key="frame" x="54" y="6" width="40" height="40"/>
                                         </imageView>
                                     </subviews>
                                 </view>
@@ -1948,6 +1948,7 @@
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Dug-6r-qaU">
                                     <size key="itemSize" width="110" height="60"/>
+                                    <size key="estimatedItemSize" width="110" height="60"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1960,8 +1961,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="110" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EtX-tR-AXd">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EtX-tR-AXd">
                                                     <rect key="frame" x="20" y="0.0" width="70" height="60"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="60" id="18A-Vt-tpS"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_accessory"/>
                                                     <nil key="highlightedColor"/>

@@ -6,8 +6,8 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         return LightRightBubbleImageSet.self
     }
     
-    var leadingConstant: CGFloat = 0
-    var trailingConstant: CGFloat = 0
+    private(set) var leadingConstant: CGFloat = 0
+    private(set) var trailingConstant: CGFloat = 0
     
     var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0

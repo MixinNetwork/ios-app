@@ -5,10 +5,10 @@ protocol AppButtonGroupMessageCellDelegate: class {
 }
 
 class AppButtonGroupMessageCell: DetailInfoMessageCell {
-
+    
     weak var appButtonDelegate: AppButtonGroupMessageCellDelegate?
-
-    private var buttons = [UIButton]()
+    
+    private var buttonViews = [AppButtonView]()
     
     override var contentFrame: CGRect {
         return (viewModel as? AppButtonGroupViewModel)?.buttonGroupFrame ?? .zero
@@ -17,33 +17,23 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? AppButtonGroupViewModel, let appButtons = viewModel.message.appButtons {
-            buttons.forEach {
+            buttonViews.forEach {
                 $0.removeFromSuperview()
             }
-            buttons = []
+            buttonViews = []
             for (i, frame) in viewModel.frames.enumerated() {
-                let buttonContent = appButtons[i]
-                let button = UIButton(type: .system)
-                button.frame = frame
-                button.setTitle(buttonContent.label, for: .normal)
-                button.setTitleColor(UIColor(hexString: buttonContent.color) ?? .gray, for: .normal)
-                if let label = button.titleLabel {
-                    label.numberOfLines = 0
-                    label.font = MessageFontSet.appButtonTitle.scaled
-                    label.adjustsFontForContentSizeCategory = true
-                    label.lineBreakMode = .byCharWrapping
-                }
-                button.backgroundColor = .background
-                button.layer.cornerRadius = 8
-                button.clipsToBounds = true
-                button.tag = i
-                button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
-                buttons.append(button)
-                contentView.addSubview(button)
+                let content = appButtons[i]
+                let view = AppButtonView()
+                view.frame = frame
+                view.setTitle(content.label, colorHexString: content.color)
+                view.button.tag = i
+                view.button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+                buttonViews.append(view)
+                contentView.addSubview(view)
             }
         }
     }
-
+    
     override func prepare() {
         super.prepare()
         timeLabel.isHidden = true

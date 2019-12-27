@@ -287,7 +287,11 @@ class WebViewController: UIViewController {
         buttonsSeparatorLineView.backgroundColor = outlineColor
         buttonsBackgroundView.layer.borderColor = outlineColor.cgColor
         
-        statusBarStyle = themeColorIsDark ? .lightContent : .default
+        if #available(iOS 13.0, *) {
+            statusBarStyle = themeColorIsDark ? .lightContent : .darkContent
+        } else {
+            statusBarStyle = themeColorIsDark ? .lightContent : .default
+        }
         setNeedsStatusBarAppearanceUpdate()
     }
     

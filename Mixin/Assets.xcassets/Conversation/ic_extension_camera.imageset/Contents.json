@@ -21,7 +21,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_extension_transfer@2x.png",
+      "filename" : "ic_extension_camera_dark@2x.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -37,7 +37,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_extension_transfer@3x.png",
+      "filename" : "ic_extension_camera_dark@3x.png",
       "appearances" : [
         {
           "appearance" : "luminosity",

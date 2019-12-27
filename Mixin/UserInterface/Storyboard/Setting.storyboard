@@ -347,8 +347,8 @@
                                                 </label>
                                                 <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="BPZ-4x-nCg" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="22" width="20" height="20"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="tintColor" name="text_accessory"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>

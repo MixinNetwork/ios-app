@@ -11,7 +11,7 @@ class EmptyView: UIStackView {
         container.addSubview(self)
         self.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
+            $0.centerY.equalToSuperview().dividedBy(1.5)
         }
     }
 

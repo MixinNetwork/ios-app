@@ -842,10 +842,10 @@ extension ConversationDataSource {
             } else {
                 viewModel = UnknownMessageViewModel(message: message)
             }
-            viewModel.layout(width: layoutWidth, style: style)
-            if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
-                viewModel.highlight(keyword: keyword)
-            }
+        }
+        viewModel.layout(width: layoutWidth, style: style)
+        if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+            viewModel.highlight(keyword: keyword)
         }
         return viewModel
     }

@@ -99,8 +99,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let windowHeight = AppDelegate.current.window.bounds.height
-        let keyboardHeight = windowHeight - keyboardFrame.origin.y
+        let keyboardHeight = keyboardFrame.height
         continueWrapperBottomConstraint.constant = keyboardHeight
         scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
         scrollView.scrollIndicatorInsets.bottom = keyboardHeight

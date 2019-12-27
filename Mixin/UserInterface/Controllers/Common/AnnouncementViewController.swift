@@ -29,8 +29,7 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
     }
 
     override func layout(for keyboardFrame: CGRect) {
-        let windowHeight = AppDelegate.current.window.bounds.height
-        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
+        keyboardPlaceholderHeightConstraint.constant = keyboardFrame.height
         view.layoutIfNeeded()
     }
 

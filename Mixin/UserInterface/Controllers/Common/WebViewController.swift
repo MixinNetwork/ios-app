@@ -29,7 +29,8 @@ class WebViewController: UIViewController {
     private let messageHandlerName = "MixinContext"
     private let reloadThemeHandlerName = "reloadTheme"
     
-    private let buttonDarkColor = UIColor(displayP3RgbValue: 0x24262A)
+    private let buttonDarkColor = UIColor(displayP3RgbValue: 0x2E2F31)
+    private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
     
     private lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
@@ -274,7 +275,7 @@ class WebViewController: UIViewController {
         
         let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
         buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
-        titleLabel.textColor = themeColorIsDark ? .white : .title
+        titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
 
         let tintColor: UIColor = themeColorIsDark ? .white : buttonDarkColor
         moreButton.tintColor = tintColor
@@ -500,7 +501,7 @@ extension WebViewController {
             guard let colorString = result as? String else {
                 return
             }
-            let color = UIColor(hexString: colorString) ?? .white
+            let color = UIColor(hexString: colorString) ?? .background
             self?.updateBackground(pageThemeColor: color)
         }
     }

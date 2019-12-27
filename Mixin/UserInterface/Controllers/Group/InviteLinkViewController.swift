@@ -19,7 +19,6 @@ class InviteLinkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        groupNameLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         iconImageView.setGroupImage(with: conversation.iconUrl)
         groupNameLabel.text = conversation.name
         updateUI()

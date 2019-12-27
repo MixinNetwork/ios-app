@@ -12,6 +12,8 @@ extension UIButton {
                 return
             }
             switch style {
+            case "semibold14":
+                titleLabel?.font = .scaledFont(ofSize: 14, weight: .semibold)
             case "regular16":
                 titleLabel?.font = .scaledFont(ofSize: 16, weight: .regular)
             case "regular14":

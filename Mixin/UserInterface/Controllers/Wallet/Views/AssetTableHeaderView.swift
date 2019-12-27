@@ -15,8 +15,6 @@ class AssetTableHeaderView: InfiniteTopView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        fiatMoneyValueLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .light),
-                                    adjustForContentSize: true)
         amountTextView.textContainerInset = .zero
     }
     

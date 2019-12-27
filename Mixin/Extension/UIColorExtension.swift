@@ -26,7 +26,6 @@ extension UIColor {
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
-    static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
 
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),

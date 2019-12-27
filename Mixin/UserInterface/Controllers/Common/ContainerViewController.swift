@@ -64,7 +64,6 @@ class ContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         prepareBarRightButton()
         navigationBar.layoutIfNeeded()
         titleLabel.text = controllerTitle

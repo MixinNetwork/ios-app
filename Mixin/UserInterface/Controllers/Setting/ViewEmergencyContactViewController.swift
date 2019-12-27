@@ -18,7 +18,6 @@ final class ViewEmergencyContactViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         avatarImageView.setImage(with: user.avatarUrl ?? "",
                                  userId: user.userId,
                                  name: user.fullName ?? "")

@@ -61,11 +61,6 @@ class AuthorizationWindow: BottomSheetView {
     }()
     private var selectedScopes = [Scope.PROFILE.rawValue]
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
-    }
-    
     func render(authInfo: AuthorizationResponse, assets: [AssetItem]) -> AuthorizationWindow {
         self.authInfo = authInfo
         self.assets = assets

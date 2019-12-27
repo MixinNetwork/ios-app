@@ -11,8 +11,6 @@ final class MediaPreviewViewController: UIViewController {
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var pauseButton: UIButton!
-    @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var dismissButton: UIButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var minimalImageViewWidthConstraint: NSLayoutConstraint!
@@ -62,9 +60,6 @@ final class MediaPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.autoPlayAnimatedImage = true
-        for case let label? in [sendButton.titleLabel, dismissButton.titleLabel] {
-            label.setFont(scaledFor: .systemFont(ofSize: 19, weight: .medium), adjustForContentSize: true)
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

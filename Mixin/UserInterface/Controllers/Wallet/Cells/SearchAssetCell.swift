@@ -9,11 +9,6 @@ class SearchAssetCell: UITableViewCell {
     
     private var forceSelected = false
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 15, weight: .medium), adjustForContentSize: true)
-    }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if forceSelected {

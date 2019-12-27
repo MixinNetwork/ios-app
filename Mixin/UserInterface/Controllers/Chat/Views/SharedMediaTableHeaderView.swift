@@ -17,7 +17,7 @@ class SharedMediaTableHeaderView: UITableViewHeaderFooterView {
     private func prepare() {
         contentView.backgroundColor = .background
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        label.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
+        label.textColor = .text
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
             make.top.bottom.equalToSuperview()

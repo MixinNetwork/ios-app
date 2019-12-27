@@ -6,7 +6,6 @@ protocol SelectCountryViewControllerDelegate: class {
 
 class SelectCountryViewController: UIViewController {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
     
@@ -36,7 +35,6 @@ class SelectCountryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         let countries = CountryCodeLibrary.shared.countries
         let selector = #selector(getter: Country.localizedName)
         (sectionIndexTitles, sections) = UILocalizedIndexedCollation.current().catalogue(countries, usingSelector: selector)

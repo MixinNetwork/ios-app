@@ -8,11 +8,6 @@ class LoginConfirmWindow: BottomSheetView {
     private var id: String!
     private var publicKey: String!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
-    }
-    
     @IBAction func loginAction(_ sender: Any) {
         guard !loginButton.isBusy else {
             return

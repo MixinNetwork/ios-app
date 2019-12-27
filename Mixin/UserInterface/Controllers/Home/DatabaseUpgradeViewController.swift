@@ -2,16 +2,13 @@ import UIKit
 import WCDBSwift
 
 class DatabaseUpgradeViewController: UIViewController {
-    
-    @IBOutlet weak var titleLabel: UILabel!
-    
+
     class func instance() -> DatabaseUpgradeViewController {
         return Storyboard.home.instantiateViewController(withIdentifier: "database") as! DatabaseUpgradeViewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         FileManager.default.writeLog(log: "DatabaseUpgradeViewController...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in

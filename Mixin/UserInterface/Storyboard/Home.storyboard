@@ -273,6 +273,9 @@
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" name="title"/>
                                                 <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DbF-VG-Rtb">
                                                 <rect key="frame" x="193" y="0.0" width="44" height="44"/>
@@ -869,9 +872,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ocm-7p-Och"/>
                     </view>
-                    <connections>
-                        <outlet property="titleLabel" destination="4dz-RN-RRL" id="mPw-UO-cSh"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WlD-N5-bdH" sceneMemberID="firstResponder"/>
             </objects>
@@ -1080,7 +1080,6 @@ chat history from icloud</string>
                         <outlet property="restoreButton" destination="HAa-aR-8l8" id="Qd0-xg-ULA"/>
                         <outlet property="skipButton" destination="xRF-Rk-K9J" id="Kf4-EF-039"/>
                         <outlet property="subtitleLabel" destination="UJs-OY-OCz" id="2iE-fA-k6q"/>
-                        <outlet property="titleLabel" destination="Hf7-bf-vIf" id="nXU-HD-WvJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pPq-Dm-YCs" sceneMemberID="firstResponder"/>

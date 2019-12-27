@@ -4,7 +4,6 @@ import WCDBSwift
 
 class RestoreViewController: UIViewController {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var skipButton: UIButton!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var restoreButton: RoundedButton!
@@ -16,7 +15,6 @@ class RestoreViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         let subtitle = NSMutableAttributedString(string: Localized.CHAT_RESTORE_SUBTITLE)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 8

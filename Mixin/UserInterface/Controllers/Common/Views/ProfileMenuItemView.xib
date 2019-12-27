@@ -46,6 +46,9 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" name="text_accessory"/>
                             <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>
                     <constraints>

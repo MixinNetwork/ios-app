@@ -13,7 +13,6 @@ class AssetInfoWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        nameLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
         contractLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(copyAction)))
     }
 

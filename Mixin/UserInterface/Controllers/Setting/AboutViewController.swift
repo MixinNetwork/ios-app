@@ -2,7 +2,6 @@ import UIKit
 
 class AboutViewController: UITableViewController {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var versionLabel: UILabel!
 
     class func instance() -> UIViewController {
@@ -14,7 +13,6 @@ class AboutViewController: UITableViewController {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         versionLabel.text = Bundle.main.shortVersion + "(\(Bundle.main.bundleVersion))"
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -1520,7 +1520,7 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_sticker_normal" translatesAutoresizingMaskIntoConstraints="NO" id="7Mx-fi-w5O">
-                                            <rect key="frame" x="54" y="6" width="40" height="40"/>
+                                            <rect key="frame" x="74" y="6" width="20" height="20"/>
                                         </imageView>
                                     </subviews>
                                 </view>
@@ -1969,6 +1969,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_accessory"/>
                                                     <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
                                         </view>
@@ -2317,13 +2320,11 @@
                     <connections>
                         <outlet property="activityIndicator" destination="y3P-sN-XXV" id="p5u-Qo-rWL"/>
                         <outlet property="contentView" destination="55I-zr-MlK" id="ZZq-87-Nbk"/>
-                        <outlet property="dismissButton" destination="4vD-ad-Ayq" id="ZrE-Wq-EyQ"/>
                         <outlet property="imageView" destination="3Fs-0Z-fFc" id="eUc-da-ZRc"/>
                         <outlet property="minimalImageViewWidthConstraint" destination="2aA-x9-com" id="luK-PS-IES"/>
                         <outlet property="normalImageViewWidthConstraint" destination="bsW-wP-fBC" id="Wg4-L4-tfe"/>
                         <outlet property="pauseButton" destination="6EX-TJ-rNM" id="et1-1c-feH"/>
                         <outlet property="playButton" destination="ESH-Nk-nNV" id="EbG-ao-0JJ"/>
-                        <outlet property="sendButton" destination="SlG-SK-i9u" id="nTZ-v5-eY5"/>
                         <outlet property="stackView" destination="Spy-Xp-6VT" id="W9t-wo-aUe"/>
                         <outlet property="stackViewBottomConstraint" destination="6JA-Jb-fRB" id="3cD-IN-LcK"/>
                     </connections>

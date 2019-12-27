@@ -9,11 +9,6 @@ class DepositTipWindow: BottomSheetView {
     private var canDismiss = false
     private var asset: AssetItem!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 17, weight: .semibold), adjustForContentSize: true)
-    }
-    
     override func dismissPopupControllerAnimated() {
         guard canDismiss else {
             return

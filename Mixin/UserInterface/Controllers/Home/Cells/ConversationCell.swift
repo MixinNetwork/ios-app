@@ -14,11 +14,6 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()

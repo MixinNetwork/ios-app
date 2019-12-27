@@ -38,6 +38,7 @@
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="navigation_title_select_country"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                 </subviews>
@@ -125,7 +126,6 @@
                     <connections>
                         <outlet property="searchBoxView" destination="zQE-qM-lTe" id="2Vu-Mu-yFL"/>
                         <outlet property="tableView" destination="ME9-Bu-R5f" id="imv-G6-MkG"/>
-                        <outlet property="titleLabel" destination="qDr-Zb-lpl" id="1Ac-sV-uFn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bm0-8k-S9h" userLabel="First Responder" sceneMemberID="firstResponder"/>

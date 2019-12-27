@@ -2,12 +2,11 @@ import UIKit
 
 class LoginConfirmWindow: BottomSheetView {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var loginButton: RoundedButton!
 
     private var id: String!
     private var publicKey: String!
-    
+
     @IBAction func loginAction(_ sender: Any) {
         guard !loginButton.isBusy else {
             return

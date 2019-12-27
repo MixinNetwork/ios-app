@@ -150,7 +150,6 @@ Mixin Messenger Desktop</string>
             <connections>
                 <outlet property="loginButton" destination="oH0-FK-y9T" id="8yH-Rb-lW5"/>
                 <outlet property="popupView" destination="4af-Sc-29x" id="6m7-lB-pHo"/>
-                <outlet property="titleLabel" destination="hTp-rW-A9R" id="djQ-v1-czc"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>

@@ -22,7 +22,7 @@
                     </constraints>
                 </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="7iG-Zm-TIM">
-                    <rect key="frame" x="203.5" y="0.0" width="12" height="34"/>
+                    <rect key="frame" x="188.5" y="0.0" width="12" height="34"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rk5-4d-LJp">
                     <rect key="frame" x="103.5" y="0.0" width="110" height="34"/>
@@ -37,7 +37,7 @@
                 <constraint firstAttribute="bottom" secondItem="7iG-Zm-TIM" secondAttribute="bottom" id="W6N-qZ-tU3"/>
                 <constraint firstItem="Rk5-4d-LJp" firstAttribute="top" secondItem="aFF-wu-hva" secondAttribute="top" id="gEC-u7-xNd"/>
                 <constraint firstItem="aFF-wu-hva" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ik6-en-FYh"/>
-                <constraint firstItem="7iG-Zm-TIM" firstAttribute="leading" secondItem="aFF-wu-hva" secondAttribute="trailing" constant="30" id="pwn-4d-pLW"/>
+                <constraint firstItem="7iG-Zm-TIM" firstAttribute="leading" secondItem="aFF-wu-hva" secondAttribute="trailing" constant="15" id="pwn-4d-pLW"/>
                 <constraint firstItem="aFF-wu-hva" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="qJw-KS-I1B"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -60,7 +60,7 @@ class AuthorizationWindow: BottomSheetView {
         return result
     }()
     private var selectedScopes = [Scope.PROFILE.rawValue]
-    
+
     func render(authInfo: AuthorizationResponse, assets: [AssetItem]) -> AuthorizationWindow {
         self.authInfo = authInfo
         self.assets = assets

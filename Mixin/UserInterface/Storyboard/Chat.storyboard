@@ -944,7 +944,7 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="296" y="-21" width="68" height="68"/>
+                                        <rect key="frame" x="294" y="-21" width="70" height="68"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                         <connections>
@@ -1900,6 +1900,7 @@
                                         <size key="customSize" width="60" height="105"/>
                                         <connections>
                                             <outlet property="avatarImageView" destination="JqL-kr-ldz" id="Pk2-be-mpV"/>
+                                            <outlet property="backgroundImageView" destination="mBM-DX-V7o" id="jPS-RV-Jpz"/>
                                             <outlet property="imageView" destination="kJg-NM-PUF" id="EQI-eQ-FWk"/>
                                             <outlet property="label" destination="P1J-EW-mcu" id="KHt-jh-25c"/>
                                         </connections>
@@ -2245,7 +2246,7 @@
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8B8-G1-vxK">
                                                 <rect key="frame" x="0.0" y="354" width="355" height="1"/>
-                                                <color key="backgroundColor" name="text_accessory"/>
+                                                <color key="backgroundColor" name="line"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="KGJ-c0-GB7"/>
                                                 </constraints>
@@ -2373,6 +2374,9 @@
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="line">
+            <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -11,7 +11,7 @@ class SystemMessageCell: MessageCell {
         super.awakeFromNib()
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         backgroundImageView.snp.makeConstraints { (make) in
-            make.leading.trailing.equalTo(label).inset(-SystemMessageViewModel.labelHorizontalInset)
+            make.leading.trailing.equalTo(label).inset(-SystemMessageViewModel.LabelInsets.horizontal)
             make.top.equalToSuperview()
             backgroundImageViewBottomConstraint = make.bottom.equalToSuperview().constraint
         }

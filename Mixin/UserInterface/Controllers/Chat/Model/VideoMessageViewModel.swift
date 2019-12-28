@@ -46,10 +46,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        super.init(message: message, style: style, fits: layoutWidth)
+    override init(message: MessageItem) {
+        super.init(message: message)
         update(mediaUrl: message.mediaUrl, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration)
         updateOperationButtonStyle()
+    }
+    
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
                                           y: contentFrame.origin.y + 8)

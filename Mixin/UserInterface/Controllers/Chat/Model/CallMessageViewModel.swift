@@ -26,8 +26,8 @@ class CallMessageViewModel: IconPrefixedTextMessageViewModel {
         return false
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         if style.contains(.received) {
             prefixImage = R.image.call.ic_message_prefix_received()
         } else {

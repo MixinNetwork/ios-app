@@ -45,15 +45,28 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         return CGSize(width: contentWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10, height: 72)
     }
     
+    override var leftTrailingMargin: CGFloat {
+        let category = UIScreen.main.traitCollection.preferredContentSizeCategory
+        if category == .extraLarge {
+            return 30
+        } else if category == .extraExtraLarge {
+            return 40
+        } else if category == .extraExtraExtraLarge {
+            return 50
+        } else {
+            return 20
+        }
+    }
+    
     private let contentWidth: CGFloat
 
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         let duration = Int(message.mediaDuration ?? 0)
         let seconds = Int(round(Double(duration) / millisecondsPerSecond))
         length = mediaDurationFormatter.string(from: TimeInterval(seconds)) ?? ""
         contentWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
         self.waveform = Waveform(data: message.mediaWaveform, durationInSeconds: seconds)
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
         updateOperationButtonStyle()
         updateButtonsHidden()
     }

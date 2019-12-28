@@ -8,7 +8,7 @@ class DepositTipWindow: BottomSheetView {
 
     private var canDismiss = false
     private var asset: AssetItem!
-
+    
     override func dismissPopupControllerAnimated() {
         guard canDismiss else {
             return

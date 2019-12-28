@@ -64,7 +64,6 @@ class HomeViewController: UIViewController {
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
         tableView.separatorStyle = .singleLine
         tableView.tableFooterView = UIView()
         dragDownIndicator.bounds.size = CGSize(width: 40, height: 40)
@@ -266,7 +265,7 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationCell.cellIdentifier) as! ConversationCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.conversation, for: indexPath)!
         cell.render(item: conversations[indexPath.row])
         return cell
     }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,15 +30,16 @@
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your Wallet PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-hQ-9OV">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="oI2-HX-M4T"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_verify_title"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tgg-8p-q44">
@@ -50,7 +50,7 @@
                                     <subviews>
                                         <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zM2-CK-lez" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="101.5" y="50" width="172" height="10"/>
-                                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="tintColor" name="text_accessory"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="172" id="1jk-JP-MuJ"/>
                                                 <constraint firstAttribute="height" constant="10" id="aoE-W2-lhp"/>
@@ -69,18 +69,19 @@
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You'll be asked for it periodically to help you remember it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKk-YI-evv" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="30" y="90" width="315" height="33.5"/>
-                                            <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
-                                            <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_remember_description"/>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
                                                     <real key="value" value="20"/>
                                                 </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="aKk-YI-evv" firstAttribute="top" secondItem="zM2-CK-lez" secondAttribute="bottom" constant="30" id="Fe1-C9-7Ow"/>
                                         <constraint firstItem="RxG-TB-FaI" firstAttribute="centerX" secondItem="dO2-94-bDN" secondAttribute="centerX" id="Gkx-OJ-ieC"/>
@@ -94,10 +95,10 @@
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQB-vk-cAS">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="170"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You have tried more than 5 times, please wait at least 24 hours to try again." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKG-nW-kNh" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="30" y="26" width="315" height="38.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.93333333330000001" green="0.20000000000000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You have tried more than 5 times, please wait at least 24 hours to try again." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKG-nW-kNh" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="30" y="26" width="315" height="40.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <color key="textColor" name="red"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_password_too_many_requests"/>
@@ -107,18 +108,20 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOR-gR-Mjb">
-                                            <rect key="frame" x="148.5" y="86" width="78" height="44"/>
+                                            <rect key="frame" x="147.5" y="84" width="80" height="46"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <inset key="contentEdgeInsets" minX="20" minY="13" maxX="20" maxY="13"/>
                                             <state key="normal" title="Got It"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_got_it"/>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="acW-Ih-LqB"/>
                                             </connections>
                                         </button>
                                     </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="xKG-nW-kNh" firstAttribute="top" secondItem="wQB-vk-cAS" secondAttribute="top" constant="26" id="9pf-gj-Mk0"/>
                                         <constraint firstItem="MOR-gR-Mjb" firstAttribute="centerX" secondItem="wQB-vk-cAS" secondAttribute="centerX" id="Nhg-AX-iM6"/>
@@ -128,7 +131,7 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="dO2-94-bDN" firstAttribute="top" secondItem="Tgg-8p-q44" secondAttribute="top" id="Ia6-DQ-ud7"/>
                                 <constraint firstAttribute="trailing" secondItem="wQB-vk-cAS" secondAttribute="trailing" id="NVk-DP-ruZ"/>
@@ -142,7 +145,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="Tgg-8p-q44" firstAttribute="leading" secondItem="BaG-Ng-fDo" secondAttribute="leading" id="61C-nT-6Sr"/>
                         <constraint firstAttribute="trailing" secondItem="BeR-hQ-9OV" secondAttribute="trailing" id="G7Q-4t-vwa"/>
@@ -154,7 +157,7 @@
                 </view>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="YtT-Bw-bo1" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="539" width="375" height="128"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -169,6 +172,21 @@
                 <constraint firstItem="YtT-Bw-bo1" firstAttribute="leading" secondItem="jqr-Lo-whB" secondAttribute="leading" id="yVi-k3-eBM"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="oT6-Rh-8fB"/>
+            <point key="canvasLocation" x="138" y="155"/>
         </view>
     </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
 </document>

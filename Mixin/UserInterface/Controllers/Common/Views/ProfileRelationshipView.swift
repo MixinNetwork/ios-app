@@ -70,7 +70,7 @@ final class ProfileRelationshipView: UIView {
             if busyIndicator == nil {
                 let frame = CGRect(origin: center, size: .zero).insetBy(dx: -10, dy: -10)
                 busyIndicator = ActivityIndicatorView(frame: frame)
-                busyIndicator!.tintColor = .indicatorGray
+                busyIndicator!.tintColor = .accessoryText
             }
             if let indicator = busyIndicator {
                 if indicator.superview == nil {
@@ -91,10 +91,11 @@ final class ProfileRelationshipView: UIView {
     }
     
     private func prepare() {
-        button.backgroundColor = .tertiaryBackground
+        button.backgroundColor = .inputBackground
         button.layer.cornerRadius = 14
         button.clipsToBounds = true
-        button.setTitleColor(.mixinBlue, for: .normal)
+
+        button.setTitleColor(.theme, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 19, bottom: 0, right: 15)

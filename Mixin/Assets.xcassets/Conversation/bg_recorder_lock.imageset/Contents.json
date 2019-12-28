@@ -5,6 +5,16 @@
       "scale" : "1x"
     },
     {
+      "idiom" : "universal",
+      "scale" : "1x",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ]
+    },
+    {
       "resizing" : {
         "mode" : "3-part-vertical",
         "center" : {
@@ -28,12 +38,56 @@
           "height" : 1
         },
         "cap-insets" : {
+          "top" : 43,
+          "bottom" : 44
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "bg_recorder_lock_dark@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "scale" : "2x"
+    },
+    {
+      "resizing" : {
+        "mode" : "3-part-vertical",
+        "center" : {
+          "mode" : "tile",
+          "height" : 1
+        },
+        "cap-insets" : {
           "top" : 65,
           "bottom" : 66
         }
       },
       "idiom" : "universal",
       "filename" : "bg_recorder_lock@3x.png",
+      "scale" : "3x"
+    },
+    {
+      "resizing" : {
+        "mode" : "3-part-vertical",
+        "center" : {
+          "mode" : "tile",
+          "height" : 1
+        },
+        "cap-insets" : {
+          "top" : 65,
+          "bottom" : 66
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "bg_recorder_lock_dark@3x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "scale" : "3x"
     }
   ],

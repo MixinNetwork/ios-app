@@ -19,7 +19,6 @@ class InviteLinkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         iconImageView.setGroupImage(with: conversation.iconUrl)
         groupNameLabel.text = conversation.name
         updateUI()
@@ -66,7 +65,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_more")
+        return R.image.ic_title_more()
     }
 
     private func revokeLink() {

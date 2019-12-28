@@ -62,7 +62,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     }
     
     @IBInspectable
-    var indicatorUnhighlightedColor: UIColor = .disabledGray {
+    var indicatorUnhighlightedColor: UIColor = R.color.line()! {
         didSet {
             updateCursor()
         }
@@ -83,7 +83,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
             return digits.joined()
         }
         set {
-            if let value = Int(text.prefix(numberOfDigits)) {
+            if let value = Int(newValue.prefix(numberOfDigits)) {
                 digits = String(value).compactMap(String.init)
             } else {
                 digits = []

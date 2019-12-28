@@ -5,10 +5,10 @@ protocol AppButtonGroupMessageCellDelegate: class {
 }
 
 class AppButtonGroupMessageCell: DetailInfoMessageCell {
-
+    
     weak var appButtonDelegate: AppButtonGroupMessageCellDelegate?
-
-    private var buttonViews = [UIView]()
+    
+    private var buttonViews = [AppButtonView]()
     
     override var contentFrame: CGRect {
         return (viewModel as? AppButtonGroupViewModel)?.buttonGroupFrame ?? .zero
@@ -22,27 +22,18 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
             }
             buttonViews = []
             for (i, frame) in viewModel.frames.enumerated() {
-                let buttonContent = appButtons[i]
-                let button = UIButton(frame: frame.button)
-                contentView.addSubview(button)
-                button.setBackgroundImage(#imageLiteral(resourceName: "ic_app_button_normal"), for: .normal)
-                button.setBackgroundImage(#imageLiteral(resourceName: "ic_app_button_selected"), for: .highlighted)
-                button.tag = i
-                button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
-                buttonViews.append(button)
-                let label = UILabel(frame: frame.label)
-                contentView.addSubview(label)
-                label.numberOfLines = 0
-                label.text = buttonContent.label
-                label.font = AppButtonGroupViewModel.titleFont
-                label.textColor = UIColor(hexString: buttonContent.color) ?? .gray
-                label.textAlignment = .left
-                label.lineBreakMode = .byCharWrapping
-                buttonViews.append(label)
+                let content = appButtons[i]
+                let view = AppButtonView()
+                view.frame = frame
+                view.setTitle(content.label, colorHexString: content.color)
+                view.button.tag = i
+                view.button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+                buttonViews.append(view)
+                contentView.addSubview(view)
             }
         }
     }
-
+    
     override func prepare() {
         super.prepare()
         timeLabel.isHidden = true

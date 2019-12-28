@@ -125,7 +125,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
         } else {
             if indexPath.row == 0 {
                 cell.selectionImageView.isHidden = true
-                cell.stickerImageView.image = #imageLiteral(resourceName: "ic_sticker_add")
+                cell.stickerImageView.image = R.image.ic_sticker_add()
             } else {
                 cell.render(sticker: stickers[indexPath.row-1], isDeleteStickers: isDeleteStickers)
             }
@@ -176,7 +176,7 @@ class FavoriteStickerCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if !selectionImageView.isHidden {
-                selectionImageView.image = isSelected ? #imageLiteral(resourceName: "ic_member_selected") : #imageLiteral(resourceName: "ic_sticker_normal")
+                selectionImageView.image = isSelected ? R.image.ic_member_selected() : R.image.ic_sticker_normal()
                 selectionMaskView.isHidden = !isSelected
             }
         }

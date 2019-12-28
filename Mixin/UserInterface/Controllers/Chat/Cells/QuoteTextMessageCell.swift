@@ -61,16 +61,17 @@ class QuoteTextMessageCell: TextMessageCell {
     override func prepare() {
         super.prepare()
         
-        quoteBackgroundImageView.image = #imageLiteral(resourceName: "bg_chat_quote")
+        quoteBackgroundImageView.image = R.image.bg_chat_quote()
         contentView.addSubview(quoteBackgroundImageView)
         
-        quoteTitleLabel.font = QuoteTextMessageViewModel.Quote.titleFont
+        quoteTitleLabel.font = MessageFontSet.quoteTitle.scaled
+        quoteTitleLabel.adjustsFontForContentSizeCategory = true
         contentView.addSubview(quoteTitleLabel)
         
         quoteIconImageView.contentMode = .center
         contentView.addSubview(quoteIconImageView)
         
-        quoteSubtitleLabel.textColor = UIColor.gray
+        quoteSubtitleLabel.textColor = .accessoryText
         quoteSubtitleLabel.numberOfLines = QuoteTextMessageViewModel.Quote.subtitleNumberOfLines
         contentView.addSubview(quoteSubtitleLabel)
         

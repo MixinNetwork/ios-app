@@ -24,7 +24,7 @@ class SelectCountryViewController: UIViewController {
     var selectedCountry: Country!
     weak var delegate: SelectCountryViewControllerDelegate?
 
-    private let sectionHeaderHeight: CGFloat = 46
+    private let sectionHeaderHeight: CGFloat = 38
     private var sections = [Section]()
     private var sectionIndexTitles = [String]()
     private var filteredCountries = [Country]()
@@ -140,6 +140,7 @@ extension SelectCountryViewController: UITableViewDelegate {
         } else {
             header.label.text = sectionIndexTitles[section - 2]
         }
+        header.labelTopConstraint.constant = 10
         return header
     }
     

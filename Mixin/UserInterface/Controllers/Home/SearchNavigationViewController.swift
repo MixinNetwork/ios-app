@@ -9,16 +9,30 @@ class SearchNavigationViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchNavigationBar.searchBoxView.textField.delegate = self
-        let image = UIColor.white.image
-        navigationBar.setBackgroundImage(image, for: .default)
-        navigationBar.shadowImage = image
-        navigationBar.backIndicatorImage = R.image.ic_search_back()
-        navigationBar.backIndicatorTransitionMaskImage = R.image.ic_search_back()
+        prepareNavigationBar()
         if let vc = viewControllers.first as? HomeSearchViewController {
             searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)
         }
     }
-    
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            guard traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
+                return
+            }
+            prepareNavigationBar()
+        }
+    }
+
+    private func prepareNavigationBar() {
+        let image = R.color.background()!.image
+        navigationBar.setBackgroundImage(image, for: .default)
+        navigationBar.shadowImage = image
+        navigationBar.backIndicatorImage = R.image.ic_search_back()
+        navigationBar.backIndicatorTransitionMaskImage = R.image.ic_search_back()
+    }
+
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
         if let vc = viewController as? (UIViewController & HomeSearchViewController) {

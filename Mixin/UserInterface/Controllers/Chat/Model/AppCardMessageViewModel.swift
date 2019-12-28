@@ -1,13 +1,11 @@
 import UIKit
 
 class AppCardMessageViewModel: CardMessageViewModel {
-
-    static let titleAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)]
-    static let descriptionAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
+    
     static let emptyLabelWidth: CGFloat = 2
     
-    override class var bubbleImageProvider: BubbleImageProvider.Type {
-        return AppCardBubbleImageProvider.self
+    override class var bubbleImageSet: BubbleImageSet.Type {
+        return AppCardBubbleImageSet.self
     }
     
     override var leftLeadingMargin: CGFloat {
@@ -25,28 +23,14 @@ class AppCardMessageViewModel: CardMessageViewModel {
     
     private var contentWidth: CGFloat = 0
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         let emptyLabelWidth = AppCardMessageViewModel.emptyLabelWidth
-        let titleWidth = ceil(message.appCard?.title.size(withAttributes: AppCardMessageViewModel.titleAttributes).width ?? emptyLabelWidth)
-        let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: AppCardMessageViewModel.descriptionAttributes).width ?? emptyLabelWidth)
+        let titleAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardTitle.scaled]
+        let titleWidth = ceil(message.appCard?.title.size(withAttributes: titleAttributes).width ?? emptyLabelWidth)
+        let descriptionAttributes = [NSAttributedString.Key.font: MessageFontSet.appCardDescription.scaled]
+        let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: descriptionAttributes).width ?? emptyLabelWidth)
         contentWidth = max(emptyLabelWidth, titleWidth, descriptionWidth)
-        super.init(message: message, style: style, fits: layoutWidth)
-    }
-    
-}
-
-extension AppCardMessageViewModel {
-    
-    class AppCardBubbleImageProvider: BubbleImageProvider {
-
-        override class var leftTail: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left")
-        }
-        
-        override class var leftTailHighlight: UIImage {
-            return #imageLiteral(resourceName: "ic_chat_bubble_left_highlight")
-        }
-        
+        super.init(message: message)
     }
     
 }

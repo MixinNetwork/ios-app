@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,12 +14,12 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="abF-IG-txU" id="z2Z-lz-lZP">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="61.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uZv-Qf-jhM">
-                        <rect key="frame" x="290" y="0.0" width="124" height="61.5"/>
-                        <color key="backgroundColor" red="0.94901960780000005" green="0.98039215690000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <rect key="frame" x="290" y="0.0" width="124" height="62"/>
+                        <color key="backgroundColor" name="background_input"/>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITh-bd-CG3">
                         <rect key="frame" x="19" y="10" width="42" height="42"/>
@@ -58,13 +57,16 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-4d-1QY">
-                        <rect key="frame" x="77" y="0.0" width="317" height="61.5"/>
+                        <rect key="frame" x="77" y="0.0" width="317" height="62"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Transfer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o1a-sz-8up">
                                 <rect key="frame" x="0.0" y="22.5" width="53.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+20" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Eq-Iz-C6X" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="63.5" y="21.5" width="222.5" height="19"/>
@@ -73,15 +75,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gns-Tw-VaL">
-                                <rect key="frame" x="296" y="23.5" width="21" height="14.5"/>
+                                <rect key="frame" x="296" y="24" width="21" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold12"/>
+                                </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="ITh-bd-CG3" firstAttribute="leading" secondItem="z2Z-lz-lZP" secondAttribute="leading" constant="19" id="6hk-dK-N7g"/>
                     <constraint firstAttribute="bottom" secondItem="uZv-Qf-jhM" secondAttribute="bottom" id="9xv-Wf-jwd"/>
@@ -95,7 +99,7 @@
                     <constraint firstItem="mI8-4d-1QY" firstAttribute="top" secondItem="z2Z-lz-lZP" secondAttribute="top" id="veW-Jz-HuR"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="amountLabel" destination="3Eq-Iz-C6X" id="lic-rB-TNz"/>
                 <outlet property="iconImageView" destination="dvX-OJ-H0b" id="eeu-vd-xVw"/>
@@ -104,6 +108,18 @@
                 <outlet property="symbolLabel" destination="gns-Tw-VaL" id="nxd-iD-gje"/>
                 <outlet property="titleLabel" destination="o1a-sz-8up" id="3zw-Xa-dLS"/>
             </connections>
+            <point key="canvasLocation" x="139" y="155"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
 </document>

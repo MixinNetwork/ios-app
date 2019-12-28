@@ -18,7 +18,7 @@ class SearchFooterView: UITableViewHeaderFooterView {
     }
     
     private func prepare() {
-        topView.backgroundColor = .white
+        topView.backgroundColor = .background
         contentView.addSubview(shadowView)
         contentView.addSubview(topView)
         topView.snp.makeConstraints { (make) in

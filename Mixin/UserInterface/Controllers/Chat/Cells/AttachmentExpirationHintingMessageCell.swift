@@ -12,7 +12,8 @@ extension AttachmentExpirationHintingMessageCell where Self: PhotoRepresentableM
         contentView.addSubview(operationButton)
         expiredHintLabel.text = Localized.CHAT_FILE_EXPIRED
         expiredHintLabel.textColor = UIColor(rgbValue: 0xEFEFF4)
-        expiredHintLabel.font = .systemFont(ofSize: 13)
+        expiredHintLabel.font = .preferredFont(forTextStyle: .footnote)
+        expiredHintLabel.adjustsFontForContentSizeCategory = true
         expiredHintLabel.sizeToFit()
         expiredHintLabel.isHidden = true
         contentView.addSubview(expiredHintLabel)

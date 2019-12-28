@@ -67,6 +67,7 @@ extension MobileNumberViewController: UITextFieldDelegate {
         if newText != numericsInText, let parsedPhoneNumber = try? phoneNumberKit.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
             self.country = country
             textField.text = parsedPhoneNumber.adjustedNationalNumber()
+            textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
             updateContinueButtonIsHidden()
             return false
         } else {

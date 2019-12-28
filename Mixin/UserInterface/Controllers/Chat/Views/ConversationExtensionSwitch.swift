@@ -18,8 +18,8 @@ class ConversationExtensionSwitch: UIControl {
     }
     
     private let iconLayer = CAShapeLayer()
-    private let offColor = UIColor(rgbValue: 0x3A3C3E).cgColor
-    private let onColor = UIColor(rgbValue: 0x397EE4).cgColor
+    private let offColor = R.color.icon_fill()!.cgColor
+    private let onColor = R.color.theme()!.cgColor
     private let animationDuration: TimeInterval = 0.2
     
     private var _isOn = false

@@ -21,7 +21,7 @@ class RestoreViewController: UIViewController {
         paragraphStyle.alignment = .center
         let attr: [NSAttributedString.Key: Any] = [
             .paragraphStyle: paragraphStyle,
-            .font: UIFont.systemFont(ofSize: 14),
+            .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
             .foregroundColor: UIColor.accessoryText
         ]
         let fullRange = NSRange(location: 0, length: subtitle.length)

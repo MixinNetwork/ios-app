@@ -13,7 +13,6 @@ class AssetInfoWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
         contractLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(copyAction)))
     }
 

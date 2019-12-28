@@ -84,7 +84,7 @@ class PinValidationViewController: UIViewController {
             })
         } else {
             pinField.isHidden = false
-            descriptionLabel.textColor = UIColor.red
+            descriptionLabel.textColor = .mixinRed
             descriptionLabel.text = error.localizedDescription
         }
     }

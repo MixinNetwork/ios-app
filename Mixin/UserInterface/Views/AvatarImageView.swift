@@ -122,9 +122,8 @@ class AvatarImageView: UIView {
     }
     
     private func prepare() {
-        layer.shadowColor = R.color.shadow()!.cgColor
+        layer.shadowColor = R.color.icon_shadow()!.cgColor
         layer.shadowRadius = 6
-        
         imageView.clipsToBounds = true
         imageView.frame = bounds
         addSubview(imageView)

@@ -29,6 +29,9 @@ class WebViewController: UIViewController {
     private let messageHandlerName = "MixinContext"
     private let reloadThemeHandlerName = "reloadTheme"
     
+    private let buttonDarkColor = UIColor(displayP3RgbValue: 0x2E2F31)
+    private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
+    
     private lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -82,7 +85,7 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateBackground(pageThemeColor: .white)
+        updateBackground(pageThemeColor: .background)
         buttonsBackgroundView.layer.borderWidth = 1
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
@@ -272,9 +275,9 @@ class WebViewController: UIViewController {
         
         let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
         buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
-        titleLabel.textColor = themeColorIsDark ? .white : .darkText
-        
-        let tintColor: UIColor = themeColorIsDark ? .white : R.color.web_button()!
+        titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
+
+        let tintColor: UIColor = themeColorIsDark ? .white : buttonDarkColor
         moreButton.tintColor = tintColor
         dismissButton.tintColor = tintColor
         
@@ -284,7 +287,11 @@ class WebViewController: UIViewController {
         buttonsSeparatorLineView.backgroundColor = outlineColor
         buttonsBackgroundView.layer.borderColor = outlineColor.cgColor
         
-        statusBarStyle = themeColorIsDark ? .lightContent : .default
+        if #available(iOS 13.0, *) {
+            statusBarStyle = themeColorIsDark ? .lightContent : .darkContent
+        } else {
+            statusBarStyle = themeColorIsDark ? .lightContent : .default
+        }
         setNeedsStatusBarAppearanceUpdate()
     }
     
@@ -498,7 +505,7 @@ extension WebViewController {
             guard let colorString = result as? String else {
                 return
             }
-            let color = UIColor(hexString: colorString) ?? .white
+            let color = UIColor(hexString: colorString) ?? .background
             self?.updateBackground(pageThemeColor: color)
         }
     }

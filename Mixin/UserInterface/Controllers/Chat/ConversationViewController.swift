@@ -45,7 +45,6 @@ class ConversationViewController: UIViewController {
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
-    private var didInitData = false
     private var isShowingMenu = false
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
@@ -136,6 +135,22 @@ class ConversationViewController: UIViewController {
         updateStrangerHintView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
+        updateNavigationBarHeightAndTableViewTopInset()
+        conversationInputViewController = R.storyboard.chat.input()
+        addChild(conversationInputViewController)
+        inputWrapperView.addSubview(conversationInputViewController.view)
+        conversationInputViewController.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        conversationInputViewController.didMove(toParent: self)
+        if dataSource.category == .group {
+            updateSubtitleAndInputBar()
+        } else if let user = ownerUser {
+            conversationInputViewController.inputBarView.isHidden = false
+            conversationInputViewController.update(opponentUser: user)
+        }
+        view.layoutIfNeeded()
+        dataSource.initData(completion: finishInitialLoading)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
@@ -148,24 +163,6 @@ class ConversationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
-        if !didInitData {
-            didInitData = true
-            updateNavigationBarHeightAndTableViewTopInset()
-            conversationInputViewController = R.storyboard.chat.input()
-            addChild(conversationInputViewController)
-            inputWrapperView.addSubview(conversationInputViewController.view)
-            conversationInputViewController.view.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            conversationInputViewController.didMove(toParent: self)
-            if dataSource.category == .group {
-                updateSubtitleAndInputBar()
-            } else if let user = ownerUser {
-                conversationInputViewController.inputBarView.isHidden = false
-                conversationInputViewController.update(opponentUser: user)
-            }
-            dataSource.initData(completion: finishInitialLoading)
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -207,6 +204,20 @@ class ConversationViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateNavigationBarHeightAndTableViewTopInset()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard let previous = previousTraitCollection, traitCollection.preferredContentSizeCategory != previous.preferredContentSizeCategory else {
+            return
+        }
+        let messageId: String?
+        if let indexPath = dataSource.focusIndexPath {
+            messageId = dataSource.viewModel(for: indexPath)?.message.messageId
+        } else {
+            messageId = nil
+        }
+        dataSource.reload(initialMessageId: messageId)
     }
     
     deinit {
@@ -285,7 +296,7 @@ class ConversationViewController: UIViewController {
                 if newHeight < conversationInputViewController.minimizedHeight {
                     newHeight = conversationInputViewController.minimizedHeight
                     if shouldMoveDown && conversationInputViewController.view.backgroundColor == .clear {
-                        conversationInputViewController.view.backgroundColor = .white
+                        conversationInputViewController.view.backgroundColor = .background
                     }
                 }
                 if conversationInputViewController.isMaximizable {
@@ -539,7 +550,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func participantDidChange(_ notification: Notification) {
-        guard didInitData, let conversationId = notification.object as? String, conversationId == self.conversationId else {
+        guard isViewLoaded, let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
         updateSubtitleAndInputBar()
@@ -587,7 +598,25 @@ class ConversationViewController: UIViewController {
         }
         updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: oldHeight, newHeight: newHeight)
         let bottomInset = newHeight + MessageViewModel.bottomSeparatorHeight
-        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
+        
+        var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
+        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
+            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
+            let availableSpace = focusRectY
+                - tableView.contentOffset.y
+                - tableView.contentInset.top
+                - ConversationDateHeaderView.height
+            if availableSpace > 0 {
+                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
+            } else {
+                newContentOffsetY = tableView.contentOffset.y
+            }
+        }
+        tableView.contentInset.bottom = bottomInset
+        if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
+            tableView.setContentOffsetYSafely(newContentOffsetY)
+        }
+        
         view.layoutIfNeeded()
         if animated {
             UIView.commitAnimations()
@@ -866,6 +895,10 @@ extension ConversationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let dataSource = dataSource else {
             return
+        }
+        if !isAppearanceAnimating {
+            // Keep focusIndexPath until viewDidAppear
+            dataSource.focusIndexPath = indexPath
         }
         if indexPath.section == 0 && indexPath.row <= loadMoreMessageThreshold {
             dataSource.loadMoreAboveIfNeeded()
@@ -1150,7 +1183,7 @@ extension ConversationViewController {
             }
         } else {
             navigationBarTopConstraint.constant = 0
-            tableView.contentInset.top = navigationBarView.frame.height
+            tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
             tableView.scrollIndicatorInsets.top = tableView.contentInset.top
             if statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
@@ -1254,7 +1287,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
+        titleViewTopConstraint.constant = max(20, AppDelegate.current.window.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
         tableView.scrollIndicatorInsets.top = tableView.contentInset.top
     }

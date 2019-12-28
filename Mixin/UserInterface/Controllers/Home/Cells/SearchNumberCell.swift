@@ -6,20 +6,28 @@ class SearchNumberCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     
-    private let numberAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont.systemFont(ofSize: 14),
-        .foregroundColor: UIColor.highlightedText
-    ]
+    private var numberAttributes: [NSAttributedString.Key: Any] {
+        return [.font: UIFont.preferredFont(forTextStyle: .subheadline),
+                .foregroundColor: UIColor.theme]
+    }
     
-    private let prefix: NSAttributedString = {
+    private var prefix: NSAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
-            .foregroundColor: UIColor.darkText
+            .font: UIFont.preferredFont(forTextStyle: .subheadline),
+            .foregroundColor: UIColor.text
         ]
         let plain = R.string.localizable.search_placeholder_number()
         let str = NSAttributedString(string: plain, attributes: attrs)
         return str
-    }()
+    }
+    
+    var number: String? {
+        didSet {
+            let text = NSMutableAttributedString(attributedString: prefix)
+            text.append(NSMutableAttributedString(string: number ?? "", attributes: numberAttributes))
+            label.attributedText = text
+        }
+    }
     
     var isBusy = false {
         didSet {
@@ -29,7 +37,7 @@ class SearchNumberCell: UITableViewCell {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        let color: UIColor = highlighted ? .modernCellSelection : .white
+        let color: UIColor = highlighted ? .selectionBackground : .background
         let work = {
             self.labelBackgroundView.backgroundColor = color
         }
@@ -38,12 +46,6 @@ class SearchNumberCell: UITableViewCell {
         } else {
             work()
         }
-    }
-    
-    func render(number: String) {
-        let text = NSMutableAttributedString(attributedString: prefix)
-        text.append(NSMutableAttributedString(string: number, attributes: numberAttributes))
-        label.attributedText = text
     }
     
 }

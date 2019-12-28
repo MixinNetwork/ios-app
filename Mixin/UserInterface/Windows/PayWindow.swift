@@ -50,6 +50,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var multisigStackView: UIStackView!
     @IBOutlet weak var bigAmountTipsView: UIView!
     @IBOutlet weak var bigAmountConfirmButton: RoundedButton!
+    @IBOutlet weak var bigAmountCancelButton: UIButton!
     @IBOutlet weak var bigAmountTitleSpaceView: UIView!
     @IBOutlet weak var bigAmountIconSpaceView: UIView!
 
@@ -95,7 +96,6 @@ class PayWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
         if ScreenSize.current == .inch3_5 {
             pinField.cellLength = 8
         }
@@ -229,7 +229,7 @@ class PayWindow: BottomSheetView {
     private func showTransferView(user: UserItem, showError: Bool, showBiometric: Bool) {
         nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
         mixinIDLabel.text = user.identityNumber
-        mixinIDLabel.textColor = .indicatorGray
+        mixinIDLabel.textColor = .accessoryText
         pinView.isHidden = false
         if !showError {
             payLabel.text = R.string.localizable.transfer_by_pin()

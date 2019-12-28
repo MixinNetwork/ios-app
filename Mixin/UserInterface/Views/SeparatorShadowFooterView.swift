@@ -10,7 +10,8 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         label.backgroundColor = .clear
         label.textColor = .accessoryText
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 12)
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
         return label
     }()
@@ -91,7 +92,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         contentView.addSubview(shadowView)
         clipsToBounds = true
         backgroundView = UIView(frame: bounds)
-        backgroundView?.backgroundColor = .clear
+        backgroundView?.backgroundColor = .secondaryBackground
     }
     
 }

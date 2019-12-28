@@ -27,7 +27,7 @@ class RoundCornerSelectionView: UIView {
     }
     
     func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        let color: UIColor = highlighted ? .modernCellSelection : .white
+        let color: UIColor = highlighted ? .selectionBackground : .white
         let work = {
             self.contentLayer.fillColor = color.cgColor
         }

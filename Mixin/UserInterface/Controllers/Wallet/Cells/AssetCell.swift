@@ -1,16 +1,11 @@
 import UIKit
 
-class AssetCell: UITableViewCell {
+class AssetCell: ModernSelectedBackgroundCell {
     
     static let height: CGFloat = 74
-    static let balanceAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont(name: "DINCondensed-Bold", size: 19)!,
-        .foregroundColor: UIColor.darkText,
-        .kern: 0.7
-    ]
     static let symbolAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont.systemFont(ofSize: 12, weight: .medium),
-        .foregroundColor: UIColor.darkText
+        .font: UIFont.scaledFont(ofSize: 12, weight: .medium),
+        .foregroundColor: UIColor.text
     ]
     
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -26,8 +21,8 @@ class AssetCell: UITableViewCell {
         balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
-        selectedBackgroundView = UIView(frame: bounds)
-        selectedBackgroundView!.backgroundColor = .modernCellSelection
+        balanceLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 19),
+                             adjustForContentSize: true)
     }
     
     override func prepareForReuse() {
@@ -43,7 +38,7 @@ class AssetCell: UITableViewCell {
         } else {
             balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
         }
-        balanceLabel.attributedText = NSAttributedString(string: balance, attributes: AssetCell.balanceAttributes)
+        balanceLabel.text = balance
         if let attributedSymbol = attributedSymbol {
             symbolLabel.attributedText = attributedSymbol
         } else {
@@ -69,5 +64,5 @@ class AssetCell: UITableViewCell {
         }
         fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
     }
-
+    
 }

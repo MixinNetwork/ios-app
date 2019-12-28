@@ -12,7 +12,7 @@ class AssetSendVideoView: UIView {
     }
     
     let player = AVPlayer()
-    private let unplayableHintImageView = UIImageView(image: #imageLiteral(resourceName: "ic_file_expired"))
+    private let unplayableHintImageView = UIImageView(image: R.image.ic_file_expired()!)
     private let thumbnailImageView = UIImageView()
     private let playableKey = "playable"
     

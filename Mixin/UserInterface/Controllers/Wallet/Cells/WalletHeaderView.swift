@@ -21,15 +21,11 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    private let fiatMoneyBalanceAttributes = [
-        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
-    ]
+    private var contentHeight: CGFloat = 159
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont(name: "DINCondensed-Bold", size: 14)!,
+        .font: UIFont.dinCondensedBold(ofSize: 14).scaled(),
         .kern: 0.7
     ]
-    
-    private var contentHeight: CGFloat = 159
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -63,7 +59,7 @@ class WalletHeaderView: InfiniteTopView {
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
         contentHeight = usdBalanceIsMoreThanZero ? 159 : 107
-        fiatMoneyValueLabel.attributedText = attributedString(usdBalance: usdTotalBalance)
+        fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
         btcValueLabel.attributedText = attributedBTCValue
@@ -115,14 +111,13 @@ extension WalletHeaderView {
         var usdBalance: Double
     }
     
-    private func attributedString(usdBalance: Double) -> NSAttributedString? {
+    private func fiatMoneyBalanceRepresentation(usdBalance: Double) -> String? {
         if usdBalance == 0 {
-            let str = "0" + currentDecimalSeparator + "00"
-            return NSAttributedString(string: str, attributes: fiatMoneyBalanceAttributes)
-        } else if let localizedFiatMoneyBalance = CurrencyFormatter.localizedString(from: usdBalance * Currency.current.rate, format: .fiatMoney, sign: .never) {
-            return NSAttributedString(string: localizedFiatMoneyBalance, attributes: fiatMoneyBalanceAttributes)
+            return "0" + currentDecimalSeparator + "00"
         } else {
-            return nil
+            return CurrencyFormatter.localizedString(from: usdBalance * Currency.current.rate,
+                                                     format: .fiatMoney,
+                                                     sign: .never)
         }
     }
     

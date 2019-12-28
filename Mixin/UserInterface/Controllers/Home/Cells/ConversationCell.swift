@@ -3,14 +3,6 @@ import SDWebImage
 
 class ConversationCell: ModernSelectedBackgroundCell {
     
-    static let contentLabelNormalFont = UIFont.systemFont(ofSize: 14)
-    static let contentLabelItalicFont: UIFont = {
-        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
-        return UIFont(descriptor: desc, size: 14)
-    }()
-    static let cellIdentifier = "cell_identifier_conversation"
-    static let height: CGFloat = 80
-
     @IBOutlet weak var avatarView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
@@ -169,7 +161,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
     }
     
     private func setContentLabelFontItalic(_ isItalic: Bool) {
-        contentLabel.font = isItalic ? ConversationCell.contentLabelItalicFont : ConversationCell.contentLabelNormalFont
+        contentLabel.font = isItalic
+            ? MessageFontSet.recalledConversationContent.scaled
+            : MessageFontSet.normalConversationContent.scaled
     }
     
 }

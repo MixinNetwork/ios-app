@@ -86,9 +86,20 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         searchTextField.resignFirstResponder()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        messages.flatMap({ $0 })
+            .forEach({ $0.updateTitleAndDescription() })
+        tableView.reloadData()
+    }
+    
     func prepareNavigationBar() {
-        navigationTitleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        navigationTitleLabel?.textColor = .darkText
+        navigationTitleLabel?.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
+                                      adjustForContentSize: true)
+        navigationTitleLabel?.textColor = .title
         let rightButton = UIBarButtonItem(customView: iconView)
         rightButton.width = 44
         navigationItem.title = " "

@@ -1,37 +1,47 @@
 import UIKit
 
 class SystemMessageViewModel: MessageViewModel {
-
-    static let backgroundImageHorizontalMargin: CGFloat = 76
-    static let labelHorizontalInset: CGFloat = 16
-    static let labelVerticalInset: CGFloat = 16
-    static let attributes: [NSAttributedString.Key: Any] = {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .byWordWrapping
-        let attributes: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 14),
-                                                        .paragraphStyle: paragraphStyle]
-        return attributes
+    
+    enum LabelInsets {
+        static let horizontal: CGFloat = 16
+        static let vertical: CGFloat = 16
+    }
+    
+    private static let paragraphStyle: NSParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineBreakMode = .byWordWrapping
+        return style.copy() as! NSParagraphStyle
     }()
     
     let text: String
     
-    private let textRect: CGRect
-    
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        text = SystemConversationAction.getSystemMessage(actionName: message.actionName, userId: message.userId, userFullName: message.userFullName, participantId: message.participantUserId, participantFullName: message.participantFullName, content: message.content)
-        let sizeToFit = CGSize(width: layoutWidth - SystemMessageViewModel.backgroundImageHorizontalMargin,
-                               height: UIView.layoutFittingExpandedSize.height)
-        textRect = (text as NSString).boundingRect(with: sizeToFit,
-                                                   options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                   attributes: SystemMessageViewModel.attributes,
-                                                   context: nil)
-        super.init(message: message, style: style, fits: layoutWidth)
-        backgroundImage = #imageLiteral(resourceName: "ic_chat_bubble_system")
+    override init(message: MessageItem) {
+        text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
+                                                         userId: message.userId,
+                                                         userFullName: message.userFullName,
+                                                         participantId: message.participantUserId,
+                                                         participantFullName: message.participantFullName,
+                                                         content: message.content)
+        super.init(message: message)
+        backgroundImage = R.image.ic_chat_bubble_system()
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
-        cellHeight = textRect.height + SystemMessageViewModel.labelVerticalInset + bottomSeparatorHeight
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        let backgroundImageHorizontalMargin: CGFloat = 76
+        let sizeToFit = CGSize(width: width - backgroundImageHorizontalMargin,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: MessageFontSet.systemMessage.scaled,
+            .paragraphStyle: SystemMessageViewModel.paragraphStyle
+        ]
+        let textRect = (text as NSString).boundingRect(with: sizeToFit,
+                                                       options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                                       attributes: attrs,
+                                                       context: nil)
+        super.layout(width: width, style: style)
+        cellHeight = textRect.height
+            + LabelInsets.vertical
+            + bottomSeparatorHeight
     }
     
 }

@@ -215,7 +215,6 @@ public class Localized {
     public static let CHAT_MENU_DEVELOPER = LocalizedString("chat_menu_developer", comment: "Developer")
     public static let CHAT_PHOTO_SAVE = LocalizedString("chat_photo_save", comment: "Save to Camera Roll")
     public static let CHAT_FILE_EXPIRED = LocalizedString("chat_file_expired", comment: "Expired")
-    public static let CHAT_VOICE_RECORD_LONGPRESS_HINT = LocalizedString("chat_voice_record_longpress_hint", comment: "Hold to record, release to send.")
     public static let CHAT_QUOTE_TYPE_STICKER = LocalizedString("chat_quote_type_sticker", comment: "Sticker")
     public static let CHAT_QUOTE_TYPE_PHOTO = LocalizedString("chat_quote_type_photo", comment: "Photo")
     public static let CHAT_QUOTE_TYPE_VIDEO = LocalizedString("chat_quote_type_video", comment: "Video")

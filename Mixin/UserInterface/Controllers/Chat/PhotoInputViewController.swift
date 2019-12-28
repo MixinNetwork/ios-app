@@ -24,7 +24,6 @@ class PhotoInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         DispatchQueue.global().async { [weak self] in
@@ -63,6 +62,15 @@ class PhotoInputViewController: UIViewController {
             vc.fetchResult = allPhotos
             gridViewController = vc
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard let previous = previousTraitCollection, previous.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory else {
+            return
+        }
+        albumsCollectionLayout.invalidateLayout()
+        albumsCollectionView.reloadData()
     }
     
     private func reloadGrid(at indexPath: IndexPath) {

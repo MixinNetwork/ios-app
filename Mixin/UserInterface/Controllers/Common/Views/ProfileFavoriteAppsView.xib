@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -21,13 +22,13 @@
                     </constraints>
                 </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="7iG-Zm-TIM">
-                    <rect key="frame" x="203.5" y="0.0" width="6" height="34"/>
+                    <rect key="frame" x="188.5" y="0.0" width="12" height="34"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rk5-4d-LJp">
                     <rect key="frame" x="103.5" y="0.0" width="110" height="34"/>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="Rk5-4d-LJp" firstAttribute="trailing" secondItem="aFF-wu-hva" secondAttribute="trailing" constant="40" id="C7T-y8-J24"/>
                 <constraint firstItem="Rk5-4d-LJp" firstAttribute="bottom" secondItem="aFF-wu-hva" secondAttribute="bottom" id="Jas-0R-Ogt"/>
@@ -36,7 +37,7 @@
                 <constraint firstAttribute="bottom" secondItem="7iG-Zm-TIM" secondAttribute="bottom" id="W6N-qZ-tU3"/>
                 <constraint firstItem="Rk5-4d-LJp" firstAttribute="top" secondItem="aFF-wu-hva" secondAttribute="top" id="gEC-u7-xNd"/>
                 <constraint firstItem="aFF-wu-hva" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ik6-en-FYh"/>
-                <constraint firstItem="7iG-Zm-TIM" firstAttribute="leading" secondItem="aFF-wu-hva" secondAttribute="trailing" constant="30" id="pwn-4d-pLW"/>
+                <constraint firstItem="7iG-Zm-TIM" firstAttribute="leading" secondItem="aFF-wu-hva" secondAttribute="trailing" constant="15" id="pwn-4d-pLW"/>
                 <constraint firstItem="aFF-wu-hva" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="qJw-KS-I1B"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -49,5 +50,8 @@
     </objects>
     <resources>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

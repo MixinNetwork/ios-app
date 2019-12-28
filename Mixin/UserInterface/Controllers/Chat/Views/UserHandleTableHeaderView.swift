@@ -16,16 +16,16 @@ final class UserHandleTableHeaderView: UIView {
     }
     
     private func prepare() {
+        shadowView.isUserInteractionEnabled = false
+        shadowView.backgroundColor = .clear
+        addSubview(shadowView)
         decorationView.isUserInteractionEnabled = false
-        decorationView.backgroundColor = .white
+        decorationView.backgroundColor = .background
         addSubview(decorationView)
         decorationView.snp.makeConstraints { (make) in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(7)
         }
-        shadowView.isUserInteractionEnabled = false
-        shadowView.backgroundColor = .clear
-        addSubview(shadowView)
         shadowView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(decorationView.snp.top)

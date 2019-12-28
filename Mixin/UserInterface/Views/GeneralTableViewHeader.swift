@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 
 class GeneralTableViewHeader: UITableViewHeaderFooterView {
-
+    
     var label: UILabel!
     var labelTopConstraint: NSLayoutConstraint!
     
@@ -10,7 +10,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         prepare()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -19,8 +19,8 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
     private func prepare() {
         clipsToBounds = true
         label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkText
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.textColor = .text
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
@@ -29,7 +29,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         }
         labelTopConstraint = label.topAnchor.constraint(equalTo: topAnchor)
         labelTopConstraint.isActive = true
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .background
     }
     
 }

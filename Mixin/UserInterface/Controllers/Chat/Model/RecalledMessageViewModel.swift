@@ -2,21 +2,12 @@ import UIKit
 
 class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     
-    private enum Font {
-        private static let font: UIFont = {
-            let descriptor = UIFont.systemFont(ofSize: 16).fontDescriptor.withMatrix(.italic)
-            return UIFont(descriptor: descriptor, size: 16)
-        }()
-        static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
-        static let lineHeight = round(font.lineHeight)
-    }
-    
     override class var ctFont: CTFont {
-        return Font.ctFont
+        return CoreTextFontSet.recalledMessage.ctFont
     }
     
     override class var lineHeight: CGFloat {
-        return Font.lineHeight
+        return CoreTextFontSet.recalledMessage.lineHeight
     }
     
     override var rawContent: String {
@@ -32,8 +23,8 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
         return false
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         if style.contains(.received) {
             prefixImage = R.image.ic_recalled_message_prefix_received()
         } else {

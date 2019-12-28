@@ -1,37 +1,38 @@
 import UIKit
 
 class MessageViewModel: CustomDebugStringConvertible {
-
-    static let backgroundImageMargin = Margin(leading: 8, trailing: 66, top: 0, bottom: 0)
+    
     static let bottomSeparatorHeight: CGFloat = 10
-
+    
     let message: MessageItem
     let quote: Quote?
     let time: String
-    let layoutWidth: CGFloat
+    
+    private(set) var layoutWidth: CGFloat = 414
     
     var thumbnail: UIImage?
     var backgroundImage: UIImage?
     var backgroundImageFrame = CGRect.zero
     var cellHeight: CGFloat = 44
-
-    internal var contentMargin: Margin {
+    
+    var contentMargin: Margin {
         return Margin(leading: 16, trailing: 10, top: 7, bottom: 7)
     }
     
-    public var debugDescription: String {
+    var debugDescription: String {
         return "MessageViewModel for message: \(message), layoutWidth: \(layoutWidth), cellHeight: \(cellHeight)"
     }
     
     var style: Style {
-        didSet {
-            if style != oldValue {
-                didSetStyle()
-            }
+        get {
+            return _style
+        }
+        set {
+            layout(width: layoutWidth, style: newValue)
         }
     }
     
-    internal var bottomSeparatorHeight: CGFloat {
+    var bottomSeparatorHeight: CGFloat {
         if style.contains(.bottomSeparator) {
             return MessageViewModel.bottomSeparatorHeight
         } else {
@@ -39,11 +40,11 @@ class MessageViewModel: CustomDebugStringConvertible {
         }
     }
     
-    init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    private var _style: Style = []
+    
+    init(message: MessageItem) {
         self.message = message
-        self.style = style
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
-        self.layoutWidth = layoutWidth
         if let thumbImage = message.thumbImage, let imageData = Data(base64Encoded: thumbImage)  {
             thumbnail = UIImage(data: imageData)
         } else {
@@ -54,13 +55,13 @@ class MessageViewModel: CustomDebugStringConvertible {
         } else {
             self.quote = nil
         }
-        didSetStyle()
     }
     
-    func didSetStyle() {
-        
+    func layout(width: CGFloat, style: Style) {
+        layoutWidth = width
+        _style = style
     }
-
+    
 }
 
 extension MessageViewModel {
@@ -89,6 +90,18 @@ extension MessageViewModel {
             self.horizontal = leading + trailing
             self.vertical = top + bottom
         }
+    }
+    
+    enum ImageSet {
+        
+        enum MessageStatus {
+            static let size = CGSize(width: doubleCheckmark.size.width,
+                                     height: pending.size.height)
+            static let pending = R.image.ic_chat_time()!.withRenderingMode(.alwaysTemplate)
+            static let checkmark = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
+            static let doubleCheckmark = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
+        }
+        
     }
     
 }

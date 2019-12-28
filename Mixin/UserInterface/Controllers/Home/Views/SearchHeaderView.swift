@@ -21,7 +21,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
     
     lazy var topFillingBackgroundView: InfiniteTopView = {
         let view = InfiniteTopView()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         return view
     }()
     
@@ -46,19 +46,19 @@ class SearchHeaderView: UITableViewHeaderFooterView {
     }
     
     private func prepare() {
-        normalBackgroundView.backgroundColor = .white
+        normalBackgroundView.backgroundColor = .background
         backgroundView = normalBackgroundView
         clipsToBounds = false
         topShadowView.clipsToBounds = true
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .darkText
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.textColor = .text
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         button.setTitle(R.string.localizable.action_more(), for: .normal)
         button.setTitleColor(.highlightedText, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)
         button.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
         contentView.addSubview(topShadowView)

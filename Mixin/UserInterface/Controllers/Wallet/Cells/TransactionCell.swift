@@ -8,7 +8,7 @@ class TransactionCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectedBackgroundView = UIView(frame: bounds)
-        selectedBackgroundView!.backgroundColor = .modernCellSelection
+        selectedBackgroundView!.backgroundColor = .selectionBackground
     }
     
 }

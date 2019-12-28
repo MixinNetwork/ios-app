@@ -21,7 +21,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        contentSize = viewModel.contentSize
+        contentSize = viewModel.presentationSize
         frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
         imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode
@@ -127,7 +127,8 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
     
     override func prepare() {
         timeLabel.backgroundColor = .clear
-        timeLabel.font = DetailInfoMessageViewModel.timeFont
+        timeLabel.font = MessageFontSet.time.scaled
+        timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         timeLabel.textColor = .white
         statusImageView.contentMode = .left

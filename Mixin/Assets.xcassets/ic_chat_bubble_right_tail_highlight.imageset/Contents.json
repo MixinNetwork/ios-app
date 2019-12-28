@@ -5,6 +5,16 @@
       "scale" : "1x"
     },
     {
+      "idiom" : "universal",
+      "scale" : "1x",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ]
+    },
+    {
       "resizing" : {
         "mode" : "9-part",
         "center" : {
@@ -32,6 +42,31 @@
           "height" : 1
         },
         "cap-insets" : {
+          "bottom" : 36,
+          "top" : 12,
+          "right" : 28,
+          "left" : 14
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "ic_chat_bubble_right_tail_highlight_dark@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "scale" : "2x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "tile",
+          "width" : 1,
+          "height" : 1
+        },
+        "cap-insets" : {
           "bottom" : 54,
           "top" : 18,
           "right" : 42,
@@ -40,6 +75,31 @@
       },
       "idiom" : "universal",
       "filename" : "ic_chat_bubble_right_tail_highlight@3x.png",
+      "scale" : "3x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "tile",
+          "width" : 1,
+          "height" : 1
+        },
+        "cap-insets" : {
+          "bottom" : 54,
+          "top" : 18,
+          "right" : 42,
+          "left" : 21
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "ic_chat_bubble_right_tail_highlight_dark@3x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "scale" : "3x"
     }
   ],

@@ -23,10 +23,22 @@ final class ViewEmergencyContactViewController: UIViewController {
                                  name: user.fullName ?? "")
         nameLabel.text = user.fullName
         idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
+        updateDescription()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        updateDescription()
+    }
+    
+    private func updateDescription() {
         let text = R.string.localizable.emergency_tip_after()
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 12),
-            .foregroundColor: UIColor.descriptionText
+            .font: UIFont.preferredFont(forTextStyle: .caption1),
+            .foregroundColor: UIColor.accessoryText
         ]
         let str = NSMutableAttributedString(string: text, attributes: attrs)
         let linkRange = (text as NSString)

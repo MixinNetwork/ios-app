@@ -11,7 +11,7 @@ class DetailInfoMessageCell: MessageCell {
     let fullnameButton = UIButton()
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
-    let identityIconImageView = UIImageView(image: #imageLiteral(resourceName: "ic_user_bot"))
+    let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
     let highlightAnimationDuration: TimeInterval = 0.2
     
     override func render(viewModel: MessageViewModel) {
@@ -48,7 +48,8 @@ class DetailInfoMessageCell: MessageCell {
     
     override func prepare() {
         super.prepare()
-        fullnameButton.titleLabel?.font = DetailInfoMessageViewModel.fullnameFont
+        fullnameButton.titleLabel?.font = MessageFontSet.fullname.scaled
+        fullnameButton.adjustsFontForContentSizeCategory = true
         fullnameButton.contentHorizontalAlignment = .left
         fullnameButton.titleLabel?.lineBreakMode = .byTruncatingTail
         fullnameButton.addTarget(self, action: #selector(fullnameAction(_:)), for: .touchUpInside)
@@ -56,7 +57,8 @@ class DetailInfoMessageCell: MessageCell {
         statusImageView.contentMode = .left
         contentView.addSubview(statusImageView)
         timeLabel.backgroundColor = .clear
-        timeLabel.font = DetailInfoMessageViewModel.timeFont
+        timeLabel.font = MessageFontSet.time.scaled
+        timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         contentView.addSubview(timeLabel)
         contentView.addSubview(identityIconImageView)
@@ -67,11 +69,11 @@ class DetailInfoMessageCell: MessageCell {
     }
  
     func updateAppearance(highlight: Bool, animated: Bool) {
-        guard let viewModel = viewModel, let bubbleImageProvider = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageProvider else {
+        guard let viewModel = viewModel, let bubbleImageSet = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageSet else {
             return
         }
         let transition = {
-            self.backgroundImageView.image = bubbleImageProvider.bubbleImage(forStyle: viewModel.style, highlight: highlight)
+            self.backgroundImageView.image = bubbleImageSet.image(forStyle: viewModel.style, highlight: highlight)
         }
         if animated {
             UIView.transition(with: backgroundImageView,

@@ -70,12 +70,20 @@ class ConversationTableView: UITableView {
             return super.tableFooterView
         }
         set {
-            let isAppendingFooterView  = super.tableFooterView == nil && newValue != nil
-            let reachesBottomBeforeAppending = abs(contentOffset.y - bottomContentOffset.y) < 1
-            super.tableFooterView = newValue
-            layoutIfNeeded()
-            let contentSizeBeyondsBottom = contentSize.height > frame.height - contentInset.vertical
-            if isAppendingFooterView && reachesBottomBeforeAppending && contentSizeBeyondsBottom {
+            let adjustContentOffset: Bool
+            if super.tableFooterView == nil && newValue != nil {
+                let reachesBottomBeforeAppending = abs(contentOffset.y - bottomContentOffset.y) < 1
+                super.tableFooterView = newValue
+                layoutIfNeeded()
+                let contentSizeBeyondsBottom = contentSize.height > frame.height - contentInset.vertical
+                adjustContentOffset = reachesBottomBeforeAppending && contentSizeBeyondsBottom
+            } else if let footerView = super.tableFooterView, newValue == nil {
+                adjustContentOffset = (contentSize.height - footerView.frame.height - contentOffset.y) < frame.height
+                super.tableFooterView = nil
+            } else {
+                adjustContentOffset = false
+            }
+            if adjustContentOffset {
                 contentOffset = bottomContentOffset
             }
         }
@@ -98,7 +106,7 @@ class ConversationTableView: UITableView {
     private var headerViewsAnimator: UIViewPropertyAnimator?
     private var longPressRecognizer: UILongPressGestureRecognizer!
     private var bottomContentOffset: CGPoint {
-        let y = contentSize.height + contentInset.bottom - frame.height
+        let y = contentSize.height + adjustedContentInset.bottom - frame.height
         return CGPoint(x: contentOffset.x, y: max(-contentInset.top, y))
     }
     
@@ -211,20 +219,11 @@ class ConversationTableView: UITableView {
         setContentOffset(bottomContentOffset, animated: animated)
     }
     
-    func setContentInsetBottom(_ value: CGFloat, automaticallyAdjustContentOffset: Bool) {
-        let newContentOffsetY = contentOffset.y + value - contentInset.bottom
-        contentInset.bottom = value
-        if automaticallyAdjustContentOffset {
-            setContentOffsetYSafely(newContentOffsetY)
-        }
-    }
-    
     func setContentOffsetYSafely(_ y: CGFloat) {
         let bottomContentOffsetY = bottomContentOffset.y
         if bottomContentOffsetY > -contentInset.top {
-            var contentOffset = self.contentOffset
-            contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
-            self.contentOffset = contentOffset
+            let y = min(bottomContentOffsetY, max(-contentInset.top, y))
+            self.contentOffset = CGPoint(x: 0, y: y)
         }
     }
     

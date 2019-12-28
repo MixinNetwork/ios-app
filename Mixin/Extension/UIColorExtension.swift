@@ -4,96 +4,79 @@ extension UIColor {
     
     static let background = R.color.background()!
     static let secondaryBackground = R.color.background_secondary()!
-    static let tertiaryBackground = R.color.background_tertiary()!
+    static let inputBackground = R.color.background_input()!
     static let selectionBackground = R.color.background_selection()!
-    static let mixinBlue = R.color.blue()!
     static let mixinGreen = R.color.green()!
     static let mixinRed = R.color.red()!
     static let title = R.color.title()!
     static let text = R.color.text()!
-    static let text2 = R.color.text_2()!
-    static let text3 = R.color.text_3()!
-    static let text4 = R.color.text_4()!
-    
-    static let theme = UIColor(rgbValue: 0x397EE4)
-    static let darkTheme = UIColor(rgbValue: 0x0CAAF5)
-    static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
+    static let theme = R.color.theme()!
+
+    static let accessoryText = R.color.text_accessory()!
+    static let highlightedText = R.color.theme()!
+    static let shadow = R.color.table_shadow()!
+    static let chatText = R.color.chat_text()!
+
     static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
-    static let placeholder = UIColor(red: 0, green: 0, blue: 0.1, alpha: 0.22)
-    static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)
     static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
-    static let selection = UIColor(rgbValue: 0xEDEEEE)
-    static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
-    static let darkText = R.color.dark_text()!
-    static let actionText = UIColor(displayP3RgbValue: 0x4B7CDD)
-    static let highlightedText = R.color.highlighted_text()!
-    static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
-    static let shadow = UIColor(rgbValue: 0xC3C3C3)
-    
+
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
-    
-    static let hintBlue = UIColor(rgbValue: 0x1FB4FC)
-    static let hintRed = UIColor(rgbValue: 0xFF7070)
-    static let hintGreen = UIColor(rgbValue: 0x48CF94)
-    
-    static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
-    
-    static let indicatorGray = UIColor(displayP3RgbValue: 0xBCBEC3)
-    static let disabledGray = UIColor(displayP3RgbValue: 0xE5E7EC)
-    
-    static let usernameColors = [UIColor(rgbValue: 0xAA4848),
-                                 UIColor(rgbValue: 0xB0665E),
-                                 UIColor(rgbValue: 0xEF8A44),
-                                 UIColor(rgbValue: 0xA09555),
-                                 UIColor(rgbValue: 0x727234),
-                                 UIColor(rgbValue: 0x9CAD23),
-                                 UIColor(rgbValue: 0xAA9100),
-                                 UIColor(rgbValue: 0xC49B4B),
-                                 UIColor(rgbValue: 0xA47758),
-                                 UIColor(rgbValue: 0xDF694C),
-                                 UIColor(rgbValue: 0xD65859),
-                                 UIColor(rgbValue: 0xC2405A),
-                                 UIColor(rgbValue: 0xA75C96),
-                                 UIColor(rgbValue: 0xBD637C),
-                                 UIColor(rgbValue: 0x8F7AC5),
-                                 UIColor(rgbValue: 0x7983C2),
-                                 UIColor(rgbValue: 0x728DB8),
-                                 UIColor(rgbValue: 0x5977C2),
-                                 UIColor(rgbValue: 0x5E6DA2),
-                                 UIColor(rgbValue: 0x3D98D0),
-                                 UIColor(rgbValue: 0x5E97A1),
-                                 UIColor(rgbValue: 0x4EABAA),
-                                 UIColor(rgbValue: 0x63A082),
-                                 UIColor(rgbValue: 0x877C9B),
-                                 UIColor(rgbValue: 0xAA66C3),
-                                 UIColor(rgbValue: 0xBB5334),
-                                 UIColor(rgbValue: 0x667355),
-                                 UIColor(rgbValue: 0x668899),
-                                 UIColor(rgbValue: 0x83BE44),
-                                 UIColor(rgbValue: 0xBBA600),
-                                 UIColor(rgbValue: 0x429AB6),
-                                 UIColor(rgbValue: 0x75856F),
-                                 UIColor(rgbValue: 0x88A299),
-                                 UIColor(rgbValue: 0xB3798E),
-                                 UIColor(rgbValue: 0x447899),
-                                 UIColor(rgbValue: 0xD79200),
-                                 UIColor(rgbValue: 0x728DB8),
-                                 UIColor(rgbValue: 0xDD637C),
-                                 UIColor(rgbValue: 0x887C66),
-                                 UIColor(rgbValue: 0xBE6C2C),
-                                 UIColor(rgbValue: 0x9B6D77),
-                                 UIColor(rgbValue: 0xB69370),
-                                 UIColor(rgbValue: 0x976236),
-                                 UIColor(rgbValue: 0x9D77A5),
-                                 UIColor(rgbValue: 0x8A660E),
-                                 UIColor(rgbValue: 0x5E935E),
-                                 UIColor(rgbValue: 0x9B8484),
-                                 UIColor(rgbValue: 0x92B288)]
+
+    static let usernameColors = [UIColor(displayP3RgbValue: 0x8C8DFF),
+                                 UIColor(displayP3RgbValue: 0x7983C2),
+                                 UIColor(displayP3RgbValue: 0x6D8DDE),
+                                 UIColor(displayP3RgbValue: 0x5979F0),
+                                 UIColor(displayP3RgbValue: 0x6695DF),
+                                 UIColor(displayP3RgbValue: 0x8F7AC5),
+                                 UIColor(displayP3RgbValue: 0x9D77A5),
+                                 UIColor(displayP3RgbValue: 0x8A64D0),
+                                 UIColor(displayP3RgbValue: 0xAA66C3),
+                                 UIColor(displayP3RgbValue: 0xA75C96),
+                                 UIColor(displayP3RgbValue: 0xC8697D),
+                                 UIColor(displayP3RgbValue: 0xB74D62),
+                                 UIColor(displayP3RgbValue: 0xBD637C),
+                                 UIColor(displayP3RgbValue: 0xB3798E),
+                                 UIColor(displayP3RgbValue: 0x9B6D77),
+                                 UIColor(displayP3RgbValue: 0xB87F7F),
+                                 UIColor(displayP3RgbValue: 0xC5595A),
+                                 UIColor(displayP3RgbValue: 0xAA4848),
+                                 UIColor(displayP3RgbValue: 0xB0665E),
+                                 UIColor(displayP3RgbValue: 0xB76753),
+                                 UIColor(displayP3RgbValue: 0xBB5334),
+                                 UIColor(displayP3RgbValue: 0xC97B46),
+                                 UIColor(displayP3RgbValue: 0xBE6C2C),
+                                 UIColor(displayP3RgbValue: 0xCB7F40),
+                                 UIColor(displayP3RgbValue: 0xA47758),
+                                 UIColor(displayP3RgbValue: 0xB69370),
+                                 UIColor(displayP3RgbValue: 0xA49373),
+                                 UIColor(displayP3RgbValue: 0xAA8A46),
+                                 UIColor(displayP3RgbValue: 0xAA8220),
+                                 UIColor(displayP3RgbValue: 0x76A048),
+                                 UIColor(displayP3RgbValue: 0x9CAD23),
+                                 UIColor(displayP3RgbValue: 0xA19431),
+                                 UIColor(displayP3RgbValue: 0xAA9100),
+                                 UIColor(displayP3RgbValue: 0xA09555),
+                                 UIColor(displayP3RgbValue: 0xC49B4B),
+                                 UIColor(displayP3RgbValue: 0x5FB05F),
+                                 UIColor(displayP3RgbValue: 0x6AB48F),
+                                 UIColor(displayP3RgbValue: 0x71B15C),
+                                 UIColor(displayP3RgbValue: 0xB3B357),
+                                 UIColor(displayP3RgbValue: 0xA3B561),
+                                 UIColor(displayP3RgbValue: 0x909F45),
+                                 UIColor(displayP3RgbValue: 0x93B289),
+                                 UIColor(displayP3RgbValue: 0x3D98D0),
+                                 UIColor(displayP3RgbValue: 0x429AB6),
+                                 UIColor(displayP3RgbValue: 0x4EABAA),
+                                 UIColor(displayP3RgbValue: 0x6BC0CE),
+                                 UIColor(displayP3RgbValue: 0x64B5D9),
+                                 UIColor(displayP3RgbValue: 0x3E9CCB),
+                                 UIColor(displayP3RgbValue: 0x2887C4),
+                                 UIColor(displayP3RgbValue: 0x52A98B)]
     
     convenience init(rgbValue: UInt, alpha: CGFloat = 1.0) {
         self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,

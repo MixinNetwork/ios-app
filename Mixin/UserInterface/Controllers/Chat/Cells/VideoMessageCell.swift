@@ -14,7 +14,8 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
         lengthLabel.layer.backgroundColor = UIColor.black.withAlphaComponent(0.4).cgColor
         lengthLabel.textColor = .white
-        lengthLabel.font = .systemFont(ofSize: 12)
+        lengthLabel.font = .preferredFont(forTextStyle: .caption1)
+        lengthLabel.adjustsFontForContentSizeCategory = true
         lengthLabel.numberOfLines = 1
         lengthLabel.layer.cornerRadius = 4
         lengthLabel.clipsToBounds = true
@@ -23,7 +24,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     }
     
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
-        contentImageWrapperView.aspectRatio = viewModel.aspectRatio
+        contentImageWrapperView.aspectRatio = viewModel.contentRatio
         contentImageView.image = viewModel.thumbnail
         if let viewModel = viewModel as? VideoMessageViewModel, viewModel.duration != nil || viewModel.fileSize != nil {
             let mediaHasDownloaded = viewModel.message.mediaStatus == MediaStatus.DONE.rawValue

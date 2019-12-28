@@ -29,8 +29,7 @@ class ContactViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(ContactHeaderView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseId.header)
+        tableView.register(UINib(resource: R.nib.contactHeaderView), forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.sectionFooterHeight = UITableView.automaticDimension

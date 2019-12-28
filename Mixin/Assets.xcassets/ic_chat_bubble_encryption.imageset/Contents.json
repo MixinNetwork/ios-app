@@ -5,6 +5,16 @@
       "scale" : "1x"
     },
     {
+      "idiom" : "universal",
+      "scale" : "1x",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ]
+    },
+    {
       "resizing" : {
         "mode" : "9-part",
         "center" : {
@@ -32,6 +42,31 @@
           "height" : 1
         },
         "cap-insets" : {
+          "bottom" : 26,
+          "top" : 20,
+          "right" : 29,
+          "left" : 28
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "ic_chat_bubble_encryption_dark@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "scale" : "2x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "tile",
+          "width" : 1,
+          "height" : 1
+        },
+        "cap-insets" : {
           "bottom" : 39,
           "top" : 30,
           "right" : 43,
@@ -40,6 +75,31 @@
       },
       "idiom" : "universal",
       "filename" : "ic_chat_bubble_encryption@3x.png",
+      "scale" : "3x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "tile",
+          "width" : 1,
+          "height" : 1
+        },
+        "cap-insets" : {
+          "bottom" : 39,
+          "top" : 30,
+          "right" : 43,
+          "left" : 43
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "ic_chat_bubble_encryption_dark@3x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "scale" : "3x"
     }
   ],

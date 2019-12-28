@@ -119,6 +119,7 @@ extension CallView {
             xibView.frame = bounds
             contentView.addSubview(xibView)
         }
+        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
     }
     
     private func layout(for style: Style) {

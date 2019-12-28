@@ -4,7 +4,7 @@ protocol SnapshotCellDelegate: class {
     func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell)
 }
 
-class SnapshotCell: UITableViewCell {
+class SnapshotCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
@@ -18,9 +18,9 @@ class SnapshotCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectedBackgroundView = UIView(frame: bounds)
-        selectedBackgroundView!.backgroundColor = .modernCellSelection
         amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+        amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 19),
+                            adjustForContentSize: true)
     }
     
     override func prepareForReuse() {

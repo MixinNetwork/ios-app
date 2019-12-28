@@ -55,8 +55,8 @@ class AssetTableHeaderView: InfiniteTopView {
     
     private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont(name: "DINCondensed-Bold", size: 34)!,
-            .foregroundColor: UIColor.darkText
+            .font: UIFontMetrics.default.scaledFont(for: .dinCondensedBold(ofSize: 34)),
+            .foregroundColor: UIColor.text
         ]
         let str = NSMutableAttributedString(string: amount, attributes: attrs)
         let attachment = SymbolTextAttachment(text: symbol)
@@ -76,7 +76,7 @@ class AssetTableHeaderView: InfiniteTopView {
             super.init(data: nil, ofType: nil)
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: UIFont.systemFont(ofSize: 12),
-                .foregroundColor: UIColor.darkText
+                .foregroundColor: UIColor.text
             ]
             let str = NSAttributedString(string: text, attributes: attributes)
             let textSize = str.size()

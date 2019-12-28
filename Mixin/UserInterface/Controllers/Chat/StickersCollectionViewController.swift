@@ -46,7 +46,7 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
         super.viewDidLoad()
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .background
         collectionView.alwaysBounceVertical = true
         collectionView.register(AnimatedImageCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseId)
         collectionView.dataSource = self

@@ -110,7 +110,7 @@ class ContainerViewController: UIViewController {
     }
 
     func setSubtitle(subtitle: String?) {
-        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        titleLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16, weight: .semibold))
         subtitleLabel.text = subtitle
         subtitleLabel.isHidden = false
     }

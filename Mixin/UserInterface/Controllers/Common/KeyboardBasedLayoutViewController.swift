@@ -33,17 +33,18 @@ class KeyboardBasedLayoutViewController: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
         guard !viewIsDisappearing else {
             return
         }
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        let frame = view.convert(endFrame, from: nil)
         if viewHasAppeared {
-            layout(for: endFrame)
+            layout(for: frame)
         } else {
             UIView.performWithoutAnimation {
-                layout(for: endFrame)
+                layout(for: frame)
             }
         }
     }

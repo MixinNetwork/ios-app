@@ -1,7 +1,7 @@
 import UIKit
 
 final class EmergencyTipsViewController: UIViewController {
-    
+
     var onNext: (() -> Void)?
     
     class func instance() -> EmergencyTipsViewController {

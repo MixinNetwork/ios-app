@@ -2,53 +2,55 @@ import UIKit
 
 class CardMessageViewModel: DetailInfoMessageViewModel {
     
-    var leadingConstant: CGFloat = 0
-    var trailingConstant: CGFloat = 0
-    
-    override class var bubbleImageProvider: BubbleImageProvider.Type {
-        return LightRightBubbleImageProvider.self
+    override class var bubbleImageSet: BubbleImageSet.Type {
+        return LightRightBubbleImageSet.self
     }
+    
+    private(set) var leadingConstant: CGFloat = 0
+    private(set) var trailingConstant: CGFloat = 0
     
     var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0
     }
     
-    internal var size: CGSize {
+    var size: CGSize {
         return CGSize(width: 220, height: 72)
     }
     
-    internal var leftLeadingMargin: CGFloat {
+    var leftLeadingMargin: CGFloat {
         return 22
     }
     
-    internal var rightLeadingMargin: CGFloat {
+    var rightLeadingMargin: CGFloat {
         return 12
     }
     
-    internal var leftTrailingMargin: CGFloat {
+    var leftTrailingMargin: CGFloat {
         return 20
     }
     
-    internal var rightTrailingMargin: CGFloat {
+    var rightTrailingMargin: CGFloat {
         return 30
     }
     
-    override func didSetStyle() {
-        let backgroundSize = CGSize(width: min(size.width, layoutWidth - MessageViewModel.backgroundImageMargin.horizontal),
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
+        let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
+        let backgroundSize = CGSize(width: min(size.width, width - bubbleMargin.horizontal),
                                     height: size.height)
         let backgroundOrigin: CGPoint
         if style.contains(.received) {
-            backgroundOrigin = CGPoint(x: MessageViewModel.backgroundImageMargin.leading, y: fullnameHeight)
+            backgroundOrigin = CGPoint(x: bubbleMargin.leading, y: fullnameHeight)
             leadingConstant = leftLeadingMargin
             trailingConstant = leftTrailingMargin
         } else {
-            backgroundOrigin = CGPoint(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - backgroundSize.width, y: fullnameHeight)
+            backgroundOrigin = CGPoint(x: width - bubbleMargin.leading - backgroundSize.width, y: fullnameHeight)
             leadingConstant = rightLeadingMargin
             trailingConstant = rightTrailingMargin
         }
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
         cellHeight = fullnameHeight + backgroundSize.height + bottomSeparatorHeight
-        super.didSetStyle()
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
     }
     
 }

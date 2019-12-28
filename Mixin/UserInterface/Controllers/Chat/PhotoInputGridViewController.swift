@@ -86,12 +86,12 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.identifier = nil
             cell.imageView.contentMode = .center
             cell.imageView.image = R.image.conversation.ic_camera()
-            cell.imageView.backgroundColor = UIColor(rgbValue: 0x333333)
+            cell.imageView.backgroundColor = R.color.camera_background()
             cell.mediaTypeView.style = .hidden
         } else if let asset = asset(at: indexPath) {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
-            cell.imageView.backgroundColor = .white
+            cell.imageView.backgroundColor = .background
             imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak cell] (image, _) in
                 guard let cell = cell, cell.identifier == asset.localIdentifier else {
                     return

@@ -49,7 +49,7 @@ class BarChartView: UIView {
                 barLayersContainerLayer.addSublayer(layer)
                 barLayers.append(layer)
                 let shadowLayer = makeShadowLayer(at: index)
-                shadowLayer.fillColor = UIColor.white.cgColor
+                shadowLayer.fillColor = UIColor.clear.cgColor
                 self.layer.insertSublayer(shadowLayer, at: 0)
                 shadowLayers.append(shadowLayer)
             }

@@ -4,13 +4,13 @@ class TransferMessageViewModel: CardMessageViewModel {
     
     let snapshotAmount: String?
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+    override init(message: MessageItem) {
         snapshotAmount = CurrencyFormatter.localizedString(from: message.snapshotAmount, format: .precision, sign: .whenNegative)
-        super.init(message: message, style: style, fits: layoutWidth)
+        super.init(message: message)
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         if !style.contains(.received) {
             timeFrame.origin.x += statusFrame.width
         }

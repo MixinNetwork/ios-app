@@ -13,6 +13,7 @@ class ConversationDataSource {
     
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
+    var focusIndexPath: IndexPath?
     weak var tableView: ConversationTableView?
     
     private let windowRect = AppDelegate.current.window.bounds
@@ -85,6 +86,119 @@ class ConversationDataSource {
     func cancelMessageProcessing() {
         messageProcessingIsCancelled = true
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func reload(initialMessageId: String? = nil, prepareBeforeReload: (() -> Void)? = nil, completion: (() -> Void)? = nil, animatedReloading: Bool = false) {
+        canInsertUnreadHint = true
+        var didLoadEarliestMessage = false
+        var didLoadLatestMessage = false
+        var messages: [MessageItem]
+        if initialMessageId != nil {
+            ConversationViewController.positions[conversationId] = nil
+        }
+        var initialMessageId = initialMessageId ?? highlight?.messageId
+        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
+            if highlight == nil, initialMessageId != firstUnreadMessageId {
+                firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
+            }
+        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: numberOfMessagesOnReloading) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
+            self.firstUnreadMessageId = firstUnreadMessageId
+        } else if let id = ConversationViewController.positions[conversationId]?.messageId, id == MessageItem.encryptionHintMessageId {
+            messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
+            didLoadEarliestMessage = true
+            didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
+            initialMessageId = id
+        } else if let id = ConversationViewController.positions[conversationId]?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: id, count: numberOfMessagesOnReloading) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
+            initialMessageId = id
+        } else {
+            messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
+            didLoadLatestMessage = true
+            didLoadEarliestMessage = messages.count < numberOfMessagesOnReloading
+            firstUnreadMessageId = nil
+        }
+        loadedMessageIds = Set(messages.map({ $0.messageId }))
+        if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
+            let firstUnreadMessge = messages[firstUnreadIndex]
+            let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
+            messages.insert(hint, at: firstUnreadIndex)
+            self.firstUnreadMessageId = nil
+            canInsertUnreadHint = false
+        }
+        var (dates, viewModels) = self.viewModels(with: messages, fits: layoutSize.width)
+        if canInsertEncryptionHint && didLoadEarliestMessage {
+            let date: String
+            if let firstDate = dates.first {
+                date = firstDate
+            } else {
+                date = DateFormatter.yyyymmdd.string(from: Date())
+                dates.append(date)
+            }
+            let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
+            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
+            if viewModels[date] != nil {
+                viewModels[date]?.insert(viewModel, at: 0)
+            } else {
+                viewModels[date] = [viewModel]
+            }
+        }
+        var initialIndexPath: IndexPath?
+        var offset: CGFloat = 0
+        let unreadMessagesCount = MessageDAO.shared.getUnreadMessagesCount(conversationId: conversationId)
+        
+        if let initialMessageId = initialMessageId {
+            initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
+            if let position = ConversationViewController.positions[conversationId], initialMessageId == position.messageId, highlight == nil {
+                offset = position.offset
+            } else {
+                offset -= ConversationDateHeaderView.height
+            }
+        } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
+            if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
+                initialIndexPath = IndexPath(row: 0, section: 0)
+            } else {
+                initialIndexPath = unreadHintIndexPath
+            }
+            offset -= ConversationDateHeaderView.height
+        }
+        performSynchronouslyOnMainThread {
+            guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+                return
+            }
+            prepareBeforeReload?()
+            self.dates = dates
+            self.viewModels = viewModels
+            tableView.reloadData()
+            self.didLoadEarliestMessage = didLoadEarliestMessage
+            self.didLoadLatestMessage = didLoadLatestMessage
+            let scrolling: () -> Void = {
+                if let initialIndexPath = initialIndexPath {
+                    self.focusIndexPath = initialIndexPath
+                    if tableView.contentSize.height > self.layoutSize.height {
+                        let rect = tableView.rectForRow(at: initialIndexPath)
+                        let y = rect.origin.y + offset - tableView.contentInset.top
+                        tableView.setContentOffsetYSafely(y)
+                    }
+                } else {
+                    self.focusIndexPath = self.lastIndexPath
+                    tableView.scrollToBottom(animated: false)
+                }
+            }
+            if animatedReloading {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: scrolling, completion: nil)
+            } else {
+                scrolling()
+            }
+            if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
+                NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
+            }
+            ConversationViewController.positions[self.conversationId] = nil
+            SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
+            self.didInitializedData = true
+            completion?()
+        }
     }
     
     func scrollToFirstUnreadMessageOrBottom() {
@@ -642,117 +756,6 @@ extension ConversationDataSource {
         }
     }
     
-    private func reload(initialMessageId: String? = nil, prepareBeforeReload: (() -> Void)? = nil, completion: (() -> Void)? = nil, animatedReloading: Bool = false) {
-        canInsertUnreadHint = true
-        var didLoadEarliestMessage = false
-        var didLoadLatestMessage = false
-        var messages: [MessageItem]
-        if initialMessageId != nil {
-            ConversationViewController.positions[conversationId] = nil
-        }
-        var initialMessageId = initialMessageId ?? highlight?.messageId
-        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
-            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
-            if highlight == nil, initialMessageId != firstUnreadMessageId {
-                firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
-            }
-        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: numberOfMessagesOnReloading) {
-            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
-            self.firstUnreadMessageId = firstUnreadMessageId
-        } else if let id = ConversationViewController.positions[conversationId]?.messageId, id == MessageItem.encryptionHintMessageId {
-            messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
-            didLoadEarliestMessage = true
-            didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
-            initialMessageId = id
-        } else if let id = ConversationViewController.positions[conversationId]?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: id, count: numberOfMessagesOnReloading) {
-            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
-            initialMessageId = id
-        } else {
-            messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
-            didLoadLatestMessage = true
-            didLoadEarliestMessage = messages.count < numberOfMessagesOnReloading
-            firstUnreadMessageId = nil
-        }
-        loadedMessageIds = Set(messages.map({ $0.messageId }))
-        if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
-            let firstUnreadMessge = messages[firstUnreadIndex]
-            let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
-            messages.insert(hint, at: firstUnreadIndex)
-            self.firstUnreadMessageId = nil
-            canInsertUnreadHint = false
-        }
-        var (dates, viewModels) = self.viewModels(with: messages, fits: layoutSize.width)
-        if canInsertEncryptionHint && didLoadEarliestMessage {
-            let date: String
-            if let firstDate = dates.first {
-                date = firstDate
-            } else {
-                date = DateFormatter.yyyymmdd.string(from: Date())
-                dates.append(date)
-            }
-            let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
-            if viewModels[date] != nil {
-                viewModels[date]?.insert(viewModel, at: 0)
-            } else {
-                viewModels[date] = [viewModel]
-            }
-        }
-        var initialIndexPath: IndexPath?
-        var offset: CGFloat = 0
-        let unreadMessagesCount = MessageDAO.shared.getUnreadMessagesCount(conversationId: conversationId)
-        
-        if let initialMessageId = initialMessageId {
-            initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
-            if let position = ConversationViewController.positions[conversationId], initialMessageId == position.messageId, highlight == nil {
-                offset = position.offset
-            } else {
-                offset -= ConversationDateHeaderView.height
-            }
-        } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
-            if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                initialIndexPath = IndexPath(row: 0, section: 0)
-            } else {
-                initialIndexPath = unreadHintIndexPath
-            }
-            offset -= ConversationDateHeaderView.height
-        }
-        performSynchronouslyOnMainThread {
-            guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
-                return
-            }
-            prepareBeforeReload?()
-            self.dates = dates
-            self.viewModels = viewModels
-            tableView.reloadData()
-            self.didLoadEarliestMessage = didLoadEarliestMessage
-            self.didLoadLatestMessage = didLoadLatestMessage
-            let scrolling: () -> Void = {
-                if let initialIndexPath = initialIndexPath {
-                    if tableView.contentSize.height > self.layoutSize.height {
-                        let rect = tableView.rectForRow(at: initialIndexPath)
-                        let y = rect.origin.y + offset - tableView.contentInset.top
-                        tableView.setContentOffsetYSafely(y)
-                    }
-                } else {
-                    tableView.scrollToBottom(animated: false)
-                }
-            }
-            if animatedReloading {
-                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: scrolling, completion: nil)
-            } else {
-                scrolling()
-            }
-            if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
-                NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
-            }
-            ConversationViewController.positions[self.conversationId] = nil
-            SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
-            self.didInitializedData = true
-            completion?()
-        }
-    }
-    
     private func indexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {
         for (section, date) in dates.enumerated() {
             let viewModels = viewModels[date]!
@@ -799,49 +802,50 @@ extension ConversationDataSource {
     private func viewModel(withMessage message: MessageItem, style: MessageViewModel.Style, fits layoutWidth: CGFloat) -> MessageViewModel {
         let viewModel: MessageViewModel
         if message.status == MessageStatus.FAILED.rawValue {
-            viewModel = DecryptionFailedMessageViewModel(message: message, style: style, fits: layoutWidth)
+            viewModel = DecryptionFailedMessageViewModel(message: message)
         } else {
             if message.quoteMessageId != nil && message.quoteContent != nil {
-                viewModel = QuoteTextMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = QuoteTextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_TEXT") {
-                viewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = TextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_IMAGE") {
-                viewModel = PhotoMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = PhotoMessageViewModel(message: message)
             } else if message.category.hasSuffix("_STICKER") {
-                viewModel = StickerMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = StickerMessageViewModel(message: message)
             } else if message.category.hasSuffix("_DATA") {
-                viewModel = DataMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = DataMessageViewModel(message: message)
             } else if message.category.hasSuffix("_VIDEO") {
-                viewModel = VideoMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = VideoMessageViewModel(message: message)
             } else if message.category.hasSuffix("_AUDIO") {
-                viewModel = AudioMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AudioMessageViewModel(message: message)
             } else if message.category.hasSuffix("_CONTACT") {
-                viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = ContactMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LIVE") {
-                viewModel = LiveMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = LiveMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
-                viewModel = CallMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                viewModel = TransferMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = TransferMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-                viewModel = SystemMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = SystemMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-                viewModel = AppButtonGroupViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AppButtonGroupViewModel(message: message)
             } else if message.category == MessageCategory.APP_CARD.rawValue {
-                viewModel = AppCardMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = AppCardMessageViewModel(message: message)
             } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
-                viewModel = RecalledMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = RecalledMessageViewModel(message: message)
             } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
-                viewModel = MessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = MessageViewModel(message: message)
                 viewModel.cellHeight = 38
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                viewModel = EncryptionHintViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = EncryptionHintViewModel(message: message)
             } else {
-                viewModel = UnknownMessageViewModel(message: message, style: style, fits: layoutWidth)
+                viewModel = UnknownMessageViewModel(message: message)
             }
-            if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
-                viewModel.highlight(keyword: keyword)
-            }
+        }
+        viewModel.layout(width: layoutWidth, style: style)
+        if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+            viewModel.highlight(keyword: keyword)
         }
         return viewModel
     }
@@ -926,11 +930,9 @@ extension ConversationDataSource {
                     }
                     previousViewModel.style.insert(.bottomSeparator)
                 } else if previousViewModelIsFromDifferentUser {
-                    previousViewModel.style.insert(.bottomSeparator)
-                    previousViewModel.style.insert(.tail)
+                    previousViewModel.style.formUnion([.bottomSeparator, .tail])
                 } else {
-                    previousViewModel.style.remove(.bottomSeparator)
-                    previousViewModel.style.remove(.tail)
+                    previousViewModel.style.subtract([.bottomSeparator, .tail])
                 }
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
                     style.insert(.fullname)
@@ -948,14 +950,12 @@ extension ConversationDataSource {
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
-                    viewModel.style.insert(.tail)
-                    viewModel.style.insert(.bottomSeparator)
+                    viewModel.style.formUnion([.bottomSeparator, .tail])
                     if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
                         nextViewModel.style.insert(.fullname)
                     }
                 } else {
-                    viewModel.style.remove(.tail)
-                    viewModel.style.remove(.bottomSeparator)
+                    viewModel.style.subtract([.bottomSeparator, .tail])
                     nextViewModel.style.remove(.fullname)
                 }
                 DispatchQueue.main.sync {

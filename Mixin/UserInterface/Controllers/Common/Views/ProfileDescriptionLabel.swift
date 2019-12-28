@@ -24,7 +24,7 @@ class ProfileDescriptionLabel: CoreTextLabel {
             typesetIfNeeded(oldValue: oldValue, newValue: font)
         }
     }
-    var textColor = UIColor.darkText {
+    var textColor = UIColor.text {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: textColor)
         }
@@ -72,6 +72,14 @@ class ProfileDescriptionLabel: CoreTextLabel {
     
     override var canBecomeFirstResponder: Bool {
         return true
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard let previous = previousTraitCollection, previous.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory else {
+            return
+        }
+        typeset()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -127,14 +135,15 @@ extension ProfileDescriptionLabel {
         let str = NSMutableAttributedString(string: text)
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
         var linksMap = [NSRange: URL]()
-        Link.detector.enumerateMatches(in: str, options: [], using: { (result, _, _) in
+        Link.detector.enumerateMatches(in: text, options: [], using: { (result, _, _) in
             guard let result = result, let url = result.url else {
                 return
             }
             linksMap[result.range] = url
         })
         // Set attributes
-        let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
+        let desc = UIFontMetrics.default.scaledFont(for: font).fontDescriptor
+        let ctFont = CTFontCreateWithFontDescriptor(desc as CTFontDescriptor, 0, nil)
         var textAlignment = self.textAlignment.ctTextAlignment.rawValue
         var lineBreakMode = self.lineBreakMode.rawValue
         var lineSpacing = self.lineSpacing

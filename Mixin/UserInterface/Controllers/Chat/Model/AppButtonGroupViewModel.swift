@@ -2,65 +2,47 @@ import UIKit
 
 class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     
-    static let titleFont = UIFont.boldSystemFont(ofSize: 16)
-    
-    private static let titleMargin = Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
-    private static let titleAttribute = [NSAttributedString.Key.font: AppButtonGroupViewModel.titleFont]
-    
-    var frames = [(button: CGRect, label: CGRect)]()
+    var frames = [CGRect]()
     var buttonGroupFrame = CGRect.zero
     
-    private let buttonSizes: [CGSize]
-    private let margin = Margin(leading: 10, trailing: 10, top: 0, bottom: 0)
+    private let margin = Margin(leading: 12, trailing: 12, top: 0, bottom: 0)
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        let boundingSize = CGSize(width: layoutWidth - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
-                                  height: UIView.layoutFittingExpandedSize.height)
-        buttonSizes = message.appButtons?.map({
-            let titleSize = ($0.label as NSString).boundingRect(with: boundingSize,
-                                                                options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                                attributes: AppButtonGroupViewModel.titleAttribute,
-                                                                context: nil)
-            return CGSize(width: ceil(titleSize.width + AppButtonGroupViewModel.titleMargin.horizontal),
-                          height: ceil(titleSize.height + AppButtonGroupViewModel.titleMargin.vertical))
-        }) ?? []
-        super.init(message: message, style: style, fits: layoutWidth)
+    override init(message: MessageItem) {
+        super.init(message: message)
         backgroundImage = nil
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        
+        frames = []
+        buttonGroupFrame = .zero
+        
+        let buttonLayoutWidth = width - margin.horizontal
+        let buttonSizes: [CGSize] = message.appButtons?.map({
+            AppButtonView.boundingSize(with: buttonLayoutWidth, title: $0.label)
+        }) ?? []
+        
         var bottomRight = CGPoint(x: margin.leading, y: 0)
-        var y: CGFloat = 0
-        var frames = [CGRect]()
+        var y: CGFloat = style.contains(.fullname) ? fullnameFrame.height : 0
+        var isFirstButton = true
         for buttonSize in buttonSizes {
-            let frame: CGRect
-            if bottomRight.x + buttonSize.width + margin.trailing <= layoutWidth || abs(bottomRight.x - margin.leading) < 0.1 {
-                frame = CGRect(x: bottomRight.x, y: y, width: buttonSize.width, height: buttonSize.height)
+            let origin: CGPoint
+            if isFirstButton || bottomRight.x + buttonSize.width + margin.trailing <= width {
+                origin = CGPoint(x: bottomRight.x, y: y)
             } else {
-                frame = CGRect(x: margin.leading, y: bottomRight.y, width: buttonSize.width, height: buttonSize.height)
-                y = frame.origin.y
+                origin = CGPoint(x: margin.leading, y: bottomRight.y)
+                y = bottomRight.y
             }
+            let frame = CGRect(origin: origin, size: buttonSize)
             frames.append(frame)
             bottomRight = CGPoint(x: frame.maxX, y: frame.maxY)
-        }
-        let buttonMargin = AppButtonGroupViewModel.titleMargin
-        self.frames = frames.map({
-            let labelFrame = CGRect(x: $0.origin.x + buttonMargin.leading,
-                                    y: $0.origin.y + buttonMargin.top,
-                                    width: $0.width - buttonMargin.horizontal,
-                                    height: $0.height - buttonMargin.vertical)
-            return (button: $0, label: labelFrame)
-        })
-        if style.contains(.fullname) {
-            self.frames = self.frames.map {
-                (button: $0.button.offsetBy(dx: 0, dy: fullnameFrame.height),
-                 label: $0.label.offsetBy(dx: 0, dy: fullnameFrame.height))
-            }
+            isFirstButton = false
         }
         buttonGroupFrame = frames.reduce(.zero, { $0.union($1) })
         if let lastFrame = frames.last {
-            cellHeight = lastFrame.maxY + margin.bottom
+            cellHeight = lastFrame.maxY + AppButtonView.buttonMargin.bottom + margin.bottom
             if style.contains(.fullname) {
                 cellHeight += fullnameFrame.height
             }

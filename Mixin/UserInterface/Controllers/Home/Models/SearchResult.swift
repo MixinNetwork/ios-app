@@ -3,17 +3,21 @@ import Foundation
 class SearchResult {
     
     let iconUrl: String
-    let title: NSAttributedString?
     let badgeImage: UIImage?
     let superscript: String?
-    let description: NSAttributedString?
     
-    init(iconUrl: String, title: NSAttributedString?, badgeImage: UIImage?, superscript: String?, description: NSAttributedString?) {
+    var title: NSAttributedString?
+    var description: NSAttributedString?
+    
+    init(iconUrl: String, badgeImage: UIImage?, superscript: String?) {
         self.iconUrl = iconUrl
-        self.title = title
         self.badgeImage = badgeImage
         self.superscript = superscript
-        self.description = description
+        updateTitleAndDescription()
+    }
+    
+    func updateTitleAndDescription() {
+        
     }
     
 }
@@ -22,35 +26,32 @@ extension SearchResult {
     
     typealias Attributes = [NSAttributedString.Key: Any]
     
-    static let titleFont = UIFont.systemFont(ofSize: 16)
-    static let titleAttributes: Attributes = [
-        .font: titleFont,
-        .foregroundColor: UIColor.darkText
-    ]
-    static let highlightedTitleAttributes: Attributes = [
-        .font: titleFont,
-        .foregroundColor: UIColor.highlightedText
-    ]
+    static var titleAttributes: Attributes {
+        return [.font: UIFont.preferredFont(forTextStyle: .callout),
+                .foregroundColor: UIColor.text]
+    }
+    static var highlightedTitleAttributes: Attributes {
+        return [.font: UIFont.preferredFont(forTextStyle: .callout),
+                .foregroundColor: UIColor.highlightedText]
+    }
     
-    static let normalDescriptionFont = UIFont.systemFont(ofSize: 12)
-    static let normalDescriptionAttributes: Attributes = [
-        .font: normalDescriptionFont,
-        .foregroundColor: UIColor.descriptionText
-    ]
-    static let highlightedNormalDescriptionAttributes: Attributes = [
-        .font: normalDescriptionFont,
-        .foregroundColor: UIColor.highlightedText
-    ]
+    static var normalDescriptionAttributes: Attributes {
+        return [.font: UIFont.preferredFont(forTextStyle: .caption1),
+                .foregroundColor: UIColor.accessoryText]
+    }
+    static var highlightedNormalDescriptionAttributes: Attributes {
+        return [.font: UIFont.preferredFont(forTextStyle: .caption1),
+                .foregroundColor: UIColor.accessoryText]
+    }
     
-    static let largerDescriptionFont = UIFont.systemFont(ofSize: 14)
-    static let largerDescriptionAttributes: Attributes = [
-        .font: largerDescriptionFont,
-        .foregroundColor: UIColor.descriptionText
-    ]
-    static let highlightedLargerDescriptionAttributes: Attributes = [
-        .font: largerDescriptionFont,
-        .foregroundColor: UIColor.highlightedText
-    ]
+    static var largerDescriptionAttributes: Attributes {
+        return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                .foregroundColor: UIColor.accessoryText]
+    }
+    static var highlightedLargerDescriptionAttributes: Attributes {
+        return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                .foregroundColor: UIColor.highlightedText]
+    }
     
     static func attributedText(text: String, textAttributes: Attributes, keyword: String, keywordAttributes: Attributes) -> NSAttributedString {
         let str = NSMutableAttributedString(string: text, attributes: textAttributes)

@@ -11,7 +11,7 @@ class CardMessageCell: DetailInfoMessageCell {
     var leftViewLeadingConstraint: Constraint!
     var rightViewTrailingConstraint: Constraint!
     
-    internal var contentTopMargin: CGFloat {
+    var contentTopMargin: CGFloat {
         return 14
     }
 

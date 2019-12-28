@@ -2,7 +2,7 @@ import UIKit
 
 final class UserAvatarStackView: UIView {
     
-    var avatarBackgroundColor = UIColor.white
+    var avatarBackgroundColor = UIColor.background
     
     var iconLength: CGFloat = 34 {
         didSet {

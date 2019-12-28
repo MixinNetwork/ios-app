@@ -1,9 +1,9 @@
 import UIKit
 
 class NumberPadButton: UIControl, XibDesignable {
-    
-    static let normalBackgroundImage = UIColor.white.image
-    static let highlightedBackgroundImage = UIColor(rgbValue: 0xa7b9c8).image
+
+    static let normalBackgroundImage = R.color.keyboard_button_background()!.image
+    static let highlightedBackgroundImage = R.color.keyboard_button_highlighted()!.image
     
     @IBOutlet weak var button: UIButton!
     

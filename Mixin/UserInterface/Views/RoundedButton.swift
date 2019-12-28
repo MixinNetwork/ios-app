@@ -27,6 +27,9 @@ class RoundedButton: UIButton {
     
     private let backgroundLayer = CAShapeLayer()
     private let shadowLayer = CALayer()
+    private let backgroundEnableColor = UIColor.theme
+    private let backgroundDisableColor = R.color.button_background_disabled()!
+    private let textDisableColor = R.color.button_text_disabled()!
     
     private lazy var activityIndicator = ActivityIndicatorView()
     
@@ -49,6 +52,7 @@ class RoundedButton: UIButton {
     
     private func prepare() {
         setTitleColor(.white, for: .normal)
+        setTitleColor(textDisableColor, for: .disabled)
         updatePaths()
         updateAppearanceWithIsEnabled()
         shadowLayer.shadowColor = UIColor.theme.cgColor
@@ -66,7 +70,7 @@ class RoundedButton: UIButton {
     }
     
     private func updateAppearanceWithIsEnabled() {
-        let color: UIColor = isEnabled ? .theme : .disabledGray
+        let color: UIColor = isEnabled ? backgroundEnableColor : backgroundDisableColor
         backgroundLayer.fillColor = color.cgColor
         shadowLayer.isHidden = !isEnabled
     }

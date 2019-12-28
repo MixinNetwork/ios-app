@@ -33,7 +33,7 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
     private let updateTimeLabelInterval: TimeInterval = 1
     private let slideToCancelDistance: CGFloat = 80
     private let longPressHintVisibleDuration: TimeInterval = 2
-    private let longPressHintRightMargin: CGFloat = 13
+    private let longPressHintRightMargin: CGFloat = 10
     private let lockDistance: CGFloat = 100
     
     private(set) var isShowingLongPressHint = false
@@ -50,7 +50,7 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
         }
     }
     
-    private lazy var longPressHintView = RecorderLongPressHintView()
+    private lazy var longPressHintView = R.nib.recorderLongPressHintView(owner: nil)!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,10 +151,11 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideLongPressHint), object: nil)
         perform(#selector(hideLongPressHint), with: nil, afterDelay: longPressHintVisibleDuration)
         longPressHintView.alpha = 0
-        longPressHintView.frame.origin = CGPoint(x: view.bounds.maxX - longPressHintView.frame.width - longPressHintRightMargin,
-                                                 y: view.bounds.minY - longPressHintView.frame.height)
-        longPressHintView.autoresizingMask = [.flexibleLeftMargin]
         view.addSubview(longPressHintView)
+        longPressHintView.snp.makeConstraints { (make) in
+            make.right.equalToSuperview().offset(-longPressHintRightMargin)
+            make.bottom.equalTo(view.snp.top)
+        }
         UIView.animate(withDuration: animationDuration, animations: {
             self.longPressHintView.alpha = 1
         })

@@ -9,8 +9,8 @@ class BalanceInputAccessoryView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        button.setBackgroundImage(UIColor(displayP3RgbValue: 0xD3D5DA).image, for: .normal)
-        button.setBackgroundImage(UIColor(displayP3RgbValue: 0xEBEDEF).image, for: .highlighted)
+        button.setBackgroundImage(UIColor.clear.image, for: .normal)
+        button.setBackgroundImage(R.color.keyboard_balance_highlighted()!.image, for: .highlighted)
     }
     
 }

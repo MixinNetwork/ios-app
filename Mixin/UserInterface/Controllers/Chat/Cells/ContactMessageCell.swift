@@ -6,7 +6,14 @@ class ContactMessageCell: CardMessageCell {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var verifiedImageView: UIImageView!
-
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        idLabel.snp.makeConstraints { (make) in
+            make.trailing.equalTo(timeLabel.snp.leading)
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarImageView.prepareForReuse()
@@ -20,10 +27,10 @@ class ContactMessageCell: CardMessageCell {
             avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
 
             if viewModel.message.sharedUserIsVerified {
-                verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+                verifiedImageView.image = R.image.ic_user_verified()
                 verifiedImageView.isHidden = false
             } else if !viewModel.message.sharedUserAppId.isEmpty {
-                verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+                verifiedImageView.image = R.image.ic_user_bot()
                 verifiedImageView.isHidden = false
             } else {
                 verifiedImageView.isHidden = true

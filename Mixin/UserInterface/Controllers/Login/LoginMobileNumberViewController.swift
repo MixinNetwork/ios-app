@@ -45,6 +45,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         introTextView.attributedText = intro
         introTextView.isEditable = false
         introTextView.isSelectable = true
+        introTextView.backgroundColor = .clear
         contentStackView.addArrangedSubview(introTextView)
     }
     

@@ -8,7 +8,7 @@ class MultisigUsersWindow: BottomSheetView {
     private var users: [UserResponse] = []
 
     var onDismiss: (() -> Void)?
-
+    
     func render(users: [UserResponse], isSender: Bool) {
         self.users = users
         if isSender {

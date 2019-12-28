@@ -19,9 +19,9 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     private lazy var tableFooterView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 7)
         let view = UIView(frame: frame)
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         let bottomFillingBackgroundView = UIView()
-        bottomFillingBackgroundView.backgroundColor = .white
+        bottomFillingBackgroundView.backgroundColor = .background
         view.addSubview(bottomFillingBackgroundView)
         bottomFillingBackgroundView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()

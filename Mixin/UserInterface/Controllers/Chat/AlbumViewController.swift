@@ -8,7 +8,7 @@ class AlbumViewController: UITableViewController {
     
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
-        container?.leftButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
+        container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
     }
     
     private func loadAlbums() {
@@ -83,7 +83,7 @@ extension AlbumViewController {
 
 }
 
-class AlbumCell: UITableViewCell {
+class AlbumCell: ModernSelectedBackgroundCell {
 
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!

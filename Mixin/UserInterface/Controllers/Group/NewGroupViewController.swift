@@ -29,8 +29,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
         guard shouldLayoutByKeyboard else {
             return
         }
-        let windowHeight = AppDelegate.current.window.bounds.height
-        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
+        keyboardPlaceholderHeightConstraint.constant = keyboardFrame.height
         view.layoutIfNeeded()
     }
     

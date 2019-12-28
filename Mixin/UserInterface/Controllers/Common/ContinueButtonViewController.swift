@@ -36,9 +36,7 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let newOffset = keyboardFrame.origin.y
-            - view.frame.height
-            - continueButtonMargin
+        let newOffset = -(keyboardFrame.height + continueButtonMargin)
         if newOffset < continueButtonBottomConstraint.constant {
             continueButtonBottomConstraint.constant = newOffset
             view.layoutIfNeeded()

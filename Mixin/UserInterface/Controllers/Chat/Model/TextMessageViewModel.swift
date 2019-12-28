@@ -2,38 +2,32 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    private enum Font {
-        private static let font = UIFont.systemFont(ofSize: 16)
-        static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
-        static let lineHeight = round(font.lineHeight)
-    }
-    
     class var ctFont: CTFont {
-        return Font.ctFont
+        return CoreTextFontSet.textMessage.ctFont
     }
     
     class var lineHeight: CGFloat {
-        return Font.lineHeight
+        return CoreTextFontSet.textMessage.lineHeight
     }
     
     class var textColor: UIColor {
-        return .black
+        return .chatText
     }
     
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()
-    var textSize = CGSize.zero
     
     private let timeLeftMargin: CGFloat = 20
-    private let minimumTextSize = CGSize(width: 5, height: 18)
+    private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
     private let hightlightPathCornerRadius: CGFloat = 4
     
     private var contentSize = CGSize.zero // contentSize is textSize concatenated with additionalTrailingSize and fullname width
+    private var linkRanges = [Link.Range]()
     
     override var debugDescription: String {
-        return super.debugDescription + ", textSize: \(textSize), contentSize: \(contentSize), contentLength: \(message.content.count)"
+        return super.debugDescription + ", contentSize: \(contentSize), contentLength: \(message.content.count)"
     }
     
     var fullnameHeight: CGFloat {
@@ -56,41 +50,33 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return message.content
     }
     
-    var timeStatusSize: CGSize {
-        let statusImageWidth = showStatusImage
-            ? DetailInfoMessageViewModel.statusImageSize.width
-            : 0
-        let width = timeLeftMargin
-            + timeSize.width
-            + statusImageWidth
-            + DetailInfoMessageViewModel.statusLeftMargin
-        return CGSize(width: width, height: 16)
+    override init(message: MessageItem) {
+        super.init(message: message)
+        linkRanges = self.linkRanges(from: rawContent)
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        super.init(message: message, style: style, fits: layoutWidth)
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
         let str = NSMutableAttributedString(string: rawContent)
         let cfStr = str as CFMutableAttributedString
-        // Detect links
-        let linksMap = self.linksMap(from: str)
         // Set attributes
         setDefaultAttributes(on: cfStr)
-        for link in linksMap {
-            let range = CFRange(nsRange: link.key)
+        for linkRange in linkRanges {
+            let range = CFRange(nsRange: linkRange.range)
             CFAttributedStringSetAttribute(cfStr, range, kCTForegroundColorAttributeName, linkColor)
         }
         // Make CTLine and Origins
-        let (lines, lineOrigins, lineRanges, lastLineWidth) = typeset(attributedString: cfStr)
+        var (lines, lineOrigins, lineRanges, textSize, lastLineWidth) = typeset(attributedString: cfStr)
         if textSize.height < minimumTextSize.height {
             textSize = minimumTextSize
         }
         // Make Links
         var links = [Link]()
-        for link in linksMap {
+        for linkRange in linkRanges {
             let linkRects: [CGRect] = lines.enumerated().compactMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
                 let lineRange = NSRange(cfRange: lineRanges[index])
-                if let intersection = lineRange.intersection(link.key) {
+                if let intersection = lineRange.intersection(linkRange.range) {
                     return line.frame(forRange: intersection, lineOrigin: lineOrigin)
                 } else {
                     return nil
@@ -106,13 +92,23 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 }
             }
             if let path = path {
-                links += linkRects.map{ Link(hitFrame: $0, backgroundPath: path, url: link.value) }
+                links += linkRects.map{ Link(hitFrame: $0, backgroundPath: path, url: linkRange.url) }
             }
         }
         // Make content
         self.content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let additionalTrailingSize = timeStatusSize
+        let additionalTrailingSize: CGSize = {
+            let statusImageWidth = showStatusImage
+                ? ImageSet.MessageStatus.size.width
+                : 0
+            let width = timeLeftMargin
+                + timeFrame.width
+                + statusImageWidth
+                + DetailInfoMessageViewModel.statusLeftMargin
+            return CGSize(width: width, height: 16)
+        }()
+        
         var contentSize = textSize
         let lastLineWithTrailingWidth = lastLineWidth + additionalTrailingSize.width
         if lastLineWithTrailingWidth > maxContentWidth {
@@ -124,19 +120,17 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         }
         if style.contains(.fullname) {
             if message.userIsBot {
-                let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin + DetailInfoMessageViewModel.identityIconSize.width
-                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameWidth + identityIconWidth))
+                let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin
+                    + DetailInfoMessageViewModel.identityIconSize.width
+                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameFrame.size.width + identityIconWidth))
             } else {
-                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameWidth))
+                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameFrame.size.width))
             }
         }
         self.contentSize = contentSize
-        didSetStyle()
-    }
-    
-    override func didSetStyle() {
+        let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         if style.contains(.received) {
-            backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
+            backgroundImageFrame = CGRect(x: bubbleMargin.leading,
                                           y: 0,
                                           width: backgroundWidth,
                                           height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)
@@ -145,7 +139,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                                        width: textSize.width,
                                        height: textSize.height)
         } else {
-            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - backgroundWidth,
+            backgroundImageFrame = CGRect(x: width - bubbleMargin.leading - backgroundWidth,
                                           y: 0,
                                           width: backgroundWidth,
                                           height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)
@@ -155,7 +149,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                                        height: textSize.height)
         }
         cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
-        super.didSetStyle()
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
     }
     
     func highlight(keyword: String) {
@@ -192,13 +186,14 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         highlightPaths = []
     }
     
-    func linksMap(from attributedString: NSAttributedString) -> [NSRange: URL] {
-        var map = [NSRange: URL]()
-        Link.detector.enumerateMatches(in: attributedString, options: [], using: { (result, _, _) in
+    func linkRanges(from string: String) -> [Link.Range] {
+        var map = [Link.Range]()
+        Link.detector.enumerateMatches(in: string, options: [], using: { (result, _, _) in
             guard let result = result, let url = result.url else {
                 return
             }
-            map[result.range] = url
+            let range = Link.Range(range: result.range, url: url)
+            map.append(range)
         })
         return map
     }
@@ -209,7 +204,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         CFAttributedStringSetAttribute(string, fullRange, kCTForegroundColorAttributeName, type(of: self).textColor)
     }
     
-    typealias TypesetResult = (lines: [CTLine], lineOrigins: [CGPoint], lineRanges: [CFRange], lastLineWidth: CGFloat)
+    typealias TypesetResult = (lines: [CTLine], lineOrigins: [CGPoint], lineRanges: [CFRange], size: CGSize, lastLineWidth: CGFloat)
     func typeset(attributedString: CFAttributedString) -> TypesetResult {
         let typesetter = CTTypesetterCreateWithAttributedString(attributedString)
         
@@ -219,6 +214,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         var characterIndex: CFIndex = 0
         var y: CGFloat = 4
         var lastLineWidth: CGFloat = 0
+        var size = CGSize.zero
         
         while true {
             let lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, Double(maxContentWidth))
@@ -230,8 +226,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 lines.append(line)
                 lineOrigins.append(lineOrigin)
                 lineRanges.append(lineRange)
-                textSize.height += type(of: self).lineHeight
-                textSize.width = max(textSize.width, lineWidth)
+                size.height += type(of: self).lineHeight
+                size.width = max(size.width, lineWidth)
                 y += type(of: self).lineHeight
                 lastLineWidth = lineWidth
                 characterIndex += lineCharacterCount
@@ -240,7 +236,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             }
         }
         
-        return (lines, lineOrigins.reversed(), lineRanges, lastLineWidth)
+        return (lines, lineOrigins.reversed(), lineRanges, size, lastLineWidth)
     }
     
 }

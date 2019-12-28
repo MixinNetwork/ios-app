@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
+    private let messageCountPerPage = 30
 
     private var conversations = [ConversationItem]()
     private var needRefresh = true
@@ -33,6 +34,7 @@ class HomeViewController: UIViewController {
     private var beginDraggingOffset: CGFloat = 0
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
+    private var loadMoreMessageThreshold = 10
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
@@ -299,6 +301,21 @@ extension HomeViewController: UITableViewDelegate {
             return [deleteAction, unpinAction]
         }
     }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard conversations.count >= messageCountPerPage else {
+            return
+        }
+        guard indexPath.row > conversations.count - loadMoreMessageThreshold else {
+            return
+        }
+        guard !refreshing else {
+            needRefresh = true
+            return
+        }
+
+        fetchConversations()
+    }
     
 }
 
@@ -345,25 +362,30 @@ extension HomeViewController {
     private func fetchConversations() {
         refreshing = true
         needRefresh = false
-        DispatchQueue.global().async { [weak self] in
-            let conversations = ConversationDAO.shared.conversationList()
-            let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
-            for conversation in groupIcons {
-                ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
-            }
-            DispatchQueue.main.async {
-                guard self?.tableView != nil else {
-                    return
+
+        DispatchQueue.main.async {
+            let limit = (self.tableView.indexPathsForVisibleRows?.first?.row ?? 0) + self.messageCountPerPage
+
+            DispatchQueue.global().async { [weak self] in
+                let conversations = ConversationDAO.shared.conversationList(limit: limit)
+                let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
+                for conversation in groupIcons {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
                 }
-                self?.guideView.isHidden = conversations.count != 0
-                self?.conversations = conversations
-                self?.tableView.reloadData()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
-                    self?.refreshing = false
-                    if self?.needRefresh ?? false {
-                        self?.fetchConversations()
+                DispatchQueue.main.async {
+                    guard self?.tableView != nil else {
+                        return
                     }
-                })
+                    self?.guideView.isHidden = conversations.count != 0
+                    self?.conversations = conversations
+                    self?.tableView.reloadData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
+                        self?.refreshing = false
+                        if self?.needRefresh ?? false {
+                            self?.fetchConversations()
+                        }
+                    })
+                }
             }
         }
     }

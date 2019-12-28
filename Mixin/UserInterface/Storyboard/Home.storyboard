@@ -677,7 +677,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MG9-9S-t2v">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
-                                <color key="backgroundColor" name="background_secondary"/>
+                                <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="N8G-il-r3j"/>
                                 </constraints>

@@ -79,7 +79,7 @@ class RecentAppsViewController: UIViewController {
         let maxIdCount = maxRowCount * cellCountPerRow
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            guard self != nil, !op.isCancelled else {
+            guard self != nil, !op.isCancelled, AccountAPI.shared.didLogin else {
                 return
             }
             let ids = CommonUserDefault.shared.recentlyUsedAppIds.prefix(maxIdCount)

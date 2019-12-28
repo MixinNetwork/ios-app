@@ -36,4 +36,8 @@ extension SignalKey {
     func getSignedSignature() -> Data {
         return Data(base64Encoded: signedPreKey.signature)!
     }
+
+    var deviceId: Int32 {
+        return SignalProtocol.convertSessionIdToDeviceId(sessionId)
+    }
 }

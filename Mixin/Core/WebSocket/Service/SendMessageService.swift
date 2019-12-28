@@ -426,13 +426,21 @@ class SendMessageService: MixinService {
                     }
                 case JobAction.SEND_SESSION_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
-                case JobAction.SEND_KEY.rawValue:
-                    _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
-                        return try sendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)
+                case JobAction.REFRESH_SESSION.rawValue:
+                    _ = ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
+                        return refreshParticipantSession(conversationId: job.conversationId!, userId: job.userId!, retry: true)
                     }
                 case JobAction.RESEND_KEY.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
-                        try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!, sessionId: job.sessionId)
+                        guard let conversationId = job.conversationId, let recipientId = job.userId, let sessionId = job.sessionId else {
+                            return
+                        }
+
+                        let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
+                        if !result {
+                            FileManager.default.writeLog(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
+                            sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
+                        }
                     }
                 case JobAction.REQUEST_RESEND_KEY.rawValue:
                     ReceiveMessageService.shared.messageDispatchQueue.sync {

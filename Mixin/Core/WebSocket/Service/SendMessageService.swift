@@ -426,7 +426,7 @@ class SendMessageService: MixinService {
                     }
                 case JobAction.SEND_SESSION_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
-                case JobAction.SEND_KEY.rawValue, JobAction.REFRESH_SESSION.rawValue:
+                case JobAction.REFRESH_SESSION.rawValue:
                     _ = ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
                         return refreshParticipantSession(conversationId: job.conversationId!, userId: job.userId!, retry: true)
                     }

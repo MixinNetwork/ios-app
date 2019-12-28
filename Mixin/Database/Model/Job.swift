@@ -150,7 +150,6 @@ enum JobAction: String {
     case RESEND_MESSAGE
     case RESEND_KEY
     case SEND_NO_KEY
-    case SEND_KEY
     case SEND_MESSAGE
     case SEND_ACK_MESSAGE
     case SEND_ACK_MESSAGES

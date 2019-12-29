@@ -192,6 +192,8 @@ extension WebSocketService: SRWebSocketDelegate {
         print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(String(describing: reason))")
         #endif
         guard code != exitCode && code != failCode else {
+            UIApplication.traceError(code: ReportErrorCode.websocketError, userInfo: ["code": "\(code)"])
+            tearDown()
             return
         }
 

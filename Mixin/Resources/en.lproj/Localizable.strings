@@ -605,6 +605,9 @@
 "database_upgrade" = "Upgrade Database";
 "database_upgrade_tips" = "The database is being upgraded, please do not close this App.";
 "database_upgrade_progress" = "Upgrading";
+"database_repair_title" = "Repair Database";
+"database_repair_tips" = "Trying to repair a corrupted database, please do not kill the app.";
+"database_repairing" = "Repairing";
 
 // Setting
 "setting_title" = "Setting";

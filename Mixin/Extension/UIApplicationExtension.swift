@@ -68,6 +68,7 @@ extension UIApplication {
         userInfo["path"] = error.path ?? ""
         userInfo["message"] = error.message ?? ""
         if error.type == .sqlite && (error.code.value == 11 || error.code.value == 26) {
+            DatabaseUserDefault.shared.hasRecoverMixinDatabaseVersion = true
             UIApplication.traceError(code: ReportErrorCode.databaseCorrupted, userInfo: userInfo)
         } else {
             UIApplication.traceError(code: ReportErrorCode.databaseError, userInfo: userInfo)

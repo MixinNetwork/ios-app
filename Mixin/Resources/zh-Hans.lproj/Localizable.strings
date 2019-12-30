@@ -609,6 +609,10 @@
 "database_upgrade_tips" = "正在进行数据库升级，请不要强制关闭应用。";
 "database_upgrade_progress" = "升级中...";
 
+"database_repair_title" = "修复数据库";
+"database_repair_tips" = "正在尝试修复已损坏的数据库，请不要关闭应用程序";
+"database_repairing" = "修复中";
+
 // Setting
 "setting_title" = "设置";
 "setting_notification" = "通知";

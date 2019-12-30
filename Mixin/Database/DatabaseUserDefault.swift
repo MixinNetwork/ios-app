@@ -10,6 +10,9 @@ class DatabaseUserDefault {
     private var keyUpgradeStickers: String {
         return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyRecoverMixinDatabaseVersion: String {
+        return "key_recover_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     private var keyDatabaseVersion: String {
         return "key_database_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
@@ -37,6 +40,15 @@ class DatabaseUserDefault {
 
     func hasUpgradeDatabase() -> Bool {
         return forceUpgradeDatabase || databaseVersion != currentDatabaseVersion
+    }
+
+    var hasRecoverMixinDatabaseVersion: Bool {
+        get {
+            return session.bool(forKey: keyRecoverMixinDatabaseVersion)
+        }
+        set {
+            session.set(newValue, forKey: keyRecoverMixinDatabaseVersion)
+        }
     }
 
     var mixinDatabaseVersion: Int {

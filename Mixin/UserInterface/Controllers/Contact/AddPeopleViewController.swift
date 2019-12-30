@@ -40,7 +40,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        keyboardPlaceholderHeightConstraint.constant = keyboardFrame.height
+        keyboardPlaceholderHeightConstraint.constant = view.frame.height - keyboardFrame.origin.y
         view.layoutIfNeeded()
     }
     

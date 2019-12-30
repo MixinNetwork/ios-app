@@ -3,11 +3,20 @@ import UIKit
 class BusyButton: UIButton {
     
     let busyIndicator = ActivityIndicatorView()
-    
+
+    private var normalTitleColor: UIColor?
+
     var isBusy = false {
         didSet {
-            isBusy ? busyIndicator.startAnimating() : busyIndicator.stopAnimating()
-            isUserInteractionEnabled = !isBusy
+            if isBusy {
+                isUserInteractionEnabled = false
+                setTitleColor(.clear, for: .normal)
+                busyIndicator.startAnimating()
+            } else {
+                isUserInteractionEnabled = true
+                setTitleColor(normalTitleColor, for: .normal)
+                busyIndicator.stopAnimating()
+            }
         }
     }
     
@@ -33,6 +42,8 @@ class BusyButton: UIButton {
         busyIndicator.hidesWhenStopped = true
         busyIndicator.stopAnimating()
         addSubview(busyIndicator)
+
+        normalTitleColor = titleColor(for: .normal)
     }
     
 }

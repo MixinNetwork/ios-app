@@ -43,9 +43,6 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         buttonGroupFrame = frames.reduce(.zero, { $0.union($1) })
         if let lastFrame = frames.last {
             cellHeight = lastFrame.maxY + AppButtonView.buttonMargin.bottom + margin.bottom
-            if style.contains(.fullname) {
-                cellHeight += fullnameFrame.height
-            }
             if style.contains(.bottomSeparator) {
                 cellHeight += bottomSeparatorHeight
             }

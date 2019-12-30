@@ -5,13 +5,20 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     
     let continueButton = BusyButton()
     
-    var continueButtonBottomConstraint: NSLayoutConstraint!
+    var keyboardLayoutGuideHeightConstraint: NSLayoutConstraint!
     
+    private let keyboardLayoutGuide = UILayoutGuide()
     private let continueButtonLength: CGFloat = 44
     private let continueButtonMargin: CGFloat = 20
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addLayoutGuide(keyboardLayoutGuide)
+        keyboardLayoutGuide.snp.makeConstraints { (make) in
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        keyboardLayoutGuideHeightConstraint = keyboardLayoutGuide.heightAnchor.constraint(equalToConstant: 0)
+        keyboardLayoutGuideHeightConstraint.isActive = true
         continueButton.isHidden = true
         continueButton.busyIndicator.tintColor = .white
         continueButton.busyIndicator.backgroundColor = .theme
@@ -26,9 +33,8 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
         continueButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(continueButtonLength)
             make.trailing.equalToSuperview().offset(-continueButtonMargin)
+            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-continueButtonMargin)
         }
-        continueButtonBottomConstraint = continueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        continueButtonBottomConstraint.isActive = true
     }
     
     @objc func continueAction(_ sender: Any) {
@@ -36,11 +42,11 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let newOffset = -(keyboardFrame.height + continueButtonMargin)
-        if newOffset < continueButtonBottomConstraint.constant {
-            continueButtonBottomConstraint.constant = newOffset
-            view.layoutIfNeeded()
+        let height = view.frame.height - keyboardFrame.origin.y
+        if height > keyboardLayoutGuideHeightConstraint.constant {
+            keyboardLayoutGuideHeightConstraint.constant = height
         }
+        view.layoutIfNeeded()
     }
     
 }

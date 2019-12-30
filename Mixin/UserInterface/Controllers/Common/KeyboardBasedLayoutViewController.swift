@@ -4,6 +4,7 @@ class KeyboardBasedLayoutViewController: UIViewController {
     
     private(set) var viewHasAppeared = false
     private(set) var viewIsDisappearing = false
+    private(set) var lastKeyboardFrame: CGRect?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -32,6 +33,13 @@ class KeyboardBasedLayoutViewController: UIViewController {
         viewIsDisappearing = true
     }
     
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        if let frame = lastKeyboardFrame {
+            askForLayout(for: frame)
+        }
+    }
+    
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard !viewIsDisappearing else {
             return
@@ -39,7 +47,16 @@ class KeyboardBasedLayoutViewController: UIViewController {
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        let frame = view.convert(endFrame, from: nil)
+        lastKeyboardFrame = endFrame
+        askForLayout(for: endFrame)
+    }
+    
+    func layout(for keyboardFrame: CGRect) {
+        
+    }
+    
+    private func askForLayout(for keyboardFrame: CGRect) {
+        let frame = view.convert(keyboardFrame, from: UIScreen.main.coordinateSpace)
         if viewHasAppeared {
             layout(for: frame)
         } else {
@@ -47,10 +64,6 @@ class KeyboardBasedLayoutViewController: UIViewController {
                 layout(for: frame)
             }
         }
-    }
-    
-    func layout(for keyboardFrame: CGRect) {
-        
     }
     
 }

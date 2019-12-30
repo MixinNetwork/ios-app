@@ -74,6 +74,7 @@ extension AuthorizationsViewController {
     private func load(authorizations: [AuthorizationResponse]) {
         self.authorizations = authorizations
         tableView.reloadData()
+        tableView.layoutIfNeeded()
         networkIndicatorView.stopAnimating()
         networkIndicatorTopConstraint.constant = networkIndicatorHeightConstraint.constant
         UIView.animate(withDuration: 0.25) {

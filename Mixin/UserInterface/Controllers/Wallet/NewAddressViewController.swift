@@ -117,7 +117,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let keyboardHeight = keyboardFrame.height
+        let keyboardHeight = view.frame.height - keyboardFrame.origin.y
         if keyboardHeight > 0 {
             continueWrapperBottomConstraint.constant = keyboardHeight
             scrollViewBottomConstraint.constant = keyboardHeight + 72

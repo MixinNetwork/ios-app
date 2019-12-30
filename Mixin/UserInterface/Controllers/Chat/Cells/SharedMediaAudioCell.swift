@@ -23,7 +23,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
             timer = nil
             switch style {
             case .playing:
-                playButton.setImage(R.image.ic_file_cancel(), for: .normal)
+                playButton.setImage(R.image.ic_pause(), for: .normal)
                 updateWaveformProgress()
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()

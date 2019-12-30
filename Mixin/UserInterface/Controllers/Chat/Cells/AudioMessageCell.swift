@@ -23,7 +23,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
             timer = nil
             switch style {
             case .playing:
-                playbackStateImageView.image = R.image.ic_file_cancel()
+                playbackStateImageView.image = R.image.ic_pause()
                 updateWaveformProgress()
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()

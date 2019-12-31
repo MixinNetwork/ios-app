@@ -514,53 +514,38 @@
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
-		DFC0EB5A23BB3CF50091E7AC /* PhoneContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB5823BB3CF50091E7AC /* PhoneContactAPI.swift */; };
-		DFC0EB5B23BB3CF50091E7AC /* EmergencyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB5923BB3CF50091E7AC /* EmergencyAPI.swift */; };
-		DFC0EB5E23BB3D200091E7AC /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB5C23BB3D200091E7AC /* GiphyAPI.swift */; };
-		DFC0EB5F23BB3D200091E7AC /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB5D23BB3D200091E7AC /* CallAPI.swift */; };
-		DFC0EB8323BB43520091E7AC /* PhoneContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7923BB43510091E7AC /* PhoneContactAPI.swift */; };
-		DFC0EB8423BB43520091E7AC /* ProvisioningAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7A23BB43510091E7AC /* ProvisioningAPI.swift */; };
-		DFC0EB8523BB43520091E7AC /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7B23BB43510091E7AC /* CallAPI.swift */; };
-		DFC0EB8623BB43520091E7AC /* EmergencyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7C23BB43510091E7AC /* EmergencyAPI.swift */; };
-		DFC0EB8723BB43520091E7AC /* AuthorizeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7D23BB43510091E7AC /* AuthorizeAPI.swift */; };
-		DFC0EB8823BB43520091E7AC /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7E23BB43510091E7AC /* GiphyAPI.swift */; };
-		DFC0EB8923BB43520091E7AC /* ContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB7F23BB43510091E7AC /* ContactAPI.swift */; };
-		DFC0EB8A23BB43520091E7AC /* AccountAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB8023BB43510091E7AC /* AccountAPI.swift */; };
-		DFC0EB8B23BB43520091E7AC /* MultisigAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB8123BB43510091E7AC /* MultisigAPI.swift */; };
-		DFC0EB8C23BB43520091E7AC /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB8223BB43520091E7AC /* WithdrawalAPI.swift */; };
-		DFC0EB9523BB454E0091E7AC /* MultisigResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB8F23BB454E0091E7AC /* MultisigResponse.swift */; };
-		DFC0EB9623BB454E0091E7AC /* EmergencyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9023BB454E0091E7AC /* EmergencyResponse.swift */; };
-		DFC0EB9723BB454E0091E7AC /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9123BB454E0091E7AC /* ProvisioningResponse.swift */; };
-		DFC0EB9823BB454E0091E7AC /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9223BB454E0091E7AC /* ProvisioningCodeResponse.swift */; };
-		DFC0EB9923BB454E0091E7AC /* PINLogResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9323BB454E0091E7AC /* PINLogResponse.swift */; };
-		DFC0EB9A23BB454E0091E7AC /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9423BB454E0091E7AC /* AuthorizationResponse.swift */; };
-		DFC0EB9F23BB45A80091E7AC /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9B23BB45A80091E7AC /* AccountRequest.swift */; };
-		DFC0EBA023BB45A80091E7AC /* AuthorizationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9C23BB45A80091E7AC /* AuthorizationRequest.swift */; };
-		DFC0EBA123BB45A80091E7AC /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9D23BB45A80091E7AC /* AddressRequest.swift */; };
-		DFC0EBA223BB45A80091E7AC /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EB9E23BB45A80091E7AC /* WithdrawalRequest.swift */; };
-		DFC0EBA423BB45D60091E7AC /* VerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA323BB45D60091E7AC /* VerificationResponse.swift */; };
-		DFC0EBAF23BB46B30091E7AC /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA523BB46B20091E7AC /* PaymentResponse.swift */; };
-		DFC0EBB023BB46B30091E7AC /* VerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA623BB46B20091E7AC /* VerificationResponse.swift */; };
-		DFC0EBB123BB46B30091E7AC /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA723BB46B20091E7AC /* ProvisioningResponse.swift */; };
-		DFC0EBB223BB46B30091E7AC /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA823BB46B20091E7AC /* AuthorizationResponse.swift */; };
-		DFC0EBB323BB46B30091E7AC /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBA923BB46B20091E7AC /* ProvisioningCodeResponse.swift */; };
-		DFC0EBB423BB46B30091E7AC /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBAA23BB46B20091E7AC /* PaymentCodeResponse.swift */; };
-		DFC0EBB523BB46B30091E7AC /* EmergencyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBAB23BB46B20091E7AC /* EmergencyResponse.swift */; };
-		DFC0EBB623BB46B30091E7AC /* MultisigResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBAC23BB46B30091E7AC /* MultisigResponse.swift */; };
-		DFC0EBB723BB46B30091E7AC /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBAD23BB46B30091E7AC /* QRCodeResponse.swift */; };
-		DFC0EBB823BB46B30091E7AC /* PINLogResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBAE23BB46B30091E7AC /* PINLogResponse.swift */; };
-		DFC0EBBF23BB477A0091E7AC /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBB923BB477A0091E7AC /* AddressRequest.swift */; };
-		DFC0EBC023BB477A0091E7AC /* AuthorizationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBBA23BB477A0091E7AC /* AuthorizationRequest.swift */; };
-		DFC0EBC123BB477A0091E7AC /* EmergencyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBBB23BB477A0091E7AC /* EmergencyRequest.swift */; };
-		DFC0EBC223BB477A0091E7AC /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBBC23BB477A0091E7AC /* WithdrawalRequest.swift */; };
-		DFC0EBC323BB477A0091E7AC /* EmergencySessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBBD23BB477A0091E7AC /* EmergencySessionRequest.swift */; };
-		DFC0EBC423BB477A0091E7AC /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBBE23BB477A0091E7AC /* AccountRequest.swift */; };
-		DFC0EBC823BB48AD0091E7AC /* RelationshipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBC723BB48AD0091E7AC /* RelationshipRequest.swift */; };
-		DFC0EBD023BB4D020091E7AC /* PaymentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBCF23BB4D020091E7AC /* PaymentAPI.swift */; };
-		DFC0EBD223BB4E6E0091E7AC /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBD123BB4E6E0091E7AC /* SessionRequest.swift */; };
-		DFC0EBD423BB54120091E7AC /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBD323BB54120091E7AC /* UserAPI.swift */; };
-		DFC0EBD623BB577C0091E7AC /* RawTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBD523BB577C0091E7AC /* RawTransactionRequest.swift */; };
-		DFC0EBD823BB57C60091E7AC /* SnapshotAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0EBD723BB57C60091E7AC /* SnapshotAPI.swift */; };
+		DFC0ECCE23BB5FDE0091E7AC /* EmergencySessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECC523BB5FDC0091E7AC /* EmergencySessionRequest.swift */; };
+		DFC0ECCF23BB5FDE0091E7AC /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECC623BB5FDC0091E7AC /* AddressRequest.swift */; };
+		DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECC723BB5FDC0091E7AC /* AccountRequest.swift */; };
+		DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECC823BB5FDC0091E7AC /* WithdrawalRequest.swift */; };
+		DFC0ECD223BB5FDE0091E7AC /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECC923BB5FDC0091E7AC /* SessionRequest.swift */; };
+		DFC0ECD323BB5FDE0091E7AC /* RelationshipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECCA23BB5FDD0091E7AC /* RelationshipRequest.swift */; };
+		DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECCB23BB5FDD0091E7AC /* AuthorizationRequest.swift */; };
+		DFC0ECD523BB5FDE0091E7AC /* RawTransactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECCC23BB5FDD0091E7AC /* RawTransactionRequest.swift */; };
+		DFC0ECD623BB5FDE0091E7AC /* EmergencyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECCD23BB5FDD0091E7AC /* EmergencyRequest.swift */; };
+		DFC0ECE123BB60DE0091E7AC /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECD723BB60DC0091E7AC /* AuthorizationResponse.swift */; };
+		DFC0ECE223BB60DE0091E7AC /* EmergencyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */; };
+		DFC0ECE323BB60DE0091E7AC /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */; };
+		DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */; };
+		DFC0ECE523BB60DE0091E7AC /* PINLogResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */; };
+		DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */; };
+		DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */; };
+		DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */; };
+		DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */; };
+		DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */; };
+		DFC0ECF523BB610C0091E7AC /* PaymentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEB23BB610A0091E7AC /* PaymentAPI.swift */; };
+		DFC0ECF623BB610C0091E7AC /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEC23BB610A0091E7AC /* CallAPI.swift */; };
+		DFC0ECF723BB610C0091E7AC /* MultisigAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECED23BB610A0091E7AC /* MultisigAPI.swift */; };
+		DFC0ECF823BB610C0091E7AC /* ContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEE23BB610B0091E7AC /* ContactAPI.swift */; };
+		DFC0ECF923BB610C0091E7AC /* AuthorizeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEF23BB610B0091E7AC /* AuthorizeAPI.swift */; };
+		DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECF023BB610B0091E7AC /* GiphyAPI.swift */; };
+		DFC0ECFB23BB610C0091E7AC /* ProvisioningAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECF123BB610B0091E7AC /* ProvisioningAPI.swift */; };
+		DFC0ECFC23BB610C0091E7AC /* PhoneContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECF223BB610B0091E7AC /* PhoneContactAPI.swift */; };
+		DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECF323BB610B0091E7AC /* AccountAPI.swift */; };
+		DFC0ECFE23BB610C0091E7AC /* EmergencyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECF423BB610C0091E7AC /* EmergencyAPI.swift */; };
+		DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECFF23BB611E0091E7AC /* WithdrawalAPI.swift */; };
+		DFC0ED0323BB611E0091E7AC /* SnapshotAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0023BB611E0091E7AC /* SnapshotAPI.swift */; };
+		DFC0ED0423BB611E0091E7AC /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0123BB611E0091E7AC /* UserAPI.swift */; };
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
@@ -1207,53 +1192,38 @@
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
-		DFC0EB5823BB3CF50091E7AC /* PhoneContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneContactAPI.swift; sourceTree = "<group>"; };
-		DFC0EB5923BB3CF50091E7AC /* EmergencyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyAPI.swift; sourceTree = "<group>"; };
-		DFC0EB5C23BB3D200091E7AC /* GiphyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
-		DFC0EB5D23BB3D200091E7AC /* CallAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7923BB43510091E7AC /* PhoneContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneContactAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7A23BB43510091E7AC /* ProvisioningAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7B23BB43510091E7AC /* CallAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7C23BB43510091E7AC /* EmergencyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7D23BB43510091E7AC /* AuthorizeAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizeAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7E23BB43510091E7AC /* GiphyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
-		DFC0EB7F23BB43510091E7AC /* ContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactAPI.swift; sourceTree = "<group>"; };
-		DFC0EB8023BB43510091E7AC /* AccountAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountAPI.swift; sourceTree = "<group>"; };
-		DFC0EB8123BB43510091E7AC /* MultisigAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigAPI.swift; sourceTree = "<group>"; };
-		DFC0EB8223BB43520091E7AC /* WithdrawalAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
-		DFC0EB8F23BB454E0091E7AC /* MultisigResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9023BB454E0091E7AC /* EmergencyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9123BB454E0091E7AC /* ProvisioningResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9223BB454E0091E7AC /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9323BB454E0091E7AC /* PINLogResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINLogResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9423BB454E0091E7AC /* AuthorizationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationResponse.swift; sourceTree = "<group>"; };
-		DFC0EB9B23BB45A80091E7AC /* AccountRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
-		DFC0EB9C23BB45A80091E7AC /* AuthorizationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationRequest.swift; sourceTree = "<group>"; };
-		DFC0EB9D23BB45A80091E7AC /* AddressRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
-		DFC0EB9E23BB45A80091E7AC /* WithdrawalRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
-		DFC0EBA323BB45D60091E7AC /* VerificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationResponse.swift; sourceTree = "<group>"; };
-		DFC0EBA523BB46B20091E7AC /* PaymentResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
-		DFC0EBA623BB46B20091E7AC /* VerificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationResponse.swift; sourceTree = "<group>"; };
-		DFC0EBA723BB46B20091E7AC /* ProvisioningResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
-		DFC0EBA823BB46B20091E7AC /* AuthorizationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationResponse.swift; sourceTree = "<group>"; };
-		DFC0EBA923BB46B20091E7AC /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
-		DFC0EBAA23BB46B20091E7AC /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
-		DFC0EBAB23BB46B20091E7AC /* EmergencyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyResponse.swift; sourceTree = "<group>"; };
-		DFC0EBAC23BB46B30091E7AC /* MultisigResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigResponse.swift; sourceTree = "<group>"; };
-		DFC0EBAD23BB46B30091E7AC /* QRCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
-		DFC0EBAE23BB46B30091E7AC /* PINLogResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINLogResponse.swift; sourceTree = "<group>"; };
-		DFC0EBB923BB477A0091E7AC /* AddressRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
-		DFC0EBBA23BB477A0091E7AC /* AuthorizationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationRequest.swift; sourceTree = "<group>"; };
-		DFC0EBBB23BB477A0091E7AC /* EmergencyRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyRequest.swift; sourceTree = "<group>"; };
-		DFC0EBBC23BB477A0091E7AC /* WithdrawalRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
-		DFC0EBBD23BB477A0091E7AC /* EmergencySessionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencySessionRequest.swift; sourceTree = "<group>"; };
-		DFC0EBBE23BB477A0091E7AC /* AccountRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
-		DFC0EBC723BB48AD0091E7AC /* RelationshipRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelationshipRequest.swift; sourceTree = "<group>"; };
-		DFC0EBCF23BB4D020091E7AC /* PaymentAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAPI.swift; sourceTree = "<group>"; };
-		DFC0EBD123BB4E6E0091E7AC /* SessionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
-		DFC0EBD323BB54120091E7AC /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
-		DFC0EBD523BB577C0091E7AC /* RawTransactionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawTransactionRequest.swift; sourceTree = "<group>"; };
-		DFC0EBD723BB57C60091E7AC /* SnapshotAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAPI.swift; sourceTree = "<group>"; };
+		DFC0ECC523BB5FDC0091E7AC /* EmergencySessionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencySessionRequest.swift; sourceTree = "<group>"; };
+		DFC0ECC623BB5FDC0091E7AC /* AddressRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
+		DFC0ECC723BB5FDC0091E7AC /* AccountRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRequest.swift; sourceTree = "<group>"; };
+		DFC0ECC823BB5FDC0091E7AC /* WithdrawalRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
+		DFC0ECC923BB5FDC0091E7AC /* SessionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
+		DFC0ECCA23BB5FDD0091E7AC /* RelationshipRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelationshipRequest.swift; sourceTree = "<group>"; };
+		DFC0ECCB23BB5FDD0091E7AC /* AuthorizationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationRequest.swift; sourceTree = "<group>"; };
+		DFC0ECCC23BB5FDD0091E7AC /* RawTransactionRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawTransactionRequest.swift; sourceTree = "<group>"; };
+		DFC0ECCD23BB5FDD0091E7AC /* EmergencyRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyRequest.swift; sourceTree = "<group>"; };
+		DFC0ECD723BB60DC0091E7AC /* AuthorizationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationResponse.swift; sourceTree = "<group>"; };
+		DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyResponse.swift; sourceTree = "<group>"; };
+		DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINLogResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
+		DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
+		DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigResponse.swift; sourceTree = "<group>"; };
+		DFC0ECEB23BB610A0091E7AC /* PaymentAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentAPI.swift; sourceTree = "<group>"; };
+		DFC0ECEC23BB610A0091E7AC /* CallAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
+		DFC0ECED23BB610A0091E7AC /* MultisigAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigAPI.swift; sourceTree = "<group>"; };
+		DFC0ECEE23BB610B0091E7AC /* ContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactAPI.swift; sourceTree = "<group>"; };
+		DFC0ECEF23BB610B0091E7AC /* AuthorizeAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizeAPI.swift; sourceTree = "<group>"; };
+		DFC0ECF023BB610B0091E7AC /* GiphyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
+		DFC0ECF123BB610B0091E7AC /* ProvisioningAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningAPI.swift; sourceTree = "<group>"; };
+		DFC0ECF223BB610B0091E7AC /* PhoneContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneContactAPI.swift; sourceTree = "<group>"; };
+		DFC0ECF323BB610B0091E7AC /* AccountAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountAPI.swift; sourceTree = "<group>"; };
+		DFC0ECF423BB610C0091E7AC /* EmergencyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyAPI.swift; sourceTree = "<group>"; };
+		DFC0ECFF23BB611E0091E7AC /* WithdrawalAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
+		DFC0ED0023BB611E0091E7AC /* SnapshotAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotAPI.swift; sourceTree = "<group>"; };
+		DFC0ED0123BB611E0091E7AC /* UserAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
@@ -2255,23 +2225,19 @@
 			children = (
 				DFC0EB8D23BB447A0091E7AC /* Request */,
 				DFC0EB8E23BB447A0091E7AC /* Response */,
-				DFC0EBD323BB54120091E7AC /* UserAPI.swift */,
-				DFC0EB8023BB43510091E7AC /* AccountAPI.swift */,
-				DFC0EB7D23BB43510091E7AC /* AuthorizeAPI.swift */,
-				DFC0EBCF23BB4D020091E7AC /* PaymentAPI.swift */,
-				DFC0EBD723BB57C60091E7AC /* SnapshotAPI.swift */,
-				DFC0EB7B23BB43510091E7AC /* CallAPI.swift */,
-				DFC0EB7F23BB43510091E7AC /* ContactAPI.swift */,
-				DFC0EB7C23BB43510091E7AC /* EmergencyAPI.swift */,
-				DFC0EB7E23BB43510091E7AC /* GiphyAPI.swift */,
-				DFC0EB8123BB43510091E7AC /* MultisigAPI.swift */,
-				DFC0EB7923BB43510091E7AC /* PhoneContactAPI.swift */,
-				DFC0EB7A23BB43510091E7AC /* ProvisioningAPI.swift */,
-				DFC0EB8223BB43520091E7AC /* WithdrawalAPI.swift */,
-				DFC0EB5D23BB3D200091E7AC /* CallAPI.swift */,
-				DFC0EB5C23BB3D200091E7AC /* GiphyAPI.swift */,
-				DFC0EB5923BB3CF50091E7AC /* EmergencyAPI.swift */,
-				DFC0EB5823BB3CF50091E7AC /* PhoneContactAPI.swift */,
+				DFC0ECF323BB610B0091E7AC /* AccountAPI.swift */,
+				DFC0ECEF23BB610B0091E7AC /* AuthorizeAPI.swift */,
+				DFC0ECEC23BB610A0091E7AC /* CallAPI.swift */,
+				DFC0ECEE23BB610B0091E7AC /* ContactAPI.swift */,
+				DFC0ECF423BB610C0091E7AC /* EmergencyAPI.swift */,
+				DFC0ED0023BB611E0091E7AC /* SnapshotAPI.swift */,
+				DFC0ED0123BB611E0091E7AC /* UserAPI.swift */,
+				DFC0ECFF23BB611E0091E7AC /* WithdrawalAPI.swift */,
+				DFC0ECF023BB610B0091E7AC /* GiphyAPI.swift */,
+				DFC0ECED23BB610A0091E7AC /* MultisigAPI.swift */,
+				DFC0ECEB23BB610A0091E7AC /* PaymentAPI.swift */,
+				DFC0ECF223BB610B0091E7AC /* PhoneContactAPI.swift */,
+				DFC0ECF123BB610B0091E7AC /* ProvisioningAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2279,19 +2245,15 @@
 		DFC0EB8D23BB447A0091E7AC /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				DFC0EBD523BB577C0091E7AC /* RawTransactionRequest.swift */,
-				DFC0EBBE23BB477A0091E7AC /* AccountRequest.swift */,
-				DFC0EBD123BB4E6E0091E7AC /* SessionRequest.swift */,
-				DFC0EBB923BB477A0091E7AC /* AddressRequest.swift */,
-				DFC0EBC723BB48AD0091E7AC /* RelationshipRequest.swift */,
-				DFC0EBBA23BB477A0091E7AC /* AuthorizationRequest.swift */,
-				DFC0EBBB23BB477A0091E7AC /* EmergencyRequest.swift */,
-				DFC0EBBD23BB477A0091E7AC /* EmergencySessionRequest.swift */,
-				DFC0EBBC23BB477A0091E7AC /* WithdrawalRequest.swift */,
-				DFC0EB9B23BB45A80091E7AC /* AccountRequest.swift */,
-				DFC0EB9D23BB45A80091E7AC /* AddressRequest.swift */,
-				DFC0EB9C23BB45A80091E7AC /* AuthorizationRequest.swift */,
-				DFC0EB9E23BB45A80091E7AC /* WithdrawalRequest.swift */,
+				DFC0ECC723BB5FDC0091E7AC /* AccountRequest.swift */,
+				DFC0ECC623BB5FDC0091E7AC /* AddressRequest.swift */,
+				DFC0ECCB23BB5FDD0091E7AC /* AuthorizationRequest.swift */,
+				DFC0ECCD23BB5FDD0091E7AC /* EmergencyRequest.swift */,
+				DFC0ECC523BB5FDC0091E7AC /* EmergencySessionRequest.swift */,
+				DFC0ECCC23BB5FDD0091E7AC /* RawTransactionRequest.swift */,
+				DFC0ECCA23BB5FDD0091E7AC /* RelationshipRequest.swift */,
+				DFC0ECC923BB5FDC0091E7AC /* SessionRequest.swift */,
+				DFC0ECC823BB5FDC0091E7AC /* WithdrawalRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -2299,23 +2261,16 @@
 		DFC0EB8E23BB447A0091E7AC /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				DFC0EBA823BB46B20091E7AC /* AuthorizationResponse.swift */,
-				DFC0EBAB23BB46B20091E7AC /* EmergencyResponse.swift */,
-				DFC0EBAC23BB46B30091E7AC /* MultisigResponse.swift */,
-				DFC0EBAA23BB46B20091E7AC /* PaymentCodeResponse.swift */,
-				DFC0EBA523BB46B20091E7AC /* PaymentResponse.swift */,
-				DFC0EBAE23BB46B30091E7AC /* PINLogResponse.swift */,
-				DFC0EBA923BB46B20091E7AC /* ProvisioningCodeResponse.swift */,
-				DFC0EBA723BB46B20091E7AC /* ProvisioningResponse.swift */,
-				DFC0EBAD23BB46B30091E7AC /* QRCodeResponse.swift */,
-				DFC0EBA623BB46B20091E7AC /* VerificationResponse.swift */,
-				DFC0EB9423BB454E0091E7AC /* AuthorizationResponse.swift */,
-				DFC0EB9023BB454E0091E7AC /* EmergencyResponse.swift */,
-				DFC0EB8F23BB454E0091E7AC /* MultisigResponse.swift */,
-				DFC0EBA323BB45D60091E7AC /* VerificationResponse.swift */,
-				DFC0EB9323BB454E0091E7AC /* PINLogResponse.swift */,
-				DFC0EB9223BB454E0091E7AC /* ProvisioningCodeResponse.swift */,
-				DFC0EB9123BB454E0091E7AC /* ProvisioningResponse.swift */,
+				DFC0ECD723BB60DC0091E7AC /* AuthorizationResponse.swift */,
+				DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */,
+				DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */,
+				DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */,
+				DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */,
+				DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */,
+				DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */,
+				DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */,
+				DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */,
+				DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -2917,27 +2872,25 @@
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
-				DFC0EBA423BB45D60091E7AC /* VerificationResponse.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
-				DFC0EBA023BB45A80091E7AC /* AuthorizationRequest.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
-				DFC0EB8623BB43520091E7AC /* EmergencyAPI.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioManager.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B50DE112333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift in Sources */,
-				DFC0EB5A23BB3CF50091E7AC /* PhoneContactAPI.swift in Sources */,
+				DFC0ECD623BB5FDE0091E7AC /* EmergencyRequest.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
+				DFC0ECE523BB60DE0091E7AC /* PINLogResponse.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
@@ -2955,9 +2908,7 @@
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
-				DFC0EB8523BB43520091E7AC /* CallAPI.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
-				DFC0EB8C23BB43520091E7AC /* WithdrawalAPI.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
 				DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */,
@@ -2968,6 +2919,7 @@
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
+				DFC0ECCE23BB5FDE0091E7AC /* EmergencySessionRequest.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
@@ -2979,10 +2931,8 @@
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
-				DFC0EB9923BB454E0091E7AC /* PINLogResponse.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
 				7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */,
-				DFC0EB9723BB454E0091E7AC /* ProvisioningResponse.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
@@ -2992,14 +2942,15 @@
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
 				7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */,
-				DFC0EB8923BB43520091E7AC /* ContactAPI.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
 				E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
+				DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
+				DFC0ECF523BB610C0091E7AC /* PaymentAPI.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */,
@@ -3012,19 +2963,15 @@
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
-				DFC0EB9A23BB454E0091E7AC /* AuthorizationResponse.swift in Sources */,
-				DFC0EB9623BB454E0091E7AC /* EmergencyResponse.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
-				DFC0EBD823BB57C60091E7AC /* SnapshotAPI.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
-				DFC0EB5B23BB3CF50091E7AC /* EmergencyAPI.swift in Sources */,
+				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				7BFF25DD23632D7200454B27 /* CoreTextFontSet.swift in Sources */,
-				DFC0EBB123BB46B30091E7AC /* ProvisioningResponse.swift in Sources */,
 				7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
@@ -3041,20 +2988,17 @@
 				7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */,
 				DFD1FBC522FD809700C570D4 /* ContactSettingViewController.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
-				DFC0EB9F23BB45A80091E7AC /* AccountRequest.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
-				DFC0EBAF23BB46B30091E7AC /* PaymentResponse.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
-				DFC0EBB423BB46B30091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
+				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
-				DFC0EB9523BB454E0091E7AC /* MultisigResponse.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,
@@ -3064,7 +3008,6 @@
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
-				DFC0EBB523BB46B30091E7AC /* EmergencyResponse.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
@@ -3079,6 +3022,7 @@
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
+				DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
 				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
@@ -3092,10 +3036,8 @@
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
-				DFC0EBD623BB577C0091E7AC /* RawTransactionRequest.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
-				DFC0EBC823BB48AD0091E7AC /* RelationshipRequest.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
@@ -3112,10 +3054,10 @@
 				7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */,
 				7BC28337234DCCF300005628 /* SharedMediaTableViewController.swift in Sources */,
 				7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */,
+				DFC0ECFC23BB610C0091E7AC /* PhoneContactAPI.swift in Sources */,
 				E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
-				DFC0EBD423BB54120091E7AC /* UserAPI.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
@@ -3125,6 +3067,7 @@
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,
 				7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */,
 				E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */,
+				DFC0ECE123BB60DE0091E7AC /* AuthorizationResponse.swift in Sources */,
 				7BDB4725215A666B008B21F9 /* SignalLoadingViewController.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
@@ -3134,13 +3077,14 @@
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
-				DFC0EBB323BB46B30091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */,
+				DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
+				DFC0ECD523BB5FDE0091E7AC /* RawTransactionRequest.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
@@ -3153,8 +3097,10 @@
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
+				DFC0ED0423BB611E0091E7AC /* UserAPI.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
+				DFC0ECFB23BB610C0091E7AC /* ProvisioningAPI.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
@@ -3162,20 +3108,18 @@
 				7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */,
 				7B09E55E1FD15BAA002E45D3 /* TransferMessageViewModel.swift in Sources */,
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
-				DFC0EBC123BB477A0091E7AC /* EmergencyRequest.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				7B369212233B5153007321A7 /* SharedMediaCell.swift in Sources */,
 				7B7A243B236A9B86003F1458 /* ConversationUnreadCountLabel.swift in Sources */,
-				DFC0EB8423BB43520091E7AC /* ProvisioningAPI.swift in Sources */,
 				7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */,
 				7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */,
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
+				DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */,
 				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
-				DFC0EBC323BB477A0091E7AC /* EmergencySessionRequest.swift in Sources */,
 				7B84358720D8DC2600237242 /* QuoteTextMessageViewModel.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
@@ -3184,26 +3128,28 @@
 				7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */,
 				7B369210233B4FC6007321A7 /* SharedMediaMediaViewController.swift in Sources */,
 				7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */,
+				DFC0ECF723BB610C0091E7AC /* MultisigAPI.swift in Sources */,
+				DFC0ECCF23BB5FDE0091E7AC /* AddressRequest.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,
-				DFC0EBBF23BB477A0091E7AC /* AddressRequest.swift in Sources */,
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
+				DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */,
 				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
-				DFC0EBC423BB477A0091E7AC /* AccountRequest.swift in Sources */,
+				DFC0ECD223BB5FDE0091E7AC /* SessionRequest.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,
+				DFC0ECFE23BB610C0091E7AC /* EmergencyAPI.swift in Sources */,
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
-				DFC0EB8A23BB43520091E7AC /* AccountAPI.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
@@ -3220,13 +3166,10 @@
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
-				DFC0EBD023BB4D020091E7AC /* PaymentAPI.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
-				DFC0EB5E23BB3D200091E7AC /* GiphyAPI.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
-				DFC0EBB023BB46B30091E7AC /* VerificationResponse.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
@@ -3240,6 +3183,7 @@
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,
 				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
+				DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
@@ -3248,6 +3192,7 @@
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
+				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
@@ -3257,15 +3202,16 @@
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
-				DFC0EBC023BB477A0091E7AC /* AuthorizationRequest.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				E015A91D23B0CCBC009E94F4 /* SendMessageService+Sending.swift in Sources */,
+				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
+				DFC0ED0323BB611E0091E7AC /* SnapshotAPI.swift in Sources */,
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
@@ -3275,12 +3221,11 @@
 				DF6175C3222398BB00624609 /* MixinURL.swift in Sources */,
 				7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
-				DFC0EBA223BB45A80091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
+				DFC0ECF923BB610C0091E7AC /* AuthorizeAPI.swift in Sources */,
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
-				DFC0EBB723BB46B30091E7AC /* QRCodeResponse.swift in Sources */,
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,
@@ -3296,9 +3241,9 @@
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
+				DFC0ECE323BB60DE0091E7AC /* ProvisioningResponse.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
-				DFC0EBA123BB45A80091E7AC /* AddressRequest.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,
@@ -3310,26 +3255,23 @@
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
 				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
+				DFC0ECF823BB610C0091E7AC /* ContactAPI.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
 				7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */,
-				DFC0EB8B23BB43520091E7AC /* MultisigAPI.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */,
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
-				DFC0EBB223BB46B30091E7AC /* AuthorizationResponse.swift in Sources */,
 				E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
-				DFC0EBB823BB46B30091E7AC /* PINLogResponse.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
-				DFC0EBC223BB477A0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
@@ -3347,7 +3289,6 @@
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,
 				7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
-				DFC0EB9823BB454E0091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
@@ -3375,48 +3316,47 @@
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationSettingsViewController.swift in Sources */,
+				DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
-				DFC0EB8323BB43520091E7AC /* PhoneContactAPI.swift in Sources */,
 				E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
+				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,
-				DFC0EB8823BB43520091E7AC /* GiphyAPI.swift in Sources */,
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
-				DFC0EB5F23BB3D200091E7AC /* CallAPI.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7B746B4022A628ED0097D18A /* Counter.swift in Sources */,
-				DFC0EBD223BB4E6E0091E7AC /* SessionRequest.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,
 				7B34A19722C0B59200665F41 /* MixinNavigationAnimating.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				DF846CD923694A2E00AA1197 /* MultisigUsersWindow.swift in Sources */,
+				DFC0ECE223BB60DE0091E7AC /* EmergencyResponse.swift in Sources */,
 				7B81DD6822EACF7500A36186 /* GalleryView.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
-				DFC0EBB623BB46B30091E7AC /* MultisigResponse.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
-				DFC0EB8723BB43520091E7AC /* AuthorizeAPI.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
+				DFC0ECF623BB610C0091E7AC /* CallAPI.swift in Sources */,
 				E09C5EBD237007650095F729 /* ProfileDescriptionView.swift in Sources */,
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
+				DFC0ECD323BB5FDE0091E7AC /* RelationshipRequest.swift in Sources */,
 				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,

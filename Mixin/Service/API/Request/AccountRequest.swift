@@ -1,17 +1,16 @@
 import Foundation
-import UIKit
 
 struct AccountRequest: Codable {
     
-    public let code: String?
-    public let registrationId: Int?
-    public let platform: String = "iOS"
-    public let platformVersion: String = UIDevice.current.systemVersion
-    public let appVersion: String
-    public let packageName: String = Bundle.main.bundleIdentifier ?? ""
-    public let purpose: String
-    public var pin: String?
-    public let sessionSecret: String?
+    let code: String?
+    let registrationId: Int?
+    let platform: String = "iOS"
+    let platformVersion: String = UIDevice.current.systemVersion
+    let appVersion: String
+    let packageName: String = Bundle.main.bundleIdentifier ?? ""
+    let purpose: String
+    var pin: String?
+    let sessionSecret: String?
     
     enum CodingKeys: String, CodingKey {
         case code
@@ -25,7 +24,7 @@ struct AccountRequest: Codable {
         case sessionSecret = "session_secret"
     }
     
-    public init(code: String?, registrationId: Int?, pin: String?, sessionSecret: String?) {
+    init(code: String?, registrationId: Int?, pin: String?, sessionSecret: String?) {
         self.code = code
         self.registrationId = registrationId
         self.appVersion = Bundle.main.shortVersion + "(" + Bundle.main.bundleVersion + ")"
@@ -36,7 +35,7 @@ struct AccountRequest: Codable {
     
 }
 
-public enum VerificationPurpose: String {
+enum VerificationPurpose: String {
     case session = "SESSION"
     case phone = "PHONE"
 }

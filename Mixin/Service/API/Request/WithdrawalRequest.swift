@@ -16,12 +16,4 @@ struct WithdrawalRequest: Codable {
         case pin
     }
     
-    init(addressId: String, amount: String, traceId: String, pin: String, memo: String) {
-        self.addressId = addressId
-        self.amount = amount
-        self.traceId = traceId
-        self.pin = pin
-        self.memo = memo
-    }
-    
 }

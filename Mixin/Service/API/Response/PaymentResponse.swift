@@ -3,10 +3,10 @@ import MixinServices
 
 struct PaymentResponse: Codable {
     
-    public let recipient: UserResponse
-    public let asset: Asset
-    public let amount: String
-    public let status: String
+    let recipient: UserResponse
+    let asset: Asset
+    let amount: String
+    let status: String
     
 }
 

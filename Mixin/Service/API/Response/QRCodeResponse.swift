@@ -3,12 +3,12 @@ import MixinServices
 
 struct QRCodeResponse: Encodable {
     
-    public let type: String
-    public var user: UserResponse? = nil
-    public var conversation: ConversationResponse? = nil
-    public var authorization: AuthorizationResponse? = nil
-    public var multisig: MultisigResponse? = nil
-    public var payment: PaymentCodeResponse? = nil
+    let type: String
+    var user: UserResponse? = nil
+    var conversation: ConversationResponse? = nil
+    var authorization: AuthorizationResponse? = nil
+    var multisig: MultisigResponse? = nil
+    var payment: PaymentCodeResponse? = nil
     
 }
 

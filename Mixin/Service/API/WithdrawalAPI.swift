@@ -1,8 +1,8 @@
 import MixinServices
 
-public class WithdrawalAPI: BaseAPI {
+final class WithdrawalAPI: BaseAPI {
     
-    public static let shared = WithdrawalAPI()
+    static let shared = WithdrawalAPI()
     
     private enum url {
         static func addresses(assetId: String) -> String {

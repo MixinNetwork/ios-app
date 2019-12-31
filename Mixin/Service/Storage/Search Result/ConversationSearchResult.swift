@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-public class ConversationSearchResult: SearchResult {
+class ConversationSearchResult: SearchResult {
     
     let conversation: ConversationItem
     

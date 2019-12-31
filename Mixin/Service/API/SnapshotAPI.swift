@@ -1,6 +1,6 @@
 import MixinServices
 
-class SnapshotAPI: BaseAPI {
+final class SnapshotAPI: BaseAPI {
 
     private enum url {
         static func snapshots(opponentId: String) -> String {

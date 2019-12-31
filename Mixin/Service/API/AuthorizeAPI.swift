@@ -1,8 +1,8 @@
 import MixinServices
 
-class AuthorizeAPI: BaseAPI {
+final class AuthorizeAPI: BaseAPI {
 
-    public static let shared = AuthorizeAPI()
+    static let shared = AuthorizeAPI()
 
     private enum url {
         static let authorizations = "authorizations"

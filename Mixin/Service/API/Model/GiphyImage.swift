@@ -1,8 +1,8 @@
 import Foundation
 
-public class GiphyImage {
+class GiphyImage {
     
-    public struct Size {
+    struct Size {
         
         let width: Int
         let height: Int
@@ -24,9 +24,9 @@ public class GiphyImage {
         
     }
     
-    public let previewUrl: URL
-    public let fullsizedUrl: URL
-    public let size: Size
+    let previewUrl: URL
+    let fullsizedUrl: URL
+    let size: Size
     
     init?(json: [String: Any]) {
         guard let images = json["images"] as? [String: Any] else {

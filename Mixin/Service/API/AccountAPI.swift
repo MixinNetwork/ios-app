@@ -1,7 +1,7 @@
 import MixinServices
 import Alamofire
 
-class AccountAPI: BaseAPI {
+final class AccountAPI: BaseAPI {
     
     static let shared = AccountAPI()
     

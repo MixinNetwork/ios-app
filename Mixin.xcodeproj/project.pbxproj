@@ -55,7 +55,6 @@
 		7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */; };
 		7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */; };
 		7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA17201196F80023B28D /* DataMessageCell.swift */; };
-		7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImage.swift */; };
 		7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */; };
 		7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */; };
 		7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A115E22C1ECB100AD029C /* RoundedBlurButton.swift */; };
@@ -63,7 +62,6 @@
 		7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */; };
 		7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
-		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
 		7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */; };
 		7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */; };
 		7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */; };
@@ -546,6 +544,8 @@
 		DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECFF23BB611E0091E7AC /* WithdrawalAPI.swift */; };
 		DFC0ED0323BB611E0091E7AC /* SnapshotAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0023BB611E0091E7AC /* SnapshotAPI.swift */; };
 		DFC0ED0423BB611E0091E7AC /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0123BB611E0091E7AC /* UserAPI.swift */; };
+		DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0623BB7D700091E7AC /* TurnServer.swift */; };
+		DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */; };
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
@@ -710,7 +710,6 @@
 		7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA17201196F80023B28D /* DataMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageCell.swift; sourceTree = "<group>"; };
-		7B29044D21F5C8AA00556488 /* GiphyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoControlView.swift; sourceTree = "<group>"; };
 		7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryVideoControlView.xib; sourceTree = "<group>"; };
 		7B2A115E22C1ECB100AD029C /* RoundedBlurButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBlurButton.swift; sourceTree = "<group>"; };
@@ -719,7 +718,6 @@
 		7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEmergencyContactViewController.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
-		7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
 		7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactIdVerificationViewController.swift; sourceTree = "<group>"; };
 		7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInfoInputViewController.swift; sourceTree = "<group>"; };
 		7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginInfoInputView.xib; sourceTree = "<group>"; };
@@ -1224,6 +1222,8 @@
 		DFC0ECFF23BB611E0091E7AC /* WithdrawalAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
 		DFC0ED0023BB611E0091E7AC /* SnapshotAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotAPI.swift; sourceTree = "<group>"; };
 		DFC0ED0123BB611E0091E7AC /* UserAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
+		DFC0ED0623BB7D700091E7AC /* TurnServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
+		DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
@@ -2223,6 +2223,7 @@
 		DFC0EB5723BB3CD60091E7AC /* API */ = {
 			isa = PBXGroup;
 			children = (
+				DFC0ED0523BB7D4F0091E7AC /* Model */,
 				DFC0EB8D23BB447A0091E7AC /* Request */,
 				DFC0EB8E23BB447A0091E7AC /* Response */,
 				DFC0ECF323BB610B0091E7AC /* AccountAPI.swift */,
@@ -2273,6 +2274,15 @@
 				DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */,
 			);
 			path = Response;
+			sourceTree = "<group>";
+		};
+		DFC0ED0523BB7D4F0091E7AC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DFC0ED0623BB7D700091E7AC /* TurnServer.swift */,
+				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		DFD294301FA5D01900FADAAD /* Base */ = {
@@ -2431,8 +2441,6 @@
 				DFC0EB5723BB3CD60091E7AC /* API */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E015A91C23B0CCBC009E94F4 /* SendMessageService+Sending.swift */,
-				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
-				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -2921,7 +2929,6 @@
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				DFC0ECCE23BB5FDE0091E7AC /* EmergencySessionRequest.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
-				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
@@ -2972,7 +2979,6 @@
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				7BFF25DD23632D7200454B27 /* CoreTextFontSet.swift in Sources */,
-				7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
@@ -3115,6 +3121,7 @@
 				7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */,
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */,
+				DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */,
 				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
@@ -3207,6 +3214,7 @@
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				E015A91D23B0CCBC009E94F4 /* SendMessageService+Sending.swift in Sources */,
 				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
+				DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,

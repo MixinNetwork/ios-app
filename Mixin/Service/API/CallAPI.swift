@@ -1,6 +1,6 @@
 import MixinServices
 
-class CallAPI: BaseAPI {
+final class CallAPI: BaseAPI {
     
     static let shared = CallAPI()
     

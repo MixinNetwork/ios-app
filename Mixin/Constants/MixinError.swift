@@ -14,7 +14,7 @@ enum MixinError: Error {
 
 extension MixinError: CustomNSError {
     
-    public static var errorDomain: String {
+    static var errorDomain: String {
         return "MixinError"
     }
     

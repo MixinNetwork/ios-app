@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-public class UserSearchResult: SearchResult {
+class UserSearchResult: SearchResult {
     
     let user: UserItem
     

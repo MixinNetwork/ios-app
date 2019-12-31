@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-public class SearchResult {
+class SearchResult {
     
     let iconUrl: String
     let badgeImage: UIImage?

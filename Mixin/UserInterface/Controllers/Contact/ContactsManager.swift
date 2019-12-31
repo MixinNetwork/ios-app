@@ -2,7 +2,7 @@ import Foundation
 import Contacts
 import PhoneNumberKit
 
-public class PhoneContact: NSObject, Codable {
+class PhoneContact: NSObject, Codable {
     
     @objc let fullName: String
     let phoneNumber: String

@@ -1,7 +1,7 @@
 import MixinServices
 import Alamofire
 
-class UserAPI: UserSessionAPI {
+final class UserAPI: UserSessionAPI {
 
     static let shared = UserAPI()
 

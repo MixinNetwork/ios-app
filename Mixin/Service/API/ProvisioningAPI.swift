@@ -1,6 +1,6 @@
 import MixinServices
 
-class ProvisioningAPI: BaseAPI {
+final class ProvisioningAPI: BaseAPI {
     
     static let shared = ProvisioningAPI()
     

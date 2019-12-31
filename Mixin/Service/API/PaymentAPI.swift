@@ -1,6 +1,6 @@
 import MixinServices
 
-class PaymentAPI: BaseAPI {
+final class PaymentAPI: BaseAPI {
 
     private enum url {
         static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> String {

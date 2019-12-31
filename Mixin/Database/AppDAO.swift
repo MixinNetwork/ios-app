@@ -4,7 +4,7 @@ import WCDBSwift
 final class AppDAO {
 
     static let shared = AppDAO()
-    static let sqlQueryColumns = "a.app_id, a.app_number, a.redirect_uri, u.full_name, a.icon_url, a.capabilites, a.app_secret, a.home_uri, a.creator_id"
+    static let sqlQueryColumns = "a.app_id, a.app_number, a.redirect_uri, u.full_name, a.icon_url, a.capabilites, a.home_uri, a.creator_id"
     static let sqlQueryApps = """
         SELECT \(sqlQueryColumns) FROM participants p, apps a, users u
         WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id

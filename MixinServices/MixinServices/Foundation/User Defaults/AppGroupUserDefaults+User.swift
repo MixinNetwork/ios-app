@@ -34,18 +34,19 @@ extension AppGroupUserDefaults {
         }
         
         public static let version = 9
+        public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
-        
-        @Default(namespace: .user, key: Key.localVersion, defaultValue: version)
-        public static var localVersion: Int
-        
-        @Default(namespace: .user, key: Key.needsRebuildDatabase, defaultValue: false)
-        public static var needsRebuildDatabase: Bool
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version || needsRebuildDatabase
         }
+        
+        @Default(namespace: .user, key: Key.localVersion, defaultValue: uninitializedVersion)
+        public static var localVersion: Int
+        
+        @Default(namespace: .user, key: Key.needsRebuildDatabase, defaultValue: false)
+        public static var needsRebuildDatabase: Bool
         
         @Default(namespace: .user, key: Key.lastUpdateOrInstallDate, defaultValue: Date())
         public private(set) static var lastUpdateOrInstallDate: Date
@@ -128,7 +129,7 @@ extension AppGroupUserDefaults {
         }
         
         internal static func migrate() {
-            localVersion = DatabaseUserDefault.shared.databaseVersion
+            localVersion = DatabaseUserDefault.shared.databaseVersion ?? uninitializedVersion
             needsRebuildDatabase = DatabaseUserDefault.shared.forceUpgradeDatabase
             lastUpdateOrInstallDate = CommonUserDefault.shared.lastUpdateOrInstallTime.toUTCDate()
             isLogoutByServer = CommonUserDefault.shared.hasForceLogout

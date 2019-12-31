@@ -110,6 +110,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
+        if AppGroupUserDefaults.firstLaunchDate == nil {
+            AppGroupUserDefaults.firstLaunchDate = Date()
+        }
         guard LoginManager.shared.account == nil else {
             return
         }
@@ -203,8 +206,11 @@ extension AppDelegate {
         guard UIApplication.shared.isProtectedDataAvailable else {
             return
         }
-        Reporter.registerUserInformation()
+        if AppGroupUserDefaults.firstLaunchDate == nil {
+            AppGroupUserDefaults.firstLaunchDate = Date()
+        }
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
+        Reporter.registerUserInformation()
         MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
             let log = String(cString: message)
             Logger.write(log: log)

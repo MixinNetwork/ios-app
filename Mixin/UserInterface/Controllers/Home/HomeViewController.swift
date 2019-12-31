@@ -517,10 +517,13 @@ extension HomeViewController {
     }
     
     private func requestAppStoreReviewIfNeeded() {
+        guard let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate else {
+            return
+        }
         let sevenDays: Double = 7 * 24 * 60 * 60
         let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
             && AppGroupUserDefaults.User.hasPerformedTransfer
-            && -AppGroupUserDefaults.firstShownHomeDate.timeIntervalSinceNow > sevenDays
+            && -firstLaunchDate.timeIntervalSinceNow > sevenDays
         if shouldRequestReview {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                 SKStoreReviewController.requestReview()

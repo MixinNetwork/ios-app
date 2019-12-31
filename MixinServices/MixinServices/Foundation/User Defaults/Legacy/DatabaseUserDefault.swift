@@ -26,9 +26,9 @@ internal class DatabaseUserDefault {
     private let session = UserDefaults(suiteName: SuiteName.database)!
     let currentDatabaseVersion = 8
 
-    var databaseVersion: Int {
+    var databaseVersion: Int? {
         get {
-            return session.integer(forKey: keyDatabaseVersion)
+            return session.object(forKey: keyDatabaseVersion) as? Int
         }
         set {
             session.set(newValue, forKey: keyDatabaseVersion)

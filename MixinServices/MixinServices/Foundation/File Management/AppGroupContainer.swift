@@ -31,22 +31,34 @@ public enum AppGroupContainer {
     }
     
     @available(iOSApplicationExtension, unavailable)
-    public static func migrate() {
-        guard let userDomainDocumentUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+    public static func migrateIfNeeded() {
+        guard !AppGroupUserDefaults.isDocumentsMigrated else {
             return
         }
-        do {
-            if FileManager.default.fileExists(atPath: documentsUrl.path, isDirectory: nil) {
-                try FileManager.default.removeItem(at: documentsUrl)
+        defer {
+            AppGroupUserDefaults.isDocumentsMigrated = true
+        }
+        guard let localDocumentUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        guard let enumerator = FileManager.default.enumerator(atPath: localDocumentUrl.path) else {
+            return
+        }
+        if !FileManager.default.fileExists(atPath: documentsUrl.path) {
+            do {
+                try FileManager.default.createDirectory(at: documentsUrl, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error)
             }
-            try FileManager.default.copyItem(at: userDomainDocumentUrl, to: documentsUrl)
-            let enumerator = FileManager.default.enumerator(atPath: userDomainDocumentUrl.path)
-            while let file = enumerator?.nextObject() as? String {
-                let url = userDomainDocumentUrl.appendingPathComponent(file)
-                try FileManager.default.removeItem(at: url)
+        }
+        while let file = enumerator.nextObject() as? String {
+            let src = localDocumentUrl.appendingPathComponent(file)
+            let dst = documentsUrl.appendingPathComponent(file)
+            do {
+                try FileManager.default.moveItem(at: src, to: dst)
+            } catch {
+                print(error)
             }
-        } catch {
-            print(error)
         }
     }
     

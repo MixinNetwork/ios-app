@@ -86,9 +86,13 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AppGroupUserDefaults.Account.pinToken = pinToken
             AppGroupUserDefaults.Account.sessionSecret = privateKeyPem
             LoginManager.shared.setAccount(account, updateUserTable: false)
+            AppGroupUserDefaults.migrateUserSpecificDefaults()
+            AppGroupContainer.migrateIfNeeded()
             MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
             TaskDatabase.shared.initDatabase()
-            AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
+            if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
+                AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
+            }
             
             if account.full_name.isEmpty {
                 Reporter.report(event: .signUp)

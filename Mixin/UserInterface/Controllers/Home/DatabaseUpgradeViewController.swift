@@ -3,7 +3,11 @@ import WCDBSwift
 import MixinServices
 
 class DatabaseUpgradeViewController: UIViewController {
-
+    
+    class var needsUpgrade: Bool {
+        !AppGroupUserDefaults.isDocumentsMigrated || AppGroupUserDefaults.User.needsUpgradeInMainApp
+    }
+    
     class func instance() -> DatabaseUpgradeViewController {
         return R.storyboard.home.database()!
     }
@@ -14,9 +18,7 @@ class DatabaseUpgradeViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let localVersion = AppGroupUserDefaults.User.localVersion
             
-            if localVersion < 9 {
-                AppGroupContainer.migrate()
-            }
+            AppGroupContainer.migrateIfNeeded()
             
             // Logs are saved in app container
             // Write after container migration
@@ -44,6 +46,7 @@ class DatabaseUpgradeViewController: UIViewController {
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
+            AppGroupUserDefaults.isDocumentsMigrated = true
             
             let time = Date().timeIntervalSince(startTime)
             if time < 2 {

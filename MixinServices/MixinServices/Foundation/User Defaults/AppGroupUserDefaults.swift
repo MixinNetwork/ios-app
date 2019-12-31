@@ -45,24 +45,21 @@ public enum AppGroupUserDefaults {
             }
         }
         
+        // default values are returned as is without writting back
         public init(namespace: Namespace?, key: String, defaultValue: Value) {
             self.namespace = namespace
             self.key = key
             self.defaultValue = defaultValue
         }
         
+        // default values are returned as is without writting back
         public convenience init<KeyType: RawRepresentable>(namespace: Namespace?, key: KeyType, defaultValue: Value) where KeyType.RawValue == String {
             self.init(namespace: namespace, key: key.rawValue, defaultValue: defaultValue)
         }
         
         public var wrappedValue: Value {
             get {
-                if let value = defaults.object(forKey: wrappedKey) as? Value {
-                    return value
-                } else {
-                    defaults.set(defaultValue, forKey: wrappedKey)
-                    return defaultValue
-                }
+                defaults.object(forKey: wrappedKey) as? Value ?? defaultValue
             }
             set {
                 if let newValue = newValue as? AnyOptional, newValue.isNil {
@@ -83,7 +80,6 @@ public enum AppGroupUserDefaults {
                 if let rawValue = defaults.object(forKey: wrappedKey) as? Value.RawValue, let value = Value(rawValue: rawValue) {
                     return value
                 } else {
-                    defaults.set(defaultValue.rawValue, forKey: wrappedKey)
                     return defaultValue
                 }
             }
@@ -98,27 +94,8 @@ public enum AppGroupUserDefaults {
 
 extension AppGroupUserDefaults {
     
-    public static let version = 1
-    
-    @Default(namespace: nil, key: "local_version", defaultValue: 0)
-    public static var localVersion: Int
-    
-    // Indicates that user defaults are in Main app's container and needs to migrate to AppGroup's container
-    public static var needsMigration: Bool {
-        localVersion == 0 && AccountUserDefault.shared.serializedAccount != nil
-    }
-    
-    public static var canMigrate: Bool {
-        !isAppExtension
-    }
-    
-    // Indicates that user defaults are outdated but do present in AppGroup's container
-    public static var needsUpgrade: Bool {
-        localVersion != 0 && version > localVersion
-    }
-    
-    @Default(namespace: nil, key: "first_shown_home_date", defaultValue: Date())
-    public static var firstShownHomeDate: Date
+    @Default(namespace: nil, key: "first_launch_date", defaultValue: nil)
+    public static var firstLaunchDate: Date?
     
     @Default(namespace: nil, key: "currency_rates", defaultValue: [:])
     public static var currencyRates: [String: Double]
@@ -126,16 +103,22 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "server_index", defaultValue: 0)
     public static var serverIndex: Int
     
+    @Default(namespace: nil, key: "documents_migrated", defaultValue: false)
+    public static var isDocumentsMigrated: Bool
+    
 }
 
 extension AppGroupUserDefaults {
     
     public static func migrateIfNeeded() {
-        defer {
-            localVersion = version
-        }
         guard needsMigration else {
             return
+        }
+        let interval = CommonUserDefault.shared.firstLaunchTimeIntervalSince1970
+        if interval != 0 {
+            // A 0 interval indicates this value has never been written
+            // Just leave it to AppDelegate
+            firstLaunchDate = Date(timeIntervalSince1970: interval)
         }
         Account.migrate()
         User.migrate()
@@ -143,6 +126,19 @@ extension AppGroupUserDefaults {
         Crypto.migrate()
         Database.migrate()
         Wallet.migrate()
+        AccountUserDefault.shared.clear()
+    }
+    
+    public static func migrateUserSpecificDefaults() {
+        User.migrate()
+        Database.migrate()
+        Wallet.migrate()
+    }
+    
+    private static var needsMigration: Bool {
+        let old = AccountUserDefault.shared.serializedAccount
+        let new = AppGroupUserDefaults.Account.serializedAccount
+        return old != nil && new == nil
     }
     
 }

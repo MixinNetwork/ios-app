@@ -36,7 +36,7 @@ public enum KeyUtil {
         callback(encryptedPin)
     }
 
-    static func aesEncrypt(pinToken: String, pin: String) -> String? {
+    public static func aesEncrypt(pinToken: String, pin: String) -> String? {
         guard let key = Data(base64Encoded: pinToken), let data = pin.data(using: .utf8), let iv = secureRandom() else {
             return nil
         }

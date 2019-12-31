@@ -1,6 +1,6 @@
 import Foundation
 
-public struct VerificationResponse: Codable {
+struct VerificationResponse: Codable {
 
     public let type: String
     public let id: String

@@ -1,4 +1,4 @@
-import Foundation
+import MixinServices
 import Alamofire
 
 public enum GiphyAPI {

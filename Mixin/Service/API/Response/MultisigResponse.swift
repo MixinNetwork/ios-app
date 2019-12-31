@@ -1,4 +1,6 @@
-public struct MultisigResponse: Codable {
+import Foundation
+
+struct MultisigResponse: Codable {
     
     public let codeId: String
     public let requestId: String

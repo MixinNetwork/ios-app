@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PINLogResponse: Codable {
+struct PINLogResponse: Codable {
     
     public let logId: String
     public let code: String

@@ -17,7 +17,7 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
         case .all:
             result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category))
         case .opponent(let id):
-            result = AssetAPI.shared.snapshots(opponentId: id)
+            result = SnapshotAPI.shared.snapshots(opponentId: id)
         case .asset(let id):
             result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), assetId: id)
         }

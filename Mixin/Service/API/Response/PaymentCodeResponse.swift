@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PaymentCodeResponse: Codable {
+struct PaymentCodeResponse: Codable {
     
     public let codeId: String
     public let assetId: String

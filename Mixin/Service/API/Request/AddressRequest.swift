@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public struct AddressRequest: Codable {
+struct AddressRequest: Codable {
     
     public let assetId: String
     public let destination: String

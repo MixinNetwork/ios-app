@@ -163,7 +163,7 @@ public class MixinService {
                 return false
             }
 
-            switch UserAPI.shared.fetchSessions(userIds: [userId]) {
+            switch UserSessionAPI.shared.fetchSessions(userIds: [userId]) {
             case let .success(sessions):
                 let participantSessions = sessions.map {
                     ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())

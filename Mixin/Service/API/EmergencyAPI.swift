@@ -1,4 +1,3 @@
-import Foundation
 import MixinServices
 
 final class EmergencyAPI: BaseAPI {

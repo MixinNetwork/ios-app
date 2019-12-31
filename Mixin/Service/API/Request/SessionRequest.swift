@@ -1,6 +1,6 @@
 import Foundation
 
-internal struct SessionRequest: Codable {
+struct SessionRequest: Codable {
     
     let platform = "iOS"
     let platform_version = "" + UIDevice.current.systemVersion

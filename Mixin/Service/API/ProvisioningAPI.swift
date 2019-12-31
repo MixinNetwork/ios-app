@@ -1,8 +1,8 @@
-import UIKit
+import MixinServices
 
-public class ProvisioningAPI: BaseAPI {
+class ProvisioningAPI: BaseAPI {
     
-    public static let shared = ProvisioningAPI()
+    static let shared = ProvisioningAPI()
     
     private enum url {
         static let code = "device/provisioning/code"
@@ -11,11 +11,11 @@ public class ProvisioningAPI: BaseAPI {
         }
     }
     
-    public func code(completion: @escaping (APIResult<ProvisioningCodeResponse>) -> Void) {
+    func code(completion: @escaping (APIResult<ProvisioningCodeResponse>) -> Void) {
         request(method: .get, url: url.code, completion: completion)
     }
     
-    public func update(id: String, secret: String, completion: @escaping (APIResult<ProvisioningResponse>) -> Void) {
+    func update(id: String, secret: String, completion: @escaping (APIResult<ProvisioningResponse>) -> Void) {
         let params = ["secret": secret]
         request(method: .post, url: url.update(id: id), parameters: params, completion: completion)
     }

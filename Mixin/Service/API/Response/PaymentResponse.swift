@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-public struct PaymentResponse: Codable {
+struct PaymentResponse: Codable {
     
     public let recipient: UserResponse
     public let asset: Asset
@@ -9,7 +10,7 @@ public struct PaymentResponse: Codable {
     
 }
 
-public enum PaymentStatus: String, Codable {
+enum PaymentStatus: String, Codable {
     case pending
     case paid
 }

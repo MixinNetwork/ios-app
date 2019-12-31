@@ -1,4 +1,4 @@
-import UIKit
+import MixinServices
 
 public class ContactAPI: BaseAPI {
 

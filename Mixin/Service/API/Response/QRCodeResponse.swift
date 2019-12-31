@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-public struct QRCodeResponse: Encodable {
+struct QRCodeResponse: Encodable {
     
     public let type: String
     public var user: UserResponse? = nil

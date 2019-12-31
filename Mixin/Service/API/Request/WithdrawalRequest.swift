@@ -1,12 +1,12 @@
 import Foundation
 
-public struct WithdrawalRequest: Codable {
+struct WithdrawalRequest: Codable {
     
-    public let addressId: String
-    public let amount: String
-    public let traceId: String
-    public var pin: String
-    public let memo: String
+    let addressId: String
+    let amount: String
+    let traceId: String
+    var pin: String
+    let memo: String
     
     enum CodingKeys: String, CodingKey {
         case addressId = "address_id"
@@ -16,7 +16,7 @@ public struct WithdrawalRequest: Codable {
         case pin
     }
     
-    public init(addressId: String, amount: String, traceId: String, pin: String, memo: String) {
+    init(addressId: String, amount: String, traceId: String, pin: String, memo: String) {
         self.addressId = addressId
         self.amount = amount
         self.traceId = traceId

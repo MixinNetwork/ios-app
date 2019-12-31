@@ -1,11 +1,16 @@
 import Foundation
 
-public struct APIError: Error, Codable {
+public class APIError: Error, Codable {
 
     public let status: Int
     public let code: Int
     public var description: String
 
+    public init(status: Int, code: Int, description: String) {
+        self.status = status
+        self.code = code
+        self.description = description
+    }
 }
 
 extension APIError {

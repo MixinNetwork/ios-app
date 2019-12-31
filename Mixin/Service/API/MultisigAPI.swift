@@ -1,4 +1,4 @@
-import Foundation
+import MixinServices
 
 public final class MultisigAPI: BaseAPI {
     

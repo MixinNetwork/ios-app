@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-public struct AuthorizationResponse: Codable {
+struct AuthorizationResponse: Codable {
     
     public let authorizationId: String
     public let authorizationCode: String

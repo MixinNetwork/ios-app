@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public struct AuthorizationRequest: Codable {
+struct AuthorizationRequest: Codable {
     
     public let authorizationId: String
     public let scopes: [String]

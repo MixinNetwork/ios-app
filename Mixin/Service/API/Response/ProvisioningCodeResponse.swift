@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ProvisioningCodeResponse: Codable {
+struct ProvisioningCodeResponse: Codable {
     
     public let code: String
     

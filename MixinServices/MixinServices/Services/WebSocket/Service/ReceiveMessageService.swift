@@ -515,7 +515,7 @@ public class ReceiveMessageService: MixinService {
                     .filter{ $0 != currentAccountId }
                 var updatedUsers = true
                 if userIds.count > 0 {
-                    switch UserAPI.shared.showUsers(userIds: userIds) {
+                    switch UserSessionAPI.shared.showUsers(userIds: userIds) {
                     case let .success(users):
                         UserDAO.shared.updateUsers(users: users)
                     case .failure:
@@ -541,7 +541,7 @@ public class ReceiveMessageService: MixinService {
         guard User.systemUser != userId, userId != currentAccountId, !UserDAO.shared.isExist(userId: userId) else {
             return .SUCCESS
         }
-        switch UserAPI.shared.showUser(userId: userId) {
+        switch UserSessionAPI.shared.showUser(userId: userId) {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
@@ -562,7 +562,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         repeat {
-            switch UserAPI.shared.showUser(userId: userId) {
+            switch UserSessionAPI.shared.showUser(userId: userId) {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true

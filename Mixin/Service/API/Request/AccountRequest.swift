@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public struct AccountRequest: Codable {
+struct AccountRequest: Codable {
     
     public let code: String?
     public let registrationId: Int?

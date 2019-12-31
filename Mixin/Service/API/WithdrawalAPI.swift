@@ -1,5 +1,4 @@
-import Foundation
-import Alamofire
+import MixinServices
 
 public class WithdrawalAPI: BaseAPI {
     
@@ -21,19 +20,19 @@ public class WithdrawalAPI: BaseAPI {
         }
     }
     
-    public func address(addressId: String) -> APIResult<Address> {
+    func address(addressId: String) -> APIResult<Address> {
         return request(method: .get, url: url.address(addressId: addressId))
     }
     
-    public func address(addressId: String, completion: @escaping (APIResult<Address>) -> Void) {
+    func address(addressId: String, completion: @escaping (APIResult<Address>) -> Void) {
         request(method: .get, url: url.address(addressId: addressId), completion: completion)
     }
     
-    public func addresses(assetId: String, completion: @escaping (APIResult<[Address]>) -> Void) {
+    func addresses(assetId: String, completion: @escaping (APIResult<[Address]>) -> Void) {
         request(method: .get, url: url.addresses(assetId: assetId), completion: completion)
     }
     
-    public func save(address: AddressRequest, completion: @escaping (APIResult<Address>) -> Void) {
+    func save(address: AddressRequest, completion: @escaping (APIResult<Address>) -> Void) {
         KeyUtil.aesEncrypt(pin: address.pin, completion: completion) { [weak self](encryptedPin) in
             var address = address
             address.pin = encryptedPin
@@ -41,7 +40,7 @@ public class WithdrawalAPI: BaseAPI {
         }
     }
     
-    public func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (APIResult<Snapshot>) -> Void) {
+    func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (APIResult<Snapshot>) -> Void) {
         KeyUtil.aesEncrypt(pin: withdrawal.pin, completion: completion) { [weak self](encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin
@@ -49,7 +48,7 @@ public class WithdrawalAPI: BaseAPI {
         }
     }
     
-    public func delete(addressId: String, pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func delete(addressId: String, pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.delete(addressId: addressId), parameters: ["PIN": encryptedPin], completion: completion)
         }

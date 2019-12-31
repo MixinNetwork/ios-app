@@ -1,4 +1,3 @@
-import UIKit
 import MixinServices
 
 class CallAPI: BaseAPI {

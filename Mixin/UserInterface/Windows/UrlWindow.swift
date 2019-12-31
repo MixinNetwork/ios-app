@@ -20,7 +20,7 @@ class UrlWindow {
             return checkAddress(url: url)
         case let .users(id):
             return checkUser(id, clearNavigationStack: clearNavigationStack)
-        case let .snapshots:
+        case .snapshots:
             return checkSnapshot(url: url)
         case let .apps(userId):
             return checkApp(url: url, userId: userId)
@@ -115,7 +115,7 @@ class UrlWindow {
             if let traceId = traceId  {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(traceId: traceId)
                 if snapshotItem == nil {
-                    switch AssetAPI.shared.snapshot(traceId: traceId) {
+                    switch SnapshotAPI.shared.snapshot(traceId: traceId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -133,7 +133,7 @@ class UrlWindow {
             } else if let snapshotId = snapshotId {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
                 if snapshotItem == nil {
-                    switch AssetAPI.shared.snapshot(snapshotId: snapshotId) {
+                    switch SnapshotAPI.shared.snapshot(snapshotId: snapshotId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -322,7 +322,7 @@ class UrlWindow {
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        AssetAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
+        PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
                 hud.hide()

@@ -255,6 +255,7 @@ extension CallManager {
             throw CallError.invalidSdp(sdp: data.data)
         }
         guard let user = UserDAO.shared.getUser(userId: data.userId) else {
+            // FIXME: Download user if absent
             throw CallError.missingUser(userId: data.userId)
         }
         AudioManager.shared.pause()

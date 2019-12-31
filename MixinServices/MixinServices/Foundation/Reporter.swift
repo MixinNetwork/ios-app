@@ -140,11 +140,14 @@ extension Reporter {
             assertionFailure()
             return
         }
-        let fileUrl = containerUrl
-            .appendingPathComponent("report", isDirectory: true)
-            .appendingPathComponent(destination.rawValue)
-            .appendingPathExtension("txt")
+        let reportContainerUrl = containerUrl.appendingPathComponent("Report", isDirectory: true)
         do {
+            if !FileManager.default.fileExists(atPath: reportContainerUrl.path, isDirectory: nil) {
+                try FileManager.default.createDirectory(at: reportContainerUrl, withIntermediateDirectories: true, attributes: nil)
+            }
+            let fileUrl = reportContainerUrl
+                .appendingPathComponent(destination.rawValue, isDirectory: false)
+                .appendingPathExtension("txt")
             try content.write(to: fileUrl, atomically: true, encoding: .utf8)
         } catch {
             assertionFailure()

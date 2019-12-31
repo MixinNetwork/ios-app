@@ -100,6 +100,10 @@ public extension UNMutableNotificationContent {
             default:
                 return localized("notification_content_general")
             }
+        } else if message.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
+            return localized("alert_key_contact_audio_call_message")
+        } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
+            return localized("alert_key_contact_audio_call_cancelled_message")
         } else {
             return localized("notification_content_general")
         }

@@ -1,38 +1,94 @@
 import UserNotifications
 import MixinServices
 
-class NotificationService: UNNotificationServiceExtension {
+final class NotificationService: UNNotificationServiceExtension {
     
-    var contentHandler: ((UNNotificationContent) -> Void)?
-    var bestAttemptContent: UNMutableNotificationContent?
+    private let timeLimit: TimeInterval = 25
+    private let startDate = Date()
+    
+    private var contentHandler: ((UNNotificationContent) -> Void)?
+    private var rawContent: UNNotificationContent?
+    private var messageId: String?
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
-        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.needsMigration, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
-            deliverBestAttemptContent()
+        self.rawContent = request.content
+        
+        guard LoginManager.shared.isLoggedIn, AppGroupUserDefaults.isDocumentsMigrated, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            deliverRawContent()
             return
         }
-        WebSocketService.shared.connect()
+        guard let aps = request.content.userInfo["aps"] as? [String: Any], let messageId = aps["msg-id"] as? String else {
+            deliverRawContent()
+            return
+        }
         
+        self.messageId = messageId
         
-        if let bestAttemptContent = bestAttemptContent {
-            // Modify the notification content here...
-            bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-            
-            contentHandler(bestAttemptContent)
+        if let message = MessageDAO.shared.getFullMessage(messageId: messageId) {
+            deliverNotification(with: message)
+        } else {
+            MixinService.callMessageCoordinator = CallManager.shared
+            ReceiveMessageService.shared.delegate = self
+            NotificationCenter.default.addObserver(self, selector: #selector(didInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
+            WebSocketService.shared.connect()
         }
     }
     
     override func serviceExtensionTimeWillExpire() {
-        deliverBestAttemptContent()
+        deliverRawContent()
     }
     
-    private func deliverBestAttemptContent() {
-        guard let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent else {
+    @objc private func didInsertMessage(_ notification: Notification) {
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
             return
         }
-        contentHandler(bestAttemptContent)
+        guard message.messageId == messageId else {
+            return
+        }
+        deliverNotification(with: message)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func deliverNotification(with message: MessageItem) {
+        guard message.status != MessageStatus.FAILED.rawValue else {
+            return
+        }
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+            return
+        }
+        let ownerUser: UserItem?
+        if conversation.category == ConversationCategory.CONTACT.rawValue {
+            ownerUser = UserDAO.shared.getUser(userId: message.userId)
+        } else {
+            ownerUser = nil
+        }
+        let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
+        contentHandler?(content)
+    }
+    
+    private func deliverRawContent() {
+        guard let rawContent = rawContent else {
+            return
+        }
+        contentHandler?(rawContent)
+    }
+    
+}
+
+extension NotificationService: ReceiveMessageServiceDelegate {
+    
+    func receiveMessageService(_ service: ReceiveMessageService, shouldContinueProcessingAfterProcessingMessageWithId id: String) -> Bool {
+        if messageId == id || -startDate.timeIntervalSinceNow >= timeLimit {
+            WebSocketService.shared.disconnect()
+            return true
+        } else {
+            return false
+        }
     }
     
 }

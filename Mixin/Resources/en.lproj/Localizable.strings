@@ -724,6 +724,7 @@
 "alert_key_contact_contact_message" = "send you a contact";
 "alert_key_contact_audio_message" = "send you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 
 // About
 "about_twitter" = "Follow us on Twitter";

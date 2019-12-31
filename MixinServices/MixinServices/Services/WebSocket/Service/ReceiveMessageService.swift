@@ -7,6 +7,10 @@ public protocol CallMessageCoordinator: class {
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
 }
 
+public protocol ReceiveMessageServiceDelegate: class {
+    func receiveMessageService(_ service: ReceiveMessageService, shouldContinueProcessingAfterProcessingMessageWithId id: String) -> Bool
+}
+
 public class ReceiveMessageService: MixinService {
     
     public static let shared = ReceiveMessageService()
@@ -18,6 +22,8 @@ public class ReceiveMessageService: MixinService {
         .WEBRTC_AUDIO_FAILED,
         .WEBRTC_AUDIO_DECLINE
     ]
+    
+    public weak var delegate: ReceiveMessageServiceDelegate?
     
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
@@ -66,7 +72,7 @@ public class ReceiveMessageService: MixinService {
 
         processDispatchQueue.async {
             defer {
-                ReceiveMessageService.shared.processing = false
+                self.processing = false
             }
 
             var finishedJobCount = 0
@@ -93,6 +99,9 @@ public class ReceiveMessageService: MixinService {
 
                     ReceiveMessageService.shared.syncConversation(data: data)
                     ReceiveMessageService.shared.checkSession(data: data)
+                    
+                    let shouldContinueProcessing = self.delegate?.receiveMessageService(self, shouldContinueProcessingAfterProcessingMessageWithId: data.messageId) ?? true
+                    
                     if MessageCategory.isLegal(category: data.category) {
                         ReceiveMessageService.shared.processSystemMessage(data: data)
                         ReceiveMessageService.shared.processPlainMessage(data: data)
@@ -104,6 +113,10 @@ public class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processUnknownMessage(data: data)
                     }
                     BlazeMessageDAO.shared.delete(data: data)
+                    
+                    guard shouldContinueProcessing else {
+                        return
+                    }
                 }
 
                 finishedJobCount += blazeMessageDatas.count

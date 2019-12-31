@@ -629,6 +629,7 @@
 "alert_key_contact_contact_message" = "あなたに連絡先を送る";
 "alert_key_contact_audio_message" = "あなたに音声を送る";
 "alert_key_contact_audio_call_message" = "音声通話に招待します";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 
 // About
 "about_twitter" = "Twitterでフォローします";

@@ -70,9 +70,10 @@ class ConversationInputViewController: UIViewController {
     private let maxInputRow = 5
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     
+    private(set) var opponentApp: App?
+    
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
-    private(set) var opponentApp: App?
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {

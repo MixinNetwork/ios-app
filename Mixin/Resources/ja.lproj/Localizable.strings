@@ -238,6 +238,9 @@
 "chat_invited_by_stranger" = "招待者は連絡先にありません";
 "chat_exit_group_and_report_inviter" = "グループを退会しても招待者を報告する";
 "chat_exit_group_and_report_inviter_confirmation" = "グループを退会しても招待者を報告しますか";
+"chat_app_reception_title" = "Tap the button to interact with the bot";
+"chat_app_reception_button_home" = "Open Home Page";
+"chat_app_reception_button_hi" = "Say Hi";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

@@ -69,6 +69,14 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
+    private lazy var appReceptionView: AppReceptionView = {
+        let view = R.nib.appReceptionView(owner: nil)!
+        view.openHomePageButton.addTarget(conversationInputViewController,
+                                          action: #selector(ConversationInputViewController.openOpponentAppAction(_:)),
+                                          for: .touchUpInside)
+        view.greetingButton.addTarget(self, action: #selector(greetAppAction(_:)), for: .touchUpInside)
+        return view
+    }()
     
     private lazy var invitationHintView: InvitationHintView = {
         let view = R.nib.invitationHintView(owner: nil)!
@@ -132,7 +140,7 @@ class ConversationViewController: UIViewController {
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateStrangerHintView()
+        updateStrangerActionView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
         updateNavigationBarHeightAndTableViewTopInset()
@@ -406,6 +414,11 @@ class ConversationViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    @objc func greetAppAction(_ sender: Any) {
+        tableView.tableFooterView = nil
+        dataSource.sendMessage(type: .SIGNAL_TEXT, value: "Hi")
+    }
+    
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
         if conversationInputViewController.audioViewController.hideLongPressHint() {
             return
@@ -533,7 +546,7 @@ class ConversationViewController: UIViewController {
             self.ownerUser = user
             updateNavigationBar()
             conversationInputViewController.update(opponentUser: user)
-            updateStrangerHintView()
+            updateStrangerActionView()
         }
         hideLoading()
         dataSource?.ownerUser = ownerUser
@@ -1201,7 +1214,7 @@ extension ConversationViewController {
         conversationInputViewController.update(opponentUser: user)
         self.ownerUser = user
         updateNavigationBar()
-        updateStrangerHintView()
+        updateStrangerActionView()
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1242,7 +1255,7 @@ extension ConversationViewController {
         UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
-    private func updateStrangerHintView() {
+    private func updateStrangerActionView() {
         guard dataSource.category == .contact else {
             return
         }
@@ -1253,7 +1266,11 @@ extension ConversationViewController {
                     guard let weakSelf = self else {
                         return
                     }
-                    weakSelf.tableView.tableFooterView = weakSelf.strangerHintView
+                    if ownerUser.isBot {
+                        weakSelf.tableView.tableFooterView = weakSelf.appReceptionView
+                    } else {
+                        weakSelf.tableView.tableFooterView = weakSelf.strangerHintView
+                    }
                 }
             } else {
                 DispatchQueue.main.async {

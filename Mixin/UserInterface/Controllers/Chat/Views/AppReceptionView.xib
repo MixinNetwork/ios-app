@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="egB-9u-bGv" customClass="AppReceptionView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap the button to interact with the bot" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ku6-sX-USa">
+                    <rect key="frame" x="0.0" y="16" width="375" height="19.5"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_app_reception_title"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="vwh-Kn-u7c">
+                    <rect key="frame" x="16" y="47.5" width="343" height="46.5"/>
+                    <subviews>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UEq-36-kfe" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="165.5" height="46.5"/>
+                            <color key="backgroundColor" name="chat_button_background"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <state key="normal" title="Open Home Page">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_app_reception_button_home"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </button>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ea-Oo-4z5" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="177.5" y="0.0" width="165.5" height="46.5"/>
+                            <color key="backgroundColor" name="chat_button_background"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <state key="normal" title="Say Hi">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_app_reception_button_hi"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vwh-Kn-u7c" firstAttribute="leading" secondItem="egB-9u-bGv" secondAttribute="leading" constant="16" id="1LI-cm-Bez"/>
+                <constraint firstItem="Ku6-sX-USa" firstAttribute="leading" secondItem="egB-9u-bGv" secondAttribute="leading" id="Iqv-gF-1Pd"/>
+                <constraint firstAttribute="trailing" secondItem="Ku6-sX-USa" secondAttribute="trailing" id="O6q-CU-HFb"/>
+                <constraint firstItem="Ku6-sX-USa" firstAttribute="top" secondItem="egB-9u-bGv" secondAttribute="top" constant="16" id="PIX-pW-buP"/>
+                <constraint firstAttribute="bottom" secondItem="vwh-Kn-u7c" secondAttribute="bottom" constant="16" id="Wnr-d0-Fpv"/>
+                <constraint firstAttribute="trailing" secondItem="vwh-Kn-u7c" secondAttribute="trailing" constant="16" id="bi6-t6-Oa2"/>
+                <constraint firstItem="vwh-Kn-u7c" firstAttribute="top" secondItem="Ku6-sX-USa" secondAttribute="bottom" constant="12" id="cNC-AN-2BC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="greetingButton" destination="1ea-Oo-4z5" id="fTC-sU-TBW"/>
+                <outlet property="openHomePageButton" destination="UEq-36-kfe" id="ThW-Q9-stp"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="-228.5"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="chat_button_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

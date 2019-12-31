@@ -778,6 +778,8 @@
 		E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */; };
 		E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */; };
 		E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */; };
+		E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */; };
+		E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
@@ -1616,6 +1618,8 @@
 		E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileFavoriteAppsView.xib; sourceTree = "<group>"; };
 		E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFavoriteAppsView.swift; sourceTree = "<group>"; };
 		E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonView.swift; sourceTree = "<group>"; };
+		E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReceptionView.swift; sourceTree = "<group>"; };
+		E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppReceptionView.xib; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRelationshipView.swift; sourceTree = "<group>"; };
@@ -2739,6 +2743,8 @@
 				7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */,
 				7BEB423522EAD209003B4479 /* ModernNetworkOperationButton.swift */,
 				7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */,
+				E05F1B9B23BB545E00A2569D /* AppReceptionView.swift */,
+				E05F1B9D23BB546F00A2569D /* AppReceptionView.xib */,
 				7B0B01971FEA63FA000EEE4F /* StrangerHintView.swift */,
 				7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */,
 				E0A70A13238250EF003C3B96 /* InvitationHintView.swift */,
@@ -3277,6 +3283,7 @@
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
+				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3899,6 +3906,7 @@
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
+				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
 				7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,

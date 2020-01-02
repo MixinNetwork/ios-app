@@ -6,7 +6,8 @@ public enum Logger {
     private static let queue = DispatchQueue(label: "one.mixin.services.queue.log")
     
     public static func write(log: String, newSection: Bool = false) {
-        DispatchQueue.global().async {
+        queue.async {
+            makeLogDirectoryIfNeeded()
             guard let files = try? FileManager.default.contentsOfDirectory(atPath: AppGroupContainer.logUrl.path) else {
                 return
             }
@@ -31,6 +32,7 @@ public enum Logger {
             return
         }
         queue.async {
+            makeLogDirectoryIfNeeded()
             var log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
             if newSection {
                 log += "------------------------------\n"
@@ -69,6 +71,7 @@ public enum Logger {
     }
     
     public static func export(conversationId: String) -> URL? {
+        makeLogDirectoryIfNeeded()
         let conversationFile = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
         do {
@@ -79,6 +82,17 @@ public enum Logger {
             #endif
         }
         return nil
+    }
+    
+    private static func makeLogDirectoryIfNeeded() {
+        guard !FileManager.default.fileExists(atPath: AppGroupContainer.logUrl.path) else {
+            return
+        }
+        do {
+            try FileManager.default.createDirectory(at: AppGroupContainer.logUrl, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            Reporter.report(error: error)
+        }
     }
     
 }

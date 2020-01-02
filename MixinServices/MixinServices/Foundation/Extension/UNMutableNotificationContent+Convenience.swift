@@ -34,6 +34,7 @@ public extension UNMutableNotificationContent {
         
         sound = .mixin
         categoryIdentifier = NotificationCategoryIdentifier.message
+        threadIdentifier = conversation.conversationId
     }
     
     private func messagePreview(conversationIsGroup: Bool, isRepresentativeMessage: Bool, message: MessageItem) -> String {

@@ -22,7 +22,7 @@ final class NotificationService: UNNotificationServiceExtension {
             deliverRawContent()
             return
         }
-        guard let aps = request.content.userInfo["aps"] as? [String: Any], let messageId = aps["msg-id"] as? String else {
+        guard let messageId = request.content.userInfo["message_id"] as? String else {
             deliverRawContent()
             return
         }

@@ -48,7 +48,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
         } else {
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
-            let senderName = senderIsMe ? Localized.CHAT_MESSAGE_YOU : item.senderFullName
+            let senderName = senderIsMe ? MixinServices.Localized.CHAT_MESSAGE_YOU : item.senderFullName
             
             let category = item.contentType
             messageTypeImageView.image = MessageCategory.iconImage(forMessageCategoryString: category)
@@ -61,50 +61,50 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_PHOTO)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_PHOTO)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_PHOTO
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_PHOTO
                 }
             } else if category.hasSuffix("_STICKER") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_STICKER)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_STICKER)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_STICKER
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_STICKER
                 }
             } else if category.hasSuffix("_CONTACT") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_CONTACT)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_CONTACT)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_CONTACT
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_CONTACT
                 }
             } else if category.hasSuffix("_DATA") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_FILE)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_FILE)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_FILE
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_FILE
                 }
             } else if category.hasSuffix("_VIDEO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_VIDEO)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_VIDEO
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VIDEO
                 }
             } else if category.hasSuffix("_LIVE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_live())"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_LIVE)"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_live()
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_LIVE
                 }
             } else if category.hasSuffix("_AUDIO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"
+                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_AUDIO)"
                 } else {
-                    contentLabel.text = Localized.NOTIFICATION_CONTENT_AUDIO
+                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_AUDIO
                 }
             } else if category.hasPrefix("WEBRTC_") {
-                contentLabel.text = Localized.NOTIFICATION_CONTENT_VOICE_CALL
+                contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VOICE_CALL
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
+                contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_TRANSFER
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"

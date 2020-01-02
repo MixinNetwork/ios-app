@@ -32,21 +32,21 @@ public enum SystemConversationAction: String {
 
     public static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
         let action = actionName ?? ""
-        let uFullName = userId == myUserId ? localized("chat_message_you") : userFullName
-        let pFullName = participantId == myUserId ? localized("chat_message_you") : participantFullName ?? ""
+        let uFullName = userId == myUserId ? Localized.CHAT_MESSAGE_YOU : userFullName
+        let pFullName = participantId == myUserId ? Localized.CHAT_MESSAGE_YOU : participantFullName ?? ""
         switch action {
         case SystemConversationAction.CREATE.rawValue:
-            return localized("chat_message_created", arguments: [uFullName])
+            return Localized.CHAT_MESSAGE_CREATED(fullName: uFullName)
         case SystemConversationAction.ADD.rawValue:
-            return localized("chat_message_added", arguments: [uFullName, pFullName])
+            return Localized.CHAT_MESSAGE_ADDED(inviterFullName: uFullName, inviteeFullName: pFullName)
         case SystemConversationAction.REMOVE.rawValue:
-            return localized("chat_message_removed", arguments: [uFullName, pFullName])
+            return Localized.CHAT_MESSAGE_REMOVED(adminFullName: uFullName, participantFullName: pFullName)
         case SystemConversationAction.JOIN.rawValue:
-            return localized("chat_message_joined", arguments: [pFullName])
+            return Localized.CHAT_MESSAGE_JOINED(fullName: pFullName)
         case SystemConversationAction.EXIT.rawValue:
-            return localized("chat_message_left", arguments: [pFullName])
+            return Localized.CHAT_MESSAGE_LEFT(fullName: pFullName)
         case SystemConversationAction.ROLE.rawValue:
-            return localized("chat_message_admin", arguments: [pFullName])
+            return Localized.CHAT_MESSAGE_ADMIN(fullName: pFullName)
         default:
             return content
         }

@@ -52,11 +52,6 @@
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";
 
-"date_format_day" = "hh:mm a";
-"date_format_date" = "MMM dd, yyyy";
-"date_format_month" = "E, d MMM";
-"date_format_transation" = "MMM dd, HH:mm";
-
 // Search
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_placeholder_address" = "Label";
@@ -76,7 +71,6 @@
 "toast_server_error" = "Server is under maintenance";
 "toast_api_error_forbidden" = "Access denied";
 "toast_api_error_no_connection" = "No network connection";
-"toast_api_error_connection_timeout" = "Network connection timeout";
 "toast_api_error_network_connection_lost" = "The network connection was lost, please check your network and try again later";
 "toast_api_error_server_5xx" = "Mixin server encounters errors";
 "toast_api_error_server_data_error" = "Data parsing error";
@@ -85,7 +79,6 @@
 "toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
-"toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Copied";
 "toast_added" = "Added";
 "toast_saved" = "Saved";
@@ -200,15 +193,7 @@
 "chat_message_menu_copy" = "Copy";
 "chat_message_open_url" = "Open URL";
 "chat_message_sticker" = "Add to Stickers";
-"chat_time_today" = "Today";
 "chat_cell_title_unread_messages" = "Unread messages";
-"chat_message_you" = "You";
-"chat_message_created" = "%@ created this group";
-"chat_message_removed" = "%@ removed %@";
-"chat_message_added" = "%@ added %@";
-"chat_message_joined" = "%@ joined the group via invite link";
-"chat_message_left" = "%@ left";
-"chat_message_admin" = "%@ now an admin";
 "chat_message_changed_title" = "%@ changed the subject to %@";
 "chat_message_call_cancelled" = "Cancelled";
 "chat_message_call_remote_cancelled" = "Cancelled by caller";
@@ -412,11 +397,8 @@
 "wallet_pin_touch_id_prompt" = "Confirm PIN to enable Touch Pay";
 "wallet_pin_face_id_prompt" = "Confirm PIN to enable Face Pay";
 "wallet_setting" = "Wallet";
-"wallet_touch_id" = "Touch ID";
-"wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = "Pay with %@";
 "wallet_enable_biometric_pay_prompt" = "Once enabled, %@ can be used to make quick transfers";
-"wallet_store_encrypted_pin" = "Enable %@ Pay";
 "wallet_biometric_pay_prompt" = "Authorize payment via %@";
 "wallet_disable_biometric_pay" = "Disable %@ Pay?";
 "wallet_pin_pay_interval_minutes" = "%@ Minutes";
@@ -685,46 +667,6 @@
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "setting_contacts_upload" = "Upload Mobile Contacts";
-
-
-// Notifications
-"notification_reply" = "Reply";
-"notification_mute" = "Mute";
-"notification_content_general" = "You have a new message";
-"notification_content_photo" = "[Photo]";
-"notification_content_transfer" = "[Transfer]";
-"notification_content_file" = "[File]";
-"notification_content_sticker" = "[Sticker]";
-"notification_content_contact" = "[Contact]";
-"notification_content_deposit" = "[Deposit]";
-"notification_content_fee" = "[Fee]";
-"notification_content_withdrawal" = "[Withdrawal]";
-"notification_content_rebate" = "[Rebate]";
-"notification_content_video" = "[Video]";
-"notification_content_live" = "[Live]";
-"notification_content_audio" = "[Audio]";
-"notification_content_voice_call" = "[Voice Call]";
-"alert_key_group_message" = "%@ send a message";
-"alert_key_group_text_message" = "%@ send a message";
-"alert_key_group_image_message" = "%@ send a photo";
-"alert_key_group_video_message" = "%@ send a video";
-"alert_key_group_live_message" = "%@ send a live stream";
-"alert_key_group_data_message" = "%@ send a file";
-"alert_key_group_sticker_message" = "%@ send a sticker";
-"alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send an audio";
-"alert_key_contact_message" = "send you a message";
-"alert_key_contact_text_message" = "send you a message";
-"alert_key_contact_image_message" = "send you a photo";
-"alert_key_contact_video_message" = "send you a video";
-"alert_key_contact_live_message" = "send you a live stream";
-"alert_key_contact_transfer_message" = "send you a transfer";
-"alert_key_contact_data_message" = "send you a file";
-"alert_key_contact_sticker_message" = "send you a sticker";
-"alert_key_contact_contact_message" = "send you a contact";
-"alert_key_contact_audio_message" = "send you an audio";
-"alert_key_contact_audio_call_message" = "invites you to a voice call";
-"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 
 // About
 "about_twitter" = "Follow us on Twitter";

@@ -22,7 +22,7 @@ public extension UNMutableNotificationContent {
                                   isRepresentativeMessage: isRepresentativeMessage,
                                   message: message)
         } else {
-            body = localized("notification_content_general")
+            body = Localized.NOTIFICATION_CONTENT_GENERAL
         }
         
         userInfo[UserInfoKey.conversationId] = conversation.conversationId
@@ -46,67 +46,67 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_image_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_IMAGE_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_image_message")
+                return Localized.ALERT_KEY_CONTACT_IMAGE_MESSAGE
             }
         } else if message.category.hasSuffix("_VIDEO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_video_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_VIDEO_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_video_message")
+                return Localized.ALERT_KEY_CONTACT_VIDEO_MESSAGE
             }
         } else if message.category.hasSuffix("_LIVE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_live_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_LIVE_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_live_message")
+                return Localized.ALERT_KEY_CONTACT_LIVE_MESSAGE
             }
         } else if message.category.hasSuffix("_AUDIO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_audio_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_audio_message")
+                return Localized.ALERT_KEY_CONTACT_AUDIO_MESSAGE
             }
         } else if message.category.hasSuffix("_DATA") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_data_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_DATA_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_data_message")
+                return Localized.ALERT_KEY_CONTACT_DATA_MESSAGE
             }
         } else if message.category.hasSuffix("_STICKER") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_sticker_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_STICKER_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_sticker_message")
+                return Localized.ALERT_KEY_CONTACT_STICKER_MESSAGE
             }
         } else if message.category.hasSuffix("_CONTACT") {
             if conversationIsGroup || isRepresentativeMessage {
-                return localized("alert_key_group_contact_message", arguments: [message.userFullName])
+                return Localized.ALERT_KEY_GROUP_CONTACT_MESSAGE(fullname: message.userFullName)
             } else {
-                return localized("alert_key_contact_contact_message")
+                return Localized.ALERT_KEY_CONTACT_CONTACT_MESSAGE
             }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:
-                return localized("notification_content_deposit")
+                return Localized.NOTIFICATION_CONTENT_DEPOSIT
             case SnapshotType.transfer.rawValue:
-                return localized("alert_key_contact_transfer_message")
+                return Localized.ALERT_KEY_CONTACT_TRANSFER_MESSAGE
             case SnapshotType.withdrawal.rawValue:
-                return localized("notification_content_withdrawal")
+                return Localized.NOTIFICATION_CONTENT_WITHDRAWAL
             case SnapshotType.fee.rawValue:
-                return localized("notification_content_fee")
+                return Localized.NOTIFICATION_CONTENT_FEE
             case SnapshotType.rebate.rawValue:
-                return localized("notification_content_rebate")
+                return Localized.NOTIFICATION_CONTENT_REBATE
             default:
-                return localized("notification_content_general")
+                return Localized.NOTIFICATION_CONTENT_GENERAL
             }
         } else if message.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-            return localized("alert_key_contact_audio_call_message")
+            return Localized.ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE
         } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
-            return localized("alert_key_contact_audio_call_cancelled_message")
+            return Localized.ALERT_KEY_CONTACT_AUDIO_CALL_CANCELLED_MESSAGE
         } else {
-            return localized("notification_content_general")
+            return Localized.NOTIFICATION_CONTENT_GENERAL
         }
     }
     

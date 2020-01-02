@@ -63,7 +63,7 @@ extension APIError {
         case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
             return Localized.TOAST_API_ERROR_NO_CONNECTION
         case NSURLErrorTimedOut:
-            return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+            return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
         case NSURLErrorNetworkConnectionLost:
             return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
         case 403:

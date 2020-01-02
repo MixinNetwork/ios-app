@@ -106,19 +106,19 @@ final class AccountAPI: BaseAPI {
     
     func updatePin(old: String?, new: String, completion: @escaping (APIResult<Account>) -> Void) {
         guard let pinToken = AppGroupUserDefaults.Account.pinToken else {
-            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            completion(.failure(APIError(status: 200, code: 400, description: MixinServices.Localized.TOAST_OPERATION_FAILED)))
             return
         }
         var param: [String: String] = [:]
         if let old = old {
             guard let encryptedOldPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: old) else {
-                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+                completion(.failure(APIError(status: 200, code: 400, description: MixinServices.Localized.TOAST_OPERATION_FAILED)))
                 return
             }
             param["old_pin"] = encryptedOldPin
         }
         guard let encryptedNewPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: new) else {
-            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            completion(.failure(APIError(status: 200, code: 400, description: MixinServices.Localized.TOAST_OPERATION_FAILED)))
             return
         }
         param["pin"] = encryptedNewPin

@@ -93,7 +93,7 @@ class QrcodeWindow: BottomSheetView {
                 if success {
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 } else {
-                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .notification, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                 }
             }
         })

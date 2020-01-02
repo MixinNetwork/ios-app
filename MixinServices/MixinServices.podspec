@@ -22,10 +22,9 @@ Mixin Core Services.
   s.ios.deployment_target = '11.0'
 
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
-  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Localized.swift'
+  s.resource_bundle = { "MixinServicesLocalization" => ["MixinServices/Localization/*.lproj/*.strings"] }
+  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Localization/Localized.swift'
 
-  s.static_framework = true
-  
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
   s.dependency 'SDWebImageYYPlugin/YYImage'

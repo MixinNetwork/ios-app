@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class MessageSearchResult: SearchResult {
     
@@ -36,7 +37,7 @@ class MessageSearchResult: SearchResult {
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
         
         if isData {
-            description = NSAttributedString(string: R.string.localizable.notification_content_file(),
+            description = NSAttributedString(string: MixinServices.Localized.NOTIFICATION_CONTENT_LIVE,
                                              attributes: SearchResult.normalDescriptionAttributes)
         } else {
             // TODO: Tokenize

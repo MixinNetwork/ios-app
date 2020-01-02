@@ -52,11 +52,6 @@
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";
 
-"date_format_day" = "ahh:mm";
-"date_format_date" = "yyyy年M月d日";
-"date_format_month" = "MM月d日 E";
-"date_format_transation" = "MM月d日 HH:mm";
-
 // Search
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
@@ -76,7 +71,6 @@
 "toast_server_error" = "服务器正在维护中";
 "toast_api_error_forbidden" = "禁止访问";
 "toast_api_error_no_connection" = "无网络连接";
-"toast_api_error_connection_timeout" = "网络连接超时";
 "toast_api_error_network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "toast_api_error_server_data_error" = "数据解析错误";
 "toast_api_error_server_5xx" = "服务器出错";
@@ -85,7 +79,6 @@
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
-"toast_operation_failed" = "操作失败，请稍后重试";
 "toast_copied" = "已复制";
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
@@ -201,15 +194,7 @@
 "chat_message_menu_copy" = "复制";
 "chat_message_open_url" = "打开链接";
 "chat_message_sticker" = "添加贴纸";
-"chat_time_today" = "今天";
 "chat_cell_title_unread_messages" = "未读消息";
-"chat_message_you" = "你";
-"chat_message_created" = "%@创建了这个群组";
-"chat_message_removed" = "%@将%@移出了群组";
-"chat_message_added" = "%@邀请%@加入了群组";
-"chat_message_joined" = "%@通过邀请链接加入群组";
-"chat_message_left" = "%@离开了群组";
-"chat_message_admin" = "%@现在是管理员";
 "chat_message_changed_title" = "%@修改群组名称为'%@'";
 "chat_message_call_cancelled" = "已取消";
 "chat_message_call_remote_cancelled" = "对方已取消";
@@ -415,11 +400,8 @@
 "wallet_pin_touch_id_prompt" = "确认钱包密码启用指纹支付";
 "wallet_pin_face_id_prompt" = "确认钱包密码启用面容支付";
 "wallet_setting" = "钱包";
-"wallet_touch_id" = "指纹";
-"wallet_face_id" = "面容";
 "wallet_enable_biometric_pay_title" = "%@支付";
 "wallet_enable_biometric_pay_prompt" = "开启后，转账时可验证%@快速完成付款";
-"wallet_store_encrypted_pin" = "启用%@支付";
 "wallet_biometric_pay_prompt" = "通过%@验证支付";
 "wallet_disable_biometric_pay" = "确定暂停使用%@支付？";
 "wallet_pin_pay_interval_minutes" = "%@ 分钟";
@@ -689,45 +671,6 @@
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
 "setting_contacts_upload" = "上传手机通讯录";
-
-// Notifications
-"notification_reply" = "回复";
-"notification_mute" = "屏蔽";
-"notification_content_general" = "你收到了一条消息";
-"notification_content_photo" = "[图片]";
-"notification_content_transfer" = "[转账]";
-"notification_content_file" = "[文件]";
-"notification_content_sticker" = "[贴纸]";
-"notification_content_contact" = "[名片]";
-"notification_content_deposit" = "[充值]";
-"notification_content_fee" = "[手续费]";
-"notification_content_withdrawal" = "[提现]";
-"notification_content_rebate" = "[退款]";
-"notification_content_video" = "[视频]";
-"notification_content_audio" = "[语音]";
-"notification_content_live" = "[直播]";
-"notification_content_voice_call" = "[语音通话]";
-"alert_key_group_message" = "%@发来一条信息";
-"alert_key_group_text_message" = "%@发来一条信息";
-"alert_key_group_image_message" = "%@发来一张图片";
-"alert_key_group_video_message" = "%@发来一个视频";
-"alert_key_group_live_message" = "%@发来一个直播";
-"alert_key_group_data_message" = "%@发来了一个文件";
-"alert_key_group_sticker_message" = "%@发来了一个贴纸";
-"alert_key_group_contact_message" = "%@分享了一个联系人";
-"alert_key_group_audio_message" = "%@发来了一个语音";
-"alert_key_contact_message" = "发来一条信息";
-"alert_key_contact_text_message" = "发来一条信息";
-"alert_key_contact_image_message" = "发来一张图片";
-"alert_key_contact_video_message" = "发来一个视频";
-"alert_key_contact_live_message" = "发来一个直播";
-"alert_key_contact_transfer_message" = "发来一笔转账";
-"alert_key_contact_data_message" = "发来了一个文件";
-"alert_key_contact_sticker_message" = "发来了一个贴纸";
-"alert_key_contact_contact_message" = "发来了一个联系人";
-"alert_key_contact_audio_message" = "发来了一个语音";
-"alert_key_contact_audio_call_message" = "邀请你进行语音通话";
-"alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

@@ -93,7 +93,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         let failedBlock = { [weak self] in
             DispatchQueue.main.async {
                 self?.container?.rightButton.isBusy = false
-                showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
             }
         }
 

@@ -3,18 +3,18 @@ import CoreMedia
 
 public extension DateFormatter {
 
-    static let dayDate = DateFormatter(dateFormat: localized("date_format_day"))
+    static let dayDate = DateFormatter(dateFormat: Localized.DATE_FORMAT_DAY)
     static let weekDate = DateFormatter(dateFormat: "EEEE")
-    static let month = DateFormatter(dateFormat: localized("date_format_month"))
+    static let month = DateFormatter(dateFormat: Localized.DATE_FORMAT_MONTH)
     static let date = DateFormatter(dateFormat: "MMM d, yyyy")
-    static let dateSimple = DateFormatter(dateFormat: localized("date_format_date"))
+    static let dateSimple = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE)
     static let dateFull = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
-    static let MMMddHHmm = DateFormatter(dateFormat: localized("date_format_transation"))
+    static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")
     static let log = DateFormatter(dateFormat: "yyyy/MM/dd, hh:mm a")
-    static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + localized("date_format_day"))
-    static let dateAndTime = DateFormatter(dateFormat: localized("date_format_date") + " " + localized("date_format_day"))
+    static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + Localized.DATE_FORMAT_DAY)
+    static let dateAndTime = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE + " " + Localized.DATE_FORMAT_DAY)
     
     convenience init(dateFormat: String) {
         self.init()
@@ -93,7 +93,7 @@ public extension Date {
         let dateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: self)
 
         if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
-            return localized("chat_time_today")
+            return MixinServices.Localized.CHAT_TIME_TODAY
         } else {
             if nowDateComponents.year == dateComponents.year && nowDateComponents.weekOfYear == dateComponents.weekOfYear {
                 return DateFormatter.weekDate.string(from: self)

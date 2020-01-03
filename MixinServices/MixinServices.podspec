@@ -21,10 +21,21 @@ Mixin Core Services.
 
   s.ios.deployment_target = '11.0'
 
+  s.static_framework = true
+
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
   s.resource_bundle = { "MixinServicesLocalization" => ["MixinServices/Localization/*.lproj/*.strings"] }
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Localization/Localized.swift'
 
+  s.dependency 'Bugsnag'
+  s.dependency 'Firebase/Core'
+  s.dependency 'Firebase/MLVision'
+  s.dependency 'Firebase/MLVisionBarcodeModel'
+  s.dependency 'Firebase/MLVisionFaceModel'
+  s.dependency 'Firebase/Analytics'
+  s.dependency 'Firebase/Performance'
+  s.dependency 'Fabric'
+  s.dependency 'Crashlytics'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
   s.dependency 'SDWebImageYYPlugin/YYImage'

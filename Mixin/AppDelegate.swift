@@ -117,6 +117,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            completionHandler(.noData)
+            return
+        }
+        WebSocketService.shared.reconnectIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+            completionHandler(.newData)
+        }
+    }
+    
 }
 
 extension AppDelegate {

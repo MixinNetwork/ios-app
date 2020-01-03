@@ -4,10 +4,6 @@ import WCDBSwift
 import MixinServices
 
 extension UIApplication {
-
-    class func appDelegate() -> AppDelegate  {
-        return UIApplication.shared.delegate as! AppDelegate
-    }
     
     static var homeContainerViewController: HomeContainerViewController? {
         return UIApplication.shared.keyWindow?.rootViewController as? HomeContainerViewController

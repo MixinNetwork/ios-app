@@ -102,13 +102,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 Reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             
-            DispatchQueue.main.sync {
-                let voipToken = UIApplication.appDelegate().voipToken
-                if !voipToken.isEmpty {
-                    AccountAPI.shared.updateSession(voipToken: voipToken)
-                }
-            }
-
             var backupExist = false
             if let backupDir = backupUrl {
                 backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud

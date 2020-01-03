@@ -2,7 +2,6 @@ import UIKit
 import UserNotifications
 import SDWebImage
 import YYImage
-import PushKit
 import AVFoundation
 import WebKit
 import MixinServices
@@ -16,11 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let window = UIWindow(frame: UIScreen.main.bounds)
     
-    private(set) var voipToken = ""
-    
-    private var autoCanceleNotification: DispatchWorkItem?
-    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-    private var backgroundTime: Timer?
     private var pendingShortcutItem: UIApplicationShortcutItem?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -30,9 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
-        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
-        pkpushRegistry.delegate = self
-        pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
         checkJailbreak()
         configAnalytics()
@@ -56,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        checkServerData()
+        
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -70,8 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         WebSocketService.shared.reconnectIfNeeded()
-        cancelBackgroundTask()
-
+        
         if let conversationId = UIApplication.currentConversationId(), UIApplication.shared.applicationState == .active {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
@@ -125,21 +115,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if LoginManager.shared.isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()
         }
-    }
-    
-}
-
-extension AppDelegate: PKPushRegistryDelegate {
-    
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        voipToken = pushCredentials.token.toHexString()
-        if LoginManager.shared.isLoggedIn {
-            AccountAPI.shared.updateSession(voipToken: voipToken)
-        }
-    }
-    
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        checkServerData(isPushKit: true)
     }
     
 }
@@ -222,33 +197,6 @@ extension AppDelegate {
             return
         }
         Keychain.shared.clearPIN()
-    }
-    
-    private func checkServerData(isPushKit: Bool = false) {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        guard !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
-            return
-        }
-        WebSocketService.shared.reconnectIfNeeded()
-
-        cancelBackgroundTask()
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            self.cancelBackgroundTask()
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 20, repeats: false) { (time) in
-            self.cancelBackgroundTask()
-        }
-    }
-    
-    private func cancelBackgroundTask() {
-        self.backgroundTime?.invalidate()
-        self.backgroundTime = nil
-        if backgroundTaskID != .invalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-            backgroundTaskID = .invalid
-        }
     }
     
     private func updateSharedImageCacheConfig() {

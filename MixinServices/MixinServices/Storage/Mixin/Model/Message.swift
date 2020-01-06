@@ -176,6 +176,7 @@ public enum MessageCategory: String {
     case SIGNAL_CONTACT
     case SIGNAL_AUDIO
     case SIGNAL_LIVE
+    case SIGNAL_POST
     case PLAIN_TEXT
     case PLAIN_IMAGE
     case PLAIN_VIDEO
@@ -185,6 +186,7 @@ public enum MessageCategory: String {
     case PLAIN_JSON
     case PLAIN_AUDIO
     case PLAIN_LIVE
+    case PLAIN_POST
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION

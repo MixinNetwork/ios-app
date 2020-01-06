@@ -590,6 +590,8 @@
 		E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */; };
 		E07E38A123A772CC0005A538 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A023A772CC0005A538 /* CallError.swift */; };
 		E07E38A623A774940005A538 /* MixinError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E38A523A774940005A538 /* MixinError.swift */; };
+		E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E081796923C32ACA005FEEAC /* PostMessageCell.swift */; };
+		E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E081796B23C32BCD005FEEAC /* PostMessageViewModel.swift */; };
 		E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */; };
 		E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08F4DDB2395345500C0D021 /* SharedAppCell.swift */; };
 		E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */; };
@@ -1274,6 +1276,8 @@
 		E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+CoreText.swift"; sourceTree = "<group>"; };
 		E07E38A023A772CC0005A538 /* CallError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
 		E07E38A523A774940005A538 /* MixinError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinError.swift; sourceTree = "<group>"; };
+		E081796923C32ACA005FEEAC /* PostMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageCell.swift; sourceTree = "<group>"; };
+		E081796B23C32BCD005FEEAC /* PostMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageViewModel.swift; sourceTree = "<group>"; };
 		E08F4DD92395326D00C0D021 /* SharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppsViewController.swift; sourceTree = "<group>"; };
 		E08F4DDB2395345500C0D021 /* SharedAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAppCell.swift; sourceTree = "<group>"; };
 		E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationDAO+Search.swift"; sourceTree = "<group>"; };
@@ -1452,6 +1456,7 @@
 				7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
 				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
+				E081796B23C32BCD005FEEAC /* PostMessageViewModel.swift */,
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 				7BF9969420CA6F3800FD948F /* Waveform.swift */,
@@ -2373,6 +2378,7 @@
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B84358820D8DC2E00237242 /* QuoteTextMessageCell.swift */,
 				7B91056122CF4A58002E3608 /* LiveMessageCell.swift */,
+				E081796923C32ACA005FEEAC /* PostMessageCell.swift */,
 				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
 				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
@@ -2940,6 +2946,7 @@
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
+				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
@@ -2968,6 +2975,7 @@
 				DFC0ECCE23BB5FDE0091E7AC /* EmergencySessionRequest.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
+				E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */,

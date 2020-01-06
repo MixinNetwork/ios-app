@@ -14,6 +14,7 @@
 "notification_content_audio" = "[语音]";
 "notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
+"notification_content_post" = "[文章]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";

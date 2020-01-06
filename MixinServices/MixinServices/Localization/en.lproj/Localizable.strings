@@ -14,6 +14,7 @@
 "notification_content_live" = "[Live]";
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
+"notification_content_post" = "[Post]";
 
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";

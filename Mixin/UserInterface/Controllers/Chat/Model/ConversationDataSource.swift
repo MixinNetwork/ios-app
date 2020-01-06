@@ -847,6 +847,8 @@ extension ConversationDataSource {
                 viewModel = ContactMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LIVE") {
                 viewModel = LiveMessageViewModel(message: message)
+            } else if message.category.hasSuffix("_POST") {
+                viewModel = PostMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

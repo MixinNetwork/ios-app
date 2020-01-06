@@ -18,7 +18,7 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_AUDIO = localized("notification_content_audio")
     public static let NOTIFICATION_CONTENT_LIVE = localized("notification_content_live")
     public static let NOTIFICATION_CONTENT_VOICE_CALL = localized("notification_content_voice_call")
-    public static let ALERT_KEY_CONTACT_AUDIO_CALL_CANCELLED_MESSAGE = localized("alert_key_contact_audio_call_cancelled_message")
+    public static let NOTIFICATION_CONTENT_POST = localized("notification_content_post")
     
     public static let ALERT_KEY_CONTACT_MESSAGE = localized("alert_key_contact_message")
     public static let ALERT_KEY_CONTACT_TEXT_MESSAGE = localized("alert_key_contact_text_message")
@@ -31,6 +31,7 @@ public class Localized {
     public static let ALERT_KEY_CONTACT_AUDIO_MESSAGE = localized("alert_key_contact_audio_message")
     public static let ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE = localized("alert_key_contact_audio_call_message")
     public static let ALERT_KEY_CONTACT_LIVE_MESSAGE = localized("alert_key_contact_live_message")
+    public static let ALERT_KEY_CONTACT_AUDIO_CALL_CANCELLED_MESSAGE = localized("alert_key_contact_audio_call_cancelled_message")
     
     public static func ALERT_KEY_GROUP_MESSAGE(fullname: String) -> String {
         return localized("alert_key_group_message", arguments: [fullname])

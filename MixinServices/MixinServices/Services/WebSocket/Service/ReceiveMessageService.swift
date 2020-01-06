@@ -396,7 +396,7 @@ public class ReceiveMessageService: MixinService {
     }
     
     private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
-        if data.category.hasSuffix("_TEXT") {
+        if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
             var content = plainText
             if data.category == MessageCategory.PLAIN_TEXT.rawValue {
                 guard let decoded = plainText.base64Decoded() else {

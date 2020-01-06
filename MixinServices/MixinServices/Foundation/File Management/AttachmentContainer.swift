@@ -3,11 +3,14 @@ import Foundation
 public enum AttachmentContainer {
     
     public static var url: URL {
-        AppGroupContainer.accountUrl.appendingPathComponent("Chat", isDirectory: true)
+        let url = AppGroupContainer.accountUrl.appendingPathComponent("Chat", isDirectory: true)
+        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        return url
     }
     
     public static func url(for category: Category, filename: String?) -> URL {
         let url = Self.url.appendingPathComponent(category.pathComponent)
+        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
         if let filename = filename {
             return url.appendingPathComponent(filename)
         } else {

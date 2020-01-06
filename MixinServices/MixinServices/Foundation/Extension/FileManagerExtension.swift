@@ -35,12 +35,6 @@ public extension FileManager {
         }
         return CGSize(width: width.intValue, height: height.intValue)
     }
-
-    func createDirectoryIfNeeded(dir: URL) throws {
-        if !FileManager.default.fileExists(atPath: dir.path) {
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
-        }
-    }
     
     func createNobackupDirectory(_ directory: URL) -> Bool {
         guard !FileManager.default.fileExists(atPath: directory.path) else {

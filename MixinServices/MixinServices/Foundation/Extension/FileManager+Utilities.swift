@@ -9,4 +9,11 @@ public extension FileManager {
         return fileSize.int64Value
     }
     
+    func createDirectoryIfNotExists(atPath path: String) throws {
+        guard !FileManager.default.fileExists(atPath: path) else {
+            return
+        }
+        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+    }
+    
 }

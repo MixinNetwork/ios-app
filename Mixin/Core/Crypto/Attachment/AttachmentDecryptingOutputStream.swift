@@ -37,13 +37,15 @@ class AttachmentDecryptingOutputStream: OutputStream {
         guard digest.count > 0 else {
             return nil
         }
-        guard FileManager.default.createFile(atPath: url.path, contents: nil, attributes: nil) else {
+        do {
+            if FileManager.default.fileExists(atPath: url.path) {
+                try FileManager.default.removeItem(at: url)
+            }
+            try Data().write(to: url)
+            self.handle = try FileHandle(forWritingTo: url)
+        } catch {
             return nil
         }
-        guard let handle = try? FileHandle(forWritingTo: url) else {
-            return nil
-        }
-        self.handle = handle
         let encryptionKeyStartIndex = key.startIndex
         let encryptionKeyEndIndex = encryptionKeyStartIndex.advanced(by: AttachmentCryptography.Length.aesKey)
         self.encryptionKey = key[encryptionKeyStartIndex..<encryptionKeyEndIndex]

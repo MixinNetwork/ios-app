@@ -58,6 +58,10 @@ class AppButtonView: UIView {
         button.backgroundColor = R.color.chat_button_background()
         button.layer.cornerRadius = cornerRadius
         button.clipsToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: AppButtonView.titleMargin.top,
+                                                left: AppButtonView.titleMargin.leading,
+                                                bottom: AppButtonView.titleMargin.bottom,
+                                                right: AppButtonView.titleMargin.trailing)
         addSubview(button)
         
         layer.shadowColor = UIColor.black.cgColor

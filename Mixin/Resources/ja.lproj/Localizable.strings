@@ -165,6 +165,14 @@
 "home_title" = "チャット";
 
 // Chat
+"chat_time_today" = "今日";
+"chat_message_you" = "あなた";
+"chat_message_created" = "%@ がこのグループを作成しました";
+"chat_message_removed" = "%@ は %@ を削除しました";
+"chat_message_added" = "%@ は %@ を追加しました";
+"chat_message_joined" = "%@ は招待リンクを介してグループに参加しました";
+"chat_message_left" = "%@ 去った";
+"chat_message_admin" = "%@ は今管理者です";
 "chat_message_menu_reply" = "返信";
 "chat_message_menu_forward" = "先へ";
 "chat_message_menu_copy" = "コピー";
@@ -385,6 +393,9 @@
 "wallet_hide_asset_confirmation" = "%@を隠すを確認してください";
 "wallet_asset_is_hidden_prompt" = "この資産は隠しました。表示にしますか";
 "wallet_asset_is_unhidden" = "表示にしました";
+"wallet_store_encrypted_pin" = " %@ Payを有効にする";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
 
 // Transaction
 "transaction_title" = "取引";

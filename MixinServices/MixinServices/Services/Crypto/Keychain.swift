@@ -87,23 +87,6 @@ public extension Keychain {
 
 public extension Keychain {
 
-    @discardableResult
-    func storePIN(pin: String) -> Bool {
-        let context = LAContext()
-        var error: NSError?
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            if context.biometryType == .touchID {
-                let prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_TOUCH_ID)
-                return storePIN(pin: pin, prompt: prompt)
-            } else if context.biometryType == .faceID {
-                let prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID)
-                return storePIN(pin: pin, prompt: prompt)
-            }
-        }
-
-        return false
-    }
-
     func storePIN(pin: String, prompt: String) -> Bool {
         guard let privateKey = getPrivateKeyRef(prompt: prompt) ?? generateKey() else {
             return false

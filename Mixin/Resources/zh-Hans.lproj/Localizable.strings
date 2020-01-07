@@ -49,6 +49,10 @@
 "all_photos" = "所有照片";
 "title_help" = "帮助";
 
+"date_format_day" = "ahh:mm";
+"date_format_month" = "MM月d日 E";
+"date_format_date" = "yyyy年M月d日";
+
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";
 
@@ -189,6 +193,14 @@
 "home_title" = "聊天";
 
 // Chat
+"chat_time_today" = "今天";
+"chat_message_you" = "你";
+"chat_message_created" = "%@创建了这个群组";
+"chat_message_removed" = "%@将%@移出了群组";
+"chat_message_added" = "%@邀请%@加入了群组";
+"chat_message_joined" = "%@通过邀请链接加入群组";
+"chat_message_left" = "%@离开了群组";
+"chat_message_admin" = "%@现在是管理员";
 "chat_message_menu_reply" = "回复";
 "chat_message_menu_forward" = "转发";
 "chat_message_menu_copy" = "复制";
@@ -427,6 +439,9 @@
 "wallet_hide_asset_confirmation" = "确认隐藏 %@？";
 "wallet_asset_is_hidden_prompt" = "该资产已隐藏。在钱包中显示？";
 "wallet_asset_is_unhidden" = "已显示";
+"wallet_store_encrypted_pin" = "启用%@支付";
+"wallet_touch_id" = "指纹";
+"wallet_face_id" = "面容";
 
 // Transaction
 "transaction_title" = "交易详情";

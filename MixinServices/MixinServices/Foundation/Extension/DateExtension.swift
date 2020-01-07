@@ -3,19 +3,9 @@ import CoreMedia
 
 public extension DateFormatter {
 
-    static let dayDate = DateFormatter(dateFormat: Localized.DATE_FORMAT_DAY)
-    static let weekDate = DateFormatter(dateFormat: "EEEE")
-    static let month = DateFormatter(dateFormat: Localized.DATE_FORMAT_MONTH)
-    static let date = DateFormatter(dateFormat: "MMM d, yyyy")
-    static let dateSimple = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE)
-    static let dateFull = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
-    static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
-    static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")
     static let log = DateFormatter(dateFormat: "yyyy/MM/dd, hh:mm a")
-    static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + Localized.DATE_FORMAT_DAY)
-    static let dateAndTime = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE + " " + Localized.DATE_FORMAT_DAY)
-    
+
     convenience init(dateFormat: String) {
         self.init()
         self.dateFormat = dateFormat
@@ -67,42 +57,6 @@ public extension Date {
 
     func logDatetime() -> String {
         return DateFormatter.log.string(from: self)
-    }
-
-    func timeAgo() -> String {
-        let now = Date()
-        let nowDateComponents = Calendar.current.dateComponents([.day], from: now)
-        let dateComponents = Calendar.current.dateComponents([.day], from: self)
-        let days = Date().timeIntervalSince(self) / 86400
-        if days < 1 && nowDateComponents.day == dateComponents.day {
-            return DateFormatter.dayDate.string(from: self)
-        } else if days < 7 {
-            return DateFormatter.weekDate.string(from: self).capitalized
-        } else {
-            return DateFormatter.dateSimple.string(from: self)
-        }
-    }
-
-    func timeHoursAndMinutes() -> String {
-        return DateFormatter.dayDate.string(from: self)
-    }
-
-    func timeDayAgo() -> String {
-        let now = Date()
-        let nowDateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: now)
-        let dateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: self)
-
-        if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
-            return MixinServices.Localized.CHAT_TIME_TODAY
-        } else {
-            if nowDateComponents.year == dateComponents.year && nowDateComponents.weekOfYear == dateComponents.weekOfYear {
-                return DateFormatter.weekDate.string(from: self)
-            } else if nowDateComponents.year == dateComponents.year {
-                return DateFormatter.month.string(from: self)
-            } else {
-                return DateFormatter.date.string(from: self)
-            }
-        }
     }
 }
 

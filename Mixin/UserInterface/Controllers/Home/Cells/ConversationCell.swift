@@ -48,7 +48,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
         } else {
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
-            let senderName = senderIsMe ? MixinServices.Localized.CHAT_MESSAGE_YOU : item.senderFullName
+            let senderName = senderIsMe ? R.string.localizable.chat_message_you() : item.senderFullName
             
             let category = item.contentType
             messageTypeImageView.image = MessageCategory.iconImage(forMessageCategoryString: category)

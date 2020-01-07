@@ -49,6 +49,10 @@
 "all_photos" = "All Photos";
 "title_help" = "Help";
 
+"date_format_day" = "hh:mm a";
+"date_format_month" = "E, d MMM";
+"date_format_date" = "MMM dd, yyyy";
+
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";
 
@@ -188,6 +192,14 @@
 "home_title" = "Chats";
 
 // Chat
+"chat_time_today" = "Today";
+"chat_message_you" = "You";
+"chat_message_created" = "%@ created this group";
+"chat_message_removed" = "%@ removed %@";
+"chat_message_added" = "%@ added %@";
+"chat_message_joined" = "%@ joined the group via invite link";
+"chat_message_left" = "%@ left";
+"chat_message_admin" = "%@ now an admin";
 "chat_message_menu_reply" = "Reply";
 "chat_message_menu_forward" = "Forward";
 "chat_message_menu_copy" = "Copy";
@@ -424,6 +436,9 @@
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
 "wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
 "wallet_asset_is_unhidden" = "Unhidden";
+"wallet_store_encrypted_pin" = "Enable %@ Pay";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
 
 // Transaction
 "transaction_title" = "Transaction";

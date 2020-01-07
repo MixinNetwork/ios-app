@@ -1,8 +1,3 @@
-"date_format_day" = "hh:mm a";
-"date_format_month" = "E, d MMM";
-"date_format_date" = "MMM dd, yyyy";
-"date_format_transation" = "MMM dd, HH:mm";
-
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";
 "notification_content_general" = "You have a new message";
@@ -44,16 +39,3 @@
 
 "toast_api_error_connection_timeout" = "Network connection timeout";
 "toast_operation_failed" = "The operation failed, please try again later";
-
-"wallet_store_encrypted_pin" = "Enable %@ Pay";
-"wallet_touch_id" = "Touch ID";
-"wallet_face_id" = "Face ID";
-
-"chat_time_today" = "Today";
-"chat_message_you" = "You";
-"chat_message_created" = "%@ created this group";
-"chat_message_removed" = "%@ removed %@";
-"chat_message_added" = "%@ added %@";
-"chat_message_joined" = "%@ joined the group via invite link";
-"chat_message_left" = "%@ left";
-"chat_message_admin" = "%@ now an admin";

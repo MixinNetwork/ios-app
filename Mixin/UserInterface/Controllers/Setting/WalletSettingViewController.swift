@@ -59,7 +59,7 @@ class WalletSettingViewController: UITableViewController {
     
     @IBAction func biometryPaySwitchAction(_ sender: Any) {
         if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
-            let type = biometryType == .touchID ? MixinServices.Localized.WALLET_TOUCH_ID : MixinServices.Localized.WALLET_FACE_ID
+            let type = biometryType == .touchID ? R.string.localizable.wallet_touch_id() : R.string.localizable.wallet_face_id()
             let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: type)
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { [weak self](_) in
@@ -75,10 +75,10 @@ class WalletSettingViewController: UITableViewController {
             let tips: String, prompt: String
             if biometryType == .touchID {
                 tips = Localized.WALLET_PIN_TOUCH_ID_PROMPT
-                prompt = MixinServices.Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: MixinServices.Localized.WALLET_TOUCH_ID)
+                prompt = R.string.localizable.wallet_store_encrypted_pin(R.string.localizable.wallet_touch_id())
             } else {
                 tips = Localized.WALLET_PIN_FACE_ID_PROMPT
-                prompt = MixinServices.Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: MixinServices.Localized.WALLET_FACE_ID)
+                prompt = R.string.localizable.wallet_store_encrypted_pin(R.string.localizable.wallet_face_id())
             }
             let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {

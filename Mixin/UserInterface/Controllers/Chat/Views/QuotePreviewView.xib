@@ -40,7 +40,7 @@
                             <rect key="frame" x="12" y="0.0" width="217" height="73"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vYN-yf-6H1">
-                                    <rect key="frame" x="0.0" y="14" width="217" height="45"/>
+                                    <rect key="frame" x="0.0" y="17" width="217" height="39"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Shou" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdh-IN-FAv">
                                             <rect key="frame" x="0.0" y="0.0" width="217" height="18"/>
@@ -49,13 +49,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Dmt-6c-wXa">
-                                            <rect key="frame" x="0.0" y="23" width="217" height="22"/>
+                                            <rect key="frame" x="0.0" y="23" width="217" height="16"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_message_video" translatesAutoresizingMaskIntoConstraints="NO" id="kFr-Av-RVi">
-                                                    <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="14" height="16"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="Video" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="735-NN-sST">
-                                                    <rect key="frame" x="32" y="0.0" width="185" height="22"/>
+                                                    <rect key="frame" x="18" y="0.0" width="199" height="16"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                     <color key="textColor" name="text_accessory"/>
                                                     <nil key="highlightedColor"/>
@@ -80,7 +80,7 @@
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d6r-ob-TPS" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="57" height="57"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" name="background"/>
                                         </view>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xxu-CR-ife">
                                             <rect key="frame" x="0.0" y="0.0" width="57" height="57"/>

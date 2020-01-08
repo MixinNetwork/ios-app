@@ -3,12 +3,8 @@ import MixinServices
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    class var ctFont: CTFont {
-        return CoreTextFontSet.textMessage.ctFont
-    }
-    
-    class var lineHeight: CGFloat {
-        return CoreTextFontSet.textMessage.lineHeight
+    class var font: UIFont {
+        UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
     }
     
     class var textColor: UIColor {
@@ -51,6 +47,16 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return message.content
     }
     
+    var contentAttributedString: NSAttributedString {
+        let str = NSMutableAttributedString(string: rawContent)
+        str.setAttributes([.font: Self.font, .foregroundColor: Self.textColor],
+                          range: NSRange(location: 0, length: str.length))
+        for linkRange in linkRanges {
+            str.addAttribute(.foregroundColor, value: linkColor, range: linkRange.range)
+        }
+        return str.copy() as! NSAttributedString
+    }
+    
     override init(message: MessageItem) {
         super.init(message: message)
         linkRanges = self.linkRanges(from: rawContent)
@@ -58,19 +64,60 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
-        let str = NSMutableAttributedString(string: rawContent)
-        let cfStr = str as CFMutableAttributedString
-        // Set attributes
-        setDefaultAttributes(on: cfStr)
-        for linkRange in linkRanges {
-            let range = CFRange(nsRange: linkRange.range)
-            CFAttributedStringSetAttribute(cfStr, range, kCTForegroundColorAttributeName, linkColor)
-        }
         // Make CTLine and Origins
-        var (lines, lineOrigins, lineRanges, textSize, lastLineWidth) = typeset(attributedString: cfStr)
-        if textSize.height < minimumTextSize.height {
-            textSize = minimumTextSize
-        }
+        var (lines, lineOrigins, lineRanges, textSize, lastLineWidth) = { () -> ([CTLine], [CGPoint], [CFRange], CGSize, CGFloat) in
+            let cfStr = contentAttributedString as CFAttributedString
+            let typesetter = CTTypesetterCreateWithAttributedString(cfStr)
+            let typesetWidth = Double(maxContentWidth)
+            
+            var lines = [CTLine]()
+            var lineOrigins = [CGPoint]()
+            var lineRanges = [CFRange]()
+            var characterIndex: CFIndex = 0
+            var y: CGFloat?
+            var lastLineWidth: CGFloat = 0
+            var size = CGSize.zero
+            var lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, typesetWidth)
+            
+            while lineCharacterCount > 0 {
+                let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
+                lineRanges.append(lineRange)
+                
+                let line = CTTypesetterCreateLine(typesetter, lineRange)
+                lines.append(line)
+                
+                var ascent: CGFloat = 0
+                var descent: CGFloat = 0
+                var leading: CGFloat = 0
+                let lineWidth = ceil(CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, &leading) - CTLineGetTrailingWhitespaceWidth(line)))
+                let lineHeight = max(Self.font.lineHeight, ascent + descent + leading)
+                
+                size.height += lineHeight
+                size.width = max(size.width, lineWidth)
+                
+                if y == nil {
+                    y = max(4, descent)
+                }
+                y! -= lineHeight
+                let lineOrigin = CGPoint(x: 0, y: y!)
+                lineOrigins.append(lineOrigin)
+                
+                lastLineWidth = lineWidth
+                characterIndex += lineCharacterCount
+                lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, typesetWidth)
+            }
+            
+            size = CGSize(width: ceil(size.width), height: ceil(size.height) + 1)
+            lineOrigins = lineOrigins.map {
+                CGPoint(x: $0.x, y: $0.y + size.height)
+            }
+            
+            return (lines, lineOrigins, lineRanges, size, lastLineWidth)
+        }()
+        
+        textSize.width = max(textSize.width, minimumTextSize.width)
+        textSize.height = max(textSize.height, minimumTextSize.height)
+        
         // Make Links
         var links = [Link]()
         for linkRange in linkRanges {
@@ -201,47 +248,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             map.append(range)
         })
         return map
-    }
-    
-    func setDefaultAttributes(on string: CFMutableAttributedString) {
-        let fullRange = CFRange(location: 0, length: CFAttributedStringGetLength(string))
-        CFAttributedStringSetAttribute(string, fullRange, kCTFontAttributeName, type(of: self).ctFont)
-        CFAttributedStringSetAttribute(string, fullRange, kCTForegroundColorAttributeName, type(of: self).textColor)
-    }
-    
-    typealias TypesetResult = (lines: [CTLine], lineOrigins: [CGPoint], lineRanges: [CFRange], size: CGSize, lastLineWidth: CGFloat)
-    func typeset(attributedString: CFAttributedString) -> TypesetResult {
-        let typesetter = CTTypesetterCreateWithAttributedString(attributedString)
-        
-        var lines = [CTLine]()
-        var lineOrigins = [CGPoint]()
-        var lineRanges = [CFRange]()
-        var characterIndex: CFIndex = 0
-        var y: CGFloat = 4
-        var lastLineWidth: CGFloat = 0
-        var size = CGSize.zero
-        
-        while true {
-            let lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, Double(maxContentWidth))
-            if lineCharacterCount > 0 {
-                let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
-                let line = CTTypesetterCreateLine(typesetter, lineRange)
-                let lineWidth = ceil(CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil) - CTLineGetTrailingWhitespaceWidth(line)))
-                let lineOrigin = CGPoint(x: 0, y: y)
-                lines.append(line)
-                lineOrigins.append(lineOrigin)
-                lineRanges.append(lineRange)
-                size.height += type(of: self).lineHeight
-                size.width = max(size.width, lineWidth)
-                y += type(of: self).lineHeight
-                lastLineWidth = lineWidth
-                characterIndex += lineCharacterCount
-            } else {
-                break
-            }
-        }
-        
-        return (lines, lineOrigins.reversed(), lineRanges, size, lastLineWidth)
     }
     
 }

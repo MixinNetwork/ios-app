@@ -397,7 +397,6 @@
 		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
 		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
-		7BFF25DD23632D7200454B27 /* CoreTextFontSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFF25DC23632D7200454B27 /* CoreTextFontSet.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -580,6 +579,7 @@
 		E00A69EF23BB46F200984FF3 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00A69EE23BB46F200984FF3 /* CallManager.swift */; };
 		E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
+		E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */; };
 		E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D99182390C3CB009F9E8D /* EditSharedAppsViewController.swift */; };
 		E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */; };
 		E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */; };
@@ -1070,7 +1070,6 @@
 		7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckmarkPeerCell.xib; sourceTree = "<group>"; };
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
-		7BFF25DC23632D7200454B27 /* CoreTextFontSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextFontSet.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
@@ -1266,6 +1265,7 @@
 		E00A69EE23BB46F200984FF3 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Provision.swift"; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
+		E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextLabelDelegate.swift; sourceTree = "<group>"; };
 		E05D99182390C3CB009F9E8D /* EditSharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSharedAppsViewController.swift; sourceTree = "<group>"; };
 		E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppCell.swift; sourceTree = "<group>"; };
 		E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileFavoriteAppsView.xib; sourceTree = "<group>"; };
@@ -1430,7 +1430,6 @@
 			children = (
 				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
 				7B31E565236181C9004F891A /* BubbleImageSet.swift */,
-				7BFF25DC23632D7200454B27 /* CoreTextFontSet.swift */,
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
@@ -1996,6 +1995,7 @@
 				7B869C6D202D7D90009930BA /* NumberPadView.xib */,
 				7B869C71202D7FC8009930BA /* NumberPadButton.swift */,
 				7B869C73202D8206009930BA /* NumberPadButton.xib */,
+				E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */,
 				7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */,
 				DF44B0CB20C6897000A099B6 /* EmptyView.swift */,
 				DF44B0CD20C6897D00A099B6 /* EmptyView.xib */,
@@ -3024,7 +3024,6 @@
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
-				7BFF25DD23632D7200454B27 /* CoreTextFontSet.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
@@ -3073,6 +3072,7 @@
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
+				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */,

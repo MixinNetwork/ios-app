@@ -56,9 +56,11 @@ final class NotificationService: UNNotificationServiceExtension {
     
     private func deliverNotification(with message: MessageItem) {
         guard message.status != MessageStatus.FAILED.rawValue else {
+            deliverRawContent()
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+            deliverRawContent()
             return
         }
         let ownerUser: UserItem?

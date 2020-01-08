@@ -788,6 +788,7 @@
 		E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */; };
 		E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0A70A1123825004003C3B96 /* InvitationHintView.xib */; };
 		E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A70A13238250EF003C3B96 /* InvitationHintView.swift */; };
+		E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8AAC423BDA1C700E911CE /* AppButton.swift */; };
 		E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */; };
 		E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */; };
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
@@ -1626,6 +1627,7 @@
 		E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileViewController.swift; sourceTree = "<group>"; };
 		E0A70A1123825004003C3B96 /* InvitationHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvitationHintView.xib; sourceTree = "<group>"; };
 		E0A70A13238250EF003C3B96 /* InvitationHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationHintView.swift; sourceTree = "<group>"; };
+		E0B8AAC423BDA1C700E911CE /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
 		E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyFavoriteAppProfileMenuItemView.xib; sourceTree = "<group>"; };
 		E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteAppProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -2775,6 +2777,7 @@
 				7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */,
 				7B8BB57D234DD18C00991ACB /* SharedMediaTableHeaderView.swift */,
 				7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */,
+				E0B8AAC423BDA1C700E911CE /* AppButton.swift */,
 				E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */,
 			);
 			path = Views;
@@ -3772,6 +3775,7 @@
 				273FACC8205FB9A800513327 /* PreKeyStoreWrapper.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
+				E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
 				273FACB5205FB9A800513327 /* crypto_provider.c in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,

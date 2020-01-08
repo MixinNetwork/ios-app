@@ -5,7 +5,7 @@ class AppButtonView: UIView {
     static let buttonMargin = MessageViewModel.Margin(leading: 5, trailing: 5, top: 1, bottom: 3)
     static let titleMargin = MessageViewModel.Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
     
-    let button = UIButton(type: .system)
+    let button = AppButton()
     
     private let cornerRadius: CGFloat = 8
     
@@ -58,6 +58,10 @@ class AppButtonView: UIView {
         button.backgroundColor = R.color.chat_button_background()
         button.layer.cornerRadius = cornerRadius
         button.clipsToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: AppButtonView.titleMargin.top,
+                                                left: AppButtonView.titleMargin.leading,
+                                                bottom: AppButtonView.titleMargin.bottom,
+                                                right: AppButtonView.titleMargin.trailing)
         addSubview(button)
         
         layer.shadowColor = UIColor.black.cgColor

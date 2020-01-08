@@ -265,6 +265,9 @@
 "chat_invited_by_stranger" = "邀请人不是你的联系人";
 "chat_exit_group_and_report_inviter" = "退出群组并举报邀请人";
 "chat_exit_group_and_report_inviter_confirmation" = "确认退出群组并举报邀请人？";
+"chat_app_reception_title" = "点击按钮使用小程序";
+"chat_app_reception_button_home" = "打开主页";
+"chat_app_reception_button_hi" = "打招呼";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

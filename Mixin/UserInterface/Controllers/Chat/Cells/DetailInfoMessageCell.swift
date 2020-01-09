@@ -59,6 +59,7 @@ class DetailInfoMessageCell: MessageCell {
         contentView.addSubview(fullnameButton)
         statusImageView.contentMode = .left
         contentView.addSubview(statusImageView)
+        encryptedImageView.alpha = 0.7
         contentView.addSubview(encryptedImageView)
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled

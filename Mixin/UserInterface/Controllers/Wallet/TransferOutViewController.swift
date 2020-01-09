@@ -48,7 +48,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }()
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
         return [.font: transactionFeeHintLabel.font ?? UIFont.systemFont(ofSize: 12),
-                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.infoGray]
+                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.accessoryText]
     }()
     private lazy var transactionLabelBoldAttribute: [NSAttributedString.Key: Any] = {
         let normalFont = transactionFeeHintLabel.font!
@@ -59,7 +59,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             boldFont = UIFont.boldSystemFont(ofSize: normalFont.pointSize)
         }
         return [.font: boldFont,
-                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.infoGray]
+                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.accessoryText]
     }()
     
     override func viewDidLoad() {

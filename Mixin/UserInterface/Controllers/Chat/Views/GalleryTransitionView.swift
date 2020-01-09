@@ -11,7 +11,7 @@ class GalleryTransitionView: UIView, GalleryAnimatable {
     
     let imageWrapperView = VerticalPositioningImageView()
     
-    var contentSize: CGSize?
+    var contentRatio: CGSize?
     
     var imageView: YYAnimatedImageView {
         return imageWrapperView.imageView

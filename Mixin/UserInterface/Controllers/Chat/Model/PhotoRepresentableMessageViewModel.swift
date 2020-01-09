@@ -6,7 +6,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     
     let contentRatio: CGSize
     
-    var contentFrame = CGRect.zero
+    var presentationFrame = CGRect.zero
     var shadowImageOrigin = CGPoint.zero
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = VerticalPositioningImageView.Position.center
@@ -48,25 +48,25 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         let shadowImageSize = PhotoRepresentableMessageViewModel.shadowImage?.size ?? .zero
         if style.contains(.received) {
-            contentFrame = CGRect(x: bubbleMargin.leading,
-                                  y: bubbleMargin.top,
-                                  width: presentationSize.width,
-                                  height: presentationSize.height)
-            shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
-                                        y: contentFrame.maxY - shadowImageSize.height)
+            presentationFrame = CGRect(x: bubbleMargin.leading,
+                                       y: bubbleMargin.top,
+                                       width: presentationSize.width,
+                                       height: presentationSize.height)
+            shadowImageOrigin = CGPoint(x: presentationFrame.maxX - shadowImageSize.width,
+                                        y: presentationFrame.maxY - shadowImageSize.height)
             if style.contains(.fullname) {
-                contentFrame.origin.y += fullnameHeight
+                presentationFrame.origin.y += fullnameHeight
                 shadowImageOrigin.y += fullnameHeight
             }
         } else {
-            contentFrame = CGRect(x: width - bubbleMargin.leading - presentationSize.width,
-                                  y: bubbleMargin.top,
-                                  width: presentationSize.width,
-                                  height: presentationSize.height)
-            shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
-                                        y: contentFrame.maxY - shadowImageSize.height)
+            presentationFrame = CGRect(x: width - bubbleMargin.leading - presentationSize.width,
+                                       y: bubbleMargin.top,
+                                       width: presentationSize.width,
+                                       height: presentationSize.height)
+            shadowImageOrigin = CGPoint(x: presentationFrame.maxX - shadowImageSize.width,
+                                        y: presentationFrame.maxY - shadowImageSize.height)
         }
-        backgroundImageFrame = contentFrame
+        backgroundImageFrame = presentationFrame
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
     }

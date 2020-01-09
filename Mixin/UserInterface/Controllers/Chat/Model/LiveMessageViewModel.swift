@@ -13,11 +13,11 @@ class LiveMessageViewModel: PhotoRepresentableMessageViewModel {
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
         if style.contains(.received) {
-            badgeOrigin = CGPoint(x: contentFrame.origin.x + badgeMargin.leading,
-                                  y: contentFrame.origin.y + badgeMargin.top)
+            badgeOrigin = CGPoint(x: presentationFrame.origin.x + badgeMargin.leading,
+                                  y: presentationFrame.origin.y + badgeMargin.top)
         } else {
-            badgeOrigin = CGPoint(x: contentFrame.origin.x + badgeMargin.trailing,
-                                  y: contentFrame.origin.y + badgeMargin.top)
+            badgeOrigin = CGPoint(x: presentationFrame.origin.x + badgeMargin.trailing,
+                                  y: presentationFrame.origin.y + badgeMargin.top)
         }
     }
     

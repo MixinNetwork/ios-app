@@ -442,16 +442,19 @@ extension ConversationInputViewController {
     }
     
     @objc private func participantDidChange(_ notification: Notification) {
+        guard parent != nil else {
+            return
+        }
         guard dataSource.category == .group else {
             return
         }
         guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
             return
         }
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             DispatchQueue.main.sync {
-                self.extensionViewController.apps = apps.map { ($0, nil) }
+                self?.extensionViewController.apps = apps.map { ($0, nil) }
             }
         }
     }

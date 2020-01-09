@@ -21,7 +21,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        contentSize = viewModel.presentationSize
+        contentRatio = viewModel.contentRatio
         frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
         imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode
@@ -50,29 +50,29 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         let frame: CGRect
         let bubbleFrame: CGRect
         
-        let size: CGSize
-        if let contentSize = contentSize {
-            size = contentSize
+        let ratio: CGSize
+        if let contentRatio = contentRatio {
+            ratio = contentRatio
         } else if let image = imageView.image {
             let imageRatio = image.size.width / image.size.height
             let imageWrapperRatio = imageWrapperView.frame.width / imageWrapperView.frame.height
             if imageRatio < imageWrapperRatio {
-                size = image.size
+                ratio = image.size
             } else {
-                size = imageWrapperView.frame.size
+                ratio = imageWrapperView.frame.size
             }
         } else {
-            size = imageWrapperView.frame.size
+            ratio = imageWrapperView.frame.size
         }
         
-        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(size) {
-            let height = min(containerBounds.height, containerBounds.width / size.width * size.height)
+        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(ratio) {
+            let height = min(containerBounds.height, containerBounds.width / ratio.width * ratio.height)
             let size = CGSize(width: containerBounds.width, height: height)
             let origin = CGPoint(x: 0, y: (containerBounds.height - height) / 2)
             frame = CGRect(origin: origin, size: size)
             bubbleFrame = CGRect(origin: .zero, size: size)
         } else {
-            frame = size.rect(fittingSize: containerBounds.size)
+            frame = ratio.rect(fittingSize: containerBounds.size)
             bubbleFrame = containerBounds
         }
         

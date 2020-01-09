@@ -479,6 +479,8 @@ class ConversationViewController: UIViewController {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }
+            } else if message.category.hasSuffix("_POST") {
+                PostWebViewController.presentInstance(markdown: message.content, asChildOf: self)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)

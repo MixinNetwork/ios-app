@@ -619,6 +619,10 @@
 		E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */; };
 		E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85A236C1BBC001FE534 /* ProfileView.xib */; };
 		E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */; };
+		E0C15B8223C6E2A1003386CA /* post.html in Resources */ = {isa = PBXBuildFile; fileRef = E0C15B7F23C6E2A1003386CA /* post.html */; };
+		E0C15B8323C6E2A1003386CA /* post.js in Resources */ = {isa = PBXBuildFile; fileRef = E0C15B8023C6E2A1003386CA /* post.js */; };
+		E0C15B8423C6E2A1003386CA /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = E0C15B8123C6E2A1003386CA /* post.css */; };
+		E0C15B8623C6E327003386CA /* PostWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C15B8523C6E327003386CA /* PostWebViewController.swift */; };
 		E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */; };
 		E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F423A9D803008F0189 /* NotificationManager.swift */; };
 		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
@@ -1308,6 +1312,10 @@
 		E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemView.swift; sourceTree = "<group>"; };
 		E0BEB85A236C1BBC001FE534 /* ProfileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileView.xib; sourceTree = "<group>"; };
 		E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuItemView.xib; sourceTree = "<group>"; };
+		E0C15B7F23C6E2A1003386CA /* post.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = post.html; sourceTree = "<group>"; };
+		E0C15B8023C6E2A1003386CA /* post.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = post.js; sourceTree = "<group>"; };
+		E0C15B8123C6E2A1003386CA /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
+		E0C15B8523C6E327003386CA /* PostWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWebViewController.swift; sourceTree = "<group>"; };
 		E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebsiteDataStore+Clear.swift"; sourceTree = "<group>"; };
 		E0D4F5F423A9D803008F0189 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
@@ -1638,6 +1646,7 @@
 				7B50DE102333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift */,
 				7BD5A889233228D900DD4E9A /* WebViewController.swift */,
 				E041064F23C6079400A6F08E /* MixinWebViewController.swift */,
+				E0C15B8523C6E327003386CA /* PostWebViewController.swift */,
 				7B95860E2369599800F1F6E1 /* ProfileViewController.swift */,
 				E09C5EB72370057B0095F729 /* UserProfileViewController.swift */,
 				E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */,
@@ -2062,6 +2071,9 @@
 				DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */,
 				DF8EF6BB2034737F00E99CE8 /* payment_success.caf */,
 				7BBD8A3220C1D51C00DF2735 /* recaptcha.html */,
+				E0C15B7F23C6E2A1003386CA /* post.html */,
+				E0C15B8123C6E2A1003386CA /* post.css */,
+				E0C15B8023C6E2A1003386CA /* post.js */,
 				277FF7101F909A1200DBB2EB /* Info.plist */,
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
 			);
@@ -2640,7 +2652,9 @@
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
+				E0C15B8323C6E2A1003386CA /* post.js in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
+				E0C15B8223C6E2A1003386CA /* post.html in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
@@ -2670,6 +2684,7 @@
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
+				E0C15B8423C6E2A1003386CA /* post.css in Resources */,
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */,
@@ -3340,6 +3355,7 @@
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
 				7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */,
 				7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */,
+				E0C15B8623C6E327003386CA /* PostWebViewController.swift in Sources */,
 				7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */,
 				DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */,
 				DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */,

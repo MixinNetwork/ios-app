@@ -17,7 +17,6 @@ extension UIColor {
     static let shadow = R.color.table_shadow()!
     static let chatText = R.color.chat_text()!
 
-    static let infoGray = UIColor(rgbValue: 0x7799A9)
     static let error = UIColor(rgbValue: 0xd73449)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)

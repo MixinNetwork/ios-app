@@ -12,7 +12,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     var statusImage: UIImage?
-    var statusTintColor = UIColor.infoGray
+    var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
@@ -20,7 +20,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
     var statusNormalTintColor: UIColor {
-        return .infoGray
+        return .accessoryText
     }
     
     var maxContentWidth: CGFloat {

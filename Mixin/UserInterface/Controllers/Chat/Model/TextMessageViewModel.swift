@@ -18,7 +18,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()
     
-    private let timeLeftMargin: CGFloat = 20
+    private let trailingInfoLeftMargin: CGFloat = 20
     private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
     private let hightlightPathCornerRadius: CGFloat = 4
@@ -102,7 +102,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             let statusImageWidth = showStatusImage
                 ? ImageSet.MessageStatus.size.width
                 : 0
-            let width = timeLeftMargin
+            let encryptedIconWidth = isEncrypted
+                ? Self.encryptedIconRightMargin + encryptedIconFrame.width
+                : 0
+            let width = trailingInfoLeftMargin
+                + encryptedIconWidth
                 + timeFrame.width
                 + statusImageWidth
                 + DetailInfoMessageViewModel.statusLeftMargin

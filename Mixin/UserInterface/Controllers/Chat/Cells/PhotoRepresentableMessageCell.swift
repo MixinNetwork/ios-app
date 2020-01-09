@@ -44,6 +44,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         shadowImageView.clipsToBounds = true
         maskingContentView.addSubview(shadowImageView)
         timeLabel.textColor = .white
+        encryptedImageView.tintColor = .white
         updateAppearance(highlight: false, animated: false)
         contentImageWrapperView.addSubview(selectedOverlapView)
         super.prepare()

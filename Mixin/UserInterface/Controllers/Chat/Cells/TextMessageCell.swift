@@ -23,6 +23,7 @@ class TextMessageCell: DetailInfoMessageCell {
         contentView.addSubview(contentLabel)
         contentLabel.backgroundColor = .clear
         timeLabel.textColor = .accessoryText
+        encryptedImageView.tintColor = .accessoryText
     }
     
 }

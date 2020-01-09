@@ -99,13 +99,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "normal"])
             }
 
-            DispatchQueue.main.sync {
-                let voipToken = UIApplication.appDelegate().voipToken
-                if !voipToken.isEmpty {
-                    AccountAPI.shared.updateSession(voipToken: voipToken)
-                }
-            }
-
             var backupExist = false
             if let backupDir = MixinFile.iCloudBackupDirectory {
                 backupExist = backupDir.appendingPathComponent(MixinFile.backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud

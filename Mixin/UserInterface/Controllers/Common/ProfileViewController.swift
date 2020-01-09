@@ -247,7 +247,7 @@ extension ProfileViewController: CoreTextLabelDelegate {
                 return
             }
             if !UrlWindow.checkUrl(url: url) {
-                WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: parent)
+                MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: parent)
             }
         }
     }

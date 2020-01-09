@@ -120,7 +120,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             if let conversationId = dataSource?.conversationId, let parent = conversationViewController {
                 let userInfo = ["source": "ConversationExtension", "identityNumber": app.appNumber]
                 reporter.report(event: .openApp, userInfo: userInfo)
-                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
             }
         }
     }

@@ -580,6 +580,8 @@
 		E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
 		E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */; };
+		E041064E23C6076F00A6F08E /* WebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E041064D23C6076F00A6F08E /* WebView.xib */; };
+		E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041064F23C6079400A6F08E /* MixinWebViewController.swift */; };
 		E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D99182390C3CB009F9E8D /* EditSharedAppsViewController.swift */; };
 		E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */; };
 		E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */; };
@@ -1266,6 +1268,8 @@
 		E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Provision.swift"; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
 		E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextLabelDelegate.swift; sourceTree = "<group>"; };
+		E041064D23C6076F00A6F08E /* WebView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebView.xib; sourceTree = "<group>"; };
+		E041064F23C6079400A6F08E /* MixinWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebViewController.swift; sourceTree = "<group>"; };
 		E05D99182390C3CB009F9E8D /* EditSharedAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSharedAppsViewController.swift; sourceTree = "<group>"; };
 		E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteAppCell.swift; sourceTree = "<group>"; };
 		E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileFavoriteAppsView.xib; sourceTree = "<group>"; };
@@ -1630,8 +1634,10 @@
 				7BB6111922BA4179000E758C /* PinValidationView.xib */,
 				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
 				7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */,
+				E041064D23C6076F00A6F08E /* WebView.xib */,
 				7B50DE102333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift */,
 				7BD5A889233228D900DD4E9A /* WebViewController.swift */,
+				E041064F23C6079400A6F08E /* MixinWebViewController.swift */,
 				7B95860E2369599800F1F6E1 /* ProfileViewController.swift */,
 				E09C5EB72370057B0095F729 /* UserProfileViewController.swift */,
 				E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */,
@@ -2620,6 +2626,7 @@
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				E041064E23C6076F00A6F08E /* WebView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
@@ -3261,6 +3268,7 @@
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
+				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
 				DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,

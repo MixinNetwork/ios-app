@@ -721,7 +721,7 @@ class ConversationViewController: UIViewController {
         }
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
-        WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
+        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
     }
     
     // MARK: - Class func
@@ -1502,9 +1502,9 @@ extension ConversationViewController {
         }
 
         if let app = app {
-            WebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
+            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
         } else {
-            WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
     }
     

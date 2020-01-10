@@ -3,9 +3,7 @@ import Foundation
 public let appGroupIdentifier = "group.one.mixin.messenger"
 public let callTimeoutInterval: TimeInterval = 60
 
-public var isAppExtension: Bool {
-    Bundle.main.bundleURL.pathExtension == "appex"
-}
+public let isAppExtension = Bundle.main.bundleURL.pathExtension == "appex"
 
 public var currentDecimalSeparator: String {
     Locale.current.decimalSeparator ?? "."
@@ -14,3 +12,9 @@ public var currentDecimalSeparator: String {
 public var globalSignalContext: OpaquePointer {
     return Signal.context
 }
+
+public var canProcessMessages: Bool {
+    LoginManager.shared.isLoggedIn && AppGroupUserDefaults.isDocumentsMigrated && !AppGroupUserDefaults.User.needsUpgradeInMainApp
+}
+
+public let websocketDidDisconnectDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.websocket.did.disconnect" as CFString)

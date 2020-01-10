@@ -105,7 +105,19 @@ extension AppGroupUserDefaults {
     
     @Default(namespace: nil, key: "documents_migrated", defaultValue: false)
     public static var isDocumentsMigrated: Bool
-    
+
+    @Default(namespace: nil, key: "is_connected_websocket_in_app_extension", defaultValue: false)
+    public static var isConnectedWebsocketInAppExtension: Bool
+
+    @Default(namespace: nil, key: "is_connected_websocket_in_main_extension", defaultValue: false)
+    public static var isConnectedWebsocketInMainApp: Bool
+
+    @Default(namespace: nil, key: "is_waiting_websocket_in_main_extension", defaultValue: false)
+    public static var isWaitingWebsocketInMainApp: Bool
+
+    public static var isConnectedWebsocket: Bool {
+        isConnectedWebsocketInAppExtension || isConnectedWebsocketInMainApp
+    }
 }
 
 extension AppGroupUserDefaults {

@@ -92,6 +92,11 @@ public class ReceiveMessageService: MixinService {
                     guard LoginManager.shared.isLoggedIn else {
                         return
                     }
+                    if isAppExtension && AppGroupUserDefaults.isWaitingWebsocketInMainApp {
+                        WebSocketService.shared.disconnect()
+                        return
+                    }
+
                     if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
                         ReceiveMessageService.shared.processBadMessage(data: data)
                         continue

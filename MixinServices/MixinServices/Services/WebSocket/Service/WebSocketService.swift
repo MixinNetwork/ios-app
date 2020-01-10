@@ -19,6 +19,7 @@ public class WebSocketService {
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
+    private let darwinNotifyCenter = CFNotificationCenterGetDarwinNotifyCenter()
     
     private var host: String?
     private var rechability: NetworkReachabilityManager?
@@ -149,6 +150,11 @@ extension WebSocketService: WebSocketDelegate {
                 }
             }
         } else {
+            if isAppExtension {
+                AppGroupUserDefaults.isConnectedWebsocketInAppExtension = true
+            } else {
+                AppGroupUserDefaults.isConnectedWebsocketInMainApp = true
+            }
             status = .connected
             NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
             ReceiveMessageService.shared.processReceiveMessages()
@@ -166,13 +172,20 @@ extension WebSocketService: WebSocketDelegate {
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        if isAppExtension {
+            AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
+        } else {
+            AppGroupUserDefaults.isConnectedWebsocketInMainApp = false
+        }
         if let error = error, NetworkManager.shared.isReachable {
             Reporter.report(error: error)
             if let error = error as? WSError, error.type == .writeTimeoutError {
                 MixinServer.toggle(currentWebSocketHost: host)
             }
         }
-        if status == .connecting || status == .connected {
+        if isAppExtension && AppGroupUserDefaults.isWaitingWebsocketInMainApp {
+            CFNotificationCenterPostNotification(darwinNotifyCenter, websocketDidDisconnectDarwinNotificationName, nil, nil, true)
+        } else if status == .connecting || status == .connected {
             reconnect(sendDisconnectToRemote: false)
         }
     }

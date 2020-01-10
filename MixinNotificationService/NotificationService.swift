@@ -11,14 +11,15 @@ final class NotificationService: UNNotificationServiceExtension {
     private var messageId: String?
     
     deinit {
+        AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
         NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
         self.rawContent = request.content
-        
-        guard LoginManager.shared.isLoggedIn, AppGroupUserDefaults.isDocumentsMigrated, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+
+        guard canProcessMessages, !AppGroupUserDefaults.isConnectedWebsocket else {
             deliverRawContent()
             return
         }

@@ -1,11 +1,12 @@
 import UIKit
+import MixinServices
 import WebKit
 
 class PostWebViewController: WebViewController {
     
     private let postContainerUrl = Bundle.main.url(forResource: "post", withExtension: "html")!
     
-    private var markdown = ""
+    private var message: MessageItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,9 +16,19 @@ class PostWebViewController: WebViewController {
         webView.load(request)
     }
     
-    class func presentInstance(markdown: String, asChildOf parent: UIViewController) {
+    override func moreAction(_ sender: Any) {
+        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+            let vc = MessageReceiverViewController.instance(content: .message(self.message))
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(controller, animated: true, completion: nil)
+    }
+    
+    class func presentInstance(message: MessageItem, asChildOf parent: UIViewController) {
         let vc = PostWebViewController(nib: R.nib.webView)
-        vc.markdown = markdown
+        vc.message = message
         vc.view.frame = parent.view.bounds
         vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         parent.addChild(vc)
@@ -61,6 +72,7 @@ extension PostWebViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        let markdown = message.content
         let isImageEnabled = "true"
         let escapedMarkdown = markdown.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? markdown
         let script = "window.showMarkdown('\(escapedMarkdown)', \(isImageEnabled));"

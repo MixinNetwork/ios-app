@@ -578,6 +578,7 @@
 		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
 		E00A69EF23BB46F200984FF3 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00A69EE23BB46F200984FF3 /* CallManager.swift */; };
 		E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */; };
+		E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0320FA423CC3D1600A651D4 /* MessageTagLabel.swift */; };
 		E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E039AB05237277E40071386E /* ProfileScrollView.swift */; };
 		E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */; };
 		E041064E23C6076F00A6F08E /* WebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E041064D23C6076F00A6F08E /* WebView.xib */; };
@@ -1270,6 +1271,7 @@
 		E00A69ED23BB234C00984FF3 /* MixinNotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinNotificationService.entitlements; sourceTree = "<group>"; };
 		E00A69EE23BB46F200984FF3 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginManager+Provision.swift"; sourceTree = "<group>"; };
+		E0320FA423CC3D1600A651D4 /* MessageTagLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTagLabel.swift; sourceTree = "<group>"; };
 		E039AB05237277E40071386E /* ProfileScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScrollView.swift; sourceTree = "<group>"; };
 		E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextLabelDelegate.swift; sourceTree = "<group>"; };
 		E041064D23C6076F00A6F08E /* WebView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebView.xib; sourceTree = "<group>"; };
@@ -2199,6 +2201,7 @@
 				7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */,
 				E0B8AAC423BDA1C700E911CE /* AppButton.swift */,
 				E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */,
+				E0320FA423CC3D1600A651D4 /* MessageTagLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3273,6 +3276,7 @@
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
+				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
 				7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,

@@ -1,14 +1,12 @@
 import UIKit
 import MixinServices
 
-class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
-    
-    static let shadowImage = R.image.ic_chat_shadow()
+class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfoViewModel {
     
     let contentRatio: CGSize
     
     var presentationFrame = CGRect.zero
-    var shadowImageOrigin = CGPoint.zero
+    var trailingInfoBackgroundFrame = CGRect.zero
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = VerticalPositioningImageView.Position.center
     
@@ -47,29 +45,24 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
-        let shadowImageSize = PhotoRepresentableMessageViewModel.shadowImage?.size ?? .zero
         if style.contains(.received) {
             presentationFrame = CGRect(x: bubbleMargin.leading,
                                        y: bubbleMargin.top,
                                        width: presentationSize.width,
                                        height: presentationSize.height)
-            shadowImageOrigin = CGPoint(x: presentationFrame.maxX - shadowImageSize.width,
-                                        y: presentationFrame.maxY - shadowImageSize.height)
             if style.contains(.fullname) {
                 presentationFrame.origin.y += fullnameHeight
-                shadowImageOrigin.y += fullnameHeight
             }
         } else {
             presentationFrame = CGRect(x: width - bubbleMargin.leading - presentationSize.width,
                                        y: bubbleMargin.top,
                                        width: presentationSize.width,
                                        height: presentationSize.height)
-            shadowImageOrigin = CGPoint(x: presentationFrame.maxX - shadowImageSize.width,
-                                        y: presentationFrame.maxY - shadowImageSize.height)
         }
         backgroundImageFrame = presentationFrame
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        layoutTrailingInfoBackgroundFrame()
     }
     
     func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {

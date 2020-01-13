@@ -625,6 +625,8 @@
 		E0C15B8423C6E2A1003386CA /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = E0C15B8123C6E2A1003386CA /* post.css */; };
 		E0C15B8623C6E327003386CA /* PostWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C15B8523C6E327003386CA /* PostWebViewController.swift */; };
 		E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */; };
+		E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C7674A23CC8F54003F9215 /* TrailingInfoBackgroundView.swift */; };
+		E0C7674D23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C7674C23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift */; };
 		E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D4F5F423A9D803008F0189 /* NotificationManager.swift */; };
 		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
 		E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */; };
@@ -1319,6 +1321,8 @@
 		E0C15B8123C6E2A1003386CA /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		E0C15B8523C6E327003386CA /* PostWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWebViewController.swift; sourceTree = "<group>"; };
 		E0C510D623B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebsiteDataStore+Clear.swift"; sourceTree = "<group>"; };
+		E0C7674A23CC8F54003F9215 /* TrailingInfoBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingInfoBackgroundView.swift; sourceTree = "<group>"; };
+		E0C7674C23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundedTrailingInfoViewModel.swift; sourceTree = "<group>"; };
 		E0D4F5F423A9D803008F0189 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
 		E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedAvatarImageView.swift; sourceTree = "<group>"; };
@@ -1448,6 +1452,7 @@
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
 				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
+				E0C7674C23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift */,
 				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
 				7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
@@ -2202,6 +2207,7 @@
 				E0B8AAC423BDA1C700E911CE /* AppButton.swift */,
 				E05DFA2D23B5D7EA00AB7ABD /* AppButtonView.swift */,
 				E0320FA423CC3D1600A651D4 /* MessageTagLabel.swift */,
+				E0C7674A23CC8F54003F9215 /* TrailingInfoBackgroundView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3072,6 +3078,7 @@
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
 				7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
+				E0C7674D23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
@@ -3336,6 +3343,7 @@
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
 				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
+				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DFC0ECF823BB610C0091E7AC /* ContactAPI.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,

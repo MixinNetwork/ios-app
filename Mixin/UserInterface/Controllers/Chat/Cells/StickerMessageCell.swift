@@ -49,8 +49,6 @@ class StickerMessageCell: DetailInfoMessageCell {
         contentImageView.contentMode = .scaleAspectFill
         contentImageView.clipsToBounds = true
         contentImageView.layer.cornerRadius = 6
-        timeLabel.textColor = .accessoryText
-        encryptedImageView.tintColor = .accessoryText
         super.prepare()
         backgroundImageView.removeFromSuperview()
     }

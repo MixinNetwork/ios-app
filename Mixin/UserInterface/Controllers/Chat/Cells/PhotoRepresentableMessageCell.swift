@@ -23,6 +23,10 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         return contentImageWrapperView.frame
     }
     
+    override var trailingInfoColor: UIColor {
+        .white
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
@@ -43,8 +47,6 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         shadowImageView.contentMode = .scaleToFill
         shadowImageView.clipsToBounds = true
         maskingContentView.addSubview(shadowImageView)
-        timeLabel.textColor = .white
-        encryptedImageView.tintColor = .white
         updateAppearance(highlight: false, animated: false)
         contentImageWrapperView.addSubview(selectedOverlapView)
         super.prepare()

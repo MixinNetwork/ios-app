@@ -22,8 +22,6 @@ class TextMessageCell: DetailInfoMessageCell {
         super.prepare()
         contentView.addSubview(contentLabel)
         contentLabel.backgroundColor = .clear
-        timeLabel.textColor = .accessoryText
-        encryptedImageView.tintColor = .accessoryText
     }
     
 }

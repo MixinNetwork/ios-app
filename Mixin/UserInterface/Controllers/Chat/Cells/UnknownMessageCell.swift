@@ -2,10 +2,8 @@ import UIKit
 
 class UnknownMessageCell: TextMessageCell {
     
-    override func prepare() {
-        super.prepare()
-        timeLabel.textColor = .white
-        encryptedImageView.tintColor = .white
+    override var trailingInfoColor: UIColor {
+        .white
     }
     
 }

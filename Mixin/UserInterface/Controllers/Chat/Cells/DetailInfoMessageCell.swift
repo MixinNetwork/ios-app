@@ -9,6 +9,7 @@ class DetailInfoMessageCell: MessageCell {
     weak var delegate: DetailInfoMessageCellDelegate?
     
     let fullnameButton = UIButton()
+    let encryptedImageView = UIImageView(image: R.image.ic_message_encrypted())
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
     let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
@@ -29,6 +30,8 @@ class DetailInfoMessageCell: MessageCell {
                 fullnameButton.isHidden = true
                 identityIconImageView.isHidden = true
             }
+            encryptedImageView.frame = viewModel.encryptedIconFrame
+            encryptedImageView.isHidden = !viewModel.isEncrypted
             timeLabel.frame = viewModel.timeFrame
             timeLabel.text = viewModel.time
             updateStatusImageView()
@@ -56,6 +59,8 @@ class DetailInfoMessageCell: MessageCell {
         contentView.addSubview(fullnameButton)
         statusImageView.contentMode = .left
         contentView.addSubview(statusImageView)
+        encryptedImageView.alpha = 0.7
+        contentView.addSubview(encryptedImageView)
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true

@@ -143,11 +143,11 @@ PODS:
   - GoogleUtilities/UserDefaults (6.4.0):
     - GoogleUtilities/Logger
   - GoogleWebRTC (1.1.29400)
-  - GTMSessionFetcher (1.3.0):
-    - GTMSessionFetcher/Full (= 1.3.0)
-  - GTMSessionFetcher/Core (1.3.0)
-  - GTMSessionFetcher/Full (1.3.0):
-    - GTMSessionFetcher/Core (= 1.3.0)
+  - GTMSessionFetcher (1.3.1):
+    - GTMSessionFetcher/Full (= 1.3.1)
+  - GTMSessionFetcher/Core (1.3.1)
+  - GTMSessionFetcher/Full (1.3.1):
+    - GTMSessionFetcher/Core (= 1.3.1)
   - GzipSwift (5.1.1)
   - libsignal-protocol-c (2.3.2)
   - MixinServices (0.1.0):
@@ -186,9 +186,9 @@ PODS:
     - R.swift.Library (~> 5.1.0)
   - R.swift.Library (5.1.0)
   - RSKImageCropper (2.2.3)
-  - SDWebImage (5.4.1):
-    - SDWebImage/Core (= 5.4.1)
-  - SDWebImage/Core (5.4.1)
+  - SDWebImage (5.4.2):
+    - SDWebImage/Core (= 5.4.2)
+  - SDWebImage/Core (5.4.2)
   - SDWebImageYYPlugin/YYImage (0.3.0):
     - SDWebImage/Core (~> 5.4)
     - YYImage/Core
@@ -312,7 +312,7 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 800648f8b3127618c1b59c7f97684427630c5ea3
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
   GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
-  GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
+  GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
   MixinServices: 6d985a4fa2ae4b849196c5c424d4a08d22ff9237
@@ -322,7 +322,7 @@ SPEC CHECKSUMS:
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
   R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
-  SDWebImage: 29c340dbdcef342bb13125553f4e19ce056b07a7
+  SDWebImage: 4ca2dc4eefae4224bea8f504251cda485a363745
   SDWebImageYYPlugin: f6c1af162fb075efe5918d8caedee1f3d17c197e
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b

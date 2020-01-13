@@ -6,6 +6,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     static let bottomSeparatorHeight: CGFloat = 10
     
     let message: MessageItem
+    let isEncrypted: Bool
     let quote: Quote?
     let time: String
     
@@ -45,6 +46,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     
     init(message: MessageItem) {
         self.message = message
+        self.isEncrypted = message.category.hasPrefix("SIGNAL_")
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
         if let thumbImage = message.thumbImage, let imageData = Data(base64Encoded: thumbImage)  {
             thumbnail = UIImage(data: imageData)

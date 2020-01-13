@@ -56,11 +56,11 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
         if style.contains(.received) {
-            durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
-                                          y: contentFrame.origin.y + 8)
+            durationLabelOrigin = CGPoint(x: presentationFrame.origin.x + 16,
+                                          y: presentationFrame.origin.y + 8)
         } else {
-            durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 10,
-                                          y: contentFrame.origin.y + 8)
+            durationLabelOrigin = CGPoint(x: presentationFrame.origin.x + 10,
+                                          y: presentationFrame.origin.y + 8)
         }
     }
     

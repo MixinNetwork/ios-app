@@ -73,6 +73,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
             : (timeMargin.trailing - DetailInfoMessageViewModel.statusLeftMargin - statusFrame.width)
         timeFrame.origin = CGPoint(x: contentFrame.maxX - timeFrame.width + timeOffset,
                                    y: contentFrame.maxY + contentMargin.bottom + timeMargin.top)
+        layoutEncryptedIconFrame(timeFrame: timeFrame)
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         cellHeight = fullnameHeight

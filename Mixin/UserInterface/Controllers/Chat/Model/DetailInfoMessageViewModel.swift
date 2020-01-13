@@ -7,21 +7,23 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let statusLeftMargin: CGFloat = 4
     static let identityIconLeftMargin: CGFloat = 4
     static let identityIconSize = R.image.ic_user_bot()!.size
+    static let encryptedIconRightMargin: CGFloat = 5
     
     class var bubbleImageSet: BubbleImageSet.Type {
         return GeneralBubbleImageSet.self
     }
     
     var statusImage: UIImage?
-    var statusTintColor = UIColor.infoGray
+    var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
+    var encryptedIconFrame = CGRect(origin: .zero, size: R.image.ic_message_encrypted()!.size)
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
     var statusNormalTintColor: UIColor {
-        return .infoGray
+        return .accessoryText
     }
     
     var maxContentWidth: CGFloat {
@@ -84,11 +86,17 @@ class DetailInfoMessageViewModel: MessageViewModel {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
             fullnameColor = UIColor.usernameColors[index]
         }
+        layoutEncryptedIconFrame(timeFrame: timeFrame)
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
+    }
+    
+    func layoutEncryptedIconFrame(timeFrame: CGRect) {
+        encryptedIconFrame.origin = CGPoint(x: timeFrame.origin.x - Self.encryptedIconRightMargin - encryptedIconFrame.size.width,
+                                            y: timeFrame.origin.y + (timeFrame.height - encryptedIconFrame.height) / 2)
     }
     
     private func updateStatusImageAndTintColor() {

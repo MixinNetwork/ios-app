@@ -50,6 +50,8 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         backgroundImageView.removeFromSuperview()
         maskingContentView.layer.masksToBounds = true
         maskingContentView.layer.mask = backgroundImageView.layer
+        encryptedImageView.alpha = 0.9
+        statusImageView.alpha = 0.9
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {

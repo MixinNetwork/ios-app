@@ -43,6 +43,10 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return 0
     }
     
+    var maxNumberOfLines: Int? {
+        nil
+    }
+    
     var rawContent: String {
         return message.content
     }
@@ -79,7 +83,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             var size = CGSize.zero
             var lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, typesetWidth)
             
-            while lineCharacterCount > 0 {
+            var didReachLineCountLimit: Bool {
+                if let maxNumberOfLines = maxNumberOfLines {
+                    return lines.count == maxNumberOfLines
+                } else {
+                    return false
+                }
+            }
+            
+            while lineCharacterCount > 0 && !didReachLineCountLimit {
                 let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
                 lineRanges.append(lineRange)
                 

@@ -632,7 +632,7 @@ extension ConversationDataSource {
         if let messageId = messageId {
             message.messageId = messageId
         }
-        if type == .SIGNAL_TEXT, let text = value as? String {
+        if type == .SIGNAL_TEXT || type == .SIGNAL_POST, let text = value as? String {
             message.content = text
             queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)

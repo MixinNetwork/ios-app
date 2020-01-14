@@ -124,7 +124,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oRx-LV-9QR">
                                             <rect key="frame" x="0.0" y="0.0" width="44" height="40"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <color key="tintColor" name="web_button"/>
+                                            <color key="tintColor" name="text"/>
                                             <state key="normal" image="ic_web_more"/>
                                             <connections>
                                                 <action selector="moreAction:" destination="-1" eventType="touchUpInside" id="uAf-uK-NEA"/>
@@ -133,7 +133,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRI-Rc-XLl">
                                             <rect key="frame" x="44" y="0.0" width="44" height="40"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <color key="tintColor" name="web_button"/>
+                                            <color key="tintColor" name="text"/>
                                             <state key="normal" image="ic_web_dismiss"/>
                                             <connections>
                                                 <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="ka5-NT-cKg"/>
@@ -218,8 +218,8 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="web_button">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

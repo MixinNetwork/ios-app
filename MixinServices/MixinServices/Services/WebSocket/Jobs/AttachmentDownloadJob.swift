@@ -101,13 +101,13 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             }
             stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
             if stream == nil {
-                Reporter.report(error: MixinServicesError.initDecryptingOutputStream)
+                reporter.report(error: MixinServicesError.initDecryptingOutputStream)
                 return false
             }
         } else {
             stream = OutputStream(url: fileUrl, append: false)
             if stream == nil {
-                Reporter.report(error: MixinServicesError.initOutputStream)
+                reporter.report(error: MixinServicesError.initOutputStream)
                 return false
             }
         }
@@ -130,7 +130,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     override open func taskFinished() {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
-            Reporter.report(error: error)
+            reporter.report(error: error)
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)

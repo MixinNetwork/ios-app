@@ -27,7 +27,7 @@ enum GroupIconMaker {
                         avatars.append(.image(image))
                         isSucceed = true
                     } else {
-                        Reporter.report(error: MixinError.loadAvatar(url: url, error: error))
+                        reporter.report(error: MixinError.loadAvatar(url: url, error: error))
                     }
                     semaphore.signal()
                 })

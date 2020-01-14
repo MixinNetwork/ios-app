@@ -1,10 +1,7 @@
 import Foundation
 import Bugsnag
-import FirebaseCore
-import FirebaseAnalytics
-import Crashlytics
 
-public enum Reporter {
+open class Reporter {
     
     public typealias UserInfo = [String: Any]
     
@@ -14,12 +11,12 @@ public enum Reporter {
         case sendSticker
         case openApp
         
-        var name: String {
+        public var name: String {
             switch self {
             case .signUp:
-                return AnalyticsEventSignUp
+                return "sign_up"
             case .login:
-                return AnalyticsEventLogin
+                return "login"
             case .sendSticker:
                 return "send_sticker"
             case .openApp:
@@ -28,93 +25,36 @@ public enum Reporter {
         }
     }
     
-    public static var basicUserInfo: [String: Any] {
-        return ["lastUpdateOrInstallTime": AppGroupUserDefaults.User.lastUpdateOrInstallDate,
-                "clientTime": DateFormatter.filename.string(from: Date())]
+    public var basicUserInfo: UserInfo {
+        ["last_update_or_install_date": AppGroupUserDefaults.User.lastUpdateOrInstallDate,
+         "client_time": DateFormatter.filename.string(from: Date())]
     }
     
-    public static func configure(bugsnagApiKey key: String?) {
+    public required init() {
         #if RELEASE
-        if let key = key {
+        if let path = Bundle.mixinServicesResource.path(forResource: "ApiKeys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["Bugsnag"] as? String {
             Bugsnag.start(withApiKey: key)
         }
         #endif
-        FirebaseApp.configure()
     }
     
-    public static func registerUserInformation() {
+    open func registerUserInformation() {
         guard let account = LoginManager.shared.account else {
             return
         }
         Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
-        Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-        Crashlytics.sharedInstance().setUserName(account.full_name)
-        Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-        Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
     }
     
-    public static func report(event: Event, userInfo: UserInfo? = nil) {
-        if isAppExtension {
-            var content = "[Event] " + event.name
-            if let userInfo = userInfo {
-                content += ", userInfo: \(userInfo)"
-            }
-            write(content: content, to: .event)
-        } else {
-            Analytics.logEvent(event.name, parameters: userInfo)
-        }
-    }
-    
-    public static func report(error: Error) {
-        if isAppExtension {
-            let content = "[Error] " + error.localizedDescription
-            write(content: content, to: .error)
-        } else {
-            Bugsnag.notifyError(error)
-            Crashlytics.sharedInstance().recordError(error)
-        }
-    }
-    
-    public static func reportErrorToFirebase(_ error: Error) {
-        if isAppExtension {
-            let content = "[Error] " + error.localizedDescription
-            write(content: content, to: .firebaseOnlyError)
-        } else {
-            Crashlytics.sharedInstance().recordError(error)
-        }
-    }
-    
-    public static func uploadAndRemoveLocalReports() {
+    open func report(event: Event, userInfo: UserInfo? = nil) {
         
     }
     
-}
-
-extension Reporter {
-    
-    private enum Destination: String {
-        case event
-        case error
-        case firebaseOnlyError = "fir_error"
+    open func report(error: Error) {
+        Bugsnag.notifyError(error)
     }
     
-    private static func write(content: String, to destination: Destination) {
-        guard let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
-            assertionFailure()
-            return
-        }
-        let reportContainerUrl = containerUrl.appendingPathComponent("Report", isDirectory: true)
-        do {
-            if !FileManager.default.fileExists(atPath: reportContainerUrl.path, isDirectory: nil) {
-                try FileManager.default.createDirectory(at: reportContainerUrl, withIntermediateDirectories: true, attributes: nil)
-            }
-            let fileUrl = reportContainerUrl
-                .appendingPathComponent(destination.rawValue, isDirectory: false)
-                .appendingPathExtension("txt")
-            try content.write(to: fileUrl, atomically: true, encoding: .utf8)
-        } catch {
-            assertionFailure()
-        }
+    open func reportErrorToFirebase(_ error: Error) {
+        
     }
     
 }

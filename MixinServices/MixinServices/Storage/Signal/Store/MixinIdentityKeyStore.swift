@@ -26,7 +26,7 @@ class MixinIdentityKeyStore: IdentityKeyStore {
             objc_sync_exit(lock)
         }
         guard let identityKey = identity else {
-            Reporter.report(error: MixinServicesError.saveIdentity)
+            reporter.report(error: MixinServicesError.saveIdentity)
             return false
         }
         IdentityDAO.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))

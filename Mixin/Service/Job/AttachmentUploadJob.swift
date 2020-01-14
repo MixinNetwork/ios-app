@@ -69,13 +69,13 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 let size = FileManager.default.fileSize(fileUrl.path)
                 let name = fileUrl.lastPathComponent
                 let error = MixinServicesError.initEncryptingInputStream(size: size, name: name)
-                Reporter.report(error: error)
+                reporter.report(error: error)
                 return false
             }
         } else {
             stream = InputStream(url: fileUrl)
             if stream == nil {
-                Reporter.report(error: MixinServicesError.initInputStream)
+                reporter.report(error: MixinServicesError.initInputStream)
                 return false
             } else {
                 contentLength = Int(FileManager.default.fileSize(fileUrl.path))

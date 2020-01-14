@@ -620,6 +620,7 @@
 		E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */; };
 		E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */; };
 		E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */; };
+		E0FAE8D223CDC4F4008B056A /* CrashlyticalReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
@@ -1304,6 +1305,7 @@
 		E0E32601238D4FBF00D1188A /* UserAvatarStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarStackView.swift; sourceTree = "<group>"; };
 		E0E32603238E2EC900D1188A /* BorderedAvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedAvatarImageView.swift; sourceTree = "<group>"; };
 		E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSharedAppsFooterView.swift; sourceTree = "<group>"; };
+		E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashlyticalReporter.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2458,6 +2460,7 @@
 				DFB6CE1F23C4859300FB6615 /* Message */,
 				DFC0EB5723BB3CD60091E7AC /* API */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
+				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -2713,12 +2716,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMLVisionFaceModel/GoogleMVFaceDetectorResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesLocalization.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesLocalization.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2750,13 +2753,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMLVisionFaceModel/GoogleMVFaceDetectorResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesLocalization.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesLocalization.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2810,7 +2811,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3338,6 +3339,7 @@
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,
 				7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */,
+				E0FAE8D223CDC4F4008B056A /* CrashlyticalReporter.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,

@@ -56,7 +56,7 @@ extension UIApplication {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
             let error = MixinError.unrecognizedUrl(url)
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
     

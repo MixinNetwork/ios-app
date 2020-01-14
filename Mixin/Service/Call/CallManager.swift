@@ -465,7 +465,7 @@ extension CallManager {
                                                         status: .DELIVERED)
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
         clean()
-        Reporter.report(error: error)
+        reporter.report(error: error)
     }
     
     private func sendCandidates(_ candidates: [RTCIceCandidate]) {

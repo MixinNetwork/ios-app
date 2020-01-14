@@ -113,7 +113,7 @@ class RestoreJob: BaseJob {
                     let isDownloaded = status == NSMetadataUbiquitousItemDownloadingStatusCurrent
 
                     if let error = metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? NSError {
-                        Reporter.report(error: error)
+                        reporter.report(error: error)
                     }
 
                     if let fileName = name, fileSize > 0, percent > 0, var monitorFile = weakSelf.monitors[fileName] {
@@ -160,7 +160,7 @@ class RestoreJob: BaseJob {
                     try FileManager.default.startDownloadingUbiquitousItem(at: file.cloudURL)
                 } catch {
                     monitors.removeValue(forKey: fileName)
-                    Reporter.report(error: error)
+                    reporter.report(error: error)
                 }
             }
         }
@@ -247,7 +247,7 @@ class RestoreJob: BaseJob {
 
                 restoreSuccess()
             } catch {
-                Reporter.report(error: error)
+                reporter.report(error: error)
                 restoreFailed()
             }
         }

@@ -63,9 +63,9 @@ class PinValidationViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
                 if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
-                    Reporter.report(error: MixinError.invalidPin)
+                    reporter.report(error: MixinError.invalidPin)
                 } else if error.status != NSURLErrorTimedOut {
-                    Reporter.report(error: error)
+                    reporter.report(error: error)
                 }
                 self.handle(error: error)
             }

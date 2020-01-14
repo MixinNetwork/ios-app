@@ -717,7 +717,7 @@ class ConversationViewController: UIViewController {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appUser.userId]))
         }
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
-        Reporter.report(event: .openApp, userInfo: userInfo)
+        reporter.report(event: .openApp, userInfo: userInfo)
         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
     }
     

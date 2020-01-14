@@ -112,7 +112,7 @@ class ImageUploadJob: AttachmentUploadJob {
             }
             updateMediaUrlAndPostNotification(filename: filename, url: url)
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
     

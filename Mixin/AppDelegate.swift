@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
-        Reporter.configure(bugsnagApiKey: MixinKeys.bugsnag)
         updateSharedImageCacheConfig()
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().setNotificationCategories([.message])
@@ -210,7 +210,7 @@ extension AppDelegate {
             AppGroupUserDefaults.firstLaunchDate = Date()
         }
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
-        Reporter.registerUserInformation()
+        reporter.registerUserInformation()
         MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
             let log = String(cString: message)
             Logger.write(log: log)

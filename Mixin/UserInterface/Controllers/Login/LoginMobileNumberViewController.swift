@@ -103,7 +103,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                         }
                         userInfo["phone"] = ctx.mobileNumber
                         userInfo["phoneCountryCode"] = ctx.callingCode
-                        Reporter.report(error: MixinError.requestLoginVerificationCode(userInfo))
+                        reporter.report(error: MixinError.requestLoginVerificationCode(userInfo))
                     }
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false

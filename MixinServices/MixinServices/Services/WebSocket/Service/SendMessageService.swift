@@ -272,7 +272,7 @@ public class SendMessageService: MixinService {
                     }
                 } else {
                     if deleteJobId == job.jobId {
-                        Reporter.report(error: MixinServicesError.duplicatedJob)
+                        reporter.report(error: MixinServicesError.duplicatedJob)
                     }
                     guard SendMessageService.shared.handlerJob(job: job) else {
                         return
@@ -297,7 +297,7 @@ public class SendMessageService: MixinService {
                 } else if err.isClientError {
                     Thread.sleep(forTimeInterval: 2)
                 } else {
-                    Reporter.report(error: error)
+                    reporter.report(error: error)
                 }
             }
 
@@ -386,12 +386,12 @@ public class SendMessageService: MixinService {
                         if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
-                            Reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                            reporter.report(error: MixinServicesError.sendMessage(userInfo))
                             LoginManager.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
-                    Reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                    reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
 
                 if let err = error as? APIError, err.code == 10002 {
@@ -437,7 +437,7 @@ extension SendMessageService {
             userInfo["error"] = "conversation status error"
             userInfo["conversationStatus"] = "\(conversation.status)"
             userInfo["conversationId"] = "\(message.conversationId)"
-            Reporter.report(error: MixinServicesError.sendMessage(userInfo))
+            reporter.report(error: MixinServicesError.sendMessage(userInfo))
             return
         }
 

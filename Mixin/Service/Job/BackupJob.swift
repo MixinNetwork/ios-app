@@ -265,7 +265,7 @@ class BackupJob: BaseJob {
             if tmpFile.fileExists {
                 try? FileManager.default.removeItem(at: tmpFile)
             }
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
 

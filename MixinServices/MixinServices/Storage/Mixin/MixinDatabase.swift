@@ -59,7 +59,7 @@ public class MixinDatabase: BaseDatabase {
                 try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
             })
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
     

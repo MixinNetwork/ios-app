@@ -44,7 +44,7 @@ class RefreshGroupIconJob: AsynchronousJob {
                 updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             }
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
 
         finishJob()

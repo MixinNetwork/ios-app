@@ -15,6 +15,14 @@ target 'Mixin' do
   use_frameworks!
   inhibit_all_warnings!
 
+  pod 'Firebase/Core'
+  pod 'Firebase/MLVision'
+  pod 'Firebase/MLVisionBarcodeModel'
+  pod 'Firebase/MLVisionFaceModel'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Performance'
+  pod 'Fabric'
+  pod 'Crashlytics'
   pod 'Alamofire'
   pod 'SDWebImage'
   pod 'SDWebImageYYPlugin/YYImage'

@@ -43,7 +43,7 @@ open class BaseAPI {
         do {
             return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
             return BaseAPI.sharedSessionManager.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
@@ -78,7 +78,7 @@ open class BaseAPI {
                                 }
                             }
                         }
-                        Reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
+                        reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
                         LoginManager.shared.logout(from: "AsyncRequest")
                         return
                     default:
@@ -193,7 +193,7 @@ extension BaseAPI {
                     }
                 }
             }
-            Reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
+            reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
             LoginManager.shared.logout(from: "SyncRequest")
         }
         return result

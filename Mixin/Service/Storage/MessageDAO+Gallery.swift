@@ -57,7 +57,7 @@ extension MessageDAO {
                 }
             }
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
         
         if count > 0 {

@@ -40,7 +40,7 @@ class HomeNavigationController: UINavigationController {
             MixinService.callMessageCoordinator = CallManager.shared
             WebSocketService.shared.connect()
             if LoginManager.shared.isLoggedIn {
-                Reporter.registerUserInformation()
+                reporter.registerUserInformation()
             }
             checkDevice()
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())

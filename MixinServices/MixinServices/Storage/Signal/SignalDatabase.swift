@@ -38,7 +38,7 @@ public class SignalDatabase: BaseDatabase {
                 try database.delete(fromTable: SignedPreKey.tableName)
             })
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
         AppGroupUserDefaults.Crypto.clearAll()
     }

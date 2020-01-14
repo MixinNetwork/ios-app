@@ -67,18 +67,12 @@ public class Localized {
 
 extension Localized {
     
-    private static let bundle: Bundle = {
-        let frameworkBundle = Bundle(for: Localized.self)
-        let localizationBundleUrl = frameworkBundle.url(forResource: "MixinServicesLocalization", withExtension: "bundle")!
-        return Bundle(url: localizationBundleUrl)!
-    }()
-    
     private static func localized(_ key: String) -> String {
-        return NSLocalizedString(key, bundle: bundle, comment: "")
+        return NSLocalizedString(key, bundle: .mixinServicesResource, comment: "")
     }
     
     private static func localized(_ key: String, arguments: [String]) -> String {
-        let format = NSLocalizedString(key, bundle: bundle, comment: "")
+        let format = NSLocalizedString(key, bundle: .mixinServicesResource, comment: "")
         return String(format: format, arguments: arguments)
     }
     

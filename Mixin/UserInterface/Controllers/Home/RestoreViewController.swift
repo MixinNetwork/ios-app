@@ -52,7 +52,7 @@ class RestoreViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
-                Reporter.report(error: MixinError.missingBackup)
+                reporter.report(error: MixinError.missingBackup)
                 return
             }
 
@@ -110,7 +110,7 @@ class RestoreViewController: UIViewController {
             self.skipButton.isHidden = false
             self.progressLabel.isHidden = true
         }
-        Reporter.report(error: error)
+        reporter.report(error: error)
     }
 
     private func downloadFromCloud(cloudURL: URL, progress: @escaping (Float) -> Void) throws {

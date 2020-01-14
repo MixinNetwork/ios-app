@@ -86,7 +86,7 @@ class UrlWindow {
                         return
                     }
                     let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
-                    Reporter.report(event: .openApp, userInfo: userInfo)
+                    reporter.report(event: .openApp, userInfo: userInfo)
                     DispatchQueue.main.async {
                         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }

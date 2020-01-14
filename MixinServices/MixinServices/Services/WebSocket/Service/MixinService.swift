@@ -251,7 +251,7 @@ public class MixinService {
                 #endif
 
                 guard let err = error as? APIError else {
-                    Reporter.report(error: error)
+                    reporter.report(error: error)
                     Thread.sleep(forTimeInterval: 2)
                     return false
                 }

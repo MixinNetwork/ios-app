@@ -65,7 +65,7 @@ public enum Logger {
                     try log.write(toFile: path, atomically: true, encoding: .utf8)
                 }
             } catch {
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
         }
     }
@@ -91,7 +91,7 @@ public enum Logger {
         do {
             try FileManager.default.createDirectory(at: AppGroupContainer.logUrl, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
     

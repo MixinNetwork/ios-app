@@ -58,7 +58,7 @@ public class BaseDatabase {
                         AppGroupUserDefaults.User.needsRebuildDatabase = true
                     }
                 }
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
         })
     }
@@ -115,7 +115,7 @@ public class BaseDatabase {
         do {
             return try callback(database)
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
         return []
     }

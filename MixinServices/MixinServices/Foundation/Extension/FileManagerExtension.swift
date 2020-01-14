@@ -48,7 +48,7 @@ public extension FileManager {
             try dir.setResourceValues(values)
             return true
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
             return false
         }
     }

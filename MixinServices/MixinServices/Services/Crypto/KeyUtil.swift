@@ -62,7 +62,7 @@ public enum KeyUtil {
         var error: NSError?
         defer {
             if let err = error  {
-                Reporter.report(error: err)
+                reporter.report(error: err)
             }
         }
         return GoutilsRsaDecrypt(pinToken, sessionId, pkString, &error)

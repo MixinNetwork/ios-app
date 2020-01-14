@@ -54,7 +54,7 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
         } while true
     }
@@ -124,7 +124,7 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
         } while true
     }

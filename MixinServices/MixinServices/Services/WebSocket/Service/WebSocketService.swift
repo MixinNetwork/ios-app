@@ -178,7 +178,7 @@ extension WebSocketService: WebSocketDelegate {
             AppGroupUserDefaults.isConnectedWebsocketInMainApp = false
         }
         if let error = error, NetworkManager.shared.isReachable {
-            Reporter.report(error: error)
+            reporter.report(error: error)
             if let error = error as? WSError, error.type == .writeTimeoutError {
                 MixinServer.toggle(currentWebSocketHost: host)
             }

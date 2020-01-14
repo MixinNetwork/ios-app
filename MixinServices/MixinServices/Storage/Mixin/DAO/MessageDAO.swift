@@ -166,7 +166,7 @@ public final class MessageDAO {
         
         guard oldMessage.status != MessageStatus.FAILED.rawValue else {
             let error = MixinServicesError.badMessageData(id: messageId, status: status, from: from)
-            Reporter.report(error: error)
+            reporter.report(error: error)
             return false
         }
         

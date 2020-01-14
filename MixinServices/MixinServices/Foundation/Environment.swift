@@ -5,6 +5,10 @@ public let callTimeoutInterval: TimeInterval = 60
 
 public let isAppExtension = Bundle.main.bundleURL.pathExtension == "appex"
 
+public let reporter = reporterClass.init()
+
+public var reporterClass = Reporter.self
+
 public var currentDecimalSeparator: String {
     Locale.current.decimalSeparator ?? "."
 }

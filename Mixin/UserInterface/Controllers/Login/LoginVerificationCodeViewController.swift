@@ -50,7 +50,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         }
                     }
                 } else {
-                    Reporter.report(error: error)
+                    reporter.report(error: error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }
@@ -61,7 +61,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     func login() {
         isBusy = true
         guard let keyPair = KeyUtil.generateRSAKeyPair() else {
-            Reporter.report(error: MixinError.generateRsaKeyPair)
+            reporter.report(error: MixinError.generateRsaKeyPair)
             isBusy = false
             return
         }
@@ -95,11 +95,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             }
             
             if account.full_name.isEmpty {
-                Reporter.report(event: .signUp)
+                reporter.report(event: .signUp)
             } else if HomeViewController.showChangePhoneNumberTips {
-                Reporter.report(event: .login, userInfo: ["source": "emergency"])
+                reporter.report(event: .login, userInfo: ["source": "emergency"])
             } else {
-                Reporter.report(event: .login, userInfo: ["source": "normal"])
+                reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             
             var backupExist = false

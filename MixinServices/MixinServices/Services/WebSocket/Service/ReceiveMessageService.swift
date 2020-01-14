@@ -282,11 +282,11 @@ public class ReceiveMessageService: MixinService {
                     userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
                 }
                 userInfo["createdAt"] = data.createdAt
-                Reporter.reportErrorToFirebase(MixinServicesError.decryptMessage(userInfo))
+                reporter.reportErrorToFirebase(MixinServicesError.decryptMessage(userInfo))
             }
             
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
-                Reporter.report(error: MixinServicesError.duplicatedMessage)
+                reporter.report(error: MixinServicesError.duplicatedMessage)
                 return
             }
             guard decoded.resendMessageId == nil else {
@@ -326,7 +326,7 @@ public class ReceiveMessageService: MixinService {
             let blazeMessage = BlazeMessage(params: BlazeMessageParam(syncSignalKeys: request), action: BlazeMessageAction.syncSignalKeys.rawValue)
             deliverNoThrow(blazeMessage: blazeMessage)
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
     }
     
@@ -358,7 +358,7 @@ public class ReceiveMessageService: MixinService {
                     "userId": data.userId
                 ]
                 let error = MixinServicesError.nilMimeType(userInfo)
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
 
             let message = Message.createMessage(mediaData: transferMediaData, data: data)

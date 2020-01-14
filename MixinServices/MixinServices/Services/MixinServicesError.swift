@@ -3,7 +3,7 @@ import Foundation
 public enum MixinServicesError: Error {
     
     private static var basicUserInfo: [String: Any] {
-        var userInfo = Reporter.basicUserInfo
+        var userInfo = reporter.basicUserInfo
         userInfo["didLogin"] = LoginManager.shared.isLoggedIn
         return userInfo
     }

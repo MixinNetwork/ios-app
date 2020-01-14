@@ -113,9 +113,9 @@ public class SignalProtocol {
         } catch SignalError.noSession {
             // Do nothing
         } catch let error as SignalError {
-            Reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
+            reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: nil))
         return data

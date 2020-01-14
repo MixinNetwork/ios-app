@@ -18,7 +18,7 @@ extension RTCIceServer {
             case .success(let servers):
                 output = servers
             case .failure(let error):
-                Reporter.report(error: error)
+                reporter.report(error: error)
             }
             semaphore.signal()
         }

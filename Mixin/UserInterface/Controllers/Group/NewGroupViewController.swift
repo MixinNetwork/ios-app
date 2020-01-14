@@ -108,7 +108,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 return imageFile
             }
         } catch {
-            Reporter.report(error: error)
+            reporter.report(error: error)
         }
         return nil
     }

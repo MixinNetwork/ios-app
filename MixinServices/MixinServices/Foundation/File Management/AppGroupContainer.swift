@@ -61,7 +61,7 @@ public enum AppGroupContainer {
             do {
                 try FileManager.default.moveItem(at: src, to: dst)
             } catch {
-                print(error)
+                reporter.report(error: error)
             }
         }
     }

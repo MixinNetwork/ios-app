@@ -93,7 +93,9 @@ public class ReceiveMessageService: MixinService {
                         return
                     }
                     if isAppExtension && AppGroupUserDefaults.isWaitingWebsocketInMainApp {
-                        WebSocketService.shared.disconnect()
+                        DispatchQueue.main.async {
+                            WebSocketService.shared.disconnect()
+                        }
                         return
                     }
 
@@ -764,8 +766,10 @@ extension ReceiveMessageService {
             let participantDidChange = operSuccess
                 && sysMessage.action != SystemConversationAction.UPDATE.rawValue
                 && sysMessage.action != SystemConversationAction.ROLE.rawValue
-            let userInfo = [MixinService.UserInfoKey.conversationId: data.conversationId]
-            NotificationCenter.default.post(name: Self.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
+            if participantDidChange {
+                let userInfo = [MixinService.UserInfoKey.conversationId: data.conversationId]
+                NotificationCenter.default.post(name: Self.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
+            }
         }
         
         switch sysMessage.action {

@@ -58,13 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        guard LoginManager.shared.isLoggedIn || !(window.rootViewController is HomeContainerViewController) else {
-            cleanForLogout()
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         WebSocketService.shared.reconnectIfNeeded()
         
-        if let conversationId = UIApplication.currentConversationId(), UIApplication.shared.applicationState == .active {
+        if let conversationId = UIApplication.currentConversationId() {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
         
@@ -111,11 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.account == nil else {
             return
         }
-        guard let data = AppGroupUserDefaults.Account.serializedAccount else {
-            return
-        }
-        let account = try? JSONDecoder.default.decode(Account.self, from: data)
-        LoginManager.shared.setAccount(account)
+        LoginManager.shared.reloadAccountFromUserDefaults()
         configAnalytics()
         if LoginManager.shared.isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()

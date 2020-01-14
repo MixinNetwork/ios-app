@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-public struct AssetSearchResult {
+struct AssetSearchResult {
     
     static let highlightedAttributes: [NSAttributedString.Key: Any] = {
         var attrs = AssetCell.symbolAttributes

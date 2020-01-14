@@ -14,7 +14,6 @@ class CallManager: CallMessageCoordinator {
             return
         }
         guard let user = UserDAO.shared.getUser(userId: data.userId) else {
-            // FIXME: Download user if absent
             return
         }
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: user.userId)

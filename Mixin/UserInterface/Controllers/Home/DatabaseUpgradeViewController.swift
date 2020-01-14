@@ -20,8 +20,6 @@ class DatabaseUpgradeViewController: UIViewController {
             
             AppGroupContainer.migrateIfNeeded()
             
-            // Logs are saved in app container
-            // Write after container migration
             Logger.write(log: "DatabaseUpgradeViewController...")
             
             TaskDatabase.shared.initDatabase()
@@ -29,24 +27,13 @@ class DatabaseUpgradeViewController: UIViewController {
             let shouldClearSentSenderKey = !AppGroupUserDefaults.Database.isSentSenderKeyCleared
             MixinDatabase.shared.initDatabase(clearSentSenderKey: shouldClearSentSenderKey)
             AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
-
-            if localVersion < 3 {
-                if let currency = AppGroupUserDefaults.Wallet.currencyCode, !currency.isEmpty {
-                    AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency), completion: {  (result) in
-                        if case let .success(account) = result {
-                            LoginManager.shared.setAccount(account)
-                            Currency.refreshCurrentCurrency()
-                        }
-                    })
-                }
-            }
+            
             if localVersion < 4 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
-            AppGroupUserDefaults.isDocumentsMigrated = true
             
             let time = Date().timeIntervalSince(startTime)
             if time < 2 {

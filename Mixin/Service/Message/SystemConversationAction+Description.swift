@@ -2,7 +2,7 @@ import MixinServices
 
 extension SystemConversationAction {
 
-    public static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
+    static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
         let action = actionName ?? ""
         let uFullName = userId == myUserId ? R.string.localizable.chat_message_you() : userFullName
         let pFullName = participantId == myUserId ? R.string.localizable.chat_message_you() : participantFullName ?? ""

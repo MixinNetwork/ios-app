@@ -45,11 +45,18 @@ public final class LoginManager {
 
         return try? JSONDecoder.default.decode(Account.self, from: data)
     }
+
+    public func reloadAccountFromUserDefaults() {
+        pthread_rwlock_wrlock(&lock)
+        _account = LoginManager.getAccountFromUserDefaults()
+        _isLoggedIn = _account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
+        pthread_rwlock_unlock(&lock)
+    }
     
     public func setAccount(_ account: Account?, updateUserTable: Bool = true) {
         pthread_rwlock_wrlock(&lock)
         _account = account
-        _isLoggedIn = account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
+        _isLoggedIn = _account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
         pthread_rwlock_unlock(&lock)
 
         if let account = account {
@@ -68,19 +75,16 @@ public final class LoginManager {
     }
     
     public func logout(from: String) {
-        if isAppExtension {
-            pthread_rwlock_wrlock(&lock)
-            _account = nil
-            _isLoggedIn = false
-            pthread_rwlock_unlock(&lock)
-        } else {
-            guard account != nil else {
-                return
-            }
+        guard account != nil else {
+            return
+        }
+
+        setAccount(nil)
+
+        if !isAppExtension {
             Logger.write(log: "===========logout...from:\(from)")
             AppGroupUserDefaults.User.isLogoutByServer = true
             DispatchQueue.main.async {
-                self.setAccount(nil)
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()

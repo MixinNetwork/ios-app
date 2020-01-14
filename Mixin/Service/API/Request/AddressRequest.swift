@@ -21,7 +21,7 @@ struct AddressRequest: Codable {
 
 extension AddressRequest {
     
-    public var fullAddress: String {
+    var fullAddress: String {
         return tag.isEmpty ? destination : "\(destination):\(tag)"
     }
     

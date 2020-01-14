@@ -379,6 +379,9 @@ extension HomeViewController {
     }
     
     private func fetchConversations() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
         refreshing = true
         needRefresh = false
 

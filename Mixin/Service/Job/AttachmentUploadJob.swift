@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import MixinServices
 
-open class AttachmentUploadJob: UploadOrDownloadJob {
+class AttachmentUploadJob: UploadOrDownloadJob {
     
-    public var attachResponse: AttachmentResponse?
+    var attachResponse: AttachmentResponse?
     
-    public var fileUrl: URL? {
+    var fileUrl: URL? {
         guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
             return nil
         }
@@ -15,7 +15,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
     
     private var stream: InputStream?
     
-    public init(message: Message) {
+    init(message: Message) {
         super.init(messageId: message.messageId)
         super.message = message
     }
@@ -24,11 +24,11 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         return "attachment-upload-\(messageId)"
     }
     
-    override open func getJobId() -> String {
-        return type(of: self).jobId(messageId: message.messageId)
+    override func getJobId() -> String {
+        return Self.jobId(messageId: message.messageId)
     }
     
-    override open func execute() -> Bool {
+    override func execute() -> Bool {
         guard !self.message.messageId.isEmpty, !isCancelled else {
             return false
         }
@@ -101,7 +101,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         return true
     }
     
-    override open func taskFinished() {
+    override func taskFinished() {
         guard let attachResponse = self.attachResponse else {
             return
         }
@@ -114,7 +114,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
         SendMessageService.shared.sendMessage(message: message, data: content)
     }
     
-    public func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
+    func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
         let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mimeType: message.mediaMimeType ?? "", width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize ?? 0, thumbnail: message.thumbImage, name: message.name, duration: message.mediaDuration, waveform: message.mediaWaveform)
         return (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
     }
@@ -123,7 +123,7 @@ open class AttachmentUploadJob: UploadOrDownloadJob {
 
 extension AttachmentUploadJob: URLSessionTaskDelegate {
     
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateUploadProgress(messageId: message.messageId, progress: progress))

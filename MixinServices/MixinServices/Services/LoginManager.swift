@@ -79,10 +79,14 @@ public final class LoginManager {
             return
         }
 
-        setAccount(nil)
+        pthread_rwlock_wrlock(&lock)
+        _account = nil
+        _isLoggedIn = false
+        pthread_rwlock_unlock(&lock)
 
         if !isAppExtension {
             Logger.write(log: "===========logout...from:\(from)")
+            AppGroupUserDefaults.Account.serializedAccount = nil
             AppGroupUserDefaults.User.isLogoutByServer = true
             DispatchQueue.main.async {
                 Keychain.shared.clearPIN()

@@ -11,7 +11,6 @@ final class NotificationService: UNNotificationServiceExtension {
     private var messageId: String?
     
     deinit {
-        AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -71,14 +70,20 @@ final class NotificationService: UNNotificationServiceExtension {
             ownerUser = nil
         }
         let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
-        contentHandler?(content)
+        deliverContent(content)
     }
     
     private func deliverRawContent() {
         guard let rawContent = rawContent else {
             return
         }
-        contentHandler?(rawContent)
+        deliverContent(rawContent)
+    }
+
+    private func deliverContent(_ content: UNNotificationContent) {
+        WebSocketService.shared.disconnect()
+        AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
+        contentHandler?(content)
     }
     
 }
@@ -87,7 +92,6 @@ extension NotificationService: ReceiveMessageServiceDelegate {
     
     func receiveMessageService(_ service: ReceiveMessageService, shouldContinueProcessingAfterProcessingMessageWithId id: String) -> Bool {
         if messageId == id || -startDate.timeIntervalSinceNow >= timeLimit {
-            WebSocketService.shared.disconnect()
             return true
         } else {
             return false

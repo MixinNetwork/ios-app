@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import FirebaseMLVision
 
 extension NSNotification.Name {
 
@@ -336,9 +335,10 @@ let currentDecimalSeparator = Locale.current.decimalSeparator ?? "."
 
 let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
 
-let qrCodeDetector: VisionBarcodeDetector = {
-    let options = VisionBarcodeDetectorOptions(formats: .qrCode)
-    return Vision.vision().barcodeDetector(options: options)
+let qrCodeDetector: CIDetector? = {
+    let context = CIContext()
+    let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+    return CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
 }()
 
 let bytesPerMegaByte: UInt = 1024 * 1024

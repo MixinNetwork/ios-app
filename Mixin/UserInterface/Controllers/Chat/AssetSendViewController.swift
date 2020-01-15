@@ -2,7 +2,6 @@ import UIKit
 import WebKit
 import Photos
 import YYImage
-import FirebaseMLVision
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
@@ -29,7 +28,6 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var qrCodeString: String?
     
     private lazy var notificationController = NotificationController(delegate: self)
-    private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     private lazy var videoSettings: [String: Any] = [
         AVVideoCodecKey: AVVideoCodecType.h264,
         AVVideoWidthKey: 1280,
@@ -155,19 +153,22 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     private func detectQrCode(image: UIImage) {
-        let image = VisionImage(image: image)
-        qrcodeDetector.detect(in: image) { [weak self] (features, error) in
-            guard let weakSelf = self else {
-                return
+        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
+            return
+        }
+        let ciImage = CIImage(cgImage: cgImage)
+        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+            guard let string = feature.messageString, !string.isEmpty else {
+                continue
             }
-            guard error == nil else {
-                return
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.qrCodeString = string
+                self.notificationController.present(urlString: string)
             }
-            guard let string = features?.first?.rawValue else {
-                return
-            }
-            weakSelf.qrCodeString = string
-            weakSelf.notificationController.present(urlString: string)
+            break
         }
     }
     

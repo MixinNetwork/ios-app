@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,8 +24,92 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlF-m5-Vjl">
+                                        <rect key="frame" x="0.0" y="64" width="375" height="140"/>
+                                        <subviews>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MKi-tW-5Ah">
+                                                <rect key="frame" x="14" y="10" width="347" height="137.5"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ceU-w4-Tmc">
+                                                        <rect key="frame" x="303" y="0.0" width="44" height="44"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="44" id="7Hp-cp-RgN"/>
+                                                            <constraint firstAttribute="height" constant="44" id="EcH-Kp-ucn"/>
+                                                        </constraints>
+                                                        <color key="tintColor" red="0.87058823529999996" green="0.8862745098" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <state key="normal" image="ic_title_close"/>
+                                                        <connections>
+                                                            <action selector="bulletinDismissAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="ePe-BJ-VJL"/>
+                                                        </connections>
+                                                    </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Turn ON Notifications" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8d4-XF-PLy">
+                                                        <rect key="frame" x="52" y="20" width="243" height="19.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                        <color key="textColor" name="title"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_bulletin_title_notification"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don’t miss messages from your friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N2Y-Hr-CBC">
+                                                        <rect key="frame" x="8" y="47.5" width="331" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <color key="textColor" name="text_desc"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_bulletin_description_notification"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xnx-Rd-RD2" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                                        <rect key="frame" x="126.5" y="80.5" width="94" height="37"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
+                                                        <state key="normal" title="Settings"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_bulletin_button_notification"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="bulletinContinueAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="cYt-P2-v9g"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" name="background_secondary"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xnx-Rd-RD2" secondAttribute="trailing" constant="8" id="3mB-bg-ts8"/>
+                                                    <constraint firstItem="N2Y-Hr-CBC" firstAttribute="leading" secondItem="MKi-tW-5Ah" secondAttribute="leading" constant="8" id="8hb-vJ-TlP"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ceU-w4-Tmc" secondAttribute="trailing" id="EJY-cq-Ikm"/>
+                                                    <constraint firstAttribute="trailing" secondItem="N2Y-Hr-CBC" secondAttribute="trailing" constant="8" id="FF9-fJ-kYi"/>
+                                                    <constraint firstItem="N2Y-Hr-CBC" firstAttribute="top" secondItem="8d4-XF-PLy" secondAttribute="bottom" constant="8" id="Ooz-AY-A5Z"/>
+                                                    <constraint firstItem="8d4-XF-PLy" firstAttribute="top" secondItem="MKi-tW-5Ah" secondAttribute="top" constant="20" id="bOv-d7-oGQ"/>
+                                                    <constraint firstItem="xnx-Rd-RD2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MKi-tW-5Ah" secondAttribute="leading" constant="8" id="eN3-Oc-klt"/>
+                                                    <constraint firstItem="xnx-Rd-RD2" firstAttribute="centerX" secondItem="MKi-tW-5Ah" secondAttribute="centerX" id="fxM-II-cR0"/>
+                                                    <constraint firstItem="8d4-XF-PLy" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MKi-tW-5Ah" secondAttribute="leading" constant="8" id="inx-eB-PbH"/>
+                                                    <constraint firstItem="ceU-w4-Tmc" firstAttribute="leading" relation="lessThanOrEqual" secondItem="8d4-XF-PLy" secondAttribute="trailing" constant="8" id="kUT-BW-xGK"/>
+                                                    <constraint firstAttribute="bottom" secondItem="xnx-Rd-RD2" secondAttribute="bottom" constant="20" id="lF0-hw-usC"/>
+                                                    <constraint firstItem="xnx-Rd-RD2" firstAttribute="top" secondItem="N2Y-Hr-CBC" secondAttribute="bottom" constant="16" id="lTc-yg-SeL"/>
+                                                    <constraint firstItem="ceU-w4-Tmc" firstAttribute="top" secondItem="MKi-tW-5Ah" secondAttribute="top" id="of4-sn-XK4"/>
+                                                    <constraint firstItem="8d4-XF-PLy" firstAttribute="centerX" secondItem="MKi-tW-5Ah" secondAttribute="centerX" priority="750" id="pnL-G1-3bG"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="13"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="MKi-tW-5Ah" firstAttribute="top" secondItem="vlF-m5-Vjl" secondAttribute="top" constant="10" id="0Nv-vF-vKp"/>
+                                            <constraint firstItem="MKi-tW-5Ah" firstAttribute="leading" secondItem="vlF-m5-Vjl" secondAttribute="leading" constant="14" id="kcJ-LP-4VW"/>
+                                            <constraint firstAttribute="trailing" secondItem="MKi-tW-5Ah" secondAttribute="trailing" constant="14" id="u0i-SB-pMb"/>
+                                            <constraint firstAttribute="height" constant="140" id="yDn-Wa-bH8"/>
+                                        </constraints>
+                                    </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9MA-tT-pfZ">
-                                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                        <rect key="frame" x="0.0" y="204" width="375" height="463"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
@@ -238,20 +322,23 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="9MA-tT-pfZ" firstAttribute="top" secondItem="BAu-gi-TQg" secondAttribute="bottom" id="Ibu-8n-cY0"/>
+                                    <constraint firstAttribute="trailing" secondItem="vlF-m5-Vjl" secondAttribute="trailing" id="Dde-qV-Lbe"/>
                                     <constraint firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="top" priority="250" id="L0c-Rs-bUL"/>
                                     <constraint firstAttribute="trailing" secondItem="9MA-tT-pfZ" secondAttribute="trailing" id="LxE-mt-bPq"/>
                                     <constraint firstAttribute="trailing" secondItem="L82-pj-DlR" secondAttribute="trailing" constant="40" id="NcG-IY-CiO"/>
                                     <constraint firstItem="aOc-Wh-A6w" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="Nsu-ek-q0g"/>
                                     <constraint firstAttribute="trailing" secondItem="aOc-Wh-A6w" secondAttribute="trailing" id="Puz-rR-cEg"/>
+                                    <constraint firstItem="9MA-tT-pfZ" firstAttribute="top" secondItem="vlF-m5-Vjl" secondAttribute="bottom" id="UvL-YA-0ZW"/>
                                     <constraint firstItem="z69-58-QNg" firstAttribute="centerX" secondItem="i5D-40-ldq" secondAttribute="centerX" id="aYD-HK-fmc"/>
                                     <constraint firstAttribute="trailing" secondItem="BAu-gi-TQg" secondAttribute="trailing" id="cfw-jq-hi5"/>
                                     <constraint firstItem="9MA-tT-pfZ" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="gUI-OH-Dsh"/>
                                     <constraint firstItem="BAu-gi-TQg" firstAttribute="top" secondItem="i5D-40-ldq" secondAttribute="top" id="iA0-b7-dRg"/>
+                                    <constraint firstItem="vlF-m5-Vjl" firstAttribute="top" secondItem="BAu-gi-TQg" secondAttribute="bottom" id="lMx-fi-2Kn"/>
                                     <constraint firstAttribute="bottom" secondItem="9MA-tT-pfZ" secondAttribute="bottom" id="tNx-Gk-iAm"/>
                                     <constraint firstItem="L82-pj-DlR" firstAttribute="centerY" secondItem="i5D-40-ldq" secondAttribute="centerY" id="ttx-86-JkN"/>
                                     <constraint firstItem="L82-pj-DlR" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" constant="40" id="vsD-b9-INs"/>
                                     <constraint firstItem="BAu-gi-TQg" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="yxJ-e8-ZQf"/>
+                                    <constraint firstItem="vlF-m5-Vjl" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="zxi-Bh-9op"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2PV-tA-eIh">
@@ -355,6 +442,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="Zif-1j-Fve"/>
                     <connections>
+                        <outlet property="bulletinContentTopConstraint" destination="0Nv-vF-vKp" id="7i0-04-M7u"/>
+                        <outlet property="bulletinContentView" destination="MKi-tW-5Ah" id="mo7-3L-PIs"/>
+                        <outlet property="bulletinDescriptionView" destination="N2Y-Hr-CBC" id="bO8-h6-VE8"/>
+                        <outlet property="bulletinTitleLabel" destination="8d4-XF-PLy" id="46U-NU-EaJ"/>
+                        <outlet property="bulletinWrapperViewHeightConstraint" destination="yDn-Wa-bH8" id="Pu2-Qk-NIY"/>
                         <outlet property="cameraButtonWrapperView" destination="z69-58-QNg" id="Z9R-JF-1xc"/>
                         <outlet property="cameraWrapperSafeAreaPlaceholderHeightConstraint" destination="HM0-tb-6J4" id="6oX-tf-lCs"/>
                         <outlet property="connectingView" destination="px1-MZ-UBh" id="pJF-Aq-gui"/>
@@ -371,7 +463,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdn-hv-2gX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-196" y="-278"/>
+            <point key="canvasLocation" x="-196" y="-278.41079460269867"/>
         </scene>
         <!--Search Navigation View Controller-->
         <scene sceneID="zZl-87-H7J">
@@ -1100,6 +1192,7 @@ chat history from icloud</string>
         <image name="ic_home_qrcode" width="18" height="17"/>
         <image name="ic_message_photo" width="14" height="12"/>
         <image name="ic_restore" width="88" height="58"/>
+        <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_title_contact" width="23" height="19"/>
         <image name="ic_title_search" width="19" height="19"/>
         <image name="ic_title_wallet" width="20" height="21"/>
@@ -1115,6 +1208,9 @@ chat history from icloud</string>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

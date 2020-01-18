@@ -125,7 +125,10 @@ extension AppGroupUserDefaults {
 
     @Default(namespace: nil, key: "check_status_in_app_extension", defaultValue: Date())
     public static var checkStatusTimeInAppExtension: Date
-
+    
+    @Default(namespace: nil, key: "notification_bulletin_dismissal_date", defaultValue: nil)
+    public static var notificationBulletinDismissalDate: Date?
+    
     public static var canProcessMessagesInAppExtension : Bool {
         websocketStatusInMainApp == .disconnected && !isProcessingMessagesInMainApp
     }

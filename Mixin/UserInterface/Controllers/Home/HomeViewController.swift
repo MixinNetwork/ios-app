@@ -17,7 +17,12 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var bulletinContentView: UIView!
+    @IBOutlet weak var bulletinTitleLabel: UILabel!
+    @IBOutlet weak var bulletinDescriptionView: UILabel!
     
+    @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var showCameraButtonConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideCameraButtonConstraint: NSLayoutConstraint!
     @IBOutlet weak var cameraWrapperSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -35,6 +40,11 @@ class HomeViewController: UIViewController {
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
+    private var isBulletinViewHidden = false {
+        didSet {
+            layoutBulletinView()
+        }
+    }
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
@@ -61,6 +71,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isBulletinViewHidden = true
+        updateBulletinView()
         updateCameraWrapperHeight()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
@@ -133,11 +145,17 @@ class HomeViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         dragDownIndicator.center.x = tableView.frame.width / 2
+        layoutBulletinView()
     }
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateCameraWrapperHeight()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
     @IBAction func cameraAction(_ sender: Any) {
@@ -202,7 +220,20 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
     }
     
+    @IBAction func bulletinContinueAction(_ sender: Any) {
+        UIApplication.openAppSettings()
+    }
+    
+    @IBAction func bulletinDismissAction(_ sender: Any) {
+        AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
+        UIView.animate(withDuration: 0.3) {
+            self.isBulletinViewHidden = true
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     @objc func applicationDidBecomeActive(_ sender: Notification) {
+        updateBulletinView()
         guard needRefresh else {
             return
         }
@@ -533,6 +564,37 @@ extension HomeViewController {
             })
         }
         HomeViewController.hasTriedToRequestReview = true
+    }
+    
+    private func layoutBulletinView() {
+        if isBulletinViewHidden {
+            bulletinWrapperViewHeightConstraint.constant = 0
+            bulletinContentView.alpha = 0
+        } else {
+            UIView.performWithoutAnimation(bulletinContentView.layoutIfNeeded)
+            bulletinWrapperViewHeightConstraint.constant = bulletinContentTopConstraint.constant + bulletinContentView.frame.height
+            bulletinContentView.alpha = 1
+        }
+    }
+    
+    private func updateBulletinView() {
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            let shouldHideBulletin: Bool
+            if settings.authorizationStatus == .denied {
+                if let date = AppGroupUserDefaults.notificationBulletinDismissalDate {
+                    let notificationAuthorizationAlertingPeriod: TimeInterval = 7 * 24 * 60 * 60
+                    shouldHideBulletin = -date.timeIntervalSinceNow < notificationAuthorizationAlertingPeriod
+                } else {
+                    shouldHideBulletin = false
+                }
+            } else {
+                shouldHideBulletin = true
+            }
+            DispatchQueue.main.async {
+                self.isBulletinViewHidden = shouldHideBulletin
+                self.view.layoutIfNeeded()
+            }
+        }
     }
     
 }

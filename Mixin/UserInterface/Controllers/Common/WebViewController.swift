@@ -107,9 +107,34 @@ class WebViewController: UIViewController {
                 titleImageView.sd_setImage(with: iconUrl, completed: nil)
             }
         }
+        loadAppearance()
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         let request = URLRequest(url: context.initialUrl)
         webView.load(request)
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            guard traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
+                return
+            }
+
+            loadAppearance()
+        }
+    }
+
+    private func loadAppearance() {
+        guard #available(iOS 12.0, *) else {
+            return
+        }
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            context.appearance = "dark"
+        default:
+            context.appearance = "light"
+        }
+
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -463,12 +488,13 @@ extension WebViewController {
         let style: Style
         let initialUrl: URL
         let isImmersive: Bool
+        var appearance = "light"
         
         private(set) lazy var appContextString: String = {
             let ctx: [String: Any] = [
                 "app_version": Bundle.main.shortVersion,
                 "immersive": isImmersive,
-                "appearance": "light",
+                "appearance": appearance,
                 "conversation_id": conversationId
             ]
             if let data = try? JSONSerialization.data(withJSONObject: ctx, options: []), let string = String(data: data, encoding: .utf8) {

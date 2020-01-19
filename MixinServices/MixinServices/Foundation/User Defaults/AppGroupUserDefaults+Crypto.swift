@@ -41,7 +41,7 @@ extension AppGroupUserDefaults {
         
         public static func clearAll() {
             Key.allCases
-                .map({ $0.rawValue })
+                .map({ Default<Never>.wrappedKey(forNamespace: .crypto, key: $0.rawValue) })
                 .forEach(defaults.removeObject(forKey:))
             defaults.synchronize()
         }

@@ -38,11 +38,7 @@ public enum AppGroupUserDefaults {
         fileprivate let defaultValue: Value
         
         fileprivate var wrappedKey: String {
-            if let namespace = namespace {
-                return namespace.stringValue + "." + key
-            } else {
-                return key
-            }
+            Self.wrappedKey(forNamespace: namespace, key: key)
         }
         
         // default values are returned as is without writting back
@@ -67,6 +63,14 @@ public enum AppGroupUserDefaults {
                 } else {
                     defaults.set(newValue, forKey: wrappedKey)
                 }
+            }
+        }
+        
+        static func wrappedKey(forNamespace namespace: Namespace?, key: String) -> String {
+            if let namespace = namespace {
+                return namespace.stringValue + "." + key
+            } else {
+                return key
             }
         }
         

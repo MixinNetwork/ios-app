@@ -13,20 +13,20 @@ public enum AppGroupUserDefaults {
         case wallet
         
         var stringValue: String {
-            switch self {
-            case .signal:
+            if self == .signal {
                 return "signal"
-            case .crypto:
+            } else if self == .crypto {
                 return "crypto"
-            case .account:
+            } else if self == .account {
                 return "account"
-            case .user:
+            } else if self == .user {
                 return "user." + myIdentityNumber
-            case .database:
+            } else if self == .database {
                 return "database." + myIdentityNumber
-            case .wallet:
+            } else if self == .wallet {
                 return "wallet." + myIdentityNumber
             }
+            fatalError("Unhandled namespace")
         }
     }
     

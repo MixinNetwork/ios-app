@@ -48,6 +48,18 @@ public class WebSocketService {
             guard self.status == .disconnected else {
                 return
             }
+
+            if isAppExtension {
+                if AppGroupUserDefaults.isConnectedWebsocketInMainApp {
+                    return
+                }
+            } else {
+                if AppGroupUserDefaults.isConnectedWebsocketInAppExtension {
+                    AppGroupUserDefaults.isWaitingWebsocketInMainApp = true
+                    return
+                }
+            }
+
             self.status = .connecting
             self.prepareForConnection(host: MixinServer.webSocketHost)
             self.networkWasRechableOnConnection = self.isReachable
@@ -74,6 +86,19 @@ public class WebSocketService {
             ConcurrentJobQueue.shared.cancelAllOperations()
             self.messageHandlers.removeAll()
             self.status = .disconnected
+        }
+    }
+
+    public func connectIfNeeded() {
+        enqueueOperation {
+            guard LoginManager.shared.isLoggedIn, self.isReachable else {
+                return
+            }
+            if self.status == .disconnected {
+                self.connect()
+            } else {
+                self.reconnectIfNeeded()
+            }
         }
     }
     
@@ -133,6 +158,12 @@ public class WebSocketService {
 extension WebSocketService: WebSocketDelegate {
     
     public func websocketDidConnect(socket: WebSocketClient) {
+        if isAppExtension {
+            AppGroupUserDefaults.isConnectedWebsocketInAppExtension = true
+        } else {
+            AppGroupUserDefaults.isConnectedWebsocketInMainApp = true
+        }
+
         guard status == .connecting else {
             return
         }
@@ -150,11 +181,6 @@ extension WebSocketService: WebSocketDelegate {
                 }
             }
         } else {
-            if isAppExtension {
-                AppGroupUserDefaults.isConnectedWebsocketInAppExtension = true
-            } else {
-                AppGroupUserDefaults.isConnectedWebsocketInMainApp = true
-            }
             status = .connected
             NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
             ReceiveMessageService.shared.processReceiveMessages()

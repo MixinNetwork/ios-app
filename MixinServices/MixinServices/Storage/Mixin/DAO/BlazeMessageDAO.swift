@@ -15,9 +15,17 @@ public final class BlazeMessageDAO {
     public func getCount() -> Int {
         return TaskDatabase.shared.getCount(on: MessageBlaze.Properties.messageId.count(), fromTable: MessageBlaze.tableName)
     }
-    
-    public func getBlazeMessageData(limit: Int) -> [BlazeMessageData] {
-        return TaskDatabase.shared.getCodables(on: [MessageBlaze.Properties.message], fromTable: MessageBlaze.tableName, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: limit) { (rows) -> [BlazeMessageData] in
+
+    func getMessageBlaze(messageId: String) -> MessageBlaze? {
+        return TaskDatabase.shared.getCodable(condition: MessageBlaze.Properties.messageId == messageId)
+    }
+
+    public func getBlazeMessageData(createdAt: String? = nil, limit: Int) -> [BlazeMessageData] {
+        var condition: Condition?
+        if let createdAt = createdAt {
+            condition = MessageBlaze.Properties.createdAt <= createdAt
+        }
+        return TaskDatabase.shared.getCodables(on: [MessageBlaze.Properties.message], fromTable: MessageBlaze.tableName, condition: condition, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: limit) { (rows) -> [BlazeMessageData] in
             var result = [BlazeMessageData]()
             for row in rows {
                 guard let data = (try? JSONDecoder.default.decode(BlazeMessageData.self, from: row[0].dataValue)) else {

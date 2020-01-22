@@ -7,10 +7,6 @@ public protocol CallMessageCoordinator: class {
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
 }
 
-public protocol ReceiveMessageServiceDelegate: class {
-    func receiveMessageService(_ service: ReceiveMessageService, shouldContinueProcessingAfterProcessingMessageWithId id: String) -> Bool
-}
-
 public class ReceiveMessageService: MixinService {
     
     public static let shared = ReceiveMessageService()
@@ -22,9 +18,7 @@ public class ReceiveMessageService: MixinService {
         .WEBRTC_AUDIO_FAILED,
         .WEBRTC_AUDIO_DECLINE
     ]
-    
-    public weak var delegate: ReceiveMessageServiceDelegate?
-    
+
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
@@ -64,7 +58,52 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
-    func processReceiveMessages() {
+    public func processReceiveMessage(messageId: String, callback: @escaping (MessageItem?) -> Void) {
+        let startDate = Date()
+        processDispatchQueue.async {
+            repeat {
+                if let message = MessageDAO.shared.getFullMessage(messageId: messageId) {
+                    callback(message)
+                    return
+                } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {
+                    repeat {
+                        let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(createdAt: createdAt, limit: 50)
+                        guard blazeMessageDatas.count > 0 else {
+                            callback(nil)
+                            return
+                        }
+
+                        for data in blazeMessageDatas {
+                            guard !AppGroupUserDefaults.isWaitingWebsocketInMainApp else {
+                                DispatchQueue.main.async {
+                                    WebSocketService.shared.disconnect()
+                                }
+                                callback(nil)
+                                return
+                            }
+                            ReceiveMessageService.shared.processReceiveMessage(data: data)
+                            if data.messageId == messageId {
+                                callback(MessageDAO.shared.getFullMessage(messageId: messageId))
+                                return
+                            }
+                        }
+                    } while true
+                } else {
+                    guard -startDate.timeIntervalSinceNow < 20, !AppGroupUserDefaults.isWaitingWebsocketInMainApp, !AppGroupUserDefaults.isConnectedWebsocketInMainApp else {
+                        callback(nil)
+                        return
+                    }
+                    WebSocketService.shared.connectIfNeeded()
+                    Thread.sleep(forTimeInterval: 2)
+                }
+            } while true
+        }
+    }
+
+    public func processReceiveMessages() {
+        guard !isAppExtension else {
+            return
+        }
         guard !processing else {
             return
         }
@@ -79,56 +118,49 @@ public class ReceiveMessageService: MixinService {
 
             repeat {
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
+                guard blazeMessageDatas.count > 0 else {
+                    return
+                }
+
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
                 if remainJobCount + finishedJobCount > 500 {
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
                     NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
                 }
-                guard blazeMessageDatas.count > 0 else {
-                    return
-                }
 
                 for data in blazeMessageDatas {
-                    guard LoginManager.shared.isLoggedIn else {
-                        return
-                    }
-                    if isAppExtension && AppGroupUserDefaults.isWaitingWebsocketInMainApp {
-                        DispatchQueue.main.async {
-                            WebSocketService.shared.disconnect()
-                        }
-                        return
-                    }
-
-                    if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
-                        ReceiveMessageService.shared.processBadMessage(data: data)
-                        continue
-                    }
-
-                    ReceiveMessageService.shared.syncConversation(data: data)
-                    ReceiveMessageService.shared.checkSession(data: data)
-                    
-                    let shouldContinueProcessing = self.delegate?.receiveMessageService(self, shouldContinueProcessingAfterProcessingMessageWithId: data.messageId) ?? true
-                    
-                    if MessageCategory.isLegal(category: data.category) {
-                        ReceiveMessageService.shared.processSystemMessage(data: data)
-                        ReceiveMessageService.shared.processPlainMessage(data: data)
-                        ReceiveMessageService.shared.processSignalMessage(data: data)
-                        ReceiveMessageService.shared.processAppButton(data: data)
-                        ReceiveMessageService.shared.processWebRTCMessage(data: data)
-                        ReceiveMessageService.shared.processRecallMessage(data: data)
-                    } else {
-                        ReceiveMessageService.shared.processUnknownMessage(data: data)
-                    }
-                    BlazeMessageDAO.shared.delete(data: data)
-                    
-                    guard shouldContinueProcessing else {
-                        return
-                    }
+                    ReceiveMessageService.shared.processReceiveMessage(data: data)
                 }
 
                 finishedJobCount += blazeMessageDatas.count
             } while true
         }
+    }
+
+    private func processReceiveMessage(data: BlazeMessageData) {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+
+        if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
+            ReceiveMessageService.shared.processBadMessage(data: data)
+            return
+        }
+
+        ReceiveMessageService.shared.syncConversation(data: data)
+        ReceiveMessageService.shared.checkSession(data: data)
+
+        if MessageCategory.isLegal(category: data.category) {
+            ReceiveMessageService.shared.processSystemMessage(data: data)
+            ReceiveMessageService.shared.processPlainMessage(data: data)
+            ReceiveMessageService.shared.processSignalMessage(data: data)
+            ReceiveMessageService.shared.processAppButton(data: data)
+            ReceiveMessageService.shared.processWebRTCMessage(data: data)
+            ReceiveMessageService.shared.processRecallMessage(data: data)
+        } else {
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+        }
+        BlazeMessageDAO.shared.delete(data: data)
     }
 
     private func checkSession(data: BlazeMessageData) {

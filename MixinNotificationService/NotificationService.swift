@@ -18,40 +18,26 @@ final class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         self.rawContent = request.content
 
-        guard canProcessMessages, !AppGroupUserDefaults.isConnectedWebsocket else {
+        guard let messageId = request.content.userInfo["message_id"] as? String, canProcessMessages else {
             deliverRawContent()
             return
         }
-        guard let messageId = request.content.userInfo["message_id"] as? String else {
-            deliverRawContent()
-            return
-        }
-        
-        self.messageId = messageId
-        
-        if let message = MessageDAO.shared.getFullMessage(messageId: messageId) {
-            deliverNotification(with: message)
-        } else {
-            MixinService.callMessageCoordinator = CallManager.shared
-            ReceiveMessageService.shared.delegate = self
-            NotificationCenter.default.addObserver(self, selector: #selector(didInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
-            WebSocketService.shared.connect()
+
+        MixinService.callMessageCoordinator = CallManager.shared
+        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId) { [weak self](messageItem: MessageItem?) in
+            guard let weakSelf = self else {
+                return
+            }
+            if let message = messageItem {
+                weakSelf.deliverNotification(with: message)
+            } else {
+                weakSelf.deliverRawContent()
+            }
         }
     }
     
     override func serviceExtensionTimeWillExpire() {
         deliverRawContent()
-    }
-    
-    @objc private func didInsertMessage(_ notification: Notification) {
-        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
-            return
-        }
-        guard message.messageId == messageId else {
-            return
-        }
-        deliverNotification(with: message)
-        NotificationCenter.default.removeObserver(self)
     }
     
     private func deliverNotification(with message: MessageItem) {
@@ -70,32 +56,14 @@ final class NotificationService: UNNotificationServiceExtension {
             ownerUser = nil
         }
         let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
-        deliverContent(content)
+        contentHandler?(content)
     }
     
     private func deliverRawContent() {
         guard let rawContent = rawContent else {
             return
         }
-        deliverContent(rawContent)
-    }
-
-    private func deliverContent(_ content: UNNotificationContent) {
-        WebSocketService.shared.disconnect()
-        AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
-        contentHandler?(content)
-    }
-    
-}
-
-extension NotificationService: ReceiveMessageServiceDelegate {
-    
-    func receiveMessageService(_ service: ReceiveMessageService, shouldContinueProcessingAfterProcessingMessageWithId id: String) -> Bool {
-        if messageId == id || -startDate.timeIntervalSinceNow >= timeLimit {
-            return true
-        } else {
-            return false
-        }
+        contentHandler?(rawContent)
     }
     
 }

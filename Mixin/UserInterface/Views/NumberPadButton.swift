@@ -1,9 +1,6 @@
 import UIKit
 
 class NumberPadButton: UIControl, XibDesignable {
-
-    static let normalBackgroundImage = R.color.keyboard_button_background()!.image
-    static let highlightedBackgroundImage = R.color.keyboard_button_highlighted()!.image
     
     @IBOutlet weak var button: UIButton!
     
@@ -15,22 +12,31 @@ class NumberPadButton: UIControl, XibDesignable {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        prepare()
+        loadXib()
+        updateButtonBackground()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        prepare()
+        loadXib()
+        updateButtonBackground()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard #available(iOS 12.0, *), traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
+            return
+        }
+        updateButtonBackground()
     }
     
     @IBAction func touchUpInsideAction(_ sender: Any) {
         sendActions(for: .touchUpInside)
     }
     
-    private func prepare() {
-        loadXib()
-        button.setBackgroundImage(NumberPadButton.normalBackgroundImage, for: .normal)
-        button.setBackgroundImage(NumberPadButton.highlightedBackgroundImage, for: .highlighted)
+    private func updateButtonBackground() {
+        button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .normal)
+        button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
     }
-
+    
 }

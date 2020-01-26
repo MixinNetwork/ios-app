@@ -567,6 +567,12 @@ class ConversationViewController: UIViewController {
             return
         }
         updateSubtitleAndInputBar()
+        dataSource.queue.async { [weak self] in
+            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
+            DispatchQueue.main.sync {
+                self?.userHandleViewController.users = users
+            }
+        }
     }
     
     @objc func didAddMessageOutOfBounds(_ notification: Notification) {

@@ -23,6 +23,7 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
+        _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
         ReceiveMessageService.shared.processReceiveMessage(messageId: messageId) { [weak self](messageItem: MessageItem?) in
             guard let weakSelf = self else {

@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
         updateSharedImageCacheConfig()
-        NetworkManager.shared.startListening()
+        _ = NetworkManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
         checkLogin()

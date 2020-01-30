@@ -6,6 +6,10 @@ public class NetworkManager {
     public static let shared = NetworkManager()
     
     private let reachabilityManager = Alamofire.NetworkReachabilityManager()
+
+    private init() {
+        reachabilityManager?.startListening()
+    }
     
     public var isReachable: Bool {
         return reachabilityManager?.isReachable ?? false
@@ -13,10 +17,6 @@ public class NetworkManager {
     
     public var isReachableOnWiFi: Bool {
         return reachabilityManager?.isReachableOnEthernetOrWiFi ?? false
-    }
-    
-    public func startListening() {
-        reachabilityManager?.startListening()
     }
     
     deinit {

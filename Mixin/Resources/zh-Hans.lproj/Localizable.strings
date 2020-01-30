@@ -698,3 +698,25 @@
 
 "report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
 "report_button"="发送";
+
+"alert_key_contact_message" = "发来一条信息";
+"alert_key_contact_text_message" = "发来一条信息";
+"alert_key_contact_image_message" = "发来一张图片";
+"alert_key_contact_video_message" = "发来一个视频";
+"alert_key_contact_live_message" = "发来一个直播";
+"alert_key_contact_transfer_message" = "发来一笔转账";
+"alert_key_contact_data_message" = "发来了一个文件";
+"alert_key_contact_sticker_message" = "发来了一个贴纸";
+"alert_key_contact_contact_message" = "发来了一个联系人";
+"alert_key_contact_audio_message" = "发来了一个语音";
+"alert_key_contact_audio_call_message" = "邀请你进行语音通话";
+"alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
+"alert_key_group_message" = "%@发来一条信息";
+"alert_key_group_text_message" = "%@发来一条信息";
+"alert_key_group_image_message" = "%@发来一张图片";
+"alert_key_group_video_message" = "%@发来一个视频";
+"alert_key_group_live_message" = "%@发来一个直播";
+"alert_key_group_data_message" = "%@发来了一个文件";
+"alert_key_group_sticker_message" = "%@发来了一个贴纸";
+"alert_key_group_contact_message" = "%@分享了一个联系人";
+"alert_key_group_audio_message" = "%@发来了一个语音";

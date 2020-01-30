@@ -596,3 +596,25 @@
 
 "report_title"="開発者に会話ログを送りますか？";
 "report_button"="送る";
+
+"alert_key_group_message" = "%@ メッセージを送る";
+"alert_key_group_text_message" = "%@ メッセージを送る";
+"alert_key_group_image_message" = "%@ 写真を送る";
+"alert_key_group_video_message" = "%@ ビデオを送る";
+"alert_key_group_live_message" = "%@ 生放送を送る";
+"alert_key_group_data_message" = "%@ ファイルを送る";
+"alert_key_group_sticker_message" = "%@ ステッカーを送る";
+"alert_key_group_contact_message" = "%@ 連絡先を送る";
+"alert_key_group_audio_message" = "%@ 音声を送る";
+"alert_key_contact_message" = "あなたにメッセージを送る";
+"alert_key_contact_text_message" = "あなたにメッセージを送る";
+"alert_key_contact_image_message" = "あなたに写真を送る";
+"alert_key_contact_video_message" = "あなたにビデオを送る";
+"alert_key_contact_live_message" = "あなたに生放送を送る";
+"alert_key_contact_transfer_message" = "お振込みします";
+"alert_key_contact_data_message" = "あなたにファイルを送る";
+"alert_key_contact_sticker_message" = "あなたにステッカーを送る";
+"alert_key_contact_contact_message" = "あなたに連絡先を送る";
+"alert_key_contact_audio_message" = "あなたに音声を送る";
+"alert_key_contact_audio_call_message" = "音声通話に招待します";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";

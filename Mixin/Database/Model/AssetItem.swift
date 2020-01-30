@@ -120,8 +120,8 @@ extension AssetItem {
         return assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     }
 
-    var isBitcoin: Bool {
-        return assetId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
+    var isBitcoinChain: Bool {
+        return chainId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     }
 
     var memoLabel: String {

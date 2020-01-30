@@ -162,7 +162,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         }
 
         var destination = addressValue
-        if asset.isBitcoin {
+        if asset.isBitcoinChain {
             if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {
                 destination = address
             }

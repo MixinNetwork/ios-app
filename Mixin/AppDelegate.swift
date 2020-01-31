@@ -16,12 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let window = UIWindow(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
-    private let darwinNotifyCenter = CFNotificationCenterGetDarwinNotifyCenter()
-    private var selfAsOpaquePointer: UnsafeMutableRawPointer {
-        Unmanaged.passUnretained(self).toOpaque()
-    }
 
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
@@ -86,9 +81,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        AppGroupUserDefaults.isConnectedWebsocketInMainApp = false
-        AppGroupUserDefaults.isWaitingWebsocketInMainApp = false
-        CFNotificationCenterRemoveEveryObserver(darwinNotifyCenter, selfAsOpaquePointer)
+        AppGroupUserDefaults.isProcessingMessagesInMainApp = false
+        AppGroupUserDefaults.websocketStatusInMainApp = WebSocketService.Status.disconnected.rawValue
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -137,13 +131,6 @@ extension AppDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
         NotificationCenter.default.addObserver(SendMessageService.shared, selector: #selector(SendMessageService.uploadAnyPendingMessages), name: WebSocketService.pendingMessageUploadingDidBecomeAvailableNotification, object: nil)
-        CFNotificationCenterAddObserver(darwinNotifyCenter, selfAsOpaquePointer, { (_, _, _, _, _) in
-            AppGroupUserDefaults.isWaitingWebsocketInMainApp = false
-            guard canProcessMessages else {
-                return
-            }
-            WebSocketService.shared.connect()
-        }, websocketDidDisconnectDarwinNotificationName.rawValue, nil, .deliverImmediately)
     }
     
     @objc func updateApplicationIconBadgeNumber() {

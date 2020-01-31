@@ -26,7 +26,13 @@ public class WebSocketService {
     private var socket: WebSocket?
     private var heartbeat: HeartbeatService?
     
-    private var status: Status = .disconnected
+    private var status: Status = .disconnected {
+        didSet {
+            if !isAppExtension {
+                AppGroupUserDefaults.websocketStatusInMainApp = status.rawValue
+            }
+        }
+    }
     private var networkWasRechableOnConnection = false
     private var lastConnectionDate: Date?
     private var messageHandlers = [String: IncomingMessageHandler]()
@@ -49,15 +55,8 @@ public class WebSocketService {
                 return
             }
 
-            if isAppExtension {
-                if AppGroupUserDefaults.isConnectedWebsocketInMainApp {
-                    return
-                }
-            } else {
-                if AppGroupUserDefaults.isConnectedWebsocketInAppExtension {
-                    AppGroupUserDefaults.isWaitingWebsocketInMainApp = true
-                    return
-                }
+            if isAppExtension && !AppGroupUserDefaults.canProcessMessagesInAppExtension {
+                return
             }
 
             self.status = .connecting
@@ -91,7 +90,7 @@ public class WebSocketService {
 
     public func connectIfNeeded() {
         enqueueOperation {
-            guard LoginManager.shared.isLoggedIn, self.isReachable else {
+            guard LoginManager.shared.isLoggedIn, NetworkManager.shared.isReachable else {
                 return
             }
             if self.status == .disconnected {
@@ -158,12 +157,6 @@ public class WebSocketService {
 extension WebSocketService: WebSocketDelegate {
     
     public func websocketDidConnect(socket: WebSocketClient) {
-        if isAppExtension {
-            AppGroupUserDefaults.isConnectedWebsocketInAppExtension = true
-        } else {
-            AppGroupUserDefaults.isConnectedWebsocketInMainApp = true
-        }
-
         guard status == .connecting else {
             return
         }
@@ -198,20 +191,14 @@ extension WebSocketService: WebSocketDelegate {
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if isAppExtension {
-            AppGroupUserDefaults.isConnectedWebsocketInAppExtension = false
-        } else {
-            AppGroupUserDefaults.isConnectedWebsocketInMainApp = false
-        }
-        if let error = error, NetworkManager.shared.isReachable {
+        if let error = error, self.isReachable {
             reporter.report(error: error)
             if let error = error as? WSError, error.type == .writeTimeoutError {
                 MixinServer.toggle(currentWebSocketHost: host)
             }
         }
-        if isAppExtension && AppGroupUserDefaults.isWaitingWebsocketInMainApp {
-            CFNotificationCenterPostNotification(darwinNotifyCenter, websocketDidDisconnectDarwinNotificationName, nil, nil, true)
-        } else if status == .connecting || status == .connected {
+
+        if status == .connecting || status == .connected {
             reconnect(sendDisconnectToRemote: false)
         }
     }
@@ -263,7 +250,7 @@ extension WebSocketService: WebSocketDelegate {
 
 extension WebSocketService {
     
-    private enum Status {
+    public enum Status: String {
         case disconnected
         case connecting
         case connected

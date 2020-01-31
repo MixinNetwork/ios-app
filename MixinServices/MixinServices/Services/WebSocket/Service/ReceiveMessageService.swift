@@ -21,12 +21,26 @@ public class ReceiveMessageService: MixinService {
 
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
+    private let processOperationQueue = OperationQueue(maxConcurrentOperationCount: 1)
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private var listPendingCallWorkItems = [String: DispatchWorkItem]()
     private var listPendingCandidates = [String: [BlazeMessageData]]()
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
+
+    override var processing: Bool {
+        didSet {
+            guard !isAppExtension else {
+                return
+            }
+            AppGroupUserDefaults.isProcessingMessagesInMainApp = processing
+        }
+    }
+
+    public var isProcessingMessagesInAppExtension: Bool {
+        return isAppExtension && processOperationQueue.operationCount == 0
+    }
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
@@ -58,12 +72,13 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
-    public func processReceiveMessage(messageId: String, callback: @escaping (MessageItem?) -> Void) {
+    public func processReceiveMessage(messageId: String, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
         let startDate = Date()
-        processDispatchQueue.async {
+        processOperationQueue.addOperation {
+            AppGroupUserDefaults.isProcessingMessagesInAppExtension = true
             repeat {
-                if let message = MessageDAO.shared.getFullMessage(messageId: messageId) {
-                    callback(message)
+                if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                    callback(nil)
                     return
                 } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {
                     repeat {
@@ -74,10 +89,7 @@ public class ReceiveMessageService: MixinService {
                         }
 
                         for data in blazeMessageDatas {
-                            guard !AppGroupUserDefaults.isWaitingWebsocketInMainApp else {
-                                DispatchQueue.main.async {
-                                    WebSocketService.shared.disconnect()
-                                }
+                            guard AppGroupUserDefaults.canProcessMessagesInAppExtension else {
                                 callback(nil)
                                 return
                             }
@@ -88,11 +100,10 @@ public class ReceiveMessageService: MixinService {
                             }
                         }
                     } while true
+                } else if let message = MessageDAO.shared.getFullMessage(messageId: messageId) {
+                   callback(message)
+                   return
                 } else {
-                    guard -startDate.timeIntervalSinceNow < 20, !AppGroupUserDefaults.isWaitingWebsocketInMainApp, !AppGroupUserDefaults.isConnectedWebsocketInMainApp else {
-                        callback(nil)
-                        return
-                    }
                     WebSocketService.shared.connectIfNeeded()
                     Thread.sleep(forTimeInterval: 2)
                 }
@@ -112,6 +123,18 @@ public class ReceiveMessageService: MixinService {
         processDispatchQueue.async {
             defer {
                 self.processing = false
+            }
+
+            if AppGroupUserDefaults.isProcessingMessagesInAppExtension {
+                repeat {
+                    let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
+                    DarwinNotificationManager.shared.checkStatusInAppExtension()
+                    Thread.sleep(forTimeInterval: 2)
+
+                    if oldDate == AppGroupUserDefaults.checkStatusTimeInAppExtension {
+                        AppGroupUserDefaults.isProcessingMessagesInAppExtension = false
+                    }
+                } while AppGroupUserDefaults.isProcessingMessagesInAppExtension
             }
 
             var finishedJobCount = 0

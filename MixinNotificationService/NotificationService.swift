@@ -9,8 +9,10 @@ final class NotificationService: UNNotificationServiceExtension {
     private var contentHandler: ((UNNotificationContent) -> Void)?
     private var rawContent: UNNotificationContent?
     private var messageId: String?
+    private var isExpired = false
     
     deinit {
+        AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -25,7 +27,9 @@ final class NotificationService: UNNotificationServiceExtension {
 
         _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
-        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId) { [weak self](messageItem: MessageItem?) in
+        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, extensionTimeWillExpire: { [weak self]() -> Bool in
+            return self?.isExpired ?? true
+        }) { [weak self](messageItem) in
             guard let weakSelf = self else {
                 return
             }
@@ -38,6 +42,7 @@ final class NotificationService: UNNotificationServiceExtension {
     }
     
     override func serviceExtensionTimeWillExpire() {
+        isExpired = true
         deliverRawContent()
     }
     

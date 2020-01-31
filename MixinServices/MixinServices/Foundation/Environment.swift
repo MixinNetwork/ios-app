@@ -23,4 +23,4 @@ public var canProcessMessages: Bool {
     LoginManager.shared.isLoggedIn && AppGroupUserDefaults.isDocumentsMigrated && !AppGroupUserDefaults.User.needsUpgradeInMainApp
 }
 
-public let websocketDidDisconnectDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.websocket.did.disconnect" as CFString)
+public let statusCheckDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.status.check" as CFString)

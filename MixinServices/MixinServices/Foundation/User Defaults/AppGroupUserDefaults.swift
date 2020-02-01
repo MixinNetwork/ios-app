@@ -129,6 +129,11 @@ extension AppGroupUserDefaults {
     public static var canProcessMessagesInAppExtension : Bool {
         websocketStatusInMainApp == WebSocketService.Status.disconnected.rawValue && !isProcessingMessagesInMainApp
     }
+
+    public static func resetStatusInMainApp() {
+        isProcessingMessagesInMainApp = false
+        websocketStatusInMainApp = WebSocketService.Status.disconnected.rawValue
+    }
 }
 
 extension AppGroupUserDefaults {

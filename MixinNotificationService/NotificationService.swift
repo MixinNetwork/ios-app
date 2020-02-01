@@ -25,6 +25,7 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
+        _ = DarwinNotificationManager.shared
         _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
         ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, extensionTimeWillExpire: { [weak self]() -> Bool in

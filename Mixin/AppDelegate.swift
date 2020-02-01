@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
+        AppGroupUserDefaults.resetStatusInMainApp()
         updateSharedImageCacheConfig()
         _ = NetworkManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
@@ -81,8 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        AppGroupUserDefaults.isProcessingMessagesInMainApp = false
-        AppGroupUserDefaults.websocketStatusInMainApp = WebSocketService.Status.disconnected.rawValue
+        AppGroupUserDefaults.resetStatusInMainApp()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -116,7 +116,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
-        WebSocketService.shared.reconnectIfNeeded()
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification", newSection: true)
+        WebSocketService.shared.connectIfNeeded()
         DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
             completionHandler(.newData)
         }

@@ -3,7 +3,14 @@ import MixinServices
 
 class UserHandleViewController: UITableViewController, ConversationAccessible {
     
-    var users = [User]()
+    var users = [User]() {
+        didSet {
+            guard let keyword = keyword else {
+                return
+            }
+            reload(with: keyword, completion: nil)
+        }
+    }
     
     private var filteredUsers = [User]()
     private var keyword: String?

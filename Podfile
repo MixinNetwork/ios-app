@@ -16,9 +16,6 @@ target 'Mixin' do
   inhibit_all_warnings!
 
   pod 'Firebase/Core'
-  pod 'Firebase/MLVision'
-  pod 'Firebase/MLVisionBarcodeModel'
-  pod 'Firebase/MLVisionFaceModel'
   pod 'Firebase/Analytics'
   pod 'Firebase/Performance'
   pod 'Fabric'

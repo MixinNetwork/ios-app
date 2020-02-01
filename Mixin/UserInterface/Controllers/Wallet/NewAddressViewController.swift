@@ -162,7 +162,12 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             return
         }
 
-        let destination = addressValue.suffix(char: ":") ?? addressValue
+        var destination = addressValue
+        if asset.isBitcoinChain {
+            if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {
+                destination = address
+            }
+        }
         shouldLayoutWithKeyboard = false
         let assetId = asset.assetId
         let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: memoValue, label: labelValue, pin: "")

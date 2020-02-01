@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IBN-Cg-mAs">
-                    <rect key="frame" x="0.0" y="181" width="414" height="728"/>
+                    <rect key="frame" x="0.0" y="385" width="414" height="524"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M2l-q6-JUi">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -43,7 +43,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KEs-gY-Z4X">
-                            <rect key="frame" x="30" y="70" width="354" height="448"/>
+                            <rect key="frame" x="30" y="70" width="354" height="288"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EOS Deposit" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="604-vb-h8v">
                                     <rect key="frame" x="124.5" y="0.0" width="105.5" height="21.5"/>
@@ -54,15 +54,50 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M4o-fk-qFA">
+                                    <rect key="frame" x="57" y="21.5" width="240" height="32"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="32" id="90T-JX-LJl"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iih-sR-Gjt" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="142" y="53.5" width="70" height="70"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="iih-sR-Gjt" secondAttribute="height" multiplier="1:1" id="J3d-bX-aZx"/>
+                                        <constraint firstAttribute="width" constant="70" id="NEl-xt-ws1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                                    <real key="value" value="60"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                                    <real key="value" value="50"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                                    <real key="value" value="50"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                            <real key="value" value="20"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                            <real key="value" value="2"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rzg-hg-bJ9">
-                                    <rect key="frame" x="57" y="21.5" width="240" height="16"/>
+                                    <rect key="frame" x="57" y="123.5" width="240" height="16"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="16" id="X0S-ui-Z5d"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3on-3S-NqV">
-                                    <rect key="frame" x="0.0" y="37.5" width="354" height="67"/>
+                                    <rect key="frame" x="0.0" y="139.5" width="354" height="67"/>
                                     <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.
 Deposit will arrive after at least 126 block 
 confirmations. </string>
@@ -74,14 +109,14 @@ confirmations. </string>
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDj-w9-6hC">
-                                    <rect key="frame" x="57" y="104.5" width="240" height="14"/>
+                                    <rect key="frame" x="57" y="206.5" width="240" height="8"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="14" id="T4f-lc-f5T"/>
+                                        <constraint firstAttribute="height" constant="8" id="T4f-lc-f5T"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5p-dy-ReY">
-                                    <rect key="frame" x="0.5" y="118.5" width="353" height="33.5"/>
+                                    <rect key="frame" x="0.5" y="214.5" width="353" height="33.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" name="red"/>
                                     <nil key="highlightedColor"/>
@@ -90,19 +125,19 @@ confirmations. </string>
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQR-t5-RCr">
-                                    <rect key="frame" x="57" y="152" width="240" height="40"/>
+                                    <rect key="frame" x="57" y="248" width="240" height="40"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="Ngu-ng-7FW"/>
                                     </constraints>
                                 </view>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_deposit_tips" translatesAutoresizingMaskIntoConstraints="NO" id="3ia-Eh-flt">
-                                    <rect key="frame" x="0.0" y="192" width="354" height="256"/>
-                                </imageView>
                             </subviews>
+                            <constraints>
+                                <constraint firstItem="iih-sR-Gjt" firstAttribute="width" secondItem="iih-sR-Gjt" secondAttribute="height" multiplier="1:1" id="RB1-4e-XDo"/>
+                            </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="plh-FU-Uiw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="149" y="594" width="116" height="42"/>
+                            <rect key="frame" x="149" y="390" width="116" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="inB-MU-RBI"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="m8r-95-hgP"/>
@@ -121,7 +156,7 @@ confirmations. </string>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="plh-FU-Uiw" firstAttribute="top" secondItem="KEs-gY-Z4X" secondAttribute="bottom" constant="76" id="Nah-XZ-4Xc" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="plh-FU-Uiw" firstAttribute="top" secondItem="KEs-gY-Z4X" secondAttribute="bottom" constant="32" id="Nah-XZ-4Xc" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
                                     <real key="value" value="32"/>
@@ -158,6 +193,8 @@ confirmations. </string>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Lz3-15-BbT"/>
             <connections>
+                <outlet property="assetView" destination="iih-sR-Gjt" id="BgQ-LT-iYP"/>
+                <outlet property="continueButton" destination="plh-FU-Uiw" id="wQU-LL-4ty"/>
                 <outlet property="popupView" destination="IBN-Cg-mAs" id="a8b-9m-mjF"/>
                 <outlet property="tipsLabel" destination="3on-3S-NqV" id="XQD-jT-ERW"/>
                 <outlet property="titleLabel" destination="604-vb-h8v" id="5Or-b2-AgK"/>
@@ -167,7 +204,6 @@ confirmations. </string>
         </view>
     </objects>
     <resources>
-        <image name="ic_deposit_tips" width="180" height="128"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

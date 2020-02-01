@@ -48,6 +48,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     
     private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 44
+    private let minEncryptedIconLeftMargin: CGFloat = 8
     private let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     private let statusHighlightTintColor = UIColor.theme
     
@@ -86,7 +87,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
             fullnameColor = UIColor.usernameColors[index]
         }
-        layoutEncryptedIconFrame(timeFrame: timeFrame)
+        layoutEncryptedIconFrame()
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
@@ -94,9 +95,14 @@ class DetailInfoMessageViewModel: MessageViewModel {
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
     }
     
-    func layoutEncryptedIconFrame(timeFrame: CGRect) {
-        encryptedIconFrame.origin = CGPoint(x: timeFrame.origin.x - Self.encryptedIconRightMargin - encryptedIconFrame.size.width,
-                                            y: timeFrame.origin.y + (timeFrame.height - encryptedIconFrame.height) / 2)
+    func layoutEncryptedIconFrame() {
+        var x = timeFrame.origin.x - Self.encryptedIconRightMargin - encryptedIconFrame.size.width
+        let diff = x - minEncryptedIconLeftMargin
+        if style.contains(.received) && isEncrypted && diff < 0 {
+            x -= diff
+            timeFrame.origin.x -= diff
+        }
+        encryptedIconFrame.origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - encryptedIconFrame.height) / 2)
     }
     
     private func updateStatusImageAndTintColor() {

@@ -45,7 +45,7 @@ class DepositViewController: UIViewController {
 
         hintLabel.text = asset.depositTips
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let weakself = self else {
                 return
             }

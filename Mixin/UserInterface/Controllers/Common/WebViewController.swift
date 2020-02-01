@@ -2,8 +2,6 @@ import UIKit
 import WebKit
 import Photos
 import Alamofire
-import FirebaseMLCommon
-import FirebaseMLVision
 import MixinServices
 
 class WebViewController: UIViewController {
@@ -110,9 +108,34 @@ class WebViewController: UIViewController {
                 titleImageView.sd_setImage(with: iconUrl, completed: nil)
             }
         }
+        loadAppearance()
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         let request = URLRequest(url: context.initialUrl)
         webView.load(request)
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            guard traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
+                return
+            }
+
+            loadAppearance()
+        }
+    }
+
+    private func loadAppearance() {
+        guard #available(iOS 12.0, *) else {
+            return
+        }
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            context.appearance = "dark"
+        default:
+            context.appearance = "light"
+        }
+
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -322,8 +345,13 @@ class WebViewController: UIViewController {
                 }
             }
         }))
-        qrCodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
-            if error == nil, let string = features?.first?.rawValue {
+        
+        if let detector = qrCodeDetector, let cgImage = image.cgImage {
+            let ciImage = CIImage(cgImage: cgImage)
+            for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+                guard let string = feature.messageString else {
+                    continue
+                }
                 controller.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                         
@@ -331,10 +359,12 @@ class WebViewController: UIViewController {
                         RecognizeWindow.instance().presentWindow(text: string)
                     }
                 }))
+                break
             }
-            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
-        })
+        }
+
+        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(controller, animated: true, completion: nil)
     }
     
 }
@@ -459,12 +489,13 @@ extension WebViewController {
         let style: Style
         let initialUrl: URL
         let isImmersive: Bool
+        var appearance = "light"
         
         private(set) lazy var appContextString: String = {
             let ctx: [String: Any] = [
                 "app_version": Bundle.main.shortVersion,
                 "immersive": isImmersive,
-                "appearance": "light",
+                "appearance": appearance,
                 "conversation_id": conversationId
             ]
             if let data = try? JSONSerialization.data(withJSONObject: ctx, options: []), let string = String(data: data, encoding: .utf8) {

@@ -29,7 +29,7 @@ public class WebSocketService {
     private var status: Status = .disconnected {
         didSet {
             if !isAppExtension {
-                AppGroupUserDefaults.websocketStatusInMainApp = status.rawValue
+                AppGroupUserDefaults.websocketStatusInMainApp = status
             }
         }
     }

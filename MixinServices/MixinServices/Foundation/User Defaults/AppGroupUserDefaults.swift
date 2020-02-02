@@ -109,14 +109,14 @@ extension AppGroupUserDefaults {
     
     @Default(namespace: nil, key: "documents_migrated", defaultValue: false)
     public static var isDocumentsMigrated: Bool
-
-    @Default(namespace: nil, key: "websocket_status_in_main_app", defaultValue: WebSocketService.Status.disconnected.rawValue)
-    public static var websocketStatusInMainApp: String
-
-    @Default(namespace: nil, key: "is_processing_messages_in_main_extension", defaultValue: false)
+    
+    @RawRepresentableDefault(namespace: nil, key: "websocket_status_in_main_app", defaultValue: .disconnected)
+    public static var websocketStatusInMainApp: WebSocketService.Status
+    
+    @Default(namespace: nil, key: "processing_messages_in_app", defaultValue: false)
     public static var isProcessingMessagesInMainApp: Bool
-
-    @Default(namespace: nil, key: "is_processing_messages_in_app_extension", defaultValue: false)
+    
+    @Default(namespace: nil, key: "processing_messages_in_extension", defaultValue: false)
     public static var isProcessingMessagesInAppExtension: Bool {
         didSet {
             AppGroupUserDefaults.checkStatusTimeInAppExtension = Date()
@@ -127,13 +127,14 @@ extension AppGroupUserDefaults {
     public static var checkStatusTimeInAppExtension: Date
 
     public static var canProcessMessagesInAppExtension : Bool {
-        websocketStatusInMainApp == WebSocketService.Status.disconnected.rawValue && !isProcessingMessagesInMainApp
+        websocketStatusInMainApp == .disconnected && !isProcessingMessagesInMainApp
     }
-
+    
     public static func resetStatusInMainApp() {
         isProcessingMessagesInMainApp = false
-        websocketStatusInMainApp = WebSocketService.Status.disconnected.rawValue
+        websocketStatusInMainApp = .disconnected
     }
+    
 }
 
 extension AppGroupUserDefaults {

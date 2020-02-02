@@ -1,14 +1,16 @@
 import UIKit
+import WebKit
+import MixinServices
 
 class SignalLoadingViewController: UIViewController {
     
     class func instance() -> SignalLoadingViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "signal") as! SignalLoadingViewController
+        return R.storyboard.home.signal()!
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        FileManager.default.writeLog(log: "SignalLoadingView...")
+        Logger.write(log: "SignalLoadingView...")
         let startTime = Date()
         DispatchQueue.global().async {
             try! SignalDatabase.shared.initDatabase()
@@ -30,21 +32,21 @@ class SignalLoadingViewController: UIViewController {
     }
 
     private func syncSignalKeys() {
-        guard !CryptoUserDefault.shared.isLoaded else {
+        guard !AppGroupUserDefaults.Crypto.isPrekeyLoaded else {
             return
         }
 
         IdentityDAO.shared.saveLocalIdentity()
 
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard LoginManager.shared.isLoggedIn else {
                 return
             }
             switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
-                CryptoUserDefault.shared.isLoaded = true
+                AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
                 DispatchQueue.main.async {
-                    MixinWebView.clearCookies()
+                    WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
                 }
                 return
             case let .failure(error):
@@ -52,30 +54,30 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                UIApplication.traceError(error)
+                reporter.report(error: error)
             }
         } while true
     }
 
     private func syncSession() {
-        guard !CryptoUserDefault.shared.isSyncSession else {
+        guard !AppGroupUserDefaults.Crypto.isSessionSynchronized else {
             return
         }
 
-        AccountUserDefault.shared.extensionSession = nil
+        AppGroupUserDefaults.Account.extensionSession = nil
         JobDAO.shared.clearSessionJob()
         let sessions = SessionDAO.shared.syncGetSessionAddress()
         let userIds = sessions.compactMap { $0.address }
 
         repeat {
-            guard AccountAPI.shared.didLogin else {
+            guard LoginManager.shared.isLoggedIn else {
                 return
             }
 
             switch UserAPI.shared.fetchSessions(userIds: userIds) {
             case let .success(remoteSessions):
                 defer {
-                    CryptoUserDefault.shared.isSyncSession = true
+                    AppGroupUserDefaults.Crypto.isSessionSynchronized = true
                 }
                 var sessionMap = [String: Int32]()
                 var userSessionMap = [String: String]()
@@ -122,7 +124,7 @@ class SignalLoadingViewController: UIViewController {
                     return
                 }
                 Thread.sleep(forTimeInterval: 2)
-                UIApplication.traceError(error)
+                reporter.report(error: error)
             }
         } while true
     }

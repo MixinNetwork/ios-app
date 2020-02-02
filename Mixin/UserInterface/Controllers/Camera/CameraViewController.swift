@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import Photos
 import AVKit
+import MixinServices
 
 enum DetechStatus {
     case detecting
@@ -69,7 +70,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             self.configureSession()
         }
 
-        if !CommonUserDefault.shared.isCameraQRCodeTips {
+        if !AppGroupUserDefaults.User.hasShownCameraQrCodeTips {
             qrcodeTipsView.isHidden = false
         }
         prepareRecord()
@@ -106,7 +107,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func hideTipsAction(_ sender: Any) {
-        CommonUserDefault.shared.isCameraQRCodeTips = true
+        AppGroupUserDefaults.User.hasShownCameraQrCodeTips = true
         qrcodeTipsView.isHidden = true
     }
 
@@ -280,7 +281,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
     
     class func instance() -> CameraViewController {
-        return Storyboard.camera.instantiateViewController(withIdentifier: "camera") as! CameraViewController
+        R.storyboard.camera.camera()!
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -608,7 +609,7 @@ extension CameraViewController: PhotoAssetPickerDelegate {
 extension CameraViewController: NotificationControllerDelegate {
     
     func notificationControllerDidSelectNotification(_ controller: NotificationController) {
-        CommonUserDefault.shared.hasPerformedQRCodeScanning = true
+        AppGroupUserDefaults.User.hasPerformedQrCodeScanning = true
         if let url = URL(string: detectText), UrlWindow.checkUrl(url: url) {
             return
         }

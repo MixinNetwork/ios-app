@@ -2,6 +2,7 @@ import UIKit
 import PhoneNumberKit
 import Alamofire
 import WCDBSwift
+import MixinServices
 
 class SearchViewController: UIViewController, HomeSearchViewController {
     

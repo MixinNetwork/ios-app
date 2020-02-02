@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class AddAssetViewController: UIViewController {
     
@@ -29,7 +30,7 @@ class AddAssetViewController: UIViewController {
     }
     
     static func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
+        let vc = R.storyboard.wallet.add_asset()!
         return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_TITLE_ADD_ASSET)
     }
     
@@ -85,7 +86,7 @@ class AddAssetViewController: UIViewController {
             }
             let assetItems = result.map({ (asset) -> (AssetItem, Bool) in
                 let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
-                let item = AssetItem.createAsset(asset: asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
+                let item = AssetItem(asset: asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let alreadyHasTheAsset = AssetDAO.shared.isExist(assetId: asset.assetId)
                 return (item, alreadyHasTheAsset)
             })
@@ -173,7 +174,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             }
         }
         DispatchQueue.global().async { [weak navigationController] in
-            let assets = items.map(Asset.createAsset)
+            let assets = items.map(Asset.init)
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)
@@ -228,11 +229,11 @@ extension AddAssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
             let (asset, forceSelected) = searchResults[indexPath.row]
-            if WalletUserDefault.shared.hiddenAssets[asset.assetId] != nil {
+            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] != nil {
                 let alert = UIAlertController(title: R.string.localizable.wallet_asset_is_hidden_prompt(), message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
                 alert.addAction(UIAlertAction(title: R.string.localizable.action_unhide(), style: .default, handler: { (_) in
-                    WalletUserDefault.shared.hiddenAssets[asset.assetId] = nil
+                    AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = nil
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.wallet_asset_is_unhidden())
                 }))
                 present(alert, animated: true, completion: nil)

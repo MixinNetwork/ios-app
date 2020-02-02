@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class LoginConfirmWindow: BottomSheetView {
 
@@ -12,7 +13,7 @@ class LoginConfirmWindow: BottomSheetView {
             return
         }
         loginButton.isBusy = true
-        ProvisionManager.updateProvision(id: id, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
+        LoginManager.shared.updateProvision(id: id, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
             self?.loginButton.isBusy = false
             if success {
                 self?.loginSuccessAction()

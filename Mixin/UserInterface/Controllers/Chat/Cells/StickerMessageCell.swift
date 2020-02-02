@@ -1,5 +1,6 @@
 import UIKit
 import YYImage
+import MixinServices
 
 class StickerMessageCell: DetailInfoMessageCell {
 

@@ -1,5 +1,5 @@
 import UIKit
-import Firebase
+import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
     
@@ -50,7 +50,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         }
                     }
                 } else {
-                    UIApplication.traceError(error)
+                    reporter.report(error: error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }
@@ -61,7 +61,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     func login() {
         isBusy = true
         guard let keyPair = KeyUtil.generateRSAKeyPair() else {
-            UIApplication.traceError(code: ReportErrorCode.keyError, userInfo: ["error": "generateRSAKeyPair failed"])
+            reporter.report(error: MixinError.generateRsaKeyPair)
             isBusy = false
             return
         }
@@ -71,7 +71,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     }
     
     func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
-        let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
+        let request = AccountRequest(code: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
         AccountAPI.shared.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             DispatchQueue.global().async {
                 self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)
@@ -83,29 +83,32 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         switch result {
         case let .success(account):
             let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)
-            AccountUserDefault.shared.storePinToken(pinToken: pinToken)
-            AccountUserDefault.shared.storeToken(token: privateKeyPem)
-            AccountUserDefault.shared.storeAccount(account: account)
-            AccountAPI.shared.account = account
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: CommonUserDefault.shared.hasForceLogout)
+            AppGroupUserDefaults.Account.pinToken = pinToken
+            AppGroupUserDefaults.Account.sessionSecret = privateKeyPem
+            LoginManager.shared.setAccount(account, updateUserTable: false)
+            AppGroupUserDefaults.migrateUserSpecificDefaults()
+            AppGroupContainer.migrateIfNeeded()
+            MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
             TaskDatabase.shared.initDatabase()
-            DatabaseUserDefault.shared.databaseVersion = DatabaseUserDefault.shared.currentDatabaseVersion
-
+            if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
+                AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
+            }
+            
             if account.full_name.isEmpty {
-                UIApplication.logEvent(eventName: AnalyticsEventSignUp)
+                reporter.report(event: .signUp)
             } else if HomeViewController.showChangePhoneNumberTips {
-                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "emergency"])
+                reporter.report(event: .login, userInfo: ["source": "emergency"])
             } else {
-                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "normal"])
+                reporter.report(event: .login, userInfo: ["source": "normal"])
             }
-
+            
             var backupExist = false
-            if let backupDir = MixinFile.iCloudBackupDirectory {
-                backupExist = backupDir.appendingPathComponent(MixinFile.backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
+            if let backupDir = backupUrl {
+                backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
             }
 
-            if CommonUserDefault.shared.hasForceLogout || !backupExist {
-                CommonUserDefault.shared.hasForceLogout = false
+            if AppGroupUserDefaults.User.isLogoutByServer || !backupExist {
+                AppGroupUserDefaults.User.isLogoutByServer = false
                 UserDAO.shared.updateAccount(account: account)
                 DispatchQueue.main.sync {
                     if account.full_name.isEmpty {
@@ -118,7 +121,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 }
             } else {
                 DispatchQueue.main.sync {
-                    AccountUserDefault.shared.hasRestoreChat = true
+                    AppGroupUserDefaults.Account.canRestoreChat = true
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
             }

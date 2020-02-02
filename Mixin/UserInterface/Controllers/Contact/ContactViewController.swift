@@ -1,5 +1,6 @@
 import UIKit
 import MessageUI
+import MixinServices
 
 class ContactViewController: UITableViewController {
     
@@ -37,7 +38,7 @@ class ContactViewController: UITableViewController {
         updateTableViewContentInsetBottom()
         reloadAccount()
         reloadContacts()
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: .AccountDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadContacts), name: .ContactsDidChange, object: nil)
         ContactAPI.shared.syncContacts()
         
@@ -49,7 +50,7 @@ class ContactViewController: UITableViewController {
     }
     
     @IBAction func showAccountAction(_ sender: Any) {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         let user = UserItem.createUser(from: account)
@@ -68,7 +69,7 @@ class ContactViewController: UITableViewController {
     }
     
     @objc func reloadAccount() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         DispatchQueue.main.async {
@@ -93,7 +94,7 @@ class ContactViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.contact.instantiateInitialViewController()!
+        let vc = R.storyboard.contact.instantiateInitialViewController()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.CONTACT_TITLE)
         return container
     }
@@ -340,7 +341,7 @@ extension ContactViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                CommonUserDefault.shared.isUploadContacts = true
+                AppGroupUserDefaults.User.autoUploadsContacts = true
                 PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
                     switch result {
                     case .success:

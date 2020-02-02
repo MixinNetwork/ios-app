@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
@@ -13,7 +14,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     var shouldAutoDownload: Bool {
-        switch CommonUserDefault.shared.autoDownloadFiles {
+        switch AppGroupUserDefaults.User.autoDownloadFiles {
         case .never:
             return false
         case .wifi:

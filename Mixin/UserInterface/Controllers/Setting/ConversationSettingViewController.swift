@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class ConversationSettingViewController: UITableViewController {
     
@@ -27,7 +28,7 @@ class ConversationSettingViewController: UITableViewController {
             $0.status = .selected
             $0.alpha = 0
         }
-        if let account = AccountAPI.shared.account {
+        if let account = LoginManager.shared.account {
             switch account.receive_message_source {
             case ReceiveMessageSource.everybody.rawValue:
                 messageSourceEverybodyCheckmarkView.alpha = 1
@@ -48,7 +49,7 @@ class ConversationSettingViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.setting.instantiateViewController(withIdentifier: "conversation"), title: Localized.SETTING_CONVERSATION)
+        return ContainerViewController.instance(viewController: R.storyboard.setting.conversation()!, title: Localized.SETTING_CONVERSATION)
     }
 
 }
@@ -70,7 +71,7 @@ extension ConversationSettingViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let newSource: ReceiveMessageSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != AccountAPI.shared.account?.receive_message_source {
+            if newSource.rawValue != LoginManager.shared.account?.receive_message_source {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setMessageSourceEverybody()
@@ -80,7 +81,7 @@ extension ConversationSettingViewController {
             }
         } else if indexPath.section == 1 {
             let newSource: AcceptConversationSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != AccountAPI.shared.account?.accept_conversation_source {
+            if newSource.rawValue != LoginManager.shared.account?.accept_conversation_source {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setConversationSourceEverybody()
@@ -113,14 +114,14 @@ extension ConversationSettingViewController {
         messageSourceContactsCheckmarkView.alpha = 0
         messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceEverybodyIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue), completion: { [weak self] (result) in
             self?.messageSourceEverybodyIndicator.stopAnimating()
             self?.tableView.isUserInteractionEnabled = true
             self?.messageSourceEverybodyCheckmarkView.alpha = 1
             switch result {
             case .success(let account):
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceContactsCheckmarkView.alpha = 1
@@ -132,14 +133,14 @@ extension ConversationSettingViewController {
         messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceContactsCheckmarkView.alpha = 0
         messageSourceContactsIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue), completion: { [weak self] (result) in
             self?.messageSourceContactsIndicator.stopAnimating()
             self?.messageSourceContactsCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
                 self?.messageSourceContactsCheckmarkView.alpha = 1
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceEverybodyCheckmarkView.alpha = 1
@@ -151,14 +152,14 @@ extension ConversationSettingViewController {
         conversationSourceContactsCheckmarkView.alpha = 0
         conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceEverybodyIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue), completion: { [weak self] (result) in
             self?.conversationSourceEverybodyIndicator.stopAnimating()
             self?.conversationSourceEverybodyCheckmarkView.alpha = 1
             self?.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
@@ -170,14 +171,14 @@ extension ConversationSettingViewController {
         conversationSourceContactsIndicator.startAnimating()
         conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceContactsCheckmarkView.alpha = 0
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue), completion: { [weak self] (result) in
             self?.conversationSourceContactsIndicator.stopAnimating()
             self?.tableView.isUserInteractionEnabled = true
             self?.conversationSourceContactsCheckmarkView.alpha = 1
             switch result {
             case .success(let account):
                 self?.conversationSourceContactsCheckmarkView.alpha = 1
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceEverybodyCheckmarkView.alpha = 1

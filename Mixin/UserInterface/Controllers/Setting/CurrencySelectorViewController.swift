@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class CurrencySelectorViewController: PopupSearchableTableViewController {
     
@@ -64,10 +65,10 @@ extension CurrencySelectorViewController: UITableViewDelegate {
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
         hud.show(style: .busy, text: "", on: self.view)
 
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.dismiss(animated: true, completion: nil)

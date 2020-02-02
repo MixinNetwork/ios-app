@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class WalletPasswordViewController: ContinueButtonViewController {
 
@@ -82,14 +83,14 @@ class WalletPasswordViewController: ContinueButtonViewController {
     }
     
     class func instance(walletPasswordType: WalletPasswordType, dismissTarget: DismissTarget?) -> WalletPasswordViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
+        let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = walletPasswordType
         vc.dismissTarget = dismissTarget
         return vc
     }
     
     class func instance(dismissTarget: DismissTarget) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
+        let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = .initPinStep1
         vc.dismissTarget = dismissTarget
         return vc
@@ -219,8 +220,8 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.isBusy = false
                     switch result {
                     case .success(let account):
-                        WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
-                        AccountAPI.shared.updateAccount(account: account)
+                        AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                        LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
                         if error.code == 429 {
@@ -244,7 +245,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 weakSelf.isBusy = false
                 switch result {
                 case .success:
-                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), dismissTarget: weakSelf.dismissTarget)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
@@ -284,12 +285,12 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.isBusy = false
                     switch result {
                     case .success(let account):
-                        if WalletUserDefault.shared.isBiometricPay {
+                        if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                             Keychain.shared.storePIN(pin: pin)
                         }
-                        WalletUserDefault.shared.checkPinInterval = WalletUserDefault.shared.checkMinInterval
-                        WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
-                        AccountAPI.shared.updateAccount(account: account)
+                        AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                        AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                        LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
                         if error.code == 429 {

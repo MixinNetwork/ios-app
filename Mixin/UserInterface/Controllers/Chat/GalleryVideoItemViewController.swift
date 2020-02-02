@@ -1,6 +1,7 @@
 import UIKit
 import AVFoundation
 import Photos
+import MixinServices
 
 final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAnimatable {
     
@@ -56,7 +57,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard item?.category == .video else {
             return false
         }
-        switch CommonUserDefault.shared.autoDownloadVideos {
+        switch AppGroupUserDefaults.User.autoDownloadVideos {
         case .wifiAndCellular:
             return true
         case .wifi:
@@ -486,7 +487,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         func showReloadAndReport(error: Error?) {
             if let error = error {
-                UIApplication.traceError(error)
+                reporter.report(error: error)
             }
             controlView.style.remove(.loading)
             controlView.playControlStyle = .reload

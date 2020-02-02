@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class EditSharedAppsViewController: UIViewController {
     
@@ -21,7 +22,7 @@ class EditSharedAppsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         DispatchQueue.global().async {
-            let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: AccountAPI.shared.accountUserId)
+            let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
             let candidates = UserDAO.shared.appFriends(notIn: favorites.compactMap({ $0.userId }))
             DispatchQueue.main.async {
                 if favorites.isEmpty && candidates.isEmpty {

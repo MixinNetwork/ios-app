@@ -53,9 +53,8 @@
 "connection_hint_progress" = "Syncing %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "MMM dd, yyyy";
 "date_format_month" = "E, d MMM";
-"date_format_transation" = "MMM dd, HH:mm";
+"date_format_date" = "MMM dd, yyyy";
 
 // Search
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
@@ -76,7 +75,6 @@
 "toast_server_error" = "Server is under maintenance";
 "toast_api_error_forbidden" = "Access denied";
 "toast_api_error_no_connection" = "No network connection";
-"toast_api_error_connection_timeout" = "Network connection timeout";
 "toast_api_error_network_connection_lost" = "The network connection was lost, please check your network and try again later";
 "toast_api_error_server_5xx" = "Mixin server encounters errors";
 "toast_api_error_server_data_error" = "Data parsing error";
@@ -85,7 +83,6 @@
 "toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
-"toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Copied";
 "toast_added" = "Added";
 "toast_saved" = "Saved";
@@ -195,13 +192,7 @@
 "home_title" = "Chats";
 
 // Chat
-"chat_message_menu_reply" = "Reply";
-"chat_message_menu_forward" = "Forward";
-"chat_message_menu_copy" = "Copy";
-"chat_message_open_url" = "Open URL";
-"chat_message_sticker" = "Add to Stickers";
 "chat_time_today" = "Today";
-"chat_cell_title_unread_messages" = "Unread messages";
 "chat_message_you" = "You";
 "chat_message_created" = "%@ created this group";
 "chat_message_removed" = "%@ removed %@";
@@ -209,6 +200,12 @@
 "chat_message_joined" = "%@ joined the group via invite link";
 "chat_message_left" = "%@ left";
 "chat_message_admin" = "%@ now an admin";
+"chat_message_menu_reply" = "Reply";
+"chat_message_menu_forward" = "Forward";
+"chat_message_menu_copy" = "Copy";
+"chat_message_open_url" = "Open URL";
+"chat_message_sticker" = "Add to Stickers";
+"chat_cell_title_unread_messages" = "Unread messages";
 "chat_message_changed_title" = "%@ changed the subject to %@";
 "chat_message_call_cancelled" = "Cancelled";
 "chat_message_call_remote_cancelled" = "Cancelled by caller";
@@ -412,11 +409,8 @@
 "wallet_pin_touch_id_prompt" = "Confirm PIN to enable Touch Pay";
 "wallet_pin_face_id_prompt" = "Confirm PIN to enable Face Pay";
 "wallet_setting" = "Wallet";
-"wallet_touch_id" = "Touch ID";
-"wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = "Pay with %@";
 "wallet_enable_biometric_pay_prompt" = "Once enabled, %@ can be used to make quick transfers";
-"wallet_store_encrypted_pin" = "Enable %@ Pay";
 "wallet_biometric_pay_prompt" = "Authorize payment via %@";
 "wallet_disable_biometric_pay" = "Disable %@ Pay?";
 "wallet_pin_pay_interval_minutes" = "%@ Minutes";
@@ -442,6 +436,9 @@
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
 "wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
 "wallet_asset_is_unhidden" = "Unhidden";
+"wallet_store_encrypted_pin" = "Enable %@ Pay";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -685,7 +682,6 @@
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "setting_contacts_upload" = "Upload Mobile Contacts";
-
 
 // Notifications
 "notification_reply" = "Reply";

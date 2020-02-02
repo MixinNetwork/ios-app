@@ -67,7 +67,7 @@ class SelectCountryViewController: UIViewController {
     }
     
     static func instance(selectedCountry: Country) -> SelectCountryViewController {
-        let vc = Storyboard.login.instantiateViewController(withIdentifier: "SelectCountry") as! SelectCountryViewController
+        let vc = R.storyboard.login.selectCountry()!
         vc.selectedCountry = selectedCountry
         return vc
     }

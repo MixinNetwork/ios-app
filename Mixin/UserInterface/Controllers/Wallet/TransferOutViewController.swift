@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class TransferOutViewController: KeyboardBasedLayoutViewController {
     
@@ -160,10 +161,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard !newAddressTips else {
             return false
         }
-        guard !WalletUserDefault.shared.firstWithdrawalTip.contains(addressId) else {
+        let didWithdrawn = AppGroupUserDefaults.Wallet.withdrawnAddressIds[addressId] ?? false
+        guard !didWithdrawn else {
             return false
         }
-
         let amountText = amountTextField.text ?? ""
         if isInputAssetAmount {
             return amountText.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10
@@ -258,7 +259,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
                     self?.asset = defaultAsset
                 } else {
-                    self?.asset = AssetItem.createDefaultAsset()
+                    self?.asset = .xin
                 }
                 DispatchQueue.main.async {
                     self?.updateAssetUI()
@@ -379,7 +380,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "send") as! TransferOutViewController
+        let vc = R.storyboard.wallet.send()!
         vc.opponent = type
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: "")

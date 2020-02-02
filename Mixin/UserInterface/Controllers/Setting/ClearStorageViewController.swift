@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class ClearStorageViewController: UITableViewController {
 
@@ -53,7 +54,7 @@ class ClearStorageViewController: UITableViewController {
     }
 
     class func instance(conversation: ConversationStorageUsage) -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "clear_storage") as! ClearStorageViewController
+        let vc = R.storyboard.setting.clear_storage()!
         vc.conversation = conversation
         let container = ContainerViewController.instance(viewController: vc, title: conversation.getConversationName())
         return container
@@ -108,16 +109,16 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         container?.rightButton.isBusy = true
         DispatchQueue.global().async { [weak self] in
             if clearPhotos {
-                self?.clean(chatDirectory: .photos)
+                self?.cleanUp(category: .photos)
             }
             if clearVideos {
-                self?.clean(chatDirectory: .videos)
+                self?.cleanUp(category: .videos)
             }
             if clearAudios {
-                self?.clean(chatDirectory: .audios)
+                self?.cleanUp(category: .audios)
             }
             if clearFiles {
-                self?.clean(chatDirectory: .files)
+                self?.cleanUp(category: .files)
             }
 
             DispatchQueue.main.async {
@@ -129,12 +130,12 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
             }
         }
     }
-
-    private func clean(chatDirectory: MixinFile.ChatDirectory) {
-        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, category: chatDirectory.messageCategorySuffix)
-        MixinFile.clean(chatDirectory: chatDirectory)
+    
+    private func cleanUp(category: AttachmentContainer.Category) {
+        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, category: category.messageCategorySuffix)
+        AttachmentContainer.cleanUp(category: category)
     }
-
+    
     func textBarRightButton() -> String? {
         return Localized.ACTION_CLEAR
     }

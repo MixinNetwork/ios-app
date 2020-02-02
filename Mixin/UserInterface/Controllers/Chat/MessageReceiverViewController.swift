@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import MixinServices
 
 class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell, MessageReceiverSearchResult> {
     
@@ -215,20 +216,21 @@ extension MessageReceiverViewController {
     
     // Copy media file in case of deletion or recalling
     static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
-        guard let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
+        guard let category = AttachmentContainer.Category(messageCategory: message.category), let mediaUrl = message.mediaUrl else {
             return message.mediaUrl
         }
         
-        let fromUrl = MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl)
+        let fromUrl = AttachmentContainer.url(for: category, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: fromUrl.path) else {
             return message.mediaUrl
         }
-        
-        let toUrl = MixinFile.url(ofChatDirectory: chatDirectory, messageId: newMessageId, fileExtension: fromUrl.pathExtension)
+        let filename = newMessageId + "." + fromUrl.pathExtension
+        let toUrl = AttachmentContainer.url(for: category, filename: filename)
         try? FileManager.default.copyItem(at: fromUrl, to: toUrl)
+        
         if message.category.hasSuffix("_VIDEO") {
-            let fromThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
-            let targetThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
+            let fromThumbnailUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            let targetThumbnailUrl = AttachmentContainer.url(for: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
             try? FileManager.default.copyItem(at: fromThumbnailUrl, to: targetThumbnailUrl)
         }
         
@@ -238,7 +240,7 @@ extension MessageReceiverViewController {
     static func makeMessage(message: MessageItem, to conversationId: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
-                                               userId: AccountAPI.shared.accountUserId)
+                                               userId: myUserId)
         if message.category.hasSuffix("_TEXT") {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
@@ -300,7 +302,7 @@ extension MessageReceiverViewController {
     static func makeMessage(userId: String, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         message.sharedUserId = userId
         let transferData = TransferContactData(userId: userId)
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
@@ -310,11 +312,11 @@ extension MessageReceiverViewController {
     static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         let filename = message.messageId + ExtensionName.jpeg.withDot
-        let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+        let path = AttachmentContainer.url(for: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
-            showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+            showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
             return nil
         }
         message.thumbImage = image.base64Thumbnail()
@@ -330,7 +332,7 @@ extension MessageReceiverViewController {
     static func makeMessage(text: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         message.content = text
         return message
     }
@@ -342,11 +344,11 @@ extension MessageReceiverViewController {
         }
         var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                             conversationId: conversationId,
-                                            userId: AccountAPI.shared.accountUserId)
+                                            userId: myUserId)
         let filename = videoUrl.lastPathComponent.substring(endChar: ".")
         let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: videoUrl) {
-            let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
+            let thumbnailURL = AttachmentContainer.url(for: .videos, filename: thumbnailFilename)
             thumbnail.saveToFile(path: thumbnailURL)
             message.thumbImage = thumbnail.base64Thumbnail()
         } else {

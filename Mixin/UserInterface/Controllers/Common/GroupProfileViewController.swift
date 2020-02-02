@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class GroupProfileViewController: ProfileViewController {
     
@@ -237,7 +238,7 @@ extension GroupProfileViewController {
         
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
-            let isAdmin = ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: AccountAPI.shared.accountUserId)
+            let isAdmin = ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return

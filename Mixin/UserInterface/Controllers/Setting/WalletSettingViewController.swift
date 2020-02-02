@@ -1,5 +1,6 @@
 import UIKit
 import LocalAuthentication
+import MixinServices
 
 class WalletSettingViewController: UITableViewController {
     
@@ -12,7 +13,7 @@ class WalletSettingViewController: UITableViewController {
     private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
     private let footerReuseId = "footer"
     private var currenyThreshold: String {
-        let threshold = AccountAPI.shared.account?.transfer_confirmation_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     private var currentCurrency: Currency {
@@ -41,7 +42,7 @@ class WalletSettingViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         if biometryType != .none {
-            biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
+            biometricsPaySwitch.isOn = AppGroupUserDefaults.Wallet.payWithBiometricAuthentication
             payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
         }
         updateLabels()
@@ -57,15 +58,16 @@ class WalletSettingViewController: UITableViewController {
     }
     
     @IBAction func biometryPaySwitchAction(_ sender: Any) {
-        if WalletUserDefault.shared.isBiometricPay {
-            let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
+        if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
+            let type = biometryType == .touchID ? R.string.localizable.wallet_touch_id() : R.string.localizable.wallet_face_id()
+            let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: type)
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { [weak self](_) in
-                self?.biometricsPaySwitch.setOn(WalletUserDefault.shared.isBiometricPay, animated: true)
+                self?.biometricsPaySwitch.setOn(AppGroupUserDefaults.Wallet.payWithBiometricAuthentication, animated: true)
             }))
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_DISABLE, style: .default, handler: { [weak self](_) in
                 Keychain.shared.clearPIN()
-                WalletUserDefault.shared.isBiometricPay = false
+                AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
                 self?.tableView.reloadData()
             }))
             present(alc, animated: true, completion: nil)
@@ -73,17 +75,17 @@ class WalletSettingViewController: UITableViewController {
             let tips: String, prompt: String
             if biometryType == .touchID {
                 tips = Localized.WALLET_PIN_TOUCH_ID_PROMPT
-                prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_TOUCH_ID)
+                prompt = R.string.localizable.wallet_store_encrypted_pin(R.string.localizable.wallet_touch_id())
             } else {
                 tips = Localized.WALLET_PIN_FACE_ID_PROMPT
-                prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID)
+                prompt = R.string.localizable.wallet_store_encrypted_pin(R.string.localizable.wallet_face_id())
             }
             let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {
                     self.biometricsPaySwitch.isOn = false
                     return
                 }
-                WalletUserDefault.shared.isBiometricPay = true
+                AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = true
                 self.tableView.reloadData()
             }, onFailed: {
                 self.biometricsPaySwitch.isOn = false
@@ -101,7 +103,7 @@ extension WalletSettingViewController {
             if biometryType == .none {
                 return 0
             } else {
-                return WalletUserDefault.shared.isBiometricPay ? 2 : 1
+                return AppGroupUserDefaults.Wallet.payWithBiometricAuthentication ? 2 : 1
             }
         } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
@@ -181,13 +183,13 @@ extension WalletSettingViewController {
     
     private func setNewPinInterval(interval: Double) {
         let validator = PinValidationViewController(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in
-            WalletUserDefault.shared.pinInterval = interval
+            AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval = interval
         })
         present(validator, animated: true, completion: nil)
     }
     
     private func refreshPinIntervalUI() {
-        let pinInterval = WalletUserDefault.shared.pinInterval
+        let pinInterval = AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval
         let hour: Double = 60 * 60
         if pinInterval < hour {
             pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_MINUTES(pinInterval).lowercased()
@@ -221,10 +223,10 @@ extension WalletSettingViewController {
         }
         hud.show(style: .busy, text: "", on: navigationController.view)
 
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: Currency.current.code, transfer_confirmation_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: Currency.current.code, transfer_confirmation_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.updateLabels()

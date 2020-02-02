@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class SharedMediaDataTableViewController: SharedMediaTableViewController {
     
@@ -28,7 +29,7 @@ class SharedMediaDataTableViewController: SharedMediaTableViewController {
         guard let mediaUrl = viewModel.message.mediaUrl else {
             return
         }
-        let url = MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
+        let url = AttachmentContainer.url(for: .files, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: url.path) else {
             return
         }

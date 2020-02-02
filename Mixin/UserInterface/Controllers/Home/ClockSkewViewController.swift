@@ -1,5 +1,5 @@
 import UIKit
-import Bugsnag
+import MixinServices
 
 class ClockSkewViewController: UIViewController {
 
@@ -8,12 +8,12 @@ class ClockSkewViewController: UIViewController {
     
 
     class func instance() -> ClockSkewViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "clock") as! ClockSkewViewController
+        return R.storyboard.home.clock()!
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        FileManager.default.writeLog(log: "ClockSkewViewController...")
+        Logger.write(log: "ClockSkewViewController...")
     }
 
 
@@ -27,7 +27,7 @@ class ClockSkewViewController: UIViewController {
 
             switch result {
             case .success:
-                AccountUserDefault.shared.hasClockSkew = false
+                AppGroupUserDefaults.Account.isClockSkewed = false
                 AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

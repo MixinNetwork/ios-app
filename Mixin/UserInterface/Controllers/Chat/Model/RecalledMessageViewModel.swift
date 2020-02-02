@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     
@@ -11,7 +12,7 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     }
     
     override var rawContent: String {
-        let isRecalledByRemote = message.userId != AccountAPI.shared.accountUserId
+        let isRecalledByRemote = message.userId != myUserId
         if isRecalledByRemote {
             return R.string.localizable.chat_message_recalled()
         } else {

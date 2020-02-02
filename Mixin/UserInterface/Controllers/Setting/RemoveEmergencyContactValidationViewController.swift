@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class RemoveEmergencyContactValidationViewController: PinValidationViewController {
     
@@ -21,7 +22,7 @@ class RemoveEmergencyContactValidationViewController: PinValidationViewControlle
             weakSelf.loadingIndicator.stopAnimating()
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 weakSelf.dismiss(animated: true, completion: nil)
             case .failure(let error):
                 weakSelf.handle(error: error)

@@ -3,6 +3,7 @@ import Contacts
 import PhoneNumberKit
 
 class PhoneContact: NSObject, Codable {
+    
     @objc let fullName: String
     let phoneNumber: String
     
@@ -10,6 +11,7 @@ class PhoneContact: NSObject, Codable {
         self.fullName = fullName
         self.phoneNumber = phoneNumber
     }
+    
 }
 
 class ContactsManager {

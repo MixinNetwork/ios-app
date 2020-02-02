@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class HiddenAssetViewController: UIViewController {
 
@@ -14,7 +15,7 @@ class HiddenAssetViewController: UIViewController {
             let assetId = weakSelf.assets[indexPath.row].assetId
             weakSelf.assets.remove(at: indexPath.row)
             weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-            WalletUserDefault.shared.hiddenAssets[assetId] = nil
+            AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
         })
         action.backgroundColor = .theme
         return action
@@ -44,7 +45,7 @@ class HiddenAssetViewController: UIViewController {
     
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
+            let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
             let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
                 return hiddenAssets[asset.assetId] != nil
             })
@@ -64,7 +65,7 @@ class HiddenAssetViewController: UIViewController {
     }
 
     class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "hidden_assets")
+        let vc = R.storyboard.wallet.hidden_assets()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS)
         return container
     }

@@ -1,8 +1,8 @@
 import UIKit
 import AVFoundation
 import StoreKit
-import UserNotifications
 import WCDBSwift
+import MixinServices
 
 class HomeViewController: UIViewController {
     
@@ -73,29 +73,22 @@ class HomeViewController: UIViewController {
         tableView.addSubview(dragDownIndicator)
         view.layoutIfNeeded()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
-                switch authorizationStatus {
-                case .authorized, .notDetermined, .provisional:
-                    UNUserNotificationCenter.current().registerForRemoteNotifications()
-                case .denied:
-                    break
-                @unknown default:
-                    break
-                }
-            }
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        qrcodeImageView.isHidden = CommonUserDefault.shared.hasPerformedQRCodeScanning
+        qrcodeImageView.isHidden = AppGroupUserDefaults.User.hasPerformedQrCodeScanning
         if needRefresh {
             fetchConversations()
         }
@@ -104,10 +97,10 @@ class HomeViewController: UIViewController {
     }
 
     private func checkServerStatus() {
-        guard AccountAPI.shared.didLogin else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
-        guard !WebSocketService.shared.connected else {
+        guard !WebSocketService.shared.isConnected else {
             return
         }
         AccountAPI.shared.me { [weak self](result) in
@@ -168,17 +161,24 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func walletAction(_ sender: Any) {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         if account.has_pin {
-            if Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime > WalletUserDefault.shared.checkPinInterval {
+            let shouldValidatePin: Bool
+            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
+                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            } else {
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                shouldValidatePin = true
+            }
+            
+            if shouldValidatePin {
                 let validator = PinValidationViewController(onSuccess: { [weak self](_) in
                     self?.navigationController?.pushViewController(WalletViewController.instance(), animated: false)
                 })
                 present(validator, animated: true, completion: nil)
             } else {
-                WalletUserDefault.shared.initPinInterval()
                 navigationController?.pushViewController(WalletViewController.instance(), animated: true)
             }
         } else {
@@ -221,18 +221,29 @@ class HomeViewController: UIViewController {
         fetchConversations()
     }
     
-    @objc func socketStatusChange(_ sender: Any) {
-        if WebSocketService.shared.connected {
-            connectingView.stopAnimating()
-            titleLabel.text = "Mixin"
-        } else {
-            connectingView.startAnimating()
-            titleLabel.text = R.string.localizable.dialog_progress_connect()
+    @objc func webSocketDidConnect(_ notification: Notification) {
+        connectingView.stopAnimating()
+        titleLabel.text = "Mixin"
+        DispatchQueue.global().async {
+            guard NetworkManager.shared.isReachableOnWiFi else {
+                return
+            }
+            if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
+                BackupJobQueue.shared.addJob(job: BackupJob())
+            }
+            if AppGroupUserDefaults.Account.canRestoreMedia {
+                BackupJobQueue.shared.addJob(job: RestoreJob())
+            }
         }
     }
     
+    @objc func webSocketDidDisconnect(_ notification: Notification) {
+        connectingView.startAnimating()
+        titleLabel.text = R.string.localizable.dialog_progress_connect()
+    }
+    
     @objc func syncStatusChange(_ notification: Notification) {
-        guard WebSocketService.shared.connected, view?.isVisibleInScreen ?? false else {
+        guard WebSocketService.shared.isConnected, view?.isVisibleInScreen ?? false else {
             return
         }
         guard let progress = notification.object as? Int else {
@@ -245,6 +256,14 @@ class HomeViewController: UIViewController {
             titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
             connectingView.startAnimating()
         }
+    }
+    
+    @objc func groupConversationParticipantDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        let job = RefreshGroupIconJob(conversationId: conversationId)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc func hideSearch() {
@@ -360,6 +379,9 @@ extension HomeViewController {
     }
     
     private func fetchConversations() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
         refreshing = true
         needRefresh = false
 
@@ -446,7 +468,7 @@ extension HomeViewController {
         tableView.endUpdates()
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversation.conversationId, autoNotification: false)
-            MixinFile.cleanAllChatDirectories()
+            AttachmentContainer.cleanUpAll()
             NotificationCenter.default.postOnMain(name: .StorageUsageDidChange)
         }
     }
@@ -458,7 +480,7 @@ extension HomeViewController {
         tableView.endUpdates()
         DispatchQueue.global().async {
             ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversation.conversationId)
-            MixinFile.cleanAllChatDirectories()
+            AttachmentContainer.cleanUpAll()
         }
     }
     
@@ -498,10 +520,13 @@ extension HomeViewController {
     }
     
     private func requestAppStoreReviewIfNeeded() {
+        guard let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate else {
+            return
+        }
         let sevenDays: Double = 7 * 24 * 60 * 60
         let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
-            && CommonUserDefault.shared.hasPerformedTransfer
-            && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
+            && AppGroupUserDefaults.User.hasPerformedTransfer
+            && -firstLaunchDate.timeIntervalSinceNow > sevenDays
         if shouldRequestReview {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                 SKStoreReviewController.requestReview()

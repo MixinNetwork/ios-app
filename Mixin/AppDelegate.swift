@@ -1,11 +1,11 @@
 import UIKit
-import Bugsnag
 import UserNotifications
-import Firebase
 import SDWebImage
 import YYImage
-import Crashlytics
 import AVFoundation
+import WebKit
+import MixinServices
+import FirebaseCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,24 +15,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     let window = UIWindow(frame: UIScreen.main.bounds)
-
-    private var autoCanceleNotification: DispatchWorkItem?
-    private var pendingShortcutItem: UIApplicationShortcutItem?
     
+    private var pendingShortcutItem: UIApplicationShortcutItem?
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        #if RELEASE
-        initBugsnag()
-        #endif
         FirebaseApp.configure()
+        MixinService.callMessageCoordinator = CallManager.shared
+        reporterClass = CrashlyticalReporter.self
+        AppGroupUserDefaults.migrateIfNeeded()
+        AppGroupUserDefaults.resetStatusInMainApp()
         updateSharedImageCacheConfig()
-        NetworkManager.shared.startListening()
-        UNUserNotificationCenter.current().registerNotificationCategory()
-        UNUserNotificationCenter.current().delegate = self
+        _ = NetworkManager.shared
+        UNUserNotificationCenter.current().setNotificationCategories([.message])
+        UNUserNotificationCenter.current().delegate = NotificationManager.shared
         checkLogin()
         checkJailbreak()
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
-        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        addObservers()
+        Logger.write(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
     
@@ -47,6 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -55,9 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        UNUserNotificationCenter.current().removeAllNotifications()
-        WebSocketService.shared.checkConnectStatus()
-
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        WebSocketService.shared.reconnectIfNeeded()
+        
         if let conversationId = UIApplication.currentConversationId() {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
         }
@@ -81,6 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        AppGroupUserDefaults.resetStatusInMainApp()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -92,98 +97,77 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return AccountAPI.shared.didLogin && UrlWindow.checkUrl(url: url)
+        return LoginManager.shared.isLoggedIn && UrlWindow.checkUrl(url: url)
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
-        guard AccountAPI.shared.account == nil else {
+        if AppGroupUserDefaults.firstLaunchDate == nil {
+            AppGroupUserDefaults.firstLaunchDate = Date()
+        }
+        guard LoginManager.shared.account == nil else {
             return
         }
-        guard let account = AccountUserDefault.shared.getAccount() else {
-            return
-        }
-
-        AccountAPI.shared.account = account
+        LoginManager.shared.reloadAccountFromUserDefaults()
         configAnalytics()
-        if AccountAPI.shared.didLogin && !(window.rootViewController is HomeContainerViewController) {
+        if LoginManager.shared.isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
             checkLogin()
         }
     }
     
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        if !handerQuickAction(response) {
-            dealWithRemoteNotification(response.notification.request.content.userInfo)
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            completionHandler(.noData)
+            return
         }
-        completionHandler()
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        if userInfo["fromWebSocket"] as? Bool ?? false {
-            completionHandler([.alert, .sound])
-            autoCanceleNotification?.cancel()
-            let workItem = DispatchWorkItem(block: {
-                guard let workItem = UIApplication.appDelegate().autoCanceleNotification, !workItem.isCancelled else {
-                    return
-                }
-                guard AccountAPI.shared.didLogin else {
-                    return
-                }
-                UNUserNotificationCenter.current().removeNotifications(identifier: NotificationRequestIdentifier.showInApp)
-            })
-            self.autoCanceleNotification = workItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: workItem)
-        } else {
-            completionHandler([])
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification", newSection: true)
+        WebSocketService.shared.connectIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+            completionHandler(.newData)
         }
     }
     
 }
 
 extension AppDelegate {
-    
-    func handerQuickAction(_ response: UNNotificationResponse) -> Bool {
-        let categoryIdentifier = response.notification.request.content.categoryIdentifier
-        let actionIdentifier = response.actionIdentifier
-        let inputText = (response as? UNTextInputNotificationResponse)?.userText
-        let userInfo = response.notification.request.content.userInfo
-        return handerQuickAction(categoryIdentifier: categoryIdentifier, actionIdentifier: actionIdentifier, inputText: inputText, userInfo: userInfo)
+
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
+        NotificationCenter.default.addObserver(SendMessageService.shared, selector: #selector(SendMessageService.uploadAnyPendingMessages), name: WebSocketService.pendingMessageUploadingDidBecomeAvailableNotification, object: nil)
     }
     
-    @discardableResult
-    func handerQuickAction(categoryIdentifier: String, actionIdentifier: String, inputText: String?, userInfo: [AnyHashable : Any]) -> Bool {
-        guard categoryIdentifier == NotificationCategoryIdentifier.message, AccountAPI.shared.didLogin else {
-            return false
-        }
-
-        guard let conversationId = userInfo["conversation_id"] as? String, let conversationCategory = userInfo["conversation_category"] as? String else {
-            return false
-        }
-
-        switch actionIdentifier {
-        case NotificationActionIdentifier.reply:
-            guard let text = inputText?.trim(), !text.isEmpty else {
-                return false
+    @objc func updateApplicationIconBadgeNumber() {
+        DispatchQueue.global().async {
+            let number = min(99, ConversationDAO.shared.getUnreadMessageCount())
+            DispatchQueue.main.async {
+                UIApplication.shared.applicationIconBadgeNumber = number
             }
-            var ownerUser: UserItem?
-            if let userId = userInfo["user_id"] as? String, let userFullName = userInfo["userFullName"] as? String, let userAvatarUrl = userInfo["userAvatarUrl"] as? String, let userIdentityNumber = userInfo["userIdentityNumber"] as? String {
-                ownerUser = UserItem.createUser(userId: userId, fullName: userFullName, identityNumber: userIdentityNumber, avatarUrl: userAvatarUrl, appId: userInfo["userAppId"] as? String)
-            }
-            var newMsg = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue, conversationId: conversationId, createdAt: Date().toUTCString(), userId: AccountAPI.shared.accountUserId)
-            newMsg.content = text
-            newMsg.quoteMessageId = userInfo["message_id"] as? String
-            DispatchQueue.global().async {
-                SendMessageService.shared.sendMessage(message: newMsg, ownerUser: ownerUser, isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
-                SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
-            }
-        default:
-            return false
         }
-        return true
+    }
+    
+    @objc func cleanForLogout() {
+        WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
+        BackupJobQueue.shared.cancelAllOperations()
+        
+        UIApplication.shared.setShortcutItemsEnabled(false)
+        UIApplication.shared.applicationIconBadgeNumber = 1
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        
+        UNUserNotificationCenter.current().removeAllNotifications()
+        UIApplication.shared.unregisterForRemoteNotifications()
+        
+        let oldRootViewController = window.rootViewController
+        window.rootViewController = LoginNavigationController.instance()
+        oldRootViewController?.navigationController?.removeFromParent()
+    }
+    
+    @objc func handleClockSkew() {
+        if let viewController = window.rootViewController as? ClockSkewViewController {
+            viewController.checkFailed()
+        } else {
+            window.rootViewController = makeInitialViewController()
+        }
     }
     
 }
@@ -192,9 +176,9 @@ extension AppDelegate {
     
     private func checkLogin() {
         window.backgroundColor = .black
-        if AccountAPI.shared.didLogin {
+        if LoginManager.shared.isLoggedIn {
             window.rootViewController = makeInitialViewController()
-            if ContactsManager.shared.authorization == .authorized && CommonUserDefault.shared.isUploadContacts {
+            if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
                 })
@@ -206,7 +190,7 @@ extension AppDelegate {
                 window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
             }
         }
-        UIApplication.shared.setShortcutItemsEnabled(AccountAPI.shared.didLogin)
+        UIApplication.shared.setShortcutItemsEnabled(LoginManager.shared.isLoggedIn)
         window.makeKeyAndVisible()
     }
     
@@ -214,17 +198,15 @@ extension AppDelegate {
         guard UIApplication.shared.isProtectedDataAvailable else {
             return
         }
-
-        if let account = AccountAPI.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+        if AppGroupUserDefaults.firstLaunchDate == nil {
+            AppGroupUserDefaults.firstLaunchDate = Date()
         }
-
-        CommonUserDefault.shared.checkUpdateOrInstallVersion()
-        CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
+        AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
+        reporter.registerUserInformation()
+        MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
+            let log = String(cString: message)
+            Logger.write(log: log)
+        }
     }
     
     private func checkJailbreak() {
@@ -234,36 +216,10 @@ extension AppDelegate {
         Keychain.shared.clearPIN()
     }
     
-    private func initBugsnag() {
-        guard let apiKey = MixinKeys.bugsnag else {
-            return
-        }
-        Bugsnag.start(withApiKey: apiKey)
-    }
-    
     private func updateSharedImageCacheConfig() {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
-    }
-    
-    private func dealWithRemoteNotification(_ userInfo: [AnyHashable: Any]?, fromLaunch: Bool = false) {
-        guard let userInfo = userInfo, let conversationId = userInfo["conversation_id"] as? String else {
-            return
-        }
-        
-        DispatchQueue.global().async {
-            guard AccountAPI.shared.didLogin else {
-                return
-            }
-            guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
-                return
-            }
-            DispatchQueue.main.async {
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
-            }
-        }
-        UNUserNotificationCenter.current().removeAllNotifications()
     }
     
     private func pushCameraViewController() {
@@ -311,7 +267,7 @@ extension AppDelegate {
         if let window = UIApplication.currentActivity()?.view.subviews.compactMap({ $0 as? QrcodeWindow }).first, window.isShowingMyQrCode {
             return
         }
-        guard let account = AccountAPI.shared.account else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         let qrcodeWindow = QrcodeWindow.instance()

@@ -71,3 +71,4 @@ fastlane/test_output
 GoogleService-Info.plist
 Mixin-Keys.plist
 R.generated.swift
+ApiKeys.plist

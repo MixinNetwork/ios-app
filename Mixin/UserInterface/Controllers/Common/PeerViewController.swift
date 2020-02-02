@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: SearchResult>: UIViewController, UITableViewDataSource, UITableViewDelegate {
     

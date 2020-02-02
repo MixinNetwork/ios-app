@@ -1,8 +1,7 @@
 import UIKit
-import UserNotifications
 import Bugsnag
-import Crashlytics
 import DeviceCheck
+import MixinServices
 
 class HomeNavigationController: UINavigationController {
     
@@ -37,9 +36,11 @@ class HomeNavigationController: UINavigationController {
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
         self.delegate = self
-        if CryptoUserDefault.shared.isLoaded && CryptoUserDefault.shared.isSyncSession && !AccountUserDefault.shared.hasClockSkew {
+        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed {
             WebSocketService.shared.connect()
-            checkUser()
+            if LoginManager.shared.isLoggedIn {
+                reporter.registerUserInformation()
+            }
             checkDevice()
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
         }
@@ -101,21 +102,8 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
 
 extension HomeNavigationController {
     
-    private func checkUser() {
-        guard AccountAPI.shared.didLogin else {
-            return
-        }
-        if let account = AccountAPI.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
-        }
-    }
-
     private func checkDevice() {
-        guard AccountAPI.shared.didLogin else {
+        guard LoginManager.shared.isLoggedIn else {
             return
         }
         DCDevice.current.generateToken { (data, error) in

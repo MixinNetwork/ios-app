@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class CreateEmergencyContactVerificationCodeViewController: VerificationCodeViewController {
 
@@ -61,7 +62,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         EmergencyAPI.shared.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 self?.showSuccessAlert()
             case .failure(let error):
                 if error.code == 429 {

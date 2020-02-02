@@ -1,5 +1,6 @@
 import UIKit
 import AlignedCollectionViewFlowLayout
+import MixinServices
 
 protocol AssetFilterViewControllerDelegate: class {
     func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)

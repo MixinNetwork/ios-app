@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import WCDBSwift
+import MixinServices
 
 class RestoreViewController: UIViewController {
 
@@ -10,8 +11,7 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var progressLabel: UILabel!
 
     class func instance() -> UIViewController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "restore")
-    }
+        return R.storyboard.home.restore()!    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,10 +41,10 @@ class RestoreViewController: UIViewController {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
             }
-            guard let backupDir = MixinFile.iCloudBackupDirectory else {
+            guard let backupDir = backupUrl else {
                 return
             }
-            var cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabaseName)
+            var cloudURL = backupDir.appendingPathComponent(backupDatabaseName)
             if !cloudURL.isStoredCloud {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
@@ -52,11 +52,11 @@ class RestoreViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
-                UIApplication.traceError(code: ReportErrorCode.restoreError, userInfo: ["error": "Backup file does not exist"])
+                reporter.report(error: MixinError.missingBackup)
                 return
             }
 
-            let localURL = MixinFile.databaseURL
+            let localURL = AppGroupContainer.mixinDatabaseUrl
             self.removeDatabase(databaseURL: localURL)
             do {
                 if !cloudURL.isDownloaded {
@@ -66,11 +66,11 @@ class RestoreViewController: UIViewController {
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 
-                AccountUserDefault.shared.hasRestoreChat = false
-                AccountUserDefault.shared.hasRestoreMedia = true
-                DatabaseUserDefault.shared.clearSentSenderKey = true
-                DatabaseUserDefault.shared.forceUpgradeDatabase = true
-
+                AppGroupUserDefaults.Account.canRestoreChat = false
+                AppGroupUserDefaults.Account.canRestoreMedia = true
+                AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+                AppGroupUserDefaults.User.needsRebuildDatabase = true
+                
                 DispatchQueue.main.async {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()
                 }
@@ -81,8 +81,8 @@ class RestoreViewController: UIViewController {
     }
 
     @IBAction func skipAction(_ sender: Any) {
-        AccountUserDefault.shared.hasRestoreChat = false
-        AccountUserDefault.shared.hasRestoreMedia = false
+        AppGroupUserDefaults.Account.canRestoreChat = false
+        AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.window.rootViewController =
             makeInitialViewController()
     }
@@ -110,7 +110,7 @@ class RestoreViewController: UIViewController {
             self.skipButton.isHidden = false
             self.progressLabel.isHidden = true
         }
-        UIApplication.traceError(error)
+        reporter.report(error: error)
     }
 
     private func downloadFromCloud(cloudURL: URL, progress: @escaping (Float) -> Void) throws {

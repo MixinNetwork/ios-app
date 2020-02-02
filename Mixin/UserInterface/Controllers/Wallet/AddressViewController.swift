@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class AddressViewController: UIViewController {
     
@@ -55,7 +56,7 @@ class AddressViewController: UIViewController {
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "address_list") as! AddressViewController
+        let vc = R.storyboard.wallet.address_list()!
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: Localized.ADDRESS_LIST_TITLE)
         return container

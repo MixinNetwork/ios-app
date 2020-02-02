@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 protocol TransferTypeViewControllerDelegate: class {
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
@@ -28,7 +29,7 @@ class TransferTypeViewController: PopupSearchableTableViewController {
             reordered.insert(selected, at: 0)
             self.assets = reordered
         }
-        let hiddenAssets = WalletUserDefault.shared.hiddenAssets
+        let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
         self.assets = self.assets.filter({ (asset) -> Bool in
             return hiddenAssets[asset.assetId] == nil
         })

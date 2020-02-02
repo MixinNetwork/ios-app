@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 class SharedMediaAudio {
     
@@ -27,7 +28,7 @@ class SharedMediaAudio {
         duration = Int(round(Double(message.mediaDuration ?? 0) / millisecondsPerSecond))
         self.mediaWaveform = Waveform(data: message.mediaWaveform, durationInSeconds: duration)
         self.length = mediaDurationFormatter.string(from: TimeInterval(duration)) ?? ""
-        self.isSentByMe = message.userId == AccountAPI.shared.accountUserId
+        self.isSentByMe = message.userId == myUserId
     }
     
 }

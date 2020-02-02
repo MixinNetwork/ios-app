@@ -1,6 +1,7 @@
 import UIKit
 import Alamofire
 import CoreTelephony
+import MixinServices
 
 final class LoginMobileNumberViewController: MobileNumberViewController {
     
@@ -102,7 +103,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                         }
                         userInfo["phone"] = ctx.mobileNumber
                         userInfo["phoneCountryCode"] = ctx.callingCode
-                        UIApplication.traceError(code: ReportErrorCode.sendCodeByLoginError, userInfo: userInfo)
+                        reporter.report(error: MixinError.requestLoginVerificationCode(userInfo))
                     }
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false

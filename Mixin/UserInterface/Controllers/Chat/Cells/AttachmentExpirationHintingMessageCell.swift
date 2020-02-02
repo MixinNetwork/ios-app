@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 protocol AttachmentExpirationHintingMessageCell: AttachmentLoadingMessageCell {
     var expiredHintLabel: UILabel { get }

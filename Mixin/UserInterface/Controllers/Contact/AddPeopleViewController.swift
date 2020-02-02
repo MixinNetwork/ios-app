@@ -1,5 +1,6 @@
 import UIKit
 import PhoneNumberKit
+import MixinServices
 
 class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
@@ -22,7 +23,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let id = AccountAPI.shared.account?.identity_number {
+        if let id = LoginManager.shared.account?.identity_number {
             myIdLabel.text = Localized.CONTACT_MY_IDENTITY_NUMBER(id: id)
         }
         searchButton.isEnabled = false
@@ -71,7 +72,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.contact.instantiateViewController(withIdentifier: "add_people")
+        let vc = R.storyboard.contact.add_people()!
         return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_ADD)
     }
     

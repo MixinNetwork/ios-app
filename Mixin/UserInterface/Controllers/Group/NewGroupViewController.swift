@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class NewGroupViewController: KeyboardBasedLayoutViewController {
     
@@ -67,13 +68,13 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     }
     
     private func loadGroupIcon() {
-        guard let account = AccountAPI.shared.account else {
+        guard let account = LoginManager.shared.account else {
             return
         }
         var participants: [ParticipantUser] = members.map { (user) in
-            return ParticipantUser.createParticipantUser(conversationId: conversationId, user: user)
+            ParticipantUser(conversationId: conversationId, user: user)
         }
-        participants.insert(ParticipantUser.createParticipantUser(conversationId: conversationId, account: account), at: 0)
+        participants.insert(ParticipantUser(conversationId: conversationId, account: account), at: 0)
         DispatchQueue.global().async { [weak self] in
             let groupImage = GroupIconMaker.make(participants: participants) ?? nil
             DispatchQueue.main.async {
@@ -95,7 +96,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             }
         }
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
-        let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
+        let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
 
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
             return imageFile
@@ -107,7 +108,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 return imageFile
             }
         } catch {
-            UIApplication.traceError(error)
+            reporter.report(error: error)
         }
         return nil
     }
@@ -147,7 +148,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     }
     
     class func instance(members: [GroupUser]) -> UIViewController {
-        let vc = Storyboard.group.instantiateViewController(withIdentifier: "new_group") as! NewGroupViewController
+        let vc = R.storyboard.group.new_group()!
         vc.members = members
         return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_NEW_GROUP)
     }

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class NotificationSettingsViewController: UITableViewController {
     
@@ -12,7 +13,7 @@ class NotificationSettingsViewController: UITableViewController {
         return Currency.current
     }
     private var currenyThreshold: String {
-        let threshold = AccountAPI.shared.account?.transfer_notification_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transfer_notification_threshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
 
@@ -32,16 +33,16 @@ class NotificationSettingsViewController: UITableViewController {
         tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        messagePreviewSwitch.isOn = CommonUserDefault.shared.shouldShowPreviewForMessageNotification
+        messagePreviewSwitch.isOn = AppGroupUserDefaults.User.showMessagePreviewInNotification
         updateThresholdLabel()
     }
     
     @IBAction func switchMessagePreview(_ sender: Any) {
-        CommonUserDefault.shared.shouldShowPreviewForMessageNotification = messagePreviewSwitch.isOn
+        AppGroupUserDefaults.User.showMessagePreviewInNotification = messagePreviewSwitch.isOn
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "notification")
+        let vc = R.storyboard.setting.notification()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
     }
 
@@ -75,10 +76,10 @@ class NotificationSettingsViewController: UITableViewController {
         }
         hud.show(style: .busy, text: "", on: navigationController.view)
 
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest.createRequest(fiat_currency: Currency.current.code, transfer_notification_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
+        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: Currency.current.code, transfer_notification_threshold: thresholdText.doubleValue), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
                 self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.tableView.reloadData()

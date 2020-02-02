@@ -124,7 +124,7 @@ class ContainerViewController: UIViewController {
     }
 
     class func instance(viewController: UIViewController, title: String) -> ContainerViewController {
-        let vc = Storyboard.common.instantiateInitialViewController() as! ContainerViewController
+        let vc = R.storyboard.common.instantiateInitialViewController()!
         vc.viewController = viewController
         vc.delegate = viewController as? ContainerViewControllerDelegate
         vc.controllerTitle = title

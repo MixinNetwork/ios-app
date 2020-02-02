@@ -1,5 +1,6 @@
 import UIKit
 import LocalAuthentication
+import MixinServices
 
 enum BiometryType {
     case faceID
@@ -9,9 +10,9 @@ enum BiometryType {
     var localizedName: String {
         switch self {
         case .faceID:
-            return Localized.WALLET_FACE_ID
+            return R.string.localizable.wallet_face_id()
         case .touchID:
-            return Localized.WALLET_TOUCH_ID
+            return R.string.localizable.wallet_touch_id()
         case .none:
             return ""
         }
@@ -24,7 +25,7 @@ var biometryType: BiometryType {
     guard !UIDevice.isJailbreak else {
         return .none
     }
-    guard AccountAPI.shared.account?.has_pin ?? false else {
+    guard LoginManager.shared.account?.has_pin ?? false else {
         return .none
     }
     var error: NSError?

@@ -1,7 +1,8 @@
 import UIKit
+import MixinServices
 
 func makeInitialViewController() -> UIViewController {
-    if AccountUserDefault.shared.hasClockSkew {
+    if AppGroupUserDefaults.Account.isClockSkewed {
         if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
             return viewController
@@ -11,13 +12,13 @@ func makeInitialViewController() -> UIViewController {
             }
             return ClockSkewViewController.instance()
         }
-    } else if AccountAPI.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
+    } else if LoginManager.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
         return UsernameViewController()
-    } else if AccountUserDefault.shared.hasRestoreChat {
+    } else if AppGroupUserDefaults.Account.canRestoreChat {
         return RestoreViewController.instance()
-    } else if DatabaseUserDefault.shared.hasUpgradeDatabase() {
+    } else if DatabaseUpgradeViewController.needsUpgrade {
         return DatabaseUpgradeViewController.instance()
-    } else if !CryptoUserDefault.shared.isLoaded || !CryptoUserDefault.shared.isSyncSession {
+    } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized {
         return SignalLoadingViewController.instance()
     } else {
         return HomeContainerViewController()

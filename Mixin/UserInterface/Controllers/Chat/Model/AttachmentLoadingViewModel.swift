@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 protocol AttachmentLoadingViewModel: class {
     var isLoading: Bool { get set }
@@ -39,7 +40,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
     var shouldUpload: Bool {
         let hasMediaUrl = message.mediaUrl != nil
         let hasLocalIdentifier = message.mediaLocalIdentifier != nil
-        return (message.userId == AccountAPI.shared.accountUserId)
+        return (message.userId == myUserId)
             && (hasMediaUrl || hasLocalIdentifier)
     }
     

@@ -2,6 +2,7 @@ import UIKit
 import WebKit
 import Photos
 import YYImage
+import MixinServices
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
@@ -60,7 +61,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             }
         } else if let asset = self.videoAsset {
             DispatchQueue.global().async { [weak self] in
-                let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
+                let thumbnail = UIImage(withFirstFrameOf: asset)
                 DispatchQueue.main.async {
                     self?.loadAsset(asset: asset, thumbnail: thumbnail)
                 }
@@ -71,7 +72,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     guard let avasset = avasset else {
                         return
                     }
-                    let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: avasset)
+                    let thumbnail = UIImage(withFirstFrameOf: avasset)
                     DispatchQueue.main.async {
                         self?.loadAsset(asset: avasset, thumbnail: thumbnail)
                     }
@@ -220,7 +221,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         sendButton.isBusy = true
         if let asset = self.videoAsset {
             let messageId = UUID().uuidString.lowercased()
-            let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: messageId + ExtensionName.mp4.withDot)
+            let outputURL = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.mp4.withDot)
             let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: outputURL)
             exportSession.exportAsynchronously { [weak self] in
                 guard let weakSelf = self else {
@@ -256,7 +257,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
 
     class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
-       let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
+       let vc = R.storyboard.chat.send_asset()!
         vc.image = image
         vc.asset = asset
         vc.videoAsset = videoAsset
@@ -265,7 +266,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     private func send(image: UIImage, to dataSource: ConversationDataSource) {
-        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: myUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
         
         DispatchQueue.global().async { [weak self] in
@@ -279,7 +280,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
                 let fileExtension = assetUrl.pathExtension.lowercased()
                 let filename = "\(message.messageId).\(fileExtension)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     
@@ -298,7 +299,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
             } else {
                 let filename = "\(message.messageId).\(ExtensionName.jpeg)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 let targetPhoto = image.scaleForUpload()
                 if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
                     message.thumbImage = targetPhoto.base64Thumbnail()

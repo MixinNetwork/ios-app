@@ -4,6 +4,7 @@ import Photos
 import SDWebImage
 import YYImage
 import CoreServices
+import MixinServices
 
 class ConversationDataSource {
     
@@ -19,7 +20,7 @@ class ConversationDataSource {
     private let windowRect = AppDelegate.current.window.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
-    private let me = AccountAPI.shared.account!
+    private let me = LoginManager.shared.account!
     
     private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -80,6 +81,8 @@ class ConversationDataSource {
     
     func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -122,7 +125,7 @@ class ConversationDataSource {
         loadedMessageIds = Set(messages.map({ $0.messageId }))
         if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
             let firstUnreadMessge = messages[firstUnreadIndex]
-            let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
+            let hint = MessageItem(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
             messages.insert(hint, at: firstUnreadIndex)
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
@@ -195,7 +198,9 @@ class ConversationDataSource {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
             }
             ConversationViewController.positions[self.conversationId] = nil
-            SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
+            if UIApplication.shared.applicationState == .active {
+                SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
+            }
             self.didInitializedData = true
             completion?()
         }
@@ -348,7 +353,7 @@ class ConversationDataSource {
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
                 let firstUnreadMessage = messages[index]
-                let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
+                let hint = MessageItem(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
                 messages.insert(hint, at: index)
                 self.canInsertUnreadHint = false
             }
@@ -458,8 +463,6 @@ extension ConversationDataSource {
             reload()
         case .update(let conversation):
             self.conversation = conversation
-        case .addMessage(let message):
-            addMessage(message)
         case .updateGroupIcon(let iconUrl):
             conversation.iconUrl = iconUrl
         case .updateMessage(let messageId):
@@ -481,12 +484,21 @@ extension ConversationDataSource {
         }
     }
     
-    private func addMessage(_ message: MessageItem) {
+    @objc func messageDaoDidInsertMessage(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[MessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
+            return
+        }
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
         let messageIsSentByMe = message.userId == me.user_id
-        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
+        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue && UIApplication.shared.applicationState == .active {
             SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
         }
         if !didLoadLatestMessage {
@@ -511,6 +523,19 @@ extension ConversationDataSource {
                 self.addMessageAndDisplay(message: message)
             }
         }
+    }
+    
+    @objc func messageDaoDidRedecryptMessage(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[MessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
+            return
+        }
+        updateMessage(messageId: message.messageId)
     }
     
     private func updateMessageStatus(messageId: String, status: MessageStatus) {
@@ -576,7 +601,7 @@ extension ConversationDataSource {
                 return
             }
             
-            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId {
+            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != myUserId && UIApplication.shared.applicationState == .active {
                 SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
             }
             
@@ -615,15 +640,15 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
                 guard FileManager.default.fileSize(url.path) > 0 else {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 let fileExtension = url.pathExtension.lowercased()
-                let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(message.messageId).\(fileExtension)")
+                let targetUrl = AttachmentContainer.url(for: .files, filename: "\(message.messageId).\(fileExtension)")
                 do {
                     try FileManager.default.copyItem(at: url, to: targetUrl)
                 } catch {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 message.name = url.lastPathComponent
@@ -637,15 +662,15 @@ extension ConversationDataSource {
             queue.async {
                 let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
-                    let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: url.lastPathComponent.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+                    let thumbnailURL = AttachmentContainer.url(for: .videos, filename: url.lastPathComponent.substring(endChar: ".") + ExtensionName.jpeg.withDot)
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.base64Thumbnail()
                 } else {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
@@ -661,10 +686,10 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
             queue.async {
                 guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                     return
                 }
-                let url = MixinFile.url(ofChatDirectory: .audios, filename: message.messageId + ExtensionName.ogg.withDot)
+                let url = AttachmentContainer.url(for: .audios, filename: message.messageId + ExtensionName.ogg.withDot)
                 do {
                     try FileManager.default.moveItem(at: value.tempUrl, to: url)
                     message.mediaSize = FileManager.default.fileSize(url.path)
@@ -675,7 +700,7 @@ extension ConversationDataSource {
                     message.mediaDuration = Int64(value.metadata.duration)
                     SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
                 } catch {
-                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? StickerItem {
@@ -683,7 +708,7 @@ extension ConversationDataSource {
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId
             queue.async {
-                UIApplication.logEvent(eventName: "send_sticker", parameters: ["stickerId": sticker.stickerId])
+                reporter.report(event: .sendSticker, userInfo: ["stickerId": sticker.stickerId])
                 let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
@@ -699,7 +724,7 @@ extension ConversationDataSource {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
-                                                userId: AccountAPI.shared.accountUserId)
+                                                userId: myUserId)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = image.fullsizedUrl.absoluteString
             message.mediaWidth = image.size.width
@@ -723,7 +748,7 @@ extension ConversationDataSource {
             let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
             var message = Message.createMessage(category: category.rawValue,
                                                 conversationId: conversationId,
-                                                userId: AccountAPI.shared.accountUserId)
+                                                userId: myUserId)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth

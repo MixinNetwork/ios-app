@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class VerificationCodeViewController: ContinueButtonViewController {
     
@@ -71,7 +72,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
             verificationCodeField.showError()
             alert(Localized.TEXT_INVALID_VERIFICATION_CODE)
         } else {
-            UIApplication.traceError(error)
+            reporter.report(error: error)
             alert(error.localizedDescription)
         }
     }

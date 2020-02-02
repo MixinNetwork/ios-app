@@ -2,6 +2,7 @@ import UIKit
 import YYImage
 import Photos
 import SDWebImage
+import MixinServices
 
 class StickerAddViewController: UIViewController {
 
@@ -17,7 +18,7 @@ class StickerAddViewController: UIViewController {
         if let assetUrl = message?.assetUrl {
             stickerImageView.sd_setImage(with: URL(string: assetUrl))
         } else if let mediaUrl = message?.mediaUrl {
-            let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+            let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
             if mediaUrl.hasSuffix(".webp") || mediaUrl.hasSuffix(".gif") {
                 animateURL = url
             }
@@ -56,13 +57,13 @@ class StickerAddViewController: UIViewController {
     }
 
     class func instance(message: MessageItem) -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_add") as! StickerAddViewController
+        let vc = R.storyboard.chat.sticker_add()!
         vc.message = message
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_ADD_TITLE)
     }
 
     class func instance(asset: PHAsset) -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_add") as! StickerAddViewController
+        let vc = R.storyboard.chat.sticker_add()!
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_ADD_TITLE)
     }
@@ -92,7 +93,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         let failedBlock = { [weak self] in
             DispatchQueue.main.async {
                 self?.container?.rightButton.isBusy = false
-                showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
             }
         }
 
@@ -100,7 +101,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    StickerPrefetcher.persistentPrefetcher.prefetchURLs([URL(string: sticker.assetUrl)!])
+                    StickerPrefetcher.persistent.prefetchURLs([URL(string: sticker.assetUrl)!])
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
@@ -123,7 +124,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 }
                 let fileExtension = assetUrl.pathExtension.lowercased()
                 let filename = "\(UUID().uuidString.lowercased()).\(fileExtension)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     if let stickerBase64 = FileManager.default.contents(atPath: targetUrl.path)?.base64EncodedString() {
@@ -136,7 +137,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 }
             } else {
                 let filename = "\(UUID().uuidString.lowercased()).\(ExtensionName.jpeg)"
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 let targetPhoto = image.scaledToSticker()
                 if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateSticker(targetUrl.path) {
                     addBloack(stickerBase64)

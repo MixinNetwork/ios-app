@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class UsernameViewController: LoginInfoInputViewController {
     
@@ -18,10 +19,10 @@ class UsernameViewController: LoginInfoInputViewController {
             weakSelf.continueButton.isBusy = false
             switch account {
             case let .success(account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 AppDelegate.current.window.rootViewController = makeInitialViewController()
             case let .failure(error):
-                UIApplication.traceError(error)
+                reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }

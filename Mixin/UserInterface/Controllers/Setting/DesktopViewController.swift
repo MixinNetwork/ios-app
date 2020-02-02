@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class DesktopViewController: UITableViewController {
     
@@ -8,7 +9,7 @@ class DesktopViewController: UITableViewController {
     @IBOutlet weak var footerLabel: UILabel!
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
+        let vc = R.storyboard.setting.desktop()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
         return container
     }
@@ -16,17 +17,17 @@ class DesktopViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
-        updateLabels(isDesktopLoggedIn: AccountUserDefault.shared.isDesktopLoggedIn)
+        updateLabels(isDesktopLoggedIn: AppGroupUserDefaults.Account.isDesktopLoggedIn)
     }
     
     @objc func sessionChanged() {
-        updateLabels(isDesktopLoggedIn: AccountUserDefault.shared.isDesktopLoggedIn)
+        updateLabels(isDesktopLoggedIn: AppGroupUserDefaults.Account.isDesktopLoggedIn)
         layoutForIsLoading(false)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let sessionId = AccountUserDefault.shared.extensionSession {
+        if let sessionId = AppGroupUserDefaults.Account.extensionSession {
             guard !indicatorView.isAnimating else {
                 return
             }
@@ -63,7 +64,7 @@ class DesktopViewController: UITableViewController {
             footerLabel.text = Localized.SETTING_DESKTOP_DESKTOP_ON
         } else {
             actionLabel.text = Localized.SCAN_QR_CODE
-            if let lastLoginDate = AccountUserDefault.shared.lastDesktopLogin {
+            if let lastLoginDate = AppGroupUserDefaults.Account.lastDesktopLoginDate {
                 let time = formattedString(from: lastLoginDate)
                 footerLabel.text = Localized.SETTING_DESKTOP_LAST_ACTIVE(time: time)
             } else {

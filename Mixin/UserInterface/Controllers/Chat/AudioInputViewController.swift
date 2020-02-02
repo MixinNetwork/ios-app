@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import MixinServices
 
 class AudioInputViewController: UIViewController, ConversationAccessible {
     
@@ -249,7 +250,7 @@ extension AudioInputViewController {
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
         } catch {
-            UIApplication.traceError(error)
+            reporter.report(error: error)
         }
     }
     

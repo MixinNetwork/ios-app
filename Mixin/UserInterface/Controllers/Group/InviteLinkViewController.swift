@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class InviteLinkViewController: UIViewController {
 
@@ -46,7 +47,7 @@ class InviteLinkViewController: UIViewController {
     }
     
     class func instance(conversation: ConversationItem) -> UIViewController {
-        let vc = Storyboard.group.instantiateViewController(withIdentifier: "invite_link") as! InviteLinkViewController
+        let vc = R.storyboard.group.invite_link()!
         vc.conversation = conversation
         return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK)
     }

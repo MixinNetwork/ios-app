@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import MixinServices
 
 class UrlWindow {
 
@@ -19,7 +20,7 @@ class UrlWindow {
             return checkAddress(url: url)
         case let .users(id):
             return checkUser(id, clearNavigationStack: clearNavigationStack)
-        case let .snapshots:
+        case .snapshots:
             return checkSnapshot(url: url)
         case let .apps(userId):
             return checkApp(url: url, userId: userId)
@@ -77,14 +78,15 @@ class UrlWindow {
                 return
             }
 
-            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: AccountAPI.shared.accountUserId)
+            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
 
             DispatchQueue.main.async {
                 if isOpenApp {
                     guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                         return
                     }
-                    UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UrlWindow", "identityNumber": app.appNumber])
+                    let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
+                    reporter.report(event: .openApp, userInfo: userInfo)
                     DispatchQueue.main.async {
                         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }
@@ -113,7 +115,7 @@ class UrlWindow {
             if let traceId = traceId  {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(traceId: traceId)
                 if snapshotItem == nil {
-                    switch AssetAPI.shared.snapshot(traceId: traceId) {
+                    switch SnapshotAPI.shared.snapshot(traceId: traceId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -131,7 +133,7 @@ class UrlWindow {
             } else if let snapshotId = snapshotId {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
                 if snapshotItem == nil {
-                    switch AssetAPI.shared.snapshot(snapshotId: snapshotId) {
+                    switch SnapshotAPI.shared.snapshot(snapshotId: snapshotId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -201,7 +203,7 @@ class UrlWindow {
     }
 
     class func checkTransferUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
-        guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != AccountAPI.shared.accountUserId else {
+        guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != myUserId else {
             return false
         }
 
@@ -241,7 +243,7 @@ class UrlWindow {
     }
 
     class func checkWithdrawal(url: URL) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -299,7 +301,7 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -320,12 +322,12 @@ class UrlWindow {
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        AssetAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
+        PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
                 hud.hide()
                 let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
-                let asset = AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
+                let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
                 PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
             case let .failure(error):
@@ -337,7 +339,7 @@ class UrlWindow {
     }
 
     class func checkAddress(url: URL) -> Bool {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -604,7 +606,7 @@ extension UrlWindow {
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
         DispatchQueue.global().async {
             let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
-            let accountUserId = AccountAPI.shared.accountUserId
+            let accountUserId = myUserId
             let conversationId = conversation.conversationId
             let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }
@@ -612,7 +614,7 @@ extension UrlWindow {
             switch UserAPI.shared.showUsers(userIds: userIds) {
             case let .success(users):
                 participants = users.map {
-                    ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
+                    ParticipantUser(conversationId: conversationId, user: $0)
                 }
             case let .failure(error):
                 DispatchQueue.main.async {

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class AvatarImageView: UIView {
     
@@ -68,7 +69,7 @@ class AvatarImageView: UIView {
     func setGroupImage(with iconUrl: String) {
         titleLabel.text = nil
         if !iconUrl.isEmpty {
-            let url = MixinFile.groupIconsUrl.appendingPathComponent(iconUrl)
+            let url = AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl)
             imageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
         } else {
             imageView.image = R.image.ic_conversation_group()

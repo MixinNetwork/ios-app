@@ -48,9 +48,8 @@
 "connection_hint_progress" = "同期中 %@%%";
 
 "date_format_day" = "hh:mm a";
-"date_format_date" = "yyyy年M月dd日";
 "date_format_month" = "E, d MMM";
-"date_format_transation" = "MMM dd, HH:mm";
+"date_format_date" = "yyyy年M月dd日";
 
 // Search
 "search_placeholder_number" = "Mixin IDか電話番号を検索: ";
@@ -71,7 +70,6 @@
 "toast_server_error" = "サーバーはメンテナンス中です";
 "toast_api_error_forbidden" = "アクセスが拒否されました";
 "toast_api_error_no_connection" = "ネットワーク接続なし";
-"toast_api_error_connection_timeout" = "ネットワーク接続タイムアウト";
 "toast_api_error_network_connection_lost"="ネットワーク接続が切断されました。ネットワークを確認して、後でもう一度やり直してください。";
 "toast_api_error_server_5xx" = "Mixin サーバーでエラーが発生しました";
 "toast_api_error_server_data_error" = "データ解析エラー";
@@ -80,7 +78,6 @@
 "toast_api_error_unavailable_phone_number" = "この電話番号は既に他のアカウントに関連付けられています";
 "permission_denied_camera" = "Mixin はあなたのカメラを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_microphone" = "Mixinはあなたのマイクを使う権限を持っていません。 設定をタップしてシステム設定を開きます。";
-"toast_operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
 "toast_copied" = "コピーしました";
 "toast_added" = "追加しました";
 "toast_saved" = "セーブしました";
@@ -172,13 +169,7 @@
 "home_title" = "チャット";
 
 // Chat
-"chat_message_menu_reply" = "返信";
-"chat_message_menu_forward" = "先へ";
-"chat_message_menu_copy" = "コピー";
-"chat_message_open_url" = "公開 URL";
-"chat_message_sticker" = "ステッカーに追加";
 "chat_time_today" = "今日";
-"chat_cell_title_unread_messages" = "未読メッセージ";
 "chat_message_you" = "あなた";
 "chat_message_created" = "%@ がこのグループを作成しました";
 "chat_message_removed" = "%@ は %@ を削除しました";
@@ -186,6 +177,12 @@
 "chat_message_joined" = "%@ は招待リンクを介してグループに参加しました";
 "chat_message_left" = "%@ 去った";
 "chat_message_admin" = "%@ は今管理者です";
+"chat_message_menu_reply" = "返信";
+"chat_message_menu_forward" = "先へ";
+"chat_message_menu_copy" = "コピー";
+"chat_message_open_url" = "公開 URL";
+"chat_message_sticker" = "ステッカーに追加";
+"chat_cell_title_unread_messages" = "未読メッセージ";
 "chat_message_changed_title" = "%@ は話題を %@ に変えた";
 "chat_message_call_cancelled" = "キャンセル";
 "chat_message_call_remote_cancelled" = "呼び出し側によってキャンセル";
@@ -374,11 +371,8 @@
 "wallet_pin_touch_id_prompt" = "Touch Payを有効にするにはPINを確認してください";
 "wallet_pin_face_id_prompt" = "Face Pay を有効にするにはPINを確認してください";
 "wallet_setting" = "ウォレット";
-"wallet_touch_id" = "Touch ID";
-"wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = " %@ で支払う";
 "wallet_enable_biometric_pay_prompt" = "有効にすると、%@を使って簡単に振込できます";
-"wallet_store_encrypted_pin" = " %@ Payを有効にする";
 "wallet_biometric_pay_prompt" = " %@で支払いを承認する";
 "wallet_disable_biometric_pay" = " %@ Payを無効に?";
 "wallet_pin_pay_interval_minutes" = "%@ 分";
@@ -403,6 +397,9 @@
 "wallet_hide_asset_confirmation" = "%@を隠すを確認してください";
 "wallet_asset_is_hidden_prompt" = "この資産は隠しました。表示にしますか";
 "wallet_asset_is_unhidden" = "表示にしました";
+"wallet_store_encrypted_pin" = " %@ Payを有効にする";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
 
 // Transaction
 "transaction_title" = "取引";

@@ -2,6 +2,7 @@ import UIKit
 import Foundation
 import LocalAuthentication
 import AudioToolbox
+import MixinServices
 
 class PayWindow: BottomSheetView {
 
@@ -71,17 +72,15 @@ class PayWindow: BottomSheetView {
     private var isKeyboardAppear = false
     private var isMultisigUsersAppear = false
     private var isAllowBiometricPay: Bool {
-        guard WalletUserDefault.shared.isBiometricPay else {
+        guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
         }
-        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
+        guard let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate, -date.timeIntervalSinceNow < AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval else {
             return false
         }
-
         guard biometryType != .none else {
             return false
         }
-
         return true
     }
     private weak var bigAmountTimer: Timer?
@@ -128,7 +127,7 @@ class PayWindow: BottomSheetView {
         case let .transfer(_, user, _):
             multisigView.isHidden = true
             let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-            let threshold = AccountAPI.shared.account?.transfer_confirmation_threshold ?? 0
+            let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
             if fiatMoneyValue < threshold {
                 showTransferView(user: user, showError: showError, showBiometric: showBiometric)
             } else {
@@ -167,7 +166,7 @@ class PayWindow: BottomSheetView {
                 }
             }
         case let .payment(payment, receivers):
-            guard let account = AccountAPI.shared.account else {
+            guard let account = LoginManager.shared.account else {
                 break
             }
             multisigView.isHidden = false
@@ -554,7 +553,7 @@ extension PayWindow: PinFieldDelegate {
 
     private func successHandler() {
         if !isAutoFillPIN {
-            WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+            AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
         }
         loadingView.stopAnimating()
         pinView.isHidden = true
@@ -587,11 +586,10 @@ extension PayWindow: PinFieldDelegate {
             case let .success(snapshot):
                 switch pinAction {
                 case .transfer, .payment:
-                    CommonUserDefault.shared.hasPerformedTransfer = true
-                    WalletUserDefault.shared.defalutTransferAssetId = assetId
+                    AppGroupUserDefaults.User.hasPerformedTransfer = true
+                    AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
                 case let .withdraw(_,address,_):
-                    WalletUserDefault.shared.firstWithdrawalTip.removeAll( where: { $0 == address.addressId })
-                    WalletUserDefault.shared.firstWithdrawalTip.append(address.addressId)
+                    AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 default:
                     break
@@ -612,13 +610,13 @@ extension PayWindow: PinFieldDelegate {
 
         switch pinAction {
         case let .transfer(trackId, user, _):
-            AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            PaymentAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
-            AssetAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
+            PaymentAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, fromWeb):
             if fromWeb {
-                AssetAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
+                PaymentAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
                     guard let weakSelf = self else {
                         return
                     }

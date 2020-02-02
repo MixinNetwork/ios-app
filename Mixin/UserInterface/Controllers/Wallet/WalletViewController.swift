@@ -1,5 +1,6 @@
 import UIKit
 import LocalAuthentication
+import MixinServices
 
 class WalletViewController: UIViewController {
     
@@ -21,7 +22,7 @@ class WalletViewController: UIViewController {
     }
     
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
+        return ContainerViewController.instance(viewController: R.storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
     }
     
     override func viewDidLoad() {
@@ -137,7 +138,7 @@ extension WalletViewController {
     
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
+            let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
             let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
                 return hiddenAssets[asset.assetId] == nil
             })
@@ -169,7 +170,7 @@ extension WalletViewController {
         }
         assets.remove(at: index)
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-        WalletUserDefault.shared.hiddenAssets[assetId] = assetId
+        AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = true
     }
     
 }

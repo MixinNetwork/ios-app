@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
 
@@ -13,7 +14,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var downloadIsTriggeredByUser = false
     
     var shouldAutoDownload: Bool {
-        switch CommonUserDefault.shared.autoDownloadVideos {
+        switch AppGroupUserDefaults.User.autoDownloadVideos {
         case .never:
             return false
         case .wifi:
@@ -68,7 +69,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         if let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
             let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+            let betterThumbnailURL = AttachmentContainer.url(for: .videos, filename: betterThumbnailFilename)
             if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
                 thumbnail = betterThumbnail
             }

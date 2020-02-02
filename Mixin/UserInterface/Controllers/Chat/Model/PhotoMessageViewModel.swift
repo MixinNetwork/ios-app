@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
     
@@ -7,7 +8,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var downloadIsTriggeredByUser = false
     
     var shouldAutoDownload: Bool {
-        switch CommonUserDefault.shared.autoDownloadPhotos {
+        switch AppGroupUserDefaults.User.autoDownloadPhotos {
         case .never:
             return false
         case .wifi:

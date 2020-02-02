@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class ConversationExtensionViewController: UIViewController, ConversationAccessible {
     
@@ -115,10 +116,11 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 (parent as? ConversationInputViewController)?.dismissCustomInput(minimize: true)
             }
         } else {
-            let app = apps[indexPath.row - fixedExtensions.count]
+            let app = apps[indexPath.row - fixedExtensions.count].app
             if let conversationId = dataSource?.conversationId, let parent = conversationViewController {
-                UIApplication.logEvent(eventName: "open_app", parameters: ["source": "ConversationExtension", "identityNumber": app.app.appNumber])
-                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app.app), asChildOf: parent)
+                let userInfo = ["source": "ConversationExtension", "identityNumber": app.appNumber]
+                reporter.report(event: .openApp, userInfo: userInfo)
+                WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
             }
         }
     }

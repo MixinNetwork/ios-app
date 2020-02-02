@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class ChangeNumberVerificationCodeViewController: VerificationCodeViewController {
     
@@ -30,14 +31,14 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
         let code = verificationCodeField.text
         let context = self.context!
         isBusy = true
-        let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: nil, pin: context.pin, sessionSecret: nil)
+        let request = AccountRequest(code: code, registrationId: nil, pin: context.pin, sessionSecret: nil)
         AccountAPI.shared.changePhoneNumber(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
             case .success(let account):
-                AccountAPI.shared.updateAccount(account: account)
+                LoginManager.shared.setAccount(account)
                 weakSelf.verificationCodeField.resignFirstResponder()
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)

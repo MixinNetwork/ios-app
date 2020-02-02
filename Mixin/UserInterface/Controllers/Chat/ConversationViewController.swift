@@ -2,6 +2,7 @@ import UIKit
 import MobileCoreServices
 import AVKit
 import Photos
+import MixinServices
 
 class ConversationViewController: UIViewController {
     
@@ -137,7 +138,8 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+        let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+        announcementButton.isHidden = !hasUnreadAnnouncement
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
         updateStrangerActionView()
@@ -166,6 +168,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -206,7 +209,7 @@ class ConversationViewController: UIViewController {
         if parent == nil {
             dataSource?.cancelMessageProcessing()
         }
-        SendMessageService.shared.sendReadMessages(conversationId: conversationId, force: true)
+        SendMessageService.shared.sendReadMessages(conversationId: conversationId)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -253,7 +256,7 @@ class ConversationViewController: UIViewController {
                                             numberOfParticipants: numberOfParticipants,
                                             isMember: isMember)
         present(vc, animated: true, completion: nil)
-        CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
+        AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
         announcementButton.isHidden = true
     }
     
@@ -465,8 +468,8 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
                 conversationInputViewController.dismiss()
-                if shareUserId == AccountAPI.shared.accountUserId {
-                    guard let account = AccountAPI.shared.account else {
+                if shareUserId == myUserId {
+                    guard let account = LoginManager.shared.account else {
                         return
                     }
                     let user = UserItem.createUser(from: account)
@@ -530,7 +533,8 @@ class ConversationViewController: UIViewController {
                 dataSource?.conversation.name = conversation.name
             }
             dataSource?.conversation.announcement = conversation.announcement
-            announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+            let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+            announcementButton.isHidden = !hasUnreadAnnouncement
             hideLoading()
         case .startedUpdateConversation:
             showLoading()
@@ -604,6 +608,16 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc func willRecallMessage(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String, messageId == previewDocumentMessageId else {
+            return
+        }
+        previewDocumentController?.dismissPreview(animated: true)
+        previewDocumentController?.dismissMenu(animated: true)
+        previewDocumentController = nil
+        previewDocumentMessageId = nil
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
@@ -668,7 +682,7 @@ class ConversationViewController: UIViewController {
             return
         }
         let viewController: UIViewController
-        if AccountAPI.shared.account?.has_pin ?? false {
+        if LoginManager.shared.account?.has_pin ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
@@ -705,25 +719,14 @@ class ConversationViewController: UIViewController {
         if let appUser = ownerUser {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appUser.userId]))
         }
-        UIApplication.logEvent(eventName: "open_app", parameters: ["source": "Conversation", "identityNumber": app.appNumber])
+        let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
+        reporter.report(event: .openApp, userInfo: userInfo)
         WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
-    }
-    
-    func handleMessageRecalling(messageId: String) {
-        guard isViewLoaded else {
-            return
-        }
-        if messageId == previewDocumentMessageId {
-            previewDocumentController?.dismissPreview(animated: true)
-            previewDocumentController?.dismissMenu(animated: true)
-            previewDocumentController = nil
-            previewDocumentMessageId = nil
-        }
     }
     
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
+        let vc = R.storyboard.chat.conversation()!
         let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
         if dataSource.category == .contact {
             vc.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
@@ -733,9 +736,9 @@ class ConversationViewController: UIViewController {
     }
     
     class func instance(ownerUser: UserItem) -> ConversationViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
+        let vc = R.storyboard.chat.conversation()!
         vc.ownerUser = ownerUser
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
         let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
             ?? ConversationItem(ownerUser: ownerUser)
         vc.dataSource = ConversationDataSource(conversation: conversation)
@@ -832,9 +835,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         case .delete:
             conversationInputViewController.textView.resignFirstResponder()
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if message.canRecall() {
+            if message.canRecall {
                 controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
-                    if CommonUserDefault.shared.isRecallTips {
+                    if AppGroupUserDefaults.User.hasShownRecallTips {
                         self.deleteForEveryone(viewModel: viewModel)
                     } else {
                         self.showRecallTips(viewModel: viewModel)
@@ -1156,7 +1159,7 @@ extension ConversationViewController {
     private func updateSubtitleAndInputBar() {
         let conversationId = dataSource.conversationId
         dataSource.queue.async { [weak self] in
-            let isParticipant = ParticipantDAO.shared.userId(AccountAPI.shared.accountUserId, isParticipantOfConversationId: conversationId)
+            let isParticipant = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
             if isParticipant {
                 let count = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
                 DispatchQueue.main.sync {
@@ -1293,7 +1296,7 @@ extension ConversationViewController {
         let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
             let isInvitedByStranger: Bool
-            let myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: AccountAPI.shared.accountUserId)
+            let myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: myUserId)
             if let inviterId = myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {
                 isInvitedByStranger = true
             } else {
@@ -1434,7 +1437,7 @@ extension ConversationViewController {
         guard let mediaUrl = message.mediaUrl else {
             return
         }
-        let url = MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
+        let url = AttachmentContainer.url(for: .files, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: url.path)  else {
             return
         }
@@ -1507,7 +1510,7 @@ extension ConversationViewController {
     
     private func report(conversationId: String) {
         DispatchQueue.global().async { [weak self] in
-            let developID = AccountAPI.shared.accountIdentityNumber == "762532" ? "31911" : "762532"
+            let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
             if user == nil {
                 switch UserAPI.shared.search(keyword: developID) {
@@ -1518,10 +1521,10 @@ extension ConversationViewController {
                     return
                 }
             }
-            guard let developUser = user, let url = FileManager.default.exportLog(conversationId: conversationId) else {
+            guard let developUser = user, let url = Logger.export(conversationId: conversationId) else {
                 return
             }
-            let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: url.lastPathComponent)
+            let targetUrl = AttachmentContainer.url(for: .files, filename: url.lastPathComponent)
             do {
                 try FileManager.default.copyItem(at: url, to: targetUrl)
                 try FileManager.default.removeItem(at: url)
@@ -1532,8 +1535,8 @@ extension ConversationViewController {
                 return
             }
             
-            let developConversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: developUser.userId)
-            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: AccountAPI.shared.accountUserId)
+            let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
+            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
             message.name = url.lastPathComponent
             message.mediaSize = FileManager.default.fileSize(targetUrl.path)
             message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
@@ -1582,11 +1585,11 @@ extension ConversationViewController {
     private func showRecallTips(viewModel: MessageViewModel) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
+            AppGroupUserDefaults.User.hasShownRecallTips = true
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
-            CommonUserDefault.shared.isRecallTips = true
+            AppGroupUserDefaults.User.hasShownRecallTips = true
             self.deleteForEveryone(viewModel: viewModel)
         }))
         present(alc, animated: true, completion: nil)

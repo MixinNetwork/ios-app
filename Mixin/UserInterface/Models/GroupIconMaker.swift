@@ -1,6 +1,6 @@
 import Foundation
 import SDWebImage
-import Firebase
+import MixinServices
 
 enum GroupIconMaker {
     
@@ -26,9 +26,7 @@ enum GroupIconMaker {
                         avatars.append(.image(image))
                         isSucceed = true
                     } else {
-                        let userInfo = ["url": url.absoluteString,
-                                        "error": error?.localizedDescription ?? "(null)"]
-                        UIApplication.traceError(code: .loadAvatar, userInfo: userInfo)
+                        reporter.report(error: MixinError.loadAvatar(url: url, error: error))
                     }
                     semaphore.signal()
                 })

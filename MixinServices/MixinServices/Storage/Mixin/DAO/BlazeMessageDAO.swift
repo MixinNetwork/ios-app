@@ -9,7 +9,7 @@ public final class BlazeMessageDAO {
     }
     
     public func insertOrReplace(messageId: String, conversationId: String, data: Data, createdAt: String) -> Bool {
-        return TaskDatabase.shared.insertOrReplace(objects: [MessageBlaze(messageId: messageId, conversationId: conversationId, message: data, createdAt: createdAt)])
+        return TaskDatabase.shared.insertOrReplace(objects: [MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)])
     }
     
     public func getCount() -> Int {

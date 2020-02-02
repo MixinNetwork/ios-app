@@ -6,7 +6,6 @@ struct MessageBlaze: BaseCodable {
     public static let tableName: String = "messages_blaze"
     
     public let messageId: String
-    public let conversationId: String
     public let message: Data
     public let createdAt: String
     
@@ -23,13 +22,11 @@ struct MessageBlaze: BaseCodable {
         }
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
-                "_index": IndexBinding(indexesBy: [createdAt]),
-                "_conversation_indexs": IndexBinding(indexesBy: [conversationId, createdAt])
+                "_index": IndexBinding(indexesBy: [createdAt])
             ]
         }
         
         case messageId = "_id"
-        case conversationId = "conversation_id"
         case message
         case createdAt = "created_at"
         

@@ -191,6 +191,9 @@
 "home_cell_action_pin" = "置顶";
 "home_cell_action_unpin" = "取消置顶";
 "home_title" = "聊天";
+"home_bulletin_title_notification" = "打开推送消息";
+"home_bulletin_description_notification" = "及时获取朋友们的最新消息";
+"home_bulletin_button_notification" = "设置";
 
 // Chat
 "chat_time_today" = "今天";

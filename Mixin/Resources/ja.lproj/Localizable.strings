@@ -167,6 +167,9 @@
 "home_cell_action_pin" = "Pin";
 "home_cell_action_unpin" = "Unpin";
 "home_title" = "チャット";
+"home_bulletin_title_notification" = "Turn ON Notifications";
+"home_bulletin_description_notification" = "Don’t miss messages from your friends";
+"home_bulletin_button_notification" = "Settings";
 
 // Chat
 "chat_time_today" = "今日";

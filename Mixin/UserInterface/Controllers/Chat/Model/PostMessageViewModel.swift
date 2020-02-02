@@ -19,7 +19,15 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     }
     
     override var contentAttributedString: NSAttributedString {
-        let md = SwiftyMarkdown(string: rawContent)
+        var lines = [String]()
+        rawContent.enumerateLines { (line, stop) in
+            lines.append(line)
+            if lines.count == 20 {
+                stop = true
+            }
+        }
+        let string = lines.joined(separator: "\n")
+        let md = SwiftyMarkdown(string: string)
         md.link.color = .theme
         return md.attributedString()
     }

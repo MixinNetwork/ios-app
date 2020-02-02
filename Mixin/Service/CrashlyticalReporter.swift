@@ -6,11 +6,6 @@ import MixinServices
 
 class CrashlyticalReporter: Reporter {
     
-    required init() {
-        super.init()
-        FirebaseApp.configure()
-    }
-    
     override func registerUserInformation() {
         super.registerUserInformation()
         if let account = LoginManager.shared.account {

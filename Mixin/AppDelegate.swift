@@ -5,6 +5,7 @@ import YYImage
 import AVFoundation
 import WebKit
 import MixinServices
+import FirebaseCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var pendingShortcutItem: UIApplicationShortcutItem?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
         AppGroupUserDefaults.resetStatusInMainApp()
@@ -160,10 +162,11 @@ extension AppDelegate {
     }
     
     @objc func handleClockSkew() {
-        guard !(window.rootViewController is ClockSkewViewController) else {
-            return
+        if let viewController = window.rootViewController as? ClockSkewViewController {
+            viewController.checkFailed()
+        } else {
+            window.rootViewController = makeInitialViewController()
         }
-        window.rootViewController = makeInitialViewController()
     }
     
 }

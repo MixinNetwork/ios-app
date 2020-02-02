@@ -48,7 +48,14 @@ open class Reporter {
     open func report(event: Event, userInfo: UserInfo? = nil) {
         
     }
-    
+
+    open func report(error: APIError) {
+        guard error.status != NSURLErrorTimedOut else {
+            return
+        }
+        Bugsnag.notifyError(error)
+    }
+
     open func report(error: Error) {
         Bugsnag.notifyError(error)
     }

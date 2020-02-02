@@ -582,7 +582,7 @@ extension HomeViewController {
             let shouldHideBulletin: Bool
             if settings.authorizationStatus == .denied {
                 if let date = AppGroupUserDefaults.notificationBulletinDismissalDate {
-                    let notificationAuthorizationAlertingPeriod: TimeInterval = 7 * 24 * 60 * 60
+                    let notificationAuthorizationAlertingPeriod: TimeInterval = 2 * 24 * 60 * 60
                     shouldHideBulletin = -date.timeIntervalSinceNow < notificationAuthorizationAlertingPeriod
                 } else {
                     shouldHideBulletin = false

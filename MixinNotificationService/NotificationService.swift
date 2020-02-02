@@ -3,17 +3,12 @@ import MixinServices
 
 final class NotificationService: UNNotificationServiceExtension {
     
-    private let timeLimit: TimeInterval = 25
-    private let startDate = Date()
-    
     private var contentHandler: ((UNNotificationContent) -> Void)?
     private var rawContent: UNNotificationContent?
-    private var messageId: String?
     private var isExpired = false
     
     deinit {
         AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
-        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {

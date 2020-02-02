@@ -16,7 +16,7 @@ extension AppGroupUserDefaults {
         @Default(namespace: .database, key: Key.vacuumDate, defaultValue: .distantPast)
         public static var vacuumDate: Date
         
-        @Default(namespace: .database, key: Key.isSentSenderKeyCleared, defaultValue: false)
+        @Default(namespace: .database, key: Key.isSentSenderKeyCleared, defaultValue: true)
         public static var isSentSenderKeyCleared: Bool
         
         internal static func migrate() {

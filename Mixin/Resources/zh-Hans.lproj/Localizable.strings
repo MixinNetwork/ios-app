@@ -49,12 +49,12 @@
 "all_photos" = "所有照片";
 "title_help" = "帮助";
 
+"connection_hint_connecting" = "正在连接";
+"connection_hint_progress" = "正在同步 %@%%";
+
 "date_format_day" = "ahh:mm";
 "date_format_month" = "MM月d日 E";
 "date_format_date" = "yyyy年M月d日";
-
-"connection_hint_connecting" = "正在连接";
-"connection_hint_progress" = "正在同步 %@%%";
 
 // Search
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
@@ -687,18 +687,32 @@
 "setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
 "setting_contacts_upload" = "上传手机通讯录";
 
-// About
-"about_twitter" = "关注我们的 Twitter";
-"about_facebook" = "关注我们的 Facebook";
-"about_help" = "帮助中心";
-"about_terms_of_service" = "隐私政策";
-"about_privacy_policy" = "服务条款";
-"about_logout_title" = "想要退出登录？";
-"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
-
-"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
-"report_button"="发送";
-
+// Notifications
+"notification_reply" = "回复";
+"notification_mute" = "屏蔽";
+"notification_content_general" = "你收到了一条消息";
+"notification_content_photo" = "[图片]";
+"notification_content_transfer" = "[转账]";
+"notification_content_file" = "[文件]";
+"notification_content_sticker" = "[贴纸]";
+"notification_content_contact" = "[名片]";
+"notification_content_deposit" = "[充值]";
+"notification_content_fee" = "[手续费]";
+"notification_content_withdrawal" = "[提现]";
+"notification_content_rebate" = "[退款]";
+"notification_content_video" = "[视频]";
+"notification_content_audio" = "[语音]";
+"notification_content_live" = "[直播]";
+"notification_content_voice_call" = "[语音通话]";
+"alert_key_group_message" = "%@发来一条信息";
+"alert_key_group_text_message" = "%@发来一条信息";
+"alert_key_group_image_message" = "%@发来一张图片";
+"alert_key_group_video_message" = "%@发来一个视频";
+"alert_key_group_live_message" = "%@发来一个直播";
+"alert_key_group_data_message" = "%@发来了一个文件";
+"alert_key_group_sticker_message" = "%@发来了一个贴纸";
+"alert_key_group_contact_message" = "%@分享了一个联系人";
+"alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
 "alert_key_contact_image_message" = "发来一张图片";
@@ -710,13 +724,15 @@
 "alert_key_contact_contact_message" = "发来了一个联系人";
 "alert_key_contact_audio_message" = "发来了一个语音";
 "alert_key_contact_audio_call_message" = "邀请你进行语音通话";
-"alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
-"alert_key_group_message" = "%@发来一条信息";
-"alert_key_group_text_message" = "%@发来一条信息";
-"alert_key_group_image_message" = "%@发来一张图片";
-"alert_key_group_video_message" = "%@发来一个视频";
-"alert_key_group_live_message" = "%@发来一个直播";
-"alert_key_group_data_message" = "%@发来了一个文件";
-"alert_key_group_sticker_message" = "%@发来了一个贴纸";
-"alert_key_group_contact_message" = "%@分享了一个联系人";
-"alert_key_group_audio_message" = "%@发来了一个语音";
+
+// About
+"about_twitter" = "关注我们的 Twitter";
+"about_facebook" = "关注我们的 Facebook";
+"about_help" = "帮助中心";
+"about_terms_of_service" = "隐私政策";
+"about_privacy_policy" = "服务条款";
+"about_logout_title" = "想要退出登录？";
+"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
+
+"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
+"report_button"="发送";

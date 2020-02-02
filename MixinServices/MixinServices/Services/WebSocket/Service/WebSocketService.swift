@@ -81,7 +81,7 @@ public class WebSocketService {
             self.connectOnNetworkIsReachable = false
             self.heartbeat?.stop()
             self.socket?.disconnect(forceTimeout: nil, closeCode: CloseCode.exit)
-            self.needsJobRestoration = false
+            self.needsJobRestoration = true
             ConcurrentJobQueue.shared.cancelAllOperations()
             self.messageHandlers.removeAll()
             self.status = .disconnected

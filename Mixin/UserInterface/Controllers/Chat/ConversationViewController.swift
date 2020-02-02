@@ -609,9 +609,6 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func willRecallMessage(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?[SendMessageService.UserInfoKey.conversationId] as? String, conversationId == self.conversationId else {
-            return
-        }
         guard let messageId = notification.userInfo?[SendMessageService.UserInfoKey.messageId] as? String, messageId == previewDocumentMessageId else {
             return
         }

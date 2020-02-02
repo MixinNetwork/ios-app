@@ -49,12 +49,12 @@
 "all_photos" = "All Photos";
 "title_help" = "Help";
 
+"connection_hint_connecting" = "Connecting";
+"connection_hint_progress" = "Syncing %@%%";
+
 "date_format_day" = "hh:mm a";
 "date_format_month" = "E, d MMM";
 "date_format_date" = "MMM dd, yyyy";
-
-"connection_hint_connecting" = "Connecting";
-"connection_hint_progress" = "Syncing %@%%";
 
 // Search
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
@@ -683,18 +683,32 @@
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "setting_contacts_upload" = "Upload Mobile Contacts";
 
-// About
-"about_twitter" = "Follow us on Twitter";
-"about_facebook" = "Follow us on Facebook";
-"about_help" = "Help Center";
-"about_terms_of_service" = "Terms of Service";
-"about_privacy_policy" = "Privacy Policy";
-"about_logout_title" = "Do you want to log out?";
-"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
-
-"report_title"="Send the conversation log to developers?";
-"report_button"="Send";
-
+// Notifications
+"notification_reply" = "Reply";
+"notification_mute" = "Mute";
+"notification_content_general" = "You have a new message";
+"notification_content_photo" = "[Photo]";
+"notification_content_transfer" = "[Transfer]";
+"notification_content_file" = "[File]";
+"notification_content_sticker" = "[Sticker]";
+"notification_content_contact" = "[Contact]";
+"notification_content_deposit" = "[Deposit]";
+"notification_content_fee" = "[Fee]";
+"notification_content_withdrawal" = "[Withdrawal]";
+"notification_content_rebate" = "[Rebate]";
+"notification_content_video" = "[Video]";
+"notification_content_live" = "[Live]";
+"notification_content_audio" = "[Audio]";
+"notification_content_voice_call" = "[Voice Call]";
+"alert_key_group_message" = "%@ send a message";
+"alert_key_group_text_message" = "%@ send a message";
+"alert_key_group_image_message" = "%@ send a photo";
+"alert_key_group_video_message" = "%@ send a video";
+"alert_key_group_live_message" = "%@ send a live stream";
+"alert_key_group_data_message" = "%@ send a file";
+"alert_key_group_sticker_message" = "%@ send a sticker";
+"alert_key_group_contact_message" = "%@ send a contact";
+"alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -706,13 +720,15 @@
 "alert_key_contact_contact_message" = "send you a contact";
 "alert_key_contact_audio_message" = "send you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
-"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
-"alert_key_group_message" = "%@ send a message";
-"alert_key_group_text_message" = "%@ send a message";
-"alert_key_group_image_message" = "%@ send a photo";
-"alert_key_group_video_message" = "%@ send a video";
-"alert_key_group_live_message" = "%@ send a live stream";
-"alert_key_group_data_message" = "%@ send a file";
-"alert_key_group_sticker_message" = "%@ send a sticker";
-"alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send an audio";
+
+// About
+"about_twitter" = "Follow us on Twitter";
+"about_facebook" = "Follow us on Facebook";
+"about_help" = "Help Center";
+"about_terms_of_service" = "Terms of Service";
+"about_privacy_policy" = "Privacy Policy";
+"about_logout_title" = "Do you want to log out?";
+"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
+
+"report_title"="Send the conversation log to developers?";
+"report_button"="Send";

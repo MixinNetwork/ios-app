@@ -37,7 +37,6 @@ class HomeNavigationController: UINavigationController {
         self.isNavigationBarHidden = true
         self.delegate = self
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed {
-            MixinService.callMessageCoordinator = CallManager.shared
             WebSocketService.shared.connect()
             if LoginManager.shared.isLoggedIn {
                 reporter.registerUserInformation()

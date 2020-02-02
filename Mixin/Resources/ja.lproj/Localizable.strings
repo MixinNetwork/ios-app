@@ -47,6 +47,10 @@
 "connection_hint_connecting" = "接続中";
 "connection_hint_progress" = "同期中 %@%%";
 
+"date_format_day" = "hh:mm a";
+"date_format_month" = "E, d MMM";
+"date_format_date" = "yyyy年M月dd日";
+
 // Search
 "search_placeholder_number" = "Mixin IDか電話番号を検索: ";
 "search_placeholder_address" = "ラベル";
@@ -585,18 +589,23 @@
 "setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
 "setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
 
-// About
-"about_twitter" = "Twitterでフォローします";
-"about_facebook" = "Facebookでフォローして";
-"about_help" = "ヘルプセンター";
-"about_terms_of_service" = "利用規約";
-"about_privacy_policy" = "個人情報保護方針";
-"about_logout_title" = "ログアウトしますか？";
-"about_logout_message" = "撤退中にあなたに送信されたすべてのメッセージは破棄され、取得することはできません！";
-
-"report_title"="開発者に会話ログを送りますか？";
-"report_button"="送る";
-
+// Notifications
+"notification_reply" = "返信";
+"notification_mute" = "消音";
+"notification_content_general" = "新しいメッセージがあります";
+"notification_content_photo" = "[写真]";
+"notification_content_transfer" = "[振込]";
+"notification_content_file" = "[ファイル]";
+"notification_content_sticker" = "[ステッカー]";
+"notification_content_contact" = "[連絡先]";
+"notification_content_deposit" = "[受取]";
+"notification_content_fee" = "[費用]";
+"notification_content_withdrawal" = "[出金]";
+"notification_content_rebate" = "[割引]";
+"notification_content_video" = "[ビデオ]";
+"notification_content_live" = "[生放送]";
+"notification_content_audio" = "[オーディオ]";
+"notification_content_voice_call" = "[音声電話]";
 "alert_key_group_message" = "%@ メッセージを送る";
 "alert_key_group_text_message" = "%@ メッセージを送る";
 "alert_key_group_image_message" = "%@ 写真を送る";
@@ -617,4 +626,15 @@
 "alert_key_contact_contact_message" = "あなたに連絡先を送る";
 "alert_key_contact_audio_message" = "あなたに音声を送る";
 "alert_key_contact_audio_call_message" = "音声通話に招待します";
-"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
+
+// About
+"about_twitter" = "Twitterでフォローします";
+"about_facebook" = "Facebookでフォローして";
+"about_help" = "ヘルプセンター";
+"about_terms_of_service" = "利用規約";
+"about_privacy_policy" = "個人情報保護方針";
+"about_logout_title" = "ログアウトしますか？";
+"about_logout_message" = "撤退中にあなたに送信されたすべてのメッセージは破棄され、取得することはできません！";
+
+"report_title"="開発者に会話ログを送りますか？";
+"report_button"="送る";

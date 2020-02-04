@@ -64,10 +64,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
         guard let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String else {
             return
         }
-        guard let conversationCategory = userInfo[UNNotificationContent.UserInfoKey.conversationCategory] as? String else {
-            return
-        }
         if response.actionIdentifier == NotificationActionIdentifier.reply {
+            guard let conversationCategory = userInfo[UNNotificationContent.UserInfoKey.conversationCategory] as? String else {
+                return
+            }
             guard let messageId = userInfo[UNNotificationContent.UserInfoKey.messageId] as? String else {
                 return
             }

@@ -4,7 +4,7 @@ import UserNotifications
 public extension UNNotificationContent {
     
     enum UserInfoKey {
-        public static let conversationId = "mixin_conv_id"
+        public static let conversationId = "conversation_id"
         public static let conversationCategory = "mixin_conv_catg"
         public static let messageId = "mixin_msg_id"
         public static let ownerUserId = "mixin_usr_id"

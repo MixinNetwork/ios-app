@@ -498,8 +498,13 @@ extension ConversationDataSource {
             return
         }
         let messageIsSentByMe = message.userId == me.user_id
-        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue && UIApplication.shared.applicationState == .active {
-            SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
+        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
+            performSynchronouslyOnMainThread {
+                guard UIApplication.shared.applicationState == .active else {
+                    return
+                }
+                SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
+            }
         }
         if !didLoadLatestMessage {
             if messageIsSentByMe {
@@ -601,8 +606,13 @@ extension ConversationDataSource {
                 return
             }
             
-            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != myUserId && UIApplication.shared.applicationState == .active {
-                SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
+            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != myUserId {
+                performSynchronouslyOnMainThread {
+                    guard UIApplication.shared.applicationState == .active else {
+                        return
+                    }
+                    SendMessageService.shared.sendReadMessages(conversationId: message.conversationId)
+                }
             }
             
             DispatchQueue.main.sync {

@@ -1,9 +1,17 @@
 import UIKit
 
 class MessageCell: UITableViewCell {
-
+    
     let backgroundImageView = UIImageView()
-
+    
+    lazy var quotedMessageView: QuotedMessageView = {
+        let view = QuotedMessageView()
+        quotedMessageViewIfLoaded = view
+        return view
+    }()
+    
+    private(set) weak var quotedMessageViewIfLoaded: QuotedMessageView?
+    
     var viewModel: MessageViewModel?
     
     required init?(coder aDecoder: NSCoder) {
@@ -22,6 +30,14 @@ class MessageCell: UITableViewCell {
     
     func render(viewModel: MessageViewModel) {
         self.viewModel = viewModel
+        if viewModel.quotedMessageViewModel == nil {
+            quotedMessageViewIfLoaded?.removeFromSuperview()
+        } else {
+            if quotedMessageView.superview == nil {
+                contentView.addSubview(quotedMessageView)
+            }
+            quotedMessageView.frame = viewModel.quotedMessageViewFrame
+        }
     }
     
     func prepare() {
@@ -31,5 +47,5 @@ class MessageCell: UITableViewCell {
         selectedBackgroundView?.backgroundColor = .clear
         contentView.insertSubview(backgroundImageView, at: 0)
     }
-
+    
 }

@@ -839,9 +839,7 @@ extension ConversationDataSource {
         if message.status == MessageStatus.FAILED.rawValue {
             viewModel = DecryptionFailedMessageViewModel(message: message)
         } else {
-            if message.quoteMessageId != nil && message.quoteContent != nil {
-                viewModel = QuoteTextMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_TEXT") {
+            if message.category.hasSuffix("_TEXT") {
                 viewModel = TextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_IMAGE") {
                 viewModel = PhotoMessageViewModel(message: message)

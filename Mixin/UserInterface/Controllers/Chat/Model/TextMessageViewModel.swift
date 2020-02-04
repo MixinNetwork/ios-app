@@ -35,13 +35,28 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0
     }
-
+    
     var backgroundWidth: CGFloat {
-        return contentAdditionalLeadingMargin + contentSize.width + contentMargin.horizontal
+        let width = contentAdditionalLeadingMargin
+            + contentSize.width
+            + contentMargin.horizontal
+        if let viewModel = quotedMessageViewModel {
+            return max(width, viewModel.contentSize.width)
+        } else {
+            return width
+        }
     }
     
     var contentLabelTopMargin: CGFloat {
-        return style.contains(.fullname) ? fullnameHeight : contentMargin.top
+        if let viewModel = quotedMessageViewModel {
+            return fullnameHeight + viewModel.contentSize.height + QuotedMessageViewModel.backgroundMargin.vertical
+        } else {
+            if style.contains(.fullname) {
+                return fullnameFrame.height
+            } else {
+                return contentMargin.top
+            }
+        }
     }
     
     var contentAdditionalLeadingMargin: CGFloat {
@@ -222,6 +237,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         }
         cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        if let viewModel = quotedMessageViewModel {
+            if style.contains(.fullname) {
+                backgroundImageFrame.origin.y += fullnameFrame.height
+                backgroundImageFrame.size.height -= fullnameFrame.height
+            }
+            let size = CGSize(width: backgroundImageFrame.width, height: viewModel.contentSize.height)
+            quotedMessageViewFrame = CGRect(origin: backgroundImageFrame.origin, size: size)
+            viewModel.layout(width: backgroundImageFrame.width, style: style)
+        }
     }
     
     func highlight(keyword: String) {

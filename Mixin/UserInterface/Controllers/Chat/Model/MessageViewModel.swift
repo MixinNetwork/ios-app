@@ -7,14 +7,15 @@ class MessageViewModel: CustomDebugStringConvertible {
     
     let message: MessageItem
     let isEncrypted: Bool
-    let quote: Quote?
     let time: String
+    let quotedMessageViewModel: QuotedMessageViewModel?
     
     private(set) var layoutWidth: CGFloat = 414
     
     var thumbnail: UIImage?
     var backgroundImage: UIImage?
     var backgroundImageFrame = CGRect.zero
+    var quotedMessageViewFrame: CGRect = .zero
     var cellHeight: CGFloat = 44
     
     var contentMargin: Margin {
@@ -53,16 +54,17 @@ class MessageViewModel: CustomDebugStringConvertible {
         } else {
             thumbnail = nil
         }
-        if let quoteContent = message.quoteContent {
-            self.quote = Quote(quoteContent: quoteContent)
+        if let quoteContent = message.quoteContent, let quote = Quote(quoteContent: quoteContent) {
+            self.quotedMessageViewModel = QuotedMessageViewModel(quote: quote)
         } else {
-            self.quote = nil
+            self.quotedMessageViewModel = nil
         }
     }
     
     func layout(width: CGFloat, style: Style) {
         layoutWidth = width
         _style = style
+        quotedMessageViewModel?.ensureContentSize(width: width)
     }
     
 }

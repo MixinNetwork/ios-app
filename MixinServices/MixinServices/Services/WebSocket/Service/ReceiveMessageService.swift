@@ -28,6 +28,7 @@ public class ReceiveMessageService: MixinService {
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
+    public var isStopProcessMessages = false
 
     override var processing: Bool {
         didSet {
@@ -115,6 +116,9 @@ public class ReceiveMessageService: MixinService {
         guard !isAppExtension else {
             return
         }
+        guard !isStopProcessMessages else {
+            return
+        }
         guard !processing else {
             return
         }
@@ -140,6 +144,9 @@ public class ReceiveMessageService: MixinService {
             var finishedJobCount = 0
 
             repeat {
+                if ReceiveMessageService.shared.isStopProcessMessages {
+                    return
+                }
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
                 guard blazeMessageDatas.count > 0 else {
                     return
@@ -152,6 +159,9 @@ public class ReceiveMessageService: MixinService {
                 }
 
                 for data in blazeMessageDatas {
+                    if ReceiveMessageService.shared.isStopProcessMessages {
+                        return
+                    }
                     ReceiveMessageService.shared.processReceiveMessage(data: data)
                 }
 

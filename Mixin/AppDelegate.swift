@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let window = UIWindow(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
+    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
+    private var backgroundTime: Timer?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
@@ -48,7 +50,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+
+        cancelBackgroundTask()
+        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            self.cancelBackgroundTask()
+        })
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { (time) in
+            WebSocketService.shared.disconnect()
+            ReceiveMessageService.shared.isStopProcessMessages = true
+            self.cancelBackgroundTask()
+        }
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -60,7 +74,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
-        WebSocketService.shared.reconnectIfNeeded()
+        cancelBackgroundTask()
+        ReceiveMessageService.shared.isStopProcessMessages = false
+        WebSocketService.shared.connectIfNeeded()
         
         if let conversationId = UIApplication.currentConversationId() {
             SendMessageService.shared.sendReadMessages(conversationId: conversationId)
@@ -77,6 +93,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         pendingShortcutItem = nil
+    }
+
+    private func cancelBackgroundTask() {
+        self.backgroundTime?.invalidate()
+        self.backgroundTime = nil
+        if backgroundTaskID != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+            backgroundTaskID = .invalid
+        }
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {

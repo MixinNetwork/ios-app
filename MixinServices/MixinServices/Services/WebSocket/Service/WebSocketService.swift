@@ -19,7 +19,6 @@ public class WebSocketService {
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
-    private let darwinNotifyCenter = CFNotificationCenterGetDarwinNotifyCenter()
     
     private var host: String?
     private var rechability: NetworkReachabilityManager?

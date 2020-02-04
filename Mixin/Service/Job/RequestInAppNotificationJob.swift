@@ -48,6 +48,10 @@ class RequestInAppNotificationJob: BaseJob {
         }
         
         DispatchQueue.main.sync {
+            guard message.conversationId != UIApplication.currentConversationId() else {
+                return
+            }
+            
             AppDelegate.current.updateApplicationIconBadgeNumber()
             let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
             let request = UNNotificationRequest(identifier: message.messageId, content: content, trigger: nil)

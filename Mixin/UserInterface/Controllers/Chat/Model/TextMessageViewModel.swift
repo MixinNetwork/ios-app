@@ -23,6 +23,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     private var contentSize = CGSize.zero // contentSize is textSize concatenated with additionalTrailingSize and fullname width
     private var linkRanges = [Link.Range]()
     
+    // The content presented may differs from message.content,
+    // e.g. when contentAttributedString is overrided
+    // highlight(keyword:) will be using this var for keyword range enumeration
+    private var presentedContent: String
+    
     override var debugDescription: String {
         return super.debugDescription + ", contentSize: \(contentSize), contentLength: \(message.content.count)"
     }
@@ -62,15 +67,18 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override init(message: MessageItem) {
+        presentedContent = message.content
         super.init(message: message)
         linkRanges = self.linkRanges(from: rawContent)
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
+        let attributedString = self.contentAttributedString
+        presentedContent = attributedString.string
         // Make CTLine and Origins
         var (lines, lineOrigins, lineRanges, textSize, lastLineWidth) = { () -> ([CTLine], [CGPoint], [CFRange], CGSize, CGFloat) in
-            let cfStr = contentAttributedString as CFAttributedString
+            let cfStr = attributedString as CFAttributedString
             let typesetter = CTTypesetterCreateWithAttributedString(cfStr)
             let typesetWidth = Double(maxContentWidth)
             
@@ -220,15 +228,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         guard let content = content else {
             return
         }
-        let messageContent = message.content as NSString
-        var searchRange = NSRange(location: 0, length: messageContent.length)
+        let presentedContent = self.presentedContent as NSString
+        var searchRange = NSRange(location: 0, length: presentedContent.length)
         var highlightRanges = [NSRange]()
-        while searchRange.location < messageContent.length {
-            let foundRange = messageContent.range(of: keyword, options: .caseInsensitive, range: searchRange)
+        while searchRange.location < presentedContent.length {
+            let foundRange = presentedContent.range(of: keyword, options: .caseInsensitive, range: searchRange)
             if foundRange.location != NSNotFound {
                 highlightRanges.append(foundRange)
                 searchRange.location = foundRange.location + foundRange.length
-                searchRange.length = messageContent.length - searchRange.location
+                searchRange.length = presentedContent.length - searchRange.location
             } else {
                 break
             }

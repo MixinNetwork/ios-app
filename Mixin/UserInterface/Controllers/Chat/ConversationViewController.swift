@@ -831,7 +831,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         let message = viewModel.message
         switch action {
         case .copy:
-            if message.category.hasSuffix("_TEXT") {
+            if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
                 UIPasteboard.general.string = message.content
             }
         case .delete:

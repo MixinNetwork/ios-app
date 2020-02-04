@@ -8,7 +8,7 @@ extension MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m
         LEFT JOIN users u ON m.user_id = u.user_id
-        WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT', 'SIGNAL_DATA','PLAIN_TEXT','PLAIN_DATA')
+        WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST')
         AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
     """
     

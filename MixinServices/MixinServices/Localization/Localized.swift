@@ -32,6 +32,7 @@ public class Localized {
     public static let ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE = localized("alert_key_contact_audio_call_message")
     public static let ALERT_KEY_CONTACT_LIVE_MESSAGE = localized("alert_key_contact_live_message")
     public static let ALERT_KEY_CONTACT_AUDIO_CALL_CANCELLED_MESSAGE = localized("alert_key_contact_audio_call_cancelled_message")
+    public static let ALERT_KEY_CONTACT_POST_MESSAGE = localized("alert_key_contact_post_message")
     
     public static func ALERT_KEY_GROUP_MESSAGE(fullname: String) -> String {
         return localized("alert_key_group_message", arguments: [fullname])
@@ -59,6 +60,9 @@ public class Localized {
     }
     public static func ALERT_KEY_GROUP_LIVE_MESSAGE(fullname: String) -> String {
         return localized("alert_key_group_live_message", arguments: [fullname])
+    }
+    public static func ALERT_KEY_GROUP_POST_MESSAGE(fullname: String) -> String {
+        return localized("alert_key_group_post_message", arguments: [fullname])
     }
     
     public static let TOAST_API_ERROR_CONNECTION_TIMEOUT = localized("toast_api_error_connection_timeout")

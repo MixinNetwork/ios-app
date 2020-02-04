@@ -405,7 +405,7 @@ public final class MessageDAO {
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
         
-        if category.hasSuffix("_TEXT") {
+        if ["_TEXT", "_POST"].contains(where: category.hasSuffix(_:)) {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteContent, MixinDatabase.NullValue()))

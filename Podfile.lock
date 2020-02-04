@@ -125,11 +125,11 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - PhoneNumberKit (3.1.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 3.1.0)
-    - PhoneNumberKit/UIKit (= 3.1.0)
-  - PhoneNumberKit/PhoneNumberKitCore (3.1.0)
-  - PhoneNumberKit/UIKit (3.1.0):
+  - PhoneNumberKit (3.2.0):
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.2.0)
+    - PhoneNumberKit/UIKit (= 3.2.0)
+  - PhoneNumberKit/PhoneNumberKitCore (3.2.0)
+  - PhoneNumberKit/UIKit (3.2.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.3)
@@ -273,7 +273,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
   MixinServices: f09751f52082cab5cb98f0070f6dda4d2a29a666
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  PhoneNumberKit: adffe4e128af1918386e09e7421d3d851a2987af
+  PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9

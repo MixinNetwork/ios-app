@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import MixinServices
+import FirebaseMLVision
 
 enum MuteInterval {
     static let none: Int64 = 0
@@ -16,10 +17,9 @@ enum StatusBarHeight {
 
 let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
 
-let qrCodeDetector: CIDetector? = {
-    let context = CIContext()
-    let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-    return CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
+let qrCodeDetector: VisionBarcodeDetector = {
+    let options = VisionBarcodeDetectorOptions(formats: .qrCode)
+    return Vision.vision().barcodeDetector(options: options)
 }()
 
 let bytesPerMegaByte: UInt = 1024 * 1024

@@ -3,6 +3,7 @@ import WebKit
 import Photos
 import YYImage
 import MixinServices
+import FirebaseMLVision
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
@@ -154,22 +155,19 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     private func detectQrCode(image: UIImage) {
-        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-            return
-        }
-        let ciImage = CIImage(cgImage: cgImage)
-        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-            guard let string = feature.messageString, !string.isEmpty else {
-                continue
+        let image = VisionImage(image: image)
+        qrCodeDetector.detect(in: image) { [weak self] (features, error) in
+            guard let weakSelf = self else {
+                return
             }
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.qrCodeString = string
-                self.notificationController.present(urlString: string)
+            guard error == nil else {
+                return
             }
-            break
+            guard let string = features?.first?.rawValue else {
+                return
+            }
+            weakSelf.qrCodeString = string
+            weakSelf.notificationController.present(urlString: string)
         }
     }
     

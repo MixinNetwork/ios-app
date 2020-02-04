@@ -28,7 +28,19 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
         textView.delegate = self
         textView.text = announcement
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIView.performWithoutAnimation {
+            // Workaround for view's layout issue
+            // view.frame.origin here is {0, 0}
+            view.layoutIfNeeded()
+            // Now it becomes {0, v}
+            // v is found to be (windowHeight - xibHeight) / 2
+            view.frame.origin = .zero // Set it back to {0, 0}
+        }
+    }
+    
     override func layout(for keyboardFrame: CGRect) {
         keyboardPlaceholderHeightConstraint.constant = view.frame.height - keyboardFrame.origin.y
         view.layoutIfNeeded()

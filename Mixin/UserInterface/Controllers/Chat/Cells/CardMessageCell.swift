@@ -23,13 +23,13 @@ class CardMessageCell: DetailInfoMessageCell {
         leftView.snp.makeConstraints { (make) in
             leftViewLeadingConstraint = make.leading
                 .equalTo(backgroundImageView)
-                .priority(.high)
+                .priority(ConstraintPriority(999))
                 .constraint
         }
         rightView.snp.makeConstraints { (make) in
             rightViewTrailingConstraint = make.trailing
                 .equalTo(backgroundImageView)
-                .priority(.high)
+                .priority(ConstraintPriority(999))
                 .constraint
         }
     }

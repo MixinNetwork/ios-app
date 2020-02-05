@@ -342,7 +342,7 @@ html {
 
 body {
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.42857143;
     color: #333;
     background-color: #fff
@@ -554,17 +554,17 @@ h6 small {
 
 .h1,
 h1 {
-    font-size: 36px
+    font-size: 30px
 }
 
 .h2,
 h2 {
-    font-size: 30px
+    font-size: 26px
 }
 
 .h3,
 h3 {
-    font-size: 24px
+    font-size: 22px
 }
 
 .h4,
@@ -820,8 +820,8 @@ abbr[title] {
 blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee
+    font-size: 16px;
+    border-left: 4px solid #eee
 }
 
 blockquote ol:last-child,
@@ -1177,6 +1177,31 @@ table th[class*=col-] {
     overflow-x: auto;
     min-height: .01%
 }
+
+@media (prefers-color-scheme: dark) {
+    hr {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .table>tbody>tr>td,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>td,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>thead>tr>th {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .table>thead>tr>th {
+        vertical-align: bottom;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    blockquote {
+        border-left: 4px solid rgba(255, 255, 255, 0.2);
+    }
+}
+
 
 @media screen and (max-width:767px) {
     .table-responsive {

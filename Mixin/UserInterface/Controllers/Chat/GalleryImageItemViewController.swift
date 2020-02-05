@@ -1,5 +1,6 @@
 import UIKit
 import YYImage
+import FirebaseMLVision
 import Photos
 import MixinServices
 
@@ -127,17 +128,16 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 guard let image = image, let weakSelf = self, weakSelf.item == item else {
                     return
                 }
-                guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-                    return
-                }
-                let ciImage = CIImage(cgImage: cgImage)
-                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                    guard let string = feature.messageString, let url = URL(string: string) else {
-                        continue
+                let visionImage = VisionImage(image: image)
+                qrCodeDetector.detect(in: visionImage, completion: { (features, error) in
+                    guard let urlString = features?.first?.rawValue else {
+                        return
                     }
-                    self?.detectedUrl = url
-                    break
-                }
+                    guard let weakSelf = self, weakSelf.item == item else {
+                        return
+                    }
+                    weakSelf.detectedUrl = URL(string: urlString)
+                })
             }
         }
         

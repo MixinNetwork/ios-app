@@ -29,6 +29,10 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
         let string = lines.joined(separator: "\n")
         let md = SwiftyMarkdown(string: string)
         md.link.color = .theme
+        let size = Counter(value: 15)
+        for style in [md.body, md.h6, md.h5, md.h4, md.h3, md.h2, md.h1] {
+            style.fontSize = CGFloat(size.advancedValue)
+        }
         return md.attributedString()
     }
     

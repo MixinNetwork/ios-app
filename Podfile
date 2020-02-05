@@ -31,7 +31,7 @@ target 'Mixin' do
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
-  pod 'SwiftyMarkdown'
+  pod 'SwiftyMarkdown', :git => 'https://github.com/wuyuehyang/SwiftyMarkdown.git'
   mixin_services
 end
 

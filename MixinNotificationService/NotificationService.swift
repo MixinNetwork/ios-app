@@ -6,6 +6,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private var contentHandler: ((UNNotificationContent) -> Void)?
     private var rawContent: UNNotificationContent?
     private var isExpired = false
+    private var conversationId: String?
     
     deinit {
         AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
@@ -14,6 +15,7 @@ final class NotificationService: UNNotificationServiceExtension {
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
         self.rawContent = request.content
+        self.conversationId = request.content.userInfo["conversation_id"] as? String
 
         guard let messageId = request.content.userInfo["message_id"] as? String, canProcessMessages else {
             deliverRawContent()
@@ -66,6 +68,12 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
         contentHandler?(rawContent)
+
+        if let conversationId = self.conversationId {
+            let websocketStatus = AppGroupUserDefaults.websocketStatusInMainApp.rawValue
+            let isProcessingMessages = AppGroupUserDefaults.isProcessingMessagesInMainApp
+            Logger.write(conversationId: conversationId, log: "[AppExtension]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)")
+        }
     }
     
 }

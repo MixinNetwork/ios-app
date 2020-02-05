@@ -59,8 +59,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.cancelBackgroundTask()
         })
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { (time) in
-            WebSocketService.shared.disconnect()
             ReceiveMessageService.shared.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
             self.cancelBackgroundTask()
         }
     }
@@ -144,9 +144,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
+        guard UIApplication.shared.applicationState != .active else {
+            return
+        }
+        
         Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification", newSection: true)
+        cancelBackgroundTask()
+        ReceiveMessageService.shared.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+            ReceiveMessageService.shared.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
             completionHandler(.newData)
         }
     }

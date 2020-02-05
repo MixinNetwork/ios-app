@@ -88,7 +88,7 @@ class UrlWindow {
                     let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
                     reporter.report(event: .openApp, userInfo: userInfo)
                     DispatchQueue.main.async {
-                        WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                     }
                 } else {
                     let vc = UserProfileViewController(user: user)

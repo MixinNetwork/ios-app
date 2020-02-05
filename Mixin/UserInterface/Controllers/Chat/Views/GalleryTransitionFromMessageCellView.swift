@@ -3,7 +3,6 @@ import UIKit
 class GalleryTransitionFromMessageCellView: GalleryTransitionView {
     
     private let accessoryContainerView = UIView()
-    private let shadowImageView = UIImageView(image: PhotoRepresentableMessageViewModel.shadowImage)
     private let timeLabel = UILabel()
     private let statusImageView = UIImageView()
     private let maskLayer = BubbleLayer()
@@ -32,7 +31,6 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         accessoryContainerView.transform = .identity
         accessoryContainerView.alpha = 1
         accessoryContainerView.frame = bounds
-        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageWrapperView)
         timeLabel.text = viewModel.time
         timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
         statusImageView.image = viewModel.statusImage
@@ -97,7 +95,6 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         let scale = bounds.width / cell.contentImageWrapperView.frame.width
         accessoryContainerView.transform = .identity
         accessoryContainerView.bounds.size = cell.contentImageWrapperView.bounds.size
-        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageWrapperView)
         timeLabel.text = viewModel.time
         timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
         statusImageView.image = viewModel.statusImage
@@ -132,9 +129,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         timeLabel.textAlignment = .right
         timeLabel.textColor = .white
         statusImageView.contentMode = .left
-        shadowImageView.frame.size = shadowImageView.image?.size ?? .zero
         accessoryContainerView.backgroundColor = .clear
-        accessoryContainerView.addSubview(shadowImageView)
         accessoryContainerView.addSubview(timeLabel)
         accessoryContainerView.addSubview(statusImageView)
         addSubview(accessoryContainerView)

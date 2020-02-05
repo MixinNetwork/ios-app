@@ -6,7 +6,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
     let maskingContentView = UIView()
     let contentImageWrapperView = VerticalPositioningImageView()
-    let shadowImageView = UIImageView(image: PhotoRepresentableMessageViewModel.shadowImage)
+    let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     
     var contentImageView: UIImageView {
         return contentImageWrapperView.imageView
@@ -23,6 +23,10 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         return contentImageWrapperView.frame
     }
     
+    override var trailingInfoColor: UIColor {
+        .white
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
@@ -30,8 +34,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
             contentImageWrapperView.frame = viewModel.presentationFrame
             contentImageWrapperView.aspectRatio = viewModel.contentRatio
             selectedOverlapView.frame = contentImageWrapperView.bounds
-            shadowImageView.frame = CGRect(origin: viewModel.shadowImageOrigin,
-                                           size: shadowImageView.image?.size ?? .zero)
+            trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
         }
     }
     
@@ -40,17 +43,15 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         maskingContentView.frame = contentView.bounds
         maskingContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         maskingContentView.addSubview(contentImageWrapperView)
-        shadowImageView.contentMode = .scaleToFill
-        shadowImageView.clipsToBounds = true
-        maskingContentView.addSubview(shadowImageView)
-        timeLabel.textColor = .white
-        encryptedImageView.tintColor = .white
         updateAppearance(highlight: false, animated: false)
         contentImageWrapperView.addSubview(selectedOverlapView)
+        contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
         backgroundImageView.removeFromSuperview()
         maskingContentView.layer.masksToBounds = true
         maskingContentView.layer.mask = backgroundImageView.layer
+        encryptedImageView.alpha = 0.9
+        statusImageView.alpha = 0.9
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {

@@ -36,7 +36,7 @@ extension RecognizeWindow: UITextViewDelegate {
             return true
         }
         dismissPopupControllerAnimated()
-        WebViewController.presentInstance(with: .init(conversationId: "", initialUrl: URL), asChildOf: parent)
+        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: URL), asChildOf: parent)
         return false
     }
     

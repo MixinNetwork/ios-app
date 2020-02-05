@@ -396,9 +396,9 @@ public class ReceiveMessageService: MixinService {
     }
     
     private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
-        if data.category.hasSuffix("_TEXT") {
+        if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
             var content = plainText
-            if data.category == MessageCategory.PLAIN_TEXT.rawValue {
+            if data.category.hasPrefix("PLAIN_") {
                 guard let decoded = plainText.base64Decoded() else {
                     return
                 }
@@ -470,7 +470,11 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func insertFailedMessage(data: BlazeMessageData) {
-        guard data.category == MessageCategory.SIGNAL_TEXT.rawValue || data.category == MessageCategory.SIGNAL_IMAGE.rawValue || data.category == MessageCategory.SIGNAL_DATA.rawValue || data.category == MessageCategory.SIGNAL_VIDEO.rawValue || data.category == MessageCategory.SIGNAL_LIVE.rawValue || data.category == MessageCategory.SIGNAL_AUDIO.rawValue || data.category == MessageCategory.SIGNAL_CONTACT.rawValue || data.category == MessageCategory.SIGNAL_STICKER.rawValue else {
+        let availableCategories: [MessageCategory] = [
+            .SIGNAL_TEXT, .SIGNAL_IMAGE, .SIGNAL_DATA, .SIGNAL_VIDEO,
+            .SIGNAL_LIVE, .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST
+        ]
+        guard availableCategories.contains(where: { data.category == $0.rawValue }) else {
             return
         }
         var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
@@ -488,7 +492,7 @@ public class ReceiveMessageService: MixinService {
             }
         }
         switch data.category {
-        case MessageCategory.SIGNAL_TEXT.rawValue:
+        case MessageCategory.SIGNAL_TEXT.rawValue, MessageCategory.SIGNAL_POST.rawValue:
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
@@ -698,7 +702,7 @@ public class ReceiveMessageService: MixinService {
             default:
                 break
             }
-        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
+        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)

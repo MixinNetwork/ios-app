@@ -4,7 +4,7 @@ import WCDBSwift
 public class SendMessageService: MixinService {
 
     public static let shared = SendMessageService()
-    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]
+    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST"]
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
@@ -34,7 +34,9 @@ public class SendMessageService: MixinService {
     }
 
     public func sendMessage(message: Message, data: String?) {
-        let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
+        let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
+            || message.category == MessageCategory.PLAIN_POST.rawValue
+        let content = shouldEncodeContent ? data?.base64Encoded() : data
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
             SendMessageService.shared.processMessages()
@@ -460,7 +462,9 @@ extension SendMessageService {
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.data == nil {
-                if message.category == MessageCategory.PLAIN_TEXT.rawValue {
+                let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
+                    || message.category == MessageCategory.PLAIN_POST.rawValue
+                if shouldEncodeContent {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {
                     blazeMessage.params?.data = message.content

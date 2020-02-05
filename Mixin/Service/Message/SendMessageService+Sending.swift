@@ -51,8 +51,10 @@ extension SendMessageService {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue :  MessageCategory.PLAIN_AUDIO.rawValue
         } else if msg.category.hasSuffix("_LIVE") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_LIVE.rawValue :  MessageCategory.PLAIN_LIVE.rawValue
+        } else if msg.category.hasSuffix("_POST") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_POST.rawValue :  MessageCategory.PLAIN_POST.rawValue
         }
-
+        
         if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
             guard let user = ownerUser else {
                 return
@@ -68,7 +70,7 @@ extension SendMessageService {
         if !message.category.hasPrefix("WEBRTC_") {
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         }
-        if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_LIVE") {
+        if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
             UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))

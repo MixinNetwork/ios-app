@@ -220,6 +220,7 @@
 "chat_message_call_duration" = "Duration %@";
 "chat_message_recalled" = "This message was deleted";
 "chat_message_recalled_by_me" = "You deleted this message";
+"chat_message_post_tag" = "Post";
 "chat_cell_title_encryption" = "Messages to this conversation are encrypted end-to-end, click for more information";
 "chat_cell_title_unknown_category" = "This type of message is not supported, please upgrade Mixin to the latest version.";
 "chat_forward_title" = "Forward";
@@ -246,6 +247,7 @@
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
 "chat_quote_type_live" = "Live";
+"chat_quote_type_post" = "Post";
 "chat_search_giphy" = "Search GIPHY";
 "chat_restore" = "Restore";
 "chat_restore_title" = "Restore your\nchat history from iCloud";
@@ -703,15 +705,8 @@
 "notification_content_live" = "[Live]";
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
-"alert_key_group_message" = "%@ send a message";
-"alert_key_group_text_message" = "%@ send a message";
-"alert_key_group_image_message" = "%@ send a photo";
-"alert_key_group_video_message" = "%@ send a video";
-"alert_key_group_live_message" = "%@ send a live stream";
-"alert_key_group_data_message" = "%@ send a file";
-"alert_key_group_sticker_message" = "%@ send a sticker";
-"alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send an audio";
+"notification_content_post" = "[Post]";
+
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -723,6 +718,19 @@
 "alert_key_contact_contact_message" = "send you a contact";
 "alert_key_contact_audio_message" = "send you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
+"alert_key_contact_post_message" = "send you a post";
+
+"alert_key_group_message" = "%@ send a message";
+"alert_key_group_text_message" = "%@ send a message";
+"alert_key_group_image_message" = "%@ send a photo";
+"alert_key_group_video_message" = "%@ send a video";
+"alert_key_group_live_message" = "%@ send a live stream";
+"alert_key_group_data_message" = "%@ send a file";
+"alert_key_group_sticker_message" = "%@ send a sticker";
+"alert_key_group_contact_message" = "%@ send a contact";
+"alert_key_group_audio_message" = "%@ send an audio";
+"alert_key_group_post_message" = "%@ send a post";
 
 // About
 "about_twitter" = "Follow us on Twitter";

@@ -3,12 +3,14 @@ import MixinServices
 
 class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     
-    override class var ctFont: CTFont {
-        return CoreTextFontSet.recalledMessage.ctFont
-    }
+    private static let normalFont: UIFont = {
+        let size: CGFloat = 16
+        let descriptor = UIFont.systemFont(ofSize: size).fontDescriptor.withMatrix(.italic)
+        return UIFont(descriptor: descriptor, size: size)
+    }()
     
-    override class var lineHeight: CGFloat {
-        return CoreTextFontSet.recalledMessage.lineHeight
+    override class var font: UIFont {
+        UIFontMetrics.default.scaledFont(for: normalFont)
     }
     
     override var rawContent: String {

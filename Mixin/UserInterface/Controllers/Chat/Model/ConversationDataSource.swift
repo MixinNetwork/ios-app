@@ -642,7 +642,7 @@ extension ConversationDataSource {
         if let messageId = messageId {
             message.messageId = messageId
         }
-        if type == .SIGNAL_TEXT, let text = value as? String {
+        if type == .SIGNAL_TEXT || type == .SIGNAL_POST, let text = value as? String {
             message.content = text
             queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
@@ -857,6 +857,8 @@ extension ConversationDataSource {
                 viewModel = ContactMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LIVE") {
                 viewModel = LiveMessageViewModel(message: message)
+            } else if message.category.hasSuffix("_POST") {
+                viewModel = PostMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

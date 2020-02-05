@@ -479,6 +479,8 @@ class ConversationViewController: UIViewController {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }
+            } else if message.category.hasSuffix("_POST") {
+                PostWebViewController.presentInstance(message: message, asChildOf: self)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)
@@ -721,7 +723,7 @@ class ConversationViewController: UIViewController {
         }
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
-        WebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
+        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
     }
     
     // MARK: - Class func
@@ -829,7 +831,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         let message = viewModel.message
         switch action {
         case .copy:
-            if message.category.hasSuffix("_TEXT") {
+            if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
@@ -1343,7 +1345,6 @@ extension ConversationViewController {
         }
         var contentViews = [
             cell.contentImageView,
-            cell.shadowImageView,
             cell.timeLabel,
             cell.statusImageView
         ]
@@ -1502,9 +1503,9 @@ extension ConversationViewController {
         }
 
         if let app = app {
-            WebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
+            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
         } else {
-            WebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
     }
     

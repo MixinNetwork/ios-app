@@ -7,20 +7,12 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     let operationButton: NetworkOperationButton! = ModernNetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
-    let lengthLabel = InsetLabel()
+    let lengthLabel = MessageTagLabel()
     
     override func prepare() {
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
-        lengthLabel.layer.backgroundColor = UIColor.black.withAlphaComponent(0.4).cgColor
-        lengthLabel.textColor = .white
-        lengthLabel.font = .preferredFont(forTextStyle: .caption1)
-        lengthLabel.adjustsFontForContentSizeCategory = true
-        lengthLabel.numberOfLines = 1
-        lengthLabel.layer.cornerRadius = 4
-        lengthLabel.clipsToBounds = true
-        lengthLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
         contentView.addSubview(lengthLabel)
     }
     

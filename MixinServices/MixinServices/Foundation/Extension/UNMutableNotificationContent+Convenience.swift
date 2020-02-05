@@ -86,6 +86,12 @@ public extension UNMutableNotificationContent {
             } else {
                 return Localized.ALERT_KEY_CONTACT_CONTACT_MESSAGE
             }
+        } else if message.category.hasSuffix("_POST") {
+            if conversationIsGroup || isRepresentativeMessage {
+                return Localized.ALERT_KEY_GROUP_POST_MESSAGE(fullname: message.userFullName)
+            } else {
+                return Localized.ALERT_KEY_CONTACT_POST_MESSAGE
+            }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:

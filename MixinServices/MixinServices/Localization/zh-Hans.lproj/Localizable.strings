@@ -14,6 +14,7 @@
 "notification_content_audio" = "[语音]";
 "notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
+"notification_content_post" = "[文章]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
@@ -27,6 +28,8 @@
 "alert_key_contact_audio_message" = "发来了一个语音";
 "alert_key_contact_audio_call_message" = "邀请你进行语音通话";
 "alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
+"alert_key_contact_post_message" = "发来一篇文章";
+
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
 "alert_key_group_image_message" = "%@发来一张图片";
@@ -36,6 +39,7 @@
 "alert_key_group_sticker_message" = "%@发来了一个贴纸";
 "alert_key_group_contact_message" = "%@分享了一个联系人";
 "alert_key_group_audio_message" = "%@发来了一个语音";
+"alert_key_group_post_message" = "%@发来了一篇文章";
 
 "toast_api_error_connection_timeout" = "网络连接超时";
 "toast_operation_failed" = "操作失败，请稍后重试";

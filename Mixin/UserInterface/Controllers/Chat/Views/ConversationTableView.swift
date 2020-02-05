@@ -15,7 +15,7 @@ extension MessageItem {
         var actions = [Selector]()
         if status == MessageStatus.FAILED.rawValue || category.hasPrefix("WEBRTC_") {
             actions = [.delete]
-        } else if category.hasSuffix("_TEXT") {
+        } else if category.hasSuffix("_TEXT") || category.hasSuffix("_POST") {
             actions = [.reply, .forward, .copy, .delete]
         } else if category.hasSuffix("_STICKER") {
             actions = [.addToStickers, .reply, .forward, .delete]
@@ -293,6 +293,7 @@ class ConversationTableView: UITableView {
         register(QuoteTextMessageCell.self, forCellReuseIdentifier: ReuseId.quoteText.rawValue)
         register(IconPrefixedTextMessageCell.self, forCellReuseIdentifier: ReuseId.iconPrefixedText.rawValue)
         register(LiveMessageCell.self, forCellReuseIdentifier: ReuseId.live.rawValue)
+        register(PostMessageCell.self, forCellReuseIdentifier: ReuseId.post.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -332,6 +333,7 @@ extension ConversationTableView {
         case appCard = "AppCardMessageCell"
         case audio = "AudioMessageCell"
         case live = "LiveMessageCell"
+        case post = "PostMessageCell"
         case quoteText = "QuoteTextMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
         case header = "DateHeader"
@@ -353,6 +355,8 @@ extension ConversationTableView {
                 self = .audio
             } else if category.hasSuffix("_LIVE") {
                 self = .live
+            } else if category.hasSuffix("_POST") {
+                self = .post
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

@@ -18,6 +18,8 @@ extension MessageCategory {
             return R.image.ic_message_live()
         } else if category.hasSuffix("_AUDIO") {
             return #imageLiteral(resourceName: "ic_message_audio")
+        } else if category.hasSuffix("_POST") {
+            return R.image.ic_message_post()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return #imageLiteral(resourceName: "ic_message_transfer")
         } else if category.hasPrefix("WEBRTC_") {

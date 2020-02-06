@@ -40,11 +40,15 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        let messageId = message.messageId
+        let conversationId = message.conversationId
+        DispatchQueue.global().async {
+            MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .PENDING, conversationId: conversationId)
+        }
         if shouldUpload {
             UploaderQueue.shared.addJob(job: ImageUploadJob(message: Message.createMessage(message: message)))
         } else {
-            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: messageId, mediaMimeType: message.mediaMimeType))
         }
 
         isLoading = true

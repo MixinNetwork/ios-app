@@ -17,9 +17,6 @@ target 'Mixin' do
 
   pod 'Firebase/Core'
   pod 'Firebase/Analytics'
-  pod 'Firebase/MLVision'
-  pod 'Firebase/MLVisionBarcodeModel'
-  pod 'Firebase/MLVisionFaceModel'
   pod 'Firebase/Performance'
   pod 'Fabric'
   pod 'Crashlytics'

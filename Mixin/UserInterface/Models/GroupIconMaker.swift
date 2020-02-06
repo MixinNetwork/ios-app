@@ -1,14 +1,13 @@
 import Foundation
 import SDWebImage
 import MixinServices
-import FirebaseMLVision
 
 enum GroupIconMaker {
     
-    private static let faceDetector: VisionFaceDetector = {
-        let options = VisionFaceDetectorOptions()
-        let vision = Vision.vision()
-        return vision.faceDetector()
+    private static let faceDetector: CIDetector? = {
+        let context = CIContext()
+        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        return CIDetector(ofType: CIDetectorTypeFace, context: context, options: options)
     }()
     
     private enum AvatarRepresentation {
@@ -342,17 +341,13 @@ enum GroupIconMaker {
     }
     
     private static func faceRect(in image: UIImage) -> CGRect? {
-        let visionImage = VisionImage(image: image)
-        let sema = DispatchSemaphore(value: 0)
-        var face: VisionFace?
-        faceDetector.process(visionImage) { (faces, error) in
-            if let faces = faces, faces.count == 1 {
-                face = faces[0]
-            }
-            sema.signal()
+        guard let ciImage = image.ciImage, let detector = faceDetector else {
+            return nil
         }
-        sema.wait()
-        return face?.frame
+        guard let feature = detector.features(in: ciImage).compactMap({ $0 as? CIFaceFeature }).first else {
+            return nil
+        }
+        return feature.bounds
     }
     
     private static func drawSeparatorLine(number: Int, in rect: CGRect) {

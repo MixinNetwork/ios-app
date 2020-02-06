@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppGroupUserDefaults.resetStatusInMainApp()
         updateSharedImageCacheConfig()
         _ = NetworkManager.shared
+        _ = DarwinNotificationManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
         checkLogin()
@@ -149,6 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification", newSection: true)
+        Logger.write(log: "\(userInfo)")
         cancelBackgroundTask()
         ReceiveMessageService.shared.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()

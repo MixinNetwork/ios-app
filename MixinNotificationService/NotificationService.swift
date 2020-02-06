@@ -18,7 +18,7 @@ final class NotificationService: UNNotificationServiceExtension {
         self.conversationId = request.content.userInfo["conversation_id"] as? String
 
         guard let messageId = request.content.userInfo["message_id"] as? String, canProcessMessages else {
-            deliverRawContent()
+            deliverRawContent(from: "notification data broken")
             return
         }
 
@@ -34,23 +34,23 @@ final class NotificationService: UNNotificationServiceExtension {
             if let message = messageItem {
                 weakSelf.deliverNotification(with: message)
             } else {
-                weakSelf.deliverRawContent()
+                weakSelf.deliverRawContent(from: "no message")
             }
         }
     }
     
     override func serviceExtensionTimeWillExpire() {
         isExpired = true
-        deliverRawContent()
+        deliverRawContent(from: "serviceExtensionTimeWillExpire")
     }
     
     private func deliverNotification(with message: MessageItem) {
         guard message.status != MessageStatus.FAILED.rawValue else {
-            deliverRawContent()
+            deliverRawContent(from: "message status failed")
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-            deliverRawContent()
+            deliverRawContent(from: "no conversation")
             return
         }
         let ownerUser: UserItem?
@@ -63,7 +63,7 @@ final class NotificationService: UNNotificationServiceExtension {
         contentHandler?(content)
     }
     
-    private func deliverRawContent() {
+    private func deliverRawContent(from: String) {
         guard let rawContent = rawContent else {
             return
         }
@@ -72,7 +72,7 @@ final class NotificationService: UNNotificationServiceExtension {
         if let conversationId = self.conversationId {
             let websocketStatus = AppGroupUserDefaults.websocketStatusInMainApp.rawValue
             let isProcessingMessages = AppGroupUserDefaults.isProcessingMessagesInMainApp
-            Logger.write(conversationId: conversationId, log: "[AppExtension]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)")
+            Logger.write(conversationId: conversationId, log: "[AppExtension]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)...\(from)")
         }
     }
     

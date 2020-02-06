@@ -111,10 +111,18 @@ extension AppGroupUserDefaults {
     public static var isDocumentsMigrated: Bool
     
     @RawRepresentableDefault(namespace: nil, key: "websocket_status_in_main_app", defaultValue: .disconnected)
-    public static var websocketStatusInMainApp: WebSocketService.Status
+    public static var websocketStatusInMainApp: WebSocketService.Status {
+        didSet {
+            AppGroupUserDefaults.checkStatusTimeInMainApp = Date()
+        }
+    }
     
     @Default(namespace: nil, key: "processing_messages_in_app", defaultValue: false)
-    public static var isProcessingMessagesInMainApp: Bool
+    public static var isProcessingMessagesInMainApp: Bool {
+        didSet {
+            AppGroupUserDefaults.checkStatusTimeInMainApp = Date()
+        }
+    }
     
     @Default(namespace: nil, key: "processing_messages_in_extension", defaultValue: false)
     public static var isProcessingMessagesInAppExtension: Bool {
@@ -125,6 +133,9 @@ extension AppGroupUserDefaults {
     
     @Default(namespace: nil, key: "check_status_in_app_extension", defaultValue: Date())
     public static var checkStatusTimeInAppExtension: Date
+
+    @Default(namespace: nil, key: "check_status_in_main_app", defaultValue: Date())
+    public static var checkStatusTimeInMainApp: Date
     
     @Default(namespace: nil, key: "notification_bulletin_dismissal_date", defaultValue: nil)
     public static var notificationBulletinDismissalDate: Date?

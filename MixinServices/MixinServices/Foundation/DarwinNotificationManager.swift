@@ -13,18 +13,24 @@ public class DarwinNotificationManager {
         if isAppExtension {
             CFNotificationCenterAddObserver(darwinNotifyCenter, selfAsOpaquePointer, { (_, _, _, _, _) in
                 AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
-            }, statusCheckDarwinNotificationName.rawValue, nil, .deliverImmediately)
+            }, checkStatusInAppExtensionDarwinNotificationName.rawValue, nil, .deliverImmediately)
+        } else {
+            CFNotificationCenterAddObserver(darwinNotifyCenter, selfAsOpaquePointer, { (_, _, _, _, _) in
+                AppGroupUserDefaults.checkStatusTimeInMainApp = Date()
+            }, checkStatusInMainAppDarwinNotificationName.rawValue, nil, .deliverImmediately)
         }
     }
 
     deinit {
-        if isAppExtension {
-            CFNotificationCenterRemoveEveryObserver(darwinNotifyCenter, selfAsOpaquePointer)
-        }
+        CFNotificationCenterRemoveEveryObserver(darwinNotifyCenter, selfAsOpaquePointer)
     }
 
     func checkStatusInAppExtension() {
-        CFNotificationCenterPostNotification(darwinNotifyCenter, statusCheckDarwinNotificationName, nil, nil, true)
+        CFNotificationCenterPostNotification(darwinNotifyCenter, checkStatusInAppExtensionDarwinNotificationName, nil, nil, true)
+    }
+
+    func checkStatusInMainApp() {
+        CFNotificationCenterPostNotification(darwinNotifyCenter, checkStatusInMainAppDarwinNotificationName, nil, nil, true)
     }
 
 }

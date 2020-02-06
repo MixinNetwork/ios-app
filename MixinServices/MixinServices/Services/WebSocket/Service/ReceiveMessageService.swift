@@ -77,6 +77,17 @@ public class ReceiveMessageService: MixinService {
         let startDate = Date()
         processOperationQueue.addOperation {
             AppGroupUserDefaults.isProcessingMessagesInAppExtension = true
+
+            if AppGroupUserDefaults.websocketStatusInMainApp != .disconnected {
+                let oldDate = AppGroupUserDefaults.checkStatusTimeInMainApp
+                DarwinNotificationManager.shared.checkStatusInMainApp()
+                Thread.sleep(forTimeInterval: 2)
+
+                if oldDate == AppGroupUserDefaults.checkStatusTimeInMainApp {
+                    AppGroupUserDefaults.websocketStatusInMainApp = .disconnected
+                }
+            }
+
             repeat {
                 if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
                     callback(nil)

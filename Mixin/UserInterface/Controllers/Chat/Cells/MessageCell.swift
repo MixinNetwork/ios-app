@@ -14,6 +14,10 @@ class MessageCell: UITableViewCell {
     
     var viewModel: MessageViewModel?
     
+    var contentFrame: CGRect {
+        return backgroundImageView.frame
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -24,19 +28,16 @@ class MessageCell: UITableViewCell {
         prepare()
     }
     
-    var contentFrame: CGRect {
-        return backgroundImageView.frame
-    }
-    
     func render(viewModel: MessageViewModel) {
         self.viewModel = viewModel
-        if viewModel.quotedMessageViewModel == nil {
-            quotedMessageViewIfLoaded?.removeFromSuperview()
-        } else {
+        if let quotedMessageViewModel = viewModel.quotedMessageViewModel {
             if quotedMessageView.superview == nil {
                 contentView.addSubview(quotedMessageView)
             }
             quotedMessageView.frame = viewModel.quotedMessageViewFrame
+            quotedMessageView.render(viewModel: quotedMessageViewModel)
+        } else {
+            quotedMessageViewIfLoaded?.removeFromSuperview()
         }
     }
     

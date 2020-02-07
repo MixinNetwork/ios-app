@@ -434,7 +434,7 @@ class ConversationViewController: UIViewController {
             let message = viewModel.message
             let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
             let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
-            if let quote = cell.quotedMessageViewIfLoaded, quote.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
+            if let quote = cell.quotedMessageViewIfLoaded, quote.bounds.contains(recognizer.location(in: quote)), let quoteMessageId = viewModel.message.quoteMessageId {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)

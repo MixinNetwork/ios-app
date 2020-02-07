@@ -5,6 +5,14 @@ class MessageViewModel: CustomDebugStringConvertible {
     
     static let bottomSeparatorHeight: CGFloat = 10
     
+    class var quotedMessageMargin: Margin {
+        Margin(leading: 9, trailing: 2, top: 1, bottom: 4)
+    }
+    
+    class var supportsQuoting: Bool {
+        false
+    }
+    
     let message: MessageItem
     let isEncrypted: Bool
     let time: String
@@ -54,17 +62,42 @@ class MessageViewModel: CustomDebugStringConvertible {
         } else {
             thumbnail = nil
         }
-        if let quoteContent = message.quoteContent, let quote = Quote(quoteContent: quoteContent) {
-            self.quotedMessageViewModel = QuotedMessageViewModel(quote: quote)
+        if Self.supportsQuoting, let quoteContent = message.quoteContent, let quote = Quote(quoteContent: quoteContent) {
+            quotedMessageViewModel = QuotedMessageViewModel(quote: quote)
         } else {
-            self.quotedMessageViewModel = nil
+            quotedMessageViewModel = nil
         }
     }
     
     func layout(width: CGFloat, style: Style) {
         layoutWidth = width
         _style = style
-        quotedMessageViewModel?.ensureContentSize(width: width)
+        if let quotedMessageViewModel = quotedMessageViewModel {
+            let quoteViewLayoutWidth = self.quoteViewLayoutWidth(from: width)
+            quotedMessageViewModel.ensureContentSize(width: quoteViewLayoutWidth)
+        }
+    }
+    
+    func quoteViewLayoutWidth(from width: CGFloat) -> CGFloat {
+        width
+    }
+    
+    func layoutQuotedMessageIfPresent() {
+        guard let viewModel = quotedMessageViewModel else {
+            return
+        }
+        let x: CGFloat
+        if style.contains(.received) {
+            x = backgroundImageFrame.origin.x + Self.quotedMessageMargin.leading
+        } else {
+            x = backgroundImageFrame.origin.x + Self.quotedMessageMargin.trailing
+        }
+        let width = backgroundImageFrame.width - Self.quotedMessageMargin.horizontal
+        quotedMessageViewFrame = CGRect(x: x,
+                                        y: backgroundImageFrame.origin.y + Self.quotedMessageMargin.top,
+                                        width: width,
+                                        height: viewModel.contentSize.height)
+        viewModel.layout(width: width, style: style)
     }
     
 }

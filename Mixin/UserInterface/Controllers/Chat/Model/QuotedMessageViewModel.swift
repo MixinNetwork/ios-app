@@ -2,11 +2,11 @@ import Foundation
 
 class QuotedMessageViewModel {
     
-    static let backgroundMargin = MessageViewModel.Margin(leading: 9, trailing: 2, top: 1, bottom: 4)
     static let contentMargin = MessageViewModel.Margin(leading: 11, trailing: 11, top: 6, bottom: 6)
     static let iconSize = CGSize(width: 15, height: 15)
     static let iconTrailingMargin: CGFloat = 4
     static let subtitleTopMargin: CGFloat = 4
+    static let subtitleRightMargin: CGFloat = 10
     static let subtitleNumberOfLines = 3
     static let imageSize = CGSize(width: 50, height: 50)
     static let avatarImageMargin: CGFloat = 8
@@ -39,17 +39,8 @@ class QuotedMessageViewModel {
         
         paddedQuoteIconWidth = quote.icon == nil ? 0 : Self.iconSize.width + Self.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Self.imageSize.width
-        let maxTitleWidth = width
-            - DetailInfoMessageViewModel.bubbleMargin.horizontal
-            - Self.backgroundMargin.horizontal
-            - Self.contentMargin.horizontal
-            - quoteImageWidth
-        let maxSubtitleWidth = width
-            - DetailInfoMessageViewModel.bubbleMargin.horizontal
-            - Self.backgroundMargin.horizontal
-            - Self.contentMargin.horizontal
-            - paddedQuoteIconWidth
-            - quoteImageWidth
+        let maxTitleWidth = width - quoteImageWidth
+        let maxSubtitleWidth = width - paddedQuoteIconWidth - quoteImageWidth - Self.subtitleRightMargin
         
         let titleHeight = MessageFontSet.quoteTitle.scaled.lineHeight
         var titleWidth = (quote.title as NSString)
@@ -73,20 +64,14 @@ class QuotedMessageViewModel {
         
         let contentWidth = max(titleWidth + quoteImageWidth, paddedQuoteIconWidth + subtitleSize.width + quoteImageWidth)
             + Self.contentMargin.horizontal
-            + Self.backgroundMargin.horizontal
-        let contentHeight = max(Self.imageSize.height,
-                                Self.contentMargin.vertical + titleHeight + Self.subtitleTopMargin + subtitleHeight)
+        let titlesHeight = Self.contentMargin.vertical + titleHeight + Self.subtitleTopMargin + subtitleHeight
+        let contentHeight = max(Self.imageSize.height, titlesHeight)
         contentSize = CGSize(width: contentWidth, height: contentHeight)
     }
     
     func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let backgroundOriginX = style.contains(.received)
-            ? Self.backgroundMargin.leading
-            : Self.backgroundMargin.trailing
-        backgroundFrame = CGRect(x: backgroundOriginX,
-                                 y: Self.backgroundMargin.top,
-                                 width: width - Self.backgroundMargin.horizontal,
-                                 height: contentSize.height)
+        let backgroundSize = CGSize(width: width, height: contentSize.height)
+        backgroundFrame = CGRect(origin: .zero, size: backgroundSize)
         let titleOrigin = CGPoint(x: backgroundFrame.origin.x + Self.contentMargin.leading,
                                   y: backgroundFrame.origin.y + Self.contentMargin.top)
         titleFrame = CGRect(origin: titleOrigin, size: titleSize)

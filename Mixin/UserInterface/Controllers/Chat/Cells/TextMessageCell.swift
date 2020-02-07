@@ -16,9 +16,6 @@ class TextMessageCell: DetailInfoMessageCell {
             contentLabel.highlightPaths = viewModel.highlightPaths
             contentLabel.setNeedsDisplay()
         }
-        if let vm = viewModel.quotedMessageViewModel {
-            quotedMessageView.render(viewModel: vm)
-        }
     }
     
     override func prepare() {

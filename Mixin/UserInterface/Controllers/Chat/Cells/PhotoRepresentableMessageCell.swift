@@ -4,7 +4,9 @@ import YYImage
 
 class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
-    let maskingContentView = UIView()
+    static let quotingPhotoCornerRadius: CGFloat = 6
+    
+    let maskingView = UIView()
     let contentImageWrapperView = VerticalPositioningImageView()
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     
@@ -20,7 +22,11 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     }()
     
     override var contentFrame: CGRect {
-        return contentImageWrapperView.frame
+        if quotedMessageViewIfLoaded == nil {
+            return contentImageWrapperView.convert(contentImageWrapperView.bounds, to: self)
+        } else {
+            return backgroundImageView.frame
+        }
     }
     
     override var trailingInfoColor: UIColor {
@@ -30,26 +36,42 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
-            contentImageWrapperView.position = viewModel.layoutPosition
-            contentImageWrapperView.frame = viewModel.presentationFrame
-            contentImageWrapperView.aspectRatio = viewModel.contentRatio
+            if viewModel.quotedMessageViewModel == nil {
+                maskingView.frame = contentView.bounds
+                contentImageWrapperView.frame = viewModel.photoFrame
+                maskingView.layer.cornerRadius = 0
+                if backgroundImageView.superview != nil {
+                    backgroundImageView.removeFromSuperview()
+                }
+                if maskingView.layer.mask == nil {
+                    maskingView.layer.mask = backgroundImageView.layer
+                }
+            } else {
+                maskingView.frame = viewModel.photoFrame
+                contentImageWrapperView.frame = maskingView.bounds
+                if maskingView.layer.mask == backgroundImageView.layer {
+                    maskingView.layer.mask = nil
+                }
+                if backgroundImageView.superview == nil {
+                    contentView.insertSubview(backgroundImageView, at: 0)
+                }
+                maskingView.layer.cornerRadius = Self.quotingPhotoCornerRadius
+            }
             selectedOverlapView.frame = contentImageWrapperView.bounds
+            contentImageWrapperView.position = viewModel.layoutPosition
+            contentImageWrapperView.aspectRatio = viewModel.contentRatio
             trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
         }
     }
     
     override func prepare() {
-        contentView.addSubview(maskingContentView)
-        maskingContentView.frame = contentView.bounds
-        maskingContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        maskingContentView.addSubview(contentImageWrapperView)
+        contentView.addSubview(maskingView)
+        maskingView.addSubview(contentImageWrapperView)
         updateAppearance(highlight: false, animated: false)
         contentImageWrapperView.addSubview(selectedOverlapView)
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
-        backgroundImageView.removeFromSuperview()
-        maskingContentView.layer.masksToBounds = true
-        maskingContentView.layer.mask = backgroundImageView.layer
+        maskingView.clipsToBounds = true
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }
@@ -57,6 +79,9 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     override func updateAppearance(highlight: Bool, animated: Bool) {
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
             self.selectedOverlapView.alpha = highlight ? 1 : 0
+        }
+        if quotedMessageViewIfLoaded != nil {
+            super.updateAppearance(highlight: highlight, animated: animated)
         }
     }
     
@@ -73,7 +98,11 @@ extension PhotoRepresentableMessageCell: GalleryTransitionSource {
     }
     
     var transitionViewType: GalleryTransitionView.Type {
-        return GalleryTransitionFromMessageCellView.self
+        if quotedMessageViewIfLoaded == nil {
+            return GalleryTransitionFromNonQuotingMessageCellView.self
+        } else {
+            return GalleryTransitionFromQuotingMessageCellView.self
+        }
     }
     
     var direction: GalleryItemModelController.Direction {

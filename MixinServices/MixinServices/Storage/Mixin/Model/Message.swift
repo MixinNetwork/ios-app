@@ -136,7 +136,25 @@ extension Message {
     }
     
     public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: MediaStatus.PENDING.rawValue, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, name: mediaData.name, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId,
+                             conversationId: data.conversationId,
+                             userId: data.getSenderId(),
+                             category: data.category,
+                             content: mediaData.attachmentId,
+                             mediaMimeType: mediaData.mimeType,
+                             mediaSize: mediaData.size,
+                             mediaDuration: mediaData.duration,
+                             mediaWidth: mediaData.width,
+                             mediaHeight: mediaData.height,
+                             mediaKey: mediaData.key,
+                             mediaDigest: mediaData.digest,
+                             mediaStatus: MediaStatus.PENDING.rawValue,
+                             mediaWaveform: mediaData.waveform,
+                             thumbImage: mediaData.thumbnail,
+                             status: MessageStatus.DELIVERED.rawValue,
+                             name: mediaData.name,
+                             quoteMessageId: data.quoteMessageId,
+                             createdAt: data.createdAt)
     }
     
     public static func createMessage(liveData: TransferLiveData, data: BlazeMessageData) -> Message {

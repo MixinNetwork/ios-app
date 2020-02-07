@@ -5,13 +5,6 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
     private let accessoryContainerView = UIView()
     private let timeLabel = UILabel()
     private let statusImageView = UIImageView()
-    private let maskLayer = BubbleLayer()
-    
-    override func load(viewController: GalleryItemViewController) {
-        super.load(viewController: viewController)
-        maskLayer.setBubble(.none, frame: bounds, animationDuration: 0)
-        maskLayer.frame = bounds
-    }
     
     override func load(source: GalleryTransitionSource) {
         guard let cell = source as? PhotoRepresentableMessageCell else {
@@ -21,7 +14,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
             return
         }
         contentRatio = viewModel.contentRatio
-        frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
+        frame = cell.contentImageWrapperView.convert(cell.contentImageWrapperView.bounds, to: superview)
         imageView.image = cell.contentImageView.image
         imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode
         imageWrapperView.aspectRatio = cell.contentImageWrapperView.aspectRatio
@@ -36,10 +29,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         statusImageView.image = viewModel.statusImage
         statusImageView.tintColor = viewModel.statusTintColor
         statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
-        let bubble = BubbleLayer.Bubble(style: viewModel.style)
-        maskLayer.setBubble(bubble, frame: bounds, animationDuration: 0)
-        maskLayer.bounds.size = imageWrapperView.bounds.size
-        maskLayer.position = CGPoint(x: imageWrapperView.bounds.midX, y: imageWrapperView.bounds.midY)
+        loadMask(viewModel: viewModel)
     }
     
     override func transition(to containerView: UIView) {
@@ -74,7 +64,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
             bubbleFrame = containerBounds
         }
         
-        maskLayer.setBubble(.none, frame: bubbleFrame, animationDuration: animationDuration)
+        transitionMaskToNone(frame: bubbleFrame)
         animate(animations: {
             self.frame = frame
             self.imageWrapperView.frame = self.bounds
@@ -105,12 +95,10 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         accessoryContainerView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         accessoryContainerView.alpha = 0
         
-        let frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
+        let frame = cell.contentImageWrapperView.convert(cell.contentImageWrapperView.bounds, to: superview)
         let bounds = CGRect(origin: .zero, size: frame.size)
-
-        let bubble = BubbleLayer.Bubble(style: viewModel.style)
-        maskLayer.setBubble(bubble, frame: bounds, animationDuration: animationDuration)
         
+        transitionMask(frame: bounds, viewModel: viewModel)
         animate(animations: {
             self.transform = .identity
             self.frame = frame
@@ -134,7 +122,18 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         accessoryContainerView.addSubview(statusImageView)
         addSubview(accessoryContainerView)
         super.prepare()
-        layer.mask = maskLayer
+    }
+    
+    func loadMask(viewModel: PhotoRepresentableMessageViewModel) {
+        
+    }
+    
+    func transitionMaskToNone(frame: CGRect) {
+        
+    }
+    
+    func transitionMask(frame: CGRect, viewModel: PhotoRepresentableMessageViewModel) {
+        
     }
     
 }

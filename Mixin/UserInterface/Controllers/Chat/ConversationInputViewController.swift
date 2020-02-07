@@ -390,6 +390,11 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    func send(asset: PHAsset) {
+        dataSource.send(asset: asset, quoteMessageId: quote?.message.messageId)
+        quote = nil
+    }
+    
 }
 
 // MARK: - Callbacks
@@ -791,7 +796,6 @@ extension ConversationInputViewController {
         setRightAccessoryButton(stickersButton)
         if photosButton.isSelected {
             loadCustomInputViewController(photoViewController)
-            quote = nil
         } else {
             dismissCustomInput(minimize: true)
         }

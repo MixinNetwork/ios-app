@@ -277,7 +277,12 @@ extension WebSocketService {
         }
         var request = URLRequest(url: url)
         request.timeoutInterval = 5
-        let socket = WebSocket(request: request)
+        let socket: WebSocket
+        if isAppExtension {
+            socket = WebSocket(request: request, protocols: ["Mixin-Notification-Extension-1"])
+        } else {
+            socket = WebSocket(request: request)
+        }
         socket.delegate = self
         socket.callbackQueue = queue
         socket.onHttpResponseHeaders = { [weak self] headers in

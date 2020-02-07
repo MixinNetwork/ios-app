@@ -73,7 +73,7 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
-    public func processReceiveMessage(messageId: String, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
+    public func processReceiveMessage(messageId: String, conversationId: String?, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
         let startDate = Date()
         processOperationQueue.addOperation {
             AppGroupUserDefaults.isProcessingMessagesInAppExtension = true
@@ -89,7 +89,10 @@ public class ReceiveMessageService: MixinService {
             }
 
             repeat {
-                if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                if -startDate.timeIntervalSinceNow >= 25 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                    if let conversationId = conversationId {
+                        Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
+                    }
                     callback(nil)
                     return
                 } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {

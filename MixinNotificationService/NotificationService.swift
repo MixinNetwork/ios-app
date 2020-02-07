@@ -7,6 +7,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private var rawContent: UNNotificationContent?
     private var isExpired = false
     private var conversationId: String?
+    private var messageId = ""
     
     deinit {
         AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
@@ -22,10 +23,11 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
+        self.messageId = messageId
         _ = DarwinNotificationManager.shared
         _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
-        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, extensionTimeWillExpire: { [weak self]() -> Bool in
+        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, conversationId: self.conversationId, extensionTimeWillExpire: { [weak self]() -> Bool in
             return self?.isExpired ?? true
         }) { [weak self](messageItem) in
             guard let weakSelf = self else {
@@ -72,7 +74,7 @@ final class NotificationService: UNNotificationServiceExtension {
         if let conversationId = self.conversationId {
             let websocketStatus = AppGroupUserDefaults.websocketStatusInMainApp.rawValue
             let isProcessingMessages = AppGroupUserDefaults.isProcessingMessagesInMainApp
-            Logger.write(conversationId: conversationId, log: "[AppExtension]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)...\(from)")
+            Logger.write(conversationId: conversationId, log: "[AppExtension][\(self.messageId)]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)...isExpired:\(isExpired)...\(from)")
         }
     }
     

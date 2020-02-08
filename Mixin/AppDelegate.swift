@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.cancelBackgroundTask()
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { (time) in
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { (time) in
             ReceiveMessageService.shared.isStopProcessMessages = true
             WebSocketService.shared.disconnect()
             self.cancelBackgroundTask()

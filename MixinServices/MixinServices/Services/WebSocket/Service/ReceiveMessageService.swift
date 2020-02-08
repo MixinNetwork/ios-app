@@ -211,7 +211,10 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func checkSession(data: BlazeMessageData) {
-        guard data.conversationId != User.systemUser && data.conversationId != currentAccountId else {
+        guard data.conversationId != User.systemUser && data.userId != User.systemUser else {
+            return
+        }
+        guard data.conversationId != currentAccountId else {
             return
         }
         let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)

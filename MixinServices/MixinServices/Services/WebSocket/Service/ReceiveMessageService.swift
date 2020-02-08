@@ -814,13 +814,13 @@ extension ReceiveMessageService {
         if systemSession.action == SystemSessionMessageAction.PROVISION.rawValue {
             AppGroupUserDefaults.Account.lastDesktopLoginDate = Date()
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
-            SignalProtocol.shared.deleteSession(userId: data.userId)
+            SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             AppGroupUserDefaults.Account.extensionSession = nil
-            SignalProtocol.shared.deleteSession(userId: data.userId)
+            SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)

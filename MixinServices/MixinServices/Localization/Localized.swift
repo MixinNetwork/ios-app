@@ -73,11 +73,11 @@ public class Localized {
 extension Localized {
     
     private static func localized(_ key: String) -> String {
-        return NSLocalizedString(key, bundle: .mixinServicesResource, comment: "")
+        return NSLocalizedString(key, comment: "")
     }
     
     private static func localized(_ key: String, arguments: [String]) -> String {
-        let format = NSLocalizedString(key, bundle: .mixinServicesResource, comment: "")
+        let format = NSLocalizedString(key, comment: "")
         return String(format: format, arguments: arguments)
     }
     

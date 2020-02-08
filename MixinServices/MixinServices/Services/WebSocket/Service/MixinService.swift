@@ -20,9 +20,17 @@ public class MixinService {
     }
 
     internal func checkSessionSenderKey(conversationId: String) throws {
-        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
+        var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
         guard participants.count > 0 else {
             return
+        }
+
+        if participants.contains(where: { $0.sessionId.isEmpty }) {
+            reporter.report(error: MixinServicesError.badParticipantSession)
+            participants = participants.filter { !$0.sessionId.isEmpty }
+            if participants.count == 0 {
+                return
+            }
         }
 
         var requestSignalKeyUsers = [BlazeMessageParamSession]()

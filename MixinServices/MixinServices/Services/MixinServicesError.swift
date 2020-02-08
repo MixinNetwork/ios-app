@@ -23,6 +23,7 @@ public enum MixinServicesError: Error {
     case decryptMessage([String: Any])
     case badMessageData(id: String, status: String, from: String)
     case logout(isAsyncRequest: Bool)
+    case badParticipantSession
     
 }
 
@@ -64,6 +65,8 @@ extension MixinServicesError: CustomNSError {
             return 13
         case .logout:
             return 14
+        case .badParticipantSession:
+            return 15
         }
     }
     

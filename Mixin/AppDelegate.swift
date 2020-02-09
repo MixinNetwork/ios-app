@@ -146,8 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
-        let isActive = UIApplication.shared.applicationState == .active
-        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isActive:\(isActive)", newSection: true)
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isMainThread:\(Thread.isMainThread)", newSection: true)
         Logger.write(log: "\(userInfo)")
         cancelBackgroundTask()
         ReceiveMessageService.shared.isStopProcessMessages = false

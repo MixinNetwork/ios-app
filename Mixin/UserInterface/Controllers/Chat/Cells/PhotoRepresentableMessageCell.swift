@@ -22,7 +22,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     }()
     
     override var contentFrame: CGRect {
-        if quotedMessageViewIfLoaded == nil {
+        if viewModel?.quotedMessageViewModel == nil {
             return contentImageWrapperView.convert(contentImageWrapperView.bounds, to: self)
         } else {
             return backgroundImageView.frame
@@ -80,7 +80,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
             self.selectedOverlapView.alpha = highlight ? 1 : 0
         }
-        if quotedMessageViewIfLoaded != nil {
+        if viewModel?.quotedMessageViewModel != nil {
             super.updateAppearance(highlight: highlight, animated: animated)
         }
     }
@@ -98,7 +98,7 @@ extension PhotoRepresentableMessageCell: GalleryTransitionSource {
     }
     
     var transitionViewType: GalleryTransitionView.Type {
-        if quotedMessageViewIfLoaded == nil {
+        if viewModel?.quotedMessageViewModel == nil {
             return GalleryTransitionFromNonQuotingMessageCellView.self
         } else {
             return GalleryTransitionFromQuotingMessageCellView.self

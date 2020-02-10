@@ -28,7 +28,7 @@ class GalleryTransitionFromNonQuotingMessageCellView: GalleryTransitionFromMessa
     
     override func transitionMask(frame: CGRect, viewModel: PhotoRepresentableMessageViewModel) {
         let bubble = BubbleLayer.Bubble(style: viewModel.style)
-        maskLayer.setBubble(bubble, frame: bounds, animationDuration: animationDuration)
+        maskLayer.setBubble(bubble, frame: frame, animationDuration: animationDuration)
     }
     
 }

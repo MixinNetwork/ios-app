@@ -408,14 +408,19 @@ class ConversationInputViewController: UIViewController {
         let conversationId = dataSource.conversationId
         let ownerUser = dataSource.ownerUser
         let isGroup = dataSource.conversation.isGroup()
-        let quoteMessageId = quote?.message.messageId
+        var quoteMessageId = quote?.message.messageId
+        quote = nil
         DispatchQueue.global().async {
             for userId in userIds {
                 var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                                     conversationId: conversationId,
                                                     userId: myUserId)
                 message.sharedUserId = userId
-                message.quoteMessageId = quoteMessageId
+                if let id = quoteMessageId {
+                    // Apply quoted message to first message only
+                    message.quoteMessageId = id
+                    quoteMessageId = nil
+                }
                 let transferData = TransferContactData(userId: userId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message,
@@ -424,7 +429,6 @@ class ConversationInputViewController: UIViewController {
             }
             DispatchQueue.main.async(execute: completion)
         }
-        quote = nil
     }
     
 }

@@ -64,6 +64,9 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
         guard let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String else {
             return
         }
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            return
+        }
         if response.actionIdentifier == NotificationActionIdentifier.reply {
             guard let conversationCategory = userInfo[UNNotificationContent.UserInfoKey.conversationCategory] as? String else {
                 return
@@ -92,9 +95,6 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             }
         } else {
             DispatchQueue.global().async {
-                guard LoginManager.shared.isLoggedIn else {
-                    return
-                }
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
                     return
                 }

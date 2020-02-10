@@ -49,7 +49,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
     }
     
     override var contentBottomMargin: CGFloat {
-        return 13
+        return 36
     }
     
     override func awakeFromNib() {

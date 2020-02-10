@@ -12,7 +12,7 @@ class CardMessageCell: DetailInfoMessageCell {
     var rightViewTrailingConstraint: Constraint!
     
     var contentBottomMargin: CGFloat {
-        return 18
+        return 40
     }
 
     override func awakeFromNib() {
@@ -37,7 +37,7 @@ class CardMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? CardMessageViewModel {
             leftViewLeadingConstraint.update(offset: viewModel.leadingConstant)
             rightViewTrailingConstraint.update(offset: -viewModel.trailingConstant)
-            contentBottomConstraint.constant = contentBottomMargin - viewModel.fullnameHeight + viewModel.bottomSeparatorHeight
+            contentBottomConstraint.constant = contentBottomMargin + viewModel.bottomSeparatorHeight
         }
     }
 

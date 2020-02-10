@@ -7,12 +7,7 @@ class AppCardMessageCell: CardMessageCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     
     override var contentBottomMargin: CGFloat {
-        return 21
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        timeLabel.isHidden = true
+        return 36
     }
     
     override func prepareForReuse() {

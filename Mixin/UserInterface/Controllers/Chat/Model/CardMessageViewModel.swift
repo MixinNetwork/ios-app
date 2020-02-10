@@ -65,8 +65,8 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
             trailingConstant = rightTrailingMargin
         }
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
-        cellHeight = fullnameHeight + backgroundSize.height + bottomSeparatorHeight
-        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        cellHeight = fullnameHeight + backgroundSize.height + timeFrame.height + timeMargin.bottom + bottomSeparatorHeight
+        layoutDetailInfo(insideBackgroundImage: false, backgroundImageFrame: backgroundImageFrame)
         layoutQuotedMessageIfPresent()
     }
     

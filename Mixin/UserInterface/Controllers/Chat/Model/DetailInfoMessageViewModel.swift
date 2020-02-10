@@ -13,6 +13,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
         return GeneralBubbleImageSet.self
     }
     
+    let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
+    
     var statusImage: UIImage?
     var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
@@ -49,7 +51,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
     private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 44
     private let minEncryptedIconLeftMargin: CGFloat = 8
-    private let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     private let statusHighlightTintColor = UIColor.theme
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
@@ -63,9 +64,14 @@ class DetailInfoMessageViewModel: MessageViewModel {
         timeFrame.size = ceil((time as NSString).size(withAttributes: [.font: MessageFontSet.time.scaled]))
     }
     
-    func layoutDetailInfo(backgroundImageFrame: CGRect) {
-        timeFrame.origin = CGPoint(x: backgroundImageFrame.maxX - timeFrame.width,
-                                   y: backgroundImageFrame.maxY - timeMargin.bottom - timeFrame.height)
+    func layoutDetailInfo(insideBackgroundImage: Bool = true, backgroundImageFrame: CGRect) {
+        if insideBackgroundImage {
+            timeFrame.origin = CGPoint(x: backgroundImageFrame.maxX - timeFrame.width,
+                                       y: backgroundImageFrame.maxY - timeMargin.bottom - timeFrame.height)
+        } else {
+            timeFrame.origin = CGPoint(x: backgroundImageFrame.maxX - timeFrame.width,
+                                       y: backgroundImageFrame.maxY)
+        }
         if showStatusImage {
             statusFrame.size = ImageSet.MessageStatus.size
         } else {

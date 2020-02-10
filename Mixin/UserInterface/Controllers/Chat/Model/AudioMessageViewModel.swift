@@ -50,19 +50,6 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         waveformWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10
     }
     
-    override var leftTrailingMargin: CGFloat {
-        let category = UIScreen.main.traitCollection.preferredContentSizeCategory
-        if category == .extraLarge {
-            return 30
-        } else if category == .extraExtraLarge {
-            return 40
-        } else if category == .extraExtraExtraLarge {
-            return 50
-        } else {
-            return 20
-        }
-    }
-    
     private let waveformWidth: CGFloat
 
     override init(message: MessageItem) {

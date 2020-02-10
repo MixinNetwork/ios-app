@@ -14,7 +14,6 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     
     var contentFrame = CGRect.zero
     
-    private let timeMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 4)
     private let contentSize: CGSize
     
     override init(message: MessageItem) {
@@ -50,6 +49,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
+        let timeMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 4)
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         if style.contains(.received) {

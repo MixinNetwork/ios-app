@@ -7,10 +7,6 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         true
     }
     
-    override class var quotedMessageMargin: Margin {
-        Margin(leading: 9, trailing: 2, top: 1, bottom: 0)
-    }
-    
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = false

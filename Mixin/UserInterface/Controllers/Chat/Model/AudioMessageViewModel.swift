@@ -7,10 +7,6 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         true
     }
     
-    override class var quotedMessageMargin: Margin {
-        Margin(leading: 9, trailing: 2, top: 1, bottom: 0)
-    }
-    
     let length: String
     let waveform: Waveform
     

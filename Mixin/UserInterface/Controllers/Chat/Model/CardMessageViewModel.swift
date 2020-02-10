@@ -6,6 +6,10 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         return LightRightBubbleImageSet.self
     }
     
+    override class var quotedMessageMargin: Margin {
+        Margin(leading: 9, trailing: 2, top: 1, bottom: 0)
+    }
+    
     private(set) var leadingConstant: CGFloat = 0
     private(set) var trailingConstant: CGFloat = 0
     

@@ -404,6 +404,29 @@ class ConversationInputViewController: UIViewController {
         quote = nil
     }
     
+    func sendContact(userIds: [String], completion: @escaping () -> Void) {
+        let conversationId = dataSource.conversationId
+        let ownerUser = dataSource.ownerUser
+        let isGroup = dataSource.conversation.isGroup()
+        let quoteMessageId = quote?.message.messageId
+        DispatchQueue.global().async {
+            for userId in userIds {
+                var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
+                                                    conversationId: conversationId,
+                                                    userId: myUserId)
+                message.sharedUserId = userId
+                message.quoteMessageId = quoteMessageId
+                let transferData = TransferContactData(userId: userId)
+                message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      isGroupMessage: isGroup)
+            }
+            DispatchQueue.main.async(execute: completion)
+        }
+        quote = nil
+    }
+    
 }
 
 // MARK: - Callbacks

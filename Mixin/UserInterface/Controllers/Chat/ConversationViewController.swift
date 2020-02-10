@@ -696,7 +696,7 @@ class ConversationViewController: UIViewController {
     }
 
     func contactAction() {
-        let vc = ContactSelectorViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
+        let vc = ContactSelectorViewController.instance(conversationInputViewController: conversationInputViewController)
         navigationController?.pushViewController(vc, animated: true)
     }
     

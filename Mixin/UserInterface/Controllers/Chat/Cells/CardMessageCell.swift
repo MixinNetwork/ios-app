@@ -6,13 +6,13 @@ class CardMessageCell: DetailInfoMessageCell {
     @IBOutlet weak var leftView: UIView!
     @IBOutlet weak var rightView: UIView!
 
-    @IBOutlet weak var contentTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
     
     var leftViewLeadingConstraint: Constraint!
     var rightViewTrailingConstraint: Constraint!
     
-    var contentTopMargin: CGFloat {
-        return 14
+    var contentBottomMargin: CGFloat {
+        return 18
     }
 
     override func awakeFromNib() {
@@ -37,7 +37,7 @@ class CardMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? CardMessageViewModel {
             leftViewLeadingConstraint.update(offset: viewModel.leadingConstant)
             rightViewTrailingConstraint.update(offset: -viewModel.trailingConstant)
-            contentTopConstraint.constant = contentTopMargin + viewModel.fullnameHeight
+            contentBottomConstraint.constant = contentBottomMargin - viewModel.fullnameHeight + viewModel.bottomSeparatorHeight
         }
     }
 

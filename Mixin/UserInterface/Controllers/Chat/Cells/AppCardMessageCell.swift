@@ -6,8 +6,8 @@ class AppCardMessageCell: CardMessageCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-    override var contentTopMargin: CGFloat {
-        return 11
+    override var contentBottomMargin: CGFloat {
+        return 21
     }
     
     override func awakeFromNib() {

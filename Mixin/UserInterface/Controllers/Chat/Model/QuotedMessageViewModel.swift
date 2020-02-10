@@ -6,7 +6,7 @@ class QuotedMessageViewModel {
     static let iconSize = CGSize(width: 15, height: 15)
     static let iconTrailingMargin: CGFloat = 4
     static let subtitleTopMargin: CGFloat = 4
-    static let subtitleRightMargin: CGFloat = 10
+    static let subtitleRightMargin: CGFloat = 16
     static let subtitleNumberOfLines = 3
     static let imageSize = CGSize(width: 50, height: 50)
     static let avatarImageMargin: CGFloat = 8

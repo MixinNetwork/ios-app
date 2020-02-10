@@ -48,8 +48,8 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
         }
     }
     
-    override var contentTopMargin: CGFloat {
-        return 10
+    override var contentBottomMargin: CGFloat {
+        return 13
     }
     
     override func awakeFromNib() {

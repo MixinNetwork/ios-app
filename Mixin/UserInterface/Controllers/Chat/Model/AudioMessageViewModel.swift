@@ -3,6 +3,14 @@ import MixinServices
 
 class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
+    override class var supportsQuoting: Bool {
+        true
+    }
+    
+    override class var quotedMessageMargin: Margin {
+        Margin(leading: 9, trailing: 2, top: 1, bottom: 0)
+    }
+    
     let length: String
     let waveform: Waveform
     
@@ -43,7 +51,15 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override var size: CGSize {
-        return CGSize(width: contentWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10, height: 72)
+        let width = contentWidth
+            + leftLeadingMargin
+            + leftTrailingMargin
+            + 48 + 10
+        var height: CGFloat = 72
+        if let quotedMessageViewModel = quotedMessageViewModel {
+            height += Self.quotedMessageMargin.vertical + quotedMessageViewModel.contentSize.height
+        }
+        return CGSize(width: width, height: height)
     }
     
     override var leftTrailingMargin: CGFloat {
@@ -70,6 +86,15 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         super.init(message: message)
         updateOperationButtonStyle()
         updateButtonsHidden()
+    }
+    
+    override func quoteViewLayoutWidth(from width: CGFloat) -> CGFloat {
+        size.width - Self.quotedMessageMargin.horizontal
+    }
+    
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        super.layout(width: width, style: style)
+        layoutQuotedMessageIfPresent()
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

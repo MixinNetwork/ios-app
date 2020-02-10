@@ -174,16 +174,16 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="6et-Tx-SHG" secondAttribute="trailing" constant="8" placeholder="YES" id="GDm-An-azb"/>
+                                                <constraint firstAttribute="bottom" secondItem="Sad-ex-764" secondAttribute="bottom" constant="18" id="GZi-ZE-Z4b"/>
                                                 <constraint firstItem="Sad-ex-764" firstAttribute="leading" secondItem="WNG-Rn-JDF" secondAttribute="leading" constant="150" placeholder="YES" id="JeZ-gY-yGd"/>
                                                 <constraint firstItem="6et-Tx-SHG" firstAttribute="centerY" secondItem="Sad-ex-764" secondAttribute="centerY" id="SGX-N0-3bY"/>
                                                 <constraint firstItem="6et-Tx-SHG" firstAttribute="leading" secondItem="Sad-ex-764" secondAttribute="trailing" constant="12" id="f0j-7J-xdQ"/>
-                                                <constraint firstItem="Sad-ex-764" firstAttribute="top" secondItem="WNG-Rn-JDF" secondAttribute="top" constant="14" id="lgm-II-Da8"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="amountLabel" destination="hrv-5u-Ur3" id="ixV-UB-Gcu"/>
-                                            <outlet property="contentTopConstraint" destination="lgm-II-Da8" id="4aK-17-6hD"/>
+                                            <outlet property="contentBottomConstraint" destination="GZi-ZE-Z4b" id="4VB-yL-xGU"/>
                                             <outlet property="iconImageView" destination="Sad-ex-764" id="4iM-Cq-5jc"/>
                                             <outlet property="leftView" destination="Sad-ex-764" id="2y4-Kb-2sW"/>
                                             <outlet property="rightView" destination="6et-Tx-SHG" id="hzy-yV-tIh"/>
@@ -279,16 +279,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="yaQ-2r-5hH" secondAttribute="bottom" constant="18" id="5qJ-eH-Clm"/>
                                                 <constraint firstItem="yaQ-2r-5hH" firstAttribute="leading" secondItem="V4B-pP-Wea" secondAttribute="leading" constant="150" placeholder="YES" id="LDf-Co-dC8"/>
                                                 <constraint firstAttribute="trailing" secondItem="j07-Lh-Frt" secondAttribute="trailing" constant="8" placeholder="YES" id="ara-ZJ-02N"/>
-                                                <constraint firstItem="yaQ-2r-5hH" firstAttribute="top" secondItem="V4B-pP-Wea" secondAttribute="top" constant="14" id="b9j-z0-q7w"/>
                                                 <constraint firstItem="j07-Lh-Frt" firstAttribute="leading" secondItem="yaQ-2r-5hH" secondAttribute="trailing" constant="12" id="h5B-se-m1L"/>
                                                 <constraint firstItem="j07-Lh-Frt" firstAttribute="centerY" secondItem="yaQ-2r-5hH" secondAttribute="centerY" id="uZ8-Zk-sTV"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="contentTopConstraint" destination="b9j-z0-q7w" id="mZ4-sF-Njz"/>
+                                            <outlet property="contentBottomConstraint" destination="5qJ-eH-Clm" id="8z5-wY-rI0"/>
                                             <outlet property="extensionNameLabel" destination="yRo-Yc-Nsv" id="IAg-TU-70h"/>
                                             <outlet property="extensionNameWrapperView" destination="prU-xR-jjp" id="Goj-TQ-gni"/>
                                             <outlet property="filenameLabel" destination="QBa-Qu-WtN" id="Pzy-pH-sFP"/>
@@ -366,14 +366,14 @@
                                                 <constraint firstItem="iMh-GZ-S3Y" firstAttribute="leading" secondItem="A2i-FR-2du" secondAttribute="trailing" constant="12" id="1k0-WH-paN"/>
                                                 <constraint firstAttribute="trailing" secondItem="iMh-GZ-S3Y" secondAttribute="trailing" constant="68" placeholder="YES" id="7UX-vn-lDq"/>
                                                 <constraint firstItem="iMh-GZ-S3Y" firstAttribute="centerY" secondItem="A2i-FR-2du" secondAttribute="centerY" id="S1V-gK-xN4"/>
+                                                <constraint firstAttribute="bottom" secondItem="A2i-FR-2du" secondAttribute="bottom" constant="18" id="T9l-Eq-Ma0"/>
                                                 <constraint firstItem="A2i-FR-2du" firstAttribute="leading" secondItem="7pa-Y8-MGd" secondAttribute="leading" constant="150" placeholder="YES" id="Z9L-DX-98F"/>
-                                                <constraint firstItem="A2i-FR-2du" firstAttribute="top" secondItem="7pa-Y8-MGd" secondAttribute="top" constant="14" id="uha-gK-LMy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="avatarImageView" destination="A2i-FR-2du" id="JhY-jm-X3N"/>
-                                            <outlet property="contentTopConstraint" destination="uha-gK-LMy" id="dWk-4V-dSo"/>
+                                            <outlet property="contentBottomConstraint" destination="T9l-Eq-Ma0" id="G2Z-1n-wMD"/>
                                             <outlet property="fullnameLabel" destination="kFZ-S0-mPe" id="JT3-1U-WWs"/>
                                             <outlet property="idLabel" destination="V5b-28-vmg" id="QoD-cv-ZQM"/>
                                             <outlet property="leftView" destination="A2i-FR-2du" id="nIQ-nu-I9P"/>
@@ -437,15 +437,15 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="YgD-LM-tmU" secondAttribute="trailing" constant="68" placeholder="YES" id="230-IU-CGd"/>
-                                                <constraint firstItem="aMu-ar-KoH" firstAttribute="top" secondItem="CN4-9k-2AV" secondAttribute="top" constant="10" id="Erc-in-APs"/>
                                                 <constraint firstItem="YgD-LM-tmU" firstAttribute="centerY" secondItem="aMu-ar-KoH" secondAttribute="centerY" id="SDQ-Y7-PKh"/>
                                                 <constraint firstItem="aMu-ar-KoH" firstAttribute="leading" secondItem="CN4-9k-2AV" secondAttribute="leading" constant="150" placeholder="YES" id="cdD-zk-Dv8"/>
                                                 <constraint firstItem="YgD-LM-tmU" firstAttribute="leading" secondItem="aMu-ar-KoH" secondAttribute="trailing" constant="10" id="qBs-Iv-uD4"/>
+                                                <constraint firstAttribute="bottom" secondItem="aMu-ar-KoH" secondAttribute="bottom" constant="14" id="vRR-tJ-cba"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="contentTopConstraint" destination="Erc-in-APs" id="ifO-Di-QzX"/>
+                                            <outlet property="contentBottomConstraint" destination="vRR-tJ-cba" id="MaY-wU-asB"/>
                                             <outlet property="descriptionLabel" destination="104-rN-D9d" id="L7S-kE-IZR"/>
                                             <outlet property="iconImageView" destination="aMu-ar-KoH" id="Efv-eq-eUV"/>
                                             <outlet property="leftView" destination="aMu-ar-KoH" id="Gja-aE-2vl"/>
@@ -563,13 +563,13 @@
                                                 <constraint firstItem="tzQ-Ot-LBE" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="trailing" constant="10" id="2e9-ex-qkn"/>
                                                 <constraint firstItem="wlc-hc-7sd" firstAttribute="centerY" secondItem="tzQ-Ot-LBE" secondAttribute="centerY" id="5AZ-6b-mPv"/>
                                                 <constraint firstAttribute="trailing" secondItem="tzQ-Ot-LBE" secondAttribute="trailing" constant="68" placeholder="YES" id="XbQ-FE-vxD"/>
-                                                <constraint firstItem="wlc-hc-7sd" firstAttribute="top" secondItem="jTl-5i-lZ8" secondAttribute="top" constant="10" id="apv-3f-1hM"/>
+                                                <constraint firstAttribute="bottom" secondItem="wlc-hc-7sd" secondAttribute="bottom" constant="14" id="iOj-Jb-L8k"/>
                                                 <constraint firstItem="wlc-hc-7sd" firstAttribute="leading" secondItem="jTl-5i-lZ8" secondAttribute="leading" constant="150" placeholder="YES" id="oxB-89-UqD"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="contentTopConstraint" destination="apv-3f-1hM" id="pLT-CD-Lqo"/>
+                                            <outlet property="contentBottomConstraint" destination="iOj-Jb-L8k" id="fFS-tS-fRP"/>
                                             <outlet property="highlightedWaveformView" destination="IP2-uL-lad" id="iDx-uN-fNf"/>
                                             <outlet property="leftView" destination="wlc-hc-7sd" id="gUC-ns-egg"/>
                                             <outlet property="lengthLabel" destination="ZUb-hH-eY8" id="O4q-jD-B8r"/>

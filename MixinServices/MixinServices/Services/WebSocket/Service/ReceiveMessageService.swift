@@ -344,7 +344,7 @@ public class ReceiveMessageService: MixinService {
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
-            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
+            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...sessionId:\(data.sessionId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             if let err = error as? SignalError, err != SignalError.noSession {
                 var userInfo = [String: Any]()
                 userInfo["conversationId"] = data.conversationId

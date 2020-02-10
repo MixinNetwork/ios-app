@@ -86,7 +86,7 @@ public class MixinService {
             return try checkSessionSenderKey(conversationId: conversationId)
         }
 
-        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
+        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? ""):\($0.sessionId ?? "")}" }.joined(separator: ","))...")
         Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
     }
 

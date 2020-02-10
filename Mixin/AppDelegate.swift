@@ -146,8 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
-        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isMainThread:\(Thread.isMainThread)", newSection: true)
-        Logger.write(log: "\(userInfo)")
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...", newSection: true)
         cancelBackgroundTask()
         ReceiveMessageService.shared.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()

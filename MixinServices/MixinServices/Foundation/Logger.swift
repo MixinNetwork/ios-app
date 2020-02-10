@@ -33,7 +33,7 @@ public enum Logger {
         }
         queue.async {
             makeLogDirectoryIfNeeded()
-            var log = log + "...\(isAppExtension ? "appExtension" : "mainApp")"
+            var log = log + "\(isAppExtension ? "...appExtension" : "")"
             log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
             if newSection {
                 log += "------------------------------\n"

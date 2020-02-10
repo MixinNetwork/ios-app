@@ -14,6 +14,19 @@ protocol AttachmentLoadingViewModel: class {
     func beginAttachmentLoading(isTriggeredByUser: Bool)
     func cancelAttachmentLoading(isTriggeredByUser: Bool)
     func shouldBeginAttachmentLoading(isTriggeredByUser: Bool) -> Bool
+    func updateMediaStatus(messageId: String, conversationId: String, status: MediaStatus)
+
+
+}
+
+extension AttachmentLoadingViewModel {
+
+    func updateMediaStatus(messageId: String, conversationId: String, status: MediaStatus) {
+        DispatchQueue.global().async {
+            MessageDAO.shared.updateMediaStatus(messageId: messageId, status: status, conversationId: conversationId)
+        }
+    }
+
 }
 
 enum ProgressUnit {

@@ -80,7 +80,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: AudioUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -102,7 +102,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             ConcurrentJobQueue.shared.cancelJob(jobId: AudioDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
         }
     }
     

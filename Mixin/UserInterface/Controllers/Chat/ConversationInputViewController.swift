@@ -236,7 +236,6 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         if sender.isOn {
-            quote = nil
             resignTextViewFirstResponderWithoutReportingContentHeightChange()
             if height == .maximized {
                 setPreferredContentHeightAnimated(.regular)
@@ -397,6 +396,11 @@ class ConversationInputViewController: UIViewController {
     
     func sendAudio(url: URL, metadata: MXNAudioMetadata) {
         dataSource.sendMessage(type: .SIGNAL_AUDIO, quoteMessageId: quote?.message.messageId, value: (url, metadata))
+        quote = nil
+    }
+    
+    func sendFile(url: URL) {
+        dataSource.sendMessage(type: .SIGNAL_DATA, quoteMessageId: quote?.message.messageId, value: url)
         quote = nil
     }
     
@@ -778,11 +782,11 @@ extension ConversationInputViewController {
                 quotePreviewWrapperHeightConstraint.constant = quotePreviewHeight
                 interactiveDismissResponder.height += quotePreviewHeight
             }
-            if textView.isFirstResponder {
+            if textView.isFirstResponder || customInputViewController != nil {
                 if oldValue == nil {
                     setPreferredContentHeight(preferredContentHeight + quotePreviewHeight, animated: true)
                 }
-            } else {
+            } else if customInputViewController == nil {
                 textView.becomeFirstResponder()
             }
         } else if oldValue != nil {

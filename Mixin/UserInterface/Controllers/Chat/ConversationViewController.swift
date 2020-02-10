@@ -1080,8 +1080,8 @@ extension ConversationViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        let previewViewController = FileSendViewController.instance(documentUrl: url, dataSource: dataSource)
-        navigationController?.pushViewController(previewViewController, animated: true)
+        let vc = FileSendViewController.instance(documentUrl: url, conversationInputViewController: conversationInputViewController)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

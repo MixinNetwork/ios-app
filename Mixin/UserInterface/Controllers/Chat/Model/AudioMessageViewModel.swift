@@ -50,16 +50,8 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
     }
     
-    override var size: CGSize {
-        let width = contentWidth
-            + leftLeadingMargin
-            + leftTrailingMargin
-            + 48 + 10
-        var height: CGFloat = 72
-        if let quotedMessageViewModel = quotedMessageViewModel {
-            height += Self.quotedMessageMargin.vertical + quotedMessageViewModel.contentSize.height
-        }
-        return CGSize(width: width, height: height)
+    override var contentWidth: CGFloat {
+        waveformWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10
     }
     
     override var leftTrailingMargin: CGFloat {
@@ -75,26 +67,17 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
     }
     
-    private let contentWidth: CGFloat
+    private let waveformWidth: CGFloat
 
     override init(message: MessageItem) {
         let duration = Int(message.mediaDuration ?? 0)
         let seconds = Int(round(Double(duration) / millisecondsPerSecond))
         length = mediaDurationFormatter.string(from: TimeInterval(seconds)) ?? ""
-        contentWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
+        waveformWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
         self.waveform = Waveform(data: message.mediaWaveform, durationInSeconds: seconds)
         super.init(message: message)
         updateOperationButtonStyle()
         updateButtonsHidden()
-    }
-    
-    override func quoteViewLayoutWidth(from width: CGFloat) -> CGFloat {
-        size.width - Self.quotedMessageMargin.horizontal
-    }
-    
-    override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        super.layout(width: width, style: style)
-        layoutQuotedMessageIfPresent()
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

@@ -2,8 +2,8 @@ import UIKit
 
 class ContactMessageViewModel: CardMessageViewModel {
     
-    override var size: CGSize {
-        return CGSize(width: 250, height: 72)
+    override var contentWidth: CGFloat {
+        250
     }
     
 }

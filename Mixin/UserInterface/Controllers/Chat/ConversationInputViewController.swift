@@ -184,7 +184,9 @@ class ConversationInputViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if height != .minimized {
-            customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
+            customInputContainerHeightConstraint.constant = view.frame.height
+                - quotePreviewWrapperHeightConstraint.constant
+                - inputBarView.frame.height
         }
     }
     

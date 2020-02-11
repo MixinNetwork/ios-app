@@ -7,7 +7,7 @@ class ContactMessageViewModel: CardMessageViewModel {
     }
     
     override var contentWidth: CGFloat {
-        250
+        235
     }
     
 }

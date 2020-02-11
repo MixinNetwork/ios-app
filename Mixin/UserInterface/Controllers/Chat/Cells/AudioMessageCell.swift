@@ -48,10 +48,6 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
         }
     }
     
-    override var contentBottomMargin: CGFloat {
-        return 36
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         waveformMaskView.backgroundColor = .black

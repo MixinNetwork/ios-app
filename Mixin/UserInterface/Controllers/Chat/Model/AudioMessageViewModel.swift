@@ -47,7 +47,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override var contentWidth: CGFloat {
-        waveformWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10
+        waveformWidth + leftLeadingMargin + leftTrailingMargin + 40 + 10
     }
     
     private let waveformWidth: CGFloat

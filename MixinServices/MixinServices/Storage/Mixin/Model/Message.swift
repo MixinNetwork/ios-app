@@ -132,7 +132,14 @@ extension Message {
     }
     
     public static func createMessage(contactData: TransferContactData, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: getStatus(data: data), sharedUserId: contactData.userId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId,
+                             conversationId: data.conversationId,
+                             userId: data.getSenderId(),
+                             category: data.category,
+                             status: getStatus(data: data),
+                             sharedUserId: contactData.userId,
+                             quoteMessageId: data.quoteMessageId,
+                             createdAt: data.createdAt)
     }
     
     public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {

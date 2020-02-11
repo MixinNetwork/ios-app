@@ -21,19 +21,19 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         220
     }
     
-    var leftLeadingMargin: CGFloat {
+    var receivedLeadingMargin: CGFloat {
         return 22
     }
     
-    var rightLeadingMargin: CGFloat {
-        return 12
-    }
-    
-    var leftTrailingMargin: CGFloat {
+    var receivedTrailingMargin: CGFloat {
         return 20
     }
     
-    var rightTrailingMargin: CGFloat {
+    var sentLeadingMargin: CGFloat {
+        return 12
+    }
+    
+    var sentTrailingMargin: CGFloat {
         return 30
     }
     
@@ -57,12 +57,12 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         let backgroundOrigin: CGPoint
         if style.contains(.received) {
             backgroundOrigin = CGPoint(x: bubbleMargin.leading, y: fullnameHeight)
-            leadingConstant = leftLeadingMargin
-            trailingConstant = leftTrailingMargin
+            leadingConstant = receivedLeadingMargin
+            trailingConstant = receivedTrailingMargin
         } else {
             backgroundOrigin = CGPoint(x: width - bubbleMargin.leading - backgroundSize.width, y: fullnameHeight)
-            leadingConstant = rightLeadingMargin
-            trailingConstant = rightTrailingMargin
+            leadingConstant = sentLeadingMargin
+            trailingConstant = sentTrailingMargin
         }
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
         cellHeight = fullnameHeight + backgroundSize.height + timeFrame.height + timeMargin.bottom + bottomSeparatorHeight

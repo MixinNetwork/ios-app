@@ -9,17 +9,17 @@ class AppCardMessageViewModel: CardMessageViewModel {
         return AppCardBubbleImageSet.self
     }
     
-    override var leftLeadingMargin: CGFloat {
+    override var receivedLeadingMargin: CGFloat {
         return 18
     }
     
-    override var leftTrailingMargin: CGFloat {
+    override var receivedTrailingMargin: CGFloat {
         return 12
     }
     
     override var contentWidth: CGFloat {
         // 48 is iconImageView.width, 10 is the spacing between icon and title
-        labelWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10
+        labelWidth + receivedLeadingMargin + receivedTrailingMargin + 48 + 10
     }
     
     private var labelWidth: CGFloat = 0

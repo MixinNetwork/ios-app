@@ -138,36 +138,9 @@
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6et-Tx-SHG">
                                                     <rect key="frame" x="202" y="12" width="165" height="44"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="0.00001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hrv-5u-Ur3">
-                                                            <rect key="frame" x="0.0" y="0.0" width="165" height="23"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="23" id="d80-cm-nuV"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                                            <color key="textColor" name="text"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rje-FV-9o4">
-                                                            <rect key="frame" x="0.0" y="27" width="165" height="17"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_accessory"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="hrv-5u-Ur3" secondAttribute="trailing" id="649-Qa-Kaq"/>
-                                                        <constraint firstItem="Rje-FV-9o4" firstAttribute="leading" secondItem="hrv-5u-Ur3" secondAttribute="leading" id="GYE-YH-QMh"/>
-                                                        <constraint firstItem="hrv-5u-Ur3" firstAttribute="top" secondItem="6et-Tx-SHG" secondAttribute="top" id="Gea-fT-UnU"/>
-                                                        <constraint firstAttribute="bottom" secondItem="Rje-FV-9o4" secondAttribute="bottom" id="Vya-hx-ddd"/>
-                                                        <constraint firstItem="hrv-5u-Ur3" firstAttribute="leading" secondItem="6et-Tx-SHG" secondAttribute="leading" id="bv9-kF-ZY5"/>
-                                                        <constraint firstItem="Rje-FV-9o4" firstAttribute="top" secondItem="hrv-5u-Ur3" secondAttribute="bottom" constant="4" id="f3w-Gz-pJy"/>
-                                                        <constraint firstItem="Rje-FV-9o4" firstAttribute="leading" secondItem="6et-Tx-SHG" secondAttribute="leading" id="gmX-HG-8qi"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Rje-FV-9o4" secondAttribute="trailing" id="wwx-hB-bfS"/>
+                                                        <constraint firstAttribute="height" constant="44" placeholder="YES" id="4JI-Qv-8XQ"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -182,12 +155,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="amountLabel" destination="hrv-5u-Ur3" id="ixV-UB-Gcu"/>
                                             <outlet property="contentBottomConstraint" destination="GZi-ZE-Z4b" id="4VB-yL-xGU"/>
                                             <outlet property="iconImageView" destination="Sad-ex-764" id="4iM-Cq-5jc"/>
                                             <outlet property="leftView" destination="Sad-ex-764" id="2y4-Kb-2sW"/>
                                             <outlet property="rightView" destination="6et-Tx-SHG" id="hzy-yV-tIh"/>
-                                            <outlet property="symbolLabel" destination="Rje-FV-9o4" id="z0I-bX-p13"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DataMessageCell" rowHeight="72" id="PXR-5f-MIR" customClass="DataMessageCell" customModule="Mixin" customModuleProvider="target">

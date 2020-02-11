@@ -2,14 +2,30 @@ import UIKit
 import MixinServices
 
 class TransferMessageCell: CardMessageCell {
-
+    
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: UILabel!
+    
+    let amountLabel = UILabel()
+    let symbolLabel = UILabel()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         statusImageView.isHidden = true
+        amountLabel.textColor = .text
+        amountLabel.font = TransferMessageViewModel.amountFont
+        amountLabel.adjustsFontForContentSizeCategory = true
+        symbolLabel.textColor = .accessoryText
+        symbolLabel.font = TransferMessageViewModel.symbolFont
+        symbolLabel.adjustsFontForContentSizeCategory = true
+        rightView.addSubview(amountLabel)
+        rightView.addSubview(symbolLabel)
+        amountLabel.snp.makeConstraints { (make) in
+            make.leading.trailing.top.equalToSuperview()
+        }
+        symbolLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(amountLabel.snp.bottom).offset(4)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
     }
     
     override func prepareForReuse() {
@@ -28,5 +44,5 @@ class TransferMessageCell: CardMessageCell {
             symbolLabel.text = viewModel.message.assetSymbol
         }
     }
-
+    
 }

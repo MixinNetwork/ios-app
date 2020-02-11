@@ -1,16 +1,38 @@
 import UIKit
 
 class ContactMessageCell: CardMessageCell {
-
+    
+    static let titleSpacing: CGFloat = 6
+    
     @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var fullnameLabel: UILabel!
-    @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var verifiedImageView: UIImageView!
+    
+    let fullnameLabel = UILabel()
+    let idLabel = UILabel()
+    let verifiedImageView = UIImageView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        fullnameLabel.font = ContactMessageViewModel.fullnameFont
+        fullnameLabel.textColor = .text
+        fullnameLabel.adjustsFontForContentSizeCategory = true
+        fullnameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        verifiedImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        idLabel.font = ContactMessageViewModel.idFont
+        idLabel.textColor = .accessoryText
+        idLabel.adjustsFontForContentSizeCategory = true
+        let stackView = UIStackView(arrangedSubviews: [fullnameLabel, verifiedImageView])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = Self.titleSpacing
+        rightView.addSubview(stackView)
+        rightView.addSubview(idLabel)
+        stackView.snp.makeConstraints { (make) in
+            make.leading.trailing.top.equalToSuperview()
+        }
         idLabel.snp.makeConstraints { (make) in
-            make.trailing.equalTo(timeLabel.snp.leading)
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(stackView.snp.bottom).offset(4)
         }
     }
     
@@ -25,17 +47,13 @@ class ContactMessageCell: CardMessageCell {
             fullnameLabel.text = viewModel.message.sharedUserFullName
             idLabel.text = viewModel.message.sharedUserIdentityNumber
             avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
-
-            if viewModel.message.sharedUserIsVerified {
-                verifiedImageView.image = R.image.ic_user_verified()
-                verifiedImageView.isHidden = false
-            } else if !viewModel.message.sharedUserAppId.isEmpty {
-                verifiedImageView.image = R.image.ic_user_bot()
+            if let image = viewModel.verifiedImage {
+                verifiedImageView.image = image
                 verifiedImageView.isHidden = false
             } else {
                 verifiedImageView.isHidden = true
             }
         }
     }
-
+    
 }

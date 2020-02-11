@@ -290,45 +290,9 @@
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iMh-GZ-S3Y">
                                                     <rect key="frame" x="202" y="12" width="105" height="44"/>
-                                                    <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Y5o-nI-iN8">
-                                                            <rect key="frame" x="0.0" y="0.0" width="105" height="23"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Alejandro Dean" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kFZ-S0-mPe">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="105" height="23"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="height" constant="23" id="LvS-fz-IL9"/>
-                                                                    </constraints>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                                    <color key="textColor" name="text"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="PZe-iD-xew">
-                                                                    <rect key="frame" x="0.0" y="-2.5" width="0.0" height="28"/>
-                                                                </imageView>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="23" id="bpz-Td-S9Z"/>
-                                                            </constraints>
-                                                        </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="10000001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5b-28-vmg">
-                                                            <rect key="frame" x="0.0" y="27" width="65" height="17"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_accessory"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="V5b-28-vmg" firstAttribute="leading" secondItem="iMh-GZ-S3Y" secondAttribute="leading" id="0ng-sR-dyO"/>
-                                                        <constraint firstItem="Y5o-nI-iN8" firstAttribute="leading" secondItem="iMh-GZ-S3Y" secondAttribute="leading" id="LLy-4t-xDD"/>
-                                                        <constraint firstItem="Y5o-nI-iN8" firstAttribute="top" secondItem="iMh-GZ-S3Y" secondAttribute="top" id="fzQ-qM-rMb"/>
-                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Y5o-nI-iN8" secondAttribute="trailing" id="uUW-ge-jHQ"/>
-                                                        <constraint firstItem="V5b-28-vmg" firstAttribute="top" secondItem="Y5o-nI-iN8" secondAttribute="bottom" constant="4" id="zBm-Sk-ZqE"/>
-                                                        <constraint firstAttribute="bottom" secondItem="V5b-28-vmg" secondAttribute="bottom" id="zYP-Vn-XfY"/>
+                                                        <constraint firstAttribute="height" constant="44" placeholder="YES" id="NCi-Ps-Isb"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -345,11 +309,8 @@
                                         <connections>
                                             <outlet property="avatarImageView" destination="A2i-FR-2du" id="JhY-jm-X3N"/>
                                             <outlet property="contentBottomConstraint" destination="T9l-Eq-Ma0" id="G2Z-1n-wMD"/>
-                                            <outlet property="fullnameLabel" destination="kFZ-S0-mPe" id="JT3-1U-WWs"/>
-                                            <outlet property="idLabel" destination="V5b-28-vmg" id="QoD-cv-ZQM"/>
                                             <outlet property="leftView" destination="A2i-FR-2du" id="nIQ-nu-I9P"/>
                                             <outlet property="rightView" destination="iMh-GZ-S3Y" id="4Xb-nG-oUb"/>
-                                            <outlet property="verifiedImageView" destination="PZe-iD-xew" id="syA-Fr-4DR"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AppCardMessageCell" rowHeight="72" id="eSa-4i-2Gg" customClass="AppCardMessageCell" customModule="Mixin" customModuleProvider="target">
@@ -2339,7 +2300,6 @@
         <image name="ic_sticker_normal" width="20" height="20"/>
         <image name="ic_title_back" width="9" height="17"/>
         <image name="ic_user_bot" width="14" height="11"/>
-        <image name="ic_user_verified" width="14" height="14"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

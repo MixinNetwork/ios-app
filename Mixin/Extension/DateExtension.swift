@@ -3,6 +3,7 @@ import Foundation
 extension DateFormatter {
 
     static let dateFull = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
+    static let dateYMD = DateFormatter(dateFormat: "yyyy-MM-dd")
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
     static let date = DateFormatter(dateFormat: "MMM d, yyyy")
 

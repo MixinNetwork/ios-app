@@ -17,6 +17,10 @@ class AuthorizationsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         reload()
     }
     
@@ -55,6 +59,8 @@ extension AuthorizationsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let permissionvc = PermissionsViewController.instance(authorization: authorizations[indexPath.row])
+        self.navigationController?.pushViewController(permissionvc, animated: true)
     }
     
 }

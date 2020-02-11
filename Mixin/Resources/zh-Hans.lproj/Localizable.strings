@@ -691,6 +691,8 @@
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_contacts_tips" = "同步通讯录到 Mixin 发现更多好友。";
 "setting_contacts_upload" = "上传手机通讯录";
+"setting_permissions" = "授权列表";
+"setting_permissions_date" = "授权时间: %@, 上次获取: %@";
 
 // Notifications
 "notification_reply" = "回复";

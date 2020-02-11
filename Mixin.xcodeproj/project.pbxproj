@@ -401,6 +401,12 @@
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
 		9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */; };
+		ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */; };
+		ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */; };
+		ABCB87E123F1A56B00780E60 /* PermissionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */; };
+		ABE865BE23F2455800C0167D /* Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865BD23F2455800C0167D /* Scope.swift */; };
+		ABE865C123F260FE00C0167D /* SingleTextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABE865BF23F260FE00C0167D /* SingleTextTableViewCell.xib */; };
+		ABE865C223F260FE00C0167D /* SingleTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865C023F260FE00C0167D /* SingleTextTableViewCell.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
 		DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */; };
@@ -1085,6 +1091,12 @@
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
 		9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationDateHeaderView.xib; sourceTree = "<group>"; };
+		ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsViewController.swift; sourceTree = "<group>"; };
+		ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionsTableViewCell.xib; sourceTree = "<group>"; };
+		ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsTableViewCell.swift; sourceTree = "<group>"; };
+		ABE865BD23F2455800C0167D /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
+		ABE865BF23F260FE00C0167D /* SingleTextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleTextTableViewCell.xib; sourceTree = "<group>"; };
+		ABE865C023F260FE00C0167D /* SingleTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextTableViewCell.swift; sourceTree = "<group>"; };
 		C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.release.xcconfig"; sourceTree = "<group>"; };
 		DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinNotificationService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
@@ -1802,6 +1814,14 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		ABE865BC23F2453D00C0167D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ABE865BD23F2455800C0167D /* Scope.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		DBADD0FED15BCB65F6FF70EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -2154,6 +2174,10 @@
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
 				7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */,
 				7BC1466E230D12B70060FE19 /* CurrencyCell.swift */,
+				ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */,
+				ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */,
+				ABE865BF23F260FE00C0167D /* SingleTextTableViewCell.xib */,
+				ABE865C023F260FE00C0167D /* SingleTextTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2437,6 +2461,7 @@
 		DFE356B61FB4992900E0E3A8 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				ABE865BC23F2453D00C0167D /* Model */,
 				DF8CECF01FC4255700E40064 /* Cells */,
 				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
@@ -2461,6 +2486,7 @@
 				DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */,
 				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
+				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -2686,10 +2712,12 @@
 				DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
+				ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
 				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
 				7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerHintView.xib in Resources */,
+				ABE865C123F260FE00C0167D /* SingleTextTableViewCell.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
@@ -2869,14 +2897,11 @@
 				"${BUILT_PRODUCTS_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/Bugsnag/Bugsnag.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceGuru/DeviceGuru.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -2898,14 +2923,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlignedCollectionViewFlowLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bugsnag.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceGuru.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -3079,6 +3101,7 @@
 				7B833E9922C4904F0063929D /* AppLoadingIndicatorView.swift in Sources */,
 				7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */,
 				DFD1FBC522FD809700C570D4 /* ContactSettingViewController.swift in Sources */,
+				ABE865BE23F2455800C0167D /* Scope.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
@@ -3367,6 +3390,7 @@
 				E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
+				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
@@ -3433,6 +3457,7 @@
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				DFB6CE2523C48A8E00FB6615 /* DateExtension.swift in Sources */,
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
+				ABCB87E123F1A56B00780E60 /* PermissionsTableViewCell.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
@@ -3452,6 +3477,7 @@
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
+				ABE865C223F260FE00C0167D /* SingleTextTableViewCell.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,

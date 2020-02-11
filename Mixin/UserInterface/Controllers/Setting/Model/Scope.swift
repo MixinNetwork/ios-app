@@ -1,0 +1,61 @@
+import Foundation
+import MixinServices
+
+enum Scope: String {
+    case PROFILE = "PROFILE:READ"
+    case PHONE = "PHONE:READ"
+    case ASSETS = "ASSETS:READ"
+    case APPS_READ = "APPS:READ"
+    case APPS_WRITE = "APPS:WRITE"
+    case CONTACTS_READ = "CONTACTS:READ"
+    case MESSAGES_REPRESENT = "MESSAGES:REPRESENT"
+    case SNAPSHOTS_READ = "SNAPSHOTS:READ"
+    
+    static func getCompleteScopeInfo(authInfo: AuthorizationResponse) -> [(scope: Scope, name: String, desc: String)] {
+        guard let account = LoginManager.shared.account else {
+            return []
+        }
+        var result = [(scope: Scope, name: String, desc: String)]()
+        result.append((.PROFILE, Localized.AUTH_PERMISSION_PROFILE, Localized.AUTH_PROFILE_DESCRIPTION(fullName: account.full_name, phone: account.identity_number)))
+
+        if authInfo.scopes.contains(Scope.PHONE.rawValue) {
+            result.append((.PHONE, Localized.AUTH_PERMISSION_PHONE, account.phone))
+        }
+        if authInfo.scopes.contains(Scope.MESSAGES_REPRESENT.rawValue) {
+            result.append((.APPS_WRITE, R.string.localizable.auth_permission_messages_represent(), R.string.localizable.auth_permission_messages_represent_description()))
+        }
+        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
+            result.append((.APPS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION))
+        }
+        if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
+            result.append((.ASSETS, Localized.AUTH_PERMISSION_ASSETS, getAssetsBalanceText()))
+        }
+        if authInfo.scopes.contains(Scope.SNAPSHOTS_READ.rawValue) {
+            result.append((.SNAPSHOTS_READ, R.string.localizable.auth_permission_snapshots_read(), R.string.localizable.auth_permission_snapshots_read_description()))
+        }
+        if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
+            result.append((.APPS_READ, Localized.AUTH_PERMISSION_APPS_READ, Localized.AUTH_PERMISSION_APPS_READ_DESCRIPTION))
+        }
+        if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
+            result.append((.APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE_DESCRIPTION))
+        }
+        return result
+    }
+    
+    private static func getAssetsBalanceText() -> String {
+        let assets = AssetDAO.shared.getAssets()
+        guard assets.count > 0 else {
+            return "0"
+        }
+        var result = "\(assets[0].localizedBalance) \(assets[0].symbol)"
+        if assets.count > 1 {
+            result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
+        }
+        if assets.count > 2 {
+            result += Localized.AUTH_ASSETS_MORE
+        }
+        return result
+    }
+}
+
+

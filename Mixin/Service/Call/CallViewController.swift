@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class CallView: UIVisualEffectView {
+class CallViewController: UIViewController {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -33,26 +33,17 @@ class CallView: UIVisualEffectView {
         return manager.call?.isOutgoing ?? true
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        loadSubviews()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
-    override init(effect: UIVisualEffect?) {
-        super.init(effect: effect)
-        loadSubviews()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
     }
     
-    func show() {
-        let window = AppDelegate.current.mainWindow
-        window.endEditing(true)
-        frame = window.bounds
-        window.addSubview(self)
-    }
-    
-    func dismiss() {
+    func disableConnectionDurationTimer() {
         setConnectionDurationTimerEnabled(false)
-        removeFromSuperview()
     }
     
     func reload(user: UserItem) {
@@ -82,7 +73,7 @@ class CallView: UIVisualEffectView {
     
 }
 
-extension CallView {
+extension CallViewController {
     
     enum Style {
         case calling
@@ -113,16 +104,6 @@ extension CallView {
         }
     }
     
-    private func loadSubviews() {
-        layoutMargins = .zero
-        let nibName = String(describing: type(of: self))
-        if let xibView = Bundle.main.loadNibNamed(nibName, owner: self, options: nil)?.first as? UIView {
-            xibView.frame = bounds
-            contentView.addSubview(xibView)
-        }
-        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
-    }
-    
     private func layout(for style: Style) {
         if style == .connected {
             statusLabel.text = mediaDurationFormatter.string(from: 0)
@@ -141,19 +122,17 @@ extension CallView {
                 self.setFunctionSwitchesHidden(true)
                 self.setAcceptButtonHidden(true)
                 self.setConnectionButtonsEnabled(true)
-                self.layoutIfNeeded()
+                self.view.layoutIfNeeded()
             }
         case .connected:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
-                self.layoutIfNeeded()
+                self.view.layoutIfNeeded()
             }
             setConnectionDurationTimerEnabled(true)
         case .disconnecting:
-            timer?.invalidate()
-            timer = nil
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
             setConnectionDurationTimerEnabled(false)

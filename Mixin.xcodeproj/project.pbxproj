@@ -46,6 +46,7 @@
 		7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */; };
 		7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
+		7B158FDA23F23C6C00AAD66C /* CallWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B158FD923F23C6C00AAD66C /* CallWindow.swift */; };
 		7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */; };
 		7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */; };
 		7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */; };
@@ -219,7 +220,7 @@
 		7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */; };
 		7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */; };
 		7B7E7144217D87860052C7DD /* CallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7E7143217D87860052C7DD /* CallView.xib */; };
-		7B7E7146217D89790052C7DD /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E7145217D89790052C7DD /* CallView.swift */; };
+		7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E7145217D89790052C7DD /* CallViewController.swift */; };
 		7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */; };
 		7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */; };
 		7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */; };
@@ -855,6 +856,7 @@
 		7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceInputAccessoryView.swift; sourceTree = "<group>"; };
 		7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceInputAccessoryView.xib; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
+		7B158FD923F23C6C00AAD66C /* CallWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallWindow.swift; sourceTree = "<group>"; };
 		7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionViewController.swift; sourceTree = "<group>"; };
 		7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionSwitch.swift; sourceTree = "<group>"; };
 		7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewController.swift; sourceTree = "<group>"; };
@@ -1027,7 +1029,7 @@
 		7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudio.swift; sourceTree = "<group>"; };
 		7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaWaveformView.swift; sourceTree = "<group>"; };
 		7B7E7143217D87860052C7DD /* CallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallView.xib; sourceTree = "<group>"; };
-		7B7E7145217D89790052C7DD /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
+		7B7E7145217D89790052C7DD /* CallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
 		7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoMessageCell.swift; sourceTree = "<group>"; };
 		7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPrefixedTextMessageViewModel.swift; sourceTree = "<group>"; };
 		7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecalledMessageViewModel.swift; sourceTree = "<group>"; };
@@ -2044,8 +2046,9 @@
 				7BF7837A2179D1AF00BECB4B /* Call.swift */,
 				E07E38A023A772CC0005A538 /* CallError.swift */,
 				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
+				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
-				7B7E7145217D89790052C7DD /* CallView.swift */,
+				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -3774,6 +3777,7 @@
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
 				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
 				DF08F0A623828B8F005CFD34 /* PHAssetExtension.swift in Sources */,
+				7B158FDA23F23C6C00AAD66C /* CallWindow.swift in Sources */,
 				7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */,
 				DF886D452440B2F800F44BCC /* ConversationCircleRequest.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
@@ -4172,7 +4176,7 @@
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
-				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
+				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,

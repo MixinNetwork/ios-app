@@ -14,16 +14,8 @@ class CallManager {
     
     private(set) var call: Call?
     
-    private(set) lazy var view: CallView = performSynchronouslyOnMainThread {
-        let view = CallView(effect: UIBlurEffect(style: .dark))
-        view.manager = self
-        return view
-    }
-
-    var messageId: String? {
-        call?.uuidString
-    }
-    
+    private var window: CallWindow?
+    private var viewController: CallViewController?
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
     private var pendingCandidates = [String: [RTCIceCandidate]]() // Key is call id
@@ -91,15 +83,12 @@ class CallManager {
         vibrator.stopVibrating()
         queue.async {
             guard let call = self.call else {
-                DispatchQueue.main.sync {
-                    self.view.style = .disconnecting
-                    self.view.dismiss()
-                }
+                DispatchQueue.main.sync(execute: self.dismissCallingInterface)
                 return
             }
             self.invalidateUnansweredTimeoutTimerAndSetNil()
             DispatchQueue.main.sync {
-                self.view.style = .disconnecting
+                self.viewController?.style = .disconnecting
             }
             let category: MessageCategory
             if [.connected, .completed].contains(self.rtcClient.iceConnectionState) {
@@ -121,16 +110,16 @@ class CallManager {
                                                    isUserInitiated: isUserInitiated,
                                                    category: category)
             DispatchQueue.main.sync {
-                self.view.dismiss()
                 self.isMuted = false
                 self.usesSpeaker = false
+                self.dismissCallingInterface()
             }
             self.call = nil
         }
     }
     
     func acceptCurrentCall() {
-        view.style = .connecting
+        viewController?.style = .connecting
         vibrator.stopVibrating()
         queue.async {
             guard let call = self.call, let sdp = self.pendingRemoteSdp else {
@@ -302,9 +291,7 @@ extension CallManager {
             semaphore.wait()
             performSynchronouslyOnMainThread {
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                view.reload(user: user)
-                view.style = .calling
-                view.show()
+                showCallingInterface(user: user)
                 if UIApplication.shared.applicationState == .active {
                     vibrator.startVibrating()
                     playRingtone(usesSpeaker: true)
@@ -329,7 +316,7 @@ extension CallManager {
             self.usesSpeaker = false
             call.hasReceivedRemoteAnswer = true
             DispatchQueue.main.sync {
-                self.view.style = .connecting
+                self.viewController?.style = .connecting
             }
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
@@ -341,7 +328,7 @@ extension CallManager {
         } else if let category = MessageCategory(rawValue: data.category), ReceiveMessageService.completeCallCategories.contains(category) {
             ringtonePlayer?.stop()
             DispatchQueue.main.sync {
-                view.style = .disconnecting
+                viewController?.style = .disconnecting
             }
             CallManager.insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             clean()
@@ -362,6 +349,26 @@ extension CallManager {
         }
     }
     
+    private func showCallingInterface(user: UserItem) {
+        let viewController = CallViewController()
+        viewController.loadViewIfNeeded()
+        viewController.manager = self
+        viewController.reload(user: user)
+        viewController.style = .calling
+        let window = CallWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        self.viewController = viewController
+        self.window = window
+    }
+    
+    private func dismissCallingInterface() {
+        viewController?.disableConnectionDurationTimer()
+        viewController = nil
+        window = nil
+        AppDelegate.current.mainWindow.makeKeyAndVisible()
+    }
+    
 }
 
 extension CallManager: WebRTCClientDelegate {
@@ -374,7 +381,7 @@ extension CallManager: WebRTCClientDelegate {
         call?.connectedDate = Date()
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         performSynchronouslyOnMainThread {
-            self.view.style = .connected
+            self.viewController?.style = .connected
         }
     }
     
@@ -396,7 +403,7 @@ extension CallManager {
         guard let call = call, !call.hasReceivedRemoteAnswer else {
             return
         }
-        view.dismiss()
+        dismissCallingInterface()
         rtcClient.close()
         isMuted = false
         queue.async {
@@ -442,9 +449,7 @@ extension CallManager {
                 return
             }
             DispatchQueue.main.sync {
-                self.view.style = .calling
-                self.view.reload(user: opponentUser)
-                self.view.show()
+                self.showCallingInterface(user: opponentUser)
             }
             let uuid = UUID()
             let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
@@ -532,7 +537,7 @@ extension CallManager {
         invalidateUnansweredTimeoutTimerAndSetNil()
         performSynchronouslyOnMainThread {
             vibrator.stopVibrating()
-            view.dismiss()
+            dismissCallingInterface()
         }
     }
     

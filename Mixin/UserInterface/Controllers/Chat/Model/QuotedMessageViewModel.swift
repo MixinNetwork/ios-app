@@ -65,7 +65,7 @@ class QuotedMessageViewModel {
         let contentWidth = max(titleWidth + quoteImageWidth, paddedQuoteIconWidth + subtitleSize.width + quoteImageWidth)
             + Self.contentMargin.horizontal
         let titlesHeight = Self.contentMargin.vertical + titleHeight + Self.subtitleTopMargin + subtitleHeight
-        let contentHeight = max(Self.imageSize.height, titlesHeight)
+        let contentHeight = max(Self.imageSize.height, ceil(titlesHeight))
         contentSize = CGSize(width: contentWidth, height: contentHeight)
     }
     

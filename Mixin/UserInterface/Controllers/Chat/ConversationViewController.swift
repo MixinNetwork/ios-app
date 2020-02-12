@@ -948,6 +948,9 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? PhotoRepresentableMessageCell {
+            setCell(cell, contentViewHidden: false)
+        }
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
@@ -1346,6 +1349,10 @@ extension ConversationViewController {
         guard let id = id, let cell = visiblePhotoRepresentableCell(of: id) else {
             return
         }
+        setCell(cell, contentViewHidden: hidden)
+    }
+    
+    private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
         var contentViews = [
             cell.contentImageView,
             cell.timeLabel,

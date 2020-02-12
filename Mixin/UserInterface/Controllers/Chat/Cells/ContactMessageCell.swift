@@ -16,14 +16,17 @@ class ContactMessageCell: CardMessageCell {
         fullnameLabel.textColor = .text
         fullnameLabel.adjustsFontForContentSizeCategory = true
         fullnameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        fullnameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         verifiedImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        verifiedImageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        verifiedImageView.contentMode = .left
         idLabel.font = ContactMessageViewModel.idFont
         idLabel.textColor = .accessoryText
         idLabel.adjustsFontForContentSizeCategory = true
         let stackView = UIStackView(arrangedSubviews: [fullnameLabel, verifiedImageView])
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
         stackView.spacing = Self.titleSpacing
         rightView.addSubview(stackView)
         rightView.addSubview(idLabel)

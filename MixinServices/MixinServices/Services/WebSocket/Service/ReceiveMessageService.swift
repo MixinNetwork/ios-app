@@ -150,6 +150,9 @@ public class ReceiveMessageService: MixinService {
             if AppGroupUserDefaults.isProcessingMessagesInAppExtension {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
+
+                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...\(oldDate)...", newSection: true)
+
                     DarwinNotificationManager.shared.checkStatusInAppExtension()
                     Thread.sleep(forTimeInterval: 2)
 
@@ -821,11 +824,15 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
+            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
+
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
+
+            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log in desktop...", newSection: true)
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)

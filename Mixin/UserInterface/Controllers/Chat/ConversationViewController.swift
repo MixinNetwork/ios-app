@@ -513,7 +513,10 @@ class ConversationViewController: UIViewController {
         let conversationId = self.conversationId
         let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinServer.httpUrl, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
-            self?.report(conversationId: conversationId)
+            self?.report(conversationId: conversationId, shareFile: false)
+        }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { [weak self](_) in
+            self?.report(conversationId: conversationId, shareFile: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
@@ -1508,8 +1511,8 @@ extension ConversationViewController {
             MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
     }
-    
-    private func report(conversationId: String) {
+
+    private func report(conversationId: String, shareFile: Bool) {
         DispatchQueue.global().async { [weak self] in
             let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
@@ -1535,19 +1538,26 @@ extension ConversationViewController {
             guard FileManager.default.fileSize(targetUrl.path) > 0 else {
                 return
             }
-            
-            let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
-            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
-            message.name = url.lastPathComponent
-            message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
-            message.mediaUrl = url.lastPathComponent
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-            
-            self?.dataSource?.queue.async {
-                SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+
+            if shareFile {
                 DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    let inviteController = UIActivityViewController(activityItems: [targetUrl], applicationActivities: nil)
+                    self?.navigationController?.present(inviteController, animated: true, completion: nil)
+                }
+            } else {
+                let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
+                var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
+                message.name = url.lastPathComponent
+                message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                message.mediaUrl = url.lastPathComponent
+                message.mediaStatus = MediaStatus.PENDING.rawValue
+
+                self?.dataSource?.queue.async {
+                    SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+                    DispatchQueue.main.async {
+                        self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    }
                 }
             }
         }

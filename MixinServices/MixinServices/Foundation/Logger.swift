@@ -15,10 +15,10 @@ public enum Logger {
                 let filename = AppGroupContainer.logUrl.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
                 if log.hasPrefix("No sender key for:") {
                     if log.contains(filename) {
-                        Logger.write(conversationId: filename, log: log, newSection: newSection)
+                        writeLog(conversationId: filename, log: log, newSection: newSection)
                     }
                 } else {
-                    Logger.write(conversationId: filename, log: log, newSection: newSection)
+                    writeLog(conversationId: filename, log: log, newSection: newSection)
                 }
             }
         }
@@ -32,42 +32,48 @@ public enum Logger {
             return
         }
         queue.async {
-            makeLogDirectoryIfNeeded()
-            var log = log + "\(isAppExtension ? "...appExtension" : "")"
-            log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
-            if newSection {
-                log += "------------------------------\n"
-            }
-            let url = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
-            let path = url.path
-            do {
-                if FileManager.default.fileExists(atPath: path) && FileManager.default.fileSize(path) > 1024 * 1024 * 2 {
-                    guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
-                        return
-                    }
-                    fileHandle.seek(toFileOffset: 1024 * 1024 * 1 + 1024 * 896)
-                    let lastString = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
-                    fileHandle.closeFile()
-                    try FileManager.default.removeItem(at: url)
-                    try lastString?.write(toFile: path, atomically: true, encoding: .utf8)
+            writeLog(conversationId: conversationId, log: log, newSection: newSection)
+        }
+    }
+
+    private static func writeLog(conversationId: String, log: String, newSection: Bool = false) {
+        makeLogDirectoryIfNeeded()
+        var log = "\(isAppExtension ? "[AppExtension]" : "")" + log + "...\(DateFormatter.filename.string(from: Date()))\n"
+        if newSection {
+            log += "------------------------------\n"
+        }
+        let url = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
+        let path = url.path
+        do {
+            if FileManager.default.fileExists(atPath: path) && FileManager.default.fileSize(path) > 1024 * 1024 * 2 {
+                guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
+                    return
                 }
-                
-                if FileManager.default.fileExists(atPath: path) {
-                    guard let data = log.data(using: .utf8) else {
-                        return
-                    }
-                    guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
-                        return
-                    }
-                    fileHandle.seekToEndOfFile()
-                    fileHandle.write(data)
-                    fileHandle.closeFile()
-                } else {
-                    try log.write(toFile: path, atomically: true, encoding: .utf8)
-                }
-            } catch {
-                reporter.report(error: error)
+                fileHandle.seek(toFileOffset: 1024 * 1024 * 1 + 1024 * 896)
+                let lastString = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
+                fileHandle.closeFile()
+                try FileManager.default.removeItem(at: url)
+                try lastString?.write(toFile: path, atomically: false, encoding: .utf8)
             }
+
+            if FileManager.default.fileExists(atPath: path) {
+                guard let data = log.data(using: .utf8) else {
+                    return
+                }
+                guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
+                    return
+                }
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(data)
+                fileHandle.closeFile()
+            } else {
+                try log.write(toFile: path, atomically: false, encoding: .utf8)
+            }
+        } catch {
+            #if DEBUG
+            print("======FileManagerExtension...writeLog...error:\(error)")
+            #endif
+            reporter.report(error: error)
         }
     }
     
@@ -92,6 +98,9 @@ public enum Logger {
         do {
             try FileManager.default.createDirectory(at: AppGroupContainer.logUrl, withIntermediateDirectories: true, attributes: nil)
         } catch {
+            #if DEBUG
+            print("======FileManagerExtension...makeLogDirectoryIfNeeded...error:\(error)")
+            #endif
             reporter.report(error: error)
         }
     }

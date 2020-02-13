@@ -746,4 +746,5 @@
 "about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
 
 "report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
-"report_button"="发送";
+"report_button"="把日志发给开发者";
+"report_share"="分享日志文件";

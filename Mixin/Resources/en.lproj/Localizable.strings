@@ -742,4 +742,5 @@
 "about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
 
 "report_title"="Send the conversation log to developers?";
-"report_button"="Send";
+"report_button"="Send to Developer";
+"report_share"="Share Log File";

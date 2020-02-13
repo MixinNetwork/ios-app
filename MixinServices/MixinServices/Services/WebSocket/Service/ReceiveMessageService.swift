@@ -139,8 +139,12 @@ public class ReceiveMessageService: MixinService {
         processing = true
 
         processDispatchQueue.async {
+            var displaySyncProcess = false
             defer {
                 self.processing = false
+                if displaySyncProcess {
+                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: 100)
+                }
             }
 
             if AppGroupUserDefaults.isProcessingMessagesInAppExtension {
@@ -168,6 +172,7 @@ public class ReceiveMessageService: MixinService {
 
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
                 if remainJobCount + finishedJobCount > 500 {
+                    displaySyncProcess = true
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
                     NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
                 }

@@ -468,8 +468,6 @@
 "auth_permission_apps_write_description" = "すべてのアプリを管理";
 "auth_permission_contacts_read" = "連絡先を読む";
 "auth_permission_contacts_read_description" = "連絡先リストにアクセスする";
-"auth_permission_messages_represent" = "代理送信";
-"auth_permission_messages_represent_description" = "メッセージを送る";
 "auth_assets_more" = "もっと";
 "auth_profile_description" = "%@, %@, プロフィール写真";
 "auth_success" = "%@にログインしました";
@@ -595,8 +593,6 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
 "setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
-"setting_permissions" = "認証リスト";
-"setting_permissions_date" = "認証日時: %@, 前回の取得: %@";
 
 // Notifications
 "notification_reply" = "返信";

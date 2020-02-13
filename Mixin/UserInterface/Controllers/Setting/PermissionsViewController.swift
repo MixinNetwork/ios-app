@@ -3,11 +3,11 @@ import MixinServices
 
 class PermissionsViewController: UIViewController {
     
-    var authorization: AuthorizationResponse! = nil
+    var authorization: AuthorizationResponse!
     
     private let footerReuseId = "footer"
     
-    private var scopes: [(scope: Scope, name: String, desc: String)] = [(scope: Scope, name: String, desc: String)]()
+    private var scopes = [(scope: Scope, name: String, desc: String)]()
     
     @IBOutlet private var tableView: UITableView!
     

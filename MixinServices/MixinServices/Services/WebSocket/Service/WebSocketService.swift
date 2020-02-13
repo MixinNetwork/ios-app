@@ -34,7 +34,7 @@ public class WebSocketService {
     }
     private var networkWasRechableOnConnection = false
     private var lastConnectionDate: Date?
-    private var messageHandlers = [String: IncomingMessageHandler]()
+    private var messageHandlers = SafeDictionary<String, IncomingMessageHandler>()
     private var needsJobRestoration = true
     private var httpUpgradeSigningDate: Date?
     private var httpUpgradeServerDate: Date?
@@ -94,19 +94,7 @@ public class WebSocketService {
             }
             if self.status == .disconnected {
                 self.connect()
-            } else {
-                self.reconnectIfNeeded()
-            }
-        }
-    }
-    
-    public func reconnectIfNeeded() {
-        enqueueOperation {
-            let shouldReconnect = self.isReachable
-                && LoginManager.shared.isLoggedIn
-                && self.status == .connected
-                && !(self.socket?.isConnected ?? false)
-            if shouldReconnect {
+            } else if self.status == .connected && !(self.socket?.isConnected ?? false) {
                 self.reconnect(sendDisconnectToRemote: true)
             }
         }
@@ -121,28 +109,32 @@ public class WebSocketService {
             var err = APIError.createTimeoutError()
             
             let semaphore = DispatchSemaphore(value: 0)
-            try queue.sync {
-                messageHandlers[message.id] = { (jobResult) in
-                    switch jobResult {
-                    case let .success(blazeMessage):
-                        response = blazeMessage
-                    case let .failure(error):
-                        if error.code == 10002 {
-                            if let param = message.params, let messageId = param.messageId, messageId != messageId.lowercased() {
-                                MessageDAO.shared.deleteMessage(id: messageId)
-                                JobDAO.shared.removeJob(jobId: message.id)
-                            }
+            messageHandlers[message.id] = { (jobResult) in
+                switch jobResult {
+                case let .success(blazeMessage):
+                    response = blazeMessage
+                case let .failure(error):
+                    if error.code == 10002 {
+                        if let param = message.params, let messageId = param.messageId, messageId != messageId.lowercased() {
+                            MessageDAO.shared.deleteMessage(id: messageId)
+                            JobDAO.shared.removeJob(jobId: message.id)
                         }
-                        err = error
                     }
-                    semaphore.signal()
+                    if let conversationId = message.params?.conversationId {
+                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage]...\(error.debugDescription)")
+                    }
+                    err = error
                 }
-                if !send(message: message) {
-                    _ = messageHandlers.removeValue(forKey: message.id)
-                    throw err
-                }
+                semaphore.signal()
             }
-            _ = semaphore.wait(timeout: .now() + .seconds(5))
+            if !send(message: message) {
+                messageHandlers.removeValue(forKey: message.id)
+                throw err
+            }
+
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut, let conversationId = message.params?.conversationId {
+                Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage]...semaphore timeout...")
+            }
             
             guard let blazeMessage = response else {
                 throw err
@@ -207,9 +199,6 @@ extension WebSocketService: WebSocketDelegate {
     }
     
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        guard status == .connected else {
-            return
-        }
         guard data.isGzipped, let unzipped = try? data.gunzipped() else {
             return
         }

@@ -7,6 +7,8 @@ struct AuthorizationResponse: Codable {
     let authorizationCode: String
     let scopes: [String]
     let codeId: String
+    let createdAt: String
+    let accessedAt: String
     let app: App
     
     enum CodingKeys: String, CodingKey {
@@ -14,6 +16,8 @@ struct AuthorizationResponse: Codable {
         case authorizationCode = "authorization_code"
         case scopes
         case codeId = "code_id"
+        case createdAt = "created_at"
+        case accessedAt = "accessed_at"
         case app
     }
     

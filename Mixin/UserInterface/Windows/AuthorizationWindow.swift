@@ -120,7 +120,7 @@ extension AuthorizationWindow: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AuthorizationScopeCell.cellIdentifier) as! AuthorizationScopeCell
         let scope = scopes[indexPath.row]
-        cell.render(name: scope.name, desc: scope.desc)
+        cell.render(name: scope.name, desc: scope.desc, forceChecked: scope.scope == .PROFILE)
         if selectedScopes.contains(scope.scope.rawValue) {
             cell.setSelected(true, animated: false)
         }

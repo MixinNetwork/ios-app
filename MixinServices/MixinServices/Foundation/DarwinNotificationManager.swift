@@ -11,6 +11,7 @@ public class DarwinNotificationManager {
 
     private init() {
         if isAppExtension {
+            AppGroupUserDefaults.isProcessingMessagesInAppExtension = false
             CFNotificationCenterAddObserver(darwinNotifyCenter, selfAsOpaquePointer, { (_, _, _, _, _) in
                 AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
             }, checkStatusInAppExtensionDarwinNotificationName.rawValue, nil, .deliverImmediately)

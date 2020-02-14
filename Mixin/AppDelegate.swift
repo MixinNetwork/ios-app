@@ -141,20 +141,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        let isActive = UIApplication.shared.applicationState == .active
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isActive:\(isActive)", newSection: true)
+
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             completionHandler(.noData)
             return
         }
+        guard !isActive else {
+            completionHandler(.noData)
+            return
+        }
 
-        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...", newSection: true)
         cancelBackgroundTask()
         ReceiveMessageService.shared.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
-            ReceiveMessageService.shared.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
             completionHandler(.newData)
+            if UIApplication.shared.applicationState != .active {
+                ReceiveMessageService.shared.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
         }
     }
     

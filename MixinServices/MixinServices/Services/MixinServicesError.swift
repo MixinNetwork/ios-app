@@ -1,4 +1,5 @@
 import Foundation
+import Starscream
 
 public enum MixinServicesError: Error {
     
@@ -24,6 +25,7 @@ public enum MixinServicesError: Error {
     case badMessageData(id: String, status: String, from: String)
     case logout(isAsyncRequest: Bool)
     case badParticipantSession
+    case websocketDidDisconnect(error: WSError)
     
 }
 
@@ -67,6 +69,8 @@ extension MixinServicesError: CustomNSError {
             return 14
         case .badParticipantSession:
             return 15
+        case .websocketDidDisconnect:
+            return 16
         }
     }
     
@@ -99,6 +103,23 @@ extension MixinServicesError: CustomNSError {
                         "from": from]
         case let .logout(isAsyncRequest):
             return ["isAsyncRequest": isAsyncRequest]
+        case let .websocketDidDisconnect(error):
+            switch error.type {
+            case .outputStreamWriteError:
+                return ["errorType": "outputStreamWriteError"]
+            case .compressionError:
+                return ["errorType": "compressionError"]
+            case .invalidSSLError:
+                return ["errorType": "invalidSSLError"]
+            case .writeTimeoutError:
+                return ["errorType": "writeTimeoutError"]
+            case .protocolError:
+                return ["errorType": "protocolError"]
+            case .upgradeError:
+                return ["errorType": "upgradeError"]
+            case .closeError:
+                return ["errorType": "closeError"]
+            }
         default:
             userInfo = [:]
         }

@@ -182,9 +182,10 @@ extension WebSocketService: WebSocketDelegate {
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if let error = error, self.isReachable {
-            reporter.report(error: error)
-            if let error = error as? WSError, error.type == .writeTimeoutError {
+        if let error = error as? WSError, self.isReachable {
+            reporter.report(error: MixinServicesError.websocketDidDisconnect(error: error))
+            
+            if error.type == .writeTimeoutError {
                 MixinServer.toggle(currentWebSocketHost: host)
             }
         }

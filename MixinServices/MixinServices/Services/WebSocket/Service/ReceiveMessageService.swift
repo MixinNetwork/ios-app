@@ -83,6 +83,8 @@ public class ReceiveMessageService: MixinService {
                 DarwinNotificationManager.shared.checkStatusInMainApp()
                 Thread.sleep(forTimeInterval: 2)
 
+                Logger.write(log: "[ReceiveMessageService] waiting for main app to process messages...checkStatusTimeInMainApp:\(oldDate)...isProcessingMessagesInMainApp:\(AppGroupUserDefaults.isProcessingMessagesInMainApp)")
+
                 if oldDate == AppGroupUserDefaults.checkStatusTimeInMainApp {
                     AppGroupUserDefaults.websocketStatusInMainApp = .disconnected
                 }
@@ -151,7 +153,7 @@ public class ReceiveMessageService: MixinService {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
 
-                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...\(oldDate)...", newSection: true)
+                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(ReceiveMessageService.shared.isStopProcessMessages)")
 
                     DarwinNotificationManager.shared.checkStatusInAppExtension()
                     Thread.sleep(forTimeInterval: 2)

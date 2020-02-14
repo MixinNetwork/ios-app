@@ -53,7 +53,7 @@ public enum Logger {
                 let lastString = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
                 fileHandle.closeFile()
                 try FileManager.default.removeItem(at: url)
-                try lastString?.write(toFile: path, atomically: false, encoding: .utf8)
+                try lastString?.write(toFile: path, atomically: true, encoding: .utf8)
             }
 
             if FileManager.default.fileExists(atPath: path) {
@@ -67,7 +67,7 @@ public enum Logger {
                 fileHandle.write(data)
                 fileHandle.closeFile()
             } else {
-                try log.write(toFile: path, atomically: false, encoding: .utf8)
+                try log.write(toFile: path, atomically: true, encoding: .utf8)
             }
         } catch {
             #if DEBUG
@@ -87,6 +87,7 @@ public enum Logger {
             #if DEBUG
             print("======FileManagerExtension...exportLog...error:\(error)")
             #endif
+            reporter.report(error: error)
         }
         return nil
     }

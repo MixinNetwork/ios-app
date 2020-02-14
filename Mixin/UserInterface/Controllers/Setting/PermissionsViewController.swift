@@ -5,6 +5,8 @@ class PermissionsViewController: UIViewController {
     
     var authorization: AuthorizationResponse!
     
+    private let iconView = AvatarImageView()
+    
     private let footerReuseId = "footer"
     
     private var scopes = [(scope: Scope, name: String, desc: String)]()
@@ -21,6 +23,7 @@ class PermissionsViewController: UIViewController {
         tableView.register(R.nib.singleTextTableViewCell)
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
+        prepareNavigationBar()
     }
     
     class func instance(authorization: AuthorizationResponse) -> UIViewController {
@@ -43,6 +46,28 @@ class PermissionsViewController: UIViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    func prepareNavigationBar() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
+        iconView.addGestureRecognizer(tapRecognizer)
+        iconView.isUserInteractionEnabled = true
+        iconView.hasShadow = true
+        iconView.setImage(with: authorization.app.iconUrl, userId: authorization.app.appId, name: authorization.app.name)
+        self.container?.navigationBar.addSubview(iconView)
+        self.iconView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(container!.rightButton)
+            make.size.equalTo(CGSize.init(width: 40, height: 40))
+            make.right.equalToSuperview().offset(-15)
+        }
+    }
+    
+    @objc func profileAction() {
+        let users = UserDAO.shared.getUsers(ofAppIds: [authorization.app.appId])
+        if let user = users.first, user.isCreatedByMessenger {
+            let vc = UserProfileViewController(user: user)
+            present(vc, animated: true, completion: nil)
+        }
     }
     
 }

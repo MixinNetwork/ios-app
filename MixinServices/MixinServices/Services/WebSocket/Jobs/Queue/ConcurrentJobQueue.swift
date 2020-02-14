@@ -10,11 +10,10 @@ public class ConcurrentJobQueue: JobQueue {
     }
 
     func restoreJobs() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-
         DispatchQueue.global().async {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
             let startConversationIds = ConversationDAO.shared.getStartStatusConversations()
             for conversationId in startConversationIds {
                 ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversationId))

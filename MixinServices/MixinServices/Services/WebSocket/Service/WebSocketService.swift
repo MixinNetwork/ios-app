@@ -50,6 +50,9 @@ public class WebSocketService {
     
     public func connect() {
         enqueueOperation {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
             guard self.status == .disconnected else {
                 return
             }

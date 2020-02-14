@@ -167,7 +167,7 @@ public class ReceiveMessageService: MixinService {
             var finishedJobCount = 0
 
             repeat {
-                if ReceiveMessageService.shared.isStopProcessMessages {
+                guard LoginManager.shared.isLoggedIn, !ReceiveMessageService.shared.isStopProcessMessages else {
                     return
                 }
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)

@@ -118,7 +118,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
             waveformView.tintColor = .highlightedText
             lengthLabel.textColor = .highlightedText
         } else {
-            waveformView.tintColor = .accessoryText
+            waveformView.tintColor = R.color.audio_waveform()!
             lengthLabel.textColor = .accessoryText
         }
     }

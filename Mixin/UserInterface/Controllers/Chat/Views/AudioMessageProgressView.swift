@@ -19,7 +19,7 @@ class AudioMessageProgressView: UIStackView {
         lengthLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         lengthLabel.adjustsFontForContentSizeCategory = true
         
-        highlightedWaveformView.tintColor = UIColor(white: 0.74, alpha: 1)
+        highlightedWaveformView.tintColor = R.color.audio_waveform_progress()!
         
         for view in [waveformView, highlightedWaveformView] {
             waveformWrapperView.addSubview(view)

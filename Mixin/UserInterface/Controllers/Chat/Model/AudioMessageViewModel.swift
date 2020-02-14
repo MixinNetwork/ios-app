@@ -46,10 +46,6 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
     }
     
-    override var contentWidth: CGFloat {
-        waveformWidth + receivedLeadingMargin + receivedTrailingMargin + 40 + 10
-    }
-    
     private let waveformWidth: CGFloat
 
     override init(message: MessageItem) {
@@ -61,6 +57,13 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         super.init(message: message)
         updateOperationButtonStyle()
         updateButtonsHidden()
+    }
+    
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        contentWidth = Self.leftViewSideLength
+            + Self.spacing
+            + waveformWidth
+        super.layout(width: width, style: style)
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

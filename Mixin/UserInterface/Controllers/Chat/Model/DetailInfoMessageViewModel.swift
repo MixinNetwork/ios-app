@@ -56,7 +56,11 @@ class DetailInfoMessageViewModel: MessageViewModel {
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
         let fullnameSize = (message.userFullName as NSString)
-            .boundingRect(with: UIView.layoutFittingExpandedSize, options: [], attributes: [.font: MessageFontSet.fullname.scaled], context: nil)
+            .boundingRect(with: UIView.layoutFittingExpandedSize,
+                          options: [],
+                          attributes: [.font: MessageFontSet.fullname.scaled],
+                          context: nil)
+            .size
         fullnameFrame.size = CGSize(width: ceil(fullnameSize.width),
                                     height: ceil(fullnameSize.height) + fullnameVerticalInset)
         updateStatusImageAndTintColor()

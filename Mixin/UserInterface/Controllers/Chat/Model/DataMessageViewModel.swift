@@ -13,10 +13,6 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
     var downloadIsTriggeredByUser = false
     
-    override var contentWidth: CGFloat {
-        280
-    }
-    
     var shouldAutoDownload: Bool {
         switch AppGroupUserDefaults.User.autoDownloadFiles {
         case .never:
@@ -38,6 +34,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        contentWidth = 280
         super.layout(width: width, style: style)
         layoutQuotedMessageIfPresent()
     }

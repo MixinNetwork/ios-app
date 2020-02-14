@@ -199,6 +199,13 @@
 		7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B869C6F202D7DA8009930BA /* NumberPadView.swift */; };
 		7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B869C71202D7FC8009930BA /* NumberPadButton.swift */; };
 		7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B869C73202D8206009930BA /* NumberPadButton.xib */; };
+		7B86B1E723F6885800C80AD9 /* CardMessageTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1E623F6885800C80AD9 /* CardMessageTitleView.swift */; };
+		7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1E823F69E3600C80AD9 /* ContactMessageCellRightView.swift */; };
+		7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B86B1EA23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib */; };
+		7B86B1ED23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1EC23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift */; };
+		7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */; };
+		7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */; };
+		7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */; };
 		7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */; };
 		7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */; };
 		7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressViewController.swift */; };
@@ -877,6 +884,13 @@
 		7B869C6F202D7DA8009930BA /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 		7B869C71202D7FC8009930BA /* NumberPadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadButton.swift; sourceTree = "<group>"; };
 		7B869C73202D8206009930BA /* NumberPadButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NumberPadButton.xib; sourceTree = "<group>"; };
+		7B86B1E623F6885800C80AD9 /* CardMessageTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageTitleView.swift; sourceTree = "<group>"; };
+		7B86B1E823F69E3600C80AD9 /* ContactMessageCellRightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCellRightView.swift; sourceTree = "<group>"; };
+		7B86B1EA23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataMessageExtensionIconView.xib; sourceTree = "<group>"; };
+		7B86B1EC23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageExtensionIconView.swift; sourceTree = "<group>"; };
+		7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageActionView.swift; sourceTree = "<group>"; };
+		7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageProgressView.swift; sourceTree = "<group>"; };
+		7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledCardContentWidthCalculable.swift; sourceTree = "<group>"; };
 		7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageViewModel.swift; sourceTree = "<group>"; };
 		7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageCell.swift; sourceTree = "<group>"; };
 		7B894AF2205BF8660065A1B8 /* AddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressViewController.swift; sourceTree = "<group>"; };
@@ -1477,6 +1491,7 @@
 				7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
 				7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */,
+				7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */,
 				7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */,
 				7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */,
 				7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */,
@@ -2243,6 +2258,12 @@
 				E0320FA423CC3D1600A651D4 /* MessageTagLabel.swift */,
 				E0C7674A23CC8F54003F9215 /* TrailingInfoBackgroundView.swift */,
 				7B81D91323E93ECA0031E945 /* QuotedMessageView.swift */,
+				7B86B1E623F6885800C80AD9 /* CardMessageTitleView.swift */,
+				7B86B1E823F69E3600C80AD9 /* ContactMessageCellRightView.swift */,
+				7B86B1EA23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib */,
+				7B86B1EC23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift */,
+				7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */,
+				7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2708,6 +2729,7 @@
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
+				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
@@ -3105,6 +3127,7 @@
 				DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,
 				DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */,
+				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
@@ -3288,6 +3311,7 @@
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
+				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */,
@@ -3421,6 +3445,7 @@
 				E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */,
 				7B333A8823406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
+				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
@@ -3468,9 +3493,12 @@
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
+				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
+				7B86B1E723F6885800C80AD9 /* CardMessageTitleView.swift in Sources */,
 				DFB6CE2523C48A8E00FB6615 /* DateExtension.swift in Sources */,
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				ABCB87E123F1A56B00780E60 /* PermissionsTableViewCell.swift in Sources */,
+				7B86B1ED23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,

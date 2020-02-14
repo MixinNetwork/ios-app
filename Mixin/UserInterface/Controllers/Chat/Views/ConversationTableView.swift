@@ -291,6 +291,11 @@ class ConversationTableView: UITableView {
         register(IconPrefixedTextMessageCell.self, forCellReuseIdentifier: ReuseId.iconPrefixedText.rawValue)
         register(LiveMessageCell.self, forCellReuseIdentifier: ReuseId.live.rawValue)
         register(PostMessageCell.self, forCellReuseIdentifier: ReuseId.post.rawValue)
+        register(TransferMessageCell.self, forCellReuseIdentifier: ReuseId.transfer.rawValue)
+        register(AppCardMessageCell.self, forCellReuseIdentifier: ReuseId.appCard.rawValue)
+        register(ContactMessageCell.self, forCellReuseIdentifier: ReuseId.contact.rawValue)
+        register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
+        register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)

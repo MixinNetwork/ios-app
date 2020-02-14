@@ -1,34 +1,23 @@
 import UIKit
 import MixinServices
 
-class TransferMessageViewModel: CardMessageViewModel {
+class TransferMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalculable {
     
-    static let amountFont = UIFont.preferredFont(forTextStyle: .title3)
-    static let symbolFont = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+    static let amountFontSet = MessageFontSet(style: .title3)
+    static let symbolFontSet = MessageFontSet(size: 14, weight: .regular)
     
     let snapshotAmount: String?
-    
-    override var contentWidth: CGFloat {
-        calculatedContentWidth
-    }
-    
-    private var calculatedContentWidth: CGFloat = 0
     
     override init(message: MessageItem) {
         snapshotAmount = CurrencyFormatter.localizedString(from: message.snapshotAmount, format: .precision, sign: .whenNegative)
         super.init(message: message)
     }
     
-    override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let amountWidth = ((snapshotAmount ?? "") as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.amountFont])
-            .width
-        let symbolWidth = ((message.assetSymbol ?? "") as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.symbolFont])
-            .width
-        calculatedContentWidth = ceil(max(amountWidth, symbolWidth))
-            + 40 + 12 + receivedLeadingMargin + receivedTrailingMargin
-        calculatedContentWidth = max(160, min(260, calculatedContentWidth))
+    override func layout(width: CGFloat, style: Style) {
+        updateContentWidth(title: snapshotAmount,
+                           titleFont: Self.amountFontSet.scaled,
+                           subtitle: message.assetSymbol,
+                           subtitleFont: Self.symbolFontSet.scaled)
         super.layout(width: width, style: style)
         if !style.contains(.received) {
             timeFrame.origin.x += statusFrame.width

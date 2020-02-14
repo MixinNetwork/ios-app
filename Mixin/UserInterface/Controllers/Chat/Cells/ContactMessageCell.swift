@@ -1,60 +1,32 @@
 import UIKit
 
-class ContactMessageCell: CardMessageCell {
+class ContactMessageCell: CardMessageCell<AvatarImageView, ContactMessageCellRightView> {
     
-    static let titleSpacing: CGFloat = 6
-    
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    
-    let fullnameLabel = UILabel()
-    let idLabel = UILabel()
-    let verifiedImageView = UIImageView()
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        fullnameLabel.font = ContactMessageViewModel.fullnameFont
-        fullnameLabel.textColor = .text
-        fullnameLabel.adjustsFontForContentSizeCategory = true
-        fullnameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        fullnameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        verifiedImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        verifiedImageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        verifiedImageView.contentMode = .left
-        idLabel.font = ContactMessageViewModel.idFont
-        idLabel.textColor = .accessoryText
-        idLabel.adjustsFontForContentSizeCategory = true
-        let stackView = UIStackView(arrangedSubviews: [fullnameLabel, verifiedImageView])
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.spacing = Self.titleSpacing
-        rightView.addSubview(stackView)
-        rightView.addSubview(idLabel)
-        stackView.snp.makeConstraints { (make) in
-            make.leading.trailing.top.equalToSuperview()
-        }
-        idLabel.snp.makeConstraints { (make) in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(stackView.snp.bottom).offset(4)
-        }
+    override func prepare() {
+        super.prepare()
+        leftView.layer.cornerRadius = ContactMessageViewModel.leftViewSideLength / 2
+        leftView.clipsToBounds = true
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        avatarImageView.prepareForReuse()
+        leftView.prepareForReuse()
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? ContactMessageViewModel {
-            fullnameLabel.text = viewModel.message.sharedUserFullName
-            idLabel.text = viewModel.message.sharedUserIdentityNumber
-            avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
+            let message = viewModel.message
+            rightView.fullnameLabel.text = message.sharedUserFullName
+            rightView.idLabel.text = message.sharedUserIdentityNumber
+            leftView.setImage(with: viewModel.message.sharedUserAvatarUrl,
+                              userId: viewModel.message.sharedUserId ?? "",
+                              name: viewModel.message.sharedUserFullName)
             if let image = viewModel.verifiedImage {
-                verifiedImageView.image = image
-                verifiedImageView.isHidden = false
+                rightView.badgeImageView.image = image
+                rightView.badgeImageView.isHidden = false
             } else {
-                verifiedImageView.isHidden = true
+                rightView.badgeImageView.isHidden = true
             }
         }
     }

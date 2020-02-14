@@ -3,20 +3,15 @@ import MixinServices
 
 class ContactMessageViewModel: CardMessageViewModel {
     
-    static let fullnameFont = UIFont.preferredFont(forTextStyle: .body)
-    static let idFont = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+    static let titleSpacing: CGFloat = 6
+    static let fullnameFontSet = MessageFontSet(style: .body)
+    static let idFontSet = MessageFontSet(size: 14, weight: .regular)
     
     override class var supportsQuoting: Bool {
         true
     }
     
     let verifiedImage: UIImage?
-    
-    override var contentWidth: CGFloat {
-        calculatedContentWidth
-    }
-    
-    private var calculatedContentWidth: CGFloat = 0
     
     override init(message: MessageItem) {
         if message.sharedUserIsVerified {
@@ -31,20 +26,21 @@ class ContactMessageViewModel: CardMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         let fullnameWidth = (message.sharedUserFullName as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.fullnameFont])
+            .size(withAttributes: [NSAttributedString.Key.font: Self.fullnameFontSet.scaled])
             .width
-        let iconWidth: CGFloat
-        if let image = verifiedImage {
-            iconWidth = ContactMessageCell.titleSpacing + image.size.width
-        } else {
-            iconWidth = 0
-        }
+        let iconWidth: CGFloat = {
+            if let image = verifiedImage {
+                return ContactMessageViewModel.titleSpacing + image.size.width
+            } else {
+                return 0
+            }
+        }()
         let idWidth = (message.sharedUserIdentityNumber as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.idFont])
+            .size(withAttributes: [NSAttributedString.Key.font: Self.idFontSet.scaled])
             .width
-        calculatedContentWidth = ceil(max(fullnameWidth + iconWidth, idWidth))
-            + 40 + 12 + receivedLeadingMargin + receivedTrailingMargin
-        calculatedContentWidth = max(160, min(260, calculatedContentWidth))
+        contentWidth = Self.leftViewSideLength
+            + Self.spacing
+            + ceil(max(fullnameWidth + iconWidth, idWidth))
         super.layout(width: width, style: style)
     }
     

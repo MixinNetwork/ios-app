@@ -5,7 +5,7 @@ class PermissionsViewController: UIViewController {
     
     var authorization: AuthorizationResponse!
     
-    private let iconView = AvatarImageView()
+    private let iconView = NavigationAvatarIconView()
     
     private let footerReuseId = "footer"
     
@@ -52,21 +52,27 @@ class PermissionsViewController: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
         iconView.addGestureRecognizer(tapRecognizer)
         iconView.isUserInteractionEnabled = true
+        iconView.frame.size = iconView.intrinsicContentSize
         iconView.hasShadow = true
         iconView.setImage(with: authorization.app.iconUrl, userId: authorization.app.appId, name: authorization.app.name)
-        self.container?.navigationBar.addSubview(iconView)
-        self.iconView.snp.makeConstraints { (make) in
+        container?.navigationBar.addSubview(iconView)
+        iconView.snp.makeConstraints { (make) in
             make.centerY.equalTo(container!.rightButton)
-            make.size.equalTo(CGSize.init(width: 40, height: 40))
             make.right.equalToSuperview().offset(-15)
         }
     }
     
     @objc func profileAction() {
-        let users = UserDAO.shared.getUsers(ofAppIds: [authorization.app.appId])
-        if let user = users.first, user.isCreatedByMessenger {
-            let vc = UserProfileViewController(user: user)
-            present(vc, animated: true, completion: nil)
+        let appId = authorization.app.appId
+        DispatchQueue.global().async { [weak self] in
+            guard let user = UserDAO.shared.getUsers(ofAppIds: [appId]).first else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                let vc = UserProfileViewController(user: user)
+                self?.present(vc, animated: true, completion: nil)
+            }
         }
     }
     

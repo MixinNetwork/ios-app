@@ -333,3 +333,15 @@ extension AppDelegate {
     }
     
 }
+
+extension AppDelegate {
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if let galleryVC = UIApplication.homeContainerViewController?.galleryViewController, let currentVC = galleryVC.currentItemViewController, let videoItemVC = currentVC as? GalleryVideoItemViewController  {
+            return videoItemVC.supportOrientations
+        }
+        
+        return .portrait
+    }
+    
+}

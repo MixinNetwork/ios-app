@@ -72,7 +72,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             .last
     }
     
-    private var currentItemViewController: GalleryItemViewController? {
+    var currentItemViewController: GalleryItemViewController? {
         return pageViewController.viewControllers?.first as? GalleryItemViewController
     }
     

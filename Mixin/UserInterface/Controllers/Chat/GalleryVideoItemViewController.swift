@@ -25,6 +25,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var isPipMode = false
     private var videoRatio: CGFloat = 1
     
+    var supportOrientations = UIInterfaceOrientationMask.all
+    
     var hidePlayControlAfterPlaybackBegins = false
     
     var isPlayable: Bool {
@@ -137,6 +139,15 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         view.insertSubview(videoView, at: 0)
         videoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         videoView.frame = view.bounds
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIDevice.current.setValue(Int(UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        controlView.pipButton.isHidden = size.width > size.height
     }
     
     override func prepareForReuse() {

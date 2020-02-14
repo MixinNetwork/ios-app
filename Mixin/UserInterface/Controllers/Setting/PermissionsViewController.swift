@@ -13,7 +13,7 @@ class PermissionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        scopes = Scope.getCompleteScopeInfo(authInfo: authorization)
+        (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)

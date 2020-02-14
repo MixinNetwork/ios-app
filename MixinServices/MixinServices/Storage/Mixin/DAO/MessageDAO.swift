@@ -341,6 +341,15 @@ public final class MessageDAO {
         let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count])
         return messages.reversed()
     }
+	
+    public func getAllMessagesOfAttachmentOnDisk(conversationId: String) -> [Message] {
+        let categories: [MessageCategory] = [
+            .SIGNAL_DATA, .PLAIN_DATA, .SIGNAL_AUDIO, .PLAIN_AUDIO,
+            .SIGNAL_IMAGE, .PLAIN_IMAGE, .SIGNAL_VIDEO, .PLAIN_VIDEO
+        ]
+        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
+        return MixinDatabase.shared.getCodables(condition: condition)
+    }
     
     public func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {
         let condition: Condition = Message.Properties.conversationId == conversationId

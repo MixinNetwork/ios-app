@@ -120,6 +120,7 @@ public final class ConversationDAO {
     }
     
     public func deleteConversationAndMessages(conversationId: String) {
+        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId))
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
@@ -127,8 +128,7 @@ public final class ConversationDAO {
     }
     
     public func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
-        MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
-        AttachmentContainer.cleanUpAll()
+        self.deleteConversation(conversationId: conversationId, autoNotification: false)
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
@@ -137,6 +137,11 @@ public final class ConversationDAO {
         if autoNotification {
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
         }
+    }
+    
+    public func deleteConversation(conversationId: String, autoNotification: Bool = true) {
+        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId))
+        MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: autoNotification)
     }
     
     public func getConversation(ownerUserId: String) -> ConversationItem? {

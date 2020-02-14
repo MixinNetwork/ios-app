@@ -492,7 +492,6 @@ extension UserProfileViewController {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
-                    AttachmentContainer.cleanUpAll()
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
                     DispatchQueue.main.async {
                         hud.hide()

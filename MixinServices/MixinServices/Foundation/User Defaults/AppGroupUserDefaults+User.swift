@@ -21,6 +21,8 @@ extension AppGroupUserDefaults {
             case backupFiles = "backup_files"
             case lastBackupDate = "last_backup_date"
             case lastBackupSize = "last_backup_size"
+			
+            case lastAttachmentCleanUpDate = "last_attachment_cleanup_date"
             
             case showMessagePreviewInNotification = "show_message_preview_in_notification"
             case conversationDraft = "conversation_draft"
@@ -83,6 +85,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.lastBackupSize, defaultValue: nil)
         public static var lastBackupSize: Int64?
+		
+        @Default(namespace: .user, key: Key.lastAttachmentCleanUpDate, defaultValue: Date())
+        public static var lastAttachmentCleanUpDate: Date
         
         @Default(namespace: .user, key: Key.showMessagePreviewInNotification, defaultValue: true)
         public static var showMessagePreviewInNotification: Bool

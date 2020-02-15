@@ -1,41 +1,34 @@
 import UIKit
 
-class ContactMessageCell: CardMessageCell {
-
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var fullnameLabel: UILabel!
-    @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var verifiedImageView: UIImageView!
+class ContactMessageCell: CardMessageCell<AvatarImageView, ContactMessageCellRightView> {
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        idLabel.snp.makeConstraints { (make) in
-            make.trailing.equalTo(timeLabel.snp.leading)
-        }
+    override func prepare() {
+        super.prepare()
+        leftView.layer.cornerRadius = ContactMessageViewModel.leftViewSideLength / 2
+        leftView.clipsToBounds = true
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        avatarImageView.prepareForReuse()
+        leftView.prepareForReuse()
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? ContactMessageViewModel {
-            fullnameLabel.text = viewModel.message.sharedUserFullName
-            idLabel.text = viewModel.message.sharedUserIdentityNumber
-            avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
-
-            if viewModel.message.sharedUserIsVerified {
-                verifiedImageView.image = R.image.ic_user_verified()
-                verifiedImageView.isHidden = false
-            } else if !viewModel.message.sharedUserAppId.isEmpty {
-                verifiedImageView.image = R.image.ic_user_bot()
-                verifiedImageView.isHidden = false
+            let message = viewModel.message
+            rightView.fullnameLabel.text = message.sharedUserFullName
+            rightView.idLabel.text = message.sharedUserIdentityNumber
+            leftView.setImage(with: viewModel.message.sharedUserAvatarUrl,
+                              userId: viewModel.message.sharedUserId ?? "",
+                              name: viewModel.message.sharedUserFullName)
+            if let image = viewModel.verifiedImage {
+                rightView.badgeImageView.image = image
+                rightView.badgeImageView.isHidden = false
             } else {
-                verifiedImageView.isHidden = true
+                rightView.badgeImageView.isHidden = true
             }
         }
     }
-
+    
 }

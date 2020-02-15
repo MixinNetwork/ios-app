@@ -3,14 +3,13 @@ import MixinServices
 
 class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCell>, MixinNavigationAnimating {
     
-    private var ownerUser: UserItem?
-    private var parentConversation: ConversationItem!
+    private weak var conversationInputViewController: ConversationInputViewController?
+    
     private var selections = [String]() // Element is user id
     
-    class func instance(ownerUser: UserItem?, conversation: ConversationItem) -> UIViewController {
+    class func instance(conversationInputViewController: ConversationInputViewController) -> UIViewController {
         let vc = ContactSelectorViewController()
-        vc.ownerUser = ownerUser
-        vc.parentConversation = conversation
+        vc.conversationInputViewController = conversationInputViewController
         return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_SHARE_CARD)
     }
     
@@ -58,24 +57,8 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
 extension ContactSelectorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let userIds = self.selections
-        let ownerUser = self.ownerUser
-        let parentConversation = self.parentConversation!
-        DispatchQueue.global().async { [weak self] in
-            for userId in userIds {
-                var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
-                                                    conversationId: parentConversation.conversationId,
-                                                    userId: myUserId)
-                message.sharedUserId = userId
-                let transferData = TransferContactData(userId: userId)
-                message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
-                SendMessageService.shared.sendMessage(message: message,
-                                                      ownerUser: ownerUser,
-                                                      isGroupMessage: parentConversation.isGroup())
-            }
-            DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-            }
+        conversationInputViewController?.sendContact(userIds: selections) {
+            self.navigationController?.popViewController(animated: true)
         }
     }
     

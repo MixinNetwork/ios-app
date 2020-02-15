@@ -24,7 +24,7 @@ extension AttachmentExpirationHintingMessageCell where Self: PhotoRepresentableM
         guard let viewModel = viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        operationButton.center = CGPoint(x: viewModel.presentationFrame.midX, y: viewModel.presentationFrame.midY)
+        operationButton.center = CGPoint(x: viewModel.photoFrame.midX, y: viewModel.photoFrame.midY)
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
             updateOperationButtonStyle()
             if viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue {

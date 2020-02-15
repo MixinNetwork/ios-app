@@ -180,8 +180,6 @@ class ConversationTableView: UITableView {
     func dequeueReusableCell(withMessage message: MessageItem, for indexPath: IndexPath) -> UITableViewCell {
         if message.status == MessageStatus.FAILED.rawValue {
             return dequeueReusableCell(withReuseId: .text, for: indexPath)
-        } else if message.quoteMessageId != nil && message.quoteContent != nil {
-            return dequeueReusableCell(withReuseId: .quoteText, for: indexPath)
         } else {
             return dequeueReusableCell(withReuseId: ReuseId(category: message.category), for: indexPath)
         }
@@ -290,10 +288,14 @@ class ConversationTableView: UITableView {
         register(UnknownMessageCell.self, forCellReuseIdentifier: ReuseId.unknown.rawValue)
         register(AppButtonGroupMessageCell.self, forCellReuseIdentifier: ReuseId.appButtonGroup.rawValue)
         register(VideoMessageCell.self, forCellReuseIdentifier: ReuseId.video.rawValue)
-        register(QuoteTextMessageCell.self, forCellReuseIdentifier: ReuseId.quoteText.rawValue)
         register(IconPrefixedTextMessageCell.self, forCellReuseIdentifier: ReuseId.iconPrefixedText.rawValue)
         register(LiveMessageCell.self, forCellReuseIdentifier: ReuseId.live.rawValue)
         register(PostMessageCell.self, forCellReuseIdentifier: ReuseId.post.rawValue)
+        register(TransferMessageCell.self, forCellReuseIdentifier: ReuseId.transfer.rawValue)
+        register(AppCardMessageCell.self, forCellReuseIdentifier: ReuseId.appCard.rawValue)
+        register(ContactMessageCell.self, forCellReuseIdentifier: ReuseId.contact.rawValue)
+        register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
+        register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -334,7 +336,6 @@ extension ConversationTableView {
         case audio = "AudioMessageCell"
         case live = "LiveMessageCell"
         case post = "PostMessageCell"
-        case quoteText = "QuoteTextMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
         case header = "DateHeader"
         

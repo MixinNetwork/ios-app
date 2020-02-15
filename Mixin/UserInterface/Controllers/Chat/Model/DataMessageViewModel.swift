@@ -3,15 +3,19 @@ import MixinServices
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
+    override class var supportsQuoting: Bool {
+        true
+    }
+    
+    override class var isContentWidthLimited: Bool {
+        false
+    }
+    
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
     var downloadIsTriggeredByUser = false
-    
-    override var size: CGSize {
-        return CGSize(width: 280, height: 72)
-    }
     
     var shouldAutoDownload: Bool {
         switch AppGroupUserDefaults.User.autoDownloadFiles {
@@ -31,6 +35,12 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     override init(message: MessageItem) {
         super.init(message: message)
         updateOperationButtonStyle()
+    }
+    
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        contentWidth = 240
+        super.layout(width: width, style: style)
+        layoutQuotedMessageIfPresent()
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

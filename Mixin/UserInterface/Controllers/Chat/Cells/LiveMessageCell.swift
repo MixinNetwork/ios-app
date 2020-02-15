@@ -9,7 +9,7 @@ class LiveMessageCell: PhotoRepresentableMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? LiveMessageViewModel {
             badgeView.frame.origin = viewModel.badgeOrigin
-            playButton.center = CGPoint(x: viewModel.presentationFrame.midX, y: viewModel.presentationFrame.midY)
+            playButton.center = CGPoint(x: viewModel.photoFrame.midX, y: viewModel.photoFrame.midY)
             if let urlString = viewModel.message.thumbUrl, let url = URL(string: urlString) {
                 contentImageView.sd_setImage(with: url)
             }

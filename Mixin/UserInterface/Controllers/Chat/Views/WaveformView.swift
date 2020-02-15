@@ -32,14 +32,7 @@ class WaveformView: UIView {
     
     override var tintColor: UIColor! {
         didSet {
-            guard tintColor != oldValue else {
-                return
-            }
-            CATransaction.performWithoutAnimation {
-                barLayers.forEach { (layer) in
-                    layer.fillColor = tintColor.cgColor
-                }
-            }
+            applyTintColorToBarLayers()
         }
     }
     
@@ -61,6 +54,11 @@ class WaveformView: UIView {
     }
     
     private var barLayers = [CAShapeLayer]()
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        applyTintColorToBarLayers()
+    }
     
     private func makeBarLayer(forBarAtIndex index: Int, atLevel level: UInt8) -> CAShapeLayer {
         let size = CGSize(width: type(of: self).barWidth, height: type(of: self).layoutHeight)
@@ -91,6 +89,14 @@ class WaveformView: UIView {
                 let barLayer = makeBarLayer(forBarAtIndex: index, atLevel: value)
                 layer.addSublayer(barLayer)
                 barLayers.append(barLayer)
+            }
+        }
+    }
+    
+    private func applyTintColorToBarLayers() {
+        CATransaction.performWithoutAnimation {
+            for layer in barLayers {
+                layer.fillColor = tintColor.cgColor
             }
         }
     }

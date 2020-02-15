@@ -1,16 +1,33 @@
 import UIKit
 import MixinServices
 
-class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell {
-    
-    @IBOutlet weak var operationButton: NetworkOperationButton!
-    @IBOutlet weak var playbackStateWrapperView: UIView!
-    @IBOutlet weak var playbackStateImageView: UIImageView!
-    @IBOutlet weak var waveformView: WaveformView!
-    @IBOutlet weak var highlightedWaveformView: WaveformView!
-    @IBOutlet weak var lengthLabel: UILabel!
+class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProgressView>, AttachmentLoadingMessageCell, AudioCell {
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
+    
+    var operationButton: NetworkOperationButton! {
+        leftView.operationButton
+    }
+    
+    var playbackStateWrapperView: UIView {
+        leftView.playbackStateWrapperView
+    }
+    
+    var playbackStateImageView: UIImageView {
+        leftView.playbackStateImageView
+    }
+    
+    var waveformView: WaveformView {
+        rightView.waveformView
+    }
+    
+    var highlightedWaveformView: WaveformView {
+        rightView.highlightedWaveformView
+    }
+    
+    var lengthLabel: UILabel {
+        rightView.lengthLabel
+    }
     
     private let waveformMaskView = UIView()
     private let waveformUpdateInterval: TimeInterval = 0.1
@@ -48,12 +65,8 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
         }
     }
     
-    override var contentTopMargin: CGFloat {
-        return 10
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override func prepare() {
+        super.prepare()
         waveformMaskView.backgroundColor = .black
         highlightedWaveformView.mask = waveformMaskView
     }
@@ -105,7 +118,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell, AudioCell
             waveformView.tintColor = .highlightedText
             lengthLabel.textColor = .highlightedText
         } else {
-            waveformView.tintColor = .accessoryText
+            waveformView.tintColor = R.color.audio_waveform()!
             lengthLabel.textColor = .accessoryText
         }
     }

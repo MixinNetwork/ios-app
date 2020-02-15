@@ -6,8 +6,6 @@ class MessageFontSet {
     static let fullname = MessageFontSet(size: 14, weight: .regular)
     static let systemMessage = MessageFontSet(size: 14, weight: .regular)
     static let appButtonTitle = MessageFontSet(size: 16, weight: .regular)
-    static let appCardTitle = MessageFontSet(style: .body)
-    static let appCardDescription = MessageFontSet(size: 14, weight: .regular)
     static let quoteTitle = MessageFontSet(style: .subheadline)
     static let normalQuoteSubtitle = MessageFontSet(size: 13, weight: .light)
     static let recalledQuoteSubtitle: MessageFontSet = {

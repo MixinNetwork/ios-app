@@ -24,11 +24,20 @@ class MyFavoriteAppProfileMenuItemView: UIView, XibDesignable {
         self.init(frame: frame)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateButtonBackground()
+    }
+    
     private func prepare() {
         loadXib()
+        updateButtonBackground()
+        avatarStackView.avatarBackgroundColor = .inputBackground
+    }
+    
+    private func updateButtonBackground() {
         button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
         button.setBackgroundImage(UIColor.secondaryBackground.image, for: .highlighted)
-        avatarStackView.avatarBackgroundColor = .inputBackground
     }
     
 }

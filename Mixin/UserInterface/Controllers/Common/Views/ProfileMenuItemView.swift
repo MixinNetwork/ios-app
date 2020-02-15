@@ -25,17 +25,24 @@ final class ProfileMenuItemView: UIView, XibDesignable {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        prepare()
+        loadXib()
+        updateButtonBackground()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        prepare()
+        loadXib()
+        updateButtonBackground()
     }
     
     convenience init() {
         let frame = CGRect(x: 0, y: 0, width: 414, height: 64)
         self.init(frame: frame)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateButtonBackground()
     }
     
     @IBAction func selectAction(_ sender: Any) {
@@ -45,8 +52,7 @@ final class ProfileMenuItemView: UIView, XibDesignable {
         target.perform(item.action)
     }
     
-    private func prepare() {
-        loadXib()
+    private func updateButtonBackground() {
         button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
         button.setBackgroundImage(UIColor.secondaryBackground.image, for: .highlighted)
     }

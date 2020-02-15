@@ -62,6 +62,14 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         default:
             trailingConstant = minRightMargin
         }
+        
+        // Fill the space between canvas' edge and the bubble's
+        if style.contains(.received) {
+            trailingConstant += 2
+        } else {
+            trailingConstant += 9
+        }
+        
         contentWidth = leadingConstant + contentWidth + trailingConstant
         contentWidth = max(minContentWidth, min(maxContentWidth, contentWidth))
         

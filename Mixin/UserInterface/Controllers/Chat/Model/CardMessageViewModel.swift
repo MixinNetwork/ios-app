@@ -50,24 +50,20 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         if style.contains(.received) {
             leadingConstant = receivedLeftMargin
+            trailingConstant = 2
         } else {
             leadingConstant = sentLeftMargin
+            trailingConstant = 9
         }
         
-        switch leadingConstant + contentWidth + maxRightMargin {
+        let descisionWidth = leadingConstant + contentWidth + trailingConstant
+        switch descisionWidth + maxRightMargin {
         case ...minContentWidth:
-            trailingConstant = minContentWidth - leadingConstant - contentWidth
+            trailingConstant += minContentWidth - descisionWidth
         case ...maxContentWidth:
-            trailingConstant = maxRightMargin
+            trailingConstant += maxRightMargin
         default:
-            trailingConstant = minRightMargin
-        }
-        
-        // Fill the space between canvas' edge and the bubble's
-        if style.contains(.received) {
-            trailingConstant += 2
-        } else {
-            trailingConstant += 9
+            trailingConstant += max(minRightMargin, maxContentWidth - descisionWidth)
         }
         
         contentWidth = leadingConstant + contentWidth + trailingConstant

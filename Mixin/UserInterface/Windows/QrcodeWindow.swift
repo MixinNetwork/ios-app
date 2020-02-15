@@ -82,8 +82,9 @@ class QrcodeWindow: BottomSheetView {
     }
     
     private func performSavingToLibrary() {
-        guard let image = qrcodeView.takeScreenshot() else {
-            return
+        let renderer = UIGraphicsImageRenderer(bounds: qrcodeView.bounds)
+        let image = renderer.image { (context) in
+            qrcodeView.layer.render(in: context.cgContext)
         }
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: image)

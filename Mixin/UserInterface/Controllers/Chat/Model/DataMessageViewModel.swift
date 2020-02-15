@@ -7,6 +7,10 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         true
     }
     
+    override class var isContentWidthLimited: Bool {
+        false
+    }
+    
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = false
@@ -34,7 +38,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        contentWidth = 280
+        contentWidth = 240
         super.layout(width: width, style: style)
         layoutQuotedMessageIfPresent()
     }

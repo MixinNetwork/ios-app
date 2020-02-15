@@ -7,6 +7,10 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         true
     }
     
+    override class var isContentWidthLimited: Bool {
+        false
+    }
+    
     let length: String
     let waveform: Waveform
     

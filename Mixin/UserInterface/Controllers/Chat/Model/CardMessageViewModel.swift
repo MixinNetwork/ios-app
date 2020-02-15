@@ -16,6 +16,10 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         40
     }
     
+    class var isContentWidthLimited: Bool {
+        true
+    }
+    
     let receivedLeftMargin: CGFloat = 22
     let sentLeftMargin: CGFloat = 15
     let maxRightMargin: CGFloat = 24
@@ -67,7 +71,9 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         }
         
         contentWidth = leadingConstant + contentWidth + trailingConstant
-        contentWidth = max(minContentWidth, min(maxContentWidth, contentWidth))
+        if Self.isContentWidthLimited {
+            contentWidth = max(minContentWidth, min(maxContentWidth, contentWidth))
+        }
         
         super.layout(width: width, style: style)
         

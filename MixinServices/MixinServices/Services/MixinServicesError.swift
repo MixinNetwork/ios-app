@@ -6,6 +6,7 @@ public enum MixinServicesError: Error {
     private static var basicUserInfo: [String: Any] {
         var userInfo = reporter.basicUserInfo
         userInfo["didLogin"] = LoginManager.shared.isLoggedIn
+        userInfo["isAppExtension"] = isAppExtension
         return userInfo
     }
     
@@ -104,21 +105,23 @@ extension MixinServicesError: CustomNSError {
         case let .logout(isAsyncRequest):
             return ["isAsyncRequest": isAsyncRequest]
         case let .websocketDidDisconnect(error):
+            userInfo = Self.basicUserInfo
+            userInfo["errorMessage"] = error.message
             switch error.type {
             case .outputStreamWriteError:
-                return ["errorType": "outputStreamWriteError"]
+                userInfo["errorType"] = "outputStreamWriteError"
             case .compressionError:
-                return ["errorType": "compressionError"]
+                userInfo["errorType"] = "compressionError"
             case .invalidSSLError:
-                return ["errorType": "invalidSSLError"]
+                userInfo["errorType"] = "invalidSSLError"
             case .writeTimeoutError:
-                return ["errorType": "writeTimeoutError"]
+                userInfo["errorType"] = "writeTimeoutError"
             case .protocolError:
-                return ["errorType": "protocolError"]
+                userInfo["errorType"] = "protocolError"
             case .upgradeError:
-                return ["errorType": "upgradeError"]
+                userInfo["errorType"] = "upgradeError"
             case .closeError:
-                return ["errorType": "closeError"]
+                userInfo["errorType"] = "closeError"
             }
         default:
             userInfo = [:]

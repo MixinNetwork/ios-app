@@ -18,6 +18,10 @@ public enum AttachmentContainer {
         }
     }
     
+    public static func cleanUp(conversationId: String, categories: [Category]) {
+        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, categories: categories))
+    }
+    
     public static func cleanUp(category: Category) {
         let path = url(for: category, filename: nil).path
         guard let onDiskFilenames = try? FileManager.default.contentsOfDirectory(atPath: path) else {
@@ -78,6 +82,19 @@ public extension AttachmentContainer {
                 return "_VIDEO"
             case .audios:
                 return "_AUDIO"
+            }
+        }
+        
+        public var messageCategory: [MessageCategory] {
+            switch self {
+            case .photos:
+                return [.SIGNAL_IMAGE, .PLAIN_IMAGE]
+            case .files:
+                return [.SIGNAL_DATA, .PLAIN_DATA]
+            case .videos:
+                return [.SIGNAL_VIDEO, .PLAIN_VIDEO]
+            case .audios:
+                return [.SIGNAL_AUDIO, .PLAIN_AUDIO]
             }
         }
         

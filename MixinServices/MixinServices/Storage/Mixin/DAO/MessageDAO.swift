@@ -123,6 +123,10 @@ public final class MessageDAO {
         MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
     }
     
+    public func deleteMessages(conversationId: String, categories: [MessageCategory]) {
+        MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue })))
+    }
+    
     public func findFailedMessages(conversationId: String, userId: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000)
     }
@@ -341,13 +345,16 @@ public final class MessageDAO {
         let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count])
         return messages.reversed()
     }
-	
-    public func getAllMessagesOfAttachmentOnDisk(conversationId: String) -> [Message] {
-        let categories: [MessageCategory] = [
-            .SIGNAL_DATA, .PLAIN_DATA, .SIGNAL_AUDIO, .PLAIN_AUDIO,
-            .SIGNAL_IMAGE, .PLAIN_IMAGE, .SIGNAL_VIDEO, .PLAIN_VIDEO
-        ]
-        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
+	    
+    public func getMessageOfAttachmentOnDisk(conversationId: String, categories: [MessageCategory]) -> [Message] {
+        var allCategories = categories
+        if allCategories.count < 1 {
+            allCategories = [
+                .SIGNAL_DATA, .PLAIN_DATA, .SIGNAL_AUDIO, .PLAIN_AUDIO,
+                .SIGNAL_IMAGE, .PLAIN_IMAGE, .SIGNAL_VIDEO, .PLAIN_VIDEO
+            ]
+        }
+        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(allCategories.map({ $0.rawValue }))
         return MixinDatabase.shared.getCodables(condition: condition)
     }
     

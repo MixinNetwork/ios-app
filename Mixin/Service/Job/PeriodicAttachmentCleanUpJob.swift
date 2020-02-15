@@ -8,7 +8,7 @@ class PeriodicAttachmentCleanUpJob: BaseJob {
     }
 
     override func run() throws {
-        if -AppGroupUserDefaults.User.lastAttachmentCleanUpDate.timeIntervalSinceNow < 86400 * 7 {
+        guard -AppGroupUserDefaults.User.lastAttachmentCleanUpDate.timeIntervalSinceNow >= 86400 * 7 else {
             return
         }
         AttachmentContainer.cleanUpAll()

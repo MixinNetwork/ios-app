@@ -7,8 +7,12 @@ class AttachmentCleanUpJob: BaseJob {
     let conversationId: String
     var messages: [Message]
     
-    init(conversationId: String) {
-        self.messages = MessageDAO.shared.getAllMessagesOfAttachmentOnDisk(conversationId: conversationId)
+    init(conversationId: String, categories: [AttachmentContainer.Category] = []) {
+        var messageCategories = [MessageCategory]()
+        categories.forEach { (category) in
+            messageCategories.append(contentsOf: category.messageCategory)
+        }
+        self.messages = MessageDAO.shared.getMessageOfAttachmentOnDisk(conversationId: conversationId, categories: messageCategories)
         self.conversationId = conversationId
     }
 

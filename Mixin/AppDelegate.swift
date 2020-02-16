@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppGroupUserDefaults.resetStatusInMainApp()
         updateSharedImageCacheConfig()
         _ = NetworkManager.shared
+        _ = DarwinNotificationManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
         checkLogin()
@@ -58,9 +59,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.cancelBackgroundTask()
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { (time) in
-            WebSocketService.shared.disconnect()
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { (time) in
             ReceiveMessageService.shared.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
             self.cancelBackgroundTask()
         }
     }
@@ -140,14 +141,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        let isActive = UIApplication.shared.applicationState == .active
+        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isActive:\(isActive)", newSection: true)
+
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             completionHandler(.noData)
             return
         }
-        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification", newSection: true)
+        guard !isActive else {
+            completionHandler(.noData)
+            return
+        }
+
+        cancelBackgroundTask()
+        ReceiveMessageService.shared.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
             completionHandler(.newData)
+            if UIApplication.shared.applicationState != .active {
+                ReceiveMessageService.shared.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
         }
     }
     

@@ -356,9 +356,7 @@ public final class MessageDAO {
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
             message.quoteContent = quoteContent
         }
-        MixinDatabase.shared.transaction { (db) in
-            try insertMessage(database: db, message: message, messageSource: messageSource)
-        }
+        try! insertMessage(database: MixinDatabase.shared.database, message: message, messageSource: messageSource)
     }
     
     public func insertMessage(database: Database, message: Message, messageSource: String) throws {

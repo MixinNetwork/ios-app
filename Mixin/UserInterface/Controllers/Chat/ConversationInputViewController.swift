@@ -184,7 +184,9 @@ class ConversationInputViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if height != .minimized {
-            customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
+            customInputContainerHeightConstraint.constant = view.frame.height
+                - quotePreviewWrapperHeightConstraint.constant
+                - inputBarView.frame.height
         }
     }
     
@@ -236,7 +238,6 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         if sender.isOn {
-            quote = nil
             resignTextViewFirstResponderWithoutReportingContentHeightChange()
             if height == .maximized {
                 setPreferredContentHeightAnimated(.regular)
@@ -387,6 +388,48 @@ class ConversationInputViewController: UIViewController {
             textView.resignFirstResponder()
         } else if height != .minimized {
             dismissCustomInput(minimize: true)
+        }
+    }
+    
+    func send(asset: PHAsset) {
+        dataSource.send(asset: asset, quoteMessageId: quote?.message.messageId)
+        quote = nil
+    }
+    
+    func sendAudio(url: URL, metadata: MXNAudioMetadata) {
+        dataSource.sendMessage(type: .SIGNAL_AUDIO, quoteMessageId: quote?.message.messageId, value: (url, metadata))
+        quote = nil
+    }
+    
+    func sendFile(url: URL) {
+        dataSource.sendMessage(type: .SIGNAL_DATA, quoteMessageId: quote?.message.messageId, value: url)
+        quote = nil
+    }
+    
+    func sendContact(userIds: [String], completion: @escaping () -> Void) {
+        let conversationId = dataSource.conversationId
+        let ownerUser = dataSource.ownerUser
+        let isGroup = dataSource.conversation.isGroup()
+        var quoteMessageId = quote?.message.messageId
+        quote = nil
+        DispatchQueue.global().async {
+            for userId in userIds {
+                var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
+                                                    conversationId: conversationId,
+                                                    userId: myUserId)
+                message.sharedUserId = userId
+                if let id = quoteMessageId {
+                    // Apply quoted message to first message only
+                    message.quoteMessageId = id
+                    quoteMessageId = nil
+                }
+                let transferData = TransferContactData(userId: userId)
+                message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      isGroupMessage: isGroup)
+            }
+            DispatchQueue.main.async(execute: completion)
         }
     }
     
@@ -768,11 +811,11 @@ extension ConversationInputViewController {
                 quotePreviewWrapperHeightConstraint.constant = quotePreviewHeight
                 interactiveDismissResponder.height += quotePreviewHeight
             }
-            if textView.isFirstResponder {
+            if textView.isFirstResponder || customInputViewController != nil {
                 if oldValue == nil {
                     setPreferredContentHeight(preferredContentHeight + quotePreviewHeight, animated: true)
                 }
-            } else {
+            } else if customInputViewController == nil {
                 textView.becomeFirstResponder()
             }
         } else if oldValue != nil {
@@ -791,7 +834,6 @@ extension ConversationInputViewController {
         setRightAccessoryButton(stickersButton)
         if photosButton.isSelected {
             loadCustomInputViewController(photoViewController)
-            quote = nil
         } else {
             dismissCustomInput(minimize: true)
         }

@@ -12,52 +12,10 @@ class AuthorizationWindow: BottomSheetView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var loginSuccess = false
-
-    private enum Scope: String {
-        case PROFILE = "PROFILE:READ"
-        case PHONE = "PHONE:READ"
-        case ASSETS = "ASSETS:READ"
-        case APPS_READ = "APPS:READ"
-        case APPS_WRITE = "APPS:WRITE"
-        case CONTACTS_READ = "CONTACTS:READ"
-        case MESSAGES_REPRESENT = "MESSAGES:REPRESENT"
-        case SNAPSHOTS_READ = "SNAPSHOTS:READ"
-    }
+    
     private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
-        guard let account = LoginManager.shared.account else {
-            return []
-        }
-        var result = [(scope: Scope, name: String, desc: String)]()
-        result.append((.PROFILE, Localized.AUTH_PERMISSION_PROFILE, Localized.AUTH_PROFILE_DESCRIPTION(fullName: account.full_name, phone: account.identity_number)))
-
-        if authInfo.scopes.contains(Scope.PHONE.rawValue) {
-            result.append((.PHONE, Localized.AUTH_PERMISSION_PHONE, account.phone))
-            selectedScopes.append(Scope.PHONE.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.MESSAGES_REPRESENT.rawValue) {
-            result.append((.APPS_WRITE, R.string.localizable.auth_permission_messages_represent(), R.string.localizable.auth_permission_messages_represent_description()))
-            selectedScopes.append(Scope.MESSAGES_REPRESENT.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
-            result.append((.APPS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION))
-            selectedScopes.append(Scope.CONTACTS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
-            result.append((.ASSETS, Localized.AUTH_PERMISSION_ASSETS, getAssetsBalanceText()))
-            selectedScopes.append(Scope.ASSETS.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.SNAPSHOTS_READ.rawValue) {
-            result.append((.SNAPSHOTS_READ, R.string.localizable.auth_permission_snapshots_read(), R.string.localizable.auth_permission_snapshots_read_description()))
-            selectedScopes.append(Scope.SNAPSHOTS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
-            result.append((.APPS_READ, Localized.AUTH_PERMISSION_APPS_READ, Localized.AUTH_PERMISSION_APPS_READ_DESCRIPTION))
-            selectedScopes.append(Scope.APPS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
-            result.append((.APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE_DESCRIPTION))
-            selectedScopes.append(Scope.APPS_WRITE.rawValue)
-        }
+        var (result, scopeValues) = Scope.getCompleteScopeInfo(authInfo: authInfo)
+        selectedScopes = scopeValues
         return result
     }()
     private var selectedScopes = [Scope.PROFILE.rawValue]
@@ -162,7 +120,7 @@ extension AuthorizationWindow: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AuthorizationScopeCell.cellIdentifier) as! AuthorizationScopeCell
         let scope = scopes[indexPath.row]
-        cell.render(name: scope.name, desc: scope.desc)
+        cell.render(name: scope.name, desc: scope.desc, forceChecked: scope.scope == .PROFILE)
         if selectedScopes.contains(scope.scope.rawValue) {
             cell.setSelected(true, animated: false)
         }

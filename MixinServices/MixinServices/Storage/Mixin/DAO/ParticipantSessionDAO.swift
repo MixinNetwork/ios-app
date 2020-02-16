@@ -16,12 +16,6 @@ public final class ParticipantSessionDAO {
     """
     private let sqlDeleteParticipantSession = """
     DELETE FROM participant_session WHERE user_id = ? AND session_id = ?
-    AND conversation_id in (
-        SELECT c.conversation_id FROM conversations c
-        INNER JOIN users u ON c.owner_id = u.user_id
-        LEFT JOIN participants p on p.conversation_id = c.conversation_id
-        WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
-    )
     """
     
     public static let shared = ParticipantSessionDAO()
@@ -38,16 +32,12 @@ public final class ParticipantSessionDAO {
         return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: sqlQueryParticipantUsers, values: [conversationId, sessionId])
     }
     
-    public func updateStatusByUserId(userId: String) {
-        MixinDatabase.shared.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.userId == userId)
-    }
-    
     public func provisionSession(userId: String, sessionId: String) {
         MixinDatabase.shared.execute(sql: String(format: sqlInsertParticipantSession, userId, sessionId, Date().toUTCString()), values: [userId])
     }
     
     public func destorySession(userId: String, sessionId: String) {
-        MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId, userId])
+        MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId])
     }
     
     public func syncConversationParticipantSession(conversation: ConversationResponse) {
@@ -56,6 +46,10 @@ public final class ParticipantSessionDAO {
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
             let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
+            
+            let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
+            try statment.execute(with: [conversationId])
+
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
         }
     }

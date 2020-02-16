@@ -5,8 +5,9 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
 
     private var documentUrl: URL!
     private var webView : WKWebView!
-    private weak var dataSource: ConversationDataSource?
-
+    
+    private weak var conversationInputViewController: ConversationInputViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,10 +22,10 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
         webView.loadFileURL(documentUrl, allowingReadAccessTo: documentUrl)
     }
 
-    class func instance(documentUrl: URL, dataSource: ConversationDataSource?) -> UIViewController {
+    class func instance(documentUrl: URL, conversationInputViewController: ConversationInputViewController) -> UIViewController {
         let vc = FileSendViewController()
         vc.documentUrl = documentUrl
-        vc.dataSource = dataSource
+        vc.conversationInputViewController = conversationInputViewController
         return ContainerViewController.instance(viewController: vc, title: documentUrl.lastPathComponent.substring(endChar:  "."))
     }
 
@@ -36,7 +37,7 @@ extension FileSendViewController: ContainerViewControllerDelegate {
         guard let url = documentUrl else {
             return
         }
-        dataSource?.sendMessage(type: .SIGNAL_DATA, value: url)
+        conversationInputViewController?.sendFile(url: url)
         navigationController?.popViewController(animated: true)
     }
 

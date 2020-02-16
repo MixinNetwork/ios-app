@@ -26,8 +26,6 @@ class MixinSessionStore: SessionStore {
         if oldSession == nil {
             SessionDAO.shared.insertOrReplace(obj: newSession)
         } else if oldSession!.record != session {
-            // TODO should update with session
-            ParticipantSessionDAO.shared.updateStatusByUserId(userId: address.name)
             SessionDAO.shared.insertOrReplace(obj: newSession)
         }
         return true

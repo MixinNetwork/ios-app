@@ -1,7 +1,10 @@
 import UIKit
 import MixinServices
 
-class TransferMessageViewModel: CardMessageViewModel {
+class TransferMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalculable {
+    
+    static let amountFontSet = MessageFontSet(style: .title3)
+    static let symbolFontSet = MessageFontSet(size: 14, weight: .regular)
     
     let snapshotAmount: String?
     
@@ -10,7 +13,11 @@ class TransferMessageViewModel: CardMessageViewModel {
         super.init(message: message)
     }
     
-    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+    override func layout(width: CGFloat, style: Style) {
+        updateContentWidth(title: snapshotAmount,
+                           titleFont: Self.amountFontSet.scaled,
+                           subtitle: message.assetSymbol,
+                           subtitleFont: Self.symbolFontSet.scaled)
         super.layout(width: width, style: style)
         if !style.contains(.received) {
             timeFrame.origin.x += statusFrame.width

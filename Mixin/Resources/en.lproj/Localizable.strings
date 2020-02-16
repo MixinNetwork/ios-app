@@ -687,6 +687,8 @@
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "setting_contacts_upload" = "Upload Mobile Contacts";
+"setting_permissions" = "Permission list";
+"setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 
 // Notifications
 "notification_reply" = "Reply";
@@ -742,4 +744,5 @@
 "about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
 
 "report_title"="Send the conversation log to developers?";
-"report_button"="Send";
+"report_button"="Send to Developer";
+"report_share"="Share Log File";

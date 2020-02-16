@@ -17,6 +17,10 @@ class AuthorizationsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         reload()
     }
     
@@ -46,15 +50,10 @@ extension AuthorizationsViewController: UITableViewDataSource {
 
 extension AuthorizationsViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let action = UITableViewRowAction(style: .destructive,
-                                          title: Localized.ACTION_DEAUTHORIZE,
-                                          handler: tableViewCommitDeleteAction)
-        return [action]
-    }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let permissionvc = PermissionsViewController.instance(authorization: authorizations[indexPath.row])
+        self.navigationController?.pushViewController(permissionvc, animated: true)
     }
     
 }
@@ -84,29 +83,6 @@ extension AuthorizationsViewController {
         tableView.checkEmpty(dataCount: authorizations.count,
                              text: Localized.SETTING_NO_AUTHORIZATIONS,
                              photo: R.image.ic_no_authorization()!)
-    }
-    
-    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
-        let app = authorizations[indexPath.row].app
-        let alert = UIAlertController(title: Localized.SETTING_DEAUTHORIZE_CONFIRMATION(name: app.name), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
-            self.removeAuthorization(at: indexPath)
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func removeAuthorization(at indexPath: IndexPath) {
-        let auth = authorizations[indexPath.row]
-        AuthorizeAPI.shared.cancel(clientId: auth.app.appId) { [weak self](result) in
-            switch result {
-            case .success:
-                self?.authorizations.remove(at: indexPath.row)
-                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-            case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-            }
-        }
     }
     
 }

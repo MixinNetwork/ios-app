@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let databaseVersion: Int = 9
+    private static let databaseVersion: Int = 11
     
     override public var database: Database! {
         get { _database }
@@ -110,6 +110,10 @@ public class MixinDatabase: BaseDatabase {
         
         if currentVersion < 8 {
             try database.update(maps: [(Job.Properties.isHttpMessage, true)], tableName: Job.tableName, condition: Job.Properties.action == JobAction.SEND_ACK_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_ACK_MESSAGES.rawValue || Job.Properties.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue)
+        }
+
+        if currentVersion < 11 {
+            try database.prepareUpdateSQL(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''").execute()
         }
     }
 }

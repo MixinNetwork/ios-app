@@ -38,6 +38,7 @@ public enum MixinServer {
         }
         serverIndex.value = nextIndex
         AppGroupUserDefaults.serverIndex = nextIndex
+        Logger.write(log: "[MixinServer][ToggleIndex]...\(webSocketHost):\(httpUrl)", newSection: true)
     }
     
 }

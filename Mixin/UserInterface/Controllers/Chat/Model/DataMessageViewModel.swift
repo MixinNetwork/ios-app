@@ -3,15 +3,19 @@ import MixinServices
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
+    override class var supportsQuoting: Bool {
+        true
+    }
+    
+    override class var isContentWidthLimited: Bool {
+        false
+    }
+    
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
     var downloadIsTriggeredByUser = false
-    
-    override var size: CGSize {
-        return CGSize(width: 280, height: 72)
-    }
     
     var shouldAutoDownload: Bool {
         switch AppGroupUserDefaults.User.autoDownloadFiles {
@@ -33,6 +37,12 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateOperationButtonStyle()
     }
     
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        contentWidth = 240
+        super.layout(width: width, style: style)
+        layoutQuotedMessageIfPresent()
+    }
+    
     func beginAttachmentLoading(isTriggeredByUser: Bool) {
         downloadIsTriggeredByUser = isTriggeredByUser
         defer {
@@ -41,7 +51,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -63,7 +73,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             ConcurrentJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
         }
     }
     

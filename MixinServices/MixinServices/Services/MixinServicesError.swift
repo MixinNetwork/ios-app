@@ -1,10 +1,12 @@
 import Foundation
+import Starscream
 
 public enum MixinServicesError: Error {
     
     private static var basicUserInfo: [String: Any] {
         var userInfo = reporter.basicUserInfo
         userInfo["didLogin"] = LoginManager.shared.isLoggedIn
+        userInfo["isAppExtension"] = isAppExtension
         return userInfo
     }
     
@@ -23,6 +25,8 @@ public enum MixinServicesError: Error {
     case decryptMessage([String: Any])
     case badMessageData(id: String, status: String, from: String)
     case logout(isAsyncRequest: Bool)
+    case badParticipantSession
+    case websocketDidDisconnect(error: WSError)
     
 }
 
@@ -64,6 +68,10 @@ extension MixinServicesError: CustomNSError {
             return 13
         case .logout:
             return 14
+        case .badParticipantSession:
+            return 15
+        case .websocketDidDisconnect:
+            return 16
         }
     }
     
@@ -96,6 +104,25 @@ extension MixinServicesError: CustomNSError {
                         "from": from]
         case let .logout(isAsyncRequest):
             return ["isAsyncRequest": isAsyncRequest]
+        case let .websocketDidDisconnect(error):
+            userInfo = Self.basicUserInfo
+            userInfo["errorMessage"] = error.message
+            switch error.type {
+            case .outputStreamWriteError:
+                userInfo["errorType"] = "outputStreamWriteError"
+            case .compressionError:
+                userInfo["errorType"] = "compressionError"
+            case .invalidSSLError:
+                userInfo["errorType"] = "invalidSSLError"
+            case .writeTimeoutError:
+                userInfo["errorType"] = "writeTimeoutError"
+            case .protocolError:
+                userInfo["errorType"] = "protocolError"
+            case .upgradeError:
+                userInfo["errorType"] = "upgradeError"
+            case .closeError:
+                userInfo["errorType"] = "closeError"
+            }
         default:
             userInfo = [:]
         }

@@ -7,22 +7,16 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     override var statusNormalTintColor: UIColor {
         .white
     }
-    
-    override var maxContentWidth: CGFloat {
-        performSynchronouslyOnMainThread {
-            AppDelegate.current.window.bounds.width / 3 * 2
-        }
-    }
-    
+
     override var maxNumberOfLines: Int? {
-        20
+        10
     }
     
     override var contentAttributedString: NSAttributedString {
         var lines = [String]()
         rawContent.enumerateLines { (line, stop) in
             lines.append(line)
-            if lines.count == 20 {
+            if lines.count == 10 {
                 stop = true
             }
         }

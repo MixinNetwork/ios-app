@@ -10,7 +10,7 @@ class SignalLoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.write(log: "SignalLoadingView...")
+        Logger.write(log: "SignalLoadingView...isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded)...isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
             try! SignalDatabase.shared.initDatabase()

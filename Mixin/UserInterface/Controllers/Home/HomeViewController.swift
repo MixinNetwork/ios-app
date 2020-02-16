@@ -235,9 +235,6 @@ class HomeViewController: UIViewController {
     
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
-        guard needRefresh else {
-            return
-        }
         fetchConversations()
     }
     

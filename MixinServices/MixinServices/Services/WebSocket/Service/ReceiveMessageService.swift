@@ -73,12 +73,28 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
-    public func processReceiveMessage(messageId: String, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
+    public func processReceiveMessage(messageId: String, conversationId: String?, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
         let startDate = Date()
         processOperationQueue.addOperation {
             AppGroupUserDefaults.isProcessingMessagesInAppExtension = true
+
+            if AppGroupUserDefaults.websocketStatusInMainApp != .disconnected {
+                let oldDate = AppGroupUserDefaults.checkStatusTimeInMainApp
+                DarwinNotificationManager.shared.checkStatusInMainApp()
+                Thread.sleep(forTimeInterval: 2)
+
+                Logger.write(log: "[ReceiveMessageService] waiting for main app to process messages...checkStatusTimeInMainApp:\(oldDate)...isProcessingMessagesInMainApp:\(AppGroupUserDefaults.isProcessingMessagesInMainApp)")
+
+                if oldDate == AppGroupUserDefaults.checkStatusTimeInMainApp {
+                    AppGroupUserDefaults.websocketStatusInMainApp = .disconnected
+                }
+            }
+
             repeat {
-                if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                if -startDate.timeIntervalSinceNow >= 25 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                    if let conversationId = conversationId {
+                        Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
+                    }
                     callback(nil)
                     return
                 } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {
@@ -125,13 +141,20 @@ public class ReceiveMessageService: MixinService {
         processing = true
 
         processDispatchQueue.async {
+            var displaySyncProcess = false
             defer {
                 self.processing = false
+                if displaySyncProcess {
+                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: 100)
+                }
             }
 
             if AppGroupUserDefaults.isProcessingMessagesInAppExtension {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
+
+                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(ReceiveMessageService.shared.isStopProcessMessages)")
+
                     DarwinNotificationManager.shared.checkStatusInAppExtension()
                     Thread.sleep(forTimeInterval: 2)
 
@@ -144,7 +167,7 @@ public class ReceiveMessageService: MixinService {
             var finishedJobCount = 0
 
             repeat {
-                if ReceiveMessageService.shared.isStopProcessMessages {
+                guard LoginManager.shared.isLoggedIn, !ReceiveMessageService.shared.isStopProcessMessages else {
                     return
                 }
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
@@ -154,6 +177,7 @@ public class ReceiveMessageService: MixinService {
 
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
                 if remainJobCount + finishedJobCount > 500 {
+                    displaySyncProcess = true
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
                     NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
                 }
@@ -197,7 +221,10 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func checkSession(data: BlazeMessageData) {
-        guard data.conversationId != User.systemUser && data.conversationId != currentAccountId else {
+        guard data.conversationId != User.systemUser && data.userId != User.systemUser else {
+            return
+        }
+        guard data.conversationId != currentAccountId else {
             return
         }
         let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
@@ -327,7 +354,7 @@ public class ReceiveMessageService: MixinService {
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
-            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
+            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...sessionId:\(data.sessionId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             if let err = error as? SignalError, err != SignalError.noSession {
                 var userInfo = [String: Any]()
                 userInfo["conversationId"] = data.conversationId
@@ -797,13 +824,17 @@ extension ReceiveMessageService {
         if systemSession.action == SystemSessionMessageAction.PROVISION.rawValue {
             AppGroupUserDefaults.Account.lastDesktopLoginDate = Date()
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
-            SignalProtocol.shared.deleteSession(userId: data.userId)
+            SignalProtocol.shared.deleteSession(userId: systemSession.userId)
+
+            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             AppGroupUserDefaults.Account.extensionSession = nil
-            SignalProtocol.shared.deleteSession(userId: data.userId)
+            SignalProtocol.shared.deleteSession(userId: systemSession.userId)
+
+            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log in desktop...", newSection: true)
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)

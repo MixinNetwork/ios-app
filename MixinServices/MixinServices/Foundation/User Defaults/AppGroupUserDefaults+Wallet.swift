@@ -58,7 +58,7 @@ extension AppGroupUserDefaults {
             biometricPaymentExpirationInterval = WalletUserDefault.shared.pinInterval
             
             defaultTransferAssetId = WalletUserDefault.shared.defalutTransferAssetId
-            hiddenAssetIds = WalletUserDefault.shared.hiddenAssets as? [String: Bool] ?? [:]
+            hiddenAssetIds = WalletUserDefault.shared.hiddenAssets.mapValues({ _ in true })
             allTransactionsOffset = WalletUserDefault.shared.allTransactionOffset
             assetTransactionsOffset = WalletUserDefault.shared.assetTransactionOffset
             currencyCode = WalletUserDefault.shared.currencyCode

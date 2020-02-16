@@ -56,11 +56,11 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
         if style.contains(.received) {
-            durationLabelOrigin = CGPoint(x: presentationFrame.origin.x + 16,
-                                          y: presentationFrame.origin.y + 8)
+            durationLabelOrigin = CGPoint(x: photoFrame.origin.x + 16,
+                                          y: photoFrame.origin.y + 8)
         } else {
-            durationLabelOrigin = CGPoint(x: presentationFrame.origin.x + 10,
-                                          y: presentationFrame.origin.y + 8)
+            durationLabelOrigin = CGPoint(x: photoFrame.origin.x + 10,
+                                          y: photoFrame.origin.y + 8)
         }
     }
     
@@ -84,7 +84,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: VideoUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -106,7 +106,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             ConcurrentJobQueue.shared.cancelJob(jobId: VideoDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
         }
     }
     

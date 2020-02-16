@@ -747,7 +747,7 @@ extension ConversationDataSource {
         }
     }
     
-    func send(asset: PHAsset) {
+    func send(asset: PHAsset, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
         let isGroupMessage = category == .group
@@ -763,6 +763,7 @@ extension ConversationDataSource {
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth
             message.mediaHeight = asset.pixelHeight
+            message.quoteMessageId = quoteMessageId
             if assetMediaTypeIsImage {
                 message.mediaMimeType = asset.isGif ? "image/gif" : "image/jpeg"
             } else {
@@ -839,9 +840,7 @@ extension ConversationDataSource {
         if message.status == MessageStatus.FAILED.rawValue {
             viewModel = DecryptionFailedMessageViewModel(message: message)
         } else {
-            if message.quoteMessageId != nil && message.quoteContent != nil {
-                viewModel = QuoteTextMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_TEXT") {
+            if message.category.hasSuffix("_TEXT") {
                 viewModel = TextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_IMAGE") {
                 viewModel = PhotoMessageViewModel(message: message)

@@ -434,7 +434,7 @@ class ConversationViewController: UIViewController {
             let message = viewModel.message
             let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
             let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
-            if message.category.hasSuffix("_TEXT"), let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
+            if let quoteMessageId = viewModel.message.quoteMessageId, !quoteMessageId.isEmpty, let quote = cell.quotedMessageViewIfLoaded, quote.bounds.contains(recognizer.location(in: quote)) {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -513,7 +513,10 @@ class ConversationViewController: UIViewController {
         let conversationId = self.conversationId
         let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinServer.httpUrl, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
-            self?.report(conversationId: conversationId)
+            self?.report(conversationId: conversationId, shareFile: false)
+        }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { [weak self](_) in
+            self?.report(conversationId: conversationId, shareFile: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
@@ -693,7 +696,7 @@ class ConversationViewController: UIViewController {
     }
 
     func contactAction() {
-        let vc = ContactSelectorViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
+        let vc = ContactSelectorViewController.instance(conversationInputViewController: conversationInputViewController)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -945,6 +948,9 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? PhotoRepresentableMessageCell {
+            setCell(cell, contentViewHidden: false)
+        }
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
@@ -1077,8 +1083,8 @@ extension ConversationViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        let previewViewController = FileSendViewController.instance(documentUrl: url, dataSource: dataSource)
-        navigationController?.pushViewController(previewViewController, animated: true)
+        let vc = FileSendViewController.instance(documentUrl: url, conversationInputViewController: conversationInputViewController)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -1343,6 +1349,10 @@ extension ConversationViewController {
         guard let id = id, let cell = visiblePhotoRepresentableCell(of: id) else {
             return
         }
+        setCell(cell, contentViewHidden: hidden)
+    }
+    
+    private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
         var contentViews = [
             cell.contentImageView,
             cell.timeLabel,
@@ -1508,8 +1518,8 @@ extension ConversationViewController {
             MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
     }
-    
-    private func report(conversationId: String) {
+
+    private func report(conversationId: String, shareFile: Bool) {
         DispatchQueue.global().async { [weak self] in
             let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
@@ -1535,19 +1545,26 @@ extension ConversationViewController {
             guard FileManager.default.fileSize(targetUrl.path) > 0 else {
                 return
             }
-            
-            let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
-            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
-            message.name = url.lastPathComponent
-            message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
-            message.mediaUrl = url.lastPathComponent
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-            
-            self?.dataSource?.queue.async {
-                SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+
+            if shareFile {
                 DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    let inviteController = UIActivityViewController(activityItems: [targetUrl], applicationActivities: nil)
+                    self?.navigationController?.present(inviteController, animated: true, completion: nil)
+                }
+            } else {
+                let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
+                var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
+                message.name = url.lastPathComponent
+                message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                message.mediaUrl = url.lastPathComponent
+                message.mediaStatus = MediaStatus.PENDING.rawValue
+
+                self?.dataSource?.queue.async {
+                    SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+                    DispatchQueue.main.async {
+                        self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    }
                 }
             }
         }

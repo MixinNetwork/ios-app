@@ -3,6 +3,14 @@ import MixinServices
 
 class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
+    override class var supportsQuoting: Bool {
+        true
+    }
+    
+    override class var isContentWidthLimited: Bool {
+        false
+    }
+    
     let length: String
     let waveform: Waveform
     
@@ -42,34 +50,24 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
     }
     
-    override var size: CGSize {
-        return CGSize(width: contentWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10, height: 72)
-    }
-    
-    override var leftTrailingMargin: CGFloat {
-        let category = UIScreen.main.traitCollection.preferredContentSizeCategory
-        if category == .extraLarge {
-            return 30
-        } else if category == .extraExtraLarge {
-            return 40
-        } else if category == .extraExtraExtraLarge {
-            return 50
-        } else {
-            return 20
-        }
-    }
-    
-    private let contentWidth: CGFloat
+    private let waveformWidth: CGFloat
 
     override init(message: MessageItem) {
         let duration = Int(message.mediaDuration ?? 0)
         let seconds = Int(round(Double(duration) / millisecondsPerSecond))
         length = mediaDurationFormatter.string(from: TimeInterval(seconds)) ?? ""
-        contentWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
+        waveformWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
         self.waveform = Waveform(data: message.mediaWaveform, durationInSeconds: seconds)
         super.init(message: message)
         updateOperationButtonStyle()
         updateButtonsHidden()
+    }
+    
+    override func layout(width: CGFloat, style: MessageViewModel.Style) {
+        contentWidth = Self.leftViewSideLength
+            + Self.spacing
+            + waveformWidth
+        super.layout(width: width, style: style)
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {
@@ -80,7 +78,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: AudioUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -102,7 +100,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             ConcurrentJobQueue.shared.cancelJob(jobId: AudioDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
         }
     }
     

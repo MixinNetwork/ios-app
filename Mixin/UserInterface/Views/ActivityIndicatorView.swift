@@ -83,6 +83,11 @@ class ActivityIndicatorView: UIView {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        indicatorLayer?.strokeColor = tintColor.cgColor
+    }
+    
     func startAnimating() {
         guard !_isAnimating else {
             return

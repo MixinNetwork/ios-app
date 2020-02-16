@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 import MixinServices
 
-class AudioInputViewController: UIViewController, ConversationAccessible {
+class AudioInputViewController: UIViewController, ConversationInputAccessible {
     
     static let maxRecordDuration: TimeInterval = 60
     
@@ -214,7 +214,7 @@ extension AudioInputViewController: MXNAudioRecorderDelegate {
         stopRedDotAnimation()
         let url = URL(fileURLWithPath: recorder.path)
         if Double(metadata.duration) > millisecondsPerSecond {
-            dataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))
+            conversationInputViewController?.sendAudio(url: url, metadata: metadata)
         } else {
             try? FileManager.default.removeItem(at: url)
             flashLongPressHint()

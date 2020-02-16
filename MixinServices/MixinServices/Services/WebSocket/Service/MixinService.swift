@@ -20,9 +20,24 @@ public class MixinService {
     }
 
     internal func checkSessionSenderKey(conversationId: String) throws {
-        let participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
+        var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
         guard participants.count > 0 else {
             return
+        }
+
+        if participants.contains(where: { $0.sessionId.isEmpty }) {
+            reporter.report(error: MixinServicesError.badParticipantSession)
+            participants = participants.filter { !$0.sessionId.isEmpty }
+            if participants.count == 0 {
+                return
+            }
+        }
+
+        let startTime = Date()
+        defer {
+            if -startTime.timeIntervalSinceNow > 2 {
+                Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CheckSessionSenderKey]...check session too slow...\(-startTime.timeIntervalSinceNow)s")
+            }
         }
 
         var requestSignalKeyUsers = [BlazeMessageParamSession]()
@@ -42,10 +57,9 @@ public class MixinService {
         }
 
         var noKeyList = [BlazeMessageParamSession]()
-        var signalKeys = [SignalKey]()
 
         if !requestSignalKeyUsers.isEmpty {
-            signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
+            let signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
             var keys = [String]()
             for signalKey in signalKeys {
                 guard let recipientId = signalKey.userId else {
@@ -62,6 +76,7 @@ public class MixinService {
                 let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
                 MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
             }
+            Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
         }
         
         guard signalKeyMessages.count > 0 else {
@@ -78,8 +93,7 @@ public class MixinService {
             return try checkSessionSenderKey(conversationId: conversationId)
         }
 
-        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? "")}" }.joined(separator: ","))...")
-        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
+        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CreateSignalKeyMessage]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? ""):\($0.sessionId ?? "")}" }.joined(separator: ","))...")
     }
 
     internal func syncConversation(conversationId: String) {

@@ -3,6 +3,10 @@ import MixinServices
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
+    override class var supportsQuoting: Bool {
+        true
+    }
+    
     class var font: UIFont {
         UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
     }
@@ -35,13 +39,29 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0
     }
-
+    
     var backgroundWidth: CGFloat {
-        return contentAdditionalLeadingMargin + contentSize.width + contentMargin.horizontal
+        let width = contentAdditionalLeadingMargin
+            + contentSize.width
+            + contentMargin.horizontal
+        if let viewModel = quotedMessageViewModel {
+            let quotedMessageWidth = viewModel.contentSize.width + Self.quotedMessageMargin.horizontal
+            return max(width, quotedMessageWidth)
+        } else {
+            return width
+        }
     }
     
     var contentLabelTopMargin: CGFloat {
-        return style.contains(.fullname) ? fullnameHeight : contentMargin.top
+        if let viewModel = quotedMessageViewModel {
+            return fullnameHeight + viewModel.contentSize.height + Self.quotedMessageMargin.vertical
+        } else {
+            if style.contains(.fullname) {
+                return fullnameFrame.height
+            } else {
+                return contentMargin.top
+            }
+        }
     }
     
     var contentAdditionalLeadingMargin: CGFloat {
@@ -70,6 +90,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         presentedContent = message.content
         super.init(message: message)
         linkRanges = self.linkRanges(from: rawContent)
+    }
+    
+    override func quoteViewLayoutWidth(from width: CGFloat) -> CGFloat {
+        width
+            - Self.bubbleMargin.horizontal
+            - Self.quotedMessageMargin.horizontal
+            - contentMargin.horizontal
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
@@ -222,6 +249,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         }
         cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        if quotedMessageViewModel != nil && style.contains(.fullname) {
+            backgroundImageFrame.origin.y += fullnameFrame.height
+            backgroundImageFrame.size.height -= fullnameFrame.height
+        }
+        layoutQuotedMessageIfPresent()
     }
     
     func highlight(keyword: String) {

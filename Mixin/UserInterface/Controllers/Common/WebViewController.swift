@@ -3,8 +3,6 @@ import WebKit
 import Photos
 import Alamofire
 import MixinServices
-import FirebaseMLCommon
-import FirebaseMLVision
 
 class WebViewController: UIViewController {
     
@@ -185,8 +183,13 @@ class WebViewController: UIViewController {
                 }
             }
         }))
-        qrCodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
-            if error == nil, let string = features?.first?.rawValue {
+        
+        if let detector = qrCodeDetector, let cgImage = image.cgImage {
+            let ciImage = CIImage(cgImage: cgImage)
+            for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+                guard let string = feature.messageString else {
+                    continue
+                }
                 controller.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                         
@@ -194,10 +197,12 @@ class WebViewController: UIViewController {
                         RecognizeWindow.instance().presentWindow(text: string)
                     }
                 }))
+                break
             }
-            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
-        })
+        }
+        
+        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(controller, animated: true, completion: nil)
     }
     
 }

@@ -13,9 +13,10 @@ class AuthorizationScopeCell: UITableViewCell {
         selectedBackgroundView = UIView()
     }
 
-    func render(name: String, desc: String) {
+    func render(name: String, desc: String, forceChecked: Bool) {
         nameLabel.text = name
         descLabel.text = desc
+        isUserInteractionEnabled = !forceChecked
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

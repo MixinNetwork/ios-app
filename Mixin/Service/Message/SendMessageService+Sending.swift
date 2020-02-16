@@ -4,6 +4,9 @@ import MixinServices
 extension SendMessageService {
     
     @objc func uploadAnyPendingMessages() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
         let messages = MessageDAO.shared.getPendingMessages()
         for message in messages {
             guard message.shouldUpload() else {

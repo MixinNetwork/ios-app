@@ -16,7 +16,7 @@ final class MediaPreviewViewController: UIViewController {
     @IBOutlet weak var minimalImageViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var normalImageViewWidthConstraint: NSLayoutConstraint!
     
-    var dataSource: ConversationDataSource?
+    weak var conversationInputViewController: ConversationInputViewController?
     
     private var lastRequestId: PHImageRequestID?
     private var asset: PHAsset?
@@ -119,7 +119,7 @@ final class MediaPreviewViewController: UIViewController {
     @IBAction func sendAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         if let asset = asset {
-            dataSource?.send(asset: asset)
+            conversationInputViewController?.send(asset: asset)
         }
     }
     

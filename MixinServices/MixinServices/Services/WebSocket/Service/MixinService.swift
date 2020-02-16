@@ -270,7 +270,6 @@ public class MixinService {
                 checkNetworkAndWebSocket()
 
                 if err.isClientError {
-                    Thread.sleep(forTimeInterval: 2)
                     continue
                 }
                 throw error
@@ -279,11 +278,9 @@ public class MixinService {
     }
 
     internal func checkNetworkAndWebSocket() {
-        while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+        repeat {
             Thread.sleep(forTimeInterval: 2)
-        }
-
-        Thread.sleep(forTimeInterval: 2)
+        } while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
     }
     
     public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
@@ -296,13 +293,9 @@ public class MixinService {
         }
         
         ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
-        
-        if let attachmentCategory = AttachmentContainer.Category(messageCategory: category), let mediaUrl = mediaUrl {
-            try? FileManager.default.removeItem(at: AttachmentContainer.url(for: attachmentCategory, filename: mediaUrl))
-            if category.hasSuffix("_VIDEO") {
-                let thumbUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
-                try? FileManager.default.removeItem(at: thumbUrl)
-            }
+
+        if let mediaUrl = mediaUrl {
+            AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
     }
     

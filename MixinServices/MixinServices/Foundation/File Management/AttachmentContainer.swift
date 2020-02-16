@@ -18,46 +18,15 @@ public enum AttachmentContainer {
         }
     }
     
-    public static func getMessageCategories(categories: [Category]) -> [MessageCategory] {
-        var messageCategories = [MessageCategory]()
-        categories.forEach { (category) in
-            messageCategories.append(contentsOf: category.messageCategory)
-        }
-        return messageCategories
-    }
-    
-    public static func allMessageCategories() -> [MessageCategory] {
-        return getMessageCategories(categories: [.photos, .audios, .files, .videos])
-    }
-    
-    public static func cleanUp(conversationId: String, categories: [MessageCategory]) {
-        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, categories: categories))
-    }
-    
-    public static func cleanUp(category: Category) {
-        let path = url(for: category, filename: nil).path
-        guard let onDiskFilenames = try? FileManager.default.contentsOfDirectory(atPath: path) else {
+    public static func removeMediaFiles(mediaUrl: String, category: String) {
+        guard let messageCategory = AttachmentContainer.Category(messageCategory: category) else {
             return
         }
-        if category == .videos {
-            let referencedFilenames = MessageDAO.shared
-                .getMediaUrls(likeCategory: category.messageCategorySuffix)
-                .map({ NSString(string: $0).deletingPathExtension })
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(where: { onDiskFilename.contains($0) }) {
-                let url = Self.url(for: .videos, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: url)
-            }
-        } else {
-            let referencedFilenames = Set(MessageDAO.shared.getMediaUrls(likeCategory: category.messageCategorySuffix))
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(onDiskFilename) {
-                let url = Self.url(for: category, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: url)
-            }
+        try? FileManager.default.removeItem(at: AttachmentContainer.url(for: messageCategory, filename: mediaUrl))
+        if category.hasSuffix("_VIDEO") {
+            let thumbUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            try? FileManager.default.removeItem(at: thumbUrl)
         }
-    }
-    
-    public static func cleanUpAll() {
-        [.photos, .audios, .files, .videos].forEach(cleanUp)
     }
     
 }

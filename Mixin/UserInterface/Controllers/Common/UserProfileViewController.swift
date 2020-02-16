@@ -491,7 +491,7 @@ extension UserProfileViewController {
                 switch UserAPI.shared.reportUser(userId: userId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
+                    ConversationDAO.shared.clearConversation(conversationId: conversationId, removeConversation: true)
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
                     DispatchQueue.main.async {
                         hud.hide()

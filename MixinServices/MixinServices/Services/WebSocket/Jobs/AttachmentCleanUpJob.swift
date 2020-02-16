@@ -2,30 +2,27 @@
 import UIKit
 import WCDBSwift
 
-class AttachmentCleanUpJob: BaseJob {
-    
+public class AttachmentCleanUpJob: BaseJob {
+
     let conversationId: String
-    var messages: [Message]
-    
-    init(conversationId: String, categories: [MessageCategory] = AttachmentContainer.allMessageCategories()) {
-        self.messages = MessageDAO.shared.getMessageOfAttachmentOnDisk(conversationId: conversationId, categories: categories)
+    let mediaUrls: [String: String]
+
+    public init(conversationId: String, mediaUrls: [String: String]) {
         self.conversationId = conversationId
+        self.mediaUrls = mediaUrls
     }
 
-    override func getJobId() -> String {
+    override open func getJobId() -> String {
         "cleanup-attachment-\(conversationId)"
     }
 
-    override func run() throws {
-        guard !conversationId.isEmpty else {
+    override open func run() throws {
+        guard !conversationId.isEmpty, mediaUrls.count > 0 else {
             return
         }
-        for message in messages {
-            guard let category = AttachmentContainer.Category(messageCategory: message.category) else {
-                continue
-            }
-            let url = AttachmentContainer.url(for: category, filename: message.mediaUrl)
-            try? FileManager.default.removeItem(at: url)
+
+        for (mediaUrl, category) in mediaUrls {
+            AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
     }
 }

@@ -303,7 +303,7 @@ extension ProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)
             DispatchQueue.global().async {
-                MessageDAO.shared.clearChat(conversationId: conversationId)
+                ConversationDAO.shared.clearConversation(conversationId: conversationId)
                 DispatchQueue.main.async {
                     showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
                 }

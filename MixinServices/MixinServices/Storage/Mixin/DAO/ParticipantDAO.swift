@@ -133,12 +133,16 @@ public final class ParticipantDAO {
         NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
     
-    public func participants(conversationId: String) -> [Participant] {
-        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipants, values: [conversationId])
+    public func participants(conversationId: String, limit: Int? = nil) -> [Participant] {
+        var sql = ParticipantDAO.sqlQueryParticipants
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        return MixinDatabase.shared.getCodables(sql: sql, values: [conversationId])
     }
     
     public func participantRequests(conversationId: String, currentAccountId: String) -> [ParticipantRequest] {
-        let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
+        let participants = ParticipantDAO.shared.participants(conversationId: conversationId, limit: 50)
         return participants
             .filter({ $0.userId != currentAccountId })
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })

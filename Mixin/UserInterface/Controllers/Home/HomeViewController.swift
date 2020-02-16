@@ -96,7 +96,7 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
-        ConcurrentJobQueue.shared.addJob(job: PeriodicAttachmentCleanUpJob())
+        ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -499,7 +499,7 @@ extension HomeViewController {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
         DispatchQueue.global().async {
-            ConversationDAO.shared.deleteConversation(conversationId: conversation.conversationId, autoNotification: false)
+            ConversationDAO.shared.clearConversation(conversationId: conversation.conversationId, autoNotification: false)
             NotificationCenter.default.postOnMain(name: .StorageUsageDidChange)
         }
     }
@@ -510,7 +510,7 @@ extension HomeViewController {
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
         DispatchQueue.global().async {
-            ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversation.conversationId)
+            ConversationDAO.shared.clearConversation(conversationId: conversation.conversationId, exitConversation: true)
         }
     }
     

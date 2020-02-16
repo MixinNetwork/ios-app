@@ -216,6 +216,13 @@ public enum MessageCategory: String {
             return true
         }
     }
+
+    public static let allMediaCategories: [MessageCategory] = [
+        .SIGNAL_IMAGE, .PLAIN_IMAGE,
+        .SIGNAL_VIDEO, .PLAIN_VIDEO,
+        .SIGNAL_AUDIO, .PLAIN_AUDIO,
+        .SIGNAL_DATA, .PLAIN_DATA
+    ]
     
 }
 

@@ -107,21 +107,27 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         let clearAudios = isClearAudios && categorys["_AUDIO"]?.messageCount ?? 0 > 0
         let clearFiles = isClearFiles && categorys["_DATA"]?.messageCount ?? 0 > 0
         container?.rightButton.isBusy = true
+
+        let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
-            var categories = [AttachmentContainer.Category]()
+            var categories = [MessageCategory]()
             if clearPhotos {
-                categories.append(.photos)
+                categories += AttachmentContainer.Category.photos.messageCategory
             }
             if clearVideos {
-                categories.append(.videos)
+                categories += AttachmentContainer.Category.videos.messageCategory
             }
             if clearAudios {
-                categories.append(.audios)
+                categories += AttachmentContainer.Category.audios.messageCategory
             }
             if clearFiles {
-                categories.append(.files)
+                categories += AttachmentContainer.Category.files.messageCategory
             }
-            self?.cleanUp(categories: categories)
+
+            let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: categories)
+            ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+            MessageDAO.shared.deleteMediaMessages(conversationId: conversationId, categories: categories)
+
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
@@ -130,12 +136,6 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
                 weakSelf.navigationController?.popViewController(animated: true)
             }
         }
-    }
-    
-    private func cleanUp(categories: [AttachmentContainer.Category]) {
-        let messageCategories = AttachmentContainer.getMessageCategories(categories: categories)
-        AttachmentContainer.cleanUp(conversationId: conversation.conversationId, categories: messageCategories)
-        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, categories: messageCategories)
     }
     
     func textBarRightButton() -> String? {

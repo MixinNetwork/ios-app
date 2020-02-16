@@ -113,37 +113,24 @@ public final class MessageDAO {
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
     
-    public func getMediaUrls(likeCategory category: String) -> [String] {
+    public func getMediaUrls(categories: [MessageCategory]) -> [String] {
+        let condition: Condition = Message.Properties.category.in(categories.map({ $0.rawValue }))
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
                                                     tableName: Message.tableName,
-                                                    condition: Message.Properties.category.like("%\(category)"))
+                                                    condition: condition)
+    }
+
+    public func getMediaUrls(conversationId: String, categories: [MessageCategory]) -> [String: String] {
+        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
+        return MixinDatabase.shared.getDictionary(key: Message.Properties.mediaUrl.asColumnResult(), value: Message.Properties.category.asColumnResult(), tableName: Message.tableName, condition: condition)
     }
     
-    public func deleteMessages(conversationId: String, category: String) {
-        MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
-    }
-    
-    public func deleteMessages(conversationId: String, categories: [MessageCategory]) {
+    public func deleteMediaMessages(conversationId: String, categories: [MessageCategory]) {
         MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue })))
     }
     
     public func findFailedMessages(conversationId: String, userId: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000)
-    }
-    
-    public func clearChat(conversationId: String, autoNotification: Bool = true) {
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Message.tableName,
-                          where: Message.Properties.conversationId == conversationId)
-            try db.update(table: Conversation.tableName,
-                          on: [Conversation.Properties.unseenMessageCount],
-                          with: [0],
-                          where: Conversation.Properties.conversationId == conversationId)
-        }
-        if autoNotification {
-            let change = ConversationChange(conversationId: conversationId, action: .reload)
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        }
     }
     
     public func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {
@@ -344,11 +331,6 @@ public final class MessageDAO {
     public func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {
         let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count])
         return messages.reversed()
-    }
-	    
-    public func getMessageOfAttachmentOnDisk(conversationId: String, categories: [MessageCategory]) -> [Message] {
-        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
-        return MixinDatabase.shared.getCodables(condition: condition)
     }
     
     public func getInvitationMessage(conversationId: String, inviteeUserId: String) -> Message? {

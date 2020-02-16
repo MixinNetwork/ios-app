@@ -70,6 +70,21 @@ public extension FileManager {
         try? FileManager.default.removeItem(at: directory)
     }
 
+
+    public func debugDirectoryAndChildFiles(_ directory: URL, dir: String = "==") {
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
+            return
+        }
+        for file in files {
+            let url = directory.appendingPathComponent(file)
+            if directoryExists(atPath: url.path) {
+                debugDirectoryAndChildFiles(url, dir: dir + "==")
+            } else {
+                print("\(dir)\(url)")
+            }
+        }
+    }
+
     func removeCloudCacheFiles(_ directory: URL) {
         guard directoryExists(atPath: directory.path) else {
             return

@@ -453,6 +453,7 @@
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
 		DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */; };
 		DF2EAEB823EF0A05005E5A4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF2EAEB523EF0646005E5A4F /* Localizable.strings */; };
+		DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
 		DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */; };
@@ -1156,6 +1157,7 @@
 		DF2EAEB423EF0646005E5A4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF2EAEB623EF064A005E5A4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DF2EAEB723EF064B005E5A4F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanUpUnusedAttachmentJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QrcodeWindow.xib; sourceTree = "<group>"; };
@@ -2535,6 +2537,7 @@
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
+				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3024,6 +3027,7 @@
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
+				DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,

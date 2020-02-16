@@ -89,33 +89,6 @@ internal struct MixinFile {
         return url.appendingPathComponent("\(messageId).\(fileExtension)")
     }
     
-    static func clean(chatDirectory: ChatDirectory) {
-        let resourcePath = url(ofChatDirectory: chatDirectory, filename: nil).path
-        guard let onDiskFilenames = try? FileManager.default.contentsOfDirectory(atPath: resourcePath) else {
-            return
-        }
-        if chatDirectory == .videos {
-            let referencedFilenames = MessageDAO.shared
-                .getMediaUrls(likeCategory: chatDirectory.messageCategorySuffix)
-                .map({ NSString(string: $0).deletingPathExtension })
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(where: { onDiskFilename.contains($0) }) {
-                let path = MixinFile.url(ofChatDirectory: .videos, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: path)
-            }
-        } else {
-            let referencedFilenames = Set(MessageDAO.shared.getMediaUrls(likeCategory: chatDirectory.messageCategorySuffix))
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(onDiskFilename) {
-                let path = MixinFile.url(ofChatDirectory: chatDirectory, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: path)
-            }
-        }
-    }
-    
-    static func cleanAllChatDirectories() {
-        let dirs: [ChatDirectory] = [.photos, .audios, .files, .videos]
-        dirs.forEach(clean)
-    }
-    
     static var groupIconsUrl: URL {
         let url = rootDirectory.appendingPathComponent("Group").appendingPathComponent("Icons")
         if !FileManager.default.fileExists(atPath: url.path) {

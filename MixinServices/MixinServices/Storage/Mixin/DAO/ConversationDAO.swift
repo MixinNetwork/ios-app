@@ -118,24 +118,33 @@ public final class ConversationDAO {
     public func updateConversationPinTime(conversationId: String, pinTime: String?) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.pinTime, pinTime ?? MixinDatabase.NullValue())], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
-    
-    public func deleteConversationAndMessages(conversationId: String) {
+
+    public func clearConversation(conversationId: String, removeConversation: Bool = false, exitConversation: Bool = false, autoNotification: Bool = true) {
+        let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
+
         MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+
+            if removeConversation || exitConversation {
+                try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
+            } else {
+                try db.update(table: Conversation.tableName,
+                    on: [Conversation.Properties.unseenMessageCount],
+                    with: [0],
+                    where: Conversation.Properties.conversationId == conversationId)
+            }
+
+            if exitConversation {
+                try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+                try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
+            }
         }
-    }
-    
-    public func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
-        MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
-        AttachmentContainer.cleanUpAll()
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
-            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
-            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
-        }
+
+        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+
         if autoNotification {
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
+            let change = ConversationChange(conversationId: conversationId, action: .reload)
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
         }
     }
     

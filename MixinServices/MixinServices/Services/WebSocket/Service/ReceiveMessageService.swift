@@ -894,9 +894,7 @@ extension ReceiveMessageService {
             }
 
             if participantId == currentAccountId {
-                DispatchQueue.global().async {
-                    ConversationDAO.shared.deleteAndExitConversation(conversationId: data.conversationId, autoNotification: false)
-                }
+                ConversationDAO.shared.clearConversation(conversationId: data.conversationId, exitConversation: true, autoNotification: false)
             } else {
                 SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
                 operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)

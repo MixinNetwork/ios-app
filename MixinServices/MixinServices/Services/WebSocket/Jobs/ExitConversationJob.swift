@@ -20,10 +20,10 @@ internal class ExitConversationJob: BaseJob {
 
         switch ConversationAPI.shared.exitConversation(conversationId: conversationId) {
         case .success:
-            ConversationDAO.shared.deleteAndExitConversation(conversationId: conversationId, autoNotification: false)
+            ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
         case let .failure(error):
             guard error.code != 404 && error.code != 403 else {
-                ConversationDAO.shared.deleteAndExitConversation(conversationId: conversationId, autoNotification: false)
+                ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
                 return
             }
             throw error

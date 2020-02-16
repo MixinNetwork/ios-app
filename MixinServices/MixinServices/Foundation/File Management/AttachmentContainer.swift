@@ -18,30 +18,15 @@ public enum AttachmentContainer {
         }
     }
     
-    public static func cleanUp(category: Category) {
-        let path = url(for: category, filename: nil).path
-        guard let onDiskFilenames = try? FileManager.default.contentsOfDirectory(atPath: path) else {
+    public static func removeMediaFiles(mediaUrl: String, category: String) {
+        guard let messageCategory = AttachmentContainer.Category(messageCategory: category) else {
             return
         }
-        if category == .videos {
-            let referencedFilenames = MessageDAO.shared
-                .getMediaUrls(likeCategory: category.messageCategorySuffix)
-                .map({ NSString(string: $0).deletingPathExtension })
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(where: { onDiskFilename.contains($0) }) {
-                let url = Self.url(for: .videos, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: url)
-            }
-        } else {
-            let referencedFilenames = Set(MessageDAO.shared.getMediaUrls(likeCategory: category.messageCategorySuffix))
-            for onDiskFilename in onDiskFilenames where !referencedFilenames.contains(onDiskFilename) {
-                let url = Self.url(for: category, filename: onDiskFilename)
-                try? FileManager.default.removeItem(at: url)
-            }
+        try? FileManager.default.removeItem(at: AttachmentContainer.url(for: messageCategory, filename: mediaUrl))
+        if category.hasSuffix("_VIDEO") {
+            let thumbUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            try? FileManager.default.removeItem(at: thumbUrl)
         }
-    }
-    
-    public static func cleanUpAll() {
-        [.photos, .audios, .files, .videos].forEach(cleanUp)
     }
     
 }
@@ -78,6 +63,19 @@ public extension AttachmentContainer {
                 return "_VIDEO"
             case .audios:
                 return "_AUDIO"
+            }
+        }
+        
+        public var messageCategory: [MessageCategory] {
+            switch self {
+            case .photos:
+                return [.SIGNAL_IMAGE, .PLAIN_IMAGE]
+            case .files:
+                return [.SIGNAL_DATA, .PLAIN_DATA]
+            case .videos:
+                return [.SIGNAL_VIDEO, .PLAIN_VIDEO]
+            case .audios:
+                return [.SIGNAL_AUDIO, .PLAIN_AUDIO]
             }
         }
         

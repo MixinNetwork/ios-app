@@ -452,6 +452,7 @@
 		DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */; };
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
 		DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */; };
+		DF2EAEB823EF0A05005E5A4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF2EAEB523EF0646005E5A4F /* Localizable.strings */; };
 		DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
@@ -1153,6 +1154,9 @@
 		DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageCell.swift; sourceTree = "<group>"; };
 		DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
 		DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAddMemberCell.swift; sourceTree = "<group>"; };
+		DF2EAEB423EF0646005E5A4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DF2EAEB623EF064A005E5A4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DF2EAEB723EF064B005E5A4F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanUpUnusedAttachmentJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };

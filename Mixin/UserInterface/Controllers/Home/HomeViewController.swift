@@ -332,7 +332,7 @@ extension HomeViewController: UITableViewDelegate {
             ConcurrentJobQueue.shared.addJob(job: job)
         } else {
             conversation.unseenMessageCount = 0
-            let vc = ConversationViewController.instance(conversation: conversations[indexPath.row])
+            let vc = ConversationViewController.instance(conversation: conversation)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

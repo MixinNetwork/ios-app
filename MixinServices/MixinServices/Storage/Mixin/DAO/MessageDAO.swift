@@ -347,14 +347,7 @@ public final class MessageDAO {
     }
 	    
     public func getMessageOfAttachmentOnDisk(conversationId: String, categories: [MessageCategory]) -> [Message] {
-        var allCategories = categories
-        if allCategories.count < 1 {
-            allCategories = [
-                .SIGNAL_DATA, .PLAIN_DATA, .SIGNAL_AUDIO, .PLAIN_AUDIO,
-                .SIGNAL_IMAGE, .PLAIN_IMAGE, .SIGNAL_VIDEO, .PLAIN_VIDEO
-            ]
-        }
-        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(allCategories.map({ $0.rawValue }))
+        let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
         return MixinDatabase.shared.getCodables(condition: condition)
     }
     

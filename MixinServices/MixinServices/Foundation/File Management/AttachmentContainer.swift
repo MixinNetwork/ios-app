@@ -18,7 +18,19 @@ public enum AttachmentContainer {
         }
     }
     
-    public static func cleanUp(conversationId: String, categories: [Category]) {
+    public static func getMessageCategories(categories: [Category]) -> [MessageCategory] {
+        var messageCategories = [MessageCategory]()
+        categories.forEach { (category) in
+            messageCategories.append(contentsOf: category.messageCategory)
+        }
+        return messageCategories
+    }
+    
+    public static func allMessageCategories() -> [MessageCategory] {
+        return getMessageCategories(categories: [.photos, .audios, .files, .videos])
+    }
+    
+    public static func cleanUp(conversationId: String, categories: [MessageCategory]) {
         ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, categories: categories))
     }
     

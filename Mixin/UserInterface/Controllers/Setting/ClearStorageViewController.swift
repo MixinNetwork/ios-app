@@ -108,20 +108,20 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         let clearFiles = isClearFiles && categorys["_DATA"]?.messageCount ?? 0 > 0
         container?.rightButton.isBusy = true
         DispatchQueue.global().async { [weak self] in
-            var categorys = [AttachmentContainer.Category]()
+            var categories = [AttachmentContainer.Category]()
             if clearPhotos {
-                categorys.append(.photos)
+                categories.append(.photos)
             }
             if clearVideos {
-                categorys.append(.videos)
+                categories.append(.videos)
             }
             if clearAudios {
-                categorys.append(.audios)
+                categories.append(.audios)
             }
             if clearFiles {
-                categorys.append(.files)
+                categories.append(.files)
             }
-            self?.cleanUp(categories: categorys)
+            self?.cleanUp(categories: categories)
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
@@ -133,11 +133,8 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
     }
     
     private func cleanUp(categories: [AttachmentContainer.Category]) {
-        var messageCategories = [MessageCategory]()
-        categories.forEach { (category) in
-            messageCategories.append(contentsOf: category.messageCategory)
-        }
-        AttachmentContainer.cleanUp(conversationId: conversation.conversationId, categories: categories)
+        let messageCategories = AttachmentContainer.getMessageCategories(categories: categories)
+        AttachmentContainer.cleanUp(conversationId: conversation.conversationId, categories: messageCategories)
         MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, categories: messageCategories)
     }
     

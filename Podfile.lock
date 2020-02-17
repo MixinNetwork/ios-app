@@ -158,7 +158,6 @@ PODS:
   - Zip (1.1.0)
 
 DEPENDENCIES:
-  - Alamofire
   - AlignedCollectionViewFlowLayout
   - Crashlytics
   - Fabric
@@ -171,13 +170,9 @@ DEPENDENCIES:
   - PhoneNumberKit
   - R.swift
   - RSKImageCropper
-  - SDWebImage
-  - SDWebImageYYPlugin/YYImage
   - SnapKit
   - SwiftyMarkdown (from `https://github.com/wuyuehyang/SwiftyMarkdown.git`)
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
-  - YYImage/WebP
-  - Zip (~> 1.1.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -290,6 +285,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 69e83eeaba3613de9ede4645f76479b9e7cb8212
+PODFILE CHECKSUM: 69f20938f55ab5d223ca7a914459809a316b32a0
 
 COCOAPODS: 1.8.4

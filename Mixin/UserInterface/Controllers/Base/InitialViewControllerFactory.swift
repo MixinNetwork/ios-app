@@ -2,10 +2,6 @@ import UIKit
 import MixinServices
 
 func makeInitialViewController() -> UIViewController {
-    guard UIApplication.shared.isProtectedDataAvailable else {
-        return R.storyboard.launchScreen().instantiateInitialViewController()!
-    }
-
     if AppGroupUserDefaults.Account.isClockSkewed {
         if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()

@@ -25,8 +25,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var isPipMode = false
     private var videoRatio: CGFloat = 1
     
-    let supportOrientations = UIInterfaceOrientationMask.all
-    
     var hidePlayControlAfterPlaybackBegins = false
     
     var isPlayable: Bool {

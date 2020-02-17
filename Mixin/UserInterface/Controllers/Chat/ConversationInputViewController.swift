@@ -189,6 +189,9 @@ class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
+        guard let homeContainerVC = UIApplication.homeContainerViewController, !homeContainerVC.galleryIsOnTopMost else {
+            return
+        }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         if abs(diff) > 1 {

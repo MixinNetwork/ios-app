@@ -25,7 +25,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var isPipMode = false
     private var videoRatio: CGFloat = 1
     
-    var supportOrientations = UIInterfaceOrientationMask.all
+    let supportOrientations = UIInterfaceOrientationMask.all
     
     var hidePlayControlAfterPlaybackBegins = false
     
@@ -147,6 +147,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         controlView.pipButton.isHidden = size.width > size.height
     }
     

@@ -29,7 +29,7 @@ class HomeContainerViewController: UIViewController {
     
     private(set) var isShowingGallery = false
     
-    private var galleryIsOnTopMost: Bool {
+    var galleryIsOnTopMost: Bool {
         return isShowingGallery
             && galleryViewController.parent != nil
             && galleryViewController.parent == homeNavigationController.viewControllers.last

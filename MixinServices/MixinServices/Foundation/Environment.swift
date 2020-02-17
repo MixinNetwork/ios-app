@@ -23,5 +23,5 @@ public var canProcessMessages: Bool {
     LoginManager.shared.isLoggedIn && AppGroupUserDefaults.isDocumentsMigrated && !AppGroupUserDefaults.User.needsUpgradeInMainApp
 }
 
-public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.status.check.extension" as CFString)
-public let checkStatusInMainAppDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.services.darwin.status.check.app" as CFString)
+public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.extension" as CFString)
+public let checkStatusInMainAppDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.app" as CFString)

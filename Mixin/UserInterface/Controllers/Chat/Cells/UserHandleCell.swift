@@ -7,18 +7,20 @@ class UserHandleCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var identityNumberLabel: UILabel!
-    @IBOutlet weak var keywordLabel: UILabel!
+    @IBOutlet weak var fullnameMatchingLabel: UILabel!
+    @IBOutlet weak var identityNumberMatchingLabel: UILabel!
     
-    func render(user: User, keyword: String?) {
+    func render(user: UserItem, fullnameMatchedKeyword: String?, identityNumberMatchedKeyword: String?) {
         avatarImageView.setImage(with: user)
         nameLabel.text = user.fullName
-        if user.isVerified ?? false {
+        if user.isVerified {
             badgeImageView.image = R.image.ic_user_verified()
         } else {
             badgeImageView.image = R.image.ic_user_bot()
         }
-        identityNumberLabel.text = "@" + user.identityNumber
-        keywordLabel.text = keyword
+        identityNumberLabel.text = user.identityNumber
+        fullnameMatchingLabel.text = fullnameMatchedKeyword
+        identityNumberMatchingLabel.text = identityNumberMatchedKeyword
     }
     
 }

@@ -1143,6 +1143,12 @@
                                                 </label>
                                             </subviews>
                                         </stackView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="L" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyP-cn-H5y">
+                                            <rect key="frame" x="74" y="8" width="9" height="22"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <color key="textColor" name="theme"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@7000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-NS-eJs">
                                             <rect key="frame" x="74" y="30" width="40.5" height="14.5"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1155,19 +1161,23 @@
                                         <constraint firstItem="Dhs-NS-eJs" firstAttribute="leading" secondItem="zuN-iN-kAk" secondAttribute="leading" id="6cH-T0-cp6"/>
                                         <constraint firstItem="2ui-1P-Jut" firstAttribute="centerY" secondItem="yzb-ty-DqI" secondAttribute="centerY" id="7Z9-P7-bb8"/>
                                         <constraint firstItem="Dhs-NS-eJs" firstAttribute="bottom" secondItem="zuN-iN-kAk" secondAttribute="bottom" id="MRy-Zi-PNG"/>
+                                        <constraint firstItem="WyP-cn-H5y" firstAttribute="leading" secondItem="g9u-Oj-cdT" secondAttribute="leading" id="OpK-dB-hkH"/>
                                         <constraint firstItem="2ui-1P-Jut" firstAttribute="leading" secondItem="gA8-EG-juZ" secondAttribute="trailing" constant="16" id="QeE-l1-79R"/>
                                         <constraint firstItem="gA8-EG-juZ" firstAttribute="leading" secondItem="yzb-ty-DqI" secondAttribute="leading" constant="20" id="Ygm-PN-ojr"/>
                                         <constraint firstItem="Dhs-NS-eJs" firstAttribute="top" secondItem="zuN-iN-kAk" secondAttribute="top" id="aeg-qE-YRK"/>
                                         <constraint firstItem="gA8-EG-juZ" firstAttribute="centerY" secondItem="yzb-ty-DqI" secondAttribute="centerY" id="ag3-mM-Wdf"/>
+                                        <constraint firstItem="WyP-cn-H5y" firstAttribute="top" secondItem="g9u-Oj-cdT" secondAttribute="top" id="d6U-gR-Snt"/>
                                         <constraint firstAttribute="trailing" secondItem="2ui-1P-Jut" secondAttribute="trailing" constant="16" id="xrt-qj-yoa"/>
+                                        <constraint firstItem="WyP-cn-H5y" firstAttribute="bottom" secondItem="g9u-Oj-cdT" secondAttribute="bottom" id="yHc-YX-qT4"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" name="background"/>
                                 <connections>
                                     <outlet property="avatarImageView" destination="gA8-EG-juZ" id="amX-9l-MTF"/>
                                     <outlet property="badgeImageView" destination="c9C-SK-bFF" id="ySk-tT-zgO"/>
+                                    <outlet property="fullnameMatchingLabel" destination="WyP-cn-H5y" id="kfF-Rf-VcY"/>
                                     <outlet property="identityNumberLabel" destination="zuN-iN-kAk" id="K65-Jh-Whc"/>
-                                    <outlet property="keywordLabel" destination="Dhs-NS-eJs" id="ZDH-tN-jK6"/>
+                                    <outlet property="identityNumberMatchingLabel" destination="Dhs-NS-eJs" id="ZDH-tN-jK6"/>
                                     <outlet property="nameLabel" destination="g9u-Oj-cdT" id="F7m-ta-rvy"/>
                                 </connections>
                             </tableViewCell>

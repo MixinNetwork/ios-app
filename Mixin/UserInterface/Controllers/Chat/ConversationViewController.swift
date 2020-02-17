@@ -577,7 +577,7 @@ class ConversationViewController: UIViewController {
         }
         updateSubtitleAndInputBar()
         dataSource.queue.async { [weak self] in
-            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
+            let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
             DispatchQueue.main.sync {
                 self?.userHandleViewController.users = users
             }
@@ -661,16 +661,15 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func inputTextViewDidChange(_ textView: UITextView) {
-        userHandleViewController.reload(with: textView.text) { (hasContent) in
+    func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
+        userHandleViewController.reload(with: keyword) { (hasContent) in
             self.setUserHandleHidden(!hasContent)
         }
     }
     
-    func inputUserHandle(with user: User) {
-        let text = "@" + user.identityNumber + " "
-        conversationInputViewController.textView.text = text
-        userHandleViewController.reload(with: text) { (hasContent) in
+    func inputUserHandle(with user: UserItem) {
+        conversationInputViewController.replaceInputingMentionToken(with: user)
+        userHandleViewController.reload(with: nil) { (hasContent) in
             self.setUserHandleHidden(true)
         }
     }
@@ -1434,12 +1433,12 @@ extension ConversationViewController {
         conversationInputViewController.finishLoading()
         if dataSource.category == .group {
             updateInvitationHintView()
-            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
-            userHandleViewController.users = users
-            let keyword: String = conversationInputViewController.textView.text
-            userHandleViewController.reload(with: keyword) { (hasContent) in
-                self.setUserHandleHidden(!hasContent)
-            }
+        }
+        let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
+        userHandleViewController.users = users
+        let keyword = conversationInputViewController.textView.inputingMentionToken
+        userHandleViewController.reload(with: keyword) { (hasContent) in
+            self.setUserHandleHidden(!hasContent)
         }
         hideLoading()
     }

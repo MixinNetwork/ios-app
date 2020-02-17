@@ -36,3 +36,8 @@ var backupUrl: URL? {
 }
 
 let backupDatabaseName = "mixin.db"
+
+enum Mention {
+    static let prefix: Character = "@"
+    static let suffix: Character = " "
+}

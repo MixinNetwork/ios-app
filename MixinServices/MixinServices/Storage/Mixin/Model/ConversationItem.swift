@@ -37,6 +37,8 @@ public class ConversationItem: TableCodable {
     public var appId: String? = nil
     public var actionName: String? = nil
     
+    public var mentionsJson: Data? = nil
+    
     public lazy var appButtons: [AppButtonData]? = {
         guard let data = Data(base64Encoded: content) else {
             return nil
@@ -49,6 +51,22 @@ public class ConversationItem: TableCodable {
             return nil
         }
         return try? JSONDecoder().decode(AppCardData.self, from: data)
+    }()
+    
+    public lazy var mentionsReplacedContent: String = {
+        guard let json = mentionsJson else {
+            return content
+        }
+        guard let mentions = try? JSONDecoder.default.decode(MessageMention.Mentions.self, from: json) else {
+            return content
+        }
+        var replaced = content
+        for mention in mentions {
+            let target = "\(Mention.prefix)\(mention.key)"
+            let replacement = "\(Mention.prefix)\(mention.value)"
+            replaced = replaced.replacingOccurrences(of: target, with: replacement)
+        }
+        return replaced
     }()
     
     public enum CodingKeys: String, CodingTableKey {
@@ -85,7 +103,7 @@ public class ConversationItem: TableCodable {
         case messageStatus
         case messageId
         case appId
-        
+        case mentionsJson = "mentions"
     }
     
     public var ownerIsBot: Bool {

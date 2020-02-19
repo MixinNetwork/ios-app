@@ -61,6 +61,8 @@ public class MessageItem: TableCodable {
     public var quoteMessageId: String? = nil
     public var quoteContent: Data? = nil
     
+    public var mentionsJson: Data? = nil
+    
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
             return nil
@@ -73,6 +75,13 @@ public class MessageItem: TableCodable {
             return nil
         }
         return try? JSONDecoder.default.decode(AppCardData.self, from: data)
+    }()
+    
+    public lazy var mentions: MessageMention.Mentions? = {
+        guard let json = mentionsJson else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(MessageMention.Mentions.self, from: json)
     }()
     
     public init() {
@@ -157,6 +166,7 @@ extension MessageItem {
         case quoteMessageId = "quote_message_id"
         case quoteContent = "quote_content"
         
+        case mentionsJson = "mentions"
     }
     
 }

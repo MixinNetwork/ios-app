@@ -14,7 +14,8 @@ public final class ConversationDAO {
     m.content as content, m.category as contentType, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
-    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId
+    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
+    mm.mentions
     """
     private static let sqlQueryConversation = """
     \(sqlQueryColumns)
@@ -22,6 +23,7 @@ public final class ConversationDAO {
     LEFT JOIN messages m ON c.last_message_id = m.id
     LEFT JOIN users u ON u.user_id = m.user_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
+    LEFT JOIN message_mention mm ON m.id = mm.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     WHERE c.category IS NOT NULL AND c.status <> 2 %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC

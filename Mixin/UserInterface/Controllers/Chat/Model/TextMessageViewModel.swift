@@ -83,6 +83,17 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         for linkRange in linkRanges {
             str.addAttribute(.foregroundColor, value: linkColor, range: linkRange.range)
         }
+        if let mentions = message.mentions {
+            for mention in mentions {
+                var range = str.mutableString.range(of: mention.key)
+                while range.location != NSNotFound {
+                    let prefixedRange = NSRange(location: range.location - 1, length: range.length + 1)
+                    str.addAttributes([.foregroundColor: UIColor.theme], range: prefixedRange)
+                    str.mutableString.replaceCharacters(in: range, with: mention.value)
+                    range = str.mutableString.range(of: mention.key)
+                }
+            }
+        }
         return str.copy() as! NSAttributedString
     }
     

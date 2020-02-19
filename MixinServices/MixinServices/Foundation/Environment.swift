@@ -25,3 +25,10 @@ public var canProcessMessages: Bool {
 
 public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.extension" as CFString)
 public let checkStatusInMainAppDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.app" as CFString)
+
+public enum Mention {
+    
+    public static let prefix: Character = "@"
+    public static let suffix: Character = " "
+    
+}

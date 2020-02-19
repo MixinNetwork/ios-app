@@ -46,7 +46,8 @@ public final class MessageDAO {
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, alb.category as assetCategory,
-               m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content
+               m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
+        mm.mentions
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
@@ -57,6 +58,7 @@ public final class MessageDAO {
         SELECT album_id FROM sticker_relationships sr WHERE sr.sticker_id = m.sticker_id LIMIT 1
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
+    LEFT JOIN message_mention mm ON m.id = mm.message_id
     """
     private static let sqlQueryFirstNMessages = """
     \(sqlQueryFullMessage)

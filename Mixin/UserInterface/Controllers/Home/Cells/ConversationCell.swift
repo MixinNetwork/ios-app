@@ -56,9 +56,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = (messageTypeImageView.image == nil)
             if category.hasSuffix("_TEXT") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(item.content)"
+                    contentLabel.text = "\(senderName): \(item.mentionsReplacedContent)"
                 } else {
-                    contentLabel.text = item.content
+                    contentLabel.text = item.mentionsReplacedContent
                 }
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {

@@ -11,6 +11,7 @@ public class ConversationItem: TableCodable {
     public var announcement: String = ""
     public var lastReadMessageId: String? = nil
     public var unseenMessageCount: Int = 0
+    public var unseenMentionCount: Int = 0
     public var status: Int = ConversationStatus.START.rawValue
     public var muteUntil: String? = nil
     public var codeUrl: String? = nil
@@ -65,6 +66,7 @@ public class ConversationItem: TableCodable {
         case status
         case lastReadMessageId
         case unseenMessageCount
+        case unseenMentionCount
         case muteUntil
         case codeUrl
         case pinTime

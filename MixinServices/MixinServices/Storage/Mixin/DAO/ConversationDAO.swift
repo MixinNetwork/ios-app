@@ -8,6 +8,7 @@ public final class ConversationDAO {
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
     c.announcement as announcement, c.category as category, c.name as name, c.status as status,
     c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
+    (SELECT COUNT(*) FROM message_mention mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
     CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
     c.code_url as codeUrl, c.pin_time as pinTime,
     m.content as content, m.category as contentType, m.created_at as createdAt,

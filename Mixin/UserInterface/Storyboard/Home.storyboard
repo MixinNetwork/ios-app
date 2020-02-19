@@ -167,7 +167,7 @@
                                                                             <rect key="frame" x="0.0" y="2.5" width="0.0" height="12"/>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="You added OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSl-Co-y1G">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="248.5" height="17"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="226.5" height="17"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                             <color key="textColor" name="text_accessory"/>
                                                                             <nil key="highlightedColor"/>
@@ -176,11 +176,27 @@
                                                                             </userDefinedRuntimeAttributes>
                                                                         </label>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_chat_pin" translatesAutoresizingMaskIntoConstraints="NO" id="p7w-4E-Qsn">
-                                                                            <rect key="frame" x="251.5" y="-5.5" width="0.0" height="28"/>
+                                                                            <rect key="frame" x="229.5" y="-5.5" width="0.0" height="28"/>
                                                                         </imageView>
                                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" image="ic_chat_mute" translatesAutoresizingMaskIntoConstraints="NO" id="EPn-2I-a8Z">
-                                                                            <rect key="frame" x="251.5" y="-5.5" width="0.0" height="28"/>
+                                                                            <rect key="frame" x="229.5" y="-5.5" width="0.0" height="28"/>
                                                                         </imageView>
+                                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="@" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a00-2x-xHL">
+                                                                            <rect key="frame" x="232.5" y="0.5" width="16" height="16"/>
+                                                                            <color key="backgroundColor" name="theme"/>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="height" constant="16" id="jSl-gv-fJP"/>
+                                                                            </constraints>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                            <userDefinedRuntimeAttributes>
+                                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular12"/>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                                    <integer key="value" value="8"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                            </userDefinedRuntimeAttributes>
+                                                                        </label>
                                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="1" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQr-Dj-Umd" customClass="ConversationUnreadCountLabel" customModule="Mixin" customModuleProvider="target">
                                                                             <rect key="frame" x="254.5" y="1.5" width="14.5" height="14.5"/>
                                                                             <color key="backgroundColor" name="theme"/>
@@ -195,6 +211,9 @@
                                                                             </userDefinedRuntimeAttributes>
                                                                         </label>
                                                                     </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="a00-2x-xHL" firstAttribute="width" secondItem="a00-2x-xHL" secondAttribute="height" multiplier="1:1" priority="999" id="qny-nL-Kn5"/>
+                                                                    </constraints>
                                                                 </stackView>
                                                             </subviews>
                                                         </stackView>
@@ -211,6 +230,7 @@
                                                 <connections>
                                                     <outlet property="avatarView" destination="BtE-5x-Sut" id="r0k-3K-u1b"/>
                                                     <outlet property="contentLabel" destination="BSl-Co-y1G" id="drM-bz-RG0"/>
+                                                    <outlet property="mentionLabel" destination="a00-2x-xHL" id="rPe-FJ-pud"/>
                                                     <outlet property="messageStatusImageView" destination="bjN-Qt-WnU" id="Wxf-Re-d2e"/>
                                                     <outlet property="messageTypeImageView" destination="lWU-l1-a3S" id="ots-gu-kcB"/>
                                                     <outlet property="muteImageView" destination="EPn-2I-a8Z" id="jP3-Ws-MLb"/>

@@ -944,6 +944,11 @@ extension ConversationViewController: UITableViewDelegate {
             viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
+        if let messageId = messageId {
+            dataSource.queue.async {
+                MessageMentionDAO.shared.read(messageId: messageId)
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

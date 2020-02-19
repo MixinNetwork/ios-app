@@ -11,6 +11,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTypeImageView: UIImageView!
     @IBOutlet weak var unreadLabel: InsetLabel!
+    @IBOutlet weak var mentionLabel: UILabel!
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
@@ -132,17 +133,23 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             }
         }
-
-        if item.unseenMessageCount > 0 {
-            unreadLabel.isHidden = false
-            unreadLabel.text = "\(item.unseenMessageCount)"
+        
+        let hasUnreadMessage = item.unseenMessageCount > 0
+        let hasUnreadMention = item.unseenMentionCount > 0
+        if hasUnreadMessage || hasUnreadMessage {
             pinImageView.isHidden = true
             muteImageView.isHidden = true
         } else {
-            unreadLabel.isHidden = true
             pinImageView.isHidden = item.pinTime == nil
             muteImageView.isHidden = !item.isMuted
         }
+        if hasUnreadMessage {
+            unreadLabel.isHidden = false
+            unreadLabel.text = "\(item.unseenMessageCount)"
+        } else {
+            unreadLabel.isHidden = true
+        }
+        mentionLabel.isHidden = !hasUnreadMention
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {

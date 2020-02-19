@@ -459,7 +459,7 @@ extension SendMessageService {
             blazeMessage.params?.quoteMessageId = message.quoteMessageId
         }
 
-        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
+        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.data == nil {
                 let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue

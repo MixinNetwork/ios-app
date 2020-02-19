@@ -36,7 +36,7 @@ extension MessageItem {
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
-            actions = [.reply, .delete]
+            actions = [.forward, .reply, .delete]
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
             actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {

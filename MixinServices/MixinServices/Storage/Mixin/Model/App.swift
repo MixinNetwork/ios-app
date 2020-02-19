@@ -10,6 +10,7 @@ public struct App: BaseCodable {
     public let name: String
     public let iconUrl: String
     public var capabilities: [String]?
+    public var resourcePatterns: [String]?
     public let homeUri: String
     public let creatorId: String
     
@@ -21,6 +22,7 @@ public struct App: BaseCodable {
         case name
         case iconUrl = "icon_url"
         case capabilities = "capabilites"
+        case resourcePatterns = "resource_patterns"
         case homeUri = "home_uri"
         case creatorId = "creator_id"
         

@@ -244,7 +244,7 @@ extension MessageReceiverViewController {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
                                                userId: myUserId)
-        if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") {
+        if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category == MessageCategory.APP_CARD.rawValue {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
             newMessage.thumbImage = message.thumbImage

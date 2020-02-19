@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import MixinServices
 
 public protocol CallMessageCoordinator: class {
     var hasActiveCall: Bool { get }
@@ -432,7 +433,8 @@ public class ReceiveMessageService: MixinService {
                 content = decoded
             }
             let message = Message.createMessage(textMessage: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+            let mention = MessageMention(message: message, isComposedByMe: false)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, mention: mention)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText) else {
                 return

@@ -26,6 +26,31 @@ public struct MessageMention: BaseCodable {
         self.hasRead = hasRead
     }
     
+    public init?(message: Message, isComposedByMe: Bool) {
+        guard message.category.hasSuffix("_TEXT"), let content = message.content else {
+            return nil
+        }
+        let numbers = MessageMentionDetector.mentionedIdentityNumbers(from: content)
+        guard !numbers.isEmpty else {
+            return nil
+        }
+        var mentions = MessageMention.Mentions()
+        for number in numbers {
+            mentions[number] = UserDAO.shared.fullname(identityNumber: number)
+        }
+        guard let json = try? JSONEncoder.default.encode(mentions) else {
+            return nil
+        }
+        self.conversationId = message.conversationId
+        self.messageId = message.messageId
+        self.mentionsJson = json
+        if isComposedByMe {
+            self.hasRead = true
+        } else {
+            self.hasRead = mentions[myIdentityNumber] == nil
+        }
+    }
+    
 }
 
 extension MessageMention {

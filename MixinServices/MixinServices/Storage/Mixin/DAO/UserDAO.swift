@@ -99,6 +99,15 @@ public final class UserDAO {
         return values.first
     }
     
+    public func userId(identityNumber: String) -> String? {
+        let values = MixinDatabase.shared.getStringValues(column: User.Properties.userId,
+                                                          tableName: User.tableName,
+                                                          condition: User.Properties.identityNumber == identityNumber,
+                                                          orderBy: nil,
+                                                          limit: 1)
+        return values.first
+    }
+    
     public func updateAccount(account: Account) {
         MixinDatabase.shared.insertOrReplace(objects: [User.createUser(from: account)])
     }

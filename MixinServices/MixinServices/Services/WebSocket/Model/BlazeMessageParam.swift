@@ -20,7 +20,9 @@ struct BlazeMessageParam: Codable {
 
     var representativeId: String? = nil
     var conversationChecksum: String? = nil
-
+    
+    var mentions: [String]? = nil
+    
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case recipientId = "recipient_id"
@@ -102,4 +104,5 @@ extension BlazeMessageParam {
         self.representativeId = representativeId
         self.conversationChecksum = checksum
     }
+    
 }

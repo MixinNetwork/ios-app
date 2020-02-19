@@ -197,6 +197,7 @@ extension MessageReceiverViewController {
         case photo(UIImage)
         case text(String)
         case video(URL)
+        case appCard(AppCardData)
     }
     
     static func makeMessage(content: MessageContent, to conversationId: String) -> Message? {
@@ -211,6 +212,8 @@ extension MessageReceiverViewController {
             return makeMessage(text: text, to: conversationId)
         case .video(let url):
             return makeMessage(videoUrl: url, to: conversationId)
+        case .appCard(let appCard):
+            return makeMessage(appCard: appCard, to: conversationId)
         }
     }
     
@@ -306,6 +309,14 @@ extension MessageReceiverViewController {
         message.sharedUserId = userId
         let transferData = TransferContactData(userId: userId)
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        return message
+    }
+
+    static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
+        var message = Message.createMessage(category: MessageCategory.APP_CARD.rawValue,
+                                            conversationId: conversationId,
+                                            userId: myUserId)
+        message.content = try! JSONEncoder().encode(appCard).base64EncodedString()
         return message
     }
     

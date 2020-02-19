@@ -20,6 +20,10 @@ public final class UserDAO {
     FROM participants p, apps a, users u
     WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id
     """
+
+    public func allAppIds() -> [String] {
+        MixinDatabase.shared.getStringValues(column: User.Properties.userId.asColumnResult(), tableName: User.tableName, condition: User.Properties.appId.isNotNull())
+    }
     
     public func deleteUser(userId: String) {
         MixinDatabase.shared.delete(table: User.tableName, condition: User.Properties.userId == userId)

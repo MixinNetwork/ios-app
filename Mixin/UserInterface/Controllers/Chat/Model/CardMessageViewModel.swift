@@ -24,10 +24,10 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     let sentLeftMargin: CGFloat = 16
     let maxRightMargin: CGFloat = 24
     let minRightMargin: CGFloat = 12
-    let minContentWidth: CGFloat = 140
+    let minContentWidth: CGFloat = 150
     
     override var maxContentWidth: CGFloat {
-        252
+        280
     }
     
     var contentWidth: CGFloat = 220

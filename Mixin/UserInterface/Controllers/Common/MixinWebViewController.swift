@@ -89,6 +89,10 @@ class MixinWebViewController: WebViewController {
         
         switch context.style {
         case .app:
+            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
+                self.shareAppCardAction(currentUrl: currentUrl)
+            }))
+
             controller.addAction(UIAlertAction(title: R.string.localizable.setting_about(), style: .default, handler: { (_) in
                 self.aboutAction()
             }))
@@ -237,7 +241,36 @@ extension MixinWebViewController {
         UIPasteboard.general.string = currentUrl.absoluteString
         showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
     }
-    
+
+    private func shareAppCardAction(currentUrl: URL) {
+        guard case let .app(appId, _, _) = context.style else {
+            return
+        }
+
+        let webTitle = webView.title ?? titleLabel.text ?? currentUrl.absoluteString
+        DispatchQueue.global().async { [weak self] in
+            var app = AppDAO.shared.getApp(appId: appId)
+            if app == nil {
+                if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                    UserDAO.shared.updateUsers(users: [response])
+                    app = response.app
+                }
+            }
+            
+            DispatchQueue.main.async {
+                let validUrl = currentUrl.absoluteString + "/"
+                if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                    let appCard = AppCardData(appId: app.appId, iconUrl: iconUrl, title: webTitle, description: app.name, action: currentUrl)
+                    let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
+    }
+
     private func shareUrlAction(currentUrl: URL) {
         guard case .webPage = context.style else {
             return

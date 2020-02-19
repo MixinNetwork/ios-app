@@ -73,7 +73,7 @@ extension SendMessageService {
         if !message.category.hasPrefix("WEBRTC_") {
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         }
-        if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) {
+        if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
             UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))

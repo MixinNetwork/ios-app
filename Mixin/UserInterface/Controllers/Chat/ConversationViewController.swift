@@ -494,9 +494,9 @@ class ConversationViewController: UIViewController {
                         self?.navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
                     }
                 }
-            } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
+            } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
-                openAction(action: action.absoluteString, sendAppId: message.userId)
+                openAppCard(appCard: appCard, sendUserId: message.userId)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -1011,7 +1011,7 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let appButtons = message.appButtons, index < appButtons.count else {
             return
         }
-        openAction(action: appButtons[index].action, sendAppId: message.userId)
+        openAction(action: appButtons[index].action, sendUserId: message.userId)
     }
     
 }
@@ -1470,30 +1470,61 @@ extension ConversationViewController {
         titleStackView.isHidden = false
     }
 
-    private func openAction(action: String, sendAppId: String) {
-        guard !action.isEmpty else {
-            return
-        }
-        guard action.hasPrefix("input:"), action.count > 6 else {
-            if let url = URL(string: action) {
-                if let app = conversationInputViewController?.opponentApp, app.appId == sendAppId {
-                    open(url: url, app: app)
-                } else {
-                    DispatchQueue.global().async { [weak self] in
-                        var app = AppDAO.shared.getApp(ofUserId: sendAppId)
-                        if app == nil {
-                            if case let .success(response) = UserAPI.shared.showUser(userId: sendAppId) {
-                                UserDAO.shared.updateUsers(users: [response])
-                                app = response.app
-                            }
-                        }
-                        DispatchQueue.main.async {
-                            self?.open(url: url, app: app)
-                        }
+    private func openAppCard(appCard: AppCardData, sendUserId: String) {
+        let action = appCard.action.absoluteString
+        if let appId = appCard.appId, !appId.isEmpty {
+            DispatchQueue.global().async { [weak self] in
+                var app = AppDAO.shared.getApp(appId: appId)
+                if app == nil {
+                    if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                        UserDAO.shared.updateUsers(users: [response])
+                        app = response.app
+                    }
+                }
+
+                DispatchQueue.main.async {
+                    let validUrl = action + "/"
+                    if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                        self?.open(url: appCard.action, app: app)
+                    } else {
+                        self?.openAction(action: appCard.action.absoluteString, sendUserId: sendUserId)
                     }
                 }
             }
+        } else {
+            openAction(action: action, sendUserId: sendUserId)
+        }
+    }
+
+    private func openAction(action: String, sendUserId: String) {
+        guard !openInputAction(action: action) else {
             return
+        }
+        guard let url = URL(string: action) else {
+            return
+        }
+
+        if let app = conversationInputViewController?.opponentApp, app.appId == sendUserId {
+            open(url: url, app: app)
+        } else {
+            DispatchQueue.global().async { [weak self] in
+                var app = AppDAO.shared.getApp(ofUserId: sendUserId)
+                if app == nil {
+                    if case let .success(response) = UserAPI.shared.showUser(userId: sendUserId) {
+                        UserDAO.shared.updateUsers(users: [response])
+                        app = response.app
+                    }
+                }
+                DispatchQueue.main.async {
+                    self?.open(url: url, app: app)
+                }
+            }
+        }
+    }
+
+    private func openInputAction(action: String) -> Bool {
+        guard action.hasPrefix("input:"), action.count > 6 else {
+            return false
         }
 
         let inputAction = String(action.suffix(action.count - 6))
@@ -1502,6 +1533,8 @@ extension ConversationViewController {
                                    quoteMessageId: nil,
                                    value: inputAction)
         }
+
+        return true
     }
 
     private func open(url: URL, app: App? = nil) {

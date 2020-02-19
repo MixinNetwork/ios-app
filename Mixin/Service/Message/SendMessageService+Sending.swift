@@ -71,8 +71,24 @@ extension SendMessageService {
                 let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: user.userId, muteUntil: "")
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
             }
+            
+            var mention: MessageMention?
+            if message.category.hasSuffix("_TEXT"), let content = msg.content {
+                let numbers = MessageMentionDetector.mentionedIdentityNumbers(from: content)
+                if !numbers.isEmpty {
+                    var mentions = MessageMention.Mentions()
+                    for number in numbers {
+                        mentions[number] = UserDAO.shared.fullname(identityNumber: number)
+                    }
+                    mention = MessageMention(conversationId: msg.conversationId,
+                                             messageId: msg.messageId,
+                                             mentionsJson: try? JSONEncoder.default.encode(mentions),
+                                             hasRead: true)
+                }
+            }
+            
             if !message.category.hasPrefix("WEBRTC_") {
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "", mention: mention)
             }
             if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                 SendMessageService.shared.sendMessage(message: msg, data: message.content)

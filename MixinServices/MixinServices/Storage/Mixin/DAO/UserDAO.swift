@@ -90,6 +90,15 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }
     
+    public func fullname(identityNumber: String) -> String? {
+        let values = MixinDatabase.shared.getStringValues(column: User.Properties.fullName,
+                                                          tableName: User.tableName,
+                                                          condition: User.Properties.identityNumber == identityNumber,
+                                                          orderBy: nil,
+                                                          limit: 1)
+        return values.first
+    }
+    
     public func updateAccount(account: Account) {
         MixinDatabase.shared.insertOrReplace(objects: [User.createUser(from: account)])
     }

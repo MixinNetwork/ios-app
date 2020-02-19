@@ -351,12 +351,19 @@ public final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    public func insertMessage(message: Message, messageSource: String) {
+    public func insertMessage(message: Message, messageSource: String, mention: MessageMention? = nil) {
         var message = message
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
             message.quoteContent = quoteContent
         }
-        try! insertMessage(database: MixinDatabase.shared.database, message: message, messageSource: messageSource)
+        if let mention = mention {
+            MixinDatabase.shared.transaction { (db) in
+                try db.insert(objects: [mention], intoTable: MessageMention.tableName)
+                try insertMessage(database: db, message: message, messageSource: messageSource)
+            }
+        } else {
+            try! insertMessage(database: MixinDatabase.shared.database, message: message, messageSource: messageSource)
+        }
     }
     
     public func insertMessage(database: Database, message: Message, messageSource: String) throws {

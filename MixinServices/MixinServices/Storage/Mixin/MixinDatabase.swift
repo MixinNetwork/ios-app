@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let databaseVersion: Int = 12
+    private static let version: Int = 13
     
     override public var database: Database! {
         get { _database }
@@ -17,14 +17,14 @@ public class MixinDatabase: BaseDatabase {
         _database = Database(path: AppGroupContainer.mixinDatabaseUrl.path)
         do {
             try database.run(transaction: {
-                var currentVersion = try database.getDatabaseVersion()
-                if currentVersion == 0 {
+                var localVersion = try database.getDatabaseVersion()
+                if localVersion == 0 {
                     // UserDefaults migration is performed before database opening
                     // Database won't be opened if UserDefaults migration fails (e.g. launched in App Extension)
                     // As long as database is open this is guaranteed running in main App
-                    currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                    localVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
                 }
-                try self.createBefore(database: database, currentVersion: currentVersion)
+                try self.createBefore(database: database, localVersion: localVersion)
                 
                 try database.create(of: Asset.self)
                 try database.create(table: Asset.topAssetsTableName, of: Asset.self)
@@ -47,7 +47,9 @@ public class MixinDatabase: BaseDatabase {
                 try database.create(of: FavoriteApp.self)
                 try database.create(of: ParticipantSession.self)
                 
-                try self.createAfter(database: database, currentVersion: currentVersion)
+                try database.create(of: MessageMention.self)
+                
+                try self.createAfter(database: database, localVersion: localVersion)
                 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
@@ -56,66 +58,67 @@ public class MixinDatabase: BaseDatabase {
                 if clearSentSenderKey {
                     try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
                 }
-                try database.setDatabaseVersion(version: MixinDatabase.databaseVersion)
+                try database.setDatabaseVersion(version: MixinDatabase.version)
             })
         } catch {
             reporter.report(error: error)
         }
     }
     
-    private func createBefore(database: Database, currentVersion: Int) throws {
-        guard currentVersion > 0 else {
+    private func createBefore(database: Database, localVersion: Int) throws {
+        guard localVersion > 0 else {
             return
         }
         
-        if currentVersion < 4 {
+        if localVersion < 4 {
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index1").execute()
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index2").execute()
         }
         
-        if currentVersion < 5 {
+        if localVersion < 5 {
             try database.drop(table: Sticker.tableName)
             try database.drop(table: "sticker_albums")
         }
         
-        if currentVersion < 6 {
+        if localVersion < 6 {
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_status_index").execute()
             try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_update").execute()
         }
         
-        if currentVersion < 7 {
+        if localVersion < 7 {
             try database.drop(table: Address.tableName)
             try database.drop(table: Asset.tableName)
             try database.drop(table: Asset.topAssetsTableName)
         }
         
-        if currentVersion < 8 {
+        if localVersion < 8 {
             try database.drop(table: "sent_sender_keys")
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
         }
         
-        if currentVersion < 9 {
+        if localVersion < 9 {
             try database.drop(table: "resend_messages")
         }
     }
     
-    private func createAfter(database: Database, currentVersion: Int) throws {
-        guard currentVersion > 0 else {
+    private func createAfter(database: Database, localVersion: Int) throws {
+        guard localVersion > 0 else {
             return
         }
         
-        if currentVersion < 4, try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
+        if localVersion < 4, try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
             try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
         
-        if currentVersion < 8 {
+        if localVersion < 8 {
             try database.update(maps: [(Job.Properties.isHttpMessage, true)], tableName: Job.tableName, condition: Job.Properties.action == JobAction.SEND_ACK_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_ACK_MESSAGES.rawValue || Job.Properties.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue)
         }
 
-        if currentVersion < 11 {
+        if localVersion < 11 {
             try database.prepareUpdateSQL(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''").execute()
         }
     }
+    
 }
 
 extension MixinDatabase {

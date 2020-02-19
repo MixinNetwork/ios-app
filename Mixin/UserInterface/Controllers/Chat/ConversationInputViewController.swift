@@ -304,6 +304,7 @@ class ConversationInputViewController: UIViewController {
         dataSource.sendMessage(type: .SIGNAL_TEXT,
                                quoteMessageId: quote?.message.messageId,
                                value: trimmedMessageDraft)
+        mentionRanges.removeAll()
         textView.text = ""
         textViewDidChange(textView)
         quote = nil

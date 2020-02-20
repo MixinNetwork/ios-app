@@ -26,7 +26,17 @@ public class BaseDatabase {
     public func getDatabaseVersion() -> Int {
         return try! database.getDatabaseVersion()
     }
-    
+
+    public func setCheckPoint(isIgnoreCheck: Bool) {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            return
+        }
+        guard database != nil else {
+            return
+        }
+        database.setCheckPoint(isIgnoreCheck: isIgnoreCheck)
+    }
+
     public func trace() {
         guard !BaseDatabase.isTraced else {
             return
@@ -214,6 +224,13 @@ extension Database {
 }
 
 extension Database {
+
+    public convenience init(path: String) {
+        self.init(withFileURL: URL(fileURLWithPath: path))
+        if isAppExtension {
+            self.setCheckPoint(isIgnoreCheck: true)
+        }
+    }
     
     public func setDatabaseVersion(version: Int) throws {
         try prepareUpdateSQL(sql: "PRAGMA user_version = \(version)").execute()

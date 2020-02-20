@@ -6,7 +6,7 @@ public final class TaskDatabase: BaseDatabase {
     
     public static let shared = TaskDatabase()
     
-    private lazy var _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
+    private lazy var _database = Database(path: AppGroupContainer.taskDatabaseUrl.path)
     
     override var database: Database! {
         get { return _database }
@@ -14,7 +14,7 @@ public final class TaskDatabase: BaseDatabase {
     }
     
     public func initDatabase() {
-        _database = Database(withPath: AppGroupContainer.taskDatabaseUrl.path)
+        _database = Database(path: AppGroupContainer.taskDatabaseUrl.path)
         do {
             try database.run(transaction: {
                 var currentVersion = try database.getDatabaseVersion()

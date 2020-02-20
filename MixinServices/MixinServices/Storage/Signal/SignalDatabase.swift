@@ -7,7 +7,7 @@ public class SignalDatabase: BaseDatabase {
     
     public static let shared = SignalDatabase()
     
-    private var _database = Database(withPath: AppGroupContainer.signalDatabaseUrl.path)
+    private var _database = Database(path: AppGroupContainer.signalDatabaseUrl.path)
     
     override var database: Database! {
         get { return _database }

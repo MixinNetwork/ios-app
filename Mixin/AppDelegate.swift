@@ -61,6 +61,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { (time) in
             ReceiveMessageService.shared.isStopProcessMessages = true
+            TaskDatabase.shared.setCheckPoint(isIgnoreCheck: true)
+            MixinDatabase.shared.setCheckPoint(isIgnoreCheck: true)
+            SignalDatabase.shared.setCheckPoint(isIgnoreCheck: true)
             WebSocketService.shared.disconnect()
             self.cancelBackgroundTask()
         }
@@ -77,6 +80,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         cancelBackgroundTask()
         ReceiveMessageService.shared.isStopProcessMessages = false
+        TaskDatabase.shared.setCheckPoint(isIgnoreCheck: false)
+        MixinDatabase.shared.setCheckPoint(isIgnoreCheck: false)
+        SignalDatabase.shared.setCheckPoint(isIgnoreCheck: false)
         WebSocketService.shared.connectIfNeeded()
         
         if let conversationId = UIApplication.currentConversationId() {

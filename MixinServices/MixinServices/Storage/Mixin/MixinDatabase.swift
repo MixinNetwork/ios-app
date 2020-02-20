@@ -11,10 +11,10 @@ public class MixinDatabase: BaseDatabase {
         set { }
     }
     
-    private var _database = Database(withPath: AppGroupContainer.mixinDatabaseUrl.path)
+    private var _database = Database(path: AppGroupContainer.mixinDatabaseUrl.path)
     
     public func initDatabase(clearSentSenderKey: Bool = false) {
-        _database = Database(withPath: AppGroupContainer.mixinDatabaseUrl.path)
+        _database = Database(path: AppGroupContainer.mixinDatabaseUrl.path)
         do {
             try database.run(transaction: {
                 var currentVersion = try database.getDatabaseVersion()

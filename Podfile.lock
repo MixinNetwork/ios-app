@@ -236,7 +236,7 @@ CHECKOUT OPTIONS:
     :commit: 7842e566c750e38920d90e0b25e38e63bfd117e7
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   WCDB.swift:
-    :commit: 6eab0d156a1e73125073c557b29566fd92910f34
+    :commit: 0f3602760dd625f5aa53b1ad83f5c09a1bb8e4f8
     :git: https://github.com/MixinNetwork/wcdb.git
 
 SPEC CHECKSUMS:

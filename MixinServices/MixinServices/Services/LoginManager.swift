@@ -63,7 +63,7 @@ public final class LoginManager {
             if let data = try? JSONEncoder.default.encode(account) {
                 AppGroupUserDefaults.Account.serializedAccount = data
             }
-            NotificationCenter.default.post(name: LoginManager.accountDidChangeNotification, object: self)
+            NotificationCenter.default.postOnMain(name: LoginManager.accountDidChangeNotification, object: self)
             if updateUserTable {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)

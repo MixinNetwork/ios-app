@@ -482,6 +482,9 @@ extension ConversationInputViewController {
     }
     
     @objc private func saveDraft() {
+        guard parent != nil else {
+            return
+        }
         AppGroupUserDefaults.User.conversationDraft[dataSource.conversationId] = trimmedMessageDraft
     }
     

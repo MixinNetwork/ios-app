@@ -1,0 +1,5 @@
+import Starscream
+
+class StarscreamWebSocket {
+
+}

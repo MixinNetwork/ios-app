@@ -8,7 +8,12 @@ import MixinServices
 
 class ConversationDataSource {
     
-    static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
+    enum UserInfoKey {
+        static let unreadMessageCount = "unread_count"
+        static let mentionedMessageIds = "mention_ids"
+    }
+    
+    static let newMessageOutOfVisibleBoundsNotification = Notification.Name("one.mixin.ios.conversation-datasource.new.msg")
     
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
@@ -69,6 +74,13 @@ class ConversationDataSource {
             return nil
         }
         return IndexPath(row: rowCount - 1, section: section)
+    }
+    
+    var visibleMessageIds: [String] {
+        let ids = tableView?.indexPathsForVisibleRows?
+            .compactMap(viewModel(for:))
+            .map({ $0.message.messageId })
+        return ids ?? []
     }
     
     // MARK: - Interface
@@ -150,6 +162,7 @@ class ConversationDataSource {
         var initialIndexPath: IndexPath?
         var offset: CGFloat = 0
         let unreadMessagesCount = MessageDAO.shared.getUnreadMessagesCount(conversationId: conversationId)
+        var unreadMentionMessageIds = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
         
         if let initialMessageId = initialMessageId {
             initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
@@ -194,8 +207,18 @@ class ConversationDataSource {
             } else {
                 scrolling()
             }
-            if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
-                NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
+            if ConversationViewController.positions[self.conversationId] != nil {
+                var userInfo = [String: Any]()
+                if !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
+                    userInfo[Self.UserInfoKey.unreadMessageCount] = unreadMessagesCount
+                }
+                unreadMentionMessageIds.removeAll(where: self.visibleMessageIds.contains)
+                if !unreadMentionMessageIds.isEmpty {
+                    userInfo[Self.UserInfoKey.mentionedMessageIds] = unreadMentionMessageIds
+                }
+                NotificationCenter.default.post(name: Self.newMessageOutOfVisibleBoundsNotification,
+                                                object: self,
+                                                userInfo: userInfo)
             }
             ConversationViewController.positions[self.conversationId] = nil
             if UIApplication.shared.applicationState == .active {
@@ -517,7 +540,7 @@ extension ConversationDataSource {
                     }
                 }
             } else {
-                NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
+                postNewMessageOutOfBoundsNotification(message: message)
             }
         } else {
             loadedMessageIds.insert(message.messageId)
@@ -1059,8 +1082,20 @@ extension ConversationDataSource {
                     tableView.scrollToBottom(animated: false)
                 }
             } else {
-                NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
+                postNewMessageOutOfBoundsNotification(message: message)
             }
+        }
+    }
+    
+    func postNewMessageOutOfBoundsNotification(message: MessageItem) {
+        var userInfo: [String: Any] = [UserInfoKey.unreadMessageCount: 1]
+        if message.mentions?[myIdentityNumber] != nil {
+            userInfo[UserInfoKey.mentionedMessageIds] = [message.messageId]
+        }
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Self.newMessageOutOfVisibleBoundsNotification,
+                                            object: self,
+                                            userInfo: userInfo)
         }
     }
     

@@ -13,6 +13,8 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var announcementButton: UIButton!
+    @IBOutlet weak var mentionWrapperView: UIView!
+    @IBOutlet weak var mentionCountLabel: InsetLabel!
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
@@ -26,6 +28,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
     
@@ -52,7 +55,7 @@ class ConversationViewController: UIViewController {
     private var didManuallyStoppedTableViewDecelerating = false
     private var numberOfParticipants: Int?
     private var isMember = true
-    
+    private var messageIdToFlashAfterAnimationFinished: String?
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
@@ -92,6 +95,26 @@ class ConversationViewController: UIViewController {
             }
             unreadBadgeLabel.isHidden = unreadBadgeValue <= 0
             unreadBadgeLabel.text = unreadBadgeValue <= 99 ? String(unreadBadgeValue) : "99+"
+        }
+    }
+    
+    private var unreadMentionMessageIds: [String] = [] {
+        didSet {
+            let wrapperAlpha: CGFloat
+            if unreadMentionMessageIds.isEmpty {
+                mentionWrapperHeightConstraint.constant = 4
+                mentionCountLabel.isHidden = true
+                wrapperAlpha = 0
+            } else {
+                mentionWrapperHeightConstraint.constant = 48
+                mentionCountLabel.text = "\(unreadMentionMessageIds.count)"
+                mentionCountLabel.isHidden = false
+                wrapperAlpha = 1
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.mentionWrapperView.alpha = wrapperAlpha
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
@@ -166,7 +189,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
     }
@@ -268,13 +291,29 @@ class ConversationViewController: UIViewController {
         unreadBadgeValue = 0
         if let quotingMessageId = quotingMessageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
             self.quotingMessageId = nil
+            scheduleCellBackgroundFlash(messageId: quotingMessageId)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            blinkCellBackground(at: indexPath)
         } else if let quotingMessageId = quotingMessageId, MessageDAO.shared.hasMessage(id: quotingMessageId) {
             self.quotingMessageId = nil
-            reloadWithMessageIdAndBlinkTheCell(quotingMessageId, upwards: true)
+            messageIdToFlashAfterAnimationFinished = quotingMessageId
+            reloadWithMessageId(quotingMessageId, scrollUpwards: true)
         } else {
             dataSource?.scrollToFirstUnreadMessageOrBottom()
+        }
+    }
+    
+    @IBAction func scrollToMentionAction(_ sender: Any) {
+        guard let id = unreadMentionMessageIds.first else {
+            return
+        }
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
+            unreadMentionMessageIds.removeFirst()
+            scheduleCellBackgroundFlash(messageId: id)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        } else if MessageDAO.shared.hasMessage(id: id) {
+            unreadMentionMessageIds.removeFirst()
+            messageIdToFlashAfterAnimationFinished = id
+            reloadWithMessageId(id, scrollUpwards: true)
         }
     }
     
@@ -437,11 +476,12 @@ class ConversationViewController: UIViewController {
             if let quoteMessageId = viewModel.message.quoteMessageId, !quoteMessageId.isEmpty, let quote = cell.quotedMessageViewIfLoaded, quote.bounds.contains(recognizer.location(in: quote)) {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
+                    scheduleCellBackgroundFlash(messageId: quoteMessageId)
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-                    blinkCellBackground(at: indexPath)
                 } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                     quotingMessageId = message.messageId
-                    reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
+                    messageIdToFlashAfterAnimationFinished = quoteMessageId
+                    reloadWithMessageId(quoteMessageId, scrollUpwards: false)
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
@@ -585,10 +625,12 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func didAddMessageOutOfBounds(_ notification: Notification) {
-        guard let count = notification.object as? Int else {
-            return
+        if let count = notification.userInfo?[ConversationDataSource.UserInfoKey.unreadMessageCount] as? Int {
+            unreadBadgeValue += count
         }
-        unreadBadgeValue += count
+        if let ids = notification.userInfo?[ConversationDataSource.UserInfoKey.mentionedMessageIds] as? [String] {
+            unreadMentionMessageIds.append(contentsOf: ids)
+        }
     }
     
     @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
@@ -916,6 +958,11 @@ extension ConversationViewController: UITableViewDelegate {
         DispatchQueue.main.async {
             self.tableView.setFloatingHeaderViewsHidden(true, animated: true, delay: 1)
         }
+        if let id = self.messageIdToFlashAfterAnimationFinished, let indexPath = self.dataSource.indexPath(where: { $0.messageId == id }) {
+            if self.flashCellBackground(at: indexPath) {
+                self.messageIdToFlashAfterAnimationFinished = nil
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -945,6 +992,9 @@ extension ConversationViewController: UITableViewDelegate {
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
         if let messageId = messageId {
+            if let index = unreadMentionMessageIds.firstIndex(of: messageId) {
+                unreadMentionMessageIds.remove(at: index)
+            }
             dataSource.queue.async {
                 MessageMentionDAO.shared.read(messageId: messageId)
             }
@@ -1330,22 +1380,29 @@ extension ConversationViewController {
         tableView.scrollIndicatorInsets.top = tableView.contentInset.top
     }
     
-    private func blinkCellBackground(at indexPath: IndexPath) {
-        let animation = { (indexPath: IndexPath) in
-            guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
-                return
-            }
-            cell.updateAppearance(highlight: true, animated: false)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                cell.updateAppearance(highlight: false, animated: true)
-            })
+    // Returns true if the animation succeeds to perform, or false if cell not found
+    private func flashCellBackground(at indexPath: IndexPath) -> Bool {
+        guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
+            return false
         }
-        if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(indexPath) {
-            animation(indexPath)
+        cell.updateAppearance(highlight: true, animated: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            cell.updateAppearance(highlight: false, animated: true)
+        })
+        return true
+    }
+    
+    private func scheduleCellBackgroundFlash(messageId: String) {
+        let visibleIndexPath = tableView.indexPathsForVisibleRows?.first(where: { (indexPath) -> Bool in
+            guard let viewModel = dataSource.viewModel(for: indexPath) else {
+                return false
+            }
+            return viewModel.message.messageId == messageId
+        })
+        if let indexPath = visibleIndexPath {
+            flashCellBackground(at: indexPath)
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                animation(indexPath)
-            })
+            messageIdToFlashAfterAnimationFinished = messageId
         }
     }
     
@@ -1444,6 +1501,11 @@ extension ConversationViewController {
         let keyword = conversationInputViewController.textView.inputingMentionToken
         userHandleViewController.reload(with: keyword) { (hasContent) in
             self.setUserHandleHidden(!hasContent)
+        }
+        UIView.performWithoutAnimation {
+            var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
+            ids.removeAll(where: dataSource.visibleMessageIds.contains)
+            unreadMentionMessageIds = ids
         }
         hideLoading()
     }
@@ -1658,24 +1720,21 @@ extension ConversationViewController {
         present(alc, animated: true, completion: nil)
     }
     
-    private func reloadWithMessageIdAndBlinkTheCell(_ messageId: String, upwards: Bool) {
-        let scroll = upwards ? dataSource.scrollToBottomAndReload : dataSource.scrollToTopAndReload
+    private func reloadWithMessageId(_ messageId: String, scrollUpwards: Bool) {
+        let scroll = scrollUpwards ? dataSource.scrollToBottomAndReload : dataSource.scrollToTopAndReload
+        let flashingId = self.messageIdToFlashAfterAnimationFinished
+        self.messageIdToFlashAfterAnimationFinished = nil
         scroll(messageId, {
             guard let indexPath = self.dataSource?.indexPath(where: { $0.messageId == messageId }) else {
                 return
             }
-            if upwards {
+            if scrollUpwards {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             } else {
                 self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
-            UIView.animate(withDuration: 0.3, animations: {
-                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
-            }, completion: { (_) in
-                if let indexPath = self.dataSource.indexPath(where: { $0.messageId == messageId }) {
-                    self.blinkCellBackground(at: indexPath)
-                }
-            })
+            self.messageIdToFlashAfterAnimationFinished = flashingId
+            self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
     }
     

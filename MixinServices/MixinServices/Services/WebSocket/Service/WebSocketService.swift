@@ -186,6 +186,9 @@ extension WebSocketService: WebSocketDelegate {
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         if let error = error as? WSError, self.isReachable {
+            if error.type == .protocolError {
+                Logger.write(log: "[WebSocketService][ProtocolError][\(error.code)]...\(error.message)...", newSection: true)
+            }
             reporter.report(error: MixinServicesError.websocketDidDisconnect(error: error))
             
             if error.type == .writeTimeoutError {

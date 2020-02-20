@@ -106,22 +106,23 @@ extension MixinServicesError: CustomNSError {
             return ["isAsyncRequest": isAsyncRequest]
         case let .websocketDidDisconnect(error):
             userInfo = Self.basicUserInfo
-            userInfo["errorMessage"] = error.message
+            userInfo["errMessage"] = error.message
+            userInfo["errCode"] = "\(error.code)"
             switch error.type {
             case .outputStreamWriteError:
-                userInfo["errorType"] = "outputStreamWriteError"
+                userInfo["errType"] = "outputStreamWriteError"
             case .compressionError:
-                userInfo["errorType"] = "compressionError"
+                userInfo["errType"] = "compressionError"
             case .invalidSSLError:
-                userInfo["errorType"] = "invalidSSLError"
+                userInfo["errType"] = "invalidSSLError"
             case .writeTimeoutError:
-                userInfo["errorType"] = "writeTimeoutError"
+                userInfo["errType"] = "writeTimeoutError"
             case .protocolError:
-                userInfo["errorType"] = "protocolError"
+                userInfo["errType"] = "protocolError"
             case .upgradeError:
-                userInfo["errorType"] = "upgradeError"
+                userInfo["errType"] = "upgradeError"
             case .closeError:
-                userInfo["errorType"] = "closeError"
+                userInfo["errType"] = "closeError"
             }
         default:
             userInfo = [:]

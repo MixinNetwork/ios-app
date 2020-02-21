@@ -3,22 +3,23 @@ import Foundation
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
 
-    private let url: URL
-    private let protocols: [String]
+    private let host: String
 
-    private var socket: URLSessionWebSocketTask?
     private lazy var urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+    private var socket: URLSessionWebSocketTask?
 
     var delegate: WebSocketProviderDelegate?
+    var serverTime: String?
+    var isConnected: Bool = false
+    var queue: DispatchQueue
 
-    required init(url: URL, protocols: [String]?) {
-        self.url = url
-        self.protocols = protocols ?? []
+    init(host: String, queue: DispatchQueue) {
+        self.host = host
+        self.queue = queue
     }
 
-
-    func connect() {
-        socket = urlSession.webSocketTask(with: url, protocols: protocols)
+    func connect(request: URLRequest) {
+        socket = urlSession.webSocketTask(with: request)
         socket?.resume()
         socket?.receive(completionHandler: { [weak self](result) in
             guard let self = self else {
@@ -31,26 +32,32 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 }
                 self.delegate?.websocketDidReceiveData(socket: self, data: data)
             case let .failure(error):
-                break
+                #if DEBUG
+                print("[NativeWebSocket]Failed to receive message: \(error)")
+                #endif
+                reporter.report(error: error)
             }
         })
     }
 
-    func disconnect() {
-        socket?.cancel()
+    func disconnect(closeCode: UInt16) {
+        socket?.cancel(with: .normalClosure, reason: nil)
         socket = nil
-        delegate?.websocketDidDisconnect(socket: self, error: nil)
     }
 
     func sendPing() {
         socket?.sendPing(pongReceiveHandler: { (error) in
-
+            if let err = error {
+                reporter.report(error: err)
+            }
         })
     }
 
     func send(data: Data) {
         socket?.send(URLSessionWebSocketTask.Message.data(data)) { (error) in
-
+            if let err = error {
+                reporter.report(error: err)
+            }
         }
     }
 
@@ -64,7 +71,48 @@ extension NativeWebSocket: URLSessionWebSocketDelegate {
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        delegate?.websocketDidDisconnect(socket: self)
+        let errType: String
+        var errMessage = ""
+        var isSwitchNetwork = false
+        switch closeCode {
+        case .invalid:
+            errType = "invalid"
+        case .normalClosure:
+            errType = "normalClosure"
+        case .goingAway:
+            errType = "goingAway"
+        case .protocolError:
+            errType = "protocolError"
+        case .unsupportedData:
+            errType = "unsupportedData"
+        case .noStatusReceived:
+            errType = "noStatusReceived"
+            isSwitchNetwork = true
+        case .abnormalClosure:
+            errType = "abnormalClosure"
+        case .invalidFramePayloadData:
+            errType = "invalidFramePayloadData"
+        case .policyViolation:
+            errType = "policyViolation"
+        case .messageTooBig:
+            errType = "messageTooBig"
+        case .mandatoryExtensionMissing:
+            errType = "mandatoryExtensionMissing"
+        case .internalServerError:
+            errType = "internalServerError"
+        case .tlsHandshakeFailure:
+            errType = "tlsHandshakeFailure"
+        }
+
+        #if DEBUG
+        print("[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(reason ?? Data())")
+        #endif
+
+        delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: isSwitchNetwork)
+
+        if closeCode != .normalClosure {
+            reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: errType, errCode: closeCode.rawValue))
+        }
     }
 
 }

@@ -5,7 +5,7 @@ internal class HeartbeatService {
     
     var onOffline: (() -> Void)?
     
-    private let socket: WebSocket
+    private let socket: WebSocketProvider
     private let interval: TimeInterval = 15
     
     private weak var timer: Timer?
@@ -14,9 +14,8 @@ internal class HeartbeatService {
     private var receivedCount = 0
     private var isRunning = false
     
-    init(socket: WebSocket) {
+    init(socket: WebSocketProvider) {
         self.socket = socket
-        socket.pongDelegate = self
     }
     
     deinit {
@@ -32,13 +31,13 @@ internal class HeartbeatService {
             guard let self = self else {
                 return
             }
-            self.socket.callbackQueue.async {
+            self.socket.queue.async {
                 // Currently both start and stop are called from socket's callback queue
                 // Dispatch to the queue to avoid data race or locking overhead
                 if self.sentCount > self.receivedCount {
                     self.onOffline?()
                 } else {
-                    self.socket.write(ping: Data())
+                    self.socket.sendPing()
                     self.sentCount += 1
                 }
             }
@@ -57,12 +56,8 @@ internal class HeartbeatService {
         receivedCount = 0
         isRunning = false
     }
-    
-}
 
-extension HeartbeatService: WebSocketPongDelegate {
-    
-    func websocketDidReceivePong(socket: WebSocketClient, data: Data?) {
+    func websocketDidReceivePong() {
         guard isRunning else {
             return
         }

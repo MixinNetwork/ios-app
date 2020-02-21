@@ -21,8 +21,7 @@ public class WebSocketService {
     private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
     
     private var host: String?
-    private var rechability: NetworkReachabilityManager?
-    private var socket: WebSocket?
+    private var socket: WebSocketProvider?
     private var heartbeat: HeartbeatService?
     
     private var status: Status = .disconnected {
@@ -33,19 +32,15 @@ public class WebSocketService {
         }
     }
     private var networkWasRechableOnConnection = false
-    private var lastConnectionDate: Date?
     private var messageHandlers = SafeDictionary<String, IncomingMessageHandler>()
     private var needsJobRestoration = true
-    private var httpUpgradeSigningDate: Date?
-    private var httpUpgradeServerDate: Date?
+    private var httpUpgradeSigningDate = Date()
+    private var lastConnectionDate = Date()
     private var connectOnNetworkIsReachable = false
-    
-    private var isReachable: Bool {
-        return rechability?.isReachable ?? false
-    }
-    
+
     internal init() {
         queue.setSpecific(key: queueSpecificKey, value: ())
+        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .NetworkDidChange, object: nil)
     }
     
     public func connect() {
@@ -56,22 +51,45 @@ public class WebSocketService {
             guard self.status == .disconnected else {
                 return
             }
+            guard let url = URL(string: "wss://\(MixinServer.webSocketHost)") else {
+                return
+            }
 
             if isAppExtension && !AppGroupUserDefaults.canProcessMessagesInAppExtension {
                 return
             }
 
             self.status = .connecting
-            self.prepareForConnection(host: MixinServer.webSocketHost)
-            self.networkWasRechableOnConnection = self.isReachable
-            self.lastConnectionDate = Date()
-            let headers = MixinRequest.getHeaders(request: self.socket!.request)
-            self.httpUpgradeSigningDate = Date()
-            self.httpUpgradeServerDate = nil
-            for (field, value) in headers {
-                self.socket!.request.setValue(value, forHTTPHeaderField: field)
+
+            let socket: WebSocketProvider
+            if #available(iOS 13.0, *) {
+                socket = NativeWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
+            } else {
+                socket = StarscreamWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
             }
-            self.socket!.connect()
+            self.socket = socket
+
+            let heartbeat = HeartbeatService(socket: socket)
+            heartbeat.onOffline = { [weak self] in
+                self?.reconnect(sendDisconnectToRemote: true)
+            }
+            self.heartbeat = heartbeat
+
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 5
+            let headers = MixinRequest.getHeaders(request: request)
+            for (field, value) in headers {
+                request.setValue(value, forHTTPHeaderField: field)
+            }
+            if isAppExtension {
+                request.setValue("Mixin-Notification-Extension-1", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+            }
+
+            self.networkWasRechableOnConnection = NetworkManager.shared.isReachable
+            self.lastConnectionDate = Date()
+            self.httpUpgradeSigningDate = Date()
+            self.socket?.serverTime = nil
+            self.socket?.connect(request: request)
         }
     }
     
@@ -82,7 +100,8 @@ public class WebSocketService {
             }
             self.connectOnNetworkIsReachable = false
             self.heartbeat?.stop()
-            self.socket?.disconnect(forceTimeout: nil, closeCode: CloseCode.exit)
+
+            self.socket?.disconnect(closeCode: CloseCode.exit)
             self.needsJobRestoration = true
             ConcurrentJobQueue.shared.cancelAllOperations()
             self.messageHandlers.removeAll()
@@ -148,64 +167,62 @@ public class WebSocketService {
     
 }
 
-extension WebSocketService: WebSocketDelegate {
-    
-    public func websocketDidConnect(socket: WebSocketClient) {
+extension WebSocketService: WebSocketProviderDelegate {
+
+    func websocketDidReceivePong(socket: WebSocketProvider) {
+        enqueueOperation {
+            self.heartbeat?.websocketDidReceivePong()
+        }
+    }
+
+    func websocketDidConnect(socket: WebSocketProvider) {
         guard status == .connecting else {
             return
         }
-        guard let signingDate = httpUpgradeSigningDate, let serverDate = httpUpgradeServerDate else {
-            return
-        }
-        if abs(serverDate.timeIntervalSince(signingDate)) > 300 {
-            if -signingDate.timeIntervalSinceNow > 60 {
-                reconnect(sendDisconnectToRemote: true)
-            } else {
-                AppGroupUserDefaults.Account.isClockSkewed = true
-                disconnect()
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
+
+        if let responseServerTime = socket.serverTime, let serverTime = Double(responseServerTime), serverTime > 0 {
+            let signingDate = httpUpgradeSigningDate
+            let serverDate =  Date(timeIntervalSince1970: serverTime / 1000000000)
+            if abs(serverDate.timeIntervalSince(signingDate)) > 300 {
+                if -signingDate.timeIntervalSinceNow > 60 {
+                    reconnect(sendDisconnectToRemote: true)
+                } else {
+                    AppGroupUserDefaults.Account.isClockSkewed = true
+                    disconnect()
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
+                    }
                 }
-            }
-        } else {
-            status = .connected
-            NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
-            ReceiveMessageService.shared.processReceiveMessages()
-            requestListPendingMessages()
-            ConcurrentJobQueue.shared.resume()
-            heartbeat?.start()
-            
-            if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > refreshOneTimePreKeyInterval {
-                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
-                ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
-            }
-            AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
-            ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
-        }
-    }
-    
-    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if let error = error as? WSError, self.isReachable {
-            if error.type == .protocolError {
-                Logger.write(log: "[WebSocketService][ProtocolError][\(error.code)]...\(error.message)...", newSection: true)
-            }
-            reporter.report(error: MixinServicesError.websocketDidDisconnect(error: error))
-            
-            if error.type == .writeTimeoutError {
-                MixinServer.toggle(currentWebSocketHost: host)
+                return
             }
         }
 
+
+        status = .connected
+        NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
+        ReceiveMessageService.shared.processReceiveMessages()
+        requestListPendingMessages()
+        ConcurrentJobQueue.shared.resume()
+        heartbeat?.start()
+
+        if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > refreshOneTimePreKeyInterval {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
+        }
+        AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
+        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
+    }
+    
+    func websocketDidDisconnect(socket: WebSocketProvider, isSwitchNetwork: Bool) {
         if status == .connecting || status == .connected {
+            if isSwitchNetwork {
+                MixinServer.toggle(currentWebSocketHost: host)
+            }
             reconnect(sendDisconnectToRemote: false)
         }
     }
-    
-    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        
-    }
-    
-    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+
+    func websocketDidReceiveData(socket: WebSocketProvider, data: Data) {
         guard data.isGzipped, let unzipped = try? data.gunzipped() else {
             return
         }
@@ -251,11 +268,6 @@ extension WebSocketService {
         case connected
     }
     
-    private enum CloseCode {
-        static let exit: UInt16 = 9999
-        static let failure: UInt16 = 9998
-    }
-    
     private typealias IncomingMessageHandler = (APIResult<BlazeMessage>) -> Void
     
     private func enqueueOperation(_ closure: @escaping () -> Void) {
@@ -265,53 +277,9 @@ extension WebSocketService {
             closure()
         }
     }
-    
-    private func prepareForConnection(host: String) {
-        let url: URL = URL(string: "wss://" + host)!
-        guard socket?.currentURL != url else {
-            return
-        }
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5
-        let socket: WebSocket
-        if isAppExtension {
-            socket = WebSocket(request: request, protocols: ["Mixin-Notification-Extension-1"])
-        } else {
-            socket = WebSocket(request: request)
-        }
-        socket.delegate = self
-        socket.callbackQueue = queue
-        socket.onHttpResponseHeaders = { [weak self] headers in
-            // This is called from an arbitrary queue instead of designated callback queue
-            // Probably a bug of Starscream
-            self?.updateHttpUpgradeServerDate(headers: headers)
-        }
-        self.socket = socket
-        
-        let heartbeat = HeartbeatService(socket: socket)
-        heartbeat.onOffline = { [weak self] in
-            self?.reconnect(sendDisconnectToRemote: true)
-        }
-        self.heartbeat = heartbeat
-        
-        rechability?.stopListening()
-        rechability = NetworkReachabilityManager(host: host)
-        rechability?.listener = { [weak self] status in
-            guard case .reachable(_) = status else {
-                return
-            }
-            self?.networkBecomesReachable()
-        }
-        rechability?.startListening()
-    }
-    
-    private func updateHttpUpgradeServerDate(headers: HTTPHeaders) {
-        enqueueOperation {
-            guard let xServerTime = headers["x-server-time"], let time = Double(xServerTime) else {
-                return
-            }
-            self.httpUpgradeServerDate = Date(timeIntervalSince1970: time / 1000000000)
-        }
+
+    @objc private func networkChanged() {
+        networkBecomesReachable()
     }
     
     private func networkBecomesReachable() {
@@ -333,15 +301,14 @@ extension WebSocketService {
             ConcurrentJobQueue.shared.suspend()
             self.heartbeat?.stop()
             if sendDisconnectToRemote {
-                self.socket?.disconnect(forceTimeout: nil, closeCode: CloseCode.failure)
+                self.socket?.disconnect(closeCode: CloseCode.failure)
             }
             self.status = .disconnected
             NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
             
-            let lastConnectionDate = self.lastConnectionDate ?? .distantPast
-            let shouldConnectImmediately = self.isReachable
+            let shouldConnectImmediately = NetworkManager.shared.isReachable
                 && LoginManager.shared.isLoggedIn
-                && (!self.networkWasRechableOnConnection || -lastConnectionDate.timeIntervalSinceNow >= 1)
+                && (!self.networkWasRechableOnConnection || -self.lastConnectionDate.timeIntervalSinceNow >= 1)
             if shouldConnectImmediately {
                 self.connectOnNetworkIsReachable = false
                 self.connect()
@@ -360,7 +327,7 @@ extension WebSocketService {
         guard let data = try? JSONEncoder.default.encode(message), let gzipped = try? data.gzipped() else {
             return false
         }
-        socket.write(data: gzipped)
+        socket.send(data: gzipped)
         return true
     }
     

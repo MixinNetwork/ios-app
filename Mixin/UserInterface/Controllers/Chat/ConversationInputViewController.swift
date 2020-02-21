@@ -74,8 +74,9 @@ class ConversationInputViewController: UIViewController {
     private(set) var opponentApp: App?
     
     private var mentionRanges = Set<NSRange>()
-    private var defaultInputTextAttributes: [NSAttributedString.Key: Any] = [:]
+    private var typingAttributes: [NSAttributedString.Key: Any] = [:]
     private var lastSelectedRange: NSRange!
+    private var lastTextCountWhenMentionRangeChanges = 0
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var customInputViewController: UIViewController? {
@@ -101,12 +102,9 @@ class ConversationInputViewController: UIViewController {
     // Do not set this var directly, use setPreferredContentHeight:animated:
     private var preferredContentHeight: CGFloat = 0
     
-    // By selecting UIKeyboard's predictive text, [UITextView setAttributedText:] immediately
-    // triggers a delegate call to shouldChangeTextInRange:replacementText:
-    // Drop the call by this flag
-    private var isManipulatingReplacement = false
-    
-    // Same as above, resolve the recursion while changing selection
+    // By changing selection inside textViewDidChangeSelection
+    // [textView selectedRange:] triggers another delegate call immediately
+    // Resolve the recursion with this flag
     private var isManipulatingSelection = false
     
     private var conversationViewController: ConversationViewController {
@@ -149,8 +147,9 @@ class ConversationInputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         lastSelectedRange = textView.selectedRange
-        defaultInputTextAttributes[.font] = textView.font
-        defaultInputTextAttributes[.foregroundColor] = textView.textColor
+        lastTextCountWhenMentionRangeChanges = textView.text.count
+        typingAttributes[.font] = textView.font
+        typingAttributes[.foregroundColor] = textView.textColor
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -451,12 +450,6 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    func replaceInputingMentionToken(with user: UserItem) {
-        if let range = textView.replaceInputingMentionToken(with: user) {
-            mentionRanges.insert(range)
-        }
-    }
-    
 }
 
 // MARK: - Callbacks
@@ -647,51 +640,35 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard !audioViewController.isRecording else {
-            return false
-        }
-        guard !isManipulatingReplacement else {
-            return false
-        }
-        isManipulatingReplacement = true
-        defer {
-            isManipulatingReplacement = false
-        }
-        
-        var replacingRange = range
-        for mentionRange in mentionRanges {
-            let isIntersected = NSLocationInRange(mentionRange.location, replacingRange)
-                || NSLocationInRange(NSMaxRange(mentionRange) - 1, replacingRange) // 1 for the suffix
-            if isIntersected {
-                replacingRange.formUnion(mentionRange)
-                mentionRanges.remove(mentionRange)
-            }
-        }
-        
-        let replacedRange = NSRange(location: replacingRange.location,
-                                    length: (text as NSString).length)
-        var adjustedMentions = Set<NSRange>()
-        let replacingRangeEndPoint = NSMaxRange(replacingRange)
-        let lengthDiff = replacedRange.length - replacingRange.length
-        for mentionRange in mentionRanges {
-            var range = mentionRange
-            if replacingRangeEndPoint <= mentionRange.location {
-                range.location += lengthDiff
-            }
-            adjustedMentions.insert(range)
-        }
-        mentionRanges = adjustedMentions
-        
-        let mutable = textView.attributedText.mutableCopy() as! NSMutableAttributedString
-        mutable.mutableString.replaceCharacters(in: replacingRange, with: text)
-        mutable.setAttributes(defaultInputTextAttributes, range: replacedRange)
-        textView.attributedText = (mutable.copy() as! NSAttributedString)
-        textView.selectedRange = NSRange(location: NSMaxRange(replacedRange), length: 0)
-        textViewDidChange(textView)
-        return false
+        return !audioViewController.isRecording
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        let fullRange = NSRange(location: 0, length: textView.attributedText.length)
+        var rangeToRemove: NSRange?
+        mentionRanges.removeAll()
+        textView.attributedText.enumerateAttribute(.mentionLength, in: fullRange, options: [], using: { (value, range, stop) in
+            guard let length = value as? Int else {
+                return
+            }
+            if length == range.length {
+                mentionRanges.insert(range)
+            } else {
+                rangeToRemove = range
+                stop.pointee = true
+            }
+        })
+        
+        if let range = rangeToRemove {
+            DispatchQueue.main.async {
+                textView.text = (textView.text as NSString).replacingCharacters(in: range, with: "")
+                self.textViewDidChange(textView)
+            }
+            return
+        }
+        
+        lastTextCountWhenMentionRangeChanges = textView.text.count
+        
         guard let lineHeight = textView.font?.lineHeight else {
             return
         }
@@ -734,22 +711,24 @@ extension ConversationInputViewController: UITextViewDelegate {
         
         var selectedRange = textView.selectedRange
         if selectedRange.length == 0 {
-            if let range = mentionRanges.first(where: { NSLocationInRange(selectedRange.location, $0) }) {
+            let mentionRangeWithCaretInside = mentionRanges.first { (range) -> Bool in
+                selectedRange.location > range.location && selectedRange.location < NSMaxRange(range)
+            }
+            if textView.text.count == lastTextCountWhenMentionRangeChanges, let range = mentionRangeWithCaretInside {
                 let isCaretGoingBackwards = selectedRange.location < lastSelectedRange.location
                 let location = isCaretGoingBackwards ? range.location : NSMaxRange(range)
                 textView.selectedRange = NSRange(location: location, length: 0)
             }
         } else {
             for mentionRange in mentionRanges {
-                let isIntersected = NSLocationInRange(mentionRange.location, selectedRange)
-                    || NSLocationInRange(NSMaxRange(mentionRange), selectedRange)
-                if isIntersected {
+                if mentionRange.intersection(selectedRange) != nil {
                     selectedRange.formUnion(mentionRange)
                 }
             }
             textView.selectedRange = selectedRange
         }
         lastSelectedRange = textView.selectedRange
+        textView.typingAttributes = typingAttributes
     }
     
 }

@@ -56,38 +56,43 @@ class ConversationInputTextView: UITextView {
         }
     }
     
-    func replaceInputingMentionToken(with user: UserItem) -> NSRange? {
+    func replaceInputingMentionToken(with user: UserItem) {
         let replacement = "\(Mention.prefix)\(user.identityNumber)\(Mention.suffix)"
         guard !text.isEmpty else {
             text = replacement
-            return nil
+            return
         }
         guard let selectedTextRange = selectedTextRange else {
-            return nil
+            return
         }
         guard let rangeBeforeCaret = textRange(from: beginningOfDocument, to: selectedTextRange.start) else {
-            return nil
+            return
         }
         guard let stringBeforeCaret = text(in: rangeBeforeCaret) else {
-            return nil
+            return
         }
         for (index, char) in stringBeforeCaret.reversed().enumerated() {
             if char == " " {
-                return nil
+                return
             } else if char == Mention.prefix {
-                guard let start = position(from: rangeBeforeCaret.end, offset: -index - 1), let range = textRange(from: start, to: rangeBeforeCaret.end) else {
-                    return nil
+                guard let start = position(from: rangeBeforeCaret.end, offset: -index - 1) else {
+                    return
                 }
-                replace(range, withText: replacement)
-                let replacementRange = NSRange(location: offset(from: beginningOfDocument, to: range.start),
-                                               length: (replacement as NSString).length - 1)
+                let replacedRange = NSRange(location: offset(from: beginningOfDocument, to: start),
+                                            length: index + 1)
                 let mutable = attributedText.mutableCopy() as! NSMutableAttributedString
-                mutable.addAttributes([.foregroundColor: UIColor.theme], range: replacementRange)
+                mutable.mutableString.replaceCharacters(in: replacedRange, with: replacement)
+                let replacementRange = NSRange(location: replacedRange.location,
+                                               length: (replacement as NSString).length - 1)
+                let attrs: [NSAttributedString.Key: Any] = [
+                    .foregroundColor: UIColor.theme,
+                    .mentionLength: replacementRange.length
+                ]
+                mutable.addAttributes(attrs, range: replacementRange)
                 attributedText = (mutable.copy() as! NSAttributedString)
-                return replacementRange
+                delegate?.textViewDidChange?(self)
             }
         }
-        return nil
     }
     
 }

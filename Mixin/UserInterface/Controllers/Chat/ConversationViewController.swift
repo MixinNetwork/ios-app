@@ -710,7 +710,7 @@ class ConversationViewController: UIViewController {
     }
     
     func inputUserHandle(with user: UserItem) {
-        conversationInputViewController.replaceInputingMentionToken(with: user)
+        conversationInputViewController.textView.replaceInputingMentionToken(with: user)
         userHandleViewController.reload(with: nil) { (hasContent) in
             self.setUserHandleHidden(true)
         }

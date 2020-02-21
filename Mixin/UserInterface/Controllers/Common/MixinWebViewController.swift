@@ -243,11 +243,15 @@ extension MixinWebViewController {
     }
 
     private func shareAppCardAction(currentUrl: URL) {
-        guard case let .app(appId, _, _) = context.style else {
+        guard case let .app(appId, appTitle, _) = context.style else {
             return
         }
 
-        let webTitle = webView.title ?? titleLabel.text ?? currentUrl.absoluteString
+        var cardTitle = appTitle
+        if let webTitle = webView.title, !webTitle.trim().isEmpty {
+            cardTitle = webTitle.trim()
+        }
+
         DispatchQueue.global().async { [weak self] in
             var app = AppDAO.shared.getApp(appId: appId)
             if app == nil {
@@ -260,7 +264,7 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let validUrl = currentUrl.absoluteString + "/"
                 if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                    let appCard = AppCardData(appId: app.appId, iconUrl: iconUrl, title: String(webTitle.prefix(32)), description: String(app.name.prefix(64)), action: currentUrl)
+                    let appCard = AppCardData(appId: app.appId, iconUrl: iconUrl, title: String(cardTitle.prefix(32)), description: String(app.name.prefix(64)), action: currentUrl)
                     let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {

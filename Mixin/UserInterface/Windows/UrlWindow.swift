@@ -4,35 +4,41 @@ import Alamofire
 import MixinServices
 
 class UrlWindow {
-
+    
     class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true) -> Bool {
-        guard let mixinURL = MixinURL(url: url) else {
-            return false
-        }
-        switch mixinURL {
-        case let .codes(code):
-            return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
-        case .pay:
-            return checkPayUrl(url: url)
-        case .withdrawal:
-            return checkWithdrawal(url: url)
-        case .address:
-            return checkAddress(url: url)
-        case let .users(id):
-            return checkUser(id, clearNavigationStack: clearNavigationStack)
-        case .snapshots:
-            return checkSnapshot(url: url)
-        case let .apps(userId):
-            return checkApp(url: url, userId: userId)
-        case let .transfer(id):
-            return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
-        case .send:
-            return checkSendUrl(url: url)
-        case .device:
-            return false
-        case .upgradeDesktop:
-            return false
-        case .unknown:
+        if let mixinURL = MixinURL(url: url) {
+            switch mixinURL {
+            case let .codes(code):
+                return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
+            case .pay:
+                return checkPayUrl(url: url)
+            case .withdrawal:
+                return checkWithdrawal(url: url)
+            case .address:
+                return checkAddress(url: url)
+            case let .users(id):
+                return checkUser(id, clearNavigationStack: clearNavigationStack)
+            case .snapshots:
+                return checkSnapshot(url: url)
+            case let .apps(userId):
+                return checkApp(url: url, userId: userId)
+            case let .transfer(id):
+                return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
+            case .send:
+                return checkSendUrl(url: url)
+            case .device:
+                return false
+            case .upgradeDesktop:
+                return false
+            case .unknown:
+                return false
+            }
+        } else if let url = MixinInternalURL(url: url) {
+            switch url {
+            case let .identityNumber(number):
+                return checkUser(identityNumber: number)
+            }
+        } else {
             return false
         }
     }
@@ -201,7 +207,43 @@ class UrlWindow {
         }
         return true
     }
-
+    
+    class func checkUser(identityNumber: String) -> Bool {
+        guard !identityNumber.isEmpty else {
+            return false
+        }
+        DispatchQueue.global().async {
+            var userItem = UserDAO.shared.getUser(identityNumber: identityNumber)
+            var updateUserFromRemoteAfterReloaded = true
+            if userItem == nil {
+                switch UserAPI.shared.search(keyword: identityNumber) {
+                case let .success(response):
+                    updateUserFromRemoteAfterReloaded = false
+                    userItem = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if error.code == 404 {
+                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
+                        } else {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                    return
+                }
+            }
+            guard let user = userItem, user.isCreatedByMessenger else {
+                return
+            }
+            DispatchQueue.main.async {
+                let vc = UserProfileViewController(user: user)
+                vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+            }
+        }
+        return true
+    }
+    
     class func checkTransferUrl(_ userId: String, clearNavigationStack: Bool) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != myUserId else {
             return false

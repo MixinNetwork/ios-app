@@ -392,6 +392,7 @@
 		7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */; };
 		7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */; };
 		7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5374820076BB500257D6C /* ShutterAnimationView.swift */; };
+		7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5DCE924001F760093968C /* MixinInternalUrl.swift */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
@@ -1091,6 +1092,7 @@
 		7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReCaptcha.storyboard; sourceTree = "<group>"; };
 		7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionFooterView.xib; sourceTree = "<group>"; };
 		7BF5374820076BB500257D6C /* ShutterAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterAnimationView.swift; sourceTree = "<group>"; };
+		7BF5DCE924001F760093968C /* MixinInternalUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinInternalUrl.swift; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
@@ -1978,6 +1980,7 @@
 				DF5D9F1B1F9C62990036D5FD /* Constant.swift */,
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
+				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
 				DFF1AD7B22254C6E0087173D /* R.generated.swift */,
 			);
@@ -3162,6 +3165,7 @@
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
+				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
 				DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,

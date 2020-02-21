@@ -1,6 +1,6 @@
 import WCDBSwift
 
-public class MessageItem: TableCodable {
+public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     
     public var messageId: String = ""
     public var conversationId: String = ""
@@ -83,6 +83,8 @@ public class MessageItem: TableCodable {
         }
         return try? JSONDecoder.default.decode(MessageMention.Mentions.self, from: json)
     }()
+    
+    public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
     
     public init() {
         

@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-public class ConversationItem: TableCodable {
+public class ConversationItem: TableCodable, MentionedFullnameReplaceable {
     
     public var conversationId: String = ""
     public var ownerId: String = ""
@@ -53,21 +53,7 @@ public class ConversationItem: TableCodable {
         return try? JSONDecoder().decode(AppCardData.self, from: data)
     }()
     
-    public lazy var mentionsReplacedContent: String = {
-        guard let json = mentionsJson else {
-            return content
-        }
-        guard let mentions = try? JSONDecoder.default.decode(MessageMention.Mentions.self, from: json) else {
-            return content
-        }
-        var replaced = content
-        for mention in mentions {
-            let target = "\(Mention.prefix)\(mention.key)"
-            let replacement = "\(Mention.prefix)\(mention.value)"
-            replaced = replaced.replacingOccurrences(of: target, with: replacement)
-        }
-        return replaced
-    }()
+    public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
     
     public enum CodingKeys: String, CodingTableKey {
         

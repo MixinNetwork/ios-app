@@ -5,8 +5,8 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     
     private struct SearchResult {
         let user: UserItem
-        let fullnameMatchedKeyword: String?
-        let identityNumberMatchedKeyword: String?
+        let fullnameKeywordRange: NSRange?
+        let identityNumberKeywordRange: NSRange?
     }
     
     var users = [UserItem]() {
@@ -70,8 +70,8 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.user_handle, for: indexPath)!
         let result = searchResults[indexPath.row]
         cell.render(user: result.user,
-                    fullnameMatchedKeyword: result.fullnameMatchedKeyword,
-                    identityNumberMatchedKeyword: result.identityNumberMatchedKeyword)
+                    fullnameKeywordRange: result.fullnameKeywordRange,
+                    identityNumberKeywordRange: result.identityNumberKeywordRange)
         return cell
     }
     
@@ -92,14 +92,21 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         let searchResults: [SearchResult]
         if let keyword = keyword {
             searchResults = users.compactMap({ (user) -> SearchResult? in
-                if user.identityNumber.hasPrefix(keyword) {
+                guard !keyword.isEmpty else {
                     return SearchResult(user: user,
-                                        fullnameMatchedKeyword: nil,
-                                        identityNumberMatchedKeyword: keyword)
-                } else if user.fullName.hasPrefix(keyword) {
+                                        fullnameKeywordRange: nil,
+                                        identityNumberKeywordRange: nil)
+                }
+                let fullnameKeywordRange = (user.fullName as NSString).range(of: keyword)
+                let identityNumberKeywordRange = (user.identityNumber as NSString).range(of: keyword)
+                if fullnameKeywordRange.location != NSNotFound {
                     return SearchResult(user: user,
-                                        fullnameMatchedKeyword: keyword,
-                                        identityNumberMatchedKeyword: nil)
+                                        fullnameKeywordRange: fullnameKeywordRange,
+                                        identityNumberKeywordRange: nil)
+                } else if identityNumberKeywordRange.location != NSNotFound {
+                    return SearchResult(user: user,
+                                        fullnameKeywordRange: nil,
+                                        identityNumberKeywordRange: identityNumberKeywordRange)
                 } else {
                     return nil
                 }

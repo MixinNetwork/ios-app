@@ -23,6 +23,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel, Background
     var trailingInfoBackgroundFrame = CGRect.zero
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = VerticalPositioningImageView.Position.center
+    var expandIconOrigin: CGPoint?
     
     override var contentMargin: Margin {
         return Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
@@ -107,6 +108,20 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel, Background
         } else {
             photoFrame.origin = bubbleOrigin
             backgroundImageFrame = photoFrame
+        }
+        
+        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(contentRatio) {
+            let margin: CGFloat
+            if style.contains(.received) {
+                margin = 9
+            } else {
+                margin = 16
+            }
+            let iconWidth = R.image.conversation.ic_message_expand()!.size.width
+            expandIconOrigin = CGPoint(x: backgroundImageFrame.maxX - iconWidth - margin,
+                                       y: photoFrame.origin.y + 8)
+        } else {
+            expandIconOrigin = nil
         }
         
         cellHeight = fullnameHeight + backgroundImageFrame.height + bottomSeparatorHeight

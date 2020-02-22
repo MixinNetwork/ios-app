@@ -9,6 +9,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     let maskingView = UIView()
     let contentImageWrapperView = VerticalPositioningImageView()
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
+    let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     
     var contentImageView: UIImageView {
         return contentImageWrapperView.imageView
@@ -61,6 +62,12 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
             contentImageWrapperView.position = viewModel.layoutPosition
             contentImageWrapperView.aspectRatio = viewModel.contentRatio
             trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
+            if let origin = viewModel.expandIconOrigin {
+                expandImageView.isHidden = false
+                expandImageView.frame.origin = origin
+            } else {
+                expandImageView.isHidden = true
+            }
         }
     }
     
@@ -71,6 +78,8 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         contentImageWrapperView.addSubview(selectedOverlapView)
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
+        expandImageView.isHidden = true
+        contentView.addSubview(expandImageView)
         maskingView.clipsToBounds = true
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9

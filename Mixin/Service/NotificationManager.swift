@@ -87,8 +87,9 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                                               userId: myUserId)
             reply.content = trimmedUserText
             reply.quoteMessageId = messageId
+            
+            SendMessageService.shared.sendReadMessages(conversationId: conversationId)
             DispatchQueue.global().async {
-                SendMessageService.shared.sendReadMessages(conversationId: conversationId)
                 SendMessageService.shared.sendMessage(message: reply,
                                                       ownerUser: ownerUser,
                                                       isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)

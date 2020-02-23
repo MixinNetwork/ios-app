@@ -1636,7 +1636,9 @@ extension ConversationViewController {
             AudioManager.shared.stop()
         }
         (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status)
+        DispatchQueue.global().async {
+            SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status)
+        }
     }
 
     private func showRecallTips(viewModel: MessageViewModel) {

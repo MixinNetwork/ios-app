@@ -20,9 +20,7 @@ public enum APIResult<ResultType: Codable> {
 open class BaseAPI {
     
     public static let jsonEncoding = JSONEncoding()
-    
-    private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.api")
-    
+
     public init() {
         
     }
@@ -126,9 +124,7 @@ extension BaseAPI {
 
     @discardableResult
     public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
-        return dispatchQueue.sync {
-            return self.syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
-        }
+        return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
     }
 
     private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, retry: Bool = false) -> APIResult<T> {

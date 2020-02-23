@@ -57,34 +57,36 @@ extension SendMessageService {
         } else if msg.category.hasSuffix("_POST") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_POST.rawValue :  MessageCategory.PLAIN_POST.rawValue
         }
-        
-        if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
-            guard let user = ownerUser else {
-                return
-            }
-            let conversationId = ConversationDAO.shared.makeConversationId(userId: account.user_id, ownerUserId: user.userId)
-            msg.conversationId = conversationId
 
-            let createdAt = Date().toUTCString()
-            let participants = [ParticipantResponse(userId: user.userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: account.user_id, role: "", createdAt: createdAt)]
-            let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: user.userId, muteUntil: "")
-            ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
-        }
-        if !message.category.hasPrefix("WEBRTC_") {
-            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-        }
-        if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
-            SendMessageService.shared.sendMessage(message: msg, data: message.content)
-        } else if msg.category.hasSuffix("_IMAGE") {
-            UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
-        } else if msg.category.hasSuffix("_VIDEO") {
-            UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg))
-        } else if msg.category.hasSuffix("_DATA") {
-            UploaderQueue.shared.addJob(job: FileUploadJob(message: msg))
-        } else if msg.category.hasSuffix("_AUDIO") {
-            UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg))
-        } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
-            SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
+        DispatchQueue.global().async {
+            if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
+                guard let user = ownerUser else {
+                    return
+                }
+                let conversationId = ConversationDAO.shared.makeConversationId(userId: account.user_id, ownerUserId: user.userId)
+                msg.conversationId = conversationId
+
+                let createdAt = Date().toUTCString()
+                let participants = [ParticipantResponse(userId: user.userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: account.user_id, role: "", createdAt: createdAt)]
+                let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: user.userId, muteUntil: "")
+                ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
+            }
+            if !message.category.hasPrefix("WEBRTC_") {
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            }
+            if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
+                SendMessageService.shared.sendMessage(message: msg, data: message.content)
+            } else if msg.category.hasSuffix("_IMAGE") {
+                UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
+            } else if msg.category.hasSuffix("_VIDEO") {
+                UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg))
+            } else if msg.category.hasSuffix("_DATA") {
+                UploaderQueue.shared.addJob(job: FileUploadJob(message: msg))
+            } else if msg.category.hasSuffix("_AUDIO") {
+                UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg))
+            } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
+                SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
+            }
         }
     }
     

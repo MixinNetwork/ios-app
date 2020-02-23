@@ -13,7 +13,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
         return GeneralBubbleImageSet.self
     }
     
-    let timeMargin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
+    var timeMargin: Margin {
+        Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
+    }
     
     var statusImage: UIImage?
     var statusTintColor: UIColor = .accessoryText

@@ -30,6 +30,10 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         280
     }
     
+    override var timeMargin: Margin {
+        Margin(leading: 16, trailing: 10, top: 0, bottom: 2)
+    }
+    
     var contentWidth: CGFloat = 220
     
     var fullnameHeight: CGFloat {

@@ -2,7 +2,7 @@ import UIKit
 
 class PostMessageCell: TextMessageCell {
     
-    let tagLabel = MessageTagLabel()
+    let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     
     override var trailingInfoColor: UIColor {
@@ -10,25 +10,25 @@ class PostMessageCell: TextMessageCell {
     }
     
     override func prepare() {
+        trailingInfoBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.16)
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
-        tagLabel.text = R.string.localizable.chat_message_post_tag()
-        tagLabel.sizeToFit()
-        contentView.addSubview(tagLabel)
+        contentView.addSubview(expandImageView)
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        let tagLabelMargin: CGFloat
+        let expandImageMargin: CGFloat
         if viewModel.style.contains(.received) {
-            tagLabelMargin = 9
+            expandImageMargin = 9
         } else {
-            tagLabelMargin = 16
+            expandImageMargin = 16
         }
-        tagLabel.frame.origin = CGPoint(x: viewModel.backgroundImageFrame.maxX - tagLabel.frame.width - tagLabelMargin,
-                                        y: viewModel.backgroundImageFrame.origin.y + 8)
+        let origin = CGPoint(x: viewModel.backgroundImageFrame.maxX - expandImageView.frame.width - expandImageMargin,
+                             y: viewModel.backgroundImageFrame.origin.y + 8)
+        expandImageView.frame.origin = origin
         if let viewModel = viewModel as? PostMessageViewModel {
             trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
         }

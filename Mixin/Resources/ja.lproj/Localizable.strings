@@ -197,7 +197,6 @@
 "chat_message_call_duration" = "継続時間 %@";
 "chat_message_recalled" = "このメッセージは削除されました";
 "chat_message_recalled_by_me" = "あなたがこのメッセージを削除しました。";
-"chat_message_post_tag" = "文章";
 "chat_cell_title_encryption" = "この会話へのメッセージはエンドツーエンドで暗号化されています。詳細についてはクリックしてください";
 "chat_cell_title_unknown_category" = "このタイプのメッセージはサポートされていません。Mixinを最新バージョンにアップグレードしてください。";
 "chat_forward_title" = "転送";

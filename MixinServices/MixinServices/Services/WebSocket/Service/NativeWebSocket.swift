@@ -30,10 +30,8 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 guard case let .data(data) = message else  {
                     return
                 }
-                print("===[NativeWebSocket]connect success......")
                 let bytes = data.bytes
                 if bytes.count == 1 && data.bytes[0] == 0x9 {
-                    print("===[NativeWebSocket]receive server ping.......")
                     self.socket?.sendPing(pongReceiveHandler: { (error) in
                         if let err = error {
                             reporter.report(error: err)
@@ -62,7 +60,6 @@ class NativeWebSocket: NSObject, WebSocketProvider {
             if let err = error {
                 reporter.report(error: err)
             } else {
-                print("===[NativeWebSocket]send ping...")
                 self.delegate?.websocketDidReceivePong(socket: self)
             }
         })
@@ -72,8 +69,6 @@ class NativeWebSocket: NSObject, WebSocketProvider {
         socket?.send(URLSessionWebSocketTask.Message.data(data)) { (error) in
             if let err = error {
                 reporter.report(error: err)
-            } else {
-                print("===[NativeWebSocket]send data...")
             }
         }
     }
@@ -92,7 +87,6 @@ extension NativeWebSocket: URLSessionWebSocketDelegate {
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        print("=====isConnected")
         if let response = webSocketTask.response as? HTTPURLResponse {
             print("=====didOpenWithProtocol..\(response.allHeaderFields)")
         }

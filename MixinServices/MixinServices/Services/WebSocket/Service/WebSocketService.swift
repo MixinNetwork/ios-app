@@ -48,6 +48,10 @@ public class WebSocketService {
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
+            guard NetworkManager.shared.isReachable else {
+                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
+                return
+            }
             guard self.status == .disconnected else {
                 return
             }
@@ -61,13 +65,9 @@ public class WebSocketService {
 
             self.status = .connecting
 
-            let socket: WebSocketProvider
-            if #available(iOS 13.0, *) {
-                socket = NativeWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
-            } else {
-                socket = StarscreamWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
-            }
+            let socket = StarscreamWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
             self.socket = socket
+            self.socket?.delegate = self
 
             let heartbeat = HeartbeatService(socket: socket)
             heartbeat.onOffline = { [weak self] in
@@ -212,12 +212,15 @@ extension WebSocketService: WebSocketProviderDelegate {
     }
     
     func websocketDidDisconnect(socket: WebSocketProvider, isSwitchNetwork: Bool) {
-        if status == .connecting || status == .connected {
-            if isSwitchNetwork {
-                MixinServer.toggle(currentWebSocketHost: host)
-            }
-            reconnect(sendDisconnectToRemote: false)
+        guard status == .connecting || status == .connected else {
+            return
         }
+
+        if isSwitchNetwork {
+            MixinServer.toggle(currentWebSocketHost: host)
+        }
+
+        reconnect(sendDisconnectToRemote: false)
     }
 
     func websocketDidReceiveData(socket: WebSocketProvider, data: Data) {
@@ -282,7 +285,7 @@ extension WebSocketService {
     
     private func networkBecomesReachable() {
         enqueueOperation {
-            guard self.connectOnNetworkIsReachable, LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, NetworkManager.shared.isReachable, self.connectOnNetworkIsReachable else {
                 return
             }
             self.connect()

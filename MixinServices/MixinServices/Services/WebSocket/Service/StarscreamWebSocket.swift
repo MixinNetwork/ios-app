@@ -24,7 +24,12 @@ class StarscreamWebSocket: WebSocketProvider {
     }
 
     func disconnect(closeCode: UInt16) {
-        socket?.disconnect()
+        switch closeCode {
+        case CloseCode.exit:
+            socket?.forceDisconnect()
+        default:
+            socket?.disconnect()
+        }
         socket = nil
     }
 
@@ -42,42 +47,36 @@ extension StarscreamWebSocket: WebSocketDelegate {
 
     func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
-        case .connected(let headers):
+        case let .connected(headers):
             isConnected = true
             serverTime = headers["X-Server-Time"]
-            print("websocket is connected: \(headers)...serverTime:\(serverTime)")
+            delegate?.websocketDidConnect(socket: self)
         case let .disconnected(reason, code):
             isConnected = false
-            handlerDisconnected(reason: reason, code: code)
+            delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
         case let .binary(data):
             delegate?.websocketDidReceiveData(socket: self, data: data)
         case .pong:
             delegate?.websocketDidReceivePong(socket: self)
         case let .viablityChanged(isViable):
-            print("===========didReceive...viablityChanged...isViable:\(isViable)")
+            isConnected = isViable
             if !isViable {
+                disconnect(closeCode: CloseCode.reconnect)
                 delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
             }
         case let .reconnectSuggested(isBetter):
-            print("===========didReceive...reconnectSuggested...isBetter:\(isBetter)")
             if isBetter {
                 disconnect(closeCode: CloseCode.reconnect)
+                delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
             }
         case .cancelled:
             isConnected = false
-            print("===========didReceive...cancelled...")
-        case .error(let error):
+        case let .error(error):
             isConnected = false
             handleError(error: error)
         default:
             break
         }
-    }
-
-    private func handlerDisconnected(reason: String, code: UInt16) {
-        print("websocket is disconnected: \(reason) with code: \(code)")
-
-        delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
     }
 
     private func handleError(error: Error?) {

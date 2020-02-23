@@ -270,6 +270,8 @@
 "chat_app_reception_title" = "点击按钮使用小程序";
 "chat_app_reception_button_home" = "打开主页";
 "chat_app_reception_button_hi" = "打招呼";
+"chat_app_card_suspicious_link" = "可疑链接";
+"chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

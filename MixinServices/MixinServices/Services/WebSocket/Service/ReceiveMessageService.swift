@@ -434,10 +434,15 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(textMessage: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
-            guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+            guard let base64Data = Data(base64Encoded: plainText) else {
+                return
+            }
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+                Logger.write(conversationId: data.conversationId, log: "[ProcessDecryptSuccess][BadData]\(String(data: base64Data, encoding: .utf8))")
                 return
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
+                Logger.write(conversationId: data.conversationId, log: "[ProcessDecryptSuccess][BadData]\(String(data: base64Data, encoding: .utf8))")
                 return
             }
 

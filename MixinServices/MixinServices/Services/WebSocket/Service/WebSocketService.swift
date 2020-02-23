@@ -189,9 +189,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 } else {
                     AppGroupUserDefaults.Account.isClockSkewed = true
                     disconnect()
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
-                    }
+                    NotificationCenter.default.postOnMain(name: MixinService.clockSkewDetectedNotification)
                 }
                 return
             }

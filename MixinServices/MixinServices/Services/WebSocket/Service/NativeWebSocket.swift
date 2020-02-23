@@ -30,18 +30,30 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 guard case let .data(data) = message else  {
                     return
                 }
-                self.delegate?.websocketDidReceiveData(socket: self, data: data)
+                print("===[NativeWebSocket]connect success......")
+                let bytes = data.bytes
+                if bytes.count == 1 && data.bytes[0] == 0x9 {
+                    print("===[NativeWebSocket]receive server ping.......")
+                    self.socket?.sendPing(pongReceiveHandler: { (error) in
+                        if let err = error {
+                            reporter.report(error: err)
+                        }
+                    })
+                } else {
+                    self.delegate?.websocketDidReceiveData(socket: self, data: data)
+                }
             case let .failure(error):
                 #if DEBUG
-                print("[NativeWebSocket]Failed to receive message: \(error)")
+                print("[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)")
                 #endif
                 reporter.report(error: error)
             }
         })
+
     }
 
     func disconnect(closeCode: UInt16) {
-        socket?.cancel(with: .normalClosure, reason: nil)
+        socket?.cancel(with: .goingAway, reason: nil)
         socket = nil
     }
 
@@ -49,6 +61,9 @@ class NativeWebSocket: NSObject, WebSocketProvider {
         socket?.sendPing(pongReceiveHandler: { (error) in
             if let err = error {
                 reporter.report(error: err)
+            } else {
+                print("===[NativeWebSocket]send ping...")
+                self.delegate?.websocketDidReceivePong(socket: self)
             }
         })
     }
@@ -57,6 +72,8 @@ class NativeWebSocket: NSObject, WebSocketProvider {
         socket?.send(URLSessionWebSocketTask.Message.data(data)) { (error) in
             if let err = error {
                 reporter.report(error: err)
+            } else {
+                print("===[NativeWebSocket]send data...")
             }
         }
     }
@@ -66,11 +83,25 @@ class NativeWebSocket: NSObject, WebSocketProvider {
 @available(iOS 13.0, *)
 extension NativeWebSocket: URLSessionWebSocketDelegate {
 
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        print("[WebSocketClient] Errored! \(String(describing: error))")
+        print("------------------------------")
+        print("\(task.response)")
+        print("------------------------------")
+        print("\(task.currentRequest?.allHTTPHeaderFields)")
+    }
+
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+        print("=====isConnected")
+        if let response = webSocketTask.response as? HTTPURLResponse {
+            print("=====didOpenWithProtocol..\(response.allHeaderFields)")
+        }
+        isConnected = true
         delegate?.websocketDidConnect(socket: self)
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        isConnected = false
         let errType: String
         var errMessage = ""
         var isSwitchNetwork = false
@@ -104,8 +135,12 @@ extension NativeWebSocket: URLSessionWebSocketDelegate {
             errType = "tlsHandshakeFailure"
         }
 
+        errMessage = errType
+        if let reason = reason, let reasonStr = String(data: reason, encoding: .utf8) {
+            errMessage = reasonStr
+        }
         #if DEBUG
-        print("[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(reason ?? Data())")
+        print("[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(errMessage)")
         #endif
 
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: isSwitchNetwork)

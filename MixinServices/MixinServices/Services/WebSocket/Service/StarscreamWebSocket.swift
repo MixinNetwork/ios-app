@@ -44,8 +44,8 @@ extension StarscreamWebSocket: WebSocketDelegate {
         switch event {
         case .connected(let headers):
             isConnected = true
-            serverTime = headers["x-server-time"]
-            print("websocket is connected: \(headers)")
+            serverTime = headers["X-Server-Time"]
+            print("websocket is connected: \(headers)...serverTime:\(serverTime)")
         case let .disconnected(reason, code):
             isConnected = false
             handlerDisconnected(reason: reason, code: code)
@@ -55,6 +55,9 @@ extension StarscreamWebSocket: WebSocketDelegate {
             delegate?.websocketDidReceivePong(socket: self)
         case let .viablityChanged(isViable):
             print("===========didReceive...viablityChanged...isViable:\(isViable)")
+            if !isViable {
+                delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
+            }
         case let .reconnectSuggested(isBetter):
             print("===========didReceive...reconnectSuggested...isBetter:\(isBetter)")
             if isBetter {
@@ -73,6 +76,8 @@ extension StarscreamWebSocket: WebSocketDelegate {
 
     private func handlerDisconnected(reason: String, code: UInt16) {
         print("websocket is disconnected: \(reason) with code: \(code)")
+
+        delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
     }
 
     private func handleError(error: Error?) {

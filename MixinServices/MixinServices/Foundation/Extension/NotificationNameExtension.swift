@@ -33,6 +33,8 @@ public extension NSNotification.Name {
     static let BackupDidChange = NSNotification.Name("one.mixin.services.backup.changed")
 
     static let UserSessionDidChange = NSNotification.Name("one.mixin.services.session.changed")
+
+    static let NetworkDidChange = NSNotification.Name("one.mixin.services.network.changed")
 }
 
 public struct ConversationChange {

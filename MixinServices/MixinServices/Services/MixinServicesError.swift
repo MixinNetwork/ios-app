@@ -26,7 +26,7 @@ public enum MixinServicesError: Error {
     case badMessageData(id: String, status: String, from: String)
     case logout(isAsyncRequest: Bool)
     case badParticipantSession
-    case websocketDidDisconnect(error: WSError)
+    case websocketError(errType: String, errMessage: String, errCode: Int)
     
 }
 
@@ -70,7 +70,7 @@ extension MixinServicesError: CustomNSError {
             return 14
         case .badParticipantSession:
             return 15
-        case .websocketDidDisconnect:
+        case .websocketError:
             return 16
         }
     }
@@ -104,26 +104,11 @@ extension MixinServicesError: CustomNSError {
                         "from": from]
         case let .logout(isAsyncRequest):
             return ["isAsyncRequest": isAsyncRequest]
-        case let .websocketDidDisconnect(error):
+        case let .websocketError(errType, errMessage, errCode):
             userInfo = Self.basicUserInfo
-            userInfo["errMessage"] = error.message
-            userInfo["errCode"] = "\(error.code)"
-            switch error.type {
-            case .outputStreamWriteError:
-                userInfo["errType"] = "outputStreamWriteError"
-            case .compressionError:
-                userInfo["errType"] = "compressionError"
-            case .invalidSSLError:
-                userInfo["errType"] = "invalidSSLError"
-            case .writeTimeoutError:
-                userInfo["errType"] = "writeTimeoutError"
-            case .protocolError:
-                userInfo["errType"] = "protocolError"
-            case .upgradeError:
-                userInfo["errType"] = "upgradeError"
-            case .closeError:
-                userInfo["errType"] = "closeError"
-            }
+            userInfo["errType"] = errType
+            userInfo["errMessage"] = errMessage
+            userInfo["errCode"] = "\(errCode)"
         default:
             userInfo = [:]
         }

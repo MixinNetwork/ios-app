@@ -175,10 +175,13 @@ class ConversationInputViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
+        lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         if abs(diff) > 1 {
+            // This function call triggers recursion on iOS 12.0
+            // It's fine to breaking out on the UIKit's own but for the correct height value
+            // ALWAYS call it after lastSafeAreaInsetsBottom is set
             setPreferredContentHeight(preferredContentHeight + diff, animated: false)
         }
-        lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
     }
     
     override func viewWillLayoutSubviews() {

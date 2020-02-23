@@ -6,7 +6,7 @@ class StarscreamWebSocket: WebSocketProvider {
 
     private var socket: WebSocket?
 
-    var delegate: WebSocketProviderDelegate?
+    weak var delegate: WebSocketProviderDelegate?
     var serverTime: String?
     var isConnected: Bool = false
     var queue: DispatchQueue

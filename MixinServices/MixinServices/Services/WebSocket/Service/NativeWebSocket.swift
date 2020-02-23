@@ -8,7 +8,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
     private lazy var urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     private var socket: URLSessionWebSocketTask?
 
-    var delegate: WebSocketProviderDelegate?
+    weak var delegate: WebSocketProviderDelegate?
     var serverTime: String?
     var isConnected: Bool = false
     var queue: DispatchQueue

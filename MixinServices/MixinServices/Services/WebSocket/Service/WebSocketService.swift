@@ -42,10 +42,14 @@ public class WebSocketService {
         queue.setSpecific(key: queueSpecificKey, value: ())
         NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .NetworkDidChange, object: nil)
     }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     public func connect() {
         enqueueOperation {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
                 return
             }
             guard NetworkManager.shared.isReachable else {

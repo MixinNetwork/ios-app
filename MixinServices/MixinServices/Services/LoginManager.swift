@@ -79,6 +79,10 @@ public final class LoginManager {
             return
         }
 
+        if !isAppExtension {
+            AppGroupUserDefaults.User.isLogoutByServer = true
+        }
+
         pthread_rwlock_wrlock(&lock)
         _account = nil
         _isLoggedIn = false
@@ -87,7 +91,6 @@ public final class LoginManager {
         if !isAppExtension {
             Logger.write(log: "===========logout...from:\(from)")
             AppGroupUserDefaults.Account.serializedAccount = nil
-            AppGroupUserDefaults.User.isLogoutByServer = true
             DispatchQueue.main.async {
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()

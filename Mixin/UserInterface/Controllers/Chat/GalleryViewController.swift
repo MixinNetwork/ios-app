@@ -122,8 +122,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         view.addGestureRecognizer(longPressRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChanged), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -320,10 +318,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
-    }
-    
-    @objc func orientationDidChanged() {
-        pageViewController.dataSource = UIDevice.current.orientation == .portrait ? modelController : nil
     }
     
 }

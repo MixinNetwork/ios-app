@@ -87,16 +87,16 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         return item?.category == .video
     }
     
+    override var canPerformInteractiveDismissal: Bool {
+        UIApplication.shared.statusBarOrientation.isPortrait
+    }
+    
     private var player: AVPlayer {
         return videoView.player
     }
     
     private var playerItemDuration: CMTime {
-        if let item = player.currentItem, item.status == .readyToPlay {
-            return item.duration
-        } else {
-            return .invalid
-        }
+        player.currentItem?.duration ?? .invalid
     }
     
     private var pipModeLayoutInsets: UIEdgeInsets {
@@ -137,11 +137,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         view.insertSubview(videoView, at: 0)
         videoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         videoView.frame = view.bounds
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        UIDevice.current.setValue(Int(UIInterfaceOrientation.portrait.rawValue), forKey: "orientation")
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -197,7 +192,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     override func load(item: GalleryItem?) {
         super.load(item: item)
         updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
-        updateSliderPosition(time: .zero)
+        controlView.slider.value = controlView.slider.minimumValue
+        controlView.playedTimeLabel.text = mediaDurationFormatter.string(from: 0)
         guard let item = item else {
             return
         }
@@ -272,16 +268,27 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func closeAction() {
-        player.replaceCurrentItem(with: nil)
-        if isPipMode {
-            isPipMode = false
-            layoutFullsized()
-            willMove(toParent: nil)
-            view.removeFromSuperview()
-            removeFromParent()
-            UIApplication.homeContainerViewController?.pipController = nil
+        
+        func dismiss() {
+            player.replaceCurrentItem(with: nil)
+            if isPipMode {
+                isPipMode = false
+                layoutFullsized()
+                willMove(toParent: nil)
+                view.removeFromSuperview()
+                removeFromParent()
+                UIApplication.homeContainerViewController?.pipController = nil
+            } else {
+                galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
+            }
+        }
+        
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(protrait, forKey: "orientation")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: dismiss)
         } else {
-            galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
+            dismiss()
         }
     }
     
@@ -354,6 +361,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else if controlView.style.contains(.loading) {
             let isShowingVisualControl = controlView.visualControlWrapperView.alpha > 0
             updateControlView(playControlsHidden: true,
+                              otherControlsHidden: isShowingVisualControl,
+                              animated: true)
+        } else {
+            let isShowingVisualControl = controlView.visualControlWrapperView.alpha > 0
+            updateControlView(playControlsHidden: false,
                               otherControlsHidden: isShowingVisualControl,
                               animated: true)
         }

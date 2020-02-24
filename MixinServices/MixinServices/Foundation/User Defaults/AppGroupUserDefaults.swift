@@ -173,10 +173,6 @@ extension AppGroupUserDefaults {
     }
     
     public static func migrateUserSpecificDefaults() {
-        guard AccountUserDefault.shared.serializedAccount != nil else {
-            AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
-            return
-        }
         User.migrate()
         Database.migrate()
         Wallet.migrate()

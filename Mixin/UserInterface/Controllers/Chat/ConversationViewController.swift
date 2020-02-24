@@ -1101,6 +1101,9 @@ extension ConversationViewController: CoreTextLabelDelegate {
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        guard url.scheme != MixinInternalURL.scheme else {
+            return
+        }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
             self?.open(url: url)

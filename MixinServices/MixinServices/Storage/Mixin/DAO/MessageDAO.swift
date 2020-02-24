@@ -435,7 +435,11 @@ public final class MessageDAO {
             values.append((Message.Properties.status, MessageStatus.DELIVERED.rawValue))
         }
         
-        try database.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+        try database.update(maps: values,
+                            tableName: Message.tableName,
+                            condition: Message.Properties.messageId == messageId)
+        try database.delete(fromTable: MessageMention.tableName,
+                            where: MessageMention.Properties.messageId == messageId)
         
         if status == MessageStatus.FAILED.rawValue {
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
@@ -459,6 +463,7 @@ public final class MessageDAO {
             let delete = try db.prepareDelete(fromTable: Message.tableName).where(Message.Properties.messageId == id)
             try delete.execute()
             deleteCount = delete.changes ?? 0
+            try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.messageId == id)
         }
         return deleteCount > 0
     }

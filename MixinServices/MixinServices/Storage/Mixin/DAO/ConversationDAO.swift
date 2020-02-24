@@ -127,7 +127,8 @@ public final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
-
+            try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
+            
             if removeConversation || exitConversation {
                 try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             } else {

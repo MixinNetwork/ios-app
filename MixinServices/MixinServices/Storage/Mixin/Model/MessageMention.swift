@@ -66,6 +66,11 @@ extension MessageMention {
                 messageId: ColumnConstraintBinding(isPrimary: true)
             ]
         }
+        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
+            return [
+                "_conversation_indexs": IndexBinding(indexesBy: conversationId),
+            ]
+        }
         
         case messageId = "message_id"
         case conversationId = "conversation_id"

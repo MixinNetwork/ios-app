@@ -159,6 +159,7 @@ class ConversationViewController: UIViewController {
             conversationInputViewController.inputBarView.isHidden = false
             conversationInputViewController.update(opponentUser: user)
         }
+        AppGroupUserDefaults.User.currentConversationId = conversationId
         view.layoutIfNeeded()
         dataSource.initData(completion: finishInitialLoading)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
@@ -232,6 +233,7 @@ class ConversationViewController: UIViewController {
     }
     
     deinit {
+        AppGroupUserDefaults.User.currentConversationId = nil
         NotificationCenter.default.removeObserver(self)
     }
     

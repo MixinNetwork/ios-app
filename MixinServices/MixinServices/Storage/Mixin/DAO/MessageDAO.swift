@@ -375,6 +375,9 @@ public final class MessageDAO {
             MessageDAO.UserInfoKey.messsageSource: messageSource
         ]
         performSynchronouslyOnMainThread {
+            if isAppExtension && AppGroupUserDefaults.User.currentConversationId == message.conversationId {
+                AppGroupUserDefaults.User.reloadConversation = true
+            }
             NotificationCenter.default.post(name: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
         }
     }

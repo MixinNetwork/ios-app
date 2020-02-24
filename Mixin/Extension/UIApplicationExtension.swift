@@ -22,15 +22,18 @@ extension UIApplication {
     }
 
     static func currentConversationId() -> String? {
+        return currentConversationViewController()?.conversationId
+    }
+
+    static func currentConversationViewController() -> ConversationViewController? {
         guard UIApplication.shared.applicationState == .active else {
             return nil
         }
-        guard let lastVC = homeNavigationController?.viewControllers.last, let chatVC = lastVC as? ConversationViewController else {
+        guard let lastVC = homeNavigationController?.viewControllers.last else {
             return nil
         }
-        return chatVC.dataSource?.conversationId
+        return lastVC as? ConversationViewController
     }
-    
 }
 
 extension UIApplication {

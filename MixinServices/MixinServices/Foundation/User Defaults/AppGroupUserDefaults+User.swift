@@ -26,6 +26,8 @@ extension AppGroupUserDefaults {
             
             case showMessagePreviewInNotification = "show_message_preview_in_notification"
             case conversationDraft = "conversation_draft"
+            case currentConversationId = "current_conversation_id"
+            case reloadConversation = "reload_conversation"
             case hasUnreadAnnouncement = "has_unread_announcement"
             case recentlyUsedAppIds = "recently_used_app_ids"
             
@@ -94,6 +96,12 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.conversationDraft, defaultValue: [:])
         public static var conversationDraft: [String: String]
+
+        @Default(namespace: .user, key: Key.currentConversationId, defaultValue: nil)
+        public static var currentConversationId: String?
+
+        @Default(namespace: .user, key: Key.reloadConversation, defaultValue: false)
+        public static var reloadConversation: Bool
         
         @Default(namespace: .user, key: Key.hasUnreadAnnouncement, defaultValue: [:])
         public static var hasUnreadAnnouncement: [String: Bool]

@@ -84,9 +84,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinDatabase.shared.setCheckPoint(isIgnoreCheck: false)
         SignalDatabase.shared.setCheckPoint(isIgnoreCheck: false)
         WebSocketService.shared.connectIfNeeded()
-        
-        if let conversationId = UIApplication.currentConversationId() {
-            SendMessageService.shared.sendReadMessages(conversationId: conversationId)
+
+        if let chatVC = UIApplication.currentConversationViewController() {
+            if chatVC.conversationId == AppGroupUserDefaults.User.currentConversationId && AppGroupUserDefaults.User.reloadConversation {
+                AppGroupUserDefaults.User.reloadConversation = false
+                chatVC.dataSource?.reload()
+            }
+            SendMessageService.shared.sendReadMessages(conversationId: chatVC.conversationId)
+        } else {
+            AppGroupUserDefaults.User.currentConversationId = nil
         }
         
         if let item = pendingShortcutItem, let itemType = UIApplicationShortcutItem.ItemType(rawValue: item.type) {

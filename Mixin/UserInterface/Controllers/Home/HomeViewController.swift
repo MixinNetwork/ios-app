@@ -243,10 +243,6 @@ class HomeViewController: UIViewController {
             needRefresh = true
             return
         }
-        guard !refreshing else {
-            needRefresh = true
-            return
-        }
         fetchConversations()
     }
     
@@ -409,6 +405,10 @@ extension HomeViewController {
     
     private func fetchConversations() {
         guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        guard !refreshing else {
+            needRefresh = true
             return
         }
         refreshing = true

@@ -91,7 +91,7 @@ public class ReceiveMessageService: MixinService {
             }
 
             repeat {
-                if -startDate.timeIntervalSinceNow >= 25 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
                     if let conversationId = conversationId {
                         Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
                     }

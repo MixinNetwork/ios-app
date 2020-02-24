@@ -32,7 +32,12 @@ class RequestInAppNotificationJob: BaseJob {
         guard !isCancelled else {
             return
         }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue, !conversation.isMuted else {
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
+            return
+        }
+        
+        let isMentioned = message.mentions?[myIdentityNumber] != nil
+        guard !conversation.isMuted || isMentioned else {
             return
         }
         

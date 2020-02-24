@@ -5,7 +5,7 @@ extension MessageItem {
     
     var quoteSubtitle: String {
         if category.hasSuffix("_TEXT") {
-            return content
+            return mentionedFullnameReplacedContent
         } else if category.hasSuffix("_STICKER") {
             return Localized.CHAT_QUOTE_TYPE_STICKER
         } else if category.hasSuffix("_IMAGE") {

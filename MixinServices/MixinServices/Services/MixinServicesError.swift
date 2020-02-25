@@ -27,6 +27,7 @@ public enum MixinServicesError: Error {
     case logout(isAsyncRequest: Bool)
     case badParticipantSession
     case websocketError(errType: String, errMessage: String, errCode: Int)
+    case messageTooBig
     
 }
 
@@ -72,6 +73,8 @@ extension MixinServicesError: CustomNSError {
             return 15
         case .websocketError:
             return 16
+        case .messageTooBig:
+            return 17
         }
     }
     

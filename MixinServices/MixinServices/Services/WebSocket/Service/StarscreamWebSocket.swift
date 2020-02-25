@@ -53,6 +53,7 @@ extension StarscreamWebSocket: WebSocketDelegate {
             delegate?.websocketDidConnect(socket: self)
         case let .disconnected(reason, code):
             isConnected = false
+            traceDisconnect(reason: reason, closeCode: code)
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
         case let .binary(data):
             delegate?.websocketDidReceiveData(socket: self, data: data)
@@ -77,6 +78,33 @@ extension StarscreamWebSocket: WebSocketDelegate {
         default:
             break
         }
+    }
+
+    private func traceDisconnect(reason: String, closeCode: UInt16) {
+        var errType = "\(closeCode)"
+        switch closeCode {
+        case Starscream.CloseCode.normal.rawValue, Starscream.CloseCode.goingAway.rawValue:
+            return
+        case Starscream.CloseCode.protocolError.rawValue:
+            errType = "protocolError"
+        case Starscream.CloseCode.protocolUnhandledType.rawValue:
+            errType = "protocolUnhandledType"
+        case Starscream.CloseCode.noStatusReceived.rawValue:
+            errType = "noStatusReceived"
+        case Starscream.CloseCode.encoding.rawValue:
+            errType = "encoding"
+        case Starscream.CloseCode.policyViolated.rawValue:
+            errType = "policyViolated"
+        case Starscream.CloseCode.messageTooBig.rawValue:
+            errType = "messageTooBig"
+        default:
+            break
+        }
+
+        #if DEBUG
+        print("[StarscreamWebSocket][\(errType)][\(closeCode)]...\(reason)")
+        #endif
+        reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: reason, errCode: Int(closeCode)))
     }
 
     private func handleError(error: Error?) {

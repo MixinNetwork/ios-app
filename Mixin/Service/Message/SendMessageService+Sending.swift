@@ -72,10 +72,13 @@ extension SendMessageService {
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
             }
             if !message.category.hasPrefix("WEBRTC_") {
+                if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > 64 * 1024 {
+                    msg.content = String(content.prefix(64 * 1024))
+                }
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             }
             if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
-                SendMessageService.shared.sendMessage(message: msg, data: message.content)
+                SendMessageService.shared.sendMessage(message: msg, data: msg.content)
             } else if msg.category.hasSuffix("_IMAGE") {
                 UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
             } else if msg.category.hasSuffix("_VIDEO") {

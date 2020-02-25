@@ -467,6 +467,12 @@ extension SendMessageService {
             let content = blazeMessage.params?.data ?? message.content ?? ""
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
         }
+
+        if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix) && (blazeMessage.params?.data ?? "").utf8.count >= 120 * 1024 {
+            reporter.report(error: MixinServicesError.messageTooBig)
+            return
+        }
+
         try deliverMessage(blazeMessage: blazeMessage)
         Logger.write(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
     }

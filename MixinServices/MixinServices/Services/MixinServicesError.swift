@@ -18,8 +18,7 @@ public enum MixinServicesError: Error {
     case duplicatedJob
     case sendMessage([String: Any])
     case refreshOneTimePreKeys(error: SignalError, identityCount: Int)
-    case initEncryptingInputStream(size: Int64, name: String)
-    case initInputStream
+    case initInputStream(url: URL, isEncrypted: Bool, fileAttributes: [FileAttributeKey: Any]?, error: Error?)
     case initDecryptingOutputStream
     case initOutputStream
     case decryptMessage([String: Any])
@@ -54,10 +53,8 @@ extension MixinServicesError: CustomNSError {
             return 6
         case .refreshOneTimePreKeys:
             return 7
-        case .initEncryptingInputStream:
-            return 8
         case .initInputStream:
-            return 9
+            return 8
         case .initDecryptingOutputStream:
             return 10
         case .initOutputStream:
@@ -91,8 +88,17 @@ extension MixinServicesError: CustomNSError {
             userInfo = Self.basicUserInfo
             userInfo["signalCode"] = error.rawValue
             userInfo["identityCount"] = identityCount
-        case let .initEncryptingInputStream(size, name):
-            userInfo = ["size": size, "name": name]
+        case let .initInputStream(url, isEncrypted, attrs, error):
+            if let attrs = attrs {
+                userInfo = [:]
+                for attr in attrs {
+                    userInfo[attr.key.rawValue] = attr.value
+                }
+            } else {
+                userInfo = ["error": error]
+            }
+            userInfo["url_string"] = url.absoluteString
+            userInfo["encrypted"] = isEncrypted
         case let .decryptMessage(info):
             userInfo = Self.basicUserInfo
             for (key, value) in info {

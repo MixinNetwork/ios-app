@@ -11,10 +11,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTypeImageView: UIImageView!
     @IBOutlet weak var unreadLabel: InsetLabel!
-    @IBOutlet weak var mentionLabel: UILabel!
+    @IBOutlet weak var mentionLabel: InsetLabel!
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        unreadLabel.contentInset = UIEdgeInsets(top: 1, left: 5, bottom: 2, right: 5)
+        mentionLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()

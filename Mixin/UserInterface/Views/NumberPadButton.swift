@@ -10,9 +10,9 @@ class NumberPadButton: UIControl, XibDesignable {
         }
     }
 	
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -21,14 +21,14 @@ class NumberPadButton: UIControl, XibDesignable {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-		self.setup()
+        self.setup()
     }
 	
-	private func setup() {
-		loadXib()
+    private func setup() {
+        loadXib()
         updateButtonBackground()
-		NotificationCenter.default.addObserver(self, selector: #selector(updateButtonBackground), name: UIScreen.capturedDidChangeNotification, object: nil)
-	}
+        NotificationCenter.default.addObserver(self, selector: #selector(updateButtonBackground), name: UIScreen.capturedDidChangeNotification, object: nil)
+    }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -43,12 +43,12 @@ class NumberPadButton: UIControl, XibDesignable {
     }
     
     @objc private func updateButtonBackground() {
-		button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .normal)
-		if UIScreen.main.isCaptured {
-			button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .highlighted)
-		}else{
-			button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
-		}
+        button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .normal)
+        if UIScreen.main.isCaptured {
+            button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .highlighted)
+        }else{
+            button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
+        }
     }
     
 }

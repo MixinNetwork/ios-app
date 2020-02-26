@@ -44,9 +44,9 @@ class NumberPadView: UIView, XibDesignable {
         guard let sender = sender as? NumberPadButton else {
             return
         }
-		if !UIScreen.main.isCaptured {
-			UIDevice.current.playInputClick()
-		}
+        if !UIScreen.main.isCaptured {
+            UIDevice.current.playInputClick()
+        }
         target?.insertText(String(sender.number))
     }
     

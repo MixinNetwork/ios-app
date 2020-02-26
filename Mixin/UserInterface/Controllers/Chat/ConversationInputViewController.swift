@@ -42,6 +42,8 @@ class ConversationInputViewController: UIViewController {
     lazy var photoViewController = R.storyboard.chat.photoInput()!
     lazy var audioViewController = R.storyboard.chat.audioInput()!
     
+    var detectsMentionToken = false
+    
     var minimizedHeight: CGFloat {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
@@ -692,11 +694,13 @@ extension ConversationInputViewController: UITextViewDelegate {
             interactiveDismissResponder.height += diff
         }
         
-        if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
-            let text = (self.textView.text as NSString).substring(with: range)
-            conversationViewController.inputTextViewDidInputMentionCandidate(text)
-        } else {
-            conversationViewController.inputTextViewDidInputMentionCandidate(nil)
+        if detectsMentionToken {
+            if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
+                let text = (self.textView.text as NSString).substring(with: range)
+                conversationViewController.inputTextViewDidInputMentionCandidate(text)
+            } else {
+                conversationViewController.inputTextViewDidInputMentionCandidate(nil)
+            }
         }
     }
     

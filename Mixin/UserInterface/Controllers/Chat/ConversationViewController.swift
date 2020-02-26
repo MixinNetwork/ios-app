@@ -178,9 +178,11 @@ class ConversationViewController: UIViewController {
         conversationInputViewController.didMove(toParent: self)
         if dataSource.category == .group {
             updateSubtitleAndInputBar()
+            conversationInputViewController.detectsMentionToken = true
         } else if let user = ownerUser {
             conversationInputViewController.inputBarView.isHidden = false
             conversationInputViewController.update(opponentUser: user)
+            conversationInputViewController.detectsMentionToken = false
         }
         view.layoutIfNeeded()
         dataSource.initData(completion: finishInitialLoading)
@@ -1497,7 +1499,8 @@ extension ConversationViewController {
         
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
-        if dataSource.category == .group {
+        let isGroup = dataSource.category == .group
+        if isGroup {
             updateInvitationHintView()
         }
         hideLoading()
@@ -1511,9 +1514,11 @@ extension ConversationViewController {
                 }
                 UIView.performWithoutAnimation {
                     self.userHandleViewController.users = users
-                    let keyword = self.conversationInputViewController.textView.inputingMentionToken
-                    self.userHandleViewController.reload(with: keyword) { (hasContent) in
-                        self.setUserHandleHidden(!hasContent)
+                    if isGroup {
+                        let keyword = self.conversationInputViewController.textView.inputingMentionToken
+                        self.userHandleViewController.reload(with: keyword) { (hasContent) in
+                            self.setUserHandleHidden(!hasContent)
+                        }
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
                     self.unreadMentionMessageIds = ids

@@ -9,17 +9,25 @@ class NumberPadButton: UIControl, XibDesignable {
             button.setTitle(String(number), for: .normal)
         }
     }
+	
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        loadXib()
-        updateButtonBackground()
+        self.setup()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setup()
+    }
+	
+    private func setup() {
         loadXib()
         updateButtonBackground()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateButtonBackground), name: UIScreen.capturedDidChangeNotification, object: nil)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -34,9 +42,13 @@ class NumberPadButton: UIControl, XibDesignable {
         sendActions(for: .touchUpInside)
     }
     
-    private func updateButtonBackground() {
+    @objc private func updateButtonBackground() {
         button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .normal)
-        button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
+        if UIScreen.main.isCaptured {
+            button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .highlighted)
+        }else{
+            button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
+        }
     }
     
 }

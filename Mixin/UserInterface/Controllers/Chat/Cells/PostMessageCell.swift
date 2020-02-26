@@ -10,7 +10,6 @@ class PostMessageCell: TextMessageCell {
     }
     
     override func prepare() {
-        trailingInfoBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.16)
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
         contentView.addSubview(expandImageView)

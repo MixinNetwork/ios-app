@@ -4,7 +4,7 @@ class MessageTagLabel: InsetLabel {
     
     convenience init() {
         self.init(frame: CGRect(x: 0, y: 0, width: 8, height: 2))
-        layer.backgroundColor = UIColor.black.withAlphaComponent(0.4).cgColor
+        layer.backgroundColor = UIColor.tagBackground.cgColor
         textColor = .white
         font = .preferredFont(forTextStyle: .caption1)
         adjustsFontForContentSizeCategory = true

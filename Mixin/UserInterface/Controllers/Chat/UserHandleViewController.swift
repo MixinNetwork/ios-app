@@ -97,7 +97,7 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
                                         fullnameKeywordRange: nil,
                                         identityNumberKeywordRange: nil)
                 }
-                let fullnameKeywordRange = (user.fullName as NSString).range(of: keyword)
+                let fullnameKeywordRange = (user.fullName as NSString).range(of: keyword, options: [.caseInsensitive])
                 let identityNumberKeywordRange = (user.identityNumber as NSString).range(of: keyword)
                 if fullnameKeywordRange.location != NSNotFound {
                     return SearchResult(user: user,

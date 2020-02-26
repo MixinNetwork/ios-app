@@ -29,9 +29,6 @@ class RequestInAppNotificationJob: BaseJob {
     
     override func main() {
         let message = self.message
-        guard !isCancelled else {
-            return
-        }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
             return
         }

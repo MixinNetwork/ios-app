@@ -27,7 +27,7 @@ public struct MessageMention: BaseCodable {
         guard message.category.hasSuffix("_TEXT"), let content = message.content else {
             return nil
         }
-        let numbers = MessageMentionDetector.mentionedIdentityNumbers(from: content)
+        let numbers = MessageMentionDetector.identityNumbers(from: content)
         guard !numbers.isEmpty else {
             return nil
         }

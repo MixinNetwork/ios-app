@@ -119,12 +119,12 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
             loadViewIfNeeded()
             self.searchResults = searchResults
             tableView.reloadData()
+            completion?(true)
+            onScrollingAnimationEnd = nil
             view.setNeedsLayout()
             view.layoutIfNeeded()
             let diff = view.frame.height - tableHeaderView.frame.height
             tableView.contentOffset.y = -diff
-            completion?(true)
-            onScrollingAnimationEnd = nil
             self.tableView.setContentOffset(.zero, animated: true)
         } else if searchResults.isEmpty {
             let diff = view.frame.height - tableHeaderView.frame.height

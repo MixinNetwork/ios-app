@@ -1384,6 +1384,7 @@ extension ConversationViewController {
     }
     
     // Returns true if the animation succeeds to perform, or false if cell not found
+    @discardableResult
     private func flashCellBackground(at indexPath: IndexPath) -> Bool {
         guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
             return false
@@ -1499,18 +1500,26 @@ extension ConversationViewController {
         if dataSource.category == .group {
             updateInvitationHintView()
         }
-        let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
-        userHandleViewController.users = users
-        let keyword = conversationInputViewController.textView.inputingMentionToken
-        userHandleViewController.reload(with: keyword) { (hasContent) in
-            self.setUserHandleHidden(!hasContent)
-        }
-        UIView.performWithoutAnimation {
-            var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
-            ids.removeAll(where: dataSource.visibleMessageIds.contains)
-            unreadMentionMessageIds = ids
-        }
         hideLoading()
+        let conversationId = self.conversationId
+        dataSource.queue.async { [weak self] in
+            let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
+            var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                UIView.performWithoutAnimation {
+                    self.userHandleViewController.users = users
+                    let keyword = self.conversationInputViewController.textView.inputingMentionToken
+                    self.userHandleViewController.reload(with: keyword) { (hasContent) in
+                        self.setUserHandleHidden(!hasContent)
+                    }
+                    ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
+                    self.unreadMentionMessageIds = ids
+                }
+            }
+        }
     }
     
     private func openDocumentAction(message: MessageItem) {

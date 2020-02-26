@@ -119,7 +119,7 @@ extension Job {
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
     
-    init(sessionRead conversationId: String, messageId: String) {
+    init(sessionRead conversationId: String, messageId: String, status: String = MessageStatus.READ.rawValue) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         self.action = JobAction.SEND_SESSION_MESSAGE.rawValue
@@ -128,7 +128,7 @@ extension Job {
         self.resendMessageId = nil
         self.blazeMessage = nil
         self.messageId = messageId
-        self.status = MessageStatus.READ.rawValue
+        self.status = status
         self.sessionId = nil
         self.isHttpMessage = false
     }

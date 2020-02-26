@@ -979,7 +979,9 @@ extension ConversationViewController: UITableViewDelegate {
         if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
             dataSource.loadMoreBelowIfNeeded()
         }
-        let messageId = dataSource.viewModel(for: indexPath)?.message.messageId
+
+        let message = dataSource.viewModel(for: indexPath)?.message
+        let messageId = message?.messageId
         if messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
             unreadBadgeValue = 0
             dataSource.firstUnreadMessageId = nil
@@ -991,12 +993,13 @@ extension ConversationViewController: UITableViewDelegate {
             viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
-        if let messageId = messageId {
+        if let messageId = messageId, let mentions = message?.mentions, mentions.count > 0 {
             if let index = unreadMentionMessageIds.firstIndex(of: messageId) {
                 unreadMentionMessageIds.remove(at: index)
             }
+            let conversationId = self.conversationId
             dataSource.queue.async {
-                MessageMentionDAO.shared.read(messageId: messageId)
+                SendMessageService.shared.sendMentionMessageRead(conversationId: conversationId, messageId: messageId)
             }
         }
     }
@@ -1404,7 +1407,7 @@ extension ConversationViewController {
             return viewModel.message.messageId == messageId
         })
         if let indexPath = visibleIndexPath {
-            flashCellBackground(at: indexPath)
+            _ = flashCellBackground(at: indexPath)
         } else {
             messageIdToFlashAfterAnimationFinished = messageId
         }

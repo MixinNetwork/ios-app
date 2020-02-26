@@ -90,22 +90,12 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }
     
-    public func fullname(identityNumber: String) -> String? {
-        let values = MixinDatabase.shared.getStringValues(column: User.Properties.fullName,
-                                                          tableName: User.tableName,
-                                                          condition: User.Properties.identityNumber == identityNumber,
-                                                          orderBy: nil,
-                                                          limit: 1)
-        return values.first
+    public func fullnames(identityNumbers: [String]) -> [String: String] {
+        return MixinDatabase.shared.getDictionary(key: User.Properties.identityNumber.asColumnResult(), value: User.Properties.fullName.asColumnResult(), tableName: User.tableName, condition: User.Properties.identityNumber.in(identityNumbers))
     }
-    
-    public func userId(identityNumber: String) -> String? {
-        let values = MixinDatabase.shared.getStringValues(column: User.Properties.userId,
-                                                          tableName: User.tableName,
-                                                          condition: User.Properties.identityNumber == identityNumber,
-                                                          orderBy: nil,
-                                                          limit: 1)
-        return values.first
+
+    public func userIds(identityNumbers: [String]) -> [String] {
+        return MixinDatabase.shared.getStringValues(column: User.Properties.userId.asColumnResult(), tableName: User.tableName, condition: User.Properties.identityNumber.in(identityNumbers))
     }
     
     public func updateAccount(account: Account) {

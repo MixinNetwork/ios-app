@@ -58,7 +58,7 @@ public final class MessageDAO {
         SELECT album_id FROM sticker_relationships sr WHERE sr.sticker_id = m.sticker_id LIMIT 1
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
-    LEFT JOIN message_mention mm ON m.id = mm.message_id
+    LEFT JOIN message_mentions mm ON m.id = mm.message_id
     """
     private static let sqlQueryFirstNMessages = """
     \(sqlQueryFullMessage)
@@ -113,6 +113,13 @@ public final class MessageDAO {
         INNER JOIN albums a ON a.album_id = sa.album_id
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
+    """
+    private static let sqlUpdateUnseenMessageCount = """
+    UPDATE conversations SET unseen_message_count = (
+        SELECT count(m.id) FROM messages m
+        INNER JOIN users u ON m.user_id = u.user_id AND u.relationship != 'ME'
+        WHERE m.conversation_id = ? AND m.status = 'DELIVERED'
+    ) WHERE conversation_id = ?
     """
     
     public func getMediaUrls(categories: [MessageCategory]) -> [String] {
@@ -182,7 +189,7 @@ public final class MessageDAO {
     }
     
     public func updateUnseenMessageCount(database: Database, conversationId: String) throws {
-        try database.prepareUpdateSQL(sql: "UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = ?) where conversation_id = ?").execute(with: [conversationId, conversationId])
+        try database.prepareUpdateSQL(sql: Self.sqlUpdateUnseenMessageCount).execute(with: [conversationId, conversationId])
     }
     
     @discardableResult

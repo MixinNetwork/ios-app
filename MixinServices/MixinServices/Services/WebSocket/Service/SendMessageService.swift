@@ -134,6 +134,20 @@ public class SendMessageService: MixinService {
         }
     }
 
+    public func sendMentionMessageRead(conversationId: String, messageId: String) {
+        let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
+
+        MixinDatabase.shared.transaction { (database) in
+            try database.update(maps: [(MessageMention.Properties.hasRead, true)],
+                                tableName: MessageMention.tableName,
+                                condition: MessageMention.Properties.messageId == messageId)
+            if AppGroupUserDefaults.Account.isDesktopLoggedIn {
+                let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
+                try database.insert(objects: [job], intoTable: Job.tableName)
+            }
+        }
+    }
+
     public func sendAckMessage(messageId: String, status: MessageStatus) {
         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: status.rawValue)
         let action: JobAction = status == .DELIVERED ? .SEND_DELIVERED_ACK_MESSAGE : .SEND_ACK_MESSAGE
@@ -437,8 +451,10 @@ extension SendMessageService {
                 }
             } else {
                 let numbers = MessageMentionDetector.mentionedIdentityNumbers(from: text)
-                let userIds = numbers.compactMap(UserDAO.shared.userId(identityNumber:))
-                blazeMessage.params?.mentions = userIds
+                if numbers.count > 0 {
+                    let userIds = UserDAO.shared.userIds(identityNumbers: numbers)
+                    blazeMessage.params?.mentions = userIds
+                }
             }
         }
         

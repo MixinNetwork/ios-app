@@ -277,6 +277,10 @@ public enum MessageStatus: String, Codable {
     }
 }
 
+public enum MessageMentionStatus: String {
+    case MENTION_READ
+}
+
 public enum MediaStatus: String {
     case PENDING
     case DONE

@@ -725,13 +725,14 @@ public class ReceiveMessageService: MixinService {
                 let messageIds = ackMessages.map({ $0.messageId })
                 UNUserNotificationCenter.current().removeNotifications(withIdentifiers: messageIds)
                 for message in ackMessages {
-                    guard message.status == MessageStatus.READ.rawValue else {
-                        continue
-                    }
-                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, from: "\(data.category):\(plainData.action)", updateUnseen: true) {
-                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
+                    if message.status == MessageStatus.READ.rawValue {
+                        MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, from: "\(data.category):\(plainData.action)", updateUnseen: true)
+                    } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
+                        MessageMentionDAO.shared.read(messageId: message.messageId)
                     }
                 }
+
+                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                 NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
             default:
                 break

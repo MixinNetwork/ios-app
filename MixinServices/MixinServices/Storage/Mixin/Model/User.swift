@@ -39,6 +39,12 @@ public struct User: BaseCodable {
                 userId: ColumnConstraintBinding(isPrimary: true)
             ]
         }
+        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
+            return [
+                "_identity_number_indexs": IndexBinding(indexesBy: identityNumber),
+                "_app_indexs": IndexBinding(indexesBy: appId)
+            ]
+        }
     }
     
     static let systemUser = "00000000-0000-0000-0000-000000000000"

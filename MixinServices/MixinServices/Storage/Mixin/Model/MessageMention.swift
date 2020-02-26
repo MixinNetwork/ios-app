@@ -4,22 +4,19 @@ public struct MessageMention: BaseCodable {
     
     public typealias Mentions = [String: String]
     
-    public static let tableName: String = "message_mention"
+    public static let tableName: String = "message_mentions"
     
     public let conversationId: String
     public let messageId: String
-    public let mentionsJson: Data?
+    public let mentionsJson: Data
     public let hasRead: Bool
     
     public lazy var mentions: Mentions = {
-        guard let json = mentionsJson else {
-            return [:]
-        }
-        let decoded = try? JSONDecoder.default.decode(Mentions.self, from: json)
+        let decoded = try? JSONDecoder.default.decode(Mentions.self, from: mentionsJson)
         return decoded ?? [:]
     }()
     
-    public init(conversationId: String, messageId: String, mentionsJson: Data?, hasRead: Bool) {
+    public init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
         self.conversationId = conversationId
         self.messageId = messageId
         self.mentionsJson = mentionsJson
@@ -34,10 +31,7 @@ public struct MessageMention: BaseCodable {
         guard !numbers.isEmpty else {
             return nil
         }
-        var mentions = MessageMention.Mentions()
-        for number in numbers {
-            mentions[number] = UserDAO.shared.fullname(identityNumber: number)
-        }
+        var mentions = UserDAO.shared.fullnames(identityNumbers: numbers)
         guard let json = try? JSONEncoder.default.encode(mentions) else {
             return nil
         }
@@ -68,7 +62,7 @@ extension MessageMention {
         }
         public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
-                "_conversation_indexs": IndexBinding(indexesBy: conversationId),
+                "_conversation_indexs": IndexBinding(indexesBy: conversationId, hasRead),
             ]
         }
         

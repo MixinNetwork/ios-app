@@ -60,27 +60,44 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             return false
         }
         
+        let needsEncryption = message.category.hasPrefix("SIGNAL_")
         let contentLength: Int
-        if message.category.hasPrefix("SIGNAL_") {
-            if let inputStream = AttachmentEncryptingInputStream(url: fileUrl) {
-                contentLength = inputStream.contentLength
-                stream = inputStream
+        do {
+            if needsEncryption {
+                if let inputStream = AttachmentEncryptingInputStream(url: fileUrl) {
+                    contentLength = inputStream.contentLength
+                    stream = inputStream
+                } else {
+                    let attrs = try FileManager.default.attributesOfItem(atPath: fileUrl.path)
+                    let error = MixinServicesError.initInputStream(url: fileUrl,
+                                                                   isEncrypted: needsEncryption,
+                                                                   fileAttributes: attrs,
+                                                                   error: nil)
+                    reporter.report(error: error)
+                    return false
+                }
             } else {
-                let size = FileManager.default.fileSize(fileUrl.path)
-                let name = fileUrl.lastPathComponent
-                let error = MixinServicesError.initEncryptingInputStream(size: size, name: name)
-                reporter.report(error: error)
-                return false
-            }
-        } else {
-            stream = InputStream(url: fileUrl)
-            if stream == nil {
-                reporter.report(error: MixinServicesError.initInputStream)
-                return false
-            } else {
+                stream = InputStream(url: fileUrl)
                 contentLength = Int(FileManager.default.fileSize(fileUrl.path))
+                if stream == nil || contentLength <= 0 {
+                    let attrs = try FileManager.default.attributesOfItem(atPath: fileUrl.path)
+                    let error = MixinServicesError.initInputStream(url: fileUrl,
+                                                                   isEncrypted: needsEncryption,
+                                                                   fileAttributes: attrs,
+                                                                   error: nil)
+                    reporter.report(error: error)
+                    return false
+                }
             }
+        } catch let underlying {
+            let error = MixinServicesError.initInputStream(url: fileUrl,
+                                                           isEncrypted: needsEncryption,
+                                                           fileAttributes: nil,
+                                                           error: underlying)
+            reporter.report(error: error)
+            return false
         }
+        
         guard let inputStream = stream, contentLength > 0 else {
             return false
         }

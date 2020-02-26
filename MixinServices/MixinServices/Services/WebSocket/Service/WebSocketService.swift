@@ -69,7 +69,7 @@ public class WebSocketService {
 
             self.status = .connecting
 
-            let socket = StarscreamWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
+            let socket = FacebookWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
             self.socket = socket
             self.socket?.delegate = self
 
@@ -326,7 +326,7 @@ extension WebSocketService {
     
     @discardableResult
     private func send(message: BlazeMessage) -> Bool {
-        guard let socket = socket, status == .connected else {
+        guard let socket = socket, socket.isConnected else {
             return false
         }
         guard let data = try? JSONEncoder.default.encode(message), let gzipped = try? data.gzipped() else {

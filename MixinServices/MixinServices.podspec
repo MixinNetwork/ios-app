@@ -33,9 +33,9 @@ Mixin Core Services.
   s.dependency 'SDWebImageYYPlugin/YYImage'
   s.dependency 'YYImage/WebP'
   s.dependency 'DeviceGuru'
-  s.dependency 'Starscream'
   s.dependency 'GzipSwift'
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
+  s.dependency 'SocketRocket'
   s.dependency 'WCDB.swift'
 end

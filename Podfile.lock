@@ -116,6 +116,7 @@ PODS:
     - libsignal-protocol-c
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
+    - SocketRocket
     - Starscream
     - WCDB.swift
     - YYImage/WebP
@@ -144,6 +145,7 @@ PODS:
     - SDWebImage/Core (~> 5.4)
     - YYImage/Core
   - SnapKit (5.0.1)
+  - SocketRocket (0.5.1)
   - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
   - Starscream (4.0.0)
@@ -211,6 +213,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageYYPlugin
     - SnapKit
+    - SocketRocket
     - SQLiteRepairKit
     - Starscream
     - WCDBOptimizedSQLCipher
@@ -266,7 +269,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
-  MixinServices: f09751f52082cab5cb98f0070f6dda4d2a29a666
+  MixinServices: 7765ba6961d4e15a399abe00102f36bb5dbf1f1b
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
@@ -277,6 +280,7 @@ SPEC CHECKSUMS:
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   SDWebImageYYPlugin: f6c1af162fb075efe5918d8caedee1f3d17c197e
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   Starscream: 04b26f02727e10a002e6b5d21b188ba0d049910b
   SwiftyMarkdown: 033abc9dad9a37903f81aec5188cade436f40520

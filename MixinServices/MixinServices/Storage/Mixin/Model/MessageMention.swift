@@ -16,14 +16,32 @@ public struct MessageMention: BaseCodable {
         return decoded ?? [:]
     }()
     
-    public init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
-        self.conversationId = conversationId
-        self.messageId = messageId
-        self.mentionsJson = mentionsJson
-        self.hasRead = hasRead
+    public init(conversationId: String, messageId: String, mentions: Mentions, hasRead: Bool) {
+        let json = (try? JSONEncoder.default.encode(mentions)) ?? Data()
+        self.init(conversationId: conversationId,
+                  messageId: messageId,
+                  mentionsJson: json,
+                  hasRead: hasRead)
     }
     
-    public init?(message: Message, isComposedByMe: Bool) {
+    public init?(incomingMessage message: Message, isQuotingMyMessage: Bool) {
+        var mentions: Mentions
+        if message.category.hasSuffix("_TEXT"), let content = message.content {
+            let numbers = MessageMentionDetector.identityNumbers(from: content)
+            mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+        } else {
+            mentions = [:]
+        }
+        if isQuotingMyMessage {
+            mentions[myIdentityNumber] = LoginManager.shared.account?.full_name
+        }
+        self.init(conversationId: message.conversationId,
+                  messageId: message.messageId,
+                  mentions: mentions,
+                  hasRead: mentions[myIdentityNumber] == nil)
+    }
+    
+    public init?(composedMessage message: Message) {
         guard message.category.hasSuffix("_TEXT"), let content = message.content else {
             return nil
         }
@@ -31,18 +49,18 @@ public struct MessageMention: BaseCodable {
         guard !numbers.isEmpty else {
             return nil
         }
-        var mentions = UserDAO.shared.fullnames(identityNumbers: numbers)
-        guard let json = try? JSONEncoder.default.encode(mentions) else {
-            return nil
-        }
-        self.conversationId = message.conversationId
-        self.messageId = message.messageId
-        self.mentionsJson = json
-        if isComposedByMe {
-            self.hasRead = true
-        } else {
-            self.hasRead = mentions[myIdentityNumber] == nil
-        }
+        let mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+        self.init(conversationId: message.conversationId,
+                  messageId: message.messageId,
+                  mentions: mentions,
+                  hasRead: true)
+    }
+    
+    private init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
+        self.conversationId = conversationId
+        self.messageId = messageId
+        self.mentionsJson = mentionsJson
+        self.hasRead = hasRead
     }
     
 }

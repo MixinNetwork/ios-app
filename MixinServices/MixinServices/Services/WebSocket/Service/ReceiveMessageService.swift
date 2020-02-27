@@ -433,8 +433,9 @@ public class ReceiveMessageService: MixinService {
                 content = decoded
             }
             let message = Message.createMessage(textMessage: content, data: data)
-            let mention = MessageMention(message: message, isComposedByMe: false)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, mention: mention)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source) { (isQuotingMyMessage) -> MessageMention? in
+                MessageMention(incomingMessage: message, isQuotingMyMessage: isQuotingMyMessage)
+            }
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText) else {
                 return
@@ -519,15 +520,37 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
+        let quote: (content: Data, isMine: Bool)? = {
+            guard !data.quoteMessageId.isEmpty else {
+                return nil
+            }
+            return MessageDAO.shared.getQuoteMessage(messageId: data.quoteMessageId)
+        }()
+        
         defer {
-            let quoteMessageId = data.quoteMessageId
-            if !quoteMessageId.isEmpty, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
-                MessageDAO.shared.updateMessageQuoteContent(conversationId: data.conversationId, quoteMessageId: quoteMessageId, quoteContent: quoteContent)
+            if let content = quote?.content {
+                MessageDAO.shared.update(quoteContent: content, for: messageId)
             }
         }
+        
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue, MessageCategory.SIGNAL_POST.rawValue:
-            MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            let numbers = MessageMentionDetector.identityNumbers(from: plainText)
+            var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+            if let quote = quote, quote.isMine, mentions[myIdentityNumber] == nil {
+                mentions[myIdentityNumber] = LoginManager.shared.account?.full_name
+            }
+            let mention = MessageMention(conversationId: data.conversationId,
+                                         messageId: messageId,
+                                         mentions: mentions,
+                                         hasRead: mentions[myIdentityNumber] == nil)
+            MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
+                                                            status: Message.getStatus(data: data),
+                                                            mention: mention,
+                                                            messageId: messageId,
+                                                            category: data.category,
+                                                            conversationId: data.conversationId,
+                                                            messageSource: data.source)
         case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return

@@ -90,7 +90,7 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }
     
-    public func fullnames(identityNumbers: [String]) -> [String: String] {
+    public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {
         return MixinDatabase.shared.getDictionary(key: User.Properties.identityNumber.asColumnResult(), value: User.Properties.fullName.asColumnResult(), tableName: User.tableName, condition: User.Properties.identityNumber.in(identityNumbers))
     }
 

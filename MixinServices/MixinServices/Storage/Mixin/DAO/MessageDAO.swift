@@ -3,6 +3,8 @@ import UIKit
 
 public final class MessageDAO {
     
+    public typealias MentionMaker = (_ isQuotingMyMessage: Bool) -> MessageMention?
+    
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
         public static let message = "msg"
@@ -150,8 +152,10 @@ public final class MessageDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
-    public func updateMessageQuoteContent(conversationId: String, quoteMessageId: String, quoteContent: Data) {
-        MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.quoteMessageId == quoteContent)
+    public func update(quoteContent: Data, for messageId: String) {
+        MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)],
+                                    tableName: Message.tableName,
+                                    condition: Message.Properties.messageId == messageId)
     }
     
     public func isExist(messageId: String) -> Bool {
@@ -360,10 +364,14 @@ public final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    public func insertMessage(message: Message, messageSource: String, mention: MessageMention? = nil) {
+    public func insertMessage(message: Message, messageSource: String, mentionMaker: MentionMaker? = nil) {
         var message = message
-        if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
-            message.quoteContent = quoteContent
+        var mention: MessageMention?
+        if let id = message.quoteMessageId, let quote = getQuoteMessage(messageId: id) {
+            message.quoteContent = quote.content
+            mention = mentionMaker?(quote.isMine)
+        } else {
+            mention = mentionMaker?(false)
         }
         if let mention = mention {
             MixinDatabase.shared.transaction { (db) in
@@ -491,20 +499,28 @@ public final class MessageDAO {
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
     }
     
-    public func getQuoteMessage(messageId: String?) -> Data? {
+    public func getQuoteMessage(messageId: String?) -> (content: Data, isMine: Bool)? {
         guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId]).first else {
             return nil
         }
-        return try? JSONEncoder().encode(quoteMessage)
+        if let content = try? JSONEncoder.default.encode(quoteMessage) {
+            let isMine = quoteMessage.userId == myUserId
+            return (content, isMine)
+        } else {
+            return nil
+        }
     }
     
 }
 
 extension MessageDAO {
     
-    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, category: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
+            if let mention = mention {
+                try database.insert(objects: [mention], intoTable: MessageMention.tableName)
+            }
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
             try updateStatment.execute(with: values)
             guard updateStatment.changes ?? 0 > 0 else {
@@ -530,8 +546,14 @@ extension MessageDAO {
         }
     }
     
-    public func updateMessageContentAndStatus(content: String, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
-        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
+    public func updateMessageContentAndStatus(content: String, status: String, mention: MessageMention?, messageId: String, category: String, conversationId: String, messageSource: String) {
+        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status],
+                               values: [content, status],
+                               mention: mention,
+                               messageId: messageId,
+                               category: category,
+                               conversationId: conversationId,
+                               messageSource: messageSource)
     }
     
     public func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, category: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {

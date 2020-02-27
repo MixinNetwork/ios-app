@@ -72,8 +72,9 @@ extension SendMessageService {
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
             }
             if !message.category.hasPrefix("WEBRTC_") {
-                let mention = MessageMention(message: msg, isComposedByMe: true)
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "", mention: mention)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "") { (_) -> MessageMention? in
+                    MessageMention(composedMessage: msg)
+                }
             }
             if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                 SendMessageService.shared.sendMessage(message: msg, data: message.content)

@@ -522,13 +522,13 @@ public class ReceiveMessageService: MixinService {
             guard !data.quoteMessageId.isEmpty else {
                 return nil
             }
-            guard let msg = MessageDAO.shared.getFullMessage(messageId: data.quoteMessageId) else {
+            guard let quoted = MessageDAO.shared.getNonFailedMessage(messageId: data.quoteMessageId) else {
                 return nil
             }
-            guard let encoded = try? JSONEncoder.default.encode(msg) else {
+            guard let encoded = try? JSONEncoder.default.encode(quoted) else {
                 return nil
             }
-            return (encoded, msg.userId == myUserId)
+            return (encoded, quoted.userId == myUserId)
         }()
         
         defer {

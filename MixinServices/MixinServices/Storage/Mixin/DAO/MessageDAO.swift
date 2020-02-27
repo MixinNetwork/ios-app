@@ -362,12 +362,15 @@ public final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
+    public func getNonFailedMessage(messageId: String) -> MessageItem? {
+        MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).first
+    }
+    
     public func insertMessage(message: Message, messageSource: String) {
         var message = message
         
         let quotedMessage: MessageItem?
-        if let id = message.quoteMessageId {
-            let quoted = getFullMessage(messageId: id)
+        if let id = message.quoteMessageId, let quoted = getNonFailedMessage(messageId: id) {
             message.quoteContent = try? JSONEncoder.default.encode(quoted)
             quotedMessage = quoted
         } else {

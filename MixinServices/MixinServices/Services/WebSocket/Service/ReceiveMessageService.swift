@@ -433,9 +433,7 @@ public class ReceiveMessageService: MixinService {
                 content = decoded
             }
             let message = Message.createMessage(textMessage: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source) { (isQuotingMyMessage) -> MessageMention? in
-                MessageMention(incomingMessage: message, isQuotingMyMessage: isQuotingMyMessage)
-            }
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText) else {
                 return
@@ -524,7 +522,13 @@ public class ReceiveMessageService: MixinService {
             guard !data.quoteMessageId.isEmpty else {
                 return nil
             }
-            return MessageDAO.shared.getQuoteMessage(messageId: data.quoteMessageId)
+            guard let msg = MessageDAO.shared.getFullMessage(messageId: data.quoteMessageId) else {
+                return nil
+            }
+            guard let encoded = try? JSONEncoder.default.encode(msg) else {
+                return nil
+            }
+            return (encoded, msg.userId == myUserId)
         }()
         
         defer {

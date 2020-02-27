@@ -3,8 +3,6 @@ import UIKit
 
 public final class MessageDAO {
     
-    public typealias MentionMaker = (_ isQuotingMyMessage: Bool) -> MessageMention?
-    
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
         public static let message = "msg"
@@ -364,16 +362,19 @@ public final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    public func insertMessage(message: Message, messageSource: String, mentionMaker: MentionMaker? = nil) {
+    public func insertMessage(message: Message, messageSource: String) {
         var message = message
-        var mention: MessageMention?
-        if let id = message.quoteMessageId, let quote = getQuoteMessage(messageId: id) {
-            message.quoteContent = quote.content
-            mention = mentionMaker?(quote.isMine)
+        
+        let quotedMessage: MessageItem?
+        if let id = message.quoteMessageId {
+            let quoted = getFullMessage(messageId: id)
+            message.quoteContent = try? JSONEncoder.default.encode(quoted)
+            quotedMessage = quoted
         } else {
-            mention = mentionMaker?(false)
+            quotedMessage = nil
         }
-        if let mention = mention {
+        
+        if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
             MixinDatabase.shared.transaction { (db) in
                 try db.insert(objects: [mention], intoTable: MessageMention.tableName)
                 try insertMessage(database: db, message: message, messageSource: messageSource)
@@ -497,18 +498,6 @@ public final class MessageDAO {
     
     public func hasMessage(id: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
-    }
-    
-    public func getQuoteMessage(messageId: String?) -> (content: Data, isMine: Bool)? {
-        guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId]).first else {
-            return nil
-        }
-        if let content = try? JSONEncoder.default.encode(quoteMessage) {
-            let isMine = quoteMessage.userId == myUserId
-            return (content, isMine)
-        } else {
-            return nil
-        }
     }
     
 }

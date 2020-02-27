@@ -2,7 +2,7 @@ import Foundation
 
 public enum MessageMentionDetector {
     
-    private static let regex = try? NSRegularExpression(pattern: "@([0-9]+)", options: [])
+    private static let regex = try? NSRegularExpression(pattern: "@([0-9]{4,})", options: [])
     
     public static func identityNumbers(from text: String) -> [String] {
         let nsText = text as NSString

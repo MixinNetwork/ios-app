@@ -14,12 +14,6 @@ public final class MessageMentionDAO {
         """
     }
     
-    public func read(messageId: String) {
-        MixinDatabase.shared.update(maps: [(MessageMention.Properties.hasRead, true)],
-                                    tableName: MessageMention.tableName,
-                                    condition: MessageMention.Properties.messageId == messageId)
-    }
-    
     public func unreadMessageIds(conversationId: String) -> [String] {
         MixinDatabase.shared.getStringValues(sql: Sql.unreadMessageIds, values: [conversationId])
     }

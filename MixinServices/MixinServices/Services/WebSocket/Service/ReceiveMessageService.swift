@@ -518,22 +518,11 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
-        let quote: (content: Data, isMine: Bool)? = {
-            guard !data.quoteMessageId.isEmpty else {
-                return nil
-            }
-            guard let quoted = MessageDAO.shared.getNonFailedMessage(messageId: data.quoteMessageId) else {
-                return nil
-            }
-            guard let encoded = try? JSONEncoder.default.encode(quoted) else {
-                return nil
-            }
-            return (encoded, quoted.userId == myUserId)
-        }()
-        
+        let quoteMessage = MessageDAO.shared.getNonFailedMessage(messageId: data.quoteMessageId)
+
         defer {
-            if let content = quote?.content {
-                MessageDAO.shared.update(quoteContent: content, for: messageId)
+            if let quoteMessage = quoteMessage, let quoteContent = try? JSONEncoder.default.encode(quoteMessage) {
+                MessageDAO.shared.update(quoteContent: quoteContent, for: messageId)
             }
         }
         
@@ -541,13 +530,13 @@ public class ReceiveMessageService: MixinService {
         case MessageCategory.SIGNAL_TEXT.rawValue, MessageCategory.SIGNAL_POST.rawValue:
             let numbers = MessageMentionDetector.identityNumbers(from: plainText)
             var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-            if let quote = quote, quote.isMine, mentions[myIdentityNumber] == nil {
-                mentions[myIdentityNumber] = LoginManager.shared.account?.full_name
+            if data.userId != myUserId && quoteMessage?.userId == myUserId && mentions[myIdentityNumber] == nil {
+                mentions[myIdentityNumber] = myFullname
             }
             let mention = MessageMention(conversationId: data.conversationId,
                                          messageId: messageId,
                                          mentions: mentions,
-                                         hasRead: mentions[myIdentityNumber] == nil)
+                                         hasRead: data.userId != myUserId)
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,

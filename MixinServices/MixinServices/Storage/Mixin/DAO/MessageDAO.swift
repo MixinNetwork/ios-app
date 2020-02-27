@@ -397,7 +397,10 @@ public final class MessageDAO {
     }
     
     public func getNonFailedMessage(messageId: String) -> MessageItem? {
-        MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).first
+        guard !messageId.isEmpty else {
+            return nil
+        }
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).first
     }
     
     public func insertMessage(message: Message, messageSource: String) {

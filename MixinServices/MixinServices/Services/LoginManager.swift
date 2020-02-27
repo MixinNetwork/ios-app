@@ -8,6 +8,10 @@ public var myIdentityNumber: String {
     LoginManager.shared.account?.identity_number ?? "00000"
 }
 
+public var myFullname: String {
+    LoginManager.shared.account?.full_name ?? ""
+}
+
 public final class LoginManager {
     
     public static let shared = LoginManager()

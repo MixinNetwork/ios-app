@@ -32,8 +32,8 @@ public struct MessageMention: BaseCodable {
         } else {
             mentions = [:]
         }
-        if let quoted = quotedMessage, quoted.userId == myUserId {
-            mentions[myIdentityNumber] = LoginManager.shared.account?.full_name ?? myIdentityNumber
+        if let quoted = quotedMessage, message.userId != myUserId, quoted.userId == myUserId {
+            mentions[myIdentityNumber] = myFullname
         }
         
         let hasRead: Bool

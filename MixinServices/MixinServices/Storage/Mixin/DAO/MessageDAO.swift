@@ -159,7 +159,41 @@ public final class MessageDAO {
     public func isExist(messageId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == messageId)
     }
-    
+
+    public func batchUpdateMessageStatus(readMessageIds: [String], mentionMessageIds: [String]) {
+        var readMessageIds = readMessageIds
+        var readMessages: [Message] = []
+        var conversationIds: Set<String> = []
+
+        if readMessageIds.count > 0 {
+            readMessages = MixinDatabase.shared.getCodables(condition: Message.Properties.messageId.in(readMessageIds) && Message.Properties.status != MessageStatus.FAILED.rawValue && Message.Properties.status != MessageStatus.READ.rawValue)
+            readMessageIds = readMessages.map { $0.messageId }
+
+            conversationIds = Set<String>(readMessages.map { $0.conversationId })
+        }
+
+        MixinDatabase.shared.transaction { (database) in
+            if readMessageIds.count > 0 {
+                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.messageId.in(readMessageIds))
+
+                for conversationId in conversationIds {
+                    try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                }
+            }
+
+            if mentionMessageIds.count > 0 {
+                try database.update(maps: [(MessageMention.Properties.hasRead, true)], tableName: MessageMention.tableName, condition: MessageMention.Properties.messageId.in(mentionMessageIds))
+            }
+        }
+
+        for message in readMessages {
+            let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
+        NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
+        UNUserNotificationCenter.current().removeNotifications(withIdentifiers: readMessageIds)
+    }
+
     @discardableResult
     public func updateMessageStatus(messageId: String, status: String, from: String, updateUnseen: Bool = false) -> Bool {
         guard let oldMessage: Message = MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId) else {

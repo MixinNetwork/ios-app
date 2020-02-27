@@ -83,6 +83,7 @@ extension FacebookWebSocket: SRWebSocketDelegate {
 
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         var errType = "\(code)"
+        var errMessage = reason ?? ""
         switch code {
         case SRStatusCodeNormal.rawValue, SRStatusCodeGoingAway.rawValue:
             return
@@ -100,6 +101,14 @@ extension FacebookWebSocket: SRWebSocketDelegate {
             errType = "policyViolated"
         case SRStatusCodeMessageTooBig.rawValue:
             errType = "messageTooBig"
+            if let job = JobDAO.shared.nextJob() {
+                errMessage += "[\(job.action)][\(job.jobId)][\(job.blazeMessage?.count ?? 0)bytes]"
+                if job.blazeMessage != nil {
+                    let blazeMessage = job.toBlazeMessage()
+                    errMessage += "[\(blazeMessage.params?.category ?? "")][\(blazeMessage.params?.conversationId ?? "")]"
+                }
+                Logger.write(log: "[MessageTooBig]" + errMessage, newSection: true)
+            }
         case SRStatusCodeMissingExtension.rawValue:
             errType = "missingExtension"
         case SRStatusCodeInternalError.rawValue:
@@ -117,7 +126,7 @@ extension FacebookWebSocket: SRWebSocketDelegate {
         #if DEBUG
         print("[FacebookWebSocket][\(errType)][\(code)]...wasClean:\(wasClean)...\(reason ?? "")")
         #endif
-        reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: reason ?? "", errCode: code))
+        reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: errMessage, errCode: code))
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
     }
 

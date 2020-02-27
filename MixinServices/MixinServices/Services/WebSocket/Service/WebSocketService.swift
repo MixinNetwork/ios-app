@@ -125,10 +125,10 @@ public class WebSocketService {
         }
     }
     
-    internal func respondedMessage(for message: BlazeMessage) throws -> BlazeMessage? {
+    internal func respondedMessage(for message: BlazeMessage) throws -> (success: Bool, blazeMessage: BlazeMessage?) {
         return try messageQueue.sync {
             guard LoginManager.shared.isLoggedIn else {
-                return nil
+                return (false, nil)
             }
             var response: BlazeMessage?
             var err = APIError.createTimeoutError()
@@ -152,7 +152,13 @@ public class WebSocketService {
                 }
                 semaphore.signal()
             }
-            if !send(message: message) {
+
+            let (success, isBadData) = send(message: message)
+            if isBadData {
+                messageHandlers.removeValue(forKey: message.id)
+                return (true, nil)
+            }
+            if !success {
                 messageHandlers.removeValue(forKey: message.id)
                 throw err
             }
@@ -164,7 +170,7 @@ public class WebSocketService {
             guard let blazeMessage = response else {
                 throw err
             }
-            return blazeMessage
+            return (blazeMessage != nil, blazeMessage)
         }
     }
     
@@ -324,15 +330,23 @@ extension WebSocketService {
     }
     
     @discardableResult
-    private func send(message: BlazeMessage) -> Bool {
+    private func send(message: BlazeMessage) -> (success: Bool, isBadData: Bool) {
         guard let socket = socket, socket.isConnected else {
-            return false
+            return (false, false)
         }
         guard let data = try? JSONEncoder.default.encode(message), let gzipped = try? data.gzipped() else {
-            return false
+            reporter.report(error: MixinServicesError.gzipFailed)
+            return (false, true)
         }
+        guard gzipped.count < 120 * 1024 else {
+            let conversationId = message.params?.conversationId ?? ""
+            let category = message.params?.category ?? ""
+            reporter.report(error: MixinServicesError.messageTooBig(gzipSize: gzipped.count, category: category, conversationId: conversationId))
+            return (false, true)
+        }
+        
         socket.send(data: gzipped)
-        return true
+        return (true, false)
     }
     
     private func requestListPendingMessages() {

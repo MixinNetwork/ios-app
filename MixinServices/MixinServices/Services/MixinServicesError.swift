@@ -25,7 +25,8 @@ public enum MixinServicesError: Error {
     case logout(isAsyncRequest: Bool)
     case badParticipantSession
     case websocketError(errType: String, errMessage: String, errCode: Int)
-    case messageTooBig
+    case messageTooBig(gzipSize: Int, category: String, conversationId: String)
+    case gzipFailed
     
 }
 
@@ -71,6 +72,8 @@ extension MixinServicesError: CustomNSError {
             return 16
         case .messageTooBig:
             return 17
+        case .gzipFailed:
+            return 18
         }
     }
     
@@ -117,6 +120,11 @@ extension MixinServicesError: CustomNSError {
             userInfo["errType"] = errType
             userInfo["errMessage"] = errMessage
             userInfo["errCode"] = "\(errCode)"
+        case let .messageTooBig(gzipSize, category, conversationId):
+            userInfo = Self.basicUserInfo
+            userInfo["conversationId"] = conversationId
+            userInfo["category"] = category
+            userInfo["size"] = "\(gzipSize / 1024)kb"
         default:
             userInfo = [:]
         }

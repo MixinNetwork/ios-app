@@ -205,7 +205,7 @@ public class MixinService {
     internal func deliverKeys(blazeMessage: BlazeMessage) -> BlazeMessage? {
         repeat {
             do {
-                return try WebSocketService.shared.respondedMessage(for: blazeMessage)
+                return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
             } catch {
                 if let err = error as? APIError {
                     if err.code == 401 {
@@ -226,7 +226,7 @@ public class MixinService {
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, retry: Bool) {
         repeat {
             do {
-                return (try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil, false)
+                return (try WebSocketService.shared.respondedMessage(for: blazeMessage).success, false)
             } catch {
                 if let err = error as? APIError {
                     if err.code == 403 {
@@ -258,7 +258,7 @@ public class MixinService {
             }
             
             do {
-                return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
+                return try WebSocketService.shared.respondedMessage(for: blazeMessage).success
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")

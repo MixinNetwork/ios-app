@@ -98,16 +98,17 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    private var unreadMentionMessageIds: [String] = [] {
+    // Element is message_id
+    private var mentionScrollingDestinations: [String] = [] {
         didSet {
             let wrapperAlpha: CGFloat
-            if unreadMentionMessageIds.isEmpty {
+            if mentionScrollingDestinations.isEmpty {
                 mentionWrapperHeightConstraint.constant = 4
                 mentionCountLabel.isHidden = true
                 wrapperAlpha = 0
             } else {
                 mentionWrapperHeightConstraint.constant = 48
-                mentionCountLabel.text = "\(unreadMentionMessageIds.count)"
+                mentionCountLabel.text = "\(mentionScrollingDestinations.count)"
                 mentionCountLabel.isHidden = false
                 wrapperAlpha = 1
             }
@@ -305,15 +306,15 @@ class ConversationViewController: UIViewController {
     }
     
     @IBAction func scrollToMentionAction(_ sender: Any) {
-        guard let id = unreadMentionMessageIds.first else {
+        guard let id = mentionScrollingDestinations.first else {
             return
         }
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
-            unreadMentionMessageIds.removeFirst()
+            mentionScrollingDestinations.removeFirst()
             scheduleCellBackgroundFlash(messageId: id)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         } else if MessageDAO.shared.hasMessage(id: id) {
-            unreadMentionMessageIds.removeFirst()
+            mentionScrollingDestinations.removeFirst()
             messageIdToFlashAfterAnimationFinished = id
             reloadWithMessageId(id, scrollUpwards: true)
         }
@@ -631,7 +632,7 @@ class ConversationViewController: UIViewController {
             unreadBadgeValue += count
         }
         if let ids = notification.userInfo?[ConversationDataSource.UserInfoKey.mentionedMessageIds] as? [String] {
-            unreadMentionMessageIds.append(contentsOf: ids)
+            mentionScrollingDestinations.append(contentsOf: ids)
         }
     }
     
@@ -993,8 +994,8 @@ extension ConversationViewController: UITableViewDelegate {
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
         if let messageId = messageId, let mentions = message?.mentions, mentions.count > 0, !(message?.hasMentionRead ?? true) {
-            if let index = unreadMentionMessageIds.firstIndex(of: messageId) {
-                unreadMentionMessageIds.remove(at: index)
+            if let index = mentionScrollingDestinations.firstIndex(of: messageId) {
+                mentionScrollingDestinations.remove(at: index)
             }
             let conversationId = self.conversationId
             dataSource.queue.async {
@@ -1521,7 +1522,7 @@ extension ConversationViewController {
                         }
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
-                    self.unreadMentionMessageIds = ids
+                    self.mentionScrollingDestinations = ids
                 }
             }
         }

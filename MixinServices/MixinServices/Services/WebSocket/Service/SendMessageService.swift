@@ -450,7 +450,7 @@ extension SendMessageService {
                     blazeMessage.params?.data = nil
                 }
             } else {
-                let numbers = MessageMentionDetector.identityNumbers(from: text)
+                let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }
                 if numbers.count > 0 {
                     let userIds = UserDAO.shared.userIds(identityNumbers: numbers)
                     blazeMessage.params?.mentions = userIds

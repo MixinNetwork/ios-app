@@ -536,7 +536,7 @@ public class ReceiveMessageService: MixinService {
             let mention = MessageMention(conversationId: data.conversationId,
                                          messageId: messageId,
                                          mentions: mentions,
-                                         hasRead: data.userId != myUserId)
+                                         hasRead: data.userId == myUserId || mentions[myIdentityNumber] == nil)
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,
@@ -738,9 +738,17 @@ public class ReceiveMessageService: MixinService {
                 guard let ackMessages = plainData.ackMessages else {
                     return
                 }
-                
-                let readMessageIds = ackMessages.compactMap({ $0.status == MessageStatus.READ.rawValue ? $0.messageId : nil })
-                let mentionMessageIds = ackMessages.compactMap({ $0.status == MessageMentionStatus.MENTION_READ.rawValue ? $0.messageId : nil })
+
+                var readMessageIds = [String]()
+                var mentionMessageIds = [String]()
+                ackMessages.forEach { (message) in
+                    if message.status == MessageStatus.READ.rawValue {
+                        readMessageIds.append(message.messageId)
+                    } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
+                        mentionMessageIds.append(message.messageId)
+                    }
+                }
+
                 MessageDAO.shared.batchUpdateMessageStatus(readMessageIds: readMessageIds, mentionMessageIds: mentionMessageIds)
             default:
                 break

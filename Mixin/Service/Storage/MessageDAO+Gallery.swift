@@ -9,7 +9,7 @@ extension MessageDAO {
            m.media_height, m.media_status, m.media_duration, m.thumb_image, m.thumb_url, m.created_at
     FROM messages m
     WHERE conversation_id = ?
-        AND (category in ('SIGNAL_IMAGE', 'SIGNAL_VIDEO', 'SIGNAL_LIVE', 'PLAIN_IMAGE', 'PLAIN_LIVE', 'PLAIN_VODE')) AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
+        AND (category in ('SIGNAL_IMAGE', 'SIGNAL_VIDEO', 'SIGNAL_LIVE', 'PLAIN_IMAGE', 'PLAIN_LIVE', 'PLAIN_VIDEO')) AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
     """
     
     func getGalleryItems(conversationId: String, location: GalleryItem?, count: Int) -> [GalleryItem] {
@@ -17,10 +17,12 @@ extension MessageDAO {
         var items = [GalleryItem]()
         var sql = MessageDAO.sqlQueryGalleryItem
         if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
             if count > 0 {
-                sql += " AND created_at >= '\(location.createdAt)' ORDER BY created_at ASC LIMIT \(count+1)"
+                sql += " AND ROWID > '\(rowId)' ORDER BY created_at ASC LIMIT \(count) "
             } else {
-                sql += " AND created_at <= '\(location.createdAt)' ORDER BY created_at DESC LIMIT \(-count+1)"
+                sql += " AND ROWID < '\(rowId)' ORDER BY created_at DESC LIMIT \(-count) "
             }
         } else {
             assert(count > 0)
@@ -49,7 +51,7 @@ extension MessageDAO {
                                        thumbImage: cs.value(atIndex: counter.advancedValue),
                                        thumbUrl: cs.value(atIndex: counter.advancedValue),
                                        createdAt: cs.value(atIndex: counter.advancedValue) ?? "")
-                if let item = item , item.messageId != location?.messageId{
+                if let item = item {
                     items.append(item)
                 }
             }

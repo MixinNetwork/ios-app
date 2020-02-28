@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let databaseVersion: Int = 11
+    private static let databaseVersion: Int = 13
     
     override public var database: Database! {
         get { _database }
@@ -96,6 +96,10 @@ public class MixinDatabase: BaseDatabase {
         
         if currentVersion < 9 {
             try database.drop(table: "resend_messages")
+        }
+        
+        if currentVersion < 13 {
+            try MixinDatabase.shared.database.drop(index: "messages_page_indexs")
         }
     }
     

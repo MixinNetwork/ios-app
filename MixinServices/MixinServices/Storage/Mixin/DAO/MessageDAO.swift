@@ -315,7 +315,9 @@ public final class MessageDAO {
         }
         var sql = prefixSql
         if let location = location {
-            sql += " AND m.created_at <= '\(location.createdAt)' AND m.id != '\(location.messageId)' "
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            sql += " AND m.ROWID < \(rowId) "
         }
         sql += " ORDER BY m.created_at DESC LIMIT ?"
         let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])

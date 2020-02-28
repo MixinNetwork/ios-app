@@ -35,6 +35,10 @@ public struct MessageMention: BaseCodable {
         if let quoted = quotedMessage, message.userId != myUserId, quoted.userId == myUserId {
             mentions[myIdentityNumber] = myFullname
         }
+
+        if mentions.count == 0 {
+            return nil
+        }
         
         let hasRead: Bool
         if message.userId == myUserId {

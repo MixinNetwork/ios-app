@@ -13,6 +13,8 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var announcementButton: UIButton!
+    @IBOutlet weak var mentionWrapperView: UIView!
+    @IBOutlet weak var mentionCountLabel: InsetLabel!
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
@@ -26,6 +28,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
     
@@ -52,7 +55,7 @@ class ConversationViewController: UIViewController {
     private var didManuallyStoppedTableViewDecelerating = false
     private var numberOfParticipants: Int?
     private var isMember = true
-    
+    private var messageIdToFlashAfterAnimationFinished: String?
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
@@ -92,6 +95,27 @@ class ConversationViewController: UIViewController {
             }
             unreadBadgeLabel.isHidden = unreadBadgeValue <= 0
             unreadBadgeLabel.text = unreadBadgeValue <= 99 ? String(unreadBadgeValue) : "99+"
+        }
+    }
+    
+    // Element is message_id
+    private var mentionScrollingDestinations: [String] = [] {
+        didSet {
+            let wrapperAlpha: CGFloat
+            if mentionScrollingDestinations.isEmpty {
+                mentionWrapperHeightConstraint.constant = 4
+                mentionCountLabel.isHidden = true
+                wrapperAlpha = 0
+            } else {
+                mentionWrapperHeightConstraint.constant = 48
+                mentionCountLabel.text = "\(mentionScrollingDestinations.count)"
+                mentionCountLabel.isHidden = false
+                wrapperAlpha = 1
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.mentionWrapperView.alpha = wrapperAlpha
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
@@ -155,9 +179,11 @@ class ConversationViewController: UIViewController {
         conversationInputViewController.didMove(toParent: self)
         if dataSource.category == .group {
             updateSubtitleAndInputBar()
+            conversationInputViewController.detectsMentionToken = true
         } else if let user = ownerUser {
             conversationInputViewController.inputBarView.isHidden = false
             conversationInputViewController.update(opponentUser: user)
+            conversationInputViewController.detectsMentionToken = false
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
         view.layoutIfNeeded()
@@ -167,7 +193,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
     }
@@ -270,13 +296,29 @@ class ConversationViewController: UIViewController {
         unreadBadgeValue = 0
         if let quotingMessageId = quotingMessageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
             self.quotingMessageId = nil
+            scheduleCellBackgroundFlash(messageId: quotingMessageId)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            blinkCellBackground(at: indexPath)
         } else if let quotingMessageId = quotingMessageId, MessageDAO.shared.hasMessage(id: quotingMessageId) {
             self.quotingMessageId = nil
-            reloadWithMessageIdAndBlinkTheCell(quotingMessageId, upwards: true)
+            messageIdToFlashAfterAnimationFinished = quotingMessageId
+            reloadWithMessageId(quotingMessageId, scrollUpwards: true)
         } else {
             dataSource?.scrollToFirstUnreadMessageOrBottom()
+        }
+    }
+    
+    @IBAction func scrollToMentionAction(_ sender: Any) {
+        guard let id = mentionScrollingDestinations.first else {
+            return
+        }
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
+            mentionScrollingDestinations.removeFirst()
+            scheduleCellBackgroundFlash(messageId: id)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        } else if MessageDAO.shared.hasMessage(id: id) {
+            mentionScrollingDestinations.removeFirst()
+            messageIdToFlashAfterAnimationFinished = id
+            reloadWithMessageId(id, scrollUpwards: true)
         }
     }
     
@@ -439,11 +481,12 @@ class ConversationViewController: UIViewController {
             if let quoteMessageId = viewModel.message.quoteMessageId, !quoteMessageId.isEmpty, let quote = cell.quotedMessageViewIfLoaded, quote.bounds.contains(recognizer.location(in: quote)) {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
+                    scheduleCellBackgroundFlash(messageId: quoteMessageId)
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-                    blinkCellBackground(at: indexPath)
                 } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                     quotingMessageId = message.messageId
-                    reloadWithMessageIdAndBlinkTheCell(quoteMessageId, upwards: false)
+                    messageIdToFlashAfterAnimationFinished = quoteMessageId
+                    reloadWithMessageId(quoteMessageId, scrollUpwards: false)
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
@@ -545,6 +588,10 @@ class ConversationViewController: UIViewController {
             hideLoading()
         case .startedUpdateConversation:
             showLoading()
+        case let .updateMessageMentionStatus(messageId, newStatus):
+            if newStatus == .MENTION_READ {
+                mentionScrollingDestinations.removeAll(where: { $0 == messageId })
+            }
         default:
             break
         }
@@ -579,7 +626,7 @@ class ConversationViewController: UIViewController {
         }
         updateSubtitleAndInputBar()
         dataSource.queue.async { [weak self] in
-            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
+            let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
             DispatchQueue.main.sync {
                 self?.userHandleViewController.users = users
             }
@@ -587,10 +634,12 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func didAddMessageOutOfBounds(_ notification: Notification) {
-        guard let count = notification.object as? Int else {
-            return
+        if let count = notification.userInfo?[ConversationDataSource.UserInfoKey.unreadMessageCount] as? Int {
+            unreadBadgeValue += count
         }
-        unreadBadgeValue += count
+        if let ids = notification.userInfo?[ConversationDataSource.UserInfoKey.mentionedMessageIds] as? [String] {
+            mentionScrollingDestinations.append(contentsOf: ids)
+        }
     }
     
     @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
@@ -663,18 +712,14 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func inputTextViewDidChange(_ textView: UITextView) {
-        userHandleViewController.reload(with: textView.text) { (hasContent) in
+    func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
+        userHandleViewController.reload(with: keyword) { (hasContent) in
             self.setUserHandleHidden(!hasContent)
         }
     }
     
-    func inputUserHandle(with user: User) {
-        let text = "@" + user.identityNumber + " "
-        conversationInputViewController.textView.text = text
-        userHandleViewController.reload(with: text) { (hasContent) in
-            self.setUserHandleHidden(true)
-        }
+    func inputUserHandle(with user: UserItem) {
+        conversationInputViewController.textView.replaceInputingMentionToken(with: user)
     }
     
     func documentAction() {
@@ -919,6 +964,11 @@ extension ConversationViewController: UITableViewDelegate {
         DispatchQueue.main.async {
             self.tableView.setFloatingHeaderViewsHidden(true, animated: true, delay: 1)
         }
+        if let id = self.messageIdToFlashAfterAnimationFinished, let indexPath = self.dataSource.indexPath(where: { $0.messageId == id }) {
+            if self.flashCellBackground(at: indexPath) {
+                self.messageIdToFlashAfterAnimationFinished = nil
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -935,7 +985,9 @@ extension ConversationViewController: UITableViewDelegate {
         if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
             dataSource.loadMoreBelowIfNeeded()
         }
-        let messageId = dataSource.viewModel(for: indexPath)?.message.messageId
+
+        let message = dataSource.viewModel(for: indexPath)?.message
+        let messageId = message?.messageId
         if messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
             unreadBadgeValue = 0
             dataSource.firstUnreadMessageId = nil
@@ -946,6 +998,14 @@ extension ConversationViewController: UITableViewDelegate {
         if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
             viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
+        }
+        if let message = message, let hasMentionRead = message.hasMentionRead, !hasMentionRead {
+            message.hasMentionRead = true
+            mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
+            dataSource.queue.async {
+                SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
+                                                                 messageId: message.messageId)
+            }
         }
     }
     
@@ -1049,6 +1109,9 @@ extension ConversationViewController: CoreTextLabelDelegate {
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        guard url.scheme != MixinInternalURL.scheme else {
+            return
+        }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
             self?.open(url: url)
@@ -1328,22 +1391,30 @@ extension ConversationViewController {
         tableView.scrollIndicatorInsets.top = tableView.contentInset.top
     }
     
-    private func blinkCellBackground(at indexPath: IndexPath) {
-        let animation = { (indexPath: IndexPath) in
-            guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
-                return
-            }
-            cell.updateAppearance(highlight: true, animated: false)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                cell.updateAppearance(highlight: false, animated: true)
-            })
+    // Returns true if the animation succeeds to perform, or false if cell not found
+    @discardableResult
+    private func flashCellBackground(at indexPath: IndexPath) -> Bool {
+        guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
+            return false
         }
-        if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(indexPath) {
-            animation(indexPath)
+        cell.updateAppearance(highlight: true, animated: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            cell.updateAppearance(highlight: false, animated: true)
+        })
+        return true
+    }
+    
+    private func scheduleCellBackgroundFlash(messageId: String) {
+        let visibleIndexPath = tableView.indexPathsForVisibleRows?.first(where: { (indexPath) -> Bool in
+            guard let viewModel = dataSource.viewModel(for: indexPath) else {
+                return false
+            }
+            return viewModel.message.messageId == messageId
+        })
+        if let indexPath = visibleIndexPath {
+            _ = flashCellBackground(at: indexPath)
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                animation(indexPath)
-            })
+            messageIdToFlashAfterAnimationFinished = messageId
         }
     }
     
@@ -1434,16 +1505,32 @@ extension ConversationViewController {
         
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
-        if dataSource.category == .group {
+        let isGroup = dataSource.category == .group
+        if isGroup {
             updateInvitationHintView()
-            let users = UserDAO.shared.getAppUsers(inConversationOf: conversationId)
-            userHandleViewController.users = users
-            let keyword: String = conversationInputViewController.textView.text
-            userHandleViewController.reload(with: keyword) { (hasContent) in
-                self.setUserHandleHidden(!hasContent)
-            }
         }
         hideLoading()
+        let conversationId = self.conversationId
+        dataSource.queue.async { [weak self] in
+            let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
+            var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                UIView.performWithoutAnimation {
+                    self.userHandleViewController.users = users
+                    if isGroup {
+                        let keyword = self.conversationInputViewController.textView.inputingMentionToken
+                        self.userHandleViewController.reload(with: keyword) { (hasContent) in
+                            self.setUserHandleHidden(!hasContent)
+                        }
+                    }
+                    ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
+                    self.mentionScrollingDestinations = ids
+                }
+            }
+        }
     }
     
     private func openDocumentAction(message: MessageItem) {
@@ -1656,24 +1743,21 @@ extension ConversationViewController {
         present(alc, animated: true, completion: nil)
     }
     
-    private func reloadWithMessageIdAndBlinkTheCell(_ messageId: String, upwards: Bool) {
-        let scroll = upwards ? dataSource.scrollToBottomAndReload : dataSource.scrollToTopAndReload
+    private func reloadWithMessageId(_ messageId: String, scrollUpwards: Bool) {
+        let scroll = scrollUpwards ? dataSource.scrollToBottomAndReload : dataSource.scrollToTopAndReload
+        let flashingId = self.messageIdToFlashAfterAnimationFinished
+        self.messageIdToFlashAfterAnimationFinished = nil
         scroll(messageId, {
             guard let indexPath = self.dataSource?.indexPath(where: { $0.messageId == messageId }) else {
                 return
             }
-            if upwards {
+            if scrollUpwards {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             } else {
                 self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
-            UIView.animate(withDuration: 0.3, animations: {
-                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
-            }, completion: { (_) in
-                if let indexPath = self.dataSource.indexPath(where: { $0.messageId == messageId }) {
-                    self.blinkCellBackground(at: indexPath)
-                }
-            })
+            self.messageIdToFlashAfterAnimationFinished = flashingId
+            self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
     }
     

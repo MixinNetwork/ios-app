@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import MixinServices
 
 public protocol CallMessageCoordinator: class {
     var hasActiveCall: Bool { get }
@@ -517,15 +518,32 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
+        let quoteMessage = MessageDAO.shared.getNonFailedMessage(messageId: data.quoteMessageId)
+
         defer {
-            let quoteMessageId = data.quoteMessageId
-            if !quoteMessageId.isEmpty, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
-                MessageDAO.shared.updateMessageQuoteContent(conversationId: data.conversationId, quoteMessageId: quoteMessageId, quoteContent: quoteContent)
+            if let quoteMessage = quoteMessage, let quoteContent = try? JSONEncoder.default.encode(quoteMessage) {
+                MessageDAO.shared.update(quoteContent: quoteContent, for: messageId)
             }
         }
+        
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue, MessageCategory.SIGNAL_POST.rawValue:
-            MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+            let numbers = MessageMentionDetector.identityNumbers(from: plainText)
+            var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+            if data.userId != myUserId && quoteMessage?.userId == myUserId && mentions[myIdentityNumber] == nil {
+                mentions[myIdentityNumber] = myFullname
+            }
+            let mention = MessageMention(conversationId: data.conversationId,
+                                         messageId: messageId,
+                                         mentions: mentions,
+                                         hasRead: data.userId == myUserId || mentions[myIdentityNumber] == nil)
+            MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
+                                                            status: Message.getStatus(data: data),
+                                                            mention: mention,
+                                                            messageId: messageId,
+                                                            category: data.category,
+                                                            conversationId: data.conversationId,
+                                                            messageSource: data.source)
         case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -720,17 +738,18 @@ public class ReceiveMessageService: MixinService {
                 guard let ackMessages = plainData.ackMessages else {
                     return
                 }
-                let messageIds = ackMessages.map({ $0.messageId })
-                UNUserNotificationCenter.current().removeNotifications(withIdentifiers: messageIds)
-                for message in ackMessages {
-                    guard message.status == MessageStatus.READ.rawValue else {
-                        continue
-                    }
-                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: MessageStatus.READ.rawValue, from: "\(data.category):\(plainData.action)", updateUnseen: true) {
-                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
+
+                var readMessageIds = [String]()
+                var mentionMessageIds = [String]()
+                ackMessages.forEach { (message) in
+                    if message.status == MessageStatus.READ.rawValue {
+                        readMessageIds.append(message.messageId)
+                    } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
+                        mentionMessageIds.append(message.messageId)
                     }
                 }
-                NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
+
+                MessageDAO.shared.batchUpdateMessageStatus(readMessageIds: readMessageIds, mentionMessageIds: mentionMessageIds)
             default:
                 break
             }

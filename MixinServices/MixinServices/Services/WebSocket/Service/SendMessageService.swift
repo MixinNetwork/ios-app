@@ -134,6 +134,21 @@ public class SendMessageService: MixinService {
         }
     }
 
+    public func sendMentionMessageRead(conversationId: String, messageId: String) {
+        let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
+
+        MixinDatabase.shared.transaction { (database) in
+            let updateStatment = try database.prepareUpdate(table: MessageMention.tableName, on: [MessageMention.Properties.hasRead]).where(MessageMention.Properties.messageId == messageId && !MessageMention.Properties.hasRead)
+            try updateStatment.execute(with: [true])
+            guard updateStatment.changes ?? 0 > 0, AppGroupUserDefaults.Account.isDesktopLoggedIn else {
+                return
+            }
+
+            let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
+            try database.insert(objects: [job], intoTable: Job.tableName)
+        }
+    }
+
     public func sendAckMessage(messageId: String, status: MessageStatus) {
         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: status.rawValue)
         let action: JobAction = status == .DELIVERED ? .SEND_DELIVERED_ACK_MESSAGE : .SEND_ACK_MESSAGE
@@ -426,16 +441,24 @@ extension SendMessageService {
             reporter.report(error: MixinServicesError.sendMessage(userInfo))
             return
         }
-
-        if conversation.category == ConversationCategory.GROUP.rawValue,  message.category.hasSuffix("_TEXT"), let text = message.content, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
-            let identityNumber = text[botNumberRange].dropFirstAndLast()
-            if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
-                message.category = MessageCategory.PLAIN_TEXT.rawValue
-                blazeMessage.params?.recipientId = recipientId
-                blazeMessage.params?.data = nil
+        
+        if message.category.hasSuffix("_TEXT"), let text = message.content {
+            if conversation.category == ConversationCategory.GROUP.rawValue, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
+                let identityNumber = text[botNumberRange].dropFirstAndLast()
+                if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+                    message.category = MessageCategory.PLAIN_TEXT.rawValue
+                    blazeMessage.params?.recipientId = recipientId
+                    blazeMessage.params?.data = nil
+                }
+            } else {
+                let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }
+                if numbers.count > 0 {
+                    let userIds = UserDAO.shared.userIds(identityNumbers: numbers)
+                    blazeMessage.params?.mentions = userIds
+                }
             }
         }
-
+        
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             blazeMessage.params?.messageId = UUID().uuidString.lowercased()
         } else {

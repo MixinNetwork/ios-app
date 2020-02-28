@@ -29,10 +29,12 @@ class RequestInAppNotificationJob: BaseJob {
     
     override func main() {
         let message = self.message
-        guard !isCancelled else {
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
             return
         }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue, !conversation.isMuted else {
+        
+        let isMentioned = message.mentions?[myIdentityNumber] != nil
+        guard !conversation.isMuted || isMentioned else {
             return
         }
         

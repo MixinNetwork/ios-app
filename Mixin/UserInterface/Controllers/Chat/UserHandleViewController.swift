@@ -3,7 +3,13 @@ import MixinServices
 
 class UserHandleViewController: UITableViewController, ConversationAccessible {
     
-    var users = [User]() {
+    private struct SearchResult {
+        let user: UserItem
+        let fullnameKeywordRange: NSRange?
+        let identityNumberKeywordRange: NSRange?
+    }
+    
+    var users = [UserItem]() {
         didSet {
             guard let keyword = keyword else {
                 return
@@ -12,7 +18,7 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         }
     }
     
-    private var filteredUsers = [User]()
+    private var searchResults = [SearchResult]()
     private var keyword: String?
     private var onScrollingAnimationEnd: (() -> ())?
     
@@ -48,7 +54,7 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let contentHeight = min(CGFloat(filteredUsers.count), 3.5) * tableView.rowHeight + 7
+        let contentHeight = min(CGFloat(searchResults.count), 3.5) * tableView.rowHeight + 7
         let tableHeaderHeight = tableView.frame.height - contentHeight
         if tableHeaderView.frame.height != tableHeaderHeight {
             tableHeaderView.frame.size.height = tableHeaderHeight
@@ -57,20 +63,22 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredUsers.count
+        return searchResults.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.user_handle, for: indexPath)!
-        let user = filteredUsers[indexPath.row]
-        cell.render(user: user, keyword: keyword)
+        let result = searchResults[indexPath.row]
+        cell.render(user: result.user,
+                    fullnameKeywordRange: result.fullnameKeywordRange,
+                    identityNumberKeywordRange: result.identityNumberKeywordRange)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let user = filteredUsers[indexPath.row]
-        conversationViewController?.inputUserHandle(with: user)
+        let result = searchResults[indexPath.row]
+        conversationViewController?.inputUserHandle(with: result.user)
     }
     
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
@@ -78,47 +86,59 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         onScrollingAnimationEnd = nil
     }
     
-    func reload(with keyword: String, completion: ((Bool) -> ())?) {
-        if keyword.hasPrefix("@700") {
-            self.keyword = keyword
-        } else {
-            self.keyword = nil
-        }
-        let hadContent = !filteredUsers.isEmpty
-        let filteredUsers: [User]
-        if let keyword = self.keyword {
-            let identityNumber = keyword[keyword.index(after: keyword.startIndex)...]
-            filteredUsers = users.filter({
-                $0.identityNumber.hasPrefix(identityNumber)
+    func reload(with keyword: String?, completion: ((Bool) -> ())?) {
+        self.keyword = keyword
+        let hadContent = !searchResults.isEmpty
+        let searchResults: [SearchResult]
+        if let keyword = keyword {
+            searchResults = users.compactMap({ (user) -> SearchResult? in
+                guard !keyword.isEmpty else {
+                    return SearchResult(user: user,
+                                        fullnameKeywordRange: nil,
+                                        identityNumberKeywordRange: nil)
+                }
+                let fullnameKeywordRange = (user.fullName as NSString).range(of: keyword, options: [.caseInsensitive])
+                let identityNumberKeywordRange = (user.identityNumber as NSString).range(of: keyword)
+                if fullnameKeywordRange.location != NSNotFound {
+                    return SearchResult(user: user,
+                                        fullnameKeywordRange: fullnameKeywordRange,
+                                        identityNumberKeywordRange: nil)
+                } else if identityNumberKeywordRange.location != NSNotFound {
+                    return SearchResult(user: user,
+                                        fullnameKeywordRange: nil,
+                                        identityNumberKeywordRange: identityNumberKeywordRange)
+                } else {
+                    return nil
+                }
             })
         } else {
-            filteredUsers = []
+            searchResults = []
         }
-        let hasContent = !filteredUsers.isEmpty
+        let hasContent = !searchResults.isEmpty
         if !hadContent && hasContent {
             loadViewIfNeeded()
-            self.filteredUsers = filteredUsers
+            self.searchResults = searchResults
             tableView.reloadData()
+            completion?(true)
+            onScrollingAnimationEnd = nil
             view.setNeedsLayout()
             view.layoutIfNeeded()
             let diff = view.frame.height - tableHeaderView.frame.height
             tableView.contentOffset.y = -diff
-            completion?(true)
-            onScrollingAnimationEnd = nil
             self.tableView.setContentOffset(.zero, animated: true)
-        } else if filteredUsers.isEmpty {
+        } else if searchResults.isEmpty {
             let diff = view.frame.height - tableHeaderView.frame.height
             let offset = CGPoint(x: 0, y: -diff)
             onScrollingAnimationEnd = { [weak self] in
                 if let weakSelf = self {
-                    weakSelf.filteredUsers = filteredUsers
+                    weakSelf.searchResults = searchResults
                     weakSelf.tableView.reloadData()
                 }
                 completion?(hasContent)
             }
             self.tableView.setContentOffset(offset, animated: true)
         } else {
-            self.filteredUsers = filteredUsers
+            self.searchResults = searchResults
             onScrollingAnimationEnd = nil
             tableView.reloadData()
             tableView.setContentOffset(.zero, animated: false)

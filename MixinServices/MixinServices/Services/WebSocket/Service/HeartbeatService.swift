@@ -31,6 +31,9 @@ internal class HeartbeatService {
                 return
             }
             self.socket.queue.async {
+                guard self.socket.isConnected else {
+                    return
+                }
                 // Currently both start and stop are called from socket's callback queue
                 // Dispatch to the queue to avoid data race or locking overhead
                 if self.sentCount > self.receivedCount {

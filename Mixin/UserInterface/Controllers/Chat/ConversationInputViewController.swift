@@ -42,6 +42,8 @@ class ConversationInputViewController: UIViewController {
     lazy var photoViewController = R.storyboard.chat.photoInput()!
     lazy var audioViewController = R.storyboard.chat.audioInput()!
     
+    var detectsMentionToken = false
+    
     var minimizedHeight: CGFloat {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
@@ -73,6 +75,10 @@ class ConversationInputViewController: UIViewController {
     
     private(set) var opponentApp: App?
     
+    private var mentionRanges = Set<NSRange>()
+    private var typingAttributes: [NSAttributedString.Key: Any] = [:]
+    private var lastSelectedRange: NSRange!
+    private var lastTextCountWhenMentionRangeChanges = 0
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var customInputViewController: UIViewController? {
@@ -97,6 +103,11 @@ class ConversationInputViewController: UIViewController {
     // Also we need more precisive controlling for animations so we declare a custom one
     // Do not set this var directly, use setPreferredContentHeight:animated:
     private var preferredContentHeight: CGFloat = 0
+    
+    // By changing selection inside textViewDidChangeSelection
+    // [textView selectedRange:] triggers another delegate call immediately
+    // Resolve the recursion with this flag
+    private var isManipulatingSelection = false
     
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
@@ -137,6 +148,10 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        lastSelectedRange = textView.selectedRange
+        lastTextCountWhenMentionRangeChanges = textView.text.count
+        typingAttributes[.font] = textView.font
+        typingAttributes[.foregroundColor] = textView.textColor
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -290,6 +305,7 @@ class ConversationInputViewController: UIViewController {
         dataSource.sendMessage(type: .SIGNAL_TEXT,
                                quoteMessageId: quote?.message.messageId,
                                value: trimmedMessageDraft)
+        mentionRanges.removeAll()
         textView.text = ""
         textViewDidChange(textView)
         quote = nil
@@ -630,6 +646,31 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        let fullRange = NSRange(location: 0, length: textView.attributedText.length)
+        var rangeToRemove: NSRange?
+        mentionRanges.removeAll()
+        textView.attributedText.enumerateAttribute(.mentionLength, in: fullRange, options: [], using: { (value, range, stop) in
+            guard let length = value as? Int else {
+                return
+            }
+            if length == range.length {
+                mentionRanges.insert(range)
+            } else {
+                rangeToRemove = range
+                stop.pointee = true
+            }
+        })
+        
+        if let range = rangeToRemove {
+            DispatchQueue.main.async {
+                textView.text = (textView.text as NSString).replacingCharacters(in: range, with: "")
+                self.textViewDidChange(textView)
+            }
+            return
+        }
+        
+        lastTextCountWhenMentionRangeChanges = textView.text.count
+        
         guard let lineHeight = textView.font?.lineHeight else {
             return
         }
@@ -652,9 +693,46 @@ extension ConversationInputViewController: UITextViewDelegate {
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }
-        if dataSource.category == .group {
-            conversationViewController.inputTextViewDidChange(textView)
+        
+        if detectsMentionToken {
+            if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
+                let text = (self.textView.text as NSString).substring(with: range)
+                conversationViewController.inputTextViewDidInputMentionCandidate(text)
+            } else {
+                conversationViewController.inputTextViewDidInputMentionCandidate(nil)
+            }
         }
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard !isManipulatingSelection else {
+            return
+        }
+        isManipulatingSelection = true
+        defer {
+            isManipulatingSelection = false
+        }
+        
+        var selectedRange = textView.selectedRange
+        if selectedRange.length == 0 {
+            let mentionRangeWithCaretInside = mentionRanges.first { (range) -> Bool in
+                selectedRange.location > range.location && selectedRange.location < NSMaxRange(range)
+            }
+            if textView.text.count == lastTextCountWhenMentionRangeChanges, let range = mentionRangeWithCaretInside {
+                let isCaretGoingBackwards = selectedRange.location < lastSelectedRange.location
+                let location = isCaretGoingBackwards ? range.location : NSMaxRange(range)
+                textView.selectedRange = NSRange(location: location, length: 0)
+            }
+        } else {
+            for mentionRange in mentionRanges {
+                if mentionRange.intersection(selectedRange) != nil {
+                    selectedRange.formUnion(mentionRange)
+                }
+            }
+            textView.selectedRange = selectedRange
+        }
+        lastSelectedRange = textView.selectedRange
+        textView.typingAttributes = typingAttributes
     }
     
 }

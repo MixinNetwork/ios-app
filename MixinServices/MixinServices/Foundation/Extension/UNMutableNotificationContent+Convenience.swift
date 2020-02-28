@@ -40,9 +40,9 @@ public extension UNMutableNotificationContent {
     private func messagePreview(conversationIsGroup: Bool, isRepresentativeMessage: Bool, message: MessageItem) -> String {
         if message.category.hasSuffix("_TEXT") {
             if conversationIsGroup || isRepresentativeMessage {
-                return "\(message.userFullName): \(message.content)"
+                return "\(message.userFullName): \(message.mentionedFullnameReplacedContent)"
             } else {
-                return message.content
+                return message.mentionedFullnameReplacedContent
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if conversationIsGroup || isRepresentativeMessage {

@@ -8,12 +8,14 @@ public final class ConversationDAO {
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
     c.announcement as announcement, c.category as category, c.name as name, c.status as status,
     c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
+    (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
     CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
     c.code_url as codeUrl, c.pin_time as pinTime,
     m.content as content, m.category as contentType, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
-    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId
+    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
+    mm.mentions
     """
     private static let sqlQueryConversation = """
     \(sqlQueryColumns)
@@ -21,6 +23,7 @@ public final class ConversationDAO {
     LEFT JOIN messages m ON c.last_message_id = m.id
     LEFT JOIN users u ON u.user_id = m.user_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
+    LEFT JOIN message_mentions mm ON m.id = mm.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     WHERE c.category IS NOT NULL AND c.status <> 2 %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
@@ -124,7 +127,8 @@ public final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
-
+            try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
+            
             if removeConversation || exitConversation {
                 try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             } else {

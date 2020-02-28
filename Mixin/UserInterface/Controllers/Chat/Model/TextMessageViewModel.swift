@@ -73,7 +73,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     var rawContent: String {
-        return message.content
+        message.mentionedFullnameReplacedContent
     }
     
     var contentAttributedString: NSAttributedString {
@@ -291,15 +291,40 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     func linkRanges(from string: String) -> [Link.Range] {
-        var map = [Link.Range]()
+        var ranges = [Link.Range]()
+        
         Link.detector.enumerateMatches(in: string, options: [], using: { (result, _, _) in
             guard let result = result, let url = result.url else {
                 return
             }
             let range = Link.Range(range: result.range, url: url)
-            map.append(range)
+            ranges.append(range)
         })
-        return map
+        
+        let str = string as NSString
+        for mention in message.mentions ?? [:] {
+            var searchingRange = NSRange(location: 0, length: str.length)
+            var range: NSRange
+            while searchingRange.location < str.length {
+                range = str.range(of: "\(Mention.prefix)\(mention.value)", range: searchingRange)
+                guard range.location != NSNotFound else {
+                    break
+                }
+                let newSearchingLocation = NSMaxRange(range)
+                let newSearchingLength = searchingRange.length - (newSearchingLocation - searchingRange.location)
+                searchingRange = NSRange(location: newSearchingLocation, length: newSearchingLength)
+                guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
+                    continue
+                }
+                guard let url = MixinInternalURL.identityNumber(mention.key).url else {
+                    continue
+                }
+                let linkRange = Link.Range(range: range, url: url)
+                ranges.append(linkRange)
+            }
+        }
+        
+        return ranges
     }
     
 }

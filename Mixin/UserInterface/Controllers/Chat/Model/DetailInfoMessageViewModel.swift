@@ -7,7 +7,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let statusLeftMargin: CGFloat = 4
     static let identityIconLeftMargin: CGFloat = 4
     static let identityIconSize = R.image.ic_user_bot()!.size
-    static let encryptedIconRightMargin: CGFloat = 5
+    static let encryptedIconRightMargin: CGFloat = 4
     
     class var bubbleImageSet: BubbleImageSet.Type {
         return GeneralBubbleImageSet.self

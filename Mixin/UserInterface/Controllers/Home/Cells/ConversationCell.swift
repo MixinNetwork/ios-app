@@ -11,9 +11,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTypeImageView: UIImageView!
     @IBOutlet weak var unreadLabel: InsetLabel!
+    @IBOutlet weak var mentionLabel: InsetLabel!
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        unreadLabel.contentInset = UIEdgeInsets(top: 1, left: 5, bottom: 2, right: 5)
+        mentionLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -55,9 +62,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = (messageTypeImageView.image == nil)
             if category.hasSuffix("_TEXT") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(item.content)"
+                    contentLabel.text = "\(senderName): \(item.mentionedFullnameReplacedContent)"
                 } else {
-                    contentLabel.text = item.content
+                    contentLabel.text = item.mentionedFullnameReplacedContent
                 }
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {
@@ -132,17 +139,23 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             }
         }
-
-        if item.unseenMessageCount > 0 {
-            unreadLabel.isHidden = false
-            unreadLabel.text = "\(item.unseenMessageCount)"
+        
+        let hasUnreadMessage = item.unseenMessageCount > 0
+        let hasUnreadMention = item.unseenMentionCount > 0
+        if hasUnreadMessage || hasUnreadMessage {
             pinImageView.isHidden = true
             muteImageView.isHidden = true
         } else {
-            unreadLabel.isHidden = true
             pinImageView.isHidden = item.pinTime == nil
             muteImageView.isHidden = !item.isMuted
         }
+        if hasUnreadMessage {
+            unreadLabel.isHidden = false
+            unreadLabel.text = "\(item.unseenMessageCount)"
+        } else {
+            unreadLabel.isHidden = true
+        }
+        mentionLabel.isHidden = !hasUnreadMention
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {

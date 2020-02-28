@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-public class ConversationItem: TableCodable {
+public class ConversationItem: TableCodable, MentionedFullnameReplaceable {
     
     public var conversationId: String = ""
     public var ownerId: String = ""
@@ -11,6 +11,7 @@ public class ConversationItem: TableCodable {
     public var announcement: String = ""
     public var lastReadMessageId: String? = nil
     public var unseenMessageCount: Int = 0
+    public var unseenMentionCount: Int = 0
     public var status: Int = ConversationStatus.START.rawValue
     public var muteUntil: String? = nil
     public var codeUrl: String? = nil
@@ -36,6 +37,8 @@ public class ConversationItem: TableCodable {
     public var appId: String? = nil
     public var actionName: String? = nil
     
+    public var mentionsJson: Data? = nil
+    
     public lazy var appButtons: [AppButtonData]? = {
         guard let data = Data(base64Encoded: content) else {
             return nil
@@ -49,6 +52,8 @@ public class ConversationItem: TableCodable {
         }
         return try? JSONDecoder().decode(AppCardData.self, from: data)
     }()
+    
+    public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -65,6 +70,7 @@ public class ConversationItem: TableCodable {
         case status
         case lastReadMessageId
         case unseenMessageCount
+        case unseenMentionCount
         case muteUntil
         case codeUrl
         case pinTime
@@ -83,7 +89,7 @@ public class ConversationItem: TableCodable {
         case messageStatus
         case messageId
         case appId
-        
+        case mentionsJson = "mentions"
     }
     
     public var ownerIsBot: Bool {

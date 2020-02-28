@@ -50,7 +50,7 @@ public struct Message: BaseCodable {
             return [
                 "_category_indexs": IndexBinding(indexesBy: [category, status]),
                 "_pending_indexs": IndexBinding(indexesBy: [userId, status, createdAt]),
-                "_page_indexs": IndexBinding(indexesBy: [conversationId, createdAt]),
+                "_page_indexs": IndexBinding(indexesBy: [conversationId, category, createdAt]),
                 "_user_indexs": IndexBinding(indexesBy: [conversationId, userId, createdAt]),
                 "_unread_indexs": IndexBinding(indexesBy: [conversationId, status, createdAt])
             ]

@@ -301,23 +301,21 @@ public final class MessageDAO {
     }
     
     public func getDataMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = MessageDAO.sqlQueryFullDataMessages
-        if let location = location {
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            sql += " AND m.ROWID < \(rowId)"
-        }
-        sql += " ORDER BY m.created_at DESC LIMIT ?"
-        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])
-        return messages
+        return self.getFullAudioOrDataMessages(conversationId: conversationId, location: location, category: "DATA", count: count)
     }
     
     public func getAudioMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = MessageDAO.sqlQueryFullAudioMessages
+        return self.getFullAudioOrDataMessages(conversationId: conversationId, location: location, category: "AUDIO", count: count)
+    }
+    
+    private func getFullAudioOrDataMessages(conversationId: String, location: MessageItem?, category: String, count: Int) -> [MessageItem] {
+        var prefixSql = MessageDAO.sqlQueryFullAudioMessages
+        if  category == "DATA" {
+            prefixSql = MessageDAO.sqlQueryFullDataMessages
+        }
+        var sql = prefixSql
         if let location = location {
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            sql += " AND m.ROWID < \(rowId)"
+            sql += " AND m.created_at <= '\(location.createdAt)' AND m.id != '\(location.messageId)' "
         }
         sql += " ORDER BY m.created_at DESC LIMIT ?"
         let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])

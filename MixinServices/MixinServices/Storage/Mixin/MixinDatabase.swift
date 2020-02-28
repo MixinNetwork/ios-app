@@ -115,6 +115,11 @@ public class MixinDatabase: BaseDatabase {
         if currentVersion < 11 {
             try database.prepareUpdateSQL(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''").execute()
         }
+        
+        if currentVersion < 13 {
+            try! MixinDatabase.shared.database.drop(index: "messages_page_indexs")
+            try! MixinDatabase.shared.database.create(index: "messages_page_indexs", with: [Message.Properties.conversationId, Message.Properties.category, Message.Properties.createdAt], forTable: Message.tableName)
+        }
     }
 }
 

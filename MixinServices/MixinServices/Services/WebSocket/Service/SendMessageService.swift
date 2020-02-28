@@ -140,14 +140,12 @@ public class SendMessageService: MixinService {
         MixinDatabase.shared.transaction { (database) in
             let updateStatment = try database.prepareUpdate(table: MessageMention.tableName, on: [MessageMention.Properties.hasRead]).where(MessageMention.Properties.messageId == messageId && !MessageMention.Properties.hasRead)
             try updateStatment.execute(with: [true])
-            guard updateStatment.changes ?? 0 > 0 else {
+            guard updateStatment.changes ?? 0 > 0, AppGroupUserDefaults.Account.isDesktopLoggedIn else {
                 return
             }
 
-            if AppGroupUserDefaults.Account.isDesktopLoggedIn {
-                let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
-                try database.insert(objects: [job], intoTable: Job.tableName)
-            }
+            let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
+            try database.insert(objects: [job], intoTable: Job.tableName)
         }
     }
 

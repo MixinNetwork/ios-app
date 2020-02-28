@@ -203,6 +203,7 @@ public final class MessageDAO {
 
         NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: readMessageIds)
+        UNUserNotificationCenter.current().removeNotifications(withIdentifiers: mentionMessageIds)
     }
 
     @discardableResult

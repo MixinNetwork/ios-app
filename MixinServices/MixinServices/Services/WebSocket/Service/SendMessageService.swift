@@ -138,9 +138,12 @@ public class SendMessageService: MixinService {
         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
 
         MixinDatabase.shared.transaction { (database) in
-            try database.update(maps: [(MessageMention.Properties.hasRead, true)],
-                                tableName: MessageMention.tableName,
-                                condition: MessageMention.Properties.messageId == messageId)
+            let updateStatment = try database.prepareUpdate(table: MessageMention.tableName, on: [MessageMention.Properties.hasRead]).where(MessageMention.Properties.messageId == messageId && !MessageMention.Properties.hasRead)
+            try updateStatment.execute(with: [true])
+            guard updateStatment.changes ?? 0 > 0 else {
+                return
+            }
+
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
                 try database.insert(objects: [job], intoTable: Job.tableName)

@@ -49,6 +49,7 @@ public struct ConversationChange {
         case updateGroupIcon(iconUrl: String)
         case updateMessage(messageId: String)
         case updateMessageStatus(messageId: String, newStatus: MessageStatus)
+        case updateMessageMentionStatus(messageId: String, newStatus: MessageMentionStatus)
         case updateMediaStatus(messageId: String, mediaStatus: MediaStatus)
         case updateUploadProgress(messageId: String, progress: Double)
         case updateDownloadProgress(messageId: String, progress: Double)

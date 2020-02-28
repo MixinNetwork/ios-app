@@ -492,6 +492,8 @@ extension ConversationDataSource {
             updateMessage(messageId: messageId)
         case .updateMessageStatus(let messageId, let newStatus):
             updateMessageStatus(messageId: messageId, status: newStatus)
+        case .updateMessageMentionStatus(let messageId, let newStatus):
+            updateMessageMentionStatus(messageId: messageId, status: newStatus)
         case .updateMediaStatus(let messageId, let mediaStatus):
             updateMessageMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
         case .updateUploadProgress(let messageId, let progress):
@@ -574,6 +576,14 @@ extension ConversationDataSource {
         if let cell = tableView?.cellForRow(at: indexPath) as? DetailInfoMessageCell {
             cell.updateStatusImageView()
         }
+    }
+
+    private func updateMessageMentionStatus(messageId: String, status: MessageMentionStatus) {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
+            return
+        }
+        viewModel.message.hasMentionRead = status == .MENTION_READ
+        // update unreadMentionMessageIds
     }
     
     private func updateMessageMediaStatus(messageId: String, mediaStatus: MediaStatus) {

@@ -47,7 +47,7 @@ public final class MessageDAO {
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, alb.category as assetCategory,
                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
-        mm.mentions
+        mm.mentions, mm.has_read as hasMentionRead
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
@@ -163,6 +163,7 @@ public final class MessageDAO {
     public func batchUpdateMessageStatus(readMessageIds: [String], mentionMessageIds: [String]) {
         var readMessageIds = readMessageIds
         var readMessages: [Message] = []
+        var mentionMessages: [Message] = []
         var conversationIds: Set<String> = []
 
         if readMessageIds.count > 0 {
@@ -170,6 +171,10 @@ public final class MessageDAO {
             readMessageIds = readMessages.map { $0.messageId }
 
             conversationIds = Set<String>(readMessages.map { $0.conversationId })
+        }
+
+        if mentionMessageIds.count > 0 {
+            mentionMessages = MixinDatabase.shared.getCodables(condition: Message.Properties.messageId.in(mentionMessageIds) && Message.Properties.status != MessageStatus.FAILED.rawValue)
         }
 
         MixinDatabase.shared.transaction { (database) in
@@ -190,6 +195,12 @@ public final class MessageDAO {
             let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
         }
+
+        for message in mentionMessages {
+            let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageMentionStatus(messageId: message.messageId, newStatus: .MENTION_READ))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
+
         NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: readMessageIds)
     }

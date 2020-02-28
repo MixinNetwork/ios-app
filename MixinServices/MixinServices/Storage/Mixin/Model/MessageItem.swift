@@ -62,6 +62,7 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     public var quoteContent: Data? = nil
     
     public var mentionsJson: Data? = nil
+    public var hasMentionRead: Bool? = nil
     
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
@@ -169,6 +170,7 @@ extension MessageItem {
         case quoteContent = "quote_content"
         
         case mentionsJson = "mentions"
+        case hasMentionRead
     }
     
 }

@@ -992,7 +992,7 @@ extension ConversationViewController: UITableViewDelegate {
             viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
-        if let messageId = messageId, let mentions = message?.mentions, mentions.count > 0 {
+        if let messageId = messageId, let mentions = message?.mentions, mentions.count > 0, !(message?.hasMentionRead ?? true) {
             if let index = unreadMentionMessageIds.firstIndex(of: messageId) {
                 unreadMentionMessageIds.remove(at: index)
             }

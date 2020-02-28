@@ -577,13 +577,15 @@ extension ConversationDataSource {
             cell.updateStatusImageView()
         }
     }
-
+    
     private func updateMessageMentionStatus(messageId: String, status: MessageMentionStatus) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        viewModel.message.hasMentionRead = status == .MENTION_READ
-        // update unreadMentionMessageIds
+        guard let message = viewModel(for: indexPath)?.message else {
+            return
+        }
+        message.hasMentionRead = status == .MENTION_READ
     }
     
     private func updateMessageMediaStatus(messageId: String, mediaStatus: MediaStatus) {

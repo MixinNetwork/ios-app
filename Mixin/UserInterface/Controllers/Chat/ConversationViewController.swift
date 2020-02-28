@@ -586,6 +586,10 @@ class ConversationViewController: UIViewController {
             hideLoading()
         case .startedUpdateConversation:
             showLoading()
+        case let .updateMessageMentionStatus(messageId, newStatus):
+            if newStatus == .MENTION_READ {
+                mentionScrollingDestinations.removeAll(where: { $0 == messageId })
+            }
         default:
             break
         }
@@ -993,13 +997,12 @@ extension ConversationViewController: UITableViewDelegate {
             viewModel.beginAttachmentLoading(isTriggeredByUser: false)
             (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
-        if let messageId = messageId, let mentions = message?.mentions, mentions.count > 0, !(message?.hasMentionRead ?? true) {
-            if let index = mentionScrollingDestinations.firstIndex(of: messageId) {
-                mentionScrollingDestinations.remove(at: index)
-            }
-            let conversationId = self.conversationId
+        if let message = message, let hasMentionRead = message.hasMentionRead, !hasMentionRead {
+            message.hasMentionRead = true
+            mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
             dataSource.queue.async {
-                SendMessageService.shared.sendMentionMessageRead(conversationId: conversationId, messageId: messageId)
+                SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
+                                                                 messageId: message.messageId)
             }
         }
     }

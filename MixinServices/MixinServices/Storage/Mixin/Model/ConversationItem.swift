@@ -54,6 +54,7 @@ public class ConversationItem: TableCodable, MentionedFullnameReplaceable {
     }()
     
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
+    public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -141,6 +142,14 @@ public class ConversationItem: TableCodable, MentionedFullnameReplaceable {
     
     public func isNeedCachedGroupIcon() -> Bool {
         return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl).path))
+    }
+    
+}
+
+extension ConversationItem: MarkdownControlCodeRemovable {
+    
+    var isPostContent: Bool {
+        contentType.hasSuffix("_POST")
     }
     
 }

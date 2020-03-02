@@ -117,6 +117,7 @@ PODS:
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
+    - SwiftyMarkdown
     - WCDB.swift
     - YYImage/WebP
     - Zip
@@ -266,7 +267,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
-  MixinServices: 2fb6f6cfd094ffebfdf8b518961ef3671f5fe68a
+  MixinServices: fe6f31cfb652a079fe9dd327800ccb612b4d47c4
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
@@ -285,6 +286,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 69f20938f55ab5d223ca7a914459809a316b32a0
+PODFILE CHECKSUM: ef418e06884b215f6c404b500a7386d925d4da8f
 
 COCOAPODS: 1.8.4

@@ -14,7 +14,6 @@
 "notification_content_live" = "[生放送]";
 "notification_content_audio" = "[オーディオ]";
 "notification_content_voice_call" = "[音声電話]";
-"notification_content_post" = "[文章]";
 
 "alert_key_contact_message" = "あなたにメッセージを送る";
 "alert_key_contact_text_message" = "あなたにメッセージを送る";

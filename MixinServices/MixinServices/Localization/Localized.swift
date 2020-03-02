@@ -18,7 +18,6 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_AUDIO = localized("notification_content_audio")
     public static let NOTIFICATION_CONTENT_LIVE = localized("notification_content_live")
     public static let NOTIFICATION_CONTENT_VOICE_CALL = localized("notification_content_voice_call")
-    public static let NOTIFICATION_CONTENT_POST = localized("notification_content_post")
     
     public static let ALERT_KEY_CONTACT_MESSAGE = localized("alert_key_contact_message")
     public static let ALERT_KEY_CONTACT_TEXT_MESSAGE = localized("alert_key_contact_text_message")

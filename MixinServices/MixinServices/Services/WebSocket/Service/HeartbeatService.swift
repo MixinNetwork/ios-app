@@ -25,6 +25,7 @@ internal class HeartbeatService {
         guard !isRunning else {
             return
         }
+        isRunning = true
         timer?.invalidate()
         let timer = Timer(timeInterval: interval, repeats: true, block: { [weak self] (timer) in
             guard let self = self else {
@@ -46,7 +47,6 @@ internal class HeartbeatService {
         })
         RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
-        isRunning = true
     }
     
     func stop() {

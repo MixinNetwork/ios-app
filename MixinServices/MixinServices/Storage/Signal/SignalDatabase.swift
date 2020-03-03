@@ -15,7 +15,6 @@ public class SignalDatabase: BaseDatabase {
     }
     
     public func initDatabase() throws {
-        database.setSynchronous(isFull: true)
         try database.run(transaction: {
             try database.create(of: Identity.self)
             try database.create(of: PreKey.self)

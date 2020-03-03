@@ -690,6 +690,11 @@
                                                                                 <constraint firstAttribute="width" secondItem="cpS-4e-0xb" secondAttribute="height" id="C2f-DK-oEc"/>
                                                                                 <constraint firstAttribute="width" constant="60" id="bRI-QA-Rhz"/>
                                                                             </constraints>
+                                                                            <userDefinedRuntimeAttributes>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                                    <integer key="value" value="30"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                            </userDefinedRuntimeAttributes>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEA-e7-GQV">
                                                                             <rect key="frame" x="2" y="71" width="56" height="20"/>

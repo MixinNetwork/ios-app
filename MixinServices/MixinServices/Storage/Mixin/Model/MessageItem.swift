@@ -86,6 +86,7 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     }()
     
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
+    public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
     
     public init() {
         
@@ -171,6 +172,14 @@ extension MessageItem {
         
         case mentionsJson = "mentions"
         case hasMentionRead
+    }
+    
+}
+
+extension MessageItem: MarkdownControlCodeRemovable {
+    
+    var isPostContent: Bool {
+        category.hasSuffix("_POST")
     }
     
 }

@@ -110,9 +110,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             } else if category.hasSuffix("_POST") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_POST)"
+                    contentLabel.text = "\(senderName): \(item.markdownControlCodeRemovedContent)"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_POST
+                    contentLabel.text = item.markdownControlCodeRemovedContent
                 }
             } else if category.hasPrefix("WEBRTC_") {
                 contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VOICE_CALL

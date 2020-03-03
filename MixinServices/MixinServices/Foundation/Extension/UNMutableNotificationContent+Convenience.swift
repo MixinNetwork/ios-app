@@ -88,9 +88,9 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category.hasSuffix("_POST") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_POST_MESSAGE(fullname: message.userFullName)
+                return "\(message.userFullName): \(message.markdownControlCodeRemovedContent)"
             } else {
-                return Localized.ALERT_KEY_CONTACT_POST_MESSAGE
+                return message.markdownControlCodeRemovedContent
             }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {

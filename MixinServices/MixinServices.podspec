@@ -38,4 +38,5 @@ Mixin Core Services.
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'
   s.dependency 'WCDB.swift'
+  s.dependency 'SwiftyMarkdown'
 end

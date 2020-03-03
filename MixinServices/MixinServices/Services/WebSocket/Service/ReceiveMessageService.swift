@@ -107,7 +107,7 @@ public class ReceiveMessageService: MixinService {
                         }
 
                         for data in blazeMessageDatas {
-                            guard AppGroupUserDefaults.canProcessMessagesInAppExtension else {
+                            guard AppGroupUserDefaults.canProcessMessagesInAppExtension, !extensionTimeWillExpire() else {
                                 callback(nil)
                                 return
                             }

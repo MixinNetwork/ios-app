@@ -46,7 +46,7 @@ public class WebSocketService {
         NotificationCenter.default.removeObserver(self)
     }
     
-    public func connect() {
+    public func connect(firstConnect: Bool = false) {
         enqueueOperation {
             guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
                 return
@@ -64,6 +64,10 @@ public class WebSocketService {
 
             if isAppExtension && !AppGroupUserDefaults.canProcessMessagesInAppExtension {
                 return
+            }
+
+            if !firstConnect {
+                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
             }
 
             self.status = .connecting
@@ -314,8 +318,7 @@ extension WebSocketService {
                 self.socket?.disconnect(closeCode: CloseCode.failure)
             }
             self.status = .disconnected
-            NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
-            
+
             let shouldConnectImmediately = NetworkManager.shared.isReachable
                 && LoginManager.shared.isLoggedIn
                 && (!self.networkWasRechableOnConnection || -self.lastConnectionDate.timeIntervalSinceNow >= 1)
@@ -323,6 +326,7 @@ extension WebSocketService {
                 self.connectOnNetworkIsReachable = false
                 self.connect()
             } else {
+                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
                 self.status = .disconnected
                 self.connectOnNetworkIsReachable = true
             }

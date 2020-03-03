@@ -33,6 +33,7 @@ internal class HeartbeatService {
             }
             self.socket.queue.async {
                 guard self.socket.isConnected else {
+                    self.socket.delegate?.websocketDidDisconnect(socket: self.socket, isSwitchNetwork: false)
                     return
                 }
                 // Currently both start and stop are called from socket's callback queue

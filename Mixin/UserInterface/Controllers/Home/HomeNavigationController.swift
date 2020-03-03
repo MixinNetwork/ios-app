@@ -37,7 +37,7 @@ class HomeNavigationController: UINavigationController {
         self.isNavigationBarHidden = true
         self.delegate = self
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed {
-            WebSocketService.shared.connect()
+            WebSocketService.shared.connect(firstConnect: true)
             if LoginManager.shared.isLoggedIn {
                 reporter.registerUserInformation()
             }

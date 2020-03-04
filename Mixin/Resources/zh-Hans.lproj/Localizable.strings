@@ -239,6 +239,7 @@
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
 "chat_menu_developer" = "开发者";
+"chat_menu_location" = "位置";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
 "chat_photo_save" = "保存到相册";
@@ -272,6 +273,8 @@
 "chat_app_reception_button_hi" = "打招呼";
 "chat_app_card_suspicious_link" = "可疑链接";
 "chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
+"chat_location_send_current" = "发送当前位置";
+"chat_location_accuracy" = "精确到 %@";
 
 // Web
 "web_suspicious_link" = "可疑链接";

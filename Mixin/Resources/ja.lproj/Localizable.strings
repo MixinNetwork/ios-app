@@ -217,6 +217,7 @@
 "chat_menu_contact" = "連絡先";
 "chat_menu_call" = "呼び出し";
 "chat_menu_developer" = "開発者";
+"chat_menu_location" = "位置";
 "chat_photo_save" = "カメラロールに保存";
 "chat_file_expired" = "期限切れ";
 "chat_voice_record_cancel" = "キャンセルにはスワイプ";
@@ -243,6 +244,8 @@
 "chat_app_reception_title" = "Tap the button to interact with the bot";
 "chat_app_reception_button_home" = "Open Home Page";
 "chat_app_reception_button_hi" = "Say Hi";
+"chat_location_send_current" = "現在地を送信";
+"chat_location_accuracy" = "%@まで正確";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

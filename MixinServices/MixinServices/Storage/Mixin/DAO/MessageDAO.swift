@@ -191,6 +191,10 @@ public final class MessageDAO {
             }
         }
 
+        guard !isAppExtension else {
+            return
+        }
+
         for message in readMessages {
             let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
@@ -231,8 +235,11 @@ public final class MessageDAO {
         } else {
             MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
         }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+
+        if !isAppExtension {
+            let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
         return true
     }
     
@@ -442,20 +449,24 @@ public final class MessageDAO {
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
-        
-        guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
-            return
-        }
-        let userInfo: [String: Any] = [
-            MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
-            MessageDAO.UserInfoKey.message: newMessage,
-            MessageDAO.UserInfoKey.messsageSource: messageSource
-        ]
-        performSynchronouslyOnMainThread {
-            if isAppExtension && AppGroupUserDefaults.User.currentConversationId == message.conversationId {
-                AppGroupUserDefaults.User.reloadConversation = true
+
+        if isAppExtension {
+            guard AppGroupUserDefaults.User.currentConversationId == message.conversationId else {
+                return
             }
-            NotificationCenter.default.post(name: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
+            AppGroupUserDefaults.User.reloadConversation = true
+        } else {
+            guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
+                return
+            }
+            let userInfo: [String: Any] = [
+                MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
+                MessageDAO.UserInfoKey.message: newMessage,
+                MessageDAO.UserInfoKey.messsageSource: messageSource
+            ]
+            performSynchronouslyOnMainThread {
+                NotificationCenter.default.post(name: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
+            }
         }
     }
     

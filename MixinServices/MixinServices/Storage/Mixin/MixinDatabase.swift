@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 14
+    private static let version: Int = 15
     
     override public var database: Database! {
         get { _database }
@@ -53,7 +53,6 @@ public class MixinDatabase: BaseDatabase {
                 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
-                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
                 
                 if clearSentSenderKey {
                     try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
@@ -98,6 +97,10 @@ public class MixinDatabase: BaseDatabase {
         
         if localVersion < 9 {
             try database.drop(table: "resend_messages")
+        }
+
+        if localVersion < 15 {
+            try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_insert").execute()
         }
     }
     

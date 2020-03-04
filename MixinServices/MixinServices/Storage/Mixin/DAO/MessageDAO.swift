@@ -26,12 +26,6 @@ public final class MessageDAO {
         UPDATE conversations SET last_message_id = (select id from messages where conversation_id = old.conversation_id order by created_at DESC limit 1) WHERE conversation_id = old.conversation_id;
     END
     """
-    static let sqlTriggerUnseenMessageInsert = """
-    CREATE TRIGGER IF NOT EXISTS conversation_unseen_message_count_insert AFTER INSERT ON messages
-    BEGIN
-        UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = new.conversation_id) where conversation_id = new.conversation_id;
-    END
-    """
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?

@@ -103,14 +103,16 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 conversationViewController?.imagePickerController.presentCamera()
             case .file:
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                conversationViewController?.documentAction()
+                conversationViewController?.presentDocumentPicker()
             case .transfer:
-                conversationViewController?.transferAction()
+                conversationViewController?.showTransfer()
             case .contact:
-                conversationViewController?.contactAction()
+                conversationViewController?.showContactSelector()
             case .call:
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                conversationViewController?.callAction()
+                conversationViewController?.callOwnerUserIfPresent()
+            case .location:
+                conversationViewController?.showLocationPicker()
             }
             if ext.dismissPanelAfterSent {
                 (parent as? ConversationInputViewController)?.dismissCustomInput(minimize: true)
@@ -137,6 +139,7 @@ extension ConversationExtensionViewController {
         case transfer
         case contact
         case call
+        case location
         
         var image: UIImage? {
             switch self {
@@ -150,6 +153,8 @@ extension ConversationExtensionViewController {
                 return R.image.conversation.ic_extension_contact()
             case .call:
                 return R.image.conversation.ic_extension_call()
+            case .location:
+                return R.image.conversation.ic_extension_location()
             }
         }
         
@@ -165,6 +170,8 @@ extension ConversationExtensionViewController {
                 return Localized.CHAT_MENU_CONTACT
             case .call:
                 return Localized.CHAT_MENU_CALL
+            case .location:
+                return R.string.localizable.chat_menu_location()
             }
         }
         

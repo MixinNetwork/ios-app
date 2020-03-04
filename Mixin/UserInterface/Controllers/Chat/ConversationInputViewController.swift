@@ -765,11 +765,11 @@ extension ConversationInputViewController {
     
     private func reloadFixedExtensions() {
         if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
-            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact, .location]
         } else if let app = opponentApp, app.creatorId == myUserId {
-            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact, .location]
         } else {
-            extensionViewController.fixedExtensions = [.camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.camera, .file, .contact, .location]
         }
     }
     

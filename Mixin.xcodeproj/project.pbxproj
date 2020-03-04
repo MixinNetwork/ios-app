@@ -15,6 +15,8 @@
 		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
+		7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04142A240FA09F00BE8D73 /* LocationCell.swift */; };
+		7B04142D240FF2BE00BE8D73 /* NearbyLocationLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04142C240FF2BE00BE8D73 /* NearbyLocationLoader.swift */; };
 		7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB722684242004F8F04 /* AssetSearchResult.swift */; };
 		7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB922684F51004F8F04 /* SearchResult.swift */; };
 		7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */; };
@@ -89,6 +91,7 @@
 		7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */; };
 		7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B35AF7B228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift */; };
 		7B362BB522E87D38009BB0BF /* AssetSendVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B362BB422E87D38009BB0BF /* AssetSendVideoView.swift */; };
+		7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B36919E233A1962007321A7 /* LocationPickerViewController.swift */; };
 		7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B369205233A3314007321A7 /* SharedMediaViewController.swift */; };
 		7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B369207233A43C1007321A7 /* SegmentedControl.swift */; };
 		7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B369209233B3650007321A7 /* MediaTypeOverlayView.xib */; };
@@ -374,6 +377,7 @@
 		7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */; };
 		7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */; };
 		7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */; };
+		7BEFAF31240EC28300BE92CE /* UserLocationAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */; };
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
@@ -705,6 +709,8 @@
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
+		7B04142A240FA09F00BE8D73 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
+		7B04142C240FF2BE00BE8D73 /* NearbyLocationLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyLocationLoader.swift; sourceTree = "<group>"; };
 		7B04FAB722684242004F8F04 /* AssetSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSearchResult.swift; sourceTree = "<group>"; };
 		7B04FAB922684F51004F8F04 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputViewController.swift; sourceTree = "<group>"; };
@@ -778,6 +784,7 @@
 		7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesWithGroupSearchResult.swift; sourceTree = "<group>"; };
 		7B35AF7B228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesWithinConversationSearchResult.swift; sourceTree = "<group>"; };
 		7B362BB422E87D38009BB0BF /* AssetSendVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSendVideoView.swift; sourceTree = "<group>"; };
+		7B36919E233A1962007321A7 /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		7B369205233A3314007321A7 /* SharedMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaViewController.swift; sourceTree = "<group>"; };
 		7B369207233A43C1007321A7 /* SegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControl.swift; sourceTree = "<group>"; };
 		7B369209233B3650007321A7 /* MediaTypeOverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaTypeOverlayView.xib; sourceTree = "<group>"; };
@@ -1076,6 +1083,7 @@
 		7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeight.swift; sourceTree = "<group>"; };
 		7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageCell.swift; sourceTree = "<group>"; };
 		7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHintViewModel.swift; sourceTree = "<group>"; };
+		7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationAnnotationView.swift; sourceTree = "<group>"; };
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
@@ -1536,6 +1544,7 @@
 				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
+				7B04142C240FF2BE00BE8D73 /* NearbyLocationLoader.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1837,6 +1846,7 @@
 				7BC28336234DCCF300005628 /* SharedMediaTableViewController.swift */,
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
 				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
+				7B36919E233A1962007321A7 /* LocationPickerViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2273,6 +2283,7 @@
 				7B86B1EC23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift */,
 				7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */,
 				7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */,
+				7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2481,6 +2492,7 @@
 				7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */,
 				7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */,
 				7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */,
+				7B04142A240FA09F00BE8D73 /* LocationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3132,6 +3144,7 @@
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
+				7B04142D240FF2BE00BE8D73 /* NearbyLocationLoader.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
@@ -3378,6 +3391,7 @@
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
+				7BEFAF31240EC28300BE92CE /* UserLocationAnnotationView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
@@ -3405,6 +3419,7 @@
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,
 				7B7264F0209C56E500F234BE /* ProfileDescriptionLabel.swift in Sources */,
+				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
@@ -3548,6 +3563,7 @@
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
+				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,

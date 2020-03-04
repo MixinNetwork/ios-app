@@ -747,14 +747,14 @@ class ConversationViewController: UIViewController {
         conversationInputViewController.textView.replaceInputingMentionToken(with: user)
     }
     
-    func documentAction() {
+    func presentDocumentPicker() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
         vc.modalPresentationStyle = .formSheet
         present(vc, animated: true, completion: nil)
     }
     
-    func transferAction() {
+    func showTransfer() {
         guard let user = ownerUser else {
             return
         }
@@ -766,19 +766,24 @@ class ConversationViewController: UIViewController {
         }
         navigationController?.pushViewController(viewController, animated: true)
     }
-
-    func contactAction() {
+    
+    func showLocationPicker() {
+        let vc = LocationPickerViewController.instance(conversationInputViewController: conversationInputViewController)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func showContactSelector() {
         let vc = ContactSelectorViewController.instance(conversationInputViewController: conversationInputViewController)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func callAction() {
+    func callOwnerUserIfPresent() {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
         CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: ownerUser)
     }
-
+    
     func pickPhotoOrVideoAction() {
         PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
             guard authorized, let weakSelf = self else {

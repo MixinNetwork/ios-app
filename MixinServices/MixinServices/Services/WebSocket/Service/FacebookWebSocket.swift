@@ -67,6 +67,9 @@ extension FacebookWebSocket: SRWebSocketDelegate {
         }
         let nsError = error as NSError
         if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
+            #if DEBUG
+            print("[FacebookWebSocket][DidFailWithError]...websocket connect timeout ...\(nsError)")
+            #endif
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: true)
         } else {
             #if DEBUG

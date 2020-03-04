@@ -30,12 +30,10 @@ public class WebSocketService {
             }
         }
     }
-    private var networkWasRechableOnConnection = false
     private var messageHandlers = SafeDictionary<String, IncomingMessageHandler>()
     private var needsJobRestoration = true
     private var httpUpgradeSigningDate = Date()
     private var lastConnectionDate = Date()
-    private var connectOnNetworkIsReachable = false
 
     internal init() {
         queue.setSpecific(key: queueSpecificKey, value: ())
@@ -92,7 +90,6 @@ public class WebSocketService {
                 request.setValue("Mixin-Notification-Extension-1", forHTTPHeaderField: "Sec-WebSocket-Protocol")
             }
 
-            self.networkWasRechableOnConnection = NetworkManager.shared.isReachable
             self.lastConnectionDate = Date()
             self.httpUpgradeSigningDate = Date()
             self.socket?.serverTime = nil
@@ -105,7 +102,6 @@ public class WebSocketService {
             guard self.status == .connecting || self.status == .connected else {
                 return
             }
-            self.connectOnNetworkIsReachable = false
             self.heartbeat?.stop()
 
             self.socket?.disconnect(closeCode: CloseCode.exit)
@@ -293,16 +289,7 @@ extension WebSocketService {
     }
 
     @objc private func networkChanged() {
-        networkBecomesReachable()
-    }
-    
-    private func networkBecomesReachable() {
-        enqueueOperation {
-            guard LoginManager.shared.isLoggedIn, NetworkManager.shared.isReachable, self.connectOnNetworkIsReachable else {
-                return
-            }
-            self.connect()
-        }
+        connectIfNeeded()
     }
     
     private func reconnect(sendDisconnectToRemote: Bool) {
@@ -319,16 +306,16 @@ extension WebSocketService {
             }
             self.status = .disconnected
 
-            let shouldConnectImmediately = NetworkManager.shared.isReachable
-                && LoginManager.shared.isLoggedIn
-                && (!self.networkWasRechableOnConnection || -self.lastConnectionDate.timeIntervalSinceNow >= 1)
-            if shouldConnectImmediately {
-                self.connectOnNetworkIsReachable = false
-                self.connect()
+            if NetworkManager.shared.isReachable {
+                if -self.lastConnectionDate.timeIntervalSinceNow >= 2 {
+                    self.connect()
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.connect()
+                    }
+                }
             } else {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
-                self.status = .disconnected
-                self.connectOnNetworkIsReachable = true
             }
         }
     }

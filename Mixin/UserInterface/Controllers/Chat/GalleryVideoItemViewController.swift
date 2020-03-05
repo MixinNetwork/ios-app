@@ -243,52 +243,22 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func pipAction() {
-        isPipMode.toggle()
-        if isPipMode {
-            controlView.pipButton.setImage(R.image.ic_video_pip(), for: .normal)
-            galleryViewController?.dismiss(pipController: self)
-            UIApplication.homeContainerViewController?.pipController = self
-        } else {
-            controlView.pipButton.setImage(R.image.ic_video_fullsize(), for: .normal)
-            galleryViewController?.show(itemViewController: self)
-            UIApplication.homeContainerViewController?.pipController = nil
-        }
-        if player.timeControlStatus == .playing {
-            updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
-        }
-        let isPipMode = self.isPipMode
-        animate(animations: {
-            self.videoView.isPipMode = isPipMode
-            if isPipMode {
-                self.layoutPip(usesArbitraryVideoViewCenter: true)
-            } else {
-                self.layoutFullsized()
-            }
-        })
+        togglePipMode(completion: nil)
     }
     
     @objc func closeAction() {
-        
-        func dismiss() {
-            player.replaceCurrentItem(with: nil)
-            if isPipMode {
-                isPipMode = false
-                layoutFullsized()
-                willMove(toParent: nil)
-                view.removeFromSuperview()
-                removeFromParent()
+        executeInPortraitOrientation {
+            self.player.replaceCurrentItem(with: nil)
+            if self.isPipMode {
+                self.isPipMode = false
+                self.layoutFullsized()
+                self.willMove(toParent: nil)
+                self.view.removeFromSuperview()
+                self.removeFromParent()
                 UIApplication.homeContainerViewController?.pipController = nil
             } else {
-                galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
+                self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
             }
-        }
-        
-        if UIApplication.shared.statusBarOrientation.isLandscape {
-            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
-            UIDevice.current.setValue(protrait, forKey: "orientation")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: dismiss)
-        } else {
-            dismiss()
         }
     }
     
@@ -433,6 +403,32 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         rateBeforeSeeking = nil
     }
     
+    func togglePipMode(completion: (() -> Void)?) {
+        executeInPortraitOrientation {
+            self.isPipMode.toggle()
+            if self.isPipMode {
+                self.controlView.pipButton.setImage(R.image.ic_video_pip(), for: .normal)
+                self.galleryViewController?.dismiss(pipController: self)
+                UIApplication.homeContainerViewController?.pipController = self
+            } else {
+                self.controlView.pipButton.setImage(R.image.ic_video_fullsize(), for: .normal)
+                self.galleryViewController?.show(itemViewController: self)
+                UIApplication.homeContainerViewController?.pipController = nil
+            }
+            if self.player.timeControlStatus == .playing {
+                self.updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            }
+            self.animate(animations: {
+                self.videoView.isPipMode = self.isPipMode
+                if self.isPipMode {
+                    self.layoutPip(usesArbitraryVideoViewCenter: true)
+                } else {
+                    self.layoutFullsized()
+                }
+            }, completion: completion)
+        }
+    }
+    
     func stickToParentEdge(horizontalVelocity: CGFloat) {
         guard let parentView = parent?.view else {
             return
@@ -500,6 +496,16 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         view.frame = parentView.bounds
+    }
+    
+    private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(protrait, forKey: "orientation")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: work)
+        } else {
+            work()
+        }
     }
     
     private func loadAssetIfPlayable(url: URL, playAfterLoaded: Bool) {

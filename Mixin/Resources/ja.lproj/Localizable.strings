@@ -210,6 +210,8 @@
 "chat_send_file_failed" = "ファイルを送信できませんでした";
 "chat_send_video_failed" = "動画を送信できませんでした";
 "chat_send_audio_failed" = "音声を送信できませんでした";
+"chat_send_location_failed" = "位置を送信できませんでした";
+"chat_user_location_undetermined" = "現在地は未定です。 後でもう一度やり直してください";
 "chat_menu_camera" = "カメラ";
 "chat_menu_photo" = "写真とビデオ";
 "chat_menu_file" = "ファイル";
@@ -226,6 +228,7 @@
 "chat_quote_type_photo" = "写真";
 "chat_quote_type_video" = "ビデオ";
 "chat_quote_type_live" = "生放送";
+"chat_quote_type_location" = "位置";
 "chat_search_giphy" = "GIPHYを検索";
 "chat_restore" = "復元";
 "chat_restore_title" = "iCloudから\nチャット履歴を復元。";
@@ -614,6 +617,7 @@
 "notification_content_live" = "[生放送]";
 "notification_content_audio" = "[オーディオ]";
 "notification_content_voice_call" = "[音声電話]";
+"notification_content_location" = "[位置]";
 
 "alert_key_contact_message" = "あなたにメッセージを送る";
 "alert_key_contact_text_message" = "あなたにメッセージを送る";
@@ -628,6 +632,7 @@
 "alert_key_contact_audio_call_message" = "音声通話に招待します";
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_post_message" = "あなたに文章を送る";
+"alert_key_contact_location_message" = "あなたに位置を送る";
 
 "alert_key_group_message" = "%@ メッセージを送る";
 "alert_key_group_text_message" = "%@ メッセージを送る";
@@ -639,6 +644,7 @@
 "alert_key_group_contact_message" = "%@ 連絡先を送る";
 "alert_key_group_audio_message" = "%@ 音声を送る";
 "alert_key_group_post_message" = "%@ に文章を送る";
+"alert_key_group_location_message" = "%@ に位置を送る";
 
 // About
 "about_twitter" = "Twitterでフォローします";

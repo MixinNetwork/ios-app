@@ -14,6 +14,7 @@
 "notification_content_live" = "[生放送]";
 "notification_content_audio" = "[オーディオ]";
 "notification_content_voice_call" = "[音声電話]";
+"notification_content_location" = "[位置]";
 
 "alert_key_contact_message" = "あなたにメッセージを送る";
 "alert_key_contact_text_message" = "あなたにメッセージを送る";
@@ -28,6 +29,7 @@
 "alert_key_contact_audio_call_message" = "音声通話に招待します";
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_post_message" = "あなたに文章を送る";
+"alert_key_contact_location_message" = "あなたに位置を送る";
 
 "alert_key_group_message" = "%@ メッセージを送る";
 "alert_key_group_text_message" = "%@ メッセージを送る";
@@ -39,6 +41,7 @@
 "alert_key_group_contact_message" = "%@ 連絡先を送る";
 "alert_key_group_audio_message" = "%@ 音声を送る";
 "alert_key_group_post_message" = "%@ に文章を送る";
+"alert_key_group_location_message" = "%@ に位置を送る";
 
 "toast_api_error_connection_timeout" = "ネットワーク接続タイムアウト";
 "toast_operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";

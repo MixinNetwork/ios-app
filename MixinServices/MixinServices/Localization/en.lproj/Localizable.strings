@@ -14,6 +14,7 @@
 "notification_content_live" = "[Live]";
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
+"notification_content_location" = "[Location]";
 
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
@@ -28,6 +29,7 @@
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_post_message" = "send you a post";
+"alert_key_contact_location_message" = "send you a location";
 
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
@@ -39,6 +41,7 @@
 "alert_key_group_contact_message" = "%@ send a contact";
 "alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_group_post_message" = "%@ send a post";
+"alert_key_group_location_message" = "%@ send a location";
 
 "toast_api_error_connection_timeout" = "Network connection timeout";
 "toast_operation_failed" = "The operation failed, please try again later";

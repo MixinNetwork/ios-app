@@ -272,6 +272,12 @@
 "chat_app_card_suspicious_link" = "可疑链接";
 "chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
 
+// Web
+"web_suspicious_link" = "可疑链接";
+"web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
+"web_suspicious_back" = "返回聊天";
+"web_suspicious_continue" = "继续访问";
+
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
 "call_status_calling" = "正在呼叫...";

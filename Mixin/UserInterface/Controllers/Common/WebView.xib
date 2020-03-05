@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,6 +21,7 @@
                 <outlet property="moreButton" destination="oRx-LV-9QR" id="Yf2-Po-Eql"/>
                 <outlet property="showPageTitleConstraint" destination="FOH-4r-I3H" id="xNX-p3-ijo"/>
                 <outlet property="statusBarBackgroundView" destination="PwQ-Xy-eeX" id="RV7-pT-ySK"/>
+                <outlet property="suspicionView" destination="LRm-BD-TfW" id="w72-sL-XyS"/>
                 <outlet property="titleImageView" destination="7nf-hJ-u6w" id="9wL-E4-TaH"/>
                 <outlet property="titleLabel" destination="MgX-Xh-sfC" id="pvA-ST-7gx"/>
                 <outlet property="titleWrapperView" destination="3hf-le-hfu" id="SeZ-lS-BYR"/>
@@ -82,6 +83,79 @@
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="rvV-eC-CSv" appends="YES" id="sq8-AK-NVe"/>
                             </connections>
+                        </view>
+                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-BD-TfW">
+                            <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_suspicious" translatesAutoresizingMaskIntoConstraints="NO" id="38B-Yw-vhu">
+                                    <rect key="frame" x="141" y="178" width="132" height="132"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Suspicious Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6iO-Dv-EXI">
+                                    <rect key="frame" x="141" y="342" width="132" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <color key="textColor" name="title"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_link"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="The link is not in the corresponding resource patterns." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8x-vt-eak">
+                                    <rect key="frame" x="36" y="379.5" width="342" height="38"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <color key="textColor" name="text_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_link_tips"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EW9-JN-Uuf" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="135.5" y="663" width="143" height="42"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="Of0-Sg-Y2v"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                                    <state key="normal" title="Back To Chat"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_back"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="IAP-lD-laa"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYI-Oc-tGO">
+                                    <rect key="frame" x="124" y="737" width="166" height="41"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                                    <state key="normal" title="Continue Open URL">
+                                        <color key="titleColor" name="theme"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_continue"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="wYb-3Z-MvC"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" name="background"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="NYI-Oc-tGO" secondAttribute="bottom" constant="40" id="Bqf-pm-VLu"/>
+                                <constraint firstItem="6iO-Dv-EXI" firstAttribute="top" secondItem="38B-Yw-vhu" secondAttribute="bottom" constant="32" id="EQ2-TA-a9q"/>
+                                <constraint firstItem="NYI-Oc-tGO" firstAttribute="centerX" secondItem="LRm-BD-TfW" secondAttribute="centerX" id="FIw-Bh-0eT"/>
+                                <constraint firstItem="NYI-Oc-tGO" firstAttribute="top" secondItem="EW9-JN-Uuf" secondAttribute="bottom" constant="32" id="Fzm-Iq-2WX"/>
+                                <constraint firstItem="EW9-JN-Uuf" firstAttribute="centerX" secondItem="LRm-BD-TfW" secondAttribute="centerX" id="HbA-h9-bWM"/>
+                                <constraint firstItem="38B-Yw-vhu" firstAttribute="centerX" secondItem="LRm-BD-TfW" secondAttribute="centerX" id="Mm2-MN-pLK"/>
+                                <constraint firstItem="6iO-Dv-EXI" firstAttribute="centerX" secondItem="LRm-BD-TfW" secondAttribute="centerX" id="TIa-oc-j7v"/>
+                                <constraint firstItem="i8x-vt-eak" firstAttribute="top" secondItem="6iO-Dv-EXI" secondAttribute="bottom" constant="16" id="UEK-eC-S0j"/>
+                                <constraint firstItem="38B-Yw-vhu" firstAttribute="top" secondItem="LRm-BD-TfW" secondAttribute="top" constant="178" id="gTn-o3-8PJ"/>
+                                <constraint firstItem="i8x-vt-eak" firstAttribute="leading" secondItem="LRm-BD-TfW" secondAttribute="leading" constant="36" id="q2L-81-wgV"/>
+                                <constraint firstAttribute="trailing" secondItem="i8x-vt-eak" secondAttribute="trailing" constant="36" id="skm-H5-Dzm"/>
+                            </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qgI-3r-2Us">
                             <rect key="frame" x="316" y="44" width="88" height="40"/>
@@ -173,7 +247,9 @@
                         <constraint firstItem="PwQ-Xy-eeX" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="JHq-Mw-ffQ"/>
                         <constraint firstAttribute="trailing" secondItem="PwQ-Xy-eeX" secondAttribute="trailing" id="OnM-FR-N8V"/>
                         <constraint firstItem="3hf-le-hfu" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="PuO-mc-tRh"/>
+                        <constraint firstAttribute="trailing" secondItem="LRm-BD-TfW" secondAttribute="trailing" id="W37-Fa-bGl"/>
                         <constraint firstAttribute="bottom" secondItem="Sgc-x5-ePK" secondAttribute="bottom" id="aFw-mJ-ebA"/>
+                        <constraint firstItem="LRm-BD-TfW" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="aig-I8-t4p"/>
                         <constraint firstItem="Sgc-x5-ePK" firstAttribute="top" secondItem="PwQ-Xy-eeX" secondAttribute="bottom" priority="500" id="cNO-Gm-Nvn"/>
                         <constraint firstAttribute="trailing" secondItem="Sgc-x5-ePK" secondAttribute="trailing" id="ciK-zK-h52"/>
                         <constraint firstItem="PwQ-Xy-eeX" firstAttribute="bottom" secondItem="3hf-le-hfu" secondAttribute="top" id="jOt-q1-URf"/>
@@ -188,11 +264,13 @@
             <constraints>
                 <constraint firstItem="qfE-71-gkL" firstAttribute="top" secondItem="aTq-9R-NxD" secondAttribute="top" id="4Oe-NX-hN6"/>
                 <constraint firstItem="qgI-3r-2Us" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" id="9Yh-4c-qu9"/>
+                <constraint firstItem="cqB-gA-yky" firstAttribute="bottom" secondItem="LRm-BD-TfW" secondAttribute="bottom" id="JE6-bq-uF1"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="trailing" secondItem="qgI-3r-2Us" secondAttribute="trailing" constant="10" id="MqL-uW-xwL"/>
                 <constraint firstAttribute="bottom" secondItem="qfE-71-gkL" secondAttribute="bottom" id="Th2-7B-F67"/>
                 <constraint firstItem="qfE-71-gkL" firstAttribute="leading" secondItem="aTq-9R-NxD" secondAttribute="leading" id="d2o-o1-uOv"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="top" secondItem="PwQ-Xy-eeX" secondAttribute="bottom" id="i2x-Ge-5cU"/>
                 <constraint firstAttribute="trailing" secondItem="qfE-71-gkL" secondAttribute="trailing" id="nNy-Fh-qVy"/>
+                <constraint firstItem="LRm-BD-TfW" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" id="odN-fp-mqW"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="cqB-gA-yky"/>
             <connections>
@@ -213,12 +291,22 @@
         </pongPressGestureRecognizer>
     </objects>
     <resources>
+        <image name="ic_suspicious" width="66" height="66"/>
         <image name="ic_web_dismiss" width="12" height="12"/>
         <image name="ic_web_more" width="16" height="4"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>

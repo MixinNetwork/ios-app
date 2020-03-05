@@ -18,6 +18,7 @@ class WebViewController: UIViewController {
     @IBOutlet weak var buttonsSeparatorLineView: UIView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var suspicionView: UIView!
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
@@ -80,6 +81,11 @@ class WebViewController: UIViewController {
     @IBAction func dismissAction(_ sender: Any) {
         dismiss()
     }
+
+    @IBAction func continueAction(_ sender: Any) {
+        
+    }
+
     
     @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
         switch recognizer.state {

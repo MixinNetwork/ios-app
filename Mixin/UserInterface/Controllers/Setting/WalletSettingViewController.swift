@@ -141,14 +141,12 @@ extension WalletSettingViewController {
                 vc = PINLogViewController.instance()
             }
             navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            let vc = CurrencySelectorViewController()
+            present(vc, animated: true, completion: nil)
         default:
-            if (biometryType == .none && indexPath.section == 2) || indexPath.section == 3 {
-                editAmountController.textFields?.first?.text = currenyThreshold
-                UIApplication.currentActivity()?.present(editAmountController, animated: true, completion: nil)
-            } else {
-                let vc = CurrencySelectorViewController()
-                present(vc, animated: true, completion: nil)
-            }
+            editAmountController.textFields?.first?.text = currenyThreshold
+            UIApplication.currentActivity()?.present(editAmountController, animated: true, completion: nil)
         }
     }
     

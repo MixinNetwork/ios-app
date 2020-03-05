@@ -443,6 +443,7 @@ public final class MessageDAO {
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
+        try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
 
         if isAppExtension {
             guard AppGroupUserDefaults.User.currentConversationId == message.conversationId else {

@@ -429,7 +429,7 @@ public final class MessageDAO {
         
         if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
             MixinDatabase.shared.transaction { (db) in
-                try db.insert(objects: [mention], intoTable: MessageMention.tableName)
+                try db.insertOrReplace(objects: [mention], intoTable: MessageMention.tableName)
                 try insertMessage(database: db, message: message, messageSource: messageSource)
             }
         } else {
@@ -569,7 +569,7 @@ extension MessageDAO {
         var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
             if let mention = mention {
-                try database.insert(objects: [mention], intoTable: MessageMention.tableName)
+                try database.insertOrReplace(objects: [mention], intoTable: MessageMention.tableName)
             }
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
             try updateStatment.execute(with: values)

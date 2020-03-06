@@ -110,9 +110,8 @@ public final class MessageDAO {
     """
     private static let sqlUpdateUnseenMessageCount = """
     UPDATE conversations SET unseen_message_count = (
-        SELECT count(m.id) FROM messages m
-        INNER JOIN users u ON m.user_id = u.user_id AND u.relationship != 'ME'
-        WHERE m.conversation_id = ? AND m.status = 'DELIVERED'
+        SELECT count(*) FROM messages
+        WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
     ) WHERE conversation_id = ?
     """
     
@@ -238,7 +237,7 @@ public final class MessageDAO {
     }
     
     public func updateUnseenMessageCount(database: Database, conversationId: String) throws {
-        try database.prepareUpdateSQL(sql: Self.sqlUpdateUnseenMessageCount).execute(with: [conversationId, conversationId])
+        try database.prepareUpdateSQL(sql: Self.sqlUpdateUnseenMessageCount).execute(with: [conversationId, myUserId, conversationId])
     }
     
     @discardableResult

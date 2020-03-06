@@ -1572,22 +1572,11 @@ extension ConversationViewController {
                 }
 
                 DispatchQueue.main.async {
-                    let validUrl = action + "/"
-                    if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                        self?.open(url: appCard.action, app: app)
-                    } else {
-                        self?.confirmOpenUrl(action: appCard.action.absoluteString, sendUserId: sendUserId)
-                    }
+                    self?.open(url: appCard.action, app: app)
                 }
             }
         } else {
             openAction(action: action, sendUserId: sendUserId)
-        }
-    }
-
-    private func confirmOpenUrl(action: String, sendUserId: String) {
-        alert(R.string.localizable.chat_app_card_suspicious_link(), message: R.string.localizable.chat_app_card_suspicious_link_tips(), actionTitle: R.string.localizable.chat_message_open_url()) { (_) in
-            self.openAction(action: action, sendUserId: sendUserId)
         }
     }
 

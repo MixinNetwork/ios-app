@@ -50,37 +50,76 @@ class MixinWebViewController: WebViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.addSubview(loadingIndicator)
+        contentView.insertSubview(loadingIndicator, belowSubview: suspicionView)
         loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
         loadingIndicator.startAnimating()
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
-        switch context.style {
-        case .webPage:
-            webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
-                guard let weakSelf = self, case .webPage = weakSelf.context.style else {
-                    return
-                }
-                self?.titleLabel.text = webView.title
-            })
-        case let .app(_, title, iconUrl):
-            titleLabel.text = title
-            if let iconUrl = iconUrl {
-                titleImageView.isHidden = false
-                titleImageView.sd_setImage(with: iconUrl, completed: nil)
-            }
-        }
         webView.navigationDelegate = self
         webView.uiDelegate = self
-        let request = URLRequest(url: context.initialUrl)
-        webView.load(request)
+        switch context.style {
+        case .webPage:
+            loadNormalUrl()
+        case let .app(appId, title, isHomeUrl, iconUrl):
+            if isHomeUrl {
+                loadAppUrl(title: title, iconUrl: iconUrl)
+            } else {
+                let validUrl = context.initialUrl.absoluteString + "/"
+                DispatchQueue.global().async { [weak self] in
+                    var app = AppDAO.shared.getApp(appId: appId)
+                    if app == nil || !(app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false) {
+                        if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                            UserDAO.shared.updateUsers(users: [response])
+                            app = response.app
+                        }
+                    }
+
+                    DispatchQueue.main.async {
+                        guard let weakSelf = self else {
+                            return
+                        }
+                        if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                            weakSelf.loadAppUrl(title: title, iconUrl: iconUrl)
+                        } else {
+                            weakSelf.suspicionView.isHidden = false
+                            weakSelf.context.style = .webPage
+                            weakSelf.context.isImmersive = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func loadNormalUrl() {
+        webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
+            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
+                return
+            }
+            self?.titleLabel.text = webView.title
+        })
+        webView.load(URLRequest(url: context.initialUrl))
+    }
+
+    private func loadAppUrl(title: String, iconUrl: URL?) {
+        titleLabel.text = title
+        if let iconUrl = iconUrl {
+            titleImageView.isHidden = false
+            titleImageView.sd_setImage(with: iconUrl, completed: nil)
+        }
+        webView.load(URLRequest(url: context.initialUrl))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
+    }
+
+    override func continueAction(_ sender: Any) {
+        suspicionView.isHidden = true
+        loadNormalUrl()
     }
     
     override func moreAction(_ sender: Any) {
@@ -213,7 +252,7 @@ extension MixinWebViewController {
     }
     
     private func aboutAction() {
-        guard case let .app(appId, _, _) = context.style else {
+        guard case let .app(appId, _, _, _) = context.style else {
             return
         }
         DispatchQueue.global().async {
@@ -243,7 +282,7 @@ extension MixinWebViewController {
     }
 
     private func shareAppCardAction(currentUrl: URL) {
-        guard case let .app(appId, appTitle, _) = context.style else {
+        guard case let .app(appId, appTitle, _, _) = context.style else {
             return
         }
 
@@ -317,13 +356,13 @@ extension MixinWebViewController {
         
         enum Style {
             case webPage
-            case app(appId: String, title: String, iconUrl: URL?)
+            case app(appId: String, title: String, isHomeUrl: Bool, iconUrl: URL?)
         }
         
         let conversationId: String
-        let style: Style
+        var style: Style
         let initialUrl: URL
-        let isImmersive: Bool
+        var isImmersive: Bool
         
         var appContextString: String {
             let appearance: String = {
@@ -348,7 +387,7 @@ extension MixinWebViewController {
         
         init(conversationId: String, app: App) {
             self.conversationId = conversationId
-            style = .app(appId: app.appId, title: app.name, iconUrl: URL(string: app.iconUrl))
+            style = .app(appId: app.appId, title: app.name, isHomeUrl: true, iconUrl: URL(string: app.iconUrl))
             initialUrl = URL(string: app.homeUri) ?? .blank
             isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
@@ -362,7 +401,7 @@ extension MixinWebViewController {
         
         init(conversationId: String, url: URL, app: App) {
             self.conversationId = conversationId
-            style = .app(appId: app.appId, title: app.name, iconUrl: URL(string: app.iconUrl))
+            style = .app(appId: app.appId, title: app.name, isHomeUrl: false, iconUrl: URL(string: app.iconUrl))
             initialUrl = url
             isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }

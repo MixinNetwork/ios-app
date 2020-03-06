@@ -13,6 +13,7 @@ public struct App: BaseCodable {
     public var resourcePatterns: [String]?
     public let homeUri: String
     public let creatorId: String
+    public let updatedAt: String?
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = App
@@ -25,6 +26,7 @@ public struct App: BaseCodable {
         case resourcePatterns = "resource_patterns"
         case homeUri = "home_uri"
         case creatorId = "creator_id"
+        case updatedAt = "updated_at"
         
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
         public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

@@ -303,8 +303,26 @@ public class ReceiveMessageService: MixinService {
             return
         }
         let message = Message.createMessage(appMessage: data)
+        if data.category == MessageCategory.APP_CARD.rawValue, let appCardData = Data(base64Encoded: data.data), let appCard = try? JSONDecoder.default.decode(AppCardData.self, from: appCardData), let updatedAt = appCard.updatedAt, let appId = appCard.appId {
+            syncApp(appId: appId, updatedAt: updatedAt)
+        }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func syncApp(appId: String, updatedAt: String) {
+        guard !updatedAt.isEmpty && !appId.isEmpty else {
+            return
+        }
+        guard AppDAO.shared.getApp(appId: appId)?.updatedAt != updatedAt else {
+            return
+        }
+
+        if case let .success(response) = UserSessionAPI.shared.showUser(userId: appId) {
+            UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
+        } else {
+            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appId]))
+        }
     }
 
     private func processRecallMessage(data: BlazeMessageData) {

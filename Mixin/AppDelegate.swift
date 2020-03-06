@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.cancelBackgroundTask()
         })
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { (time) in
-            ReceiveMessageService.shared.isStopProcessMessages = true
+            MixinService.isStopProcessMessages = true
             WebSocketService.shared.disconnect()
             self.cancelBackgroundTask()
         }
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         cancelBackgroundTask()
-        ReceiveMessageService.shared.isStopProcessMessages = false
+        MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
 
         if let chatVC = UIApplication.currentConversationViewController() {
@@ -160,13 +160,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         cancelBackgroundTask()
-        ReceiveMessageService.shared.isStopProcessMessages = false
+        MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
             completionHandler(.newData)
             if UIApplication.shared.applicationState != .active {
-                ReceiveMessageService.shared.isStopProcessMessages = true
+                MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }
         }

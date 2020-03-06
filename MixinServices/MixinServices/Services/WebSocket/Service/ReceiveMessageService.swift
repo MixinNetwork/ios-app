@@ -29,7 +29,6 @@ public class ReceiveMessageService: MixinService {
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
-    public var isStopProcessMessages = false
 
     override var processing: Bool {
         didSet {
@@ -92,7 +91,7 @@ public class ReceiveMessageService: MixinService {
             }
 
             repeat {
-                if -startDate.timeIntervalSinceNow >= 20 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                if -startDate.timeIntervalSinceNow >= 15 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
                     if let conversationId = conversationId {
                         Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
                     }
@@ -133,7 +132,7 @@ public class ReceiveMessageService: MixinService {
         guard !isAppExtension else {
             return
         }
-        guard !isStopProcessMessages else {
+        guard !MixinService.isStopProcessMessages else {
             return
         }
         guard !processing else {
@@ -154,7 +153,7 @@ public class ReceiveMessageService: MixinService {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
 
-                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(ReceiveMessageService.shared.isStopProcessMessages)")
+                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(MixinService.isStopProcessMessages)")
 
                     DarwinNotificationManager.shared.checkStatusInAppExtension()
                     Thread.sleep(forTimeInterval: 2)
@@ -168,7 +167,7 @@ public class ReceiveMessageService: MixinService {
             var finishedJobCount = 0
 
             repeat {
-                guard LoginManager.shared.isLoggedIn, !ReceiveMessageService.shared.isStopProcessMessages else {
+                guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                     return
                 }
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
@@ -184,7 +183,7 @@ public class ReceiveMessageService: MixinService {
                 }
 
                 for data in blazeMessageDatas {
-                    if ReceiveMessageService.shared.isStopProcessMessages {
+                    if MixinService.isStopProcessMessages {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessage(data: data)

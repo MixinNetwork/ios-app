@@ -12,6 +12,8 @@ public class MixinService {
     public static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
     
     public static var callMessageCoordinator: CallMessageCoordinator!
+
+    public static var isStopProcessMessages = false
     
     var processing = false
     
@@ -294,7 +296,13 @@ public class MixinService {
     internal func checkNetworkAndWebSocket() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
+    }
+
+    internal func checkNetwork() {
+        repeat {
+            Thread.sleep(forTimeInterval: 2)
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !NetworkManager.shared.isReachable
     }
     
     public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {

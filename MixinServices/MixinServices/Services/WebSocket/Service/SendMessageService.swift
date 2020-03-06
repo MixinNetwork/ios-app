@@ -176,6 +176,9 @@ public class SendMessageService: MixinService {
                 guard LoginManager.shared.isLoggedIn else {
                     return
                 }
+                guard !MixinService.isStopProcessMessages else {
+                    return
+                }
 
                 let jobs = JobDAO.shared.nextBatchHttpJobs(limit: 100)
                 var ackMessages = [AckMessage]()
@@ -224,7 +227,7 @@ public class SendMessageService: MixinService {
                 guard error.code != 403 else {
                     return true
                 }
-                SendMessageService.shared.checkNetworkAndWebSocket()
+                checkNetwork()
             }
         } while true
     }
@@ -242,6 +245,9 @@ public class SendMessageService: MixinService {
             var deleteJobId = ""
             repeat {
                 guard LoginManager.shared.isLoggedIn else {
+                    return
+                }
+                guard !MixinService.isStopProcessMessages else {
                     return
                 }
                 guard let job = JobDAO.shared.nextJob() else {
@@ -311,6 +317,9 @@ public class SendMessageService: MixinService {
     private func handlerJob(job: Job) -> Bool {
         repeat {
             guard LoginManager.shared.isLoggedIn else {
+                return false
+            }
+            guard !MixinService.isStopProcessMessages else {
                 return false
             }
 

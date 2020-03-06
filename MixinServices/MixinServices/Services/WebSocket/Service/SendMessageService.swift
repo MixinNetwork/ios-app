@@ -225,7 +225,6 @@ public class SendMessageService: MixinService {
                     return true
                 }
                 SendMessageService.shared.checkNetworkAndWebSocket()
-                Thread.sleep(forTimeInterval: 2)
             }
         } while true
     }

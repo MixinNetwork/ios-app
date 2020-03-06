@@ -60,8 +60,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
     
     private func retry() -> Bool {
         checkNetworkAndWebSocket()
-        
-        Thread.sleep(forTimeInterval: 2)
+
         if !isCancelled {
             if !execute() {
                 finishJob()

@@ -84,7 +84,6 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                     return false
                 }
                 checkNetworkAndWebSocket()
-                Thread.sleep(forTimeInterval: 2)
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false

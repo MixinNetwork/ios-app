@@ -30,7 +30,6 @@ open class BaseJob: Operation {
                 guard let err = error as? APIError, err.isClientError || err.isServerError else {
                     return
                 }
-                Thread.sleep(forTimeInterval: 2)
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
     }
@@ -48,15 +47,18 @@ open class BaseJob: Operation {
     }
     
     public func checkNetworkAndWebSocket() {
-        if requireNetwork() {
-            while LoginManager.shared.isLoggedIn && !NetworkManager.shared.isReachable {
-                Thread.sleep(forTimeInterval: 3)
-            }
-        }
-        if requireWebSocket() {
-            while LoginManager.shared.isLoggedIn && !WebSocketService.shared.isConnected {
-                Thread.sleep(forTimeInterval: 3)
-            }
+        if requireNetwork() && requireWebSocket() {
+            repeat {
+                Thread.sleep(forTimeInterval: 2)
+            } while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
+        } else if requireNetwork() {
+            repeat {
+                Thread.sleep(forTimeInterval: 2)
+            } while LoginManager.shared.isLoggedIn && !NetworkManager.shared.isReachable
+        } else if requireWebSocket() {
+            repeat {
+                Thread.sleep(forTimeInterval: 2)
+            } while LoginManager.shared.isLoggedIn && !WebSocketService.shared.isConnected
         }
     }
     

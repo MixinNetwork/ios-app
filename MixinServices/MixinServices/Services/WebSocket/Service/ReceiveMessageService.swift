@@ -545,7 +545,7 @@ public class ReceiveMessageService: MixinService {
         }
         
         switch data.category {
-        case MessageCategory.SIGNAL_TEXT.rawValue, MessageCategory.SIGNAL_POST.rawValue:
+        case MessageCategory.SIGNAL_TEXT.rawValue:
             let numbers = MessageMentionDetector.identityNumbers(from: plainText)
             var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
             if data.userId != myUserId && quoteMessage?.userId == myUserId && mentions[myIdentityNumber] == nil {
@@ -558,6 +558,14 @@ public class ReceiveMessageService: MixinService {
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,
+                                                            messageId: messageId,
+                                                            category: data.category,
+                                                            conversationId: data.conversationId,
+                                                            messageSource: data.source)
+        case MessageCategory.SIGNAL_POST.rawValue:
+            MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
+                                                            status: Message.getStatus(data: data),
+                                                            mention: nil,
                                                             messageId: messageId,
                                                             category: data.category,
                                                             conversationId: data.conversationId,

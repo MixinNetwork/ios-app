@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var pendingShortcutItem: UIApplicationShortcutItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private var stopTaskTime: Timer?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
@@ -36,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        Logger.write(log: "\n-----------------------\nAppDelegate...didFinishLaunching...isProtectedDataAvailable:\(UIApplication.shared.isProtectedDataAvailable)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         return true
     }
     
@@ -59,10 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.cancelBackgroundTask()
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { (time) in
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            self.cancelBackgroundTask()
+        }
+        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
             MixinService.isStopProcessMessages = true
             WebSocketService.shared.disconnect()
-            self.cancelBackgroundTask()
         }
     }
     
@@ -103,8 +106,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func cancelBackgroundTask() {
-        self.backgroundTime?.invalidate()
-        self.backgroundTime = nil
+        stopTaskTime?.invalidate()
+        stopTaskTime = nil
+        backgroundTime?.invalidate()
+        backgroundTime = nil
         if backgroundTaskID != .invalid {
             UIApplication.shared.endBackgroundTask(backgroundTaskID)
             backgroundTaskID = .invalid
@@ -148,7 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let isActive = UIApplication.shared.applicationState == .active
-        Logger.write(log: "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>\n[AppDelegate] received remote notification...isActive:\(isActive)", newSection: true)
+        Logger.write(log: "[AppDelegate] received remote notification...isActive:\(isActive)")
 
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             completionHandler(.noData)
@@ -163,12 +168,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            self.cancelBackgroundTask()
             completionHandler(.newData)
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
+        }
+        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
+            guard UIApplication.shared.applicationState != .active else {
+                return
             }
+            MixinService.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
         }
     }
     

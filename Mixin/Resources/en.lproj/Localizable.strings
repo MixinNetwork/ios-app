@@ -246,7 +246,6 @@
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
 "chat_quote_type_live" = "Live";
-"chat_quote_type_post" = "Post";
 "chat_search_giphy" = "Search GIPHY";
 "chat_restore" = "Restore";
 "chat_restore_title" = "Restore your\nchat history from iCloud";

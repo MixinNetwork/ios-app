@@ -247,7 +247,6 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_quote_type_live" = "直播";
-"chat_quote_type_post" = "文章";
 "chat_search_giphy" = "在 GIPHY 上搜索";
 "chat_restore" = "恢复";
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";

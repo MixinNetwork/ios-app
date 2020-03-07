@@ -15,7 +15,7 @@ extension MessageItem {
         } else if category.hasSuffix("_LIVE") {
             return R.string.localizable.chat_quote_type_live()
         } else if category.hasSuffix("_POST") {
-            return R.string.localizable.chat_quote_type_post()
+            return markdownControlCodeRemovedContent
         } else if category.hasSuffix("_AUDIO") {
             if let duration = mediaDuration {
                 return mediaDurationFormatter.string(from: TimeInterval(Double(duration) / millisecondsPerSecond)) ?? ""

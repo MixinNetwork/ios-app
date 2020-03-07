@@ -223,7 +223,6 @@
 "chat_quote_type_photo" = "写真";
 "chat_quote_type_video" = "ビデオ";
 "chat_quote_type_live" = "生放送";
-"chat_quote_type_post" = "文章";
 "chat_search_giphy" = "GIPHYを検索";
 "chat_restore" = "復元";
 "chat_restore_title" = "iCloudから\nチャット履歴を復元。";

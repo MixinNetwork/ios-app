@@ -15,6 +15,10 @@ class UnknownMessageViewModel: TextMessageViewModel {
         return Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
     }
     
+    override var trailingInfoColor: UIColor {
+        .white
+    }
+    
     override init(message: MessageItem) {
         super.init(message: message)
         statusImage = nil

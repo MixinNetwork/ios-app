@@ -24,6 +24,8 @@ extension MessageItem {
             }
         } else if category.hasSuffix("_DATA") {
             return name ?? ""
+        } else if category.hasSuffix("_LOCATION") {
+            return R.string.localizable.chat_quote_type_location()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {

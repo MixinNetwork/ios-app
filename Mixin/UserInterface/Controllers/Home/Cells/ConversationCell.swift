@@ -114,6 +114,12 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else {
                     contentLabel.text = item.markdownControlCodeRemovedContent
                 }
+            } else if category.hasSuffix("_LOCATION") {
+                if item.isGroup() {
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_location())"
+                } else {
+                    contentLabel.text = R.string.localizable.notification_content_location()
+                }
             } else if category.hasPrefix("WEBRTC_") {
                 contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VOICE_CALL
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

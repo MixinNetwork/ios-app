@@ -168,6 +168,28 @@ extension Message {
         return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, mediaUrl: liveData.url, mediaWidth: liveData.width, mediaHeight: liveData.height, thumbUrl: liveData.thumbUrl, status: getStatus(data: data), createdAt: data.createdAt)
     }
     
+    public static func createLocationMessage(content: String, data: BlazeMessageData) -> Message {
+        return createMessage(messageId: data.messageId,
+                             conversationId: data.conversationId,
+                             userId: data.getSenderId(),
+                             category: data.category,
+                             content: content,
+                             mediaMimeType: nil,
+                             mediaSize: nil,
+                             mediaDuration: nil,
+                             mediaWidth: nil,
+                             mediaHeight: nil,
+                             mediaKey: nil,
+                             mediaDigest: nil,
+                             mediaStatus: MediaStatus.PENDING.rawValue,
+                             mediaWaveform: nil,
+                             thumbImage: nil,
+                             status: MessageStatus.DELIVERED.rawValue,
+                             name: nil,
+                             quoteMessageId: data.quoteMessageId,
+                             createdAt: data.createdAt)
+    }
+    
     public static func createWebRTCMessage(data: BlazeMessageData, category: MessageCategory, status: MessageStatus) -> Message {
         return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: category.rawValue, status: status.rawValue, quoteMessageId: data.quoteMessageId, createdAt: data.createdAt)
     }
@@ -202,6 +224,7 @@ public enum MessageCategory: String {
     case SIGNAL_AUDIO
     case SIGNAL_LIVE
     case SIGNAL_POST
+    case SIGNAL_LOCATION
     case PLAIN_TEXT
     case PLAIN_IMAGE
     case PLAIN_VIDEO
@@ -212,6 +235,7 @@ public enum MessageCategory: String {
     case PLAIN_AUDIO
     case PLAIN_LIVE
     case PLAIN_POST
+    case PLAIN_LOCATION
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION

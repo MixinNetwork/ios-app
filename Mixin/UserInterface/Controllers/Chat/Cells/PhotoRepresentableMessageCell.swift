@@ -2,25 +2,16 @@ import UIKit
 import SDWebImage
 import YYImage
 
-class PhotoRepresentableMessageCell: DetailInfoMessageCell {
+class PhotoRepresentableMessageCell: ImageMessageCell {
     
     static let quotingPhotoCornerRadius: CGFloat = 6
     
-    let maskingView = UIView()
     let contentImageWrapperView = VerticalPositioningImageView()
-    let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     
     var contentImageView: UIImageView {
         return contentImageWrapperView.imageView
     }
-    
-    lazy var selectedOverlapView: UIView = {
-        let view = SelectedOverlapView()
-        view.alpha = 0
-        contentView.addSubview(view)
-        return view
-    }()
     
     override var contentFrame: CGRect {
         if viewModel?.quotedMessageViewModel == nil {
@@ -28,10 +19,6 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         } else {
             return backgroundImageView.frame
         }
-    }
-    
-    override var trailingInfoColor: UIColor {
-        .white
     }
     
     override func render(viewModel: MessageViewModel) {
@@ -85,15 +72,6 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         statusImageView.alpha = 0.9
     }
     
-    override func updateAppearance(highlight: Bool, animated: Bool) {
-        UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
-            self.selectedOverlapView.alpha = highlight ? 1 : 0
-        }
-        if viewModel?.quotedMessageViewModel != nil {
-            super.updateAppearance(highlight: highlight, animated: animated)
-        }
-    }
-    
     func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         
     }
@@ -119,33 +97,3 @@ extension PhotoRepresentableMessageCell: GalleryTransitionSource {
     }
     
 }
-
-extension PhotoRepresentableMessageCell {
-    
-    class SelectedOverlapView: UIView {
-        
-        override var backgroundColor: UIColor? {
-            set {
-                
-            }
-            get {
-                return super.backgroundColor
-            }
-        }
-        
-        private let dimmingColor = UIColor.black.withAlphaComponent(0.2)
-        
-        required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-            super.backgroundColor = dimmingColor
-        }
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            super.backgroundColor = dimmingColor
-        }
-        
-    }
-    
-}
-

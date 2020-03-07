@@ -516,13 +516,16 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(contactData: transferData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        } else if data.category.hasSuffix("_LOCATION") {
+            let message = Message.createLocationMessage(content: plainText, data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         }
     }
-
+    
     private func insertFailedMessage(data: BlazeMessageData) {
         let availableCategories: [MessageCategory] = [
-            .SIGNAL_TEXT, .SIGNAL_IMAGE, .SIGNAL_DATA, .SIGNAL_VIDEO,
-            .SIGNAL_LIVE, .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST
+            .SIGNAL_TEXT, .SIGNAL_IMAGE, .SIGNAL_DATA, .SIGNAL_VIDEO, .SIGNAL_LIVE,
+            .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST, .SIGNAL_LOCATION
         ]
         guard availableCategories.contains(where: { data.category == $0.rawValue }) else {
             return
@@ -561,7 +564,7 @@ public class ReceiveMessageService: MixinService {
                                                             category: data.category,
                                                             conversationId: data.conversationId,
                                                             messageSource: data.source)
-        case MessageCategory.SIGNAL_POST.rawValue:
+        case MessageCategory.SIGNAL_POST.rawValue, MessageCategory.SIGNAL_LOCATION.rawValue:
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: nil,
@@ -778,7 +781,7 @@ public class ReceiveMessageService: MixinService {
             default:
                 break
             }
-        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue:
+        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue, MessageCategory.PLAIN_LOCATION.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)

@@ -461,6 +461,22 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    func send(location: Location) throws {
+        let conversationId = dataSource.conversationId
+        let ownerUser = dataSource.ownerUser
+        let isGroup = dataSource.conversation.isGroup()
+        let quoteMessageId = quote?.message.messageId
+        quote = nil
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
+                                            conversationId: conversationId,
+                                            userId: myUserId)
+        message.content = try JSONEncoder().encode(location).base64EncodedString()
+        message.quoteMessageId = quoteMessageId
+        SendMessageService.shared.sendMessage(message: message,
+                                              ownerUser: ownerUser,
+                                              isGroupMessage: isGroup)
+    }
+    
 }
 
 // MARK: - Callbacks

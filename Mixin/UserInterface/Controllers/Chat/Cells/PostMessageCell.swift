@@ -5,10 +5,6 @@ class PostMessageCell: TextMessageCell {
     let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     
-    override var trailingInfoColor: UIColor {
-        .white
-    }
-    
     override func prepare() {
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()

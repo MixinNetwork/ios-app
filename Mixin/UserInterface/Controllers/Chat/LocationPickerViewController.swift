@@ -1,6 +1,7 @@
 import UIKit
 import CoreLocation
 import MapKit
+import MixinServices
 
 class LocationPickerViewController: UIViewController {
     
@@ -120,6 +121,23 @@ extension LocationPickerViewController: UITableViewDataSource {
 
 extension LocationPickerViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            if let location = mapView.userLocation.location {
+                send(coordinate: location.coordinate, name: nil, address: nil)
+            } else {
+                alert(R.string.localizable.chat_user_location_undetermined())
+            }
+        } else {
+            let location = locations[indexPath.row]
+            send(coordinate: location.coordinate, name: location.name, address: location.address)
+        }
+    }
+    
+}
+
+extension LocationPickerViewController {
+    
     private func reloadLocations(coordinate: CLLocationCoordinate2D) {
         NearbyLocationLoader.shared.search(coordinate: coordinate) { [weak self] (locations) in
             guard let self = self else {
@@ -127,6 +145,20 @@ extension LocationPickerViewController: UITableViewDelegate {
             }
             self.locations = locations
             self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        }
+    }
+    
+    private func send(coordinate: CLLocationCoordinate2D, name: String?, address: String?) {
+        let location = Location(latitude: coordinate.latitude,
+                                longitude: coordinate.longitude,
+                                name: name,
+                                address: address)
+        do {
+            try input.send(location: location)
+            navigationController?.popViewController(animated: true)
+        } catch {
+            reporter.report(error: error)
+            showAutoHiddenHud(style: .error, text: R.string.localizable.chat_send_location_failed())
         }
     }
     

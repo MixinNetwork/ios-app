@@ -92,6 +92,12 @@ public extension UNMutableNotificationContent {
             } else {
                 return message.markdownControlCodeRemovedContent
             }
+        } else if message.category.hasSuffix("_LOCATION") {
+            if conversationIsGroup || isRepresentativeMessage {
+                return Localized.ALERT_KEY_GROUP_LOCATION_MESSAGE(fullname: message.userFullName)
+            } else {
+                return Localized.ALERT_KEY_CONTACT_LOCATION_MESSAGE
+            }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:

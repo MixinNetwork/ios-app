@@ -563,6 +563,17 @@ class ConversationViewController: UIViewController {
         alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { [weak self](_) in
             self?.report(conversationId: conversationId, shareFile: true)
         }))
+        if myIdentityNumber == "762532" || myIdentityNumber == "26596" {
+            if let userId = ownerUser?.userId, dataSource.category == .contact {
+                alc.addAction(UIAlertAction(title: R.string.localizable.report_copy_user_id(), style: .default, handler: {(_) in
+                    UIPasteboard.general.string = userId
+                }))
+            }
+            alc.addAction(UIAlertAction(title: R.string.localizable.report_copy_conversation_id(), style: .default, handler: { (_) in
+                UIPasteboard.general.string = self.conversationId
+            }))
+        }
+
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }

@@ -4,22 +4,16 @@ import Zip
 public enum Logger {
     
     private static let queue = DispatchQueue(label: "one.mixin.services.queue.log")
+    private static let systemLog = "system"
     
     public static func write(log: String, newSection: Bool = false) {
         queue.async {
             makeLogDirectoryIfNeeded()
-            guard let files = try? FileManager.default.contentsOfDirectory(atPath: AppGroupContainer.logUrl.path) else {
-                return
-            }
-            for file in files {
-                let filename = AppGroupContainer.logUrl.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
-                if log.hasPrefix("No sender key for:") {
-                    if log.contains(filename) {
-                        writeLog(conversationId: filename, log: log, newSection: newSection)
-                    }
-                } else {
-                    writeLog(conversationId: filename, log: log, newSection: newSection)
-                }
+
+            if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
+                write(conversationId: conversationId, log: log, newSection: newSection)
+            } else {
+                writeLog(filename: systemLog, log: log, newSection: newSection)
             }
         }
     }
@@ -32,17 +26,17 @@ public enum Logger {
             return
         }
         queue.async {
-            writeLog(conversationId: conversationId, log: log, newSection: newSection)
+            writeLog(filename: conversationId, log: log, newSection: newSection)
         }
     }
 
-    private static func writeLog(conversationId: String, log: String, newSection: Bool = false) {
+    private static func writeLog(filename: String, log: String, newSection: Bool = false) {
         makeLogDirectoryIfNeeded()
         var log = "\(isAppExtension ? "[AppExtension]" : "")" + log + "...\(DateFormatter.filename.string(from: Date()))\n"
         if newSection {
             log += "------------------------------\n"
         }
-        let url = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
+        let url = AppGroupContainer.logUrl.appendingPathComponent("\(filename).txt")
         let path = url.path
         do {
             if FileManager.default.fileExists(atPath: path) && FileManager.default.fileSize(path) > 1024 * 1024 * 2 {
@@ -80,9 +74,10 @@ public enum Logger {
     public static func export(conversationId: String) -> URL? {
         makeLogDirectoryIfNeeded()
         let conversationFile = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
+        let systemFile = AppGroupContainer.logUrl.appendingPathComponent("\(systemLog).txt")
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
         do {
-            return try Zip.quickZipFiles([conversationFile], fileName: filename)
+            return try Zip.quickZipFiles([conversationFile, systemFile], fileName: filename)
         } catch {
             #if DEBUG
             print("======FileManagerExtension...exportLog...error:\(error)")

@@ -750,3 +750,5 @@
 "report_title"="Send the conversation log to developers?";
 "report_button"="Send to Developer";
 "report_share"="Share Log File";
+"report_copy_user_id"="Copy User Id";
+"report_copy_conversation_id"="Copy Conversation Id";

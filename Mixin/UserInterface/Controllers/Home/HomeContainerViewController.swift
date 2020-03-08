@@ -29,6 +29,8 @@ class HomeContainerViewController: UIViewController {
     
     private(set) var isShowingGallery = false
     
+    private var navigationInteractiveGestureWasEnabled = true
+    
     var galleryIsOnTopMost: Bool {
         return isShowingGallery
             && galleryViewController.parent != nil
@@ -90,6 +92,10 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        if let recognizer = homeNavigationController.interactivePopGestureRecognizer {
+            navigationInteractiveGestureWasEnabled = recognizer.isEnabled
+            recognizer.isEnabled = false
+        }
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didShow: item)
     }
     
@@ -103,6 +109,7 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         setNeedsStatusBarAppearanceUpdate()
         setNeedsUpdateOfHomeIndicatorAutoHidden()
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
+        homeNavigationController.interactivePopGestureRecognizer?.isEnabled = navigationInteractiveGestureWasEnabled
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {

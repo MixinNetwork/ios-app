@@ -212,6 +212,9 @@
 "chat_send_audio_failed" = "音声を送信できませんでした";
 "chat_send_location_failed" = "位置を送信できませんでした";
 "chat_user_location_undetermined" = "現在地は未定です。 後でもう一度やり直してください";
+"chat_open_external_maps_apple" = "Mapsで開く";
+"chat_open_external_maps_google" = "Google Mapsで開く";
+"chat_open_external_maps_gaode" = "高德地图で開く";
 "chat_menu_camera" = "カメラ";
 "chat_menu_photo" = "写真とビデオ";
 "chat_menu_file" = "ファイル";

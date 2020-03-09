@@ -17,13 +17,13 @@ class UserLocationAnnotationView: MKAnnotationView {
     
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        image = R.image.conversation.ic_annotation()
+        image = R.image.conversation.ic_annotation_user_location()
         layer.insertSublayer(pulseLayer, at: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        image = R.image.conversation.ic_annotation()
+        image = R.image.conversation.ic_annotation_user_location()
         layer.insertSublayer(pulseLayer, at: 0)
     }
     

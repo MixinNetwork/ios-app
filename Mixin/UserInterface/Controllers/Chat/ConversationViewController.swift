@@ -550,6 +550,10 @@ class ConversationViewController: UIViewController {
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
                 openAppCard(appCard: appCard, sendUserId: message.userId)
+            } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
+                let vc = LocationPreviewViewController(location: location)
+                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+                navigationController?.pushViewController(container, animated: true)
             } else {
                 conversationInputViewController.dismiss()
             }

@@ -4,7 +4,7 @@ import MapKit
 class LocationMessageCell: ImageMessageCell {
     
     private let mapImageView = UIImageView()
-    private let annotationView = UIImageView(image: R.image.conversation.ic_annotation())
+    private let annotationView = UIImageView(image: R.image.conversation.ic_annotation_user_location())
     
     private lazy var informationView: LocationInformationView = {
         let view = LocationInformationView()

@@ -1,7 +1,8 @@
 import Foundation
 import CoreLocation
+import MapKit
 
-public class Location: Codable {
+public class Location: NSObject, Codable {
     
     public typealias Degrees = Double
     
@@ -11,6 +12,16 @@ public class Location: Codable {
     public let address: String?
     
     public private(set) lazy var coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    public private(set) lazy var mapItem: MKMapItem = {
+        let placemark = MKPlacemark(coordinate: coordinate)
+        let item = MKMapItem(placemark: placemark)
+        item.name = name
+        return item
+    }()
+    
+    public override var debugDescription: String {
+        "Location { latitude: \(latitude), longitude: \(longitude), name: \(name ?? "(null)"), address: \(address ?? "(null)") }"
+    }
     
     public init(latitude: Degrees, longitude: Degrees, name: String?, address: String?) {
         self.latitude = latitude
@@ -21,10 +32,14 @@ public class Location: Codable {
     
 }
 
-extension Location: CustomDebugStringConvertible {
+extension Location: MKAnnotation {
     
-    public var debugDescription: String {
-        "Location { latitude: \(latitude), longitude: \(longitude), name: \(name ?? "(null)"), address: \(address ?? "(null)") }"
+    public var title: String? {
+        name
+    }
+    
+    public var subtitle: String? {
+        address
     }
     
 }

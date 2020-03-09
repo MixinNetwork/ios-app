@@ -235,6 +235,9 @@
 "chat_send_audio_failed" = "Failed to send audio";
 "chat_send_location_failed" = "Failed to send location";
 "chat_user_location_undetermined" = "Your location has yet to be determined. Please try again later";
+"chat_open_external_maps_apple" = "Open in Maps";
+"chat_open_external_maps_google" = "Open in Google Maps";
+"chat_open_external_maps_gaode" = "Open in 高德地图";
 "chat_menu_camera" = "Camera";
 "chat_menu_photo" = "Photo & Video";
 "chat_menu_file" = "File";

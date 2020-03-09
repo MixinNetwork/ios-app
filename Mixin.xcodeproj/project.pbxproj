@@ -298,6 +298,8 @@
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
 		7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */; };
 		7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */; };
+		7BB5250324160F3D0060DAE1 /* LocationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */; };
+		7BB525C9241654020060DAE1 /* LocationPreviewAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB525C8241654020060DAE1 /* LocationPreviewAnnotationView.swift */; };
 		7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB6111922BA4179000E758C /* PinValidationView.xib */; };
 		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
@@ -998,6 +1000,8 @@
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionView.swift; sourceTree = "<group>"; };
 		7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisionMessage.swift; sourceTree = "<group>"; };
+		7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPreviewViewController.swift; sourceTree = "<group>"; };
+		7BB525C8241654020060DAE1 /* LocationPreviewAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPreviewAnnotationView.swift; sourceTree = "<group>"; };
 		7BB6111922BA4179000E758C /* PinValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinValidationView.xib; sourceTree = "<group>"; };
 		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1864,6 +1868,7 @@
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
 				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
 				7B36919E233A1962007321A7 /* LocationPickerViewController.swift */,
+				7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2301,6 +2306,7 @@
 				7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */,
 				7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */,
 				7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */,
+				7BB525C8241654020060DAE1 /* LocationPreviewAnnotationView.swift */,
 				7B5F966A241424CD003A087B /* LocationInformationView.xib */,
 				7B5F96682414241C003A087B /* LocationInformationView.swift */,
 			);
@@ -3284,6 +3290,7 @@
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
+				7BB525C9241654020060DAE1 /* LocationPreviewAnnotationView.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */,
@@ -3370,6 +3377,7 @@
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
+				7BB5250324160F3D0060DAE1 /* LocationPreviewViewController.swift in Sources */,
 				7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */,
 				7BF4047B2048F008004C54E4 /* VerifyPinNavigationController.swift in Sources */,
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,

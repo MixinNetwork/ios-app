@@ -114,7 +114,11 @@ public class WebSocketService {
 
     public func connectIfNeeded() {
         enqueueOperation {
-            guard LoginManager.shared.isLoggedIn, NetworkManager.shared.isReachable else {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            guard NetworkManager.shared.isReachable else {
+                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
             if self.status == .disconnected {

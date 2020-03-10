@@ -33,6 +33,7 @@ class SharedMediaMediaViewController: UIViewController, SharedMediaContentViewCo
             - collectionLayout.minimumInteritemSpacing * (numberOfCellPerLine - 1)
         width = floor((width) / numberOfCellPerLine)
         collectionLayout.itemSize = CGSize(width: width, height: width)
+        collectionLayout.invalidateLayout()
         super.viewWillLayoutSubviews()
     }
     

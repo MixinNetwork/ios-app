@@ -44,6 +44,7 @@
 "action_try_again" = "Try Again";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
+"menu_report" = "Report";
 "no_result" = "No result";
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";
@@ -751,3 +752,4 @@
 "report_share"="Share Log File";
 "report_copy_user_id"="Copy User Id";
 "report_copy_conversation_id"="Copy Conversation Id";
+"report_message"="Allow Manual Report Message";

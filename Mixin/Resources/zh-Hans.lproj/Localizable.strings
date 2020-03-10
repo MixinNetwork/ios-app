@@ -44,6 +44,7 @@
 "action_try_again" = "重试";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
+"menu_report" = "上报";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";
@@ -757,3 +758,4 @@
 "report_share"="分享日志文件";
 "report_copy_user_id"="复制用户 ID";
 "report_copy_conversation_id"="复制会话 ID";
+"report_message"="允许手动上报消息";

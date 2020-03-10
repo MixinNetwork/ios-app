@@ -7,6 +7,7 @@ fileprivate extension Selector {
     static let forward = #selector(ConversationTableView.forwardAction(_:))
     static let copy = #selector(ConversationTableView.copyAction(_:))
     static let addToStickers = #selector(ConversationTableView.addToStickersAction(_:))
+    static let report = #selector(ConversationTableView.reportAction(_:))
 }
 
 extension MessageItem {
@@ -43,6 +44,9 @@ extension MessageItem {
             actions = [.delete]
         } else {
             actions = []
+        }
+        if ConversationViewController.allowReportSingleMessage {
+            actions += [.report]
         }
         return actions
     }
@@ -151,7 +155,11 @@ class ConversationTableView: UITableView {
     @objc func addToStickersAction(_ sender: Any) {
         invokeDelegate(action: .add)
     }
-    
+
+    @objc func reportAction(_ sender: Any) {
+        invokeDelegate(action: .report)
+    }
+
     @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
         guard recognizer.state == .began, let actionDelegate = actionDelegate else {
             return
@@ -304,7 +312,9 @@ class ConversationTableView: UITableView {
             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
-            UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:)))]
+            UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:))),
+            UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportAction(_:)))
+        ]
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
     }
     
@@ -318,6 +328,7 @@ extension ConversationTableView {
         case copy
         case delete
         case add
+        case report
     }
     
     enum ReuseId: String {

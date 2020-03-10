@@ -13,6 +13,10 @@ public class WebSocketService {
     public var isConnected: Bool {
         return status == .connected
     }
+
+    public var isRealConnected: Bool {
+        return socket?.isConnected ?? false
+    }
     
     private let queue = DispatchQueue(label: "one.mixin.services.queue.websocket")
     private let queueSpecificKey = DispatchSpecificKey<Void>()

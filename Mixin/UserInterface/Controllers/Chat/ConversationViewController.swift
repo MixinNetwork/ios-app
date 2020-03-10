@@ -63,6 +63,7 @@ class ConversationViewController: UIViewController {
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
+    static var allowReportSingleMessage = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
@@ -563,6 +564,12 @@ class ConversationViewController: UIViewController {
         alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { [weak self](_) in
             self?.report(conversationId: conversationId, shareFile: true)
         }))
+        if !Self.allowReportSingleMessage {
+            alc.addAction(UIAlertAction(title: R.string.localizable.report_message(), style: .default, handler: { (_) in
+                Self.allowReportSingleMessage = true
+            }))
+        }
+
         if myIdentityNumber == "762532" || myIdentityNumber == "26596" {
             if let userId = ownerUser?.userId, dataSource.category == .contact {
                 alc.addAction(UIAlertAction(title: R.string.localizable.report_copy_user_id(), style: .default, handler: {(_) in
@@ -934,6 +941,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             } else {
                 navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
             }
+        case .report:
+            report(conversationId: conversationId, shareFile: false, message: message)
         }
     }
 }
@@ -1647,7 +1656,7 @@ extension ConversationViewController {
         }
     }
 
-    private func report(conversationId: String, shareFile: Bool) {
+    private func report(conversationId: String, shareFile: Bool, message: MessageItem? = nil) {
         DispatchQueue.global().async { [weak self] in
             let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
@@ -1660,6 +1669,37 @@ extension ConversationViewController {
                     return
                 }
             }
+
+            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(NetworkManager.shared.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
+
+            if let message = message {
+                var log = "[Report][Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"
+                if ["_IMAGE", "_VIDEO", "_AUDIO", "_LIVE"].contains(where: message.category.hasSuffix) {
+                    log += """
+                            ...mediaStatus:\(message.mediaStatus ?? "")
+                            ...mediaUrl:\(message.mediaUrl ?? "")
+                            ...mediaMimeType:\(message.mediaMimeType ?? "")
+                            ...mediaSize:\(message.mediaSize ?? 0)
+                            ...mediaDuration:\(message.mediaDuration ?? 0)
+                            ...mediaLocalIdentifier:\(message.mediaLocalIdentifier ?? "")
+                            ...mediaWidth:\(message.mediaWidth ?? 0)
+                            ...mediaHeight:\(message.mediaHeight ?? 0)
+                           """
+
+                    if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
+                        if message.category.hasSuffix("_IMAGE") {
+                            let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
+                            log += "...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
+                        } else if message.category.hasSuffix("_VIDEO") {
+                            let url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
+                            log += "...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
+                        }
+                    }
+                }
+
+                Logger.write(conversationId: conversationId, log: log, newSection: true)
+            }
+
             guard let developUser = user, let url = Logger.export(conversationId: conversationId) else {
                 return
             }

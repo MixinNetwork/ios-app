@@ -248,7 +248,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
-        titleLabel.text = "Mixin"
+        titleLabel.text = R.string.localizable.app_name()
         DispatchQueue.global().async {
             guard NetworkManager.shared.isReachableOnWiFi else {
                 return
@@ -275,7 +275,7 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleLabel.text = "Mixin"
+            titleLabel.text = R.string.localizable.app_name()
             connectingView.stopAnimating()
         } else {
             titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)

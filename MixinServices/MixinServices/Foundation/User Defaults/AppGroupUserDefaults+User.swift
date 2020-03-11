@@ -35,9 +35,11 @@ extension AppGroupUserDefaults {
             case autoDownloadPhotos = "auto_download_photos"
             case autoDownloadVideos = "auto_download_videos"
             case autoDownloadFiles = "auto_download_files"
+
+            case hasCheckDownloadedMedia = "has_check_downloaded_media"
         }
         
-        public static let version = 17
+        public static let version = 18
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
@@ -120,6 +122,9 @@ extension AppGroupUserDefaults {
         
         @RawRepresentableDefault(namespace: .user, key: Key.autoDownloadFiles, defaultValue: .never)
         public static var autoDownloadFiles: AutoDownload
+
+        @Default(namespace: .user, key: Key.hasCheckDownloadedMedia, defaultValue: false)
+        public static var hasCheckDownloadedMedia: Bool
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

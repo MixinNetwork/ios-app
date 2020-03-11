@@ -9,6 +9,15 @@ enum MixinKeys {
         return (NSDictionary(contentsOfFile: path) as? [String: Any]) ?? [:]
     }()
     
+    enum Foursquare {
+        
+        static let clientId = dict?["ClientID"]
+        static let clientSecret = dict?["ClientSecret"]
+        
+        private static let dict = keys["Foursquare"] as? [String: String]
+        
+    }
+    
     static let reCaptcha = keys["ReCaptcha"] as? String
     static let giphy = keys["Giphy"] as? String
     

@@ -51,7 +51,11 @@ class LocationMessageCell: ImageMessageCell {
             if maskingView.layer.mask == nil {
                 maskingView.layer.mask = backgroundImageView.layer
             }
-            selectedOverlapView.frame = mapImageView.bounds
+            if let informationFrame = informationViewIfLoaded?.frame {
+                selectedOverlapView.frame = mapImageView.frame.union(informationFrame)
+            } else {
+                selectedOverlapView.frame = mapImageView.frame
+            }
             if viewModel.hasAddress {
                 trailingInfoBackgroundView.isHidden = true
             } else {
@@ -69,9 +73,9 @@ class LocationMessageCell: ImageMessageCell {
         updateAppearance(highlight: false, animated: false)
         annotationView.isHidden = true
         mapImageView.addSubview(annotationView)
-        mapImageView.addSubview(selectedOverlapView)
         contentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
+        maskingView.addSubview(selectedOverlapView)
         backgroundImageView.removeFromSuperview()
         maskingView.layer.mask = backgroundImageView.layer
         maskingView.clipsToBounds = true

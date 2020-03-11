@@ -3,12 +3,7 @@ import Alamofire
 
 enum GiphyAPI {
     
-    enum Error: Swift.Error {
-        case noApiKey
-        case badResponse
-    }
-    
-    typealias Completion = (Result<[GiphyImage]>) -> Void
+    typealias Completion = (Alamofire.Result<[GiphyImage]>) -> Void
     
     private static var apiKey = MixinKeys.giphy
     private static var language: String {
@@ -24,7 +19,7 @@ enum GiphyAPI {
     
     static func trending(offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
         guard let key = apiKey else {
-            completion(.failure(Error.noApiKey))
+            completion(.failure(ExternalApiError.noApiKey))
             return nil
         }
         let url = URL(string: "https://api.giphy.com/v1/gifs/trending?offset=\(offset)&limit=\(limit)&rating=r&api_key=\(key)")!
@@ -34,7 +29,7 @@ enum GiphyAPI {
     
     static func search(keyword: String, offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
         guard let key = apiKey else {
-            completion(.failure(Error.noApiKey))
+            completion(.failure(ExternalApiError.noApiKey))
             return nil
         }
         guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -51,11 +46,11 @@ enum GiphyAPI {
             switch response.result {
             case .success(let json):
                 guard let json = json as? [String: Any] else {
-                    completion(.failure(Error.badResponse))
+                    completion(.failure(ExternalApiError.badResponse))
                     return
                 }
                 guard let data = json["data"] as? [[String: Any]] else {
-                    completion(.failure(Error.badResponse))
+                    completion(.failure(ExternalApiError.badResponse))
                     return
                 }
                 let images = data.compactMap(GiphyImage.init)

@@ -2,6 +2,7 @@ import UIKit
 import CoreLocation
 import MapKit
 import MixinServices
+import Alamofire
 
 class LocationPickerViewController: UIViewController {
     
@@ -18,8 +19,8 @@ class LocationPickerViewController: UIViewController {
     private let annotationReuseId = "anno"
     
     private var input: ConversationInputViewController!
-    private var localSearch: MKLocalSearch?
-    private var locations: [NearbyLocationLoader.Location] = []
+    private var nearbyLocationsRequest: Request?
+    private var locations: [FoursquareLocation] = []
     
     private var userLocationAccuracy: String {
         if let accuracy = mapView.userLocation.location?.horizontalAccuracy {
@@ -51,7 +52,9 @@ class LocationPickerViewController: UIViewController {
         mapView.userTrackingMode = .follow
         tableView.dataSource = self
         tableView.delegate = self
-        reloadLocations(coordinate: mapView.userLocation.coordinate)
+        if mapView.userLocation.coordinate.latitude != 0 || mapView.userLocation.coordinate.longitude != 0 {
+            reloadLocations(coordinate: mapView.userLocation.coordinate)
+        }
         let isAuthorized = CLLocationManager.authorizationStatus() == .authorizedAlways
             || CLLocationManager.authorizationStatus() == .authorizedWhenInUse
         if isAuthorized {
@@ -107,9 +110,7 @@ extension LocationPickerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.location, for: indexPath)!
         if indexPath.section == 0 {
-            cell.iconImageView.image = R.image.conversation.ic_location_user()
-            cell.titleLabel.text = R.string.localizable.chat_location_send_current()
-            cell.subtitleLabel.text = R.string.localizable.chat_location_accuracy(userLocationAccuracy)
+            cell.renderAsCurrentLocation(accuracy: userLocationAccuracy)
         } else {
             let location = locations[indexPath.row]
             cell.render(location: location)
@@ -139,12 +140,18 @@ extension LocationPickerViewController: UITableViewDelegate {
 extension LocationPickerViewController {
     
     private func reloadLocations(coordinate: CLLocationCoordinate2D) {
-        NearbyLocationLoader.shared.search(coordinate: coordinate) { [weak self] (locations) in
+        nearbyLocationsRequest?.cancel()
+        nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate) { [weak self] (result) in
             guard let self = self else {
                 return
             }
-            self.locations = locations
-            self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+            switch result {
+            case .success(let locations):
+                self.locations = locations
+                self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+            case .failure:
+                break
+            }
         }
     }
     

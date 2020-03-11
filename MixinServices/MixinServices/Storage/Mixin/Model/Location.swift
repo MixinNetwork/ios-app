@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 import MapKit
 
-public class Location: NSObject, Codable {
+open class Location: NSObject, Codable {
     
     public typealias Degrees = Double
     

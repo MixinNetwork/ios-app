@@ -55,7 +55,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         if shouldUpload {
             UploaderQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
         } else {
-            ConcurrentJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId))
         }
         isLoading = true
     }

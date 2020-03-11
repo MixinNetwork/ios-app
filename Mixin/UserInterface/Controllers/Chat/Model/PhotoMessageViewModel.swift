@@ -44,7 +44,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if shouldUpload {
             UploaderQueue.shared.addJob(job: ImageUploadJob(message: Message.createMessage(message: message)))
         } else {
-            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId))
         }
 
         isLoading = true

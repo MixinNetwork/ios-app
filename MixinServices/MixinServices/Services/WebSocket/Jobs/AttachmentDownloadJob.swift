@@ -7,7 +7,6 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
-    private var mediaMimeType: String?
     
     internal var fileName: String {
         var pathExtension = message.name?.pathExtension()?.lowercased()
@@ -32,11 +31,6 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     internal var fileUrl: URL {
         return AttachmentContainer.url(for: .photos, filename: fileName)
-    }
-    
-    public init(messageId: String, mediaMimeType: String?) {
-        super.init(messageId: messageId)
-        self.mediaMimeType = mediaMimeType
     }
     
     open class func jobId(messageId: String) -> String {

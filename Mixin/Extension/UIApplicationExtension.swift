@@ -34,6 +34,28 @@ extension UIApplication {
         }
         return lastVC as? ConversationViewController
     }
+
+    static var isApplicationActive: Bool {
+        if Thread.isMainThread {
+            return UIApplication.shared.applicationState == .active
+        } else {
+            var isActive = false
+            DispatchQueue.main.sync {
+                isActive = UIApplication.shared.applicationState == .active
+            }
+            return isActive
+        }
+    }
+
+    static var canBatchProcessMessages: Bool {
+        return !isAppExtension &&
+               LoginManager.shared.isLoggedIn &&
+               !AppGroupUserDefaults.User.needsUpgradeInMainApp &&
+               !MixinService.isStopProcessMessages &&
+               isApplicationActive
+    }
+
+
 }
 
 extension UIApplication {

@@ -1,18 +1,18 @@
 import Foundation
 
-internal class ExitConversationJob: BaseJob {
+public class ExitConversationJob: BaseJob {
 
     let conversationId: String
 
-    init(conversationId: String) {
+    public init(conversationId: String) {
         self.conversationId = conversationId
     }
 
-    override func getJobId() -> String {
+    override public func getJobId() -> String {
         return "exit-coversation-\(conversationId)"
     }
 
-    override func run() throws {
+    override public func run() throws {
         let conversationId = self.conversationId
         guard !isCancelled, !conversationId.isEmpty, ConversationDAO.shared.getConversationStatus(conversationId: conversationId) == ConversationStatus.QUIT.rawValue else {
             return

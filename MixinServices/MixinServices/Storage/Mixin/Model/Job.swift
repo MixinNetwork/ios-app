@@ -9,6 +9,7 @@ internal struct Job: BaseCodable {
     let jobId: String
     let priority: Int
     let action: String
+    let category: String
     
     let userId: String?
     let blazeMessage: Data?
@@ -17,8 +18,7 @@ internal struct Job: BaseCodable {
     var messageId: String?
     var status: String?
     var sessionId: String?
-    var isHttpMessage: Bool
-    
+
     var isAutoIncrement = true
     
     enum CodingKeys: String, CodingTableKey {
@@ -28,14 +28,14 @@ internal struct Job: BaseCodable {
         case priority
         case blazeMessage = "blaze_message"
         case action
+        case category
         case conversationId = "conversation_id"
         case userId = "user_id"
         case resendMessageId = "resend_message_id"
         case messageId = "message_id"
         case status
         case sessionId = "session_id"
-        case isHttpMessage = "is_http_message"
-        
+
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
@@ -45,28 +45,29 @@ internal struct Job: BaseCodable {
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
                 "_index_id": IndexBinding(isUnique: true, indexesBy: jobId),
-                "_next_indexs": IndexBinding(indexesBy: [isHttpMessage.asIndex(orderBy: .ascending), priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
+                "_next_indexs": IndexBinding(indexesBy: [category, priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
             ]
         }
     }
     
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
+        if action == .SEND_DELIVERED_ACK_MESSAGE {
+            self.category = JobCategory.Http.rawValue
+        } else {
+            self.category = JobCategory.WebSocket.rawValue
+        }
+
         switch action {
         case .RESEND_MESSAGE:
-            self.isHttpMessage = false
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
-            self.isHttpMessage = true
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
         case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES:
-            self.isHttpMessage = true
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         case .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
-            self.isHttpMessage = false
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
-            self.isHttpMessage = false
             self.priority = JobPriority.SEND_MESSAGE.rawValue
         }
         self.action = action.rawValue
@@ -130,9 +131,22 @@ extension Job {
         self.messageId = messageId
         self.status = status
         self.sessionId = nil
-        self.isHttpMessage = false
+        self.category = JobCategory.WebSocket.rawValue
     }
-    
+
+    init(downloadTask messageId: String) {
+        self.jobId = UUID().uuidString.lowercased()
+        self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
+        self.action = JobAction.DOWNLOAD_MEDIA.rawValue
+        self.userId = nil
+        self.conversationId = nil
+        self.resendMessageId = nil
+        self.blazeMessage = nil
+        self.messageId = messageId
+        self.status = nil
+        self.sessionId = nil
+        self.category = JobCategory.Task.rawValue
+    }
 }
 
 
@@ -143,7 +157,7 @@ enum JobPriority: Int {
     case SEND_ACK_MESSAGE = 5
 }
 
-enum JobAction: String {
+public enum JobAction: String {
     case REQUEST_RESEND_KEY
     case REQUEST_RESEND_MESSAGES
     case RESEND_MESSAGE
@@ -158,6 +172,13 @@ enum JobAction: String {
 
     case SEND_SESSION_MESSAGE
     case SEND_SESSION_MESSAGES
+
+    case DOWNLOAD_MEDIA
+    case UPLOAD_MEDIA
 }
 
-
+public enum JobCategory: String {
+    case WebSocket
+    case Http
+    case Task
+}

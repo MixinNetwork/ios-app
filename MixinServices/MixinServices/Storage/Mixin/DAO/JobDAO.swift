@@ -5,27 +5,31 @@ public final class JobDAO {
     
     public static let shared = JobDAO()
     
-    internal func nextJob() -> Job? {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == false, orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
+    internal func nextJob(category: JobCategory) -> Job? {
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue, orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
     }
     
     public func clearSessionJob() {
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.isHttpMessage == false && (Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_SESSION_MESSAGES.rawValue))
+        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.category == JobCategory.WebSocket.rawValue && Job.Properties.action.in(JobAction.SEND_SESSION_MESSAGE.rawValue, JobAction.SEND_SESSION_MESSAGES.rawValue))
     }
-    
-    internal func nextBatchHttpJobs(limit: Limit) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == true, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+
+    public func nextJobs(category: JobCategory, action: JobAction, limit: Limit? = nil) -> [String: String] {
+        return MixinDatabase.shared.getDictionary(key: Job.Properties.jobId.asColumnResult(), value: Job.Properties.messageId.asColumnResult(), tableName: Job.tableName, condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
-    
-    internal func nextBatchSessionJobs(limit: Limit) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.isHttpMessage == false && Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+
+    internal func nextBatchJobs(category: JobCategory, limit: Limit) -> [Job] {
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
-    
+
+    internal func nextBatchJobs(category: JobCategory, action: JobAction, limit: Limit) -> [Job] {
+        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    }
+
     internal func getCount() -> Int {
         return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName)
     }
     
-    internal func removeJob(jobId: String) {
+    public func removeJob(jobId: String) {
         MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId == jobId)
     }
     

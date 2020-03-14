@@ -59,13 +59,17 @@ extension SendMessageService {
             if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                 SendMessageService.shared.sendMessage(message: msg, data: msg.content)
             } else if msg.category.hasSuffix("_IMAGE") {
-                UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_VIDEO") {
-                UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_DATA") {
-                UploaderQueue.shared.addJob(job: FileUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: FileUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_AUDIO") {
-                UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg, jobId: jobId))
             } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
                 SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
             }

@@ -5,6 +5,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
     public let messageId: String
     public var message: Message!
     public var task: URLSessionTask?
+    internal var jobId: String?
     
     public lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
@@ -30,6 +31,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
         let statusCode = (response as? HTTPURLResponse)?.statusCode
         guard statusCode != 404 else {
             weakSelf.downloadExpired()
+            weakSelf.removeJob()
             weakSelf.finishJob()
             return
         }
@@ -47,6 +49,12 @@ open class UploadOrDownloadJob: AsynchronousJob {
     
     public init(messageId: String) {
         self.messageId = messageId
+    }
+
+    public init(message: Message, jobId: String? = nil) {
+        self.messageId = message.messageId
+        self.message = message
+        self.jobId = jobId
     }
     
     override open func cancel() {
@@ -71,7 +79,15 @@ open class UploadOrDownloadJob: AsynchronousJob {
     }
     
     open func taskFinished() {
-        
+
+    }
+
+    public func removeJob() {
+        guard let jobId = self.jobId, !jobId.isEmpty else {
+            return
+        }
+
+        JobDAO.shared.removeJob(jobId: jobId)
     }
     
 }

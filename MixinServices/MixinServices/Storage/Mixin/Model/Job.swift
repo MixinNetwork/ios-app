@@ -134,10 +134,10 @@ extension Job {
         self.category = JobCategory.WebSocket.rawValue
     }
 
-    init(downloadTask messageId: String) {
+    init(attachmentMessage messageId: String, action: JobAction) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
-        self.action = JobAction.DOWNLOAD_MEDIA.rawValue
+        self.action = action.rawValue
         self.userId = nil
         self.conversationId = nil
         self.resendMessageId = nil
@@ -173,8 +173,8 @@ public enum JobAction: String {
     case SEND_SESSION_MESSAGE
     case SEND_SESSION_MESSAGES
 
-    case DOWNLOAD_MEDIA
-    case UPLOAD_MEDIA
+    case DOWNLOAD_ATTACHMENT
+    case UPLOAD_ATTACHMENT
 }
 
 public enum JobCategory: String {

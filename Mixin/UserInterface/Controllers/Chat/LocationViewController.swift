@@ -6,6 +6,8 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: TableHeaderBypassTableView!
     
+    let headerReuseId = "header"
+    
     var tableViewMaskHeight: CGFloat {
         get {
             tableViewMaskLayer.frame.height
@@ -37,11 +39,14 @@ class LocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(R.nib.locationCell)
+        tableView.register(UITableViewHeaderFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableViewMaskLayer.cornerRadius = 13
         tableViewMaskLayer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tableViewMaskLayer.masksToBounds = true
         tableViewMaskLayer.backgroundColor = UIColor.black.cgColor
         tableView.layer.mask = tableViewMaskLayer
+        tableView.delegate = self
     }
     
     override func viewWillLayoutSubviews() {
@@ -69,6 +74,32 @@ extension LocationViewController: UIScrollViewDelegate {
         var preferredWrapperHeight = view.bounds.height - tableViewContentTop
         preferredWrapperHeight = min(preferredWrapperHeight, maxTableWrapperHeight)
         tableViewMaskHeight = preferredWrapperHeight
+    }
+    
+}
+
+extension LocationViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        section == 0 ? tableView.sectionHeaderHeight : .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId)!
+        view.contentView.backgroundColor = .background
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        nil
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
     
 }

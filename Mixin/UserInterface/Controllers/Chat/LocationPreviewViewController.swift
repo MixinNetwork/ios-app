@@ -5,7 +5,7 @@ import MapKit
 class LocationPreviewViewController: LocationViewController {
     
     override var minTableWrapperHeight: CGFloat {
-        62 + 7 + view.safeAreaInsets.bottom
+        tableView.rowHeight + tableView.sectionHeaderHeight + view.safeAreaInsets.bottom
     }
     
     private let annotationReuseId = "anno"
@@ -42,6 +42,11 @@ class LocationPreviewViewController: LocationViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewMaskAndHeaderView()
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        openLocationInExternalMapApp()
     }
     
     private func openLocationInExternalMapApp() {
@@ -98,15 +103,6 @@ extension LocationPreviewViewController: UITableViewDataSource {
         cell.render(location: location)
         cell.showsNavigationImageView = true
         return cell
-    }
-    
-}
-
-extension LocationPreviewViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        openLocationInExternalMapApp()
     }
     
 }

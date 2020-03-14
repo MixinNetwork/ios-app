@@ -120,6 +120,20 @@ class LocationPickerViewController: LocationViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 0 {
+            if let location = mapView.userLocation.location {
+                send(coordinate: location.coordinate, name: nil, address: nil)
+            } else {
+                alert(R.string.localizable.chat_user_location_undetermined())
+            }
+        } else {
+            let location = nearbyLocations[indexPath.row]
+            send(coordinate: location.coordinate, name: location.name, address: location.address)
+        }
+    }
+    
     @objc private func scrollToUserLocationAction(_ sender: Any) {
         mapView.setCenter(mapView.userLocation.coordinate, animated: true)
     }
@@ -202,24 +216,6 @@ extension LocationPickerViewController: UITableViewDataSource {
             cell.render(location: location)
         }
         return cell
-    }
-    
-}
-
-extension LocationPickerViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 {
-            if let location = mapView.userLocation.location {
-                send(coordinate: location.coordinate, name: nil, address: nil)
-            } else {
-                alert(R.string.localizable.chat_user_location_undetermined())
-            }
-        } else {
-            let location = nearbyLocations[indexPath.row]
-            send(coordinate: location.coordinate, name: location.name, address: location.address)
-        }
     }
     
 }

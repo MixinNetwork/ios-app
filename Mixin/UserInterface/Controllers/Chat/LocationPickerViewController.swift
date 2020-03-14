@@ -7,9 +7,6 @@ import Alamofire
 class LocationPickerViewController: LocationViewController {
     
     override var tableViewMaskHeight: CGFloat {
-        willSet {
-            mapViewCenterCoordinateBeforeTableViewMaskChanges = mapView.centerCoordinate
-        }
         didSet {
             pinImageViewIfLoaded?.center = pinImageViewCenter
             scrollToUserLocationButtonBottomConstraint.constant = tableViewMaskHeight + 20
@@ -38,7 +35,6 @@ class LocationPickerViewController: LocationViewController {
     
     private var input: ConversationInputViewController!
     private var scrollToUserLocationButtonBottomConstraint: NSLayoutConstraint!
-    private var mapViewCenterCoordinateBeforeTableViewMaskChanges: CLLocationCoordinate2D!
     private var userDidDropThePin = false
     private var userPinnedLocationAddress: String?
     private var nearbyLocationsRequest: Request?
@@ -46,12 +42,8 @@ class LocationPickerViewController: LocationViewController {
     private var nearbyLocations: [FoursquareLocation] = []
     
     private var userLocationAccuracy: String {
-        if let accuracy = mapView.userLocation.location?.horizontalAccuracy {
-            if accuracy > 0 {
-                return "\(accuracy)m"
-            } else {
-                return ">1km"
-            }
+        if let accuracy = mapView.userLocation.location?.horizontalAccuracy, accuracy > 0 {
+            return "\(Int(accuracy))m"
         } else {
             return ">1km"
         }

@@ -772,8 +772,9 @@ class ConversationViewController: UIViewController {
     }
     
     func showLocationPicker() {
-        let vc = LocationPickerViewController.instance(conversationInputViewController: conversationInputViewController)
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = LocationPickerViewController(input: conversationInputViewController)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+        navigationController?.pushViewController(container, animated: true)
     }
     
     func showContactSelector() {

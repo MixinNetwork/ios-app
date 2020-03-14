@@ -1,6 +1,6 @@
 import UIKit
 
-class LocationInformationView: UIView {
+class LocationInformationView: SolidBackgroundColoredView {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!

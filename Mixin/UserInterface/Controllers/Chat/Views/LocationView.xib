@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LocationViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="mapView" destination="VkP-p5-8St" id="bGW-6Y-ahJ"/>
+                <outlet property="tableView" destination="B7f-5h-4L5" id="mb5-pu-iOC"/>
+                <outlet property="view" destination="PJf-0q-OB7" id="5hO-IF-S7Z"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="PJf-0q-OB7">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-p5-8St">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </mapView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="62" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-5h-4L5" customClass="TableHeaderBypassTableView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <color key="backgroundColor" name="background"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstItem="B7f-5h-4L5" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="0ov-0F-hgi"/>
+                <constraint firstItem="B7f-5h-4L5" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="25v-Sh-L6P"/>
+                <constraint firstItem="VkP-p5-8St" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="Al0-Yo-PjQ"/>
+                <constraint firstItem="VkP-p5-8St" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="LLk-Ae-CTQ"/>
+                <constraint firstAttribute="bottom" secondItem="VkP-p5-8St" secondAttribute="bottom" id="dQZ-6a-u0B"/>
+                <constraint firstAttribute="trailing" secondItem="B7f-5h-4L5" secondAttribute="trailing" id="fFN-CY-0bo"/>
+                <constraint firstAttribute="bottom" secondItem="B7f-5h-4L5" secondAttribute="bottom" id="gif-PK-sg1"/>
+                <constraint firstAttribute="trailing" secondItem="VkP-p5-8St" secondAttribute="trailing" id="jqi-es-pJ6"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="I12-qE-llk"/>
+            <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

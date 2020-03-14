@@ -105,6 +105,8 @@
 		7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */; };
 		7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */; };
 		7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */; };
+		7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4EB241965AA00B58006 /* LocationViewController.swift */; };
+		7B3FD4EE241965BE00B58006 /* LocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B3FD4ED241965BE00B58006 /* LocationView.xib */; };
 		7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */; };
 		7B402F88214692C300383687 /* BubbleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B402F87214692C200383687 /* BubbleLayer.swift */; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
@@ -252,7 +254,7 @@
 		7B9916D421945A6800C11401 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* AssetCell.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */; };
-		7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */; };
+		7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */; };
 		7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */; };
 		7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */; };
 		7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */; };
@@ -385,7 +387,6 @@
 		7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */; };
 		7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */; };
 		7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */; };
-		7BEFAF31240EC28300BE92CE /* UserLocationAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */; };
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
@@ -412,6 +413,9 @@
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
+		7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */; };
+		7BFCB8A4241C120500E7BC43 /* AnimationsDisabledLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */; };
+		7BFCB8A8241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFCB8A7241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift */; };
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
 		7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */; };
 		7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */; };
@@ -810,6 +814,8 @@
 		7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaViewController.swift; sourceTree = "<group>"; };
 		7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAnnouncementViewController.swift; sourceTree = "<group>"; };
 		7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderingModeSwitchableImageView.swift; sourceTree = "<group>"; };
+		7B3FD4EB241965AA00B58006 /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
+		7B3FD4ED241965BE00B58006 /* LocationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationView.xib; sourceTree = "<group>"; };
 		7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentExpirationHintingMessageCell.swift; sourceTree = "<group>"; };
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
@@ -957,7 +963,7 @@
 		7B9916D321945A6800C11401 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyTipsViewController.swift; sourceTree = "<group>"; };
-		7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBackgroundedView.swift; sourceTree = "<group>"; };
+		7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidBackgroundColoredView.swift; sourceTree = "<group>"; };
 		7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputAccessible.swift; sourceTree = "<group>"; };
 		7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeModernNetworkOperationButton.swift; sourceTree = "<group>"; };
 		7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalNetworkOperationIconSet.swift; sourceTree = "<group>"; };
@@ -1103,7 +1109,6 @@
 		7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeight.swift; sourceTree = "<group>"; };
 		7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageCell.swift; sourceTree = "<group>"; };
 		7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHintViewModel.swift; sourceTree = "<group>"; };
-		7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationAnnotationView.swift; sourceTree = "<group>"; };
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
@@ -1130,6 +1135,9 @@
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
+		7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationCell.xib; sourceTree = "<group>"; };
+		7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationsDisabledLayer.swift; sourceTree = "<group>"; };
+		7BFCB8A7241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Distance.swift"; sourceTree = "<group>"; };
 		7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSelectorViewController.swift; sourceTree = "<group>"; };
 		7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferReceiverViewController.swift; sourceTree = "<group>"; };
 		7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewController.swift; sourceTree = "<group>"; };
@@ -1872,6 +1880,7 @@
 				7BC28336234DCCF300005628 /* SharedMediaTableViewController.swift */,
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
 				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
+				7B3FD4EB241965AA00B58006 /* LocationViewController.swift */,
 				7B36919E233A1962007321A7 /* LocationPickerViewController.swift */,
 				7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */,
 			);
@@ -2010,6 +2019,7 @@
 				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
+				7BFCB8A7241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2119,7 +2129,7 @@
 				7BDBDE6B223636B8006220DF /* ShadowImageView.swift */,
 				7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */,
 				7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */,
-				7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */,
+				7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */,
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
@@ -2130,6 +2140,7 @@
 				7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */,
 				7B311BA922B9EAFE00C16652 /* IntroTextView.swift */,
 				7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */,
+				7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2310,11 +2321,11 @@
 				7B86B1EC23F6A1CD00C80AD9 /* DataMessageExtensionIconView.swift */,
 				7B86B1EE23F6A70300C80AD9 /* AudioMessageActionView.swift */,
 				7B86B1F223F6AA5C00C80AD9 /* AudioMessageProgressView.swift */,
-				7BEFAF30240EC28300BE92CE /* UserLocationAnnotationView.swift */,
 				7BB525C8241654020060DAE1 /* LocationPreviewAnnotationView.swift */,
 				7B5F966A241424CD003A087B /* LocationInformationView.xib */,
 				7B5F96682414241C003A087B /* LocationInformationView.swift */,
 				7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */,
+				7B3FD4ED241965BE00B58006 /* LocationView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2528,6 +2539,7 @@
 				7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */,
 				7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */,
 				7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */,
+				7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */,
 				7B04142A240FA09F00BE8D73 /* LocationCell.swift */,
 			);
 			path = Cells;
@@ -2768,12 +2780,14 @@
 				E041064E23C6076F00A6F08E /* WebView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
+				7B3FD4EE241965BE00B58006 /* LocationView.xib in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFB19008233220360021CAF3 /* PINLogCell.xib in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
+				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
@@ -3105,6 +3119,7 @@
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
+				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
@@ -3294,7 +3309,7 @@
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
-				7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */,
+				7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */,
 				DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */,
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
@@ -3364,6 +3379,7 @@
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */,
 				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
+				7BFCB8A4241C120500E7BC43 /* AnimationsDisabledLayer.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
 				DFC0ECD223BB5FDE0091E7AC /* SessionRequest.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
@@ -3436,7 +3452,6 @@
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
-				7BEFAF31240EC28300BE92CE /* UserLocationAnnotationView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
@@ -3530,6 +3545,7 @@
 				7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */,
 				E0FAE8D223CDC4F4008B056A /* CrashlyticalReporter.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
+				7BFCB8A8241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,

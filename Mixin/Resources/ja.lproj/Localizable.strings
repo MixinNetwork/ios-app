@@ -252,6 +252,8 @@
 "chat_app_reception_button_hi" = "Say Hi";
 "chat_location_send_current" = "現在地を送信";
 "chat_location_accuracy" = "%@まで正確";
+"chat_location_send_user_picked" = "この場所を送信";
+"chat_location_reverse_geocode_processing" = "検索されています";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

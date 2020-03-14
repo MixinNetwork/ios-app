@@ -277,6 +277,8 @@
 "chat_app_reception_button_home" = "Open Home Page";
 "chat_app_reception_button_hi" = "Say Hi";
 "chat_location_send_current" = "Send Your Current Location";
+"chat_location_send_user_picked" = "Send This Location";
+"chat_location_reverse_geocode_processing" = "Locating...";
 "chat_location_accuracy" = "Accurate to %@";
 
 // Web

@@ -1,6 +1,6 @@
 import UIKit
 
-class WhiteBackgroundedView: UIView {
+class SolidBackgroundColoredView: UIView {
     
     override var backgroundColor: UIColor? {
         get {

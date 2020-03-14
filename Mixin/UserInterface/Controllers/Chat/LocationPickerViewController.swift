@@ -4,23 +4,46 @@ import MapKit
 import MixinServices
 import Alamofire
 
-class LocationPickerViewController: UIViewController {
+class LocationPickerViewController: LocationViewController {
     
-    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var scrollToUserLocationButton: UIButton!
-    
-    class func instance(conversationInputViewController: ConversationInputViewController) -> UIViewController {
-        let vc = R.storyboard.chat.location_picker()!
-        vc.input = conversationInputViewController
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+    override var tableViewMaskHeight: CGFloat {
+        willSet {
+            mapViewCenterCoordinateBeforeTableViewMaskChanges = mapView.centerCoordinate
+        }
+        didSet {
+            pinImageViewIfLoaded?.center = pinImageViewCenter
+            scrollToUserLocationButtonBottomConstraint.constant = tableViewMaskHeight + 20
+            if userDidDropThePin {
+                var point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
+                point.y += (tableViewMaskHeight - oldValue) / 2
+                let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
+                mapView.setCenter(coordinate, animated: false)
+            }
+        }
     }
     
-    private let annotationReuseId = "anno"
+    private let scrollToUserLocationButton = UIButton()
+    private let pinImage = R.image.conversation.ic_annotation_pin()!
+    private let nearbyLocationSearchingIndicator = ActivityIndicatorView()
+    
+    private lazy var geocoder = CLGeocoder()
+    private lazy var pinImageView = UIImageView(image: pinImage)
+    private lazy var locationManager: CLLocationManager = {
+        let manager = CLLocationManager()
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        return manager
+    }()
+    
+    private weak var pinImageViewIfLoaded: UIImageView?
     
     private var input: ConversationInputViewController!
+    private var scrollToUserLocationButtonBottomConstraint: NSLayoutConstraint!
+    private var mapViewCenterCoordinateBeforeTableViewMaskChanges: CLLocationCoordinate2D!
+    private var userDidDropThePin = false
+    private var userPinnedLocationAddress: String?
     private var nearbyLocationsRequest: Request?
-    private var locations: [FoursquareLocation] = []
+    private var nearbyLocationsSearchCoordinate: CLLocationCoordinate2D?
+    private var nearbyLocations: [FoursquareLocation] = []
     
     private var userLocationAccuracy: String {
         if let accuracy = mapView.userLocation.location?.horizontalAccuracy {
@@ -34,31 +57,51 @@ class LocationPickerViewController: UIViewController {
         }
     }
     
-    private lazy var manager: CLLocationManager = {
-        let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        return manager
-    }()
+    private var pinCenter: CGPoint {
+        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2)
+    }
+    
+    private var pinImageViewCenter: CGPoint {
+        let pinCenter = self.pinCenter
+        return CGPoint(x: pinCenter.x, y: pinCenter.y - pinImage.size.height / 2)
+    }
+    
+    convenience init(input: ConversationInputViewController) {
+        self.init(nib: R.nib.locationView)
+        self.input = input
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapView.delegate = self
+        mapView.userTrackingMode = .follow
+        let userDragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDragMapAction(_:)))
+        mapView.addGestureRecognizer(userDragRecognizer)
+        userDragRecognizer.delegate = self
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        view.addSubview(scrollToUserLocationButton)
+        scrollToUserLocationButton.setImage(R.image.conversation.ic_scroll_to_user_location(), for: .normal)
+        scrollToUserLocationButton.addTarget(self, action: #selector(scrollToUserLocationAction(_:)), for: .touchUpInside)
+        scrollToUserLocationButton.snp.makeConstraints { (make) in
+            make.width.height.equalTo(44)
+            make.trailing.equalToSuperview().offset(-12)
+        }
+        scrollToUserLocationButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: scrollToUserLocationButton.bottomAnchor)
+        scrollToUserLocationButtonBottomConstraint.isActive = true
         if let imageView = scrollToUserLocationButton.imageView {
             imageView.contentMode = .center
             imageView.clipsToBounds = false
         }
-        mapView.register(UserLocationAnnotationView.self,
-                         forAnnotationViewWithReuseIdentifier: annotationReuseId)
-        mapView.delegate = self
-        mapView.userTrackingMode = .follow
-        tableView.dataSource = self
-        tableView.delegate = self
+        
+        nearbyLocationSearchingIndicator.tintColor = .theme
+        nearbyLocationSearchingIndicator.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 240)
+        
         if mapView.userLocation.coordinate.latitude != 0 || mapView.userLocation.coordinate.longitude != 0 {
-            reloadLocations(coordinate: mapView.userLocation.coordinate)
-        }
-        let isAuthorized = CLLocationManager.authorizationStatus() == .authorizedAlways
-            || CLLocationManager.authorizationStatus() == .authorizedWhenInUse
-        if isAuthorized {
-            
+            reloadNearbyLocations(coordinate: mapView.userLocation.coordinate)
         }
     }
     
@@ -68,7 +111,7 @@ class LocationPickerViewController: UIViewController {
         case .authorizedAlways, .authorizedWhenInUse:
             break
         case .notDetermined:
-            manager.requestWhenInUseAuthorization()
+            locationManager.requestWhenInUseAuthorization()
         case .restricted, .denied:
             fallthrough
         @unknown default:
@@ -76,22 +119,60 @@ class LocationPickerViewController: UIViewController {
         }
     }
     
-    @IBAction func scrollToUserLocationAction(_ sender: Any) {
+    @objc private func scrollToUserLocationAction(_ sender: Any) {
         mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+    }
+    
+    @objc private func userDragMapAction(_ recognizer: UIPanGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        userDidDropThePin = true
+        mapView.userTrackingMode = .none
+        if pinImageView.superview == nil {
+            pinImageView.center = pinImageViewCenter
+            view.addSubview(pinImageView)
+            pinImageViewIfLoaded = pinImageView
+        }
     }
     
 }
 
 extension LocationPickerViewController: MKMapViewDelegate {
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
+            return
+        }
+        geocoder.cancelGeocode()
+        userPinnedLocationAddress = nil
+        reloadFirstCell()
+    }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
+            return
+        }
+        let coordinate = mapView.convert(pinCenter, toCoordinateFrom: view)
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
+            guard let self = self else {
+                return
+            }
+            if let address = placemarks?.first?.postalAddress {
+                self.userPinnedLocationAddress = address.street
+            } else {
+                self.userPinnedLocationAddress = ""
+            }
+            self.reloadFirstCell()
+        }
+        reloadNearbyLocations(coordinate: coordinate)
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        reloadLocations(coordinate: userLocation.coordinate)
-        if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LocationCell {
-            cell.subtitleLabel.text = R.string.localizable.chat_location_accuracy(userLocationAccuracy)
+        if !userDidDropThePin {
+            reloadNearbyLocations(coordinate: userLocation.coordinate)
+            reloadFirstCell()
         }
     }
     
@@ -104,15 +185,19 @@ extension LocationPickerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        section == 0 ? 1 : locations.count
+        section == 0 ? 1 : nearbyLocations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.location, for: indexPath)!
         if indexPath.section == 0 {
-            cell.renderAsCurrentLocation(accuracy: userLocationAccuracy)
+            if userDidDropThePin {
+                cell.renderAsUserPickedLocation(address: userPinnedLocationAddress)
+            } else {
+                cell.renderAsUserLocation(accuracy: userLocationAccuracy)
+            }
         } else {
-            let location = locations[indexPath.row]
+            let location = nearbyLocations[indexPath.row]
             cell.render(location: location)
         }
         return cell
@@ -130,16 +215,35 @@ extension LocationPickerViewController: UITableViewDelegate {
                 alert(R.string.localizable.chat_user_location_undetermined())
             }
         } else {
-            let location = locations[indexPath.row]
+            let location = nearbyLocations[indexPath.row]
             send(coordinate: location.coordinate, name: location.name, address: location.address)
         }
     }
     
 }
 
+extension LocationPickerViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
+    }
+    
+}
+
 extension LocationPickerViewController {
     
-    private func reloadLocations(coordinate: CLLocationCoordinate2D) {
+    private func reloadNearbyLocations(coordinate: CLLocationCoordinate2D) {
+        let willSearchCoordinateAtLeast100MetersAway = nearbyLocationsSearchCoordinate == nil
+            || coordinate.distance(from: nearbyLocationsSearchCoordinate!) >= 100
+        guard willSearchCoordinateAtLeast100MetersAway else {
+            return
+        }
+        nearbyLocations = []
+        tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        if tableView.tableFooterView == nil {
+            nearbyLocationSearchingIndicator.startAnimating()
+            tableView.tableFooterView = nearbyLocationSearchingIndicator
+        }
         nearbyLocationsRequest?.cancel()
         nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate) { [weak self] (result) in
             guard let self = self else {
@@ -147,8 +251,11 @@ extension LocationPickerViewController {
             }
             switch result {
             case .success(let locations):
-                self.locations = locations
+                self.nearbyLocationSearchingIndicator.stopAnimating()
+                self.tableView.tableFooterView = nil
+                self.nearbyLocations = locations
                 self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+                self.nearbyLocationsSearchCoordinate = coordinate
             case .failure:
                 break
             }
@@ -167,6 +274,11 @@ extension LocationPickerViewController {
             reporter.report(error: error)
             showAutoHiddenHud(style: .error, text: R.string.localizable.chat_send_location_failed())
         }
+    }
+    
+    private func reloadFirstCell() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
     
 }

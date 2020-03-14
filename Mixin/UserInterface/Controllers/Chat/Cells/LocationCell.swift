@@ -23,13 +23,23 @@ class LocationCell: ModernSelectedBackgroundCell {
         subtitleLabel.text = location.address
     }
     
-    func renderAsCurrentLocation(accuracy: String) {
+    func renderAsUserLocation(accuracy: String) {
+        renderAsUserRelatedLocation()
+        titleLabel.text = R.string.localizable.chat_location_send_current()
+        subtitleLabel.text = R.string.localizable.chat_location_accuracy(accuracy)
+    }
+    
+    func renderAsUserPickedLocation(address: String?) {
+        renderAsUserRelatedLocation()
+        titleLabel.text = R.string.localizable.chat_location_send_user_picked()
+        subtitleLabel.text = address ?? R.string.localizable.chat_location_reverse_geocode_processing()
+    }
+    
+    private func renderAsUserRelatedLocation() {
         iconBackgroundImageView.isHidden = true
         iconImageView.renderingMode = .alwaysOriginal
         iconImageView.contentMode = .center
         iconImageView.image = R.image.conversation.ic_location_user()
-        titleLabel.text = R.string.localizable.chat_location_send_current()
-        subtitleLabel.text = R.string.localizable.chat_location_accuracy(accuracy)
     }
     
 }

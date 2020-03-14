@@ -281,6 +281,8 @@
 "chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
 "chat_location_send_current" = "发送当前位置";
 "chat_location_accuracy" = "精确到 %@";
+"chat_location_send_user_picked" = "发送这个位置";
+"chat_location_reverse_geocode_processing" = "正在定位…";
 
 // Web
 "web_suspicious_link" = "可疑链接";

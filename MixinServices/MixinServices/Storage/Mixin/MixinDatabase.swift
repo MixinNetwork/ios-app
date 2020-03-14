@@ -96,9 +96,11 @@ public class MixinDatabase: BaseDatabase {
             try database.prepareUpdateSQL(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''").execute()
         }
 
-        if localVersion < 18, try database.isColumnExist(tableName: Job.tableName, columnName: "is_http_message") {
-            try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.WebSocket.rawValue)' WHERE is_http_message == 0").execute()
-            try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.Http.rawValue)' WHERE is_http_message == 1").execute()
+        if localVersion < 18 {
+            if try database.isColumnExist(tableName: Job.tableName, columnName: "is_http_message") {
+                try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.WebSocket.rawValue)' WHERE is_http_message == 0").execute()
+                try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.Http.rawValue)' WHERE is_http_message == 1").execute()
+            }
 
             let jobs = try database.prepareSelectSQL(sql: "SELECT id FROM messages WHERE user_id = ? AND status = 'SENDING' AND media_status = 'PENDING' AND category in ('SIGNAL_IMAGE','SIGNAL_VIDEO','SIGNAL_DATA', 'SIGNAL_AUDIO','PLAIN_IMAGE','PLAIN_VIDEO','PLAIN_DATA', 'PLAIN_AUDIO')", values: [myUserId]).getStringValues().map { Job(attachmentMessage: $0, action: .UPLOAD_ATTACHMENT) }
 

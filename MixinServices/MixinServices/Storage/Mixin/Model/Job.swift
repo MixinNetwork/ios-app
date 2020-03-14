@@ -173,7 +173,7 @@ public enum JobAction: String {
     case SEND_SESSION_MESSAGE
     case SEND_SESSION_MESSAGES
 
-    case DOWNLOAD_ATTACHMENT
+    case RECOVER_ATTACHMENT
     case UPLOAD_ATTACHMENT
 }
 

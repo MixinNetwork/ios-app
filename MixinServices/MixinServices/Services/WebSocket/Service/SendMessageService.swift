@@ -45,6 +45,11 @@ public class SendMessageService: MixinService {
         return job.jobId
     }
 
+    public func recoverAttachmentMessages(messageIds: [String]) {
+        let jobs = messageIds.map { Job(attachmentMessage: $0, action: .RECOVER_ATTACHMENT) }
+        MixinDatabase.shared.insertOrReplace(objects: jobs)
+    }
+
     public func sendWebRTCMessage(message: Message, recipientId: String) {
         MixinDatabase.shared.insertOrReplace(objects: [Job(webRTCMessage: message, recipientId: recipientId)])
         SendMessageService.shared.processMessages()

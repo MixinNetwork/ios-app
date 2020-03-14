@@ -120,13 +120,9 @@ public final class MessageDAO {
 
     public func getDownloadedMediaUrls(categories: [MessageCategory], offset: Offset, limit: Limit) -> [String: String] {
         let condition: Condition = Message.Properties.category.in(categories.map{ $0.rawValue }) && Message.Properties.mediaStatus == MediaStatus.DONE.rawValue
-        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: condition, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], offset: offset, limit: limit)
+        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: condition, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], offset: offset, limit: limit)
     }
 
-    public func updateMediaStatus(messageIds: [String], mediaStatus: MediaStatus) {
-        MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, mediaStatus.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId.in(messageIds))
-    }
-    
     public func deleteMediaMessages(conversationId: String, categories: [MessageCategory]) {
         MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue })))
     }

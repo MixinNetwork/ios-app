@@ -36,7 +36,7 @@ extension AppGroupUserDefaults {
             case autoDownloadVideos = "auto_download_videos"
             case autoDownloadFiles = "auto_download_files"
 
-            case hasCheckDownloadedMedia = "has_check_downloaded_media"
+            case hasRecoverMedia = "has_recover_media"
         }
         
         public static let version = 18
@@ -123,8 +123,8 @@ extension AppGroupUserDefaults {
         @RawRepresentableDefault(namespace: .user, key: Key.autoDownloadFiles, defaultValue: .never)
         public static var autoDownloadFiles: AutoDownload
 
-        @Default(namespace: .user, key: Key.hasCheckDownloadedMedia, defaultValue: false)
-        public static var hasCheckDownloadedMedia: Bool
+        @Default(namespace: .user, key: Key.hasRecoverMedia, defaultValue: false)
+        public static var hasRecoverMedia: Bool
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

@@ -18,7 +18,7 @@ class JobService {
                 JobService.shared.checkConversations()
                 JobService.shared.restoreUploadJobs()
             }
-            JobService.shared.restoreDownloadJobs()
+            JobService.shared.recoverMediaJobs()
         }
     }
 
@@ -68,13 +68,16 @@ class JobService {
             guard UIApplication.canBatchProcessMessages else {
                 return
             }
-            JobService.shared.restoreDownloadJobs()
+            JobService.shared.recoverMediaJobs()
         }
     }
 
-    private func restoreDownloadJobs() {
+    private func recoverMediaJobs() {
+        guard NetworkManager.shared.isReachableOnWiFi else {
+            return
+        }
         let limit = 5
-        let jobs = JobDAO.shared.nextJobs(category: .Task, action: .DOWNLOAD_ATTACHMENT, limit: limit)
+        let jobs = JobDAO.shared.nextJobs(category: .Task, action: .RECOVER_ATTACHMENT, limit: limit)
 
         for (idx, (jobId, messageId)) in jobs.enumerated() {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {

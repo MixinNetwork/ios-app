@@ -1,14 +1,14 @@
 import Foundation
 import MixinServices
 
-class CheckMediaJob: BaseJob {
+class RecoverMediaJob: BaseJob {
 
     override func getJobId() -> String {
-       "clean_up_unused_attachment"
+       "recover_media"
     }
 
     override func run() throws {
-        guard AppGroupUserDefaults.User.hasCheckDownloadedMedia else {
+        guard AppGroupUserDefaults.User.hasRecoverMedia else {
             return
         }
 
@@ -26,14 +26,14 @@ class CheckMediaJob: BaseJob {
                 }
 
                 if pendingMessageIds.count > 0 {
-                    MessageDAO.shared.updateMediaStatus(messageIds: pendingMessageIds, mediaStatus: .PENDING)
+                    SendMessageService.shared.recoverAttachmentMessages(messageIds: pendingMessageIds)
                 }
 
                 offset += 100
             } while mediaUrls.count == 100 && LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages
         }
 
-        AppGroupUserDefaults.User.hasCheckDownloadedMedia = false
+        AppGroupUserDefaults.User.hasRecoverMedia = false
     }
 
 }

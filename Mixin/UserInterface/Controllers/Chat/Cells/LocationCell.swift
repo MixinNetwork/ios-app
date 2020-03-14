@@ -3,10 +3,35 @@ import MixinServices
 
 class LocationCell: ModernSelectedBackgroundCell {
     
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconBackgroundImageView: UIImageView!
     @IBOutlet weak var iconImageView: RenderingModeSwitchableImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
+    
+    var showsNavigationImageView = false {
+        didSet {
+            if showsNavigationImageView {
+                if navigationImageView.superview == nil {
+                    contentStackView.addArrangedSubview(navigationImageView)
+                }
+            } else {
+                if let view = navigationImageViewIfLoaded {
+                    contentStackView.removeArrangedSubview(view)
+                }
+            }
+        }
+    }
+    
+    private lazy var navigationImageView: UIImageView = {
+        let view = UIImageView(image: R.image.conversation.ic_navigation())
+        view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
+        navigationImageViewIfLoaded = view
+        return view
+    }()
+    
+    private weak var navigationImageViewIfLoaded: UIImageView?
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -14,11 +39,11 @@ class LocationCell: ModernSelectedBackgroundCell {
         iconImageView.image = nil
     }
     
-    func render(location: FoursquareLocation) {
+    func render(location: Location) {
         iconBackgroundImageView.isHidden = false
         iconImageView.renderingMode = .alwaysTemplate
         iconImageView.contentMode = .scaleAspectFill
-        iconImageView.sd_setImage(with: location.iconUrl, completed: nil)
+//        iconImageView.sd_setImage(with: location.iconUrl, completed: nil)
         titleLabel.text = location.name
         subtitleLabel.text = location.address
     }

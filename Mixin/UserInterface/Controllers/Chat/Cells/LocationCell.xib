@@ -73,6 +73,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="contentStackView" destination="Jpg-ed-hwO" id="T1z-CM-lfs"/>
                 <outlet property="iconBackgroundImageView" destination="6bV-cR-mzR" id="Zet-yy-RgI"/>
                 <outlet property="iconImageView" destination="xOD-0i-bYT" id="aYB-Qa-Vfy"/>
                 <outlet property="subtitleLabel" destination="Ods-5v-ffs" id="DpX-Sx-tVb"/>

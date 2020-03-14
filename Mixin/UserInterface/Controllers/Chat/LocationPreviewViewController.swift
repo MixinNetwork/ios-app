@@ -2,12 +2,10 @@ import UIKit
 import MixinServices
 import MapKit
 
-class LocationPreviewViewController: UIViewController {
+class LocationPreviewViewController: LocationViewController {
     
-    let location: Location
-    
-    var mapView: MKMapView {
-        view as! MKMapView
+    override var minTableWrapperHeight: CGFloat {
+        62 + 7 + view.safeAreaInsets.bottom
     }
     
     private let annotationReuseId = "anno"
@@ -18,36 +16,35 @@ class LocationPreviewViewController: UIViewController {
     // https://lbs.amap.com/api/amap-mobile/guide/ios/marker
     private lazy var gaodeMapUrl = URL(string: "iosamap://viewMap?sourceApplication=Mixin+Messenger&poiname=A&lat=39.98848272&lon=116.47560823&dev=1")!
     
-    init(location: Location) {
+    private var location: Location!
+    
+    convenience init(location: Location) {
+        self.init(nib: R.nib.locationView)
         self.location = location
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Xib/Storyboard is unsupported")
-    }
-    
-    override func loadView() {
-        view = MKMapView()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.showsUserLocation = false
         mapView.delegate = self
-        mapView.register(LocationPreviewAnnotationView.self,
+        mapView.register(MKAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: annotationReuseId)
         let region = MKCoordinateRegion(center: location.coordinate,
                                         latitudinalMeters: 5000,
                                         longitudinalMeters: 5000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(location)
+        
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
-}
-
-extension LocationPreviewViewController: ContainerViewControllerDelegate {
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewMaskAndHeaderView()
+    }
     
-    func barRightButtonTappedAction() {
+    private func openLocationInExternalMapApp() {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if UIApplication.shared.canOpenURL(googleMapUrl) {
             controller.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_google(), style: .default, handler: { (_) in
@@ -66,6 +63,14 @@ extension LocationPreviewViewController: ContainerViewControllerDelegate {
         present(controller, animated: true, completion: nil)
     }
     
+}
+
+extension LocationPreviewViewController: ContainerViewControllerDelegate {
+    
+    func barRightButtonTappedAction() {
+        openLocationInExternalMapApp()
+    }
+    
     func imageBarRightButton() -> UIImage? {
         R.image.ic_open_external()
     }
@@ -75,13 +80,33 @@ extension LocationPreviewViewController: ContainerViewControllerDelegate {
 extension LocationPreviewViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let location = annotation as? Location else {
-            return nil
-        }
-        let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation) as! LocationPreviewAnnotationView
-        view.titleLabel.text = location.name
-        view.subtitleLabel.text = location.address
+        let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
+        view.image = R.image.conversation.ic_annotation_pin()
         return view
+    }
+    
+}
+
+extension LocationPreviewViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.location, for: indexPath)!
+        cell.render(location: location)
+        cell.showsNavigationImageView = true
+        return cell
+    }
+    
+}
+
+extension LocationPreviewViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        openLocationInExternalMapApp()
     }
     
 }

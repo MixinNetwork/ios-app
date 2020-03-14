@@ -75,6 +75,7 @@ class LocationPickerViewController: LocationViewController {
         super.viewDidLoad()
         
         mapView.delegate = self
+        mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         let userDragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDragMapAction(_:)))
         mapView.addGestureRecognizer(userDragRecognizer)
@@ -208,6 +209,7 @@ extension LocationPickerViewController: UITableViewDataSource {
 extension LocationPickerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             if let location = mapView.userLocation.location {
                 send(coordinate: location.coordinate, name: nil, address: nil)

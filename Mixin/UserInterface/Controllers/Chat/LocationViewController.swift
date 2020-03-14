@@ -17,14 +17,14 @@ class LocationViewController: UIViewController {
         }
     }
     
+    var minTableWrapperHeight: CGFloat {
+        view.bounds.height / 2
+    }
+    
     private let tableHeaderView = UIView()
     private let tableViewMaskLayer = AnimationsDisabledLayer()
     
     private var lastViewHeight: CGFloat = 0
-    
-    private var minTableWrapperHeight: CGFloat {
-        view.bounds.height / 2
-    }
     
     private var maxTableWrapperHeight: CGFloat {
         view.bounds.height - 160
@@ -47,11 +47,17 @@ class LocationViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if view.bounds.height != lastViewHeight {
-            tableViewMaskHeight = view.bounds.height - minTableWrapperHeight
-            tableHeaderView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: minTableWrapperHeight)
-            tableView.tableHeaderView = tableHeaderView
+            updateTableViewMaskAndHeaderView()
             lastViewHeight = view.bounds.height
         }
+    }
+    
+    func updateTableViewMaskAndHeaderView() {
+        tableViewMaskHeight = minTableWrapperHeight
+        let headerSize = CGSize(width: tableView.frame.width,
+                                height: view.bounds.height - minTableWrapperHeight)
+        tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
+        tableView.tableHeaderView = tableHeaderView
     }
     
 }

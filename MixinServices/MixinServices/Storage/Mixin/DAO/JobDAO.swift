@@ -25,6 +25,10 @@ public final class JobDAO {
         return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
 
+    public func getCount(category: JobCategory) -> Int {
+        return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName, condition: Job.Properties.category == category.rawValue)
+    }
+
     internal func getCount() -> Int {
         return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName)
     }

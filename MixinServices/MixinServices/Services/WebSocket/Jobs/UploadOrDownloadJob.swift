@@ -6,6 +6,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
     public var message: Message!
     public var task: URLSessionTask?
     internal var jobId: String?
+    public private(set) var isRecoverAttachment = false
     
     public lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
@@ -51,10 +52,11 @@ open class UploadOrDownloadJob: AsynchronousJob {
         self.messageId = messageId
     }
 
-    public init(message: Message, jobId: String? = nil) {
+    public init(message: Message, jobId: String? = nil, isRecoverAttachment: Bool = false) {
         self.messageId = message.messageId
         self.message = message
         self.jobId = jobId
+        self.isRecoverAttachment = isRecoverAttachment
     }
     
     override open func cancel() {

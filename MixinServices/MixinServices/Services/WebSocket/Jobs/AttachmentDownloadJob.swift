@@ -67,6 +67,12 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                 }
                 return true
             case let .failure(error):
+                guard error.code != 404 else {
+                    downloadExpired()
+                    removeJob()
+                    finishJob()
+                    return false
+                }
                 guard error.isClientError || error.isServerError else {
                     return false
                 }

@@ -79,28 +79,29 @@ class JobService {
         let limit = 5
         let jobs = JobDAO.shared.nextJobs(category: .Task, action: .RECOVER_ATTACHMENT, limit: limit)
 
-        for (idx, (jobId, messageId)) in jobs.enumerated() {
+        for (jobId, messageId) in jobs {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 JobDAO.shared.removeJob(jobId: jobId)
                 continue
             }
             let downloadJob: AttachmentDownloadJob
             if message.category.hasSuffix("_VIDEO") {
-                downloadJob = VideoDownloadJob(message: message, jobId: jobId)
+                downloadJob = VideoDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
             } else if message.category.hasSuffix("_DATA") {
-                downloadJob = FileDownloadJob(message: message, jobId: jobId)
+                downloadJob = FileDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
             } else if message.category.hasSuffix("_AUDIO") {
-                downloadJob = AudioDownloadJob(message: message, jobId: jobId)
+                downloadJob = AudioDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
             } else if message.category.hasSuffix("_IMAGE") {
-                downloadJob = AttachmentDownloadJob(message: message, jobId: jobId)
+                downloadJob = AttachmentDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
             } else {
                 JobDAO.shared.removeJob(jobId: jobId)
                 continue
             }
-            if idx == limit - 1 {
-                downloadJob.completionBlock = {
-                    JobService.shared.processDownloadJobs()
+            downloadJob.completionBlock = {
+                guard !ConcurrentJobQueue.shared.isExistRecoverAttachment() else {
+                    return
                 }
+                JobService.shared.processDownloadJobs()
             }
             ConcurrentJobQueue.shared.addJob(job: downloadJob)
         }

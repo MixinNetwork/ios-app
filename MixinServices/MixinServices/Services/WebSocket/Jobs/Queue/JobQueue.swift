@@ -36,6 +36,15 @@ open class JobQueue {
         }
         return true
     }
+
+    open func isExistRecoverAttachment() -> Bool {
+        guard queue.operations.count > 0 else {
+            return false
+        }
+        return queue.operations.contains(where: { (operation) -> Bool in
+            (operation as? UploadOrDownloadJob)?.isRecoverAttachment ?? false
+        })
+    }
     
     @discardableResult
     open func cancelJob(jobId: String) -> Bool {

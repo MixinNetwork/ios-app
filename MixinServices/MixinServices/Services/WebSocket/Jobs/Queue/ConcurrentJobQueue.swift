@@ -9,6 +9,4 @@ public class ConcurrentJobQueue: JobQueue {
         super.init(maxConcurrentOperationCount: 6)
     }
 
-
-    
 }

@@ -10,12 +10,12 @@ class LocationViewController: UIViewController {
     
     var tableViewMaskHeight: CGFloat {
         get {
-            tableViewMaskLayer.frame.height
+            tableViewMaskView.frame.height
         }
         set {
             let y = view.bounds.height - newValue + tableView.contentOffset.y
-            tableViewMaskLayer.frame = CGRect(x: 0, y: y, width: tableView.bounds.width, height: newValue)
-            mapView.layoutMargins.bottom = newValue
+            tableViewMaskView.frame = CGRect(x: 0, y: y, width: tableView.bounds.width, height: newValue)
+            mapView.layoutMargins.bottom = newValue - view.safeAreaInsets.bottom
         }
     }
     
@@ -24,7 +24,7 @@ class LocationViewController: UIViewController {
     }
     
     private let tableHeaderView = UIView()
-    private let tableViewMaskLayer = AnimationsDisabledLayer()
+    private let tableViewMaskView = UIView()
     
     private var lastViewHeight: CGFloat = 0
     
@@ -41,11 +41,12 @@ class LocationViewController: UIViewController {
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)
-        tableViewMaskLayer.cornerRadius = 13
-        tableViewMaskLayer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        tableViewMaskLayer.masksToBounds = true
-        tableViewMaskLayer.backgroundColor = UIColor.black.cgColor
-        tableView.layer.mask = tableViewMaskLayer
+        tableViewMaskView.backgroundColor = .black
+        tableViewMaskView.layer.cornerRadius = 13
+        tableViewMaskView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        tableViewMaskView.layer.masksToBounds = true
+        tableViewMaskView.layer.backgroundColor = UIColor.black.cgColor
+        tableView.mask = tableViewMaskView
         tableView.delegate = self
     }
     

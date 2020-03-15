@@ -413,7 +413,6 @@
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */; };
-		7BFCB8A4241C120500E7BC43 /* AnimationsDisabledLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */; };
 		7BFCB8A8241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFCB8A7241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift */; };
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
 		7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */; };
@@ -1134,7 +1133,6 @@
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationCell.xib; sourceTree = "<group>"; };
-		7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationsDisabledLayer.swift; sourceTree = "<group>"; };
 		7BFCB8A7241CF1B800E7BC43 /* CLLocationCoordinate2D+Distance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Distance.swift"; sourceTree = "<group>"; };
 		7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSelectorViewController.swift; sourceTree = "<group>"; };
 		7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferReceiverViewController.swift; sourceTree = "<group>"; };
@@ -2138,7 +2136,6 @@
 				7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */,
 				7B311BA922B9EAFE00C16652 /* IntroTextView.swift */,
 				7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */,
-				7BFCB8A3241C120500E7BC43 /* AnimationsDisabledLayer.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3375,7 +3372,6 @@
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */,
 				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
-				7BFCB8A4241C120500E7BC43 /* AnimationsDisabledLayer.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
 				DFC0ECD223BB5FDE0091E7AC /* SessionRequest.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,

@@ -7,6 +7,7 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var tableView: TableHeaderBypassTableView!
     
     let headerReuseId = "header"
+    let annotationReuseId = "anno"
     
     var tableViewMaskHeight: CGFloat {
         get {
@@ -38,6 +39,8 @@ class LocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.register(AnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: annotationReuseId)
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)

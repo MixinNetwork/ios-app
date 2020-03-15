@@ -49,13 +49,8 @@ class LocationPickerViewController: LocationViewController {
         }
     }
     
-    private var pinCenter: CGPoint {
-        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2)
-    }
-    
     private var pinImageViewCenter: CGPoint {
-        let pinCenter = self.pinCenter
-        return CGPoint(x: pinCenter.x, y: pinCenter.y - pinImage.size.height / 2)
+        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2)
     }
     
     convenience init(input: ConversationInputViewController) {
@@ -69,9 +64,12 @@ class LocationPickerViewController: LocationViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
-        let userDragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDragMapAction(_:)))
-        mapView.addGestureRecognizer(userDragRecognizer)
-        userDragRecognizer.delegate = self
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dropPinAction(_:)))
+        mapView.addGestureRecognizer(panRecognizer)
+        panRecognizer.delegate = self
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(dropPinAction(_:)))
+        mapView.addGestureRecognizer(pinchRecognizer)
+        pinchRecognizer.delegate = self
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -128,24 +126,47 @@ class LocationPickerViewController: LocationViewController {
     
     @objc private func scrollToUserLocationAction(_ sender: Any) {
         mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        userDidDropThePin = false
+        let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
+        mapView.removeAnnotations(userPickedAnnotations)
     }
     
-    @objc private func userDragMapAction(_ recognizer: UIPanGestureRecognizer) {
-        guard recognizer.state == .began else {
-            return
-        }
+    @objc private func dropPinAction(_ recognizer: UIPanGestureRecognizer) {
         userDidDropThePin = true
-        mapView.userTrackingMode = .none
-        if pinImageView.superview == nil {
-            pinImageView.center = pinImageViewCenter
-            view.addSubview(pinImageView)
-            pinImageViewIfLoaded = pinImageView
+        switch recognizer.state {
+        case .began:
+            mapView.userTrackingMode = .none
+            let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
+            mapView.removeAnnotations(userPickedAnnotations)
+            if pinImageView.superview == nil {
+                pinImageView.center = pinImageViewCenter
+                view.addSubview(pinImageView)
+                pinImageViewIfLoaded = pinImageView
+            }
+        case .ended:
+            pinImageView.removeFromSuperview()
+            if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
+                let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableViewMaskHeight) / 2)
+                let coordinate = mapView.convert(point, toCoordinateFrom: view)
+                let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
+                mapView.addAnnotation(annotation)
+            }
+        default:
+            break
         }
     }
     
 }
 
 extension LocationPickerViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is UserPickedLocationAnnotation {
+            return mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
+        } else {
+            return nil
+        }
+    }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
@@ -160,7 +181,7 @@ extension LocationPickerViewController: MKMapViewDelegate {
         guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
             return
         }
-        let coordinate = mapView.convert(pinCenter, toCoordinateFrom: view)
+        let coordinate = mapView.convert(pinImageViewCenter, toCoordinateFrom: view)
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
             guard let self = self else {

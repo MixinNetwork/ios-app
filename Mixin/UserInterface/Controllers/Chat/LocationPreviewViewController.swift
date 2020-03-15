@@ -8,8 +8,6 @@ class LocationPreviewViewController: LocationViewController {
         tableView.rowHeight + tableView.sectionHeaderHeight + view.safeAreaInsets.bottom
     }
     
-    private let annotationReuseId = "anno"
-    
     // https://developers.google.com/maps/documentation/urls/ios-urlscheme
     private lazy var googleMapUrl = URL(string: "https://www.google.com/maps/@42.585444,13.007813,6z")!
     
@@ -27,8 +25,6 @@ class LocationPreviewViewController: LocationViewController {
         super.viewDidLoad()
         mapView.showsUserLocation = false
         mapView.delegate = self
-        mapView.register(MKAnnotationView.self,
-                         forAnnotationViewWithReuseIdentifier: annotationReuseId)
         let region = MKCoordinateRegion(center: location.coordinate,
                                         latitudinalMeters: 5000,
                                         longitudinalMeters: 5000)
@@ -85,9 +81,7 @@ extension LocationPreviewViewController: ContainerViewControllerDelegate {
 extension LocationPreviewViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
-        view.image = R.image.conversation.ic_annotation_pin()
-        return view
+        mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
     }
     
 }

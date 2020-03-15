@@ -42,7 +42,14 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    private let minInputWrapperTopMargin: CGFloat = 112 // Margin to navigation title bar
+    // Margin to navigation title bar
+    private let minInputWrapperTopMargin: CGFloat = {
+        if ScreenSize.current <= .inch4 {
+            return 60
+        } else {
+            return 112
+        }
+    }()
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3

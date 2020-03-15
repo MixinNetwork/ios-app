@@ -246,15 +246,16 @@ public final class ConversationDAO {
                 ownerId = ownerParticipant.userId
             }
         }
-        
+
         let conversationId = conversation.conversationId
-        let oldStatus = ConversationDAO.shared.getConversationStatus(conversationId: conversation.conversationId)
-        guard oldStatus == nil || oldStatus! != targetStatus.rawValue else {
-            return true
-        }
-        
         return MixinDatabase.shared.transaction { (db) in
-            if oldStatus == nil {
+            let oldStatus = try db.getValue(on: Conversation.Properties.status.asColumnResult(), fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
+
+            guard oldStatus.type == .null || (oldStatus.int32Value != targetStatus.rawValue) else {
+                return
+            }
+
+            if oldStatus.type == .null {
                 let targetConversation = Conversation.createConversation(from: conversation, ownerId: ownerId, status: targetStatus)
                 try db.insert(objects: targetConversation, intoTable: Conversation.tableName)
             } else {

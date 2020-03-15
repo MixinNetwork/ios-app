@@ -538,6 +538,8 @@
 "auth_permission_assets" = "资产余额";
 "auth_permission_apps_read" = "读取应用";
 "auth_permission_apps_read_description" = "访问你的应用列表";
+"auth_permission_apps_favorite_read" = "读取分享的应用";
+"auth_permission_apps_favorite_read_description" = "访问你分享的应用列表";
 "auth_permission_apps_write" = "管理应用";
 "auth_permission_apps_write_description" = "管理你所有的应用";
 "auth_permission_contacts_read" = "读取联系人";

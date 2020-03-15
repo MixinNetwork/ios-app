@@ -36,8 +36,14 @@ class AssetInfoWindow: BottomSheetView {
         guard asset != nil else {
             return
         }
-        UIPasteboard.general.string = asset.assetKey
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+
+        let assetKey = asset.assetKey
+        let alc = UIAlertController(title: R.string.localizable.wallet_asset_key(), message: R.string.localizable.wallet_asset_key_copy_tips(), preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: R.string.localizable.action_copy(), style: .cancel, handler: { (_) in
+            UIPasteboard.general.string = assetKey
+            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        }))
+        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

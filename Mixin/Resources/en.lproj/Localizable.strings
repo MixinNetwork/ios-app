@@ -444,6 +444,7 @@
 "wallet_asset_symbol" = "Symbol";
 "wallet_asset_chain" = "Chain";
 "wallet_asset_key" = "Asset Key";
+"wallet_asset_key_copy_tips" = "Attention: Asset key is NOT a deposit address!";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
 "wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
 "wallet_asset_is_unhidden" = "Unhidden";

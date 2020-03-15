@@ -449,6 +449,7 @@
 "wallet_asset_symbol" = "符号";
 "wallet_asset_chain" = "所属公链";
 "wallet_asset_key" = "资产标识";
+"wallet_asset_key_copy_tips" = "注意：资产标识不是充值地址！";
 "wallet_hide_asset_confirmation" = "确认隐藏 %@？";
 "wallet_asset_is_hidden_prompt" = "该资产已隐藏。在钱包中显示？";
 "wallet_asset_is_unhidden" = "已显示";

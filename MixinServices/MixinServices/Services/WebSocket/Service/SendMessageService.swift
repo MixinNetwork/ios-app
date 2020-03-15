@@ -39,6 +39,17 @@ public class SendMessageService: MixinService {
         SendMessageService.shared.processMessages()
     }
 
+    public func saveUploadJob(message: Message) -> String {
+        let job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
+        MixinDatabase.shared.insertOrReplace(objects: [job])
+        return job.jobId
+    }
+
+    public func recoverAttachmentMessages(messageIds: [String]) {
+        let jobs = messageIds.map { Job(attachmentMessage: $0, action: .RECOVER_ATTACHMENT) }
+        MixinDatabase.shared.insertOrReplace(objects: jobs)
+    }
+
     public func sendWebRTCMessage(message: Message, recipientId: String) {
         MixinDatabase.shared.insertOrReplace(objects: [Job(webRTCMessage: message, recipientId: recipientId)])
         SendMessageService.shared.processMessages()
@@ -180,7 +191,7 @@ public class SendMessageService: MixinService {
                     return
                 }
 
-                let jobs = JobDAO.shared.nextBatchHttpJobs(limit: 100)
+                let jobs = JobDAO.shared.nextBatchJobs(category: .Http, limit: 100)
                 var ackMessages = [AckMessage]()
                 jobs.forEach { (job) in
                     switch job.action {
@@ -250,7 +261,7 @@ public class SendMessageService: MixinService {
                 guard !MixinService.isStopProcessMessages else {
                     return
                 }
-                guard let job = JobDAO.shared.nextJob() else {
+                guard let job = JobDAO.shared.nextJob(category: .WebSocket) else {
                     return
                 }
 
@@ -259,7 +270,7 @@ public class SendMessageService: MixinService {
                         JobDAO.shared.removeJob(jobId: job.jobId)
                         continue
                     }
-                    let jobs = JobDAO.shared.nextBatchSessionJobs(limit: 100)
+                    let jobs = JobDAO.shared.nextBatchJobs(category: .WebSocket, action: .SEND_SESSION_MESSAGE, limit: 100)
                     let messages: [TransferMessage] = jobs.compactMap {
                         guard let messageId = $0.messageId, let status = $0.status else {
                             return nil

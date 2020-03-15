@@ -3,7 +3,9 @@ import UIKit
 import MixinServices
 
 class AttachmentUploadJob: UploadOrDownloadJob {
-    
+
+    private var stream: InputStream?
+
     var attachResponse: AttachmentResponse?
     
     var fileUrl: URL? {
@@ -11,13 +13,6 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             return nil
         }
         return AttachmentContainer.url(for: .photos, filename: mediaUrl)
-    }
-    
-    private var stream: InputStream?
-    
-    init(message: Message) {
-        super.init(messageId: message.messageId)
-        super.message = message
     }
     
     class func jobId(messageId: String) -> String {
@@ -30,6 +25,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
     
     override func execute() -> Bool {
         guard !self.message.messageId.isEmpty, !isCancelled else {
+            removeJob()
             return false
         }
         repeat {
@@ -37,6 +33,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             case let .success(attachResponse):
                 self.attachResponse = attachResponse
                 guard uploadAttachment(attachResponse: attachResponse) else {
+                    removeJob()
                     return false
                 }
                 return true
@@ -128,6 +125,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
         
         SendMessageService.shared.sendMessage(message: message, data: content)
+        removeJob()
     }
     
     func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {

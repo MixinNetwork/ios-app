@@ -197,7 +197,7 @@ class AudioManager: NSObject {
         guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
             return
         }
-        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
+        let job = AudioDownloadJob(messageId: next.messageId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     

@@ -519,6 +519,8 @@
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
 		DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */; };
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
+		DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */; };
+		DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAD89A0241B6D6400836EDD /* JobService.swift */; };
 		DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */; };
 		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
 		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
@@ -1232,6 +1234,8 @@
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceCheck.framework; path = System/Library/Frameworks/DeviceCheck.framework; sourceTree = SDKROOT; };
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverMediaJob.swift; sourceTree = "<group>"; };
+		DFAD89A0241B6D6400836EDD /* JobService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobService.swift; sourceTree = "<group>"; };
 		DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementView.xib; sourceTree = "<group>"; };
 		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
@@ -2328,6 +2332,7 @@
 			children = (
 				DFB6CE2023C485AB00FB6615 /* SendMessageService+Sending.swift */,
 				DFB6CE2223C485D400FB6615 /* SystemConversationAction+Description.swift */,
+				DFAD89A0241B6D6400836EDD /* JobService.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -2541,6 +2546,7 @@
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
+				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3258,6 +3264,7 @@
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
+				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
 				DFC0ED0423BB611E0091E7AC /* UserAPI.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
@@ -3512,6 +3519,7 @@
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
+				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7B746B4022A628ED0097D18A /* Counter.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,

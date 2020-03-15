@@ -7,24 +7,22 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
-    private var mediaMimeType: String?
     
     internal var fileName: String {
-        var pathExtension = message.name?.pathExtension()?.lowercased()
-        
-        if pathExtension == nil {
-            if let mimeType = message.mediaMimeType?.lowercased(), let ext = FileManager.default.pathExtension(mimeType: mimeType)?.lowercased() {
-                pathExtension = ".\(ext)"
-            }
-        }
-        
-        if pathExtension == nil {
-            if message.category.hasSuffix("_VIDEO") {
-                pathExtension = ExtensionName.mp4.withDot
-            } else if message.category.hasSuffix("_IMAGE") {
-                pathExtension = ExtensionName.jpeg.withDot
-            } else if message.category.hasSuffix("_AUDIO") {
-                pathExtension = ExtensionName.ogg.withDot
+        var pathExtension: String?
+
+        if message.category.hasSuffix("_VIDEO") {
+            pathExtension = ExtensionName.mp4.withDot
+        } else if message.category.hasSuffix("_IMAGE") {
+            pathExtension = ExtensionName.jpeg.withDot
+        } else if message.category.hasSuffix("_AUDIO") {
+            pathExtension = ExtensionName.ogg.withDot
+        } else {
+            pathExtension = message.name?.pathExtension()?.lowercased()
+            if pathExtension == nil {
+                if let mimeType = message.mediaMimeType?.lowercased(), let ext = FileManager.default.pathExtension(mimeType: mimeType)?.lowercased() {
+                    pathExtension = ".\(ext)"
+                }
             }
         }
         return "\(message.messageId)\(pathExtension ?? "")"
@@ -33,12 +31,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     internal var fileUrl: URL {
         return AttachmentContainer.url(for: .photos, filename: fileName)
     }
-    
-    public init(messageId: String, mediaMimeType: String?) {
-        super.init(messageId: messageId)
-        self.mediaMimeType = mediaMimeType
-    }
-    
+
     open class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
@@ -61,25 +54,25 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     }
     
     override open func execute() -> Bool {
-        guard !self.messageId.isEmpty else {
+        guard let attachmentId = validAttachmentMessage() else {
+            removeJob()
             return false
         }
-        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue && message.mediaStatus != MediaStatus.READ.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue)) else {
-            return false
-        }
-        guard let attachmentId = message.content, !attachmentId.isEmpty else {
-            return false
-        }
-        
-        self.message = message
         repeat {
             switch MessageAPI.shared.getAttachment(id: attachmentId) {
             case let .success(attachmentResponse):
                 guard downloadAttachment(attachResponse: attachmentResponse) else {
+                    removeJob()
                     return false
                 }
                 return true
             case let .failure(error):
+                guard error.code != 404 else {
+                    downloadExpired()
+                    removeJob()
+                    finishJob()
+                    return false
+                }
                 guard error.isClientError || error.isServerError else {
                     return false
                 }
@@ -87,6 +80,27 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false
+    }
+
+    private func validAttachmentMessage() -> String? {
+        guard !messageId.isEmpty else {
+            return nil
+        }
+        guard let message = self.message ?? MessageDAO.shared.getMessage(messageId: messageId) else {
+            return nil
+        }
+        guard message.category != MessageCategory.MESSAGE_RECALL.rawValue else {
+            return nil
+        }
+        guard let attachmentId = message.content, !attachmentId.isEmpty else {
+            return nil
+        }
+        guard !(jobId?.isEmpty ?? true) || message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.READ.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
+            return nil
+        }
+
+        self.message = message
+        return attachmentId
     }
     
     private func downloadAttachment(attachResponse: AttachmentResponse) -> Bool {
@@ -133,13 +147,13 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)
+            removeJob()
         }
     }
     
     override open func downloadExpired() {
         MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .EXPIRED, conversationId: message.conversationId)
     }
-    
 }
 
 extension AttachmentDownloadJob: URLSessionDataDelegate {

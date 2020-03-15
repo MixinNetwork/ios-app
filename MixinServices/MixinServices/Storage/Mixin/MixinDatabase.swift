@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 17
+    private static let version: Int = 18
     
     override public var database: Database! {
         get { _database }
@@ -69,27 +69,6 @@ public class MixinDatabase: BaseDatabase {
             return
         }
         
-        if localVersion < 4 {
-            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index1").execute()
-            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index2").execute()
-        }
-        
-        if localVersion < 5 {
-            try database.drop(table: Sticker.tableName)
-            try database.drop(table: "sticker_albums")
-        }
-        
-        if localVersion < 6 {
-            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_status_index").execute()
-            try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_update").execute()
-        }
-        
-        if localVersion < 7 {
-            try database.drop(table: Address.tableName)
-            try database.drop(table: Asset.tableName)
-            try database.drop(table: Asset.topAssetsTableName)
-        }
-        
         if localVersion < 8 {
             try database.drop(table: "sent_sender_keys")
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
@@ -102,23 +81,32 @@ public class MixinDatabase: BaseDatabase {
         if localVersion < 15 {
             try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_insert").execute()
         }
+
+        if localVersion < 18 {
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS jobs_next_indexs").execute()
+        }
     }
     
     private func createAfter(database: Database, localVersion: Int) throws {
         guard localVersion > 0 else {
             return
         }
-        
-        if localVersion < 4, try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
-            try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
-        }
-        
-        if localVersion < 8 {
-            try database.update(maps: [(Job.Properties.isHttpMessage, true)], tableName: Job.tableName, condition: Job.Properties.action == JobAction.SEND_ACK_MESSAGE.rawValue || Job.Properties.action == JobAction.SEND_ACK_MESSAGES.rawValue || Job.Properties.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue)
-        }
 
         if localVersion < 11 {
             try database.prepareUpdateSQL(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''").execute()
+        }
+
+        if localVersion < 18 {
+            if try database.isColumnExist(tableName: Job.tableName, columnName: "is_http_message") {
+                try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.WebSocket.rawValue)' WHERE is_http_message = 0").execute()
+                try database.prepareUpdateSQL(sql: "UPDATE jobs SET category = '\(JobCategory.Http.rawValue)' WHERE is_http_message = 1").execute()
+            }
+
+            let jobs = try database.prepareSelectSQL(sql: "SELECT id FROM messages WHERE user_id = ? AND status = 'SENDING' AND media_status = 'PENDING' AND category in ('SIGNAL_IMAGE','SIGNAL_VIDEO','SIGNAL_DATA', 'SIGNAL_AUDIO','PLAIN_IMAGE','PLAIN_VIDEO','PLAIN_DATA', 'PLAIN_AUDIO')", values: [myUserId]).getStringValues().map { Job(attachmentMessage: $0, action: .UPLOAD_ATTACHMENT) }
+
+            try database.insert(objects: jobs, intoTable: Job.tableName)
+
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_pending_indexs").execute()
         }
     }
     

@@ -36,7 +36,7 @@ class SharedMediaAudioManager: AudioManager {
         guard next.category.hasSuffix("_AUDIO"), next.mediaStatus == MediaStatus.CANCELED.rawValue || next.mediaStatus == MediaStatus.PENDING.rawValue else {
             return
         }
-        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
+        let job = AudioDownloadJob(messageId: next.messageId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     

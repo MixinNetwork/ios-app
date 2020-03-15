@@ -15,5 +15,9 @@ public extension FileManager {
         }
         try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
     }
+
+    func isAvailable(_ path: String) -> Bool {
+        return fileExists(atPath: path) && fileSize(path) > 0
+    }
     
 }

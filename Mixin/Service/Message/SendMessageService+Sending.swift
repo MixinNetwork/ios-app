@@ -3,27 +3,6 @@ import MixinServices
 
 extension SendMessageService {
     
-    @objc func uploadAnyPendingMessages() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        let messages = MessageDAO.shared.getPendingMessages()
-        for message in messages {
-            guard message.shouldUpload() else {
-                continue
-            }
-            if message.category.hasSuffix("_IMAGE") {
-                UploaderQueue.shared.addJob(job: ImageUploadJob(message: message))
-            } else if message.category.hasSuffix("_DATA") {
-                UploaderQueue.shared.addJob(job: FileUploadJob(message: message))
-            } else if message.category.hasSuffix("_VIDEO") {
-                UploaderQueue.shared.addJob(job: VideoUploadJob(message: message))
-            } else if message.category.hasSuffix("_AUDIO") {
-                UploaderQueue.shared.addJob(job: AudioUploadJob(message: message))
-            }
-        }
-    }
-    
     func sendMessage(message: Message, ownerUser: UserItem?, isGroupMessage: Bool) {
         guard let account = LoginManager.shared.account else {
             return
@@ -80,13 +59,17 @@ extension SendMessageService {
             if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                 SendMessageService.shared.sendMessage(message: msg, data: msg.content)
             } else if msg.category.hasSuffix("_IMAGE") {
-                UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_VIDEO") {
-                UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_DATA") {
-                UploaderQueue.shared.addJob(job: FileUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: FileUploadJob(message: msg, jobId: jobId))
             } else if msg.category.hasSuffix("_AUDIO") {
-                UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg))
+                let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg, jobId: jobId))
             } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
                 SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
             }

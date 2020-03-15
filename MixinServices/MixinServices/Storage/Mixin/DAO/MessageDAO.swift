@@ -87,15 +87,6 @@ public final class MessageDAO {
     WHERE m.conversation_id = ? AND m.category in ('SIGNAL_DATA', 'PLAIN_DATA')
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
-    private static let sqlQueryPendingMessages = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.sticker_id, m.created_at FROM messages m
-    INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
-    WHERE m.user_id = ? AND m.status = 'SENDING' AND m.media_status = 'PENDING'
-    ORDER BY m.created_at ASC
-    """
     static let sqlQueryQuoteMessageById = """
     \(sqlQueryFullMessage)
     WHERE m.id = ? AND m.status <> 'FAILED'
@@ -126,7 +117,12 @@ public final class MessageDAO {
         let condition: Condition = Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue }))
         return MixinDatabase.shared.getDictionary(key: Message.Properties.mediaUrl.asColumnResult(), value: Message.Properties.category.asColumnResult(), tableName: Message.tableName, condition: condition)
     }
-    
+
+    public func getDownloadedMediaUrls(categories: [MessageCategory], offset: Offset, limit: Limit) -> [String: String] {
+        let condition: Condition = Message.Properties.category.in(categories.map{ $0.rawValue }) && Message.Properties.mediaStatus == MediaStatus.DONE.rawValue
+        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: condition, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], offset: offset, limit: limit)
+    }
+
     public func deleteMediaMessages(conversationId: String, categories: [MessageCategory]) {
         MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.in(categories.map({ $0.rawValue })))
     }
@@ -278,10 +274,6 @@ public final class MessageDAO {
     
     public func getMessage(messageId: String) -> Message? {
         return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId)
-    }
-    
-    public func getPendingMessages() -> [Message] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [myUserId])
     }
     
     public func firstUnreadMessage(conversationId: String) -> Message? {

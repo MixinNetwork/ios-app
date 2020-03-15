@@ -6,7 +6,7 @@ public class WebSocketService {
     
     public static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")
     public static let didDisconnectNotification = Notification.Name("one.mixin.services.ws.disconnect")
-    public static let pendingMessageUploadingDidBecomeAvailableNotification = Notification.Name("one.mixin.services.pending.msg.upload.available")
+    public static let didSendListPendingMessageNotification = Notification.Name("one.mixin.services.ws.pending")
     
     public static let shared = WebSocketService()
     
@@ -35,7 +35,6 @@ public class WebSocketService {
         }
     }
     private var messageHandlers = SafeDictionary<String, IncomingMessageHandler>()
-    private var needsJobRestoration = true
     private var httpUpgradeSigningDate = Date()
     private var lastConnectionDate = Date()
 
@@ -109,7 +108,6 @@ public class WebSocketService {
             self.heartbeat?.stop()
 
             self.socket?.disconnect(closeCode: CloseCode.exit)
-            self.needsJobRestoration = true
             ConcurrentJobQueue.shared.cancelAllOperations()
             self.messageHandlers.removeAll()
             self.status = .disconnected
@@ -353,13 +351,10 @@ extension WebSocketService {
         messageHandlers[message.id] = { (result) in
             switch result {
             case .success:
-                if self.needsJobRestoration {
-                    self.needsJobRestoration = false
-                    DispatchQueue.global().async {
-                        NotificationCenter.default.post(name: WebSocketService.pendingMessageUploadingDidBecomeAvailableNotification, object: self)
-                        SendMessageService.shared.processMessages()
-                    }
-                    ConcurrentJobQueue.shared.restoreJobs()
+                if isAppExtension {
+                    SendMessageService.shared.processMessages()
+                } else {
+                    NotificationCenter.default.postOnMain(name: Self.didSendListPendingMessageNotification)
                 }
             case .failure:
                 self.queue.asyncAfter(deadline: .now() + 2, execute: {

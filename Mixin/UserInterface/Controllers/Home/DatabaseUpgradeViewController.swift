@@ -34,6 +34,9 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 13 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: UserDAO.shared.allAppIds()))
             }
+            if localVersion < 18 {
+                AppGroupUserDefaults.User.hasRecoverMedia = true
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

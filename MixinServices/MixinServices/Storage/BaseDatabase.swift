@@ -82,8 +82,8 @@ public class BaseDatabase {
         return try! database.prepareSelectSQL(sql: sql, values: []).getValue().int64Value
     }
     
-    public func getDictionary(key: ColumnResult, value: ColumnResult, tableName: String, condition: Condition? = nil) -> [String: String] {
-        let rows = try! database.getRows(on: [key, value], fromTable: tableName, where: condition)
+    public func getDictionary(key: ColumnResult, value: ColumnResult, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, offset: Offset? = nil, limit: Limit? = nil) -> [String: String] {
+        let rows = try! database.getRows(on: [key, value], fromTable: tableName, where: condition, orderBy: orderList, limit: limit, offset: offset)
         var result = [String: String]()
         for row in rows {
             result[row[0].stringValue] = row[1].stringValue

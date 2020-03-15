@@ -97,6 +97,9 @@ class HomeViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
         ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())
+        if AppGroupUserDefaults.User.hasRecoverMedia {
+            ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -90,9 +90,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         guard let item = item else {
             return
         }
-        let job = AttachmentDownloadJob(messageId: item.messageId,
-                                        mediaMimeType: item.mediaMimeType)
-        ConcurrentJobQueue.shared.addJob(job: job)
+        ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: item.messageId))
         layout(mediaStatus: .PENDING)
     }
     

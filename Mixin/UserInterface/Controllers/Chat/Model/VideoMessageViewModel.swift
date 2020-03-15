@@ -88,7 +88,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if shouldUpload {
             UploaderQueue.shared.addJob(job: VideoUploadJob(message: Message.createMessage(message: message)))
         } else {
-            ConcurrentJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId))
         }
         isLoading = true
     }

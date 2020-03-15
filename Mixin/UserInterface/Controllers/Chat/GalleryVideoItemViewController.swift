@@ -163,9 +163,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item, item.category == .video else {
             return
         }
-        let job = VideoDownloadJob(messageId: item.messageId,
-                                   mediaMimeType: item.mediaMimeType)
-        ConcurrentJobQueue.shared.addJob(job: job)
+        ConcurrentJobQueue.shared.addJob(job: VideoDownloadJob(messageId: item.messageId))
         layout(mediaStatus: .PENDING)
     }
     

@@ -12,6 +12,7 @@ public enum AttachmentContainer {
         let url = Self.url.appendingPathComponent(category.pathComponent)
         try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
         if let filename = filename {
+            assert(!filename.isEmpty)
             return url.appendingPathComponent(filename)
         } else {
             return url
@@ -22,9 +23,14 @@ public enum AttachmentContainer {
         guard let messageCategory = AttachmentContainer.Category(messageCategory: category) else {
             return
         }
-        try? FileManager.default.removeItem(at: AttachmentContainer.url(for: messageCategory, filename: mediaUrl))
+        guard !mediaUrl.isEmpty else {
+            return
+        }
+        let url = AttachmentContainer.url(for: messageCategory, filename: mediaUrl)
+        try? FileManager.default.removeItem(at: url)
         if category.hasSuffix("_VIDEO") {
-            let thumbUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            let thumbFilename = mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot
+            let thumbUrl = AttachmentContainer.url(for: .videos, filename: thumbFilename)
             try? FileManager.default.removeItem(at: thumbUrl)
         }
     }

@@ -82,7 +82,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         if shouldUpload {
             UploaderQueue.shared.addJob(job: AudioUploadJob(message: Message.createMessage(message: message)))
         } else {
-            ConcurrentJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId))
         }
         isLoading = true
     }

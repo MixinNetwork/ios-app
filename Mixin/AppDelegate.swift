@@ -189,7 +189,7 @@ extension AppDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
-        NotificationCenter.default.addObserver(SendMessageService.shared, selector: #selector(SendMessageService.uploadAnyPendingMessages), name: WebSocketService.pendingMessageUploadingDidBecomeAvailableNotification, object: nil)
+        NotificationCenter.default.addObserver(JobService.shared, selector: #selector(JobService.restoreJobs), name: WebSocketService.didSendListPendingMessageNotification, object: nil)
     }
     
     @objc func updateApplicationIconBadgeNumber() {

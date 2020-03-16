@@ -1,6 +1,6 @@
 import SocketRocket
 
-class FacebookWebSocket: NSObject, WebSocketProvider {
+class RocketWebSocket: NSObject, WebSocketProvider {
 
     private let host: String
 
@@ -47,7 +47,7 @@ class FacebookWebSocket: NSObject, WebSocketProvider {
 
 }
 
-extension FacebookWebSocket: SRWebSocketDelegate {
+extension RocketWebSocket: SRWebSocketDelegate {
 
     func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         guard let data = message as? Data else {
@@ -68,12 +68,12 @@ extension FacebookWebSocket: SRWebSocketDelegate {
         let nsError = error as NSError
         if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
             #if DEBUG
-            print("[FacebookWebSocket][DidFailWithError]...websocket connect timeout ...\(nsError)")
+            print("[RocketWebSocket][DidFailWithError]...websocket connect timeout ...\(nsError)")
             #endif
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: true)
         } else {
             #if DEBUG
-            print("[FacebookWebSocket][DidFailWithError]\(err)")
+            print("[RocketWebSocket][DidFailWithError]\(err)")
             #endif
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
 
@@ -119,7 +119,7 @@ extension FacebookWebSocket: SRWebSocketDelegate {
         }
 
         #if DEBUG
-        print("[FacebookWebSocket][\(errType)][\(code)]...wasClean:\(wasClean)...\(reason ?? "")")
+        print("[RocketWebSocket][\(errType)][\(code)]...wasClean:\(wasClean)...\(reason ?? "")")
         #endif
         reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: errMessage, errCode: code))
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)

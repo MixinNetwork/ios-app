@@ -73,7 +73,7 @@ public class WebSocketService {
 
             self.status = .connecting
 
-            let socket = FacebookWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
+            let socket = RocketWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
             self.socket = socket
             self.socket?.delegate = self
 

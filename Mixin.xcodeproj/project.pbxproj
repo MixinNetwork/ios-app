@@ -16,6 +16,8 @@
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
 		7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015F48241F60BC0004A563 /* LocationTableView.swift */; };
+		7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */; };
+		7B015F51241FA4EC0004A563 /* SearchResultAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015F50241FA4EC0004A563 /* SearchResultAnnotationView.swift */; };
 		7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04142A240FA09F00BE8D73 /* LocationCell.swift */; };
 		7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB722684242004F8F04 /* AssetSearchResult.swift */; };
 		7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04FAB922684F51004F8F04 /* SearchResult.swift */; };
@@ -395,8 +397,9 @@
 		7BF196B12411625300CC8325 /* UserInterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF196B02411625300CC8325 /* UserInterfaceStyle.swift */; };
 		7BF196B52411650900CC8325 /* LocationMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF196B42411650900CC8325 /* LocationMessageCell.swift */; };
 		7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF196B9241209A900CC8325 /* ImageMessageCell.swift */; };
+		7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */; };
 		7BF19C22241E0DB600B192D5 /* UserPickedLocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */; };
-		7BF19C24241E0EA200B192D5 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C23241E0EA200B192D5 /* AnnotationView.swift */; };
+		7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
 		7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */; };
@@ -727,6 +730,8 @@
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
 		7B015F48241F60BC0004A563 /* LocationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTableView.swift; sourceTree = "<group>"; };
+		7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultAnnotation.swift; sourceTree = "<group>"; };
+		7B015F50241FA4EC0004A563 /* SearchResultAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultAnnotationView.swift; sourceTree = "<group>"; };
 		7B04142A240FA09F00BE8D73 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		7B04FAB722684242004F8F04 /* AssetSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSearchResult.swift; sourceTree = "<group>"; };
 		7B04FAB922684F51004F8F04 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
@@ -1118,8 +1123,9 @@
 		7BF196B02411625300CC8325 /* UserInterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInterfaceStyle.swift; sourceTree = "<group>"; };
 		7BF196B42411650900CC8325 /* LocationMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMessageCell.swift; sourceTree = "<group>"; };
 		7BF196B9241209A900CC8325 /* ImageMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageCell.swift; sourceTree = "<group>"; };
+		7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationSearchView.xib; sourceTree = "<group>"; };
 		7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPickedLocationAnnotation.swift; sourceTree = "<group>"; };
-		7BF19C23241E0EA200B192D5 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinAnnotationView.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
 		7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadJob.swift; sourceTree = "<group>"; };
@@ -1581,6 +1587,7 @@
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
 				7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */,
+				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2328,7 +2335,9 @@
 				7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */,
 				7B015F48241F60BC0004A563 /* LocationTableView.swift */,
 				7B3FD4ED241965BE00B58006 /* LocationView.xib */,
-				7BF19C23241E0EA200B192D5 /* AnnotationView.swift */,
+				7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */,
+				7B015F50241FA4EC0004A563 /* SearchResultAnnotationView.swift */,
+				7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2789,6 +2798,7 @@
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFB19008233220360021CAF3 /* PINLogCell.xib in Resources */,
+				7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
@@ -3371,6 +3381,7 @@
 				7B37B16123ED480000590215 /* GalleryTransitionFromQuotingMessageCellView.swift in Sources */,
 				7B369210233B4FC6007321A7 /* SharedMediaMediaViewController.swift in Sources */,
 				7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */,
+				7B015F51241FA4EC0004A563 /* SearchResultAnnotationView.swift in Sources */,
 				DFC0ECF723BB610C0091E7AC /* MultisigAPI.swift in Sources */,
 				DFC0ECCF23BB5FDE0091E7AC /* AddressRequest.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,
@@ -3490,6 +3501,7 @@
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
 				7BF19C22241E0DB600B192D5 /* UserPickedLocationAnnotation.swift in Sources */,
+				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
@@ -3558,7 +3570,7 @@
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
-				7BF19C24241E0EA200B192D5 /* AnnotationView.swift in Sources */,
+				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,

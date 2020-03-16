@@ -39,7 +39,7 @@ class LocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.register(AnnotationView.self,
+        mapView.register(PinAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: annotationReuseId)
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,

@@ -6,12 +6,33 @@ import Alamofire
 
 class LocationPickerViewController: LocationViewController {
     
+    @IBOutlet weak var searchBoxView: SearchBoxView? {
+        didSet {
+            if let textField = oldValue?.textField {
+                textField.removeTarget(self, action: nil, for: .editingChanged)
+                textField.delegate = nil
+            }
+            if let textField = searchBoxView?.textField {
+                textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
+                textField.keyboardType = .webSearch
+                textField.delegate = self
+            }
+        }
+    }
+    
     override var tableViewMaskHeight: CGFloat {
         didSet {
             pinImageViewIfLoaded?.center = pinImageViewCenter
             scrollToUserLocationButtonBottomConstraint.constant = tableViewMaskHeight + 20
-            if userDidDropThePin {
-                var point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
+            let point: CGPoint?
+            if let result = pickedSearchResult {
+                point = mapView.convert(result.coordinate, toPointTo: mapView)
+            } else if userDidDropThePin {
+                point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
+            } else {
+                point = nil
+            }
+            if var point = point {
                 point.y += (tableViewMaskHeight - oldValue) / 2
                 let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
                 mapView.setCenter(coordinate, animated: false)
@@ -19,12 +40,22 @@ class LocationPickerViewController: LocationViewController {
         }
     }
     
+    override var minTableWrapperHeight: CGFloat {
+        if let keyboardHeight = keyboardHeightIfShow {
+            return keyboardHeight + 2 * tableView.rowHeight + tableView.sectionHeaderHeight
+        } else {
+            return super.minTableWrapperHeight
+        }
+    }
+    
     private let scrollToUserLocationButton = UIButton()
     private let pinImage = R.image.conversation.ic_annotation_pin()!
     private let nearbyLocationSearchingIndicator = ActivityIndicatorView()
+    private let searchResultAnnotationReuseId = "search"
     
     private lazy var geocoder = CLGeocoder()
     private lazy var pinImageView = UIImageView(image: pinImage)
+    private lazy var searchView = R.nib.locationSearchView(owner: self)!
     private lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -40,6 +71,11 @@ class LocationPickerViewController: LocationViewController {
     private var nearbyLocationsRequest: Request?
     private var nearbyLocationsSearchCoordinate: CLLocationCoordinate2D?
     private var nearbyLocations: [FoursquareLocation] = []
+    private var keyboardHeightIfShow: CGFloat?
+    private var isKeyboardAnimating = false
+    private var lastSearchRequest: Request?
+    private var searchResults: [FoursquareLocation]?
+    private var pickedSearchResult: FoursquareLocation?
     
     private var userLocationAccuracy: String {
         if let accuracy = mapView.userLocation.location?.horizontalAccuracy, accuracy > 0 {
@@ -53,9 +89,24 @@ class LocationPickerViewController: LocationViewController {
         CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2)
     }
     
+    private var trimmedKeyword: String? {
+        guard let trimmed = searchBoxView?.textField.text?.trimmingCharacters(in: .whitespaces) else {
+            return nil
+        }
+        if trimmed.isEmpty {
+            return nil
+        } else {
+            return trimmed
+        }
+    }
+    
     convenience init(input: ConversationInputViewController) {
         self.init(nib: R.nib.locationView)
         self.input = input
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -64,6 +115,8 @@ class LocationPickerViewController: LocationViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
+        mapView.register(SearchResultAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: searchResultAnnotationReuseId)
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dropPinAction(_:)))
         mapView.addGestureRecognizer(panRecognizer)
         panRecognizer.delegate = self
@@ -91,6 +144,20 @@ class LocationPickerViewController: LocationViewController {
         nearbyLocationSearchingIndicator.tintColor = .theme
         nearbyLocationSearchingIndicator.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 240)
         
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(keyboardWillChangeFrame(_:)),
+                           name: UIResponder.keyboardWillChangeFrameNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(keyboardDidEndAnimating(_:)),
+                           name: UIResponder.keyboardDidShowNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(keyboardDidEndAnimating(_:)),
+                           name: UIResponder.keyboardDidHideNotification,
+                           object: nil)
+        
         if mapView.userLocation.coordinate.latitude != 0 || mapView.userLocation.coordinate.longitude != 0 {
             reloadNearbyLocations(coordinate: mapView.userLocation.coordinate)
         }
@@ -115,15 +182,52 @@ class LocationPickerViewController: LocationViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 {
-            if let location = mapView.userLocation.location {
-                send(coordinate: location.coordinate, name: nil, address: nil)
+        if let searchResults = searchResults {
+            if pickedSearchResult == nil || indexPath.section == 1 {
+                let picked = searchResults[indexPath.row]
+                self.pickedSearchResult = picked
+                tableView.reloadData()
+                if let anno = mapView.annotations.compactMap({ $0 as? SearchResultAnnotation }).first(where: { $0.location == picked}) {
+                    mapView.selectAnnotation(anno, animated: true)
+                }
+                mapView.setCenter(picked.coordinate, animated: true)
+            } else if let result = pickedSearchResult, indexPath.section == 0 {
+                send(coordinate: result.coordinate, name: result.name, address: result.address)
             } else {
-                alert(R.string.localizable.chat_user_location_undetermined())
+                assertionFailure("No way this is happening")
             }
         } else {
-            let location = nearbyLocations[indexPath.row]
-            send(coordinate: location.coordinate, name: location.name, address: location.address)
+            if indexPath.section == 0 {
+                if let location = mapView.userLocation.location {
+                    send(coordinate: location.coordinate, name: nil, address: nil)
+                } else {
+                    alert(R.string.localizable.chat_user_location_undetermined())
+                }
+            } else {
+                let location = nearbyLocations[indexPath.row]
+                send(coordinate: location.coordinate, name: location.name, address: location.address)
+            }
+        }
+    }
+    
+    @IBAction func cancelSearchAction(_ sender: Any) {
+        searchBoxView?.textField.resignFirstResponder()
+        searchResults = nil
+        pickedSearchResult = nil
+        tableView.reloadData()
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.userTrackingMode = .follow
+        let userLocationCoordinate = mapView.userLocation.coordinate
+        mapView.setCenter(userLocationCoordinate, animated: true)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.searchView.alpha = 0
+        }) { (_) in
+            self.searchBoxView?.textField.text = nil
+            self.reloadNearbyLocations(coordinate: userLocationCoordinate)
+            self.tableView.contentOffset.y = 0
+            self.view.layoutIfNeeded()
+            self.tableViewMaskHeight = self.minTableWrapperHeight
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -143,6 +247,9 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func dropPinAction(_ recognizer: UIPanGestureRecognizer) {
+        guard searchResults == nil else {
+            return
+        }
         userDidDropThePin = true
         guard recognizer.state == .began else {
             return
@@ -157,6 +264,94 @@ class LocationPickerViewController: LocationViewController {
         }
     }
     
+    @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        isKeyboardAnimating = true
+        let keyboardWillBeInvisible = (UIScreen.main.bounds.height - endFrame.origin.y) <= 1
+        if keyboardWillBeInvisible {
+            keyboardHeightIfShow = nil
+        } else {
+            keyboardHeightIfShow = endFrame.height
+        }
+        updateTableViewMaskAndHeaderView()
+        view.layoutIfNeeded()
+    }
+    
+    @objc private func keyboardDidEndAnimating(_ notification: Notification) {
+        isKeyboardAnimating = false
+    }
+    
+    @objc private func search(_ sender: UITextField) {
+        guard let keyword = trimmedKeyword else {
+            searchBoxView?.isBusy = false
+            searchResults = nil
+            tableView.reloadData()
+            return
+        }
+        lastSearchRequest?.cancel()
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
+        perform(#selector(requestSearch(keyword:)), with: keyword, afterDelay: 1)
+    }
+    
+    @objc private func requestSearch(keyword: String) {
+        searchBoxView?.isBusy = true
+        let coordinate: CLLocationCoordinate2D
+        if let annotation = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
+            coordinate = annotation.coordinate
+        } else {
+            coordinate = mapView.userLocation.coordinate
+        }
+        lastSearchRequest = FoursquareAPI.search(coordinate: coordinate, query: keyword, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            let locations: [FoursquareLocation]?
+            switch result {
+            case .success(let resultLocations):
+                if resultLocations.isEmpty {
+                    locations = nil
+                } else {
+                    locations = resultLocations
+                }
+            case .failure(let error):
+                locations = nil
+            }
+            self.pickedSearchResult = nil
+            self.searchResults = locations
+            self.tableView.reloadData()
+            self.searchBoxView?.isBusy = false
+            self.mapView.removeAnnotations(self.mapView.annotations)
+            if let annotations = locations?.map(SearchResultAnnotation.init) {
+                self.mapView.addAnnotations(annotations)
+            }
+        })
+    }
+    
+}
+
+extension LocationPickerViewController: ContainerViewControllerDelegate {
+    
+    func barRightButtonTappedAction() {
+        if searchView.superview == nil {
+            container?.navigationBar.addSubview(searchView)
+            searchView.snp.makeConstraints { (make) in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.height.equalTo(44)
+            }
+        }
+        searchView.alpha = 0
+        UIView.animate(withDuration: 0.3) {
+            self.searchView.alpha = 1
+        }
+        searchBoxView?.textField.becomeFirstResponder()
+    }
+    
+    func imageBarRightButton() -> UIImage? {
+        R.image.ic_title_search()
+    }
+    
 }
 
 extension LocationPickerViewController: MKMapViewDelegate {
@@ -164,13 +359,19 @@ extension LocationPickerViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is UserPickedLocationAnnotation {
             return mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
+        } else if annotation is SearchResultAnnotation {
+            return mapView.dequeueReusableAnnotationView(withIdentifier: searchResultAnnotationReuseId, for: annotation)
         } else {
             return nil
         }
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
+        let isUserDraggingCausedMapViewRegionChange = userDidDropThePin
+            && !tableView.isTracking
+            && !tableView.isDecelerating
+            && !isKeyboardAnimating
+        guard isUserDraggingCausedMapViewRegionChange else {
             return
         }
         geocoder.cancelGeocode()
@@ -179,7 +380,10 @@ extension LocationPickerViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        guard userDidDropThePin else {
+        guard userDidDropThePin && !isKeyboardAnimating else {
+            return
+        }
+        guard searchResults == nil else {
             return
         }
         addUserPickedAnnotationAndRemoveThePlaceholder()
@@ -226,24 +430,53 @@ extension LocationPickerViewController: MKMapViewDelegate {
 extension LocationPickerViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        if searchResults == nil {
+            return 2
+        } else {
+            if pickedSearchResult == nil {
+                return 1
+            } else {
+                return 2
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        section == 0 ? 1 : nearbyLocations.count
+        if let results = searchResults {
+            if section == 0 && pickedSearchResult != nil {
+                return 1
+            } else {
+                return results.count
+            }
+        } else {
+            if section == 0 {
+                return 1
+            } else {
+                return nearbyLocations.count
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.location, for: indexPath)!
-        if indexPath.section == 0 {
-            if userDidDropThePin {
-                cell.renderAsUserPickedLocation(address: userPinnedLocationAddress)
+        if let results = searchResults {
+            if let result = pickedSearchResult, indexPath.section == 0 {
+                cell.renderAsUserPickedLocation(address: result.name)
             } else {
-                cell.renderAsUserLocation(accuracy: userLocationAccuracy)
+                let location = results[indexPath.row]
+                cell.render(location: location)
             }
         } else {
-            let location = nearbyLocations[indexPath.row]
-            cell.render(location: location)
+            if indexPath.section == 0 {
+                if userDidDropThePin {
+                    cell.renderAsUserPickedLocation(address: userPinnedLocationAddress)
+                } else {
+                    cell.renderAsUserLocation(accuracy: userLocationAccuracy)
+                }
+            } else {
+                let location = nearbyLocations[indexPath.row]
+                cell.render(location: location)
+            }
         }
         return cell
     }
@@ -254,6 +487,15 @@ extension LocationPickerViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         true
+    }
+    
+}
+
+extension LocationPickerViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }
@@ -277,13 +519,13 @@ extension LocationPickerViewController {
             return
         }
         nearbyLocations = []
-        tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        tableView.reloadData()
         if tableView.tableFooterView == nil {
             nearbyLocationSearchingIndicator.startAnimating()
             tableView.tableFooterView = nearbyLocationSearchingIndicator
         }
         nearbyLocationsRequest?.cancel()
-        nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate) { [weak self] (result) in
+        nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate, query: nil) { [weak self] (result) in
             guard let self = self else {
                 return
             }
@@ -292,7 +534,7 @@ extension LocationPickerViewController {
                 self.nearbyLocationSearchingIndicator.stopAnimating()
                 self.tableView.tableFooterView = nil
                 self.nearbyLocations = locations
-                self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+                self.tableView.reloadData()
                 self.nearbyLocationsSearchCoordinate = coordinate
             case .failure:
                 break

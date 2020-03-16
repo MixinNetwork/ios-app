@@ -1,7 +1,7 @@
 import UIKit
 import MapKit
 
-class AnnotationView: MKAnnotationView {
+class PinAnnotationView: MKAnnotationView {
     
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)

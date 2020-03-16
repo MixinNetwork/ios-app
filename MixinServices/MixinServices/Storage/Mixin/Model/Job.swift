@@ -52,22 +52,21 @@ internal struct Job: BaseCodable {
     
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
-        if action == .SEND_DELIVERED_ACK_MESSAGE {
-            self.category = JobCategory.Http.rawValue
-        } else {
-            self.category = JobCategory.WebSocket.rawValue
-        }
-
         switch action {
         case .RESEND_MESSAGE:
+            self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
+            self.category = JobCategory.Http.rawValue
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
         case .SEND_ACK_MESSAGE, .SEND_ACK_MESSAGES:
+            self.category = JobCategory.Http.rawValue
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         case .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
+            self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
+            self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_MESSAGE.rawValue
         }
         self.action = action.rawValue

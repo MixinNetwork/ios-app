@@ -128,28 +128,32 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func scrollToUserLocationAction(_ sender: Any) {
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
         userDidDropThePin = false
         let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
         mapView.removeAnnotations(userPickedAnnotations)
+        mapView.userTrackingMode = .follow
+        let coordinate = mapView.userLocation.coordinate
+        mapView.setCenter(coordinate, animated: true)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.tableView.contentOffset = .zero
+            self.tableViewMaskHeight = self.minTableWrapperHeight
+        }) { (_) in
+            self.reloadNearbyLocations(coordinate: coordinate)
+        }
     }
     
     @objc private func dropPinAction(_ recognizer: UIPanGestureRecognizer) {
         userDidDropThePin = true
-        switch recognizer.state {
-        case .began:
-            mapView.userTrackingMode = .none
-            let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
-            mapView.removeAnnotations(userPickedAnnotations)
-            if pinImageView.superview == nil {
-                pinImageView.center = pinImageViewCenter
-                view.addSubview(pinImageView)
-                pinImageViewIfLoaded = pinImageView
-            }
-        case .ended:
-            addUserPickedAnnotationAndRemoveThePlaceholder()
-        default:
-            break
+        guard recognizer.state == .began else {
+            return
+        }
+        mapView.userTrackingMode = .none
+        let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
+        mapView.removeAnnotations(userPickedAnnotations)
+        if pinImageView.superview == nil {
+            pinImageView.center = pinImageViewCenter
+            view.addSubview(pinImageView)
+            pinImageViewIfLoaded = pinImageView
         }
     }
     
@@ -175,7 +179,11 @@ extension LocationPickerViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        guard userDidDropThePin && !tableView.isTracking && !tableView.isDecelerating else {
+        guard userDidDropThePin else {
+            return
+        }
+        addUserPickedAnnotationAndRemoveThePlaceholder()
+        guard !tableView.isTracking && !tableView.isDecelerating else {
             return
         }
         let coordinate = mapView.convert(pinImageViewCenter, toCoordinateFrom: view)
@@ -191,7 +199,19 @@ extension LocationPickerViewController: MKMapViewDelegate {
             }
             self.reloadFirstCell()
         }
-        reloadNearbyLocations(coordinate: coordinate)
+        if tableView.contentOffset != .zero {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.tableView.contentOffset = .zero
+                self.tableViewMaskHeight = self.minTableWrapperHeight
+                if let annotation = self.mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
+                    self.mapView.setCenter(annotation.coordinate, animated: false)
+                }
+            }) { (_) in
+                self.reloadNearbyLocations(coordinate: coordinate)
+            }
+        } else {
+            reloadNearbyLocations(coordinate: coordinate)
+        }
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
@@ -241,13 +261,13 @@ extension LocationPickerViewController: UIGestureRecognizerDelegate {
 extension LocationPickerViewController {
     
     private func addUserPickedAnnotationAndRemoveThePlaceholder() {
-        pinImageView.removeFromSuperview()
         if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
             let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableViewMaskHeight) / 2)
             let coordinate = mapView.convert(point, toCoordinateFrom: view)
             let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
             mapView.addAnnotation(annotation)
         }
+        pinImageView.removeFromSuperview()
     }
     
     private func reloadNearbyLocations(coordinate: CLLocationCoordinate2D) {

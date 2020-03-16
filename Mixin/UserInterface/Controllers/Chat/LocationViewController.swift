@@ -4,7 +4,7 @@ import MapKit
 class LocationViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var tableView: TableHeaderBypassTableView!
+    @IBOutlet weak var tableView: LocationTableView!
     
     let headerReuseId = "header"
     let annotationReuseId = "anno"
@@ -74,6 +74,9 @@ class LocationViewController: UIViewController {
 extension LocationViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard tableView.isTracking || tableView.isDecelerating else {
+            return
+        }
         let tableViewContentTop = tableView.convert(CGPoint.zero, to: view).y + tableHeaderView.frame.height
         var preferredWrapperHeight = view.bounds.height - tableViewContentTop
         preferredWrapperHeight = min(preferredWrapperHeight, maxTableWrapperHeight)

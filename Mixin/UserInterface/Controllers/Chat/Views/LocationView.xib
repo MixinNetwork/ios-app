@@ -24,7 +24,7 @@
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-p5-8St">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                 </mapView>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="interactive" style="grouped" separatorStyle="none" rowHeight="62" sectionHeaderHeight="7" estimatedSectionHeaderHeight="7" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-5h-4L5" customClass="TableHeaderBypassTableView" customModule="Mixin" customModuleProvider="target">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="interactive" style="grouped" separatorStyle="none" rowHeight="62" estimatedRowHeight="62" sectionHeaderHeight="7" estimatedSectionHeaderHeight="7" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-5h-4L5" customClass="LocationTableView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" name="background"/>
                 </tableView>

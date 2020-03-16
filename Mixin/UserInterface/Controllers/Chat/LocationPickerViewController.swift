@@ -106,7 +106,10 @@ class LocationPickerViewController: LocationViewController {
         case .restricted, .denied:
             fallthrough
         @unknown default:
-            break
+            if !userDidDropThePin {
+                addUserPickedAnnotationAndRemoveThePlaceholder()
+                userDidDropThePin = true
+            }
         }
     }
     
@@ -144,13 +147,7 @@ class LocationPickerViewController: LocationViewController {
                 pinImageViewIfLoaded = pinImageView
             }
         case .ended:
-            pinImageView.removeFromSuperview()
-            if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
-                let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableViewMaskHeight) / 2)
-                let coordinate = mapView.convert(point, toCoordinateFrom: view)
-                let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
-                mapView.addAnnotation(annotation)
-            }
+            addUserPickedAnnotationAndRemoveThePlaceholder()
         default:
             break
         }
@@ -242,6 +239,16 @@ extension LocationPickerViewController: UIGestureRecognizerDelegate {
 }
 
 extension LocationPickerViewController {
+    
+    private func addUserPickedAnnotationAndRemoveThePlaceholder() {
+        pinImageView.removeFromSuperview()
+        if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
+            let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableViewMaskHeight) / 2)
+            let coordinate = mapView.convert(point, toCoordinateFrom: view)
+            let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
+            mapView.addAnnotation(annotation)
+        }
+    }
     
     private func reloadNearbyLocations(coordinate: CLLocationCoordinate2D) {
         let willSearchCoordinateAtLeast100MetersAway = nearbyLocationsSearchCoordinate == nil

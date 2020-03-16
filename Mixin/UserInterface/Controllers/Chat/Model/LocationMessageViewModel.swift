@@ -30,7 +30,13 @@ class LocationMessageViewModel: ImageMessageViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        photoFrame.size = CGSize(width: Self.bubbleWidth, height: 180)
+        let photoWidth: CGFloat
+        if quotedMessageViewModel == nil {
+            photoWidth = Self.bubbleWidth
+        } else {
+            photoWidth = Self.bubbleWidth - Self.quotingMessageMargin.horizontal
+        }
+        photoFrame.size = CGSize(width: photoWidth, height: 180)
         super.layout(width: width, style: style)
         if style.contains(.received) {
             labelsLeadingConstant = 20

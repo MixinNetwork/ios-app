@@ -2,6 +2,8 @@ import UIKit
 
 class ImageMessageCell: DetailInfoMessageCell {
     
+    static let quotingPhotoCornerRadius: CGFloat = 6
+    
     let maskingView = UIView()
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     

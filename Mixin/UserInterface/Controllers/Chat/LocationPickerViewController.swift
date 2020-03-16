@@ -198,7 +198,9 @@ class LocationPickerViewController: LocationViewController {
             }
         } else {
             if indexPath.section == 0 {
-                if let location = mapView.userLocation.location {
+                if let anno = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
+                    send(coordinate: anno.coordinate, name: nil, address: nil)
+                } else if let location = mapView.userLocation.location {
                     send(coordinate: location.coordinate, name: nil, address: nil)
                 } else {
                     alert(R.string.localizable.chat_user_location_undetermined())

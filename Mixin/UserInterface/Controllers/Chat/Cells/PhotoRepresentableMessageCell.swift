@@ -4,8 +4,6 @@ import YYImage
 
 class PhotoRepresentableMessageCell: ImageMessageCell {
     
-    static let quotingPhotoCornerRadius: CGFloat = 6
-    
     let contentImageWrapperView = VerticalPositioningImageView()
     let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     

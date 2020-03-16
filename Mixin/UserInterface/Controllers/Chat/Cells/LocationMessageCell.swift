@@ -33,9 +33,27 @@ class LocationMessageCell: ImageMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? LocationMessageViewModel {
-            maskingView.frame = contentView.bounds
-            mapImageView.frame = viewModel.photoFrame
-            maskingView.layer.cornerRadius = 0
+            if viewModel.quotedMessageViewModel == nil {
+                maskingView.frame = contentView.bounds
+                mapImageView.frame = viewModel.photoFrame
+                maskingView.layer.cornerRadius = 0
+                if backgroundImageView.superview != nil {
+                    backgroundImageView.removeFromSuperview()
+                }
+                if maskingView.layer.mask == nil {
+                    maskingView.layer.mask = backgroundImageView.layer
+                }
+            } else {
+                maskingView.frame = viewModel.photoFrame
+                mapImageView.frame = maskingView.bounds
+                if maskingView.layer.mask == backgroundImageView.layer {
+                    maskingView.layer.mask = nil
+                }
+                if backgroundImageView.superview == nil {
+                    contentView.insertSubview(backgroundImageView, at: 0)
+                }
+                maskingView.layer.cornerRadius = Self.quotingPhotoCornerRadius
+            }
             if let frame = viewModel.informationFrame {
                 informationView.frame = frame
                 informationView.nameLabel.text = viewModel.message.location?.name
@@ -47,9 +65,6 @@ class LocationMessageCell: ImageMessageCell {
                 }
             } else {
                 informationViewIfLoaded?.removeFromSuperview()
-            }
-            if maskingView.layer.mask == nil {
-                maskingView.layer.mask = backgroundImageView.layer
             }
             if let informationFrame = informationViewIfLoaded?.frame {
                 selectedOverlapView.frame = mapImageView.frame.union(informationFrame)

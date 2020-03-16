@@ -86,7 +86,7 @@ class LocationPickerViewController: LocationViewController {
     }
     
     private var pinImageViewCenter: CGPoint {
-        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2)
+        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableViewMaskHeight) / 2 - pinImage.size.height / 2)
     }
     
     private var trimmedKeyword: String? {

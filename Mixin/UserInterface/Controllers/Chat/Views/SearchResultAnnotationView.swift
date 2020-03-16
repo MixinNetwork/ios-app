@@ -3,7 +3,8 @@ import MapKit
 
 class SearchResultAnnotationView: MKAnnotationView {
     
-    private lazy var pinImageView = UIImageView(image: R.image.conversation.ic_annotation_pin())
+    private lazy var pinImage = R.image.conversation.ic_annotation_pin()!
+    private lazy var pinImageView = UIImageView(image: pinImage)
     
     private var pinImageViewIfLoaded: UIView?
     
@@ -21,7 +22,7 @@ class SearchResultAnnotationView: MKAnnotationView {
         super.setSelected(selected, animated: animated)
         if selected {
             addSubview(pinImageView)
-            pinImageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+            pinImageView.center = CGPoint(x: bounds.midX, y: bounds.midY - pinImage.size.height / 2)
             pinImageViewIfLoaded = pinImageView
         } else {
             pinImageViewIfLoaded?.removeFromSuperview()
@@ -29,9 +30,10 @@ class SearchResultAnnotationView: MKAnnotationView {
     }
     
     private func prepare() {
-        let pinImage = R.image.conversation.ic_annotation_search_result()!
-        image = pinImage
-        bounds = CGRect(origin: .zero, size: pinImage.size)
+        let annotationImage = R.image.conversation.ic_annotation_search_result()!
+        image = annotationImage
+        bounds = CGRect(origin: .zero, size: annotationImage.size)
+        centerOffset = CGPoint(x: 0, y: 10)
     }
     
 }

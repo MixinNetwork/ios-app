@@ -68,7 +68,7 @@
 		<string>taobaotravel</string>
 		<string>mogujie</string>
 		<string>iosamap</string>
-		<string>comgooglemapsurl</string>
+		<string>comgooglemaps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

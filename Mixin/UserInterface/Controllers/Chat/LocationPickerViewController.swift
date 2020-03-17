@@ -26,7 +26,7 @@ class LocationPickerViewController: LocationViewController {
             scrollToUserLocationButtonBottomConstraint.constant = tableViewMaskHeight + 20
             let point: CGPoint?
             if let result = pickedSearchResult {
-                point = mapView.convert(result.gcj02CompatibleCoordinate, toPointTo: mapView)
+                point = mapView.convert(result.coordinate, toPointTo: mapView)
             } else if userDidDropThePin {
                 point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
             } else {
@@ -79,7 +79,7 @@ class LocationPickerViewController: LocationViewController {
     private var pickedSearchResult: Location?
     
     private var userLocationAccuracy: String {
-        if let accuracy = locationManager.location?.horizontalAccuracy, accuracy > 0 {
+        if let accuracy = mapView.userLocation.location?.horizontalAccuracy, accuracy > 0 {
             return "\(Int(accuracy))m"
         } else {
             return ">1km"
@@ -108,7 +108,6 @@ class LocationPickerViewController: LocationViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        locationManager.stopUpdatingLocation()
     }
     
     override func viewDidLoad() {
@@ -160,8 +159,8 @@ class LocationPickerViewController: LocationViewController {
                            name: UIResponder.keyboardDidHideNotification,
                            object: nil)
         
-        locationManager.startUpdatingLocation()
-        if let coordinate = locationManager.location?.coordinate, coordinate.latitude != 0 || coordinate.longitude != 0 {
+        let coordinate = mapView.userLocation.coordinate
+        if coordinate.latitude != 0 || coordinate.longitude != 0 {
             reloadNearbyLocations(coordinate: coordinate)
         }
     }
@@ -193,7 +192,7 @@ class LocationPickerViewController: LocationViewController {
                 if let anno = mapView.annotations.compactMap({ $0 as? SearchResultAnnotation }).first(where: { $0.location == picked}) {
                     mapView.selectAnnotation(anno, animated: true)
                 }
-                mapView.setCenter(picked.gcj02CompatibleCoordinate, animated: true)
+                mapView.setCenter(picked.coordinate, animated: true)
             } else if let result = pickedSearchResult, indexPath.section == 0 {
                 send(coordinate: result.coordinate,
                      name: result.name,
@@ -206,7 +205,7 @@ class LocationPickerViewController: LocationViewController {
             if indexPath.section == 0 {
                 if let anno = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
                     send(coordinate: anno.coordinate, name: nil, address: nil, venueType: nil)
-                } else if let location = locationManager.location {
+                } else if let location = mapView.userLocation.location {
                     send(coordinate: location.coordinate,
                          name: nil,
                          address: nil,
@@ -231,14 +230,13 @@ class LocationPickerViewController: LocationViewController {
         tableView.reloadData()
         mapView.removeAnnotations(mapView.annotations)
         mapView.userTrackingMode = .follow
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        let userCoordinate = mapView.userLocation.coordinate
+        mapView.setCenter(userCoordinate, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
         }) { (_) in
             self.searchBoxView?.textField.text = nil
-            if let coordinate = self.locationManager.location?.coordinate {
-                self.reloadNearbyLocations(coordinate: coordinate)
-            }
+            self.reloadNearbyLocations(coordinate: userCoordinate)
             self.tableView.contentOffset.y = 0
             self.view.layoutIfNeeded()
             self.tableViewMaskHeight = self.minTableWrapperHeight
@@ -251,14 +249,13 @@ class LocationPickerViewController: LocationViewController {
         let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
         mapView.removeAnnotations(userPickedAnnotations)
         mapView.userTrackingMode = .follow
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        let userCoordinate = mapView.userLocation.coordinate
+        mapView.setCenter(userCoordinate, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.tableView.contentOffset = .zero
             self.tableViewMaskHeight = self.minTableWrapperHeight
         }) { (_) in
-            if let coordinate = self.locationManager.location?.coordinate {
-                self.reloadNearbyLocations(coordinate: coordinate)
-            }
+            self.reloadNearbyLocations(coordinate: userCoordinate)
         }
     }
     
@@ -316,7 +313,7 @@ class LocationPickerViewController: LocationViewController {
         let coordinate: CLLocationCoordinate2D
         if let annotation = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
             coordinate = annotation.coordinate
-        } else if let userLocation = locationManager.location {
+        } else if let userLocation = mapView.userLocation.location {
             coordinate = userLocation.coordinate
         } else {
             coordinate = mapView.centerCoordinate
@@ -374,13 +371,6 @@ extension LocationPickerViewController: ContainerViewControllerDelegate {
 
 extension LocationPickerViewController: CLLocationManagerDelegate {
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if !userDidDropThePin, let location = locations.first {
-            reloadNearbyLocations(coordinate: location.coordinate)
-            reloadFirstCell()
-        }
-    }
-    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             mapView.setCenter(mapView.userLocation.coordinate, animated: true)
@@ -394,6 +384,13 @@ extension LocationPickerViewController: CLLocationManagerDelegate {
 }
 
 extension LocationPickerViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        if !userDidDropThePin {
+            reloadNearbyLocations(coordinate: userLocation.coordinate)
+            reloadFirstCell()
+        }
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is UserPickedLocationAnnotation {

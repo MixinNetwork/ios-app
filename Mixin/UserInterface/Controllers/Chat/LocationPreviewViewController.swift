@@ -12,7 +12,17 @@ class LocationPreviewViewController: LocationViewController {
     private lazy var googleMapUrl = URL(string: "comgooglemaps://?center=\(location.latitude),\(location.longitude)")!
     
     // https://lbs.amap.com/api/amap-mobile/guide/ios/marker
-    private lazy var gaodeMapUrl = URL(string: "iosamap://viewMap?sourceApplication=Mixin+Messenger&poiname=A&lat=\(location.latitude)&lon=\(location.longitude)&dev=1")!
+    private lazy var gaodeMapUrl: URL = {
+        var components = URLComponents(string: "iosamap://viewMap")!
+        components.queryItems = [
+            URLQueryItem(name: "sourceApplication", value: "Mixin Messenger"),
+            URLQueryItem(name: "poiname", value: location.name ?? R.string.localizable.chat_location_unnamed()),
+            URLQueryItem(name: "lat", value: "\(location.latitude)"),
+            URLQueryItem(name: "lon", value: "\(location.longitude)"),
+            URLQueryItem(name: "dev", value: "0"),
+        ]
+        return components.url!
+    }()
     
     private var location: Location!
     
@@ -25,7 +35,7 @@ class LocationPreviewViewController: LocationViewController {
         super.viewDidLoad()
         mapView.showsUserLocation = false
         mapView.delegate = self
-        let region = MKCoordinateRegion(center: location.gcj02CompatibleCoordinate,
+        let region = MKCoordinateRegion(center: location.coordinate,
                                         latitudinalMeters: 5000,
                                         longitudinalMeters: 5000)
         mapView.setRegion(region, animated: false)

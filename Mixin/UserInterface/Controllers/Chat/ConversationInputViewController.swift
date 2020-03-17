@@ -470,7 +470,8 @@ class ConversationInputViewController: UIViewController {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
-        message.content = try JSONEncoder().encode(location).base64EncodedString()
+        let jsonData = try JSONEncoder().encode(location)
+        message.content = String(data: jsonData, encoding: .utf8)
         message.quoteMessageId = quoteMessageId
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: ownerUser,

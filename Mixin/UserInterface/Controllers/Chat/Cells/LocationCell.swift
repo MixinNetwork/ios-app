@@ -40,11 +40,15 @@ class LocationCell: ModernSelectedBackgroundCell {
     }
     
     func render(location: Location) {
-        iconBackgroundImageView.isHidden = false
-        iconImageView.renderingMode = .alwaysTemplate
-        iconImageView.contentMode = .scaleAspectFill
-//        iconImageView.sd_setImage(with: location.iconUrl, completed: nil)
-        titleLabel.text = location.name
+        if let url = location.iconUrl {
+            iconBackgroundImageView.isHidden = false
+            iconImageView.renderingMode = .alwaysTemplate
+            iconImageView.contentMode = .scaleAspectFill
+            iconImageView.sd_setImage(with: url, completed: nil)
+        } else {
+            renderAsUserRelatedLocation()
+        }
+        titleLabel.text = location.name ?? R.string.localizable.chat_location_unnamed()
         subtitleLabel.text = location.address
     }
     

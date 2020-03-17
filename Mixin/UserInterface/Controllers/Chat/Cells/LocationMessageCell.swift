@@ -106,7 +106,7 @@ class LocationMessageCell: ImageMessageCell {
             mapImageView.image = image
             annotationView.center = center
             annotationView.isHidden = false
-        } else if let coordinate = viewModel.message.location?.coordinate {
+        } else if let coordinate = viewModel.message.location?.gcj02CompatibleCoordinate {
             mapImageView.image = R.image.conversation.bg_message_location()
             let options = MKMapSnapshotter.Options()
             options.region = MKCoordinateRegion(center: coordinate,

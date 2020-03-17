@@ -26,7 +26,7 @@ class LocationPickerViewController: LocationViewController {
             scrollToUserLocationButtonBottomConstraint.constant = tableViewMaskHeight + 20
             let point: CGPoint?
             if let result = pickedSearchResult {
-                point = mapView.convert(result.coordinate, toPointTo: mapView)
+                point = mapView.convert(result.gcj02CompatibleCoordinate, toPointTo: mapView)
             } else if userDidDropThePin {
                 point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
             } else {
@@ -59,6 +59,7 @@ class LocationPickerViewController: LocationViewController {
     private lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.delegate = self
         return manager
     }()
     
@@ -70,15 +71,15 @@ class LocationPickerViewController: LocationViewController {
     private var userPinnedLocationAddress: String?
     private var nearbyLocationsRequest: Request?
     private var nearbyLocationsSearchCoordinate: CLLocationCoordinate2D?
-    private var nearbyLocations: [FoursquareLocation] = []
+    private var nearbyLocations: [Location] = []
     private var keyboardHeightIfShow: CGFloat?
     private var isKeyboardAnimating = false
     private var lastSearchRequest: Request?
-    private var searchResults: [FoursquareLocation]?
-    private var pickedSearchResult: FoursquareLocation?
+    private var searchResults: [Location]?
+    private var pickedSearchResult: Location?
     
     private var userLocationAccuracy: String {
-        if let accuracy = mapView.userLocation.location?.horizontalAccuracy, accuracy > 0 {
+        if let accuracy = locationManager.location?.horizontalAccuracy, accuracy > 0 {
             return "\(Int(accuracy))m"
         } else {
             return ">1km"
@@ -107,6 +108,7 @@ class LocationPickerViewController: LocationViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        locationManager.stopUpdatingLocation()
     }
     
     override func viewDidLoad() {
@@ -158,8 +160,9 @@ class LocationPickerViewController: LocationViewController {
                            name: UIResponder.keyboardDidHideNotification,
                            object: nil)
         
-        if mapView.userLocation.coordinate.latitude != 0 || mapView.userLocation.coordinate.longitude != 0 {
-            reloadNearbyLocations(coordinate: mapView.userLocation.coordinate)
+        locationManager.startUpdatingLocation()
+        if let coordinate = locationManager.location?.coordinate, coordinate.latitude != 0 || coordinate.longitude != 0 {
+            reloadNearbyLocations(coordinate: coordinate)
         }
     }
     
@@ -190,24 +193,33 @@ class LocationPickerViewController: LocationViewController {
                 if let anno = mapView.annotations.compactMap({ $0 as? SearchResultAnnotation }).first(where: { $0.location == picked}) {
                     mapView.selectAnnotation(anno, animated: true)
                 }
-                mapView.setCenter(picked.coordinate, animated: true)
+                mapView.setCenter(picked.gcj02CompatibleCoordinate, animated: true)
             } else if let result = pickedSearchResult, indexPath.section == 0 {
-                send(coordinate: result.coordinate, name: result.name, address: result.address)
+                send(coordinate: result.coordinate,
+                     name: result.name,
+                     address: result.address,
+                     venueType: result.venueType)
             } else {
                 assertionFailure("No way this is happening")
             }
         } else {
             if indexPath.section == 0 {
                 if let anno = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
-                    send(coordinate: anno.coordinate, name: nil, address: nil)
-                } else if let location = mapView.userLocation.location {
-                    send(coordinate: location.coordinate, name: nil, address: nil)
+                    send(coordinate: anno.coordinate, name: nil, address: nil, venueType: nil)
+                } else if let location = locationManager.location {
+                    send(coordinate: location.coordinate,
+                         name: nil,
+                         address: nil,
+                         venueType: nil)
                 } else {
                     alert(R.string.localizable.chat_user_location_undetermined())
                 }
             } else {
                 let location = nearbyLocations[indexPath.row]
-                send(coordinate: location.coordinate, name: location.name, address: location.address)
+                send(coordinate: location.coordinate,
+                     name: location.name,
+                     address: location.address,
+                     venueType: location.venueType)
             }
         }
     }
@@ -219,13 +231,14 @@ class LocationPickerViewController: LocationViewController {
         tableView.reloadData()
         mapView.removeAnnotations(mapView.annotations)
         mapView.userTrackingMode = .follow
-        let userLocationCoordinate = mapView.userLocation.coordinate
-        mapView.setCenter(userLocationCoordinate, animated: true)
+        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
         }) { (_) in
             self.searchBoxView?.textField.text = nil
-            self.reloadNearbyLocations(coordinate: userLocationCoordinate)
+            if let coordinate = self.locationManager.location?.coordinate {
+                self.reloadNearbyLocations(coordinate: coordinate)
+            }
             self.tableView.contentOffset.y = 0
             self.view.layoutIfNeeded()
             self.tableViewMaskHeight = self.minTableWrapperHeight
@@ -238,13 +251,14 @@ class LocationPickerViewController: LocationViewController {
         let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
         mapView.removeAnnotations(userPickedAnnotations)
         mapView.userTrackingMode = .follow
-        let coordinate = mapView.userLocation.coordinate
-        mapView.setCenter(coordinate, animated: true)
+        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.tableView.contentOffset = .zero
             self.tableViewMaskHeight = self.minTableWrapperHeight
         }) { (_) in
-            self.reloadNearbyLocations(coordinate: coordinate)
+            if let coordinate = self.locationManager.location?.coordinate {
+                self.reloadNearbyLocations(coordinate: coordinate)
+            }
         }
     }
     
@@ -302,14 +316,16 @@ class LocationPickerViewController: LocationViewController {
         let coordinate: CLLocationCoordinate2D
         if let annotation = mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
             coordinate = annotation.coordinate
+        } else if let userLocation = locationManager.location {
+            coordinate = userLocation.coordinate
         } else {
-            coordinate = mapView.userLocation.coordinate
+            coordinate = mapView.centerCoordinate
         }
         lastSearchRequest = FoursquareAPI.search(coordinate: coordinate, query: keyword, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }
-            let locations: [FoursquareLocation]?
+            let locations: [Location]?
             switch result {
             case .success(let resultLocations):
                 if resultLocations.isEmpty {
@@ -317,7 +333,7 @@ class LocationPickerViewController: LocationViewController {
                 } else {
                     locations = resultLocations
                 }
-            case .failure(let error):
+            case .failure(_):
                 locations = nil
             }
             self.pickedSearchResult = nil
@@ -352,6 +368,27 @@ extension LocationPickerViewController: ContainerViewControllerDelegate {
     
     func imageBarRightButton() -> UIImage? {
         R.image.ic_title_search()
+    }
+    
+}
+
+extension LocationPickerViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if !userDidDropThePin, let location = locations.first {
+            reloadNearbyLocations(coordinate: location.coordinate)
+            reloadFirstCell()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+            if let location = manager.location {
+                reloadNearbyLocations(coordinate: location.coordinate)
+                reloadFirstCell()
+            }
+        }
     }
     
 }
@@ -417,13 +454,6 @@ extension LocationPickerViewController: MKMapViewDelegate {
             }
         } else {
             reloadNearbyLocations(coordinate: coordinate)
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        if !userDidDropThePin {
-            reloadNearbyLocations(coordinate: userLocation.coordinate)
-            reloadFirstCell()
         }
     }
     
@@ -544,11 +574,12 @@ extension LocationPickerViewController {
         }
     }
     
-    private func send(coordinate: CLLocationCoordinate2D, name: String?, address: String?) {
+    private func send(coordinate: CLLocationCoordinate2D, name: String?, address: String?, venueType: String?) {
         let location = Location(latitude: coordinate.latitude,
                                 longitude: coordinate.longitude,
                                 name: name,
-                                address: address)
+                                address: address,
+                                venueType: venueType)
         do {
             try input.send(location: location)
             navigationController?.popViewController(animated: true)

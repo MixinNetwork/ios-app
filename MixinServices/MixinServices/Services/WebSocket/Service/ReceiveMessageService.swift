@@ -517,7 +517,14 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(contactData: transferData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_LOCATION") {
-            let message = Message.createLocationMessage(content: plainText, data: data)
+            var content = plainText
+            if data.category.hasPrefix("PLAIN_") {
+                guard let decoded = plainText.base64Decoded() else {
+                    return
+                }
+                content = decoded
+            }
+            let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         }
     }

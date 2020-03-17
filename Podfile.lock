@@ -267,7 +267,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
-  MixinServices: fe6f31cfb652a079fe9dd327800ccb612b4d47c4
+  MixinServices: 3dd3119f611b2bb521b14d1f2344fe3d453122e9
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6

@@ -5,7 +5,7 @@ import MixinServices
 
 enum FoursquareAPI {
     
-    typealias Completion = (Alamofire.Result<[FoursquareLocation]>) -> Void
+    typealias Completion = (Alamofire.Result<[Location]>) -> Void
     
     static func search(coordinate: CLLocationCoordinate2D, query: String?, completion: @escaping Completion) -> Request? {
         guard let clientId = MixinKeys.Foursquare.clientId, let clientSecret = MixinKeys.Foursquare.clientSecret else {
@@ -25,8 +25,8 @@ enum FoursquareAPI {
         }
         return request(components.url!).responseJSON { (response) in
             switch response.result {
-            case .success(let json as FoursquareLocation.Json):
-                guard let locations = [FoursquareLocation](json: json) else {
+            case .success(let json as Location.FoursquareJson):
+                guard let locations = [Location](json: json) else {
                     completion(.failure(ExternalApiError.badResponse))
                     return
                 }

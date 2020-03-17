@@ -335,7 +335,6 @@
 		7BC850C020CBB3AE00A57B83 /* liboggopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC850BF20CBB3AD00A57B83 /* liboggopus.a */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
-		7BC96DE7241782460047471D /* FoursquareLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE6241782460047471D /* FoursquareLocation.swift */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
 		7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */; };
 		7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */; };
@@ -1061,7 +1060,6 @@
 		7BC850BF20CBB3AD00A57B83 /* liboggopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liboggopus.a; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
-		7BC96DE6241782460047471D /* FoursquareLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareLocation.swift; sourceTree = "<group>"; };
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransactionExtension.swift; sourceTree = "<group>"; };
 		7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
@@ -2465,7 +2463,6 @@
 				DFC0ED0623BB7D700091E7AC /* TurnServer.swift */,
 				7BC96DE4241779F70047471D /* ExternalApiError.swift */,
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
-				7BC96DE6241782460047471D /* FoursquareLocation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3446,7 +3443,6 @@
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
-				7BC96DE7241782460047471D /* FoursquareLocation.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,

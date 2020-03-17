@@ -92,7 +92,7 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
         guard category.hasSuffix("_LOCATION") else {
             return nil
         }
-        guard let json = content.base64Decoded()?.data(using: .utf8) else {
+        guard let json = content.data(using: .utf8) else {
             return nil
         }
         return try? JSONDecoder.default.decode(Location.self, from: json)

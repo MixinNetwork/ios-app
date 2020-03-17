@@ -33,6 +33,7 @@ public class SendMessageService: MixinService {
     public func sendMessage(message: Message, data: String?) {
         let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
             || message.category == MessageCategory.PLAIN_POST.rawValue
+            || message.category == MessageCategory.PLAIN_LOCATION.rawValue
         let content = shouldEncodeContent ? data?.base64Encoded() : data
 
         MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
@@ -490,6 +491,7 @@ extension SendMessageService {
             if blazeMessage.params?.data == nil {
                 let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
                     || message.category == MessageCategory.PLAIN_POST.rawValue
+                    || message.category == MessageCategory.PLAIN_LOCATION.rawValue
                 if shouldEncodeContent {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {

@@ -123,7 +123,9 @@ public class WebSocketService {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
-            if self.status == .disconnected {
+            if self.status == .connected && self.socket?.isConnected ?? false, let heartbeat = self.heartbeat {
+                heartbeat.checkConnect()
+            } else if self.status == .disconnected {
                 self.connect()
             } else if self.status == .connected && !(self.socket?.isConnected ?? false) {
                 self.reconnect(sendDisconnectToRemote: true)

@@ -268,7 +268,7 @@ class UrlWindow {
                 }
             }
 
-            guard let user = userItem, user.isCreatedByMessenger else {
+            guard let user = userItem else {
                 return
             }
 

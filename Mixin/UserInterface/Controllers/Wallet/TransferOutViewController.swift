@@ -70,7 +70,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .contact(let user):
             targetUser = user
             opponentImageView.setImage(with: user)
-            container?.setSubtitle(subtitle: user.identityNumber)
+            container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
             container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + user.fullName
         case .address(let address):
             targetAddress = address

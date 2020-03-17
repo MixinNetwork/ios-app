@@ -227,7 +227,7 @@ class PayWindow: BottomSheetView {
 
     private func showTransferView(user: UserItem, showError: Bool, showBiometric: Bool) {
         nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
-        mixinIDLabel.text = user.identityNumber
+        mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
         mixinIDLabel.textColor = .accessoryText
         pinView.isHidden = false
         if !showError {

@@ -27,6 +27,7 @@ public enum MixinServicesError: Error {
     case websocketError(errType: String, errMessage: String, errCode: Int)
     case messageTooBig(gzipSize: Int, category: String, conversationId: String)
     case gzipFailed
+    case backgroundUpgradeDatabase
     
 }
 
@@ -74,6 +75,8 @@ extension MixinServicesError: CustomNSError {
             return 17
         case .gzipFailed:
             return 18
+        case .backgroundUpgradeDatabase:
+            return 19
         }
     }
     

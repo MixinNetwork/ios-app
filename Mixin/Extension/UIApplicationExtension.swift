@@ -56,6 +56,16 @@ extension UIApplication {
     }
 
 
+    var applicationStateString: String {
+        switch applicationState {
+        case .active:
+            return "active"
+        case .background:
+            return "background"
+        case .inactive:
+            return "inactive"
+        }
+    }
 }
 
 extension UIApplication {

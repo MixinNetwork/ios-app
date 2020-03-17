@@ -33,7 +33,8 @@ class LocationPreviewViewController: LocationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.showsUserLocation = false
+        mapView.userTrackingMode = .none
+        mapView.showsUserLocation = true
         mapView.delegate = self
         let region = MKCoordinateRegion(center: location.coordinate,
                                         latitudinalMeters: 5000,
@@ -91,7 +92,21 @@ extension LocationPreviewViewController: ContainerViewControllerDelegate {
 extension LocationPreviewViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        mapView.dequeueReusableAnnotationView(withIdentifier: pinAnnotationReuseId, for: annotation)
+        if annotation is Location {
+            return mapView.dequeueReusableAnnotationView(withIdentifier: pinAnnotationReuseId, for: annotation)
+        } else {
+            return nil
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        guard location.address == nil else {
+            return
+        }
+        let distance = userLocation.coordinate.distance(from: location.coordinate)
+        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LocationCell
+        let distanceRepresentation = MKDistanceFormatter.general.string(fromDistance: distance)
+        cell?.subtitleLabel.text = R.string.localizable.chat_location_distance(distanceRepresentation)
     }
     
 }

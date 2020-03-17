@@ -1,4 +1,5 @@
 import CoreLocation
+import MapKit
 
 extension CLLocationCoordinate2D {
     
@@ -7,5 +8,15 @@ extension CLLocationCoordinate2D {
         let that = CLLocation(latitude: from.latitude, longitude: from.longitude)
         return this.distance(from: that)
     }
+    
+}
+
+extension MKDistanceFormatter {
+    
+    static let general: MKDistanceFormatter = {
+        let formatter = MKDistanceFormatter()
+        formatter.unitStyle = .abbreviated
+        return formatter
+    }()
     
 }

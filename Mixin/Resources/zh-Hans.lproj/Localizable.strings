@@ -284,7 +284,7 @@
 "chat_location_send_user_picked" = "发送这个位置";
 "chat_location_reverse_geocode_processing" = "正在定位…";
 "chat_location_unnamed" = "未命名地点";
-"chat_location_distance" = "距离 %@";
+"chat_location_distance" = "距离%@";
 
 // Web
 "web_suspicious_link" = "可疑链接";

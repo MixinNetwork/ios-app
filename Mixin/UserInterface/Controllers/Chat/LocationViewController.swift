@@ -4,32 +4,35 @@ import MapKit
 class LocationViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var tableView: LocationTableView!
+    @IBOutlet weak var tableWrapperView: LocationTableWrapperView!
+    @IBOutlet weak var tableView: UITableView!
     
     let headerReuseId = "header"
-    let annotationReuseId = "anno"
+    let pinAnnotationReuseId = "anno"
+    let tableHeaderView = UIView()
     
-    var tableViewMaskHeight: CGFloat {
+    var tableWrapperMaskHeight: CGFloat {
         get {
-            tableViewMaskView.frame.height
+            tableWrapperMaskView.frame.height
         }
         set {
-            let y = view.bounds.height - newValue + tableView.contentOffset.y
-            tableViewMaskView.frame = CGRect(x: 0, y: y, width: tableView.bounds.width, height: newValue)
+            tableWrapperMaskView.frame = CGRect(x: 0,
+                                                y: view.bounds.height - newValue,
+                                                width: view.bounds.width,
+                                                height: newValue)
             mapView.layoutMargins.bottom = newValue - view.safeAreaInsets.bottom
         }
     }
     
-    var minTableWrapperHeight: CGFloat {
+    var minTableWrapperMaskHeight: CGFloat {
         view.bounds.height / 2
     }
     
-    private let tableHeaderView = UIView()
-    private let tableViewMaskView = UIView()
+    private let tableWrapperMaskView = UIView()
     
     private var lastViewHeight: CGFloat = 0
     
-    private var maxTableWrapperHeight: CGFloat {
+    private var maxTableWrapperMaskHeight: CGFloat {
         view.bounds.height - 160
     }
     
@@ -40,31 +43,31 @@ class LocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.register(PinAnnotationView.self,
-                         forAnnotationViewWithReuseIdentifier: annotationReuseId)
+                         forAnnotationViewWithReuseIdentifier: pinAnnotationReuseId)
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)
-        tableViewMaskView.backgroundColor = .black
-        tableViewMaskView.layer.cornerRadius = 13
-        tableViewMaskView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        tableViewMaskView.layer.masksToBounds = true
-        tableViewMaskView.layer.backgroundColor = UIColor.black.cgColor
-        tableView.mask = tableViewMaskView
+        tableWrapperMaskView.backgroundColor = .black
+        tableWrapperMaskView.layer.cornerRadius = 13
+        tableWrapperMaskView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        tableWrapperMaskView.layer.masksToBounds = true
+        tableWrapperMaskView.layer.backgroundColor = UIColor.black.cgColor
+        tableWrapperView.mask = tableWrapperMaskView
         tableView.delegate = self
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if view.bounds.height != lastViewHeight {
-            updateTableViewMaskAndHeaderView()
+            resetTableWrapperMaskHeightAndHeaderView()
             lastViewHeight = view.bounds.height
         }
     }
     
-    func updateTableViewMaskAndHeaderView() {
-        tableViewMaskHeight = minTableWrapperHeight
+    func resetTableWrapperMaskHeightAndHeaderView() {
+        tableWrapperMaskHeight = minTableWrapperMaskHeight
         let headerSize = CGSize(width: tableView.frame.width,
-                                height: view.bounds.height - minTableWrapperHeight)
+                                height: view.bounds.height - minTableWrapperMaskHeight)
         tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
         tableView.tableHeaderView = tableHeaderView
     }
@@ -77,10 +80,10 @@ extension LocationViewController: UIScrollViewDelegate {
         guard tableView.isTracking || tableView.isDecelerating else {
             return
         }
-        let tableViewContentTop = tableView.convert(CGPoint.zero, to: view).y + tableHeaderView.frame.height
-        var preferredWrapperHeight = view.bounds.height - tableViewContentTop
-        preferredWrapperHeight = min(preferredWrapperHeight, maxTableWrapperHeight)
-        tableViewMaskHeight = preferredWrapperHeight
+        let tableViewContentTop = tableView.convert(CGPoint.zero, to: tableWrapperView).y + tableHeaderView.frame.height
+        var preferredWrapperHeight = tableWrapperView.bounds.height - tableViewContentTop
+        preferredWrapperHeight = min(preferredWrapperHeight, maxTableWrapperMaskHeight)
+        tableWrapperMaskHeight = preferredWrapperHeight
     }
     
 }

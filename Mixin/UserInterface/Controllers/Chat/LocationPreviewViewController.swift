@@ -4,7 +4,7 @@ import MapKit
 
 class LocationPreviewViewController: LocationViewController {
     
-    override var minTableWrapperHeight: CGFloat {
+    override var minTableWrapperMaskHeight: CGFloat {
         tableView.rowHeight + tableView.sectionHeaderHeight + view.safeAreaInsets.bottom
     }
     
@@ -47,7 +47,7 @@ class LocationPreviewViewController: LocationViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        updateTableViewMaskAndHeaderView()
+        resetTableWrapperMaskHeightAndHeaderView()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -91,7 +91,7 @@ extension LocationPreviewViewController: ContainerViewControllerDelegate {
 extension LocationPreviewViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        mapView.dequeueReusableAnnotationView(withIdentifier: annotationReuseId, for: annotation)
+        mapView.dequeueReusableAnnotationView(withIdentifier: pinAnnotationReuseId, for: annotation)
     }
     
 }

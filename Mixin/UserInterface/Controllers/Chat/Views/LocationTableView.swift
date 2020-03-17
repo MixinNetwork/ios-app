@@ -1,6 +1,6 @@
 import UIKit
 
-class LocationTableView: UITableView {
+class LocationTableWrapperView: UIView {
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let superHitTest = super.hitTest(point, with: event)

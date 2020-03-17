@@ -187,16 +187,12 @@ class LocationPickerViewController: LocationViewController {
         if let searchResults = searchResults {
             if pickedSearchResult == nil || indexPath.section == 1 {
                 let picked = searchResults[indexPath.row]
-                self.pickedSearchResult = picked
-                tableView.reloadData()
-                tableView.layoutIfNeeded() // setContentOffset: is not working without layoutIfNeeded
-                if let anno = mapView.annotations.compactMap({ $0 as? SearchResultAnnotation }).first(where: { $0.location == picked}) {
+                let annotation = mapView.annotations
+                    .compactMap({ $0 as? SearchResultAnnotation })
+                    .first(where: { $0.location == picked})
+                if let anno = annotation {
+                    mapView.deselectAnnotation(anno, animated: false)
                     mapView.selectAnnotation(anno, animated: true)
-                }
-                UIView.animate(withDuration: 0.3) {
-                    self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
-                    self.tableView.contentOffset = .zero
-                    self.mapView.setCenter(picked.coordinate, animated: false)
                 }
             } else if let result = pickedSearchResult, indexPath.section == 0 {
                 send(coordinate: result.coordinate,
@@ -246,17 +242,20 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func scrollToUserLocationAction(_ sender: Any) {
-        userDidDropThePin = false
-        let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
-        mapView.removeAnnotations(userPickedAnnotations)
-        mapView.userTrackingMode = .follow
-        let userCoordinate = mapView.userLocation.coordinate
-        mapView.setCenter(userCoordinate, animated: true)
-        UIView.animate(withDuration: 0.3, animations: {
-            self.tableView.contentOffset = .zero
-            self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
-        }) { (_) in
-            self.reloadNearbyLocations(coordinate: userCoordinate)
+        if searchResults != nil {
+            mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        } else {
+            userDidDropThePin = false
+            mapView.removeAnnotations(mapView.annotations)
+            mapView.userTrackingMode = .follow
+            let userCoordinate = mapView.userLocation.coordinate
+            mapView.setCenter(userCoordinate, animated: true)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.tableView.contentOffset = .zero
+                self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
+            }) { (_) in
+                self.reloadNearbyLocations(coordinate: userCoordinate)
+            }
         }
     }
     
@@ -310,14 +309,14 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func search(_ sender: UITextField) {
+        lastSearchRequest?.cancel()
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
         guard let keyword = trimmedKeyword else {
             searchBoxView?.isBusy = false
             searchResults = nil
             tableView.reloadData()
             return
         }
-        lastSearchRequest?.cancel()
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
         perform(#selector(requestSearch(keyword:)), with: keyword, afterDelay: 1)
     }
     
@@ -466,6 +465,21 @@ extension LocationPickerViewController: MKMapViewDelegate {
             }
         } else {
             reloadNearbyLocations(coordinate: coordinate)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let picked = view.annotation as? SearchResultAnnotation else {
+            return
+        }
+        mapView.userTrackingMode = .none
+        self.pickedSearchResult = picked.location
+        tableView.reloadData()
+        tableView.layoutIfNeeded() // setContentOffset: is not working without layoutIfNeeded
+        UIView.animate(withDuration: 0.3) {
+            self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
+            self.tableView.contentOffset = .zero
+            self.mapView.setCenter(picked.coordinate, animated: false)
         }
     }
     

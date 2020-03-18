@@ -20,6 +20,8 @@ extension MessageCategory {
             return #imageLiteral(resourceName: "ic_message_audio")
         } else if category.hasSuffix("_POST") {
             return R.image.ic_message_post()
+        } else if category.hasSuffix("_LOCATION") {
+            return R.image.ic_message_location()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return #imageLiteral(resourceName: "ic_message_transfer")
         } else if category.hasPrefix("WEBRTC_") {

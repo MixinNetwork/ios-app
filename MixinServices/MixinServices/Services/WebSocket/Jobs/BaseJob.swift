@@ -31,7 +31,7 @@ open class BaseJob: Operation {
                     return
                 }
             }
-        } while LoginManager.shared.isLoggedIn && !isCancelled
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !isCancelled
     }
     
     open func run() throws {

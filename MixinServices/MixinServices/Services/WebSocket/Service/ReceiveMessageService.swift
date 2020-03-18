@@ -46,7 +46,7 @@ public class ReceiveMessageService: MixinService {
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
             assert(MixinService.callMessageCoordinator != nil)
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                 return
             }
             guard let data = blazeMessage.data?.data(using: .utf8), let blazeMessageData = try? JSONDecoder.default.decode(BlazeMessageData.self, from: data) else {
@@ -161,7 +161,7 @@ public class ReceiveMessageService: MixinService {
                     if oldDate == AppGroupUserDefaults.checkStatusTimeInAppExtension {
                         AppGroupUserDefaults.isProcessingMessagesInAppExtension = false
                     }
-                } while AppGroupUserDefaults.isProcessingMessagesInAppExtension
+                } while AppGroupUserDefaults.isProcessingMessagesInAppExtension && !MixinService.isStopProcessMessages
             }
 
             var finishedJobCount = 0

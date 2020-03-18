@@ -181,7 +181,7 @@ extension Message {
                              mediaHeight: nil,
                              mediaKey: nil,
                              mediaDigest: nil,
-                             mediaStatus: MediaStatus.PENDING.rawValue,
+                             mediaStatus: nil,
                              mediaWaveform: nil,
                              thumbImage: nil,
                              status: MessageStatus.DELIVERED.rawValue,

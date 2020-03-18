@@ -52,16 +52,11 @@ class LocationPickerViewController: LocationViewController {
     private let pinImage = R.image.conversation.ic_annotation_pin()!
     private let nearbyLocationSearchingIndicator = ActivityIndicatorView()
     private let searchResultAnnotationReuseId = "search"
+    private let locationManager = CLLocationManager()
     
     private lazy var geocoder = CLGeocoder()
     private lazy var pinImageView = UIImageView(image: pinImage)
     private lazy var searchView = R.nib.locationSearchView(owner: self)!
-    private lazy var locationManager: CLLocationManager = {
-        let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.delegate = self
-        return manager
-    }()
     
     private weak var pinImageViewIfLoaded: UIImageView?
     
@@ -142,6 +137,9 @@ class LocationPickerViewController: LocationViewController {
             imageView.clipsToBounds = false
         }
         
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.delegate = self
+        
         nearbyLocationSearchingIndicator.tintColor = .theme
         nearbyLocationSearchingIndicator.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 240)
         
@@ -158,27 +156,12 @@ class LocationPickerViewController: LocationViewController {
                            selector: #selector(keyboardDidEndAnimating(_:)),
                            name: UIResponder.keyboardDidHideNotification,
                            object: nil)
-        
-        let coordinate = mapView.userLocation.coordinate
-        if coordinate.latitude != 0 || coordinate.longitude != 0 {
-            reloadNearbyLocations(coordinate: coordinate)
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways, .authorizedWhenInUse:
-            break
-        case .notDetermined:
+        if CLLocationManager.authorizationStatus() == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            fallthrough
-        @unknown default:
-            if !userDidDropThePin {
-                addUserPickedAnnotationAndRemoveThePlaceholder()
-                userDidDropThePin = true
-            }
         }
     }
     
@@ -231,13 +214,16 @@ class LocationPickerViewController: LocationViewController {
         tableView.reloadData()
         mapView.removeAnnotations(mapView.annotations)
         mapView.userTrackingMode = .follow
-        let userCoordinate = mapView.userLocation.coordinate
-        mapView.setCenter(userCoordinate, animated: true)
+        if let location = mapView.userLocation.location {
+            mapView.setCenter(location.coordinate, animated: true)
+        }
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
         }) { (_) in
             self.searchBoxView?.textField.text = nil
-            self.reloadNearbyLocations(coordinate: userCoordinate)
+            if let location = self.mapView.userLocation.location {
+                self.reloadNearbyLocations(coordinate: location.coordinate)
+            }
         }
     }
     
@@ -386,11 +372,20 @@ extension LocationPickerViewController: ContainerViewControllerDelegate {
 extension LocationPickerViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedAlways || status == .authorizedWhenInUse {
-            mapView.setCenter(mapView.userLocation.coordinate, animated: true)
-            if let location = manager.location {
-                reloadNearbyLocations(coordinate: location.coordinate)
-                reloadFirstCell()
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways, .authorizedWhenInUse:
+            scrollToUserLocationButton.isHidden = false
+            cancelSearchAction(self)
+            userDidDropThePin = false
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            fallthrough
+        @unknown default:
+            scrollToUserLocationButton.isHidden = true
+            if !userDidDropThePin {
+                addUserPickedAnnotationAndRemoveThePlaceholder()
+                userDidDropThePin = true
             }
         }
     }

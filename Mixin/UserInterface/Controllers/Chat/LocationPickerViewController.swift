@@ -24,18 +24,20 @@ class LocationPickerViewController: LocationViewController {
         didSet {
             pinImageViewIfLoaded?.center = pinImageViewCenter
             scrollToUserLocationButtonBottomConstraint.constant = tableWrapperMaskHeight + 20
-            let point: CGPoint?
-            if let result = pickedSearchResult {
-                point = mapView.convert(result.coordinate, toPointTo: mapView)
-            } else if userDidDropThePin {
-                point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
-            } else {
-                point = nil
-            }
-            if var point = point {
-                point.y += (tableWrapperMaskHeight - oldValue) / 2
-                let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
-                mapView.setCenter(coordinate, animated: false)
+            if tableView.isTracking || tableView.isDecelerating {
+                let point: CGPoint?
+                if let result = pickedSearchResult {
+                    point = mapView.convert(result.coordinate, toPointTo: mapView)
+                } else if userDidDropThePin {
+                    point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
+                } else {
+                    point = nil
+                }
+                if var point = point {
+                    point.y += (tableWrapperMaskHeight - oldValue) / 2
+                    let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
+                    mapView.setCenter(coordinate, animated: false)
+                }
             }
         }
     }
@@ -158,6 +160,12 @@ class LocationPickerViewController: LocationViewController {
                            object: nil)
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let tableContentHeight = minTableWrapperMaskHeight - tableView.sectionHeaderHeight - tableView.rowHeight
+        nearbyLocationSearchingIndicator.indicatorCenterY = tableContentHeight / 2
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if CLLocationManager.authorizationStatus() == .notDetermined {
@@ -212,11 +220,9 @@ class LocationPickerViewController: LocationViewController {
         searchResults = nil
         pickedSearchResult = nil
         tableView.reloadData()
-        mapView.removeAnnotations(mapView.annotations)
-        mapView.userTrackingMode = .follow
-        if let location = mapView.userLocation.location {
-            mapView.setCenter(location.coordinate, animated: true)
-        }
+        let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
+        mapView.removeAnnotations(annotations)
+        mapView.setUserTrackingMode(.follow, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
         }) { (_) in
@@ -230,18 +236,19 @@ class LocationPickerViewController: LocationViewController {
     @objc private func scrollToUserLocationAction(_ sender: Any) {
         if searchResults != nil {
             mapView.setCenter(mapView.userLocation.coordinate, animated: true)
-        } else {
+        } else if mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
             userDidDropThePin = false
-            mapView.removeAnnotations(mapView.annotations)
-            mapView.userTrackingMode = .follow
-            let userCoordinate = mapView.userLocation.coordinate
-            mapView.setCenter(userCoordinate, animated: true)
-            UIView.animate(withDuration: 0.3, animations: {
-                self.tableView.contentOffset = .zero
-                self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
-            }) { (_) in
-                self.reloadNearbyLocations(coordinate: userCoordinate)
+            let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
+            mapView.removeAnnotations(annotations)
+            mapView.setUserTrackingMode(.follow, animated: true)
+            if let location = mapView.userLocation.location {
+                reloadNearbyLocations(coordinate: location.coordinate)
+            } else {
+                tableView.reloadData()
             }
+            tableView.layoutIfNeeded()
+            let contentOffset = CGPoint(x: 0, y: tableWrapperMaskHeight - minTableWrapperMaskHeight)
+            tableView.contentOffset = contentOffset
         }
     }
     
@@ -337,7 +344,8 @@ class LocationPickerViewController: LocationViewController {
             self.tableView.contentOffset = .zero
             self.tableView.reloadData()
             self.searchBoxView?.isBusy = false
-            self.mapView.removeAnnotations(self.mapView.annotations)
+            let annotations = self.mapView.annotations.filter({ !($0 is MKUserLocation) })
+            self.mapView.removeAnnotations(annotations)
             if let annotations = locations?.map(SearchResultAnnotation.init) {
                 self.mapView.addAnnotations(annotations)
             }
@@ -448,19 +456,7 @@ extension LocationPickerViewController: MKMapViewDelegate {
             }
             self.reloadFirstCell()
         }
-        if tableView.contentOffset != .zero {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.tableView.contentOffset = .zero
-                self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
-                if let annotation = self.mapView.annotations.first(where: { $0 is UserPickedLocationAnnotation }) {
-                    self.mapView.setCenter(annotation.coordinate, animated: false)
-                }
-            }) { (_) in
-                self.reloadNearbyLocations(coordinate: coordinate)
-            }
-        } else {
-            reloadNearbyLocations(coordinate: coordinate)
-        }
+        reloadNearbyLocations(coordinate: coordinate)
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -555,6 +551,14 @@ extension LocationPickerViewController: UITextFieldDelegate {
 
 extension LocationPickerViewController {
     
+    private func updateTableViewContentOffsetWithMaskHeightIfNeeded() {
+        tableView.layoutIfNeeded()
+        let minContentOffsetY = tableWrapperMaskHeight - minTableWrapperMaskHeight
+        if tableView.contentOffset.y < minContentOffsetY {
+            tableView.contentOffset.y = minContentOffsetY
+        }
+    }
+    
     private func addUserPickedAnnotationAndRemoveThePlaceholder() {
         if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
             let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableWrapperMaskHeight) / 2)
@@ -571,12 +575,15 @@ extension LocationPickerViewController {
         guard willSearchCoordinateAtLeast100MetersAway else {
             return
         }
-        nearbyLocations = []
-        tableView.reloadData()
         if tableView.tableFooterView == nil {
+            nearbyLocationSearchingIndicator.frame.size.height = tableWrapperMaskHeight
+                - tableView.sectionHeaderHeight
+                - tableView.rowHeight
             nearbyLocationSearchingIndicator.startAnimating()
             tableView.tableFooterView = nearbyLocationSearchingIndicator
         }
+        nearbyLocations = []
+        tableView.reloadData()
         nearbyLocationsRequest?.cancel()
         nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate, query: nil) { [weak self] (result) in
             guard let self = self else {
@@ -588,6 +595,7 @@ extension LocationPickerViewController {
                 self.tableView.tableFooterView = nil
                 self.nearbyLocations = locations
                 self.tableView.reloadData()
+                self.updateTableViewContentOffsetWithMaskHeightIfNeeded()
                 self.nearbyLocationsSearchCoordinate = coordinate
             case .failure:
                 break

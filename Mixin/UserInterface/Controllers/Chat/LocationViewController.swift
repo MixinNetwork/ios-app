@@ -86,6 +86,13 @@ extension LocationViewController: UIScrollViewDelegate {
         tableWrapperMaskHeight = preferredWrapperHeight
     }
     
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        UIView.animate(withDuration: 0.3) {
+            self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
+        }
+        return true
+    }
+    
 }
 
 extension LocationViewController: UITableViewDelegate {

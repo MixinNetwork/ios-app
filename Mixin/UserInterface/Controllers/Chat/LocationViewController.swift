@@ -33,7 +33,7 @@ class LocationViewController: UIViewController {
     private var lastViewHeight: CGFloat = 0
     
     private var maxTableWrapperMaskHeight: CGFloat {
-        view.bounds.height - 160
+        max(view.bounds.height - 160, minTableWrapperMaskHeight)
     }
     
     convenience init() {

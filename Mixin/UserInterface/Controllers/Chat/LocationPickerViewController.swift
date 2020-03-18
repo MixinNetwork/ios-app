@@ -556,12 +556,13 @@ extension LocationPickerViewController {
     }
     
     private func addUserPickedAnnotationAndRemoveThePlaceholder() {
-        if !mapView.annotations.contains(where: { $0 is UserPickedLocationAnnotation }) {
-            let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableWrapperMaskHeight) / 2)
-            let coordinate = mapView.convert(point, toCoordinateFrom: view)
-            let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
-            mapView.addAnnotation(annotation)
+        guard pinImageView.superview != nil else {
+            return
         }
+        let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableWrapperMaskHeight) / 2)
+        let coordinate = mapView.convert(point, toCoordinateFrom: view)
+        let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
+        mapView.addAnnotation(annotation)
         DispatchQueue.main.async(execute: pinImageView.removeFromSuperview)
     }
     

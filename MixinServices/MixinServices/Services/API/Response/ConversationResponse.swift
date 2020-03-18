@@ -41,7 +41,12 @@ public struct ConversationResponse: Codable {
         self.creatorId = creatorId
         self.muteUntil = muteUntil
     }
-    
+
+    public init(conversationId: String, userId: String, avatarUrl: String) {
+        let createdAt = Date().toUTCString()
+        let participants = [ParticipantResponse(userId: userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: myUserId, role: "", createdAt: createdAt)]
+        self.init(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: userId, muteUntil: "")
+    }
 }
 
 public struct ParticipantResponse: Codable {

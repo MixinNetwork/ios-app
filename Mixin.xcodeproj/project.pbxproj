@@ -407,6 +407,7 @@
 		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
 		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
+		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -588,6 +589,17 @@
 		DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */; };
 		DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */; };
 		DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */; };
+		DFE861BC2422673B009B1833 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE861BB2422673B009B1833 /* ShareViewController.swift */; };
+		DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE861BD2422673B009B1833 /* MainInterface.storyboard */; };
+		DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DFE8629124227F91009B1833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629024227F91009B1833 /* Assets.xcassets */; };
+		DFE8629324227FA1009B1833 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629224227FA1009B1833 /* Colors.xcassets */; };
+		DFE8635A242282D3009B1833 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE86359242282D3009B1833 /* R.generated.swift */; };
+		DFE864E624228753009B1833 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E524228753009B1833 /* ConversationCell.swift */; };
+		DFE864E8242299CB009B1833 /* ConversationSearchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E7242299CB009B1833 /* ConversationSearchItem.swift */; };
+		DFE864EB24229EFB009B1833 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFE864ED24229EFB009B1833 /* Localizable.strings */; };
+		DFE864F02422A49A009B1833 /* ConversationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFE864EF2422A49A009B1833 /* ConversationHeaderView.xib */; };
+		DFE864F22422A59E009B1833 /* ConversationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864F12422A59E009B1833 /* ConversationHeaderView.swift */; };
 		DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7B22254C6E0087173D /* R.generated.swift */; };
 		DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF2145C209AC7D400612234 /* ConerLabel.swift */; };
 		DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */; };
@@ -657,6 +669,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DFE861C12422673B009B1833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFE861B82422673B009B1833;
+			remoteInfo = MixinShare;
+		};
 		E090B9FC23B3957E0088355B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
@@ -683,6 +702,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */,
 				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -699,10 +719,13 @@
 		277FF70B1F909A1200DBB2EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		277FF70E1F909A1200DBB2EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.release.xcconfig"; sourceTree = "<group>"; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
+		67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinShare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
 		7B04FAB722684242004F8F04 /* AssetSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSearchResult.swift; sourceTree = "<group>"; };
@@ -1303,6 +1326,20 @@
 		DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsageViewController.swift; sourceTree = "<group>"; };
 		DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearStorageViewController.swift; sourceTree = "<group>"; };
+		DFE861B92422673B009B1833 /* MixinShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MixinShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFE861BB2422673B009B1833 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		DFE861BE2422673B009B1833 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		DFE861C02422673B009B1833 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DFE861C724226889009B1833 /* MixinShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinShare.entitlements; sourceTree = "<group>"; };
+		DFE8629024227F91009B1833 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFE8629224227FA1009B1833 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		DFE86359242282D3009B1833 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		DFE864E524228753009B1833 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
+		DFE864E7242299CB009B1833 /* ConversationSearchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSearchItem.swift; sourceTree = "<group>"; };
+		DFE864EC24229EFB009B1833 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DFE864EE24229F06009B1833 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DFE864EF2422A49A009B1833 /* ConversationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationHeaderView.xib; sourceTree = "<group>"; };
+		DFE864F12422A59E009B1833 /* ConversationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHeaderView.swift; sourceTree = "<group>"; };
 		DFEAED4C1FBD762100A617D8 /* Mixin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mixin.entitlements; sourceTree = "<group>"; };
 		DFF1AD7B22254C6E0087173D /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		DFF2145C209AC7D400612234 /* ConerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConerLabel.swift; sourceTree = "<group>"; };
@@ -1390,6 +1427,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFE861B62422673B009B1833 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E090B9F423B3957E0088355B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1414,6 +1459,7 @@
 			children = (
 				277FF7011F909A1200DBB2EB /* Mixin */,
 				E090B9F823B3957E0088355B /* MixinNotificationService */,
+				DFE861BA2422673B009B1833 /* MixinShare */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -1425,6 +1471,7 @@
 			children = (
 				277FF6FF1F909A1200DBB2EB /* Mixin.app */,
 				E090B9F723B3957E0088355B /* MixinNotificationService.appex */,
+				DFE861B92422673B009B1833 /* MixinShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1456,6 +1503,8 @@
 				8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */,
 				4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */,
 				C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */,
+				60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */,
+				46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1861,6 +1910,7 @@
 				273A5E0B1F95EA4500AE802F /* Contacts.framework */,
 				23987C4F141F7C6E533A683D /* Pods_Mixin.framework */,
 				DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */,
+				67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2528,6 +2578,25 @@
 			path = Setting;
 			sourceTree = "<group>";
 		};
+		DFE861BA2422673B009B1833 /* MixinShare */ = {
+			isa = PBXGroup;
+			children = (
+				DFE861C724226889009B1833 /* MixinShare.entitlements */,
+				DFE86359242282D3009B1833 /* R.generated.swift */,
+				DFE861BB2422673B009B1833 /* ShareViewController.swift */,
+				DFE864E7242299CB009B1833 /* ConversationSearchItem.swift */,
+				DFE864E524228753009B1833 /* ConversationCell.swift */,
+				DFE864F12422A59E009B1833 /* ConversationHeaderView.swift */,
+				DFE864EF2422A49A009B1833 /* ConversationHeaderView.xib */,
+				DFE864ED24229EFB009B1833 /* Localizable.strings */,
+				DFE861BD2422673B009B1833 /* MainInterface.storyboard */,
+				DFE861C02422673B009B1833 /* Info.plist */,
+				DFE8629024227F91009B1833 /* Assets.xcassets */,
+				DFE8629224227FA1009B1833 /* Colors.xcassets */,
+			);
+			path = MixinShare;
+			sourceTree = "<group>";
+		};
 		E01BC6E423ACD7D1005D3FF3 /* Job */ = {
 			isa = PBXGroup;
 			children = (
@@ -2624,11 +2693,32 @@
 			);
 			dependencies = (
 				E090B9FD23B3957E0088355B /* PBXTargetDependency */,
+				DFE861C22422673B009B1833 /* PBXTargetDependency */,
 			);
 			name = Mixin;
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DFE861B82422673B009B1833 /* MixinShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFE861C62422673B009B1833 /* Build configuration list for PBXNativeTarget "MixinShare" */;
+			buildPhases = (
+				AD9E7F08DC70A970DF917A03 /* [CP] Check Pods Manifest.lock */,
+				DFE86358242281C6009B1833 /* R.swift */,
+				DFE861B52422673B009B1833 /* Sources */,
+				DFE861B62422673B009B1833 /* Frameworks */,
+				DFE861B72422673B009B1833 /* Resources */,
+				CB5728E78EE6BA983EB90403 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MixinShare;
+			productName = MixinShare;
+			productReference = DFE861B92422673B009B1833 /* MixinShare.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		E090B9F623B3957E0088355B /* MixinNotificationService */ = {
 			isa = PBXNativeTarget;
@@ -2675,6 +2765,10 @@
 							};
 						};
 					};
+					DFE861B82422673B009B1833 = {
+						CreatedOnToolsVersion = 11.3.1;
+						ProvisioningStyle = Automatic;
+					};
 					E090B9F623B3957E0088355B = {
 						CreatedOnToolsVersion = 11.3;
 						ProvisioningStyle = Automatic;
@@ -2698,6 +2792,7 @@
 			targets = (
 				277FF6FE1F909A1200DBB2EB /* Mixin */,
 				E090B9F623B3957E0088355B /* MixinNotificationService */,
+				DFE861B82422673B009B1833 /* MixinShare */,
 			);
 		};
 /* End PBXProject section */
@@ -2808,6 +2903,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFE861B72422673B009B1833 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE8629324227FA1009B1833 /* Colors.xcassets in Resources */,
+				DFE864EB24229EFB009B1833 /* Localizable.strings in Resources */,
+				DFE864F02422A49A009B1833 /* ConversationHeaderView.xib in Resources */,
+				DFE8629124227F91009B1833 /* Assets.xcassets in Resources */,
+				DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E090B9F523B3957E0088355B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2855,6 +2962,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AD9E7F08DC70A970DF917A03 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MixinShare-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C4BC0BC97D28F5C46D8311A1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2871,6 +3000,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB5728E78EE6BA983EB90403 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DF1BD0B42292AF2900EBDC22 /* Fabric */ = {
@@ -2905,6 +3052,26 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /usr/bin/ruby;
 			shellScript = "fork do\nProcess.setsid\nSTDIN.reopen(\"/dev/null\")\nSTDOUT.reopen(\"/dev/null\", \"a\")\nSTDERR.reopen(\"/dev/null\", \"a\")\n\nrequire 'shellwords'\n\nDir[\"#{ENV[\"DWARF_DSYM_FOLDER_PATH\"]}/*/Contents/Resources/DWARF/*\"].each do |dsym|\nsystem(\"curl -F dsym=@#{Shellwords.escape(dsym)} -F projectRoot=#{Shellwords.escape(ENV[\"PROJECT_DIR\"])} https://upload.bugsnag.com/\")\nend\nend";
+		};
+		DFE86358242281C6009B1833 /* R.swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = R.swift;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/MixinShare/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/MixinShare/R.generated.swift\"\n";
 		};
 		DFF1AD7A222548040087173D /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3561,6 +3728,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFE861B52422673B009B1833 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE864F22422A59E009B1833 /* ConversationHeaderView.swift in Sources */,
+				DFE861BC2422673B009B1833 /* ShareViewController.swift in Sources */,
+				DFE864E8242299CB009B1833 /* ConversationSearchItem.swift in Sources */,
+				DFE8635A242282D3009B1833 /* R.generated.swift in Sources */,
+				DFE864E624228753009B1833 /* ConversationCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E090B9F323B3957E0088355B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3573,6 +3752,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFE861B82422673B009B1833 /* MixinShare */;
+			targetProxy = DFE861C12422673B009B1833 /* PBXContainerItemProxy */;
+		};
 		E090B9FD23B3957E0088355B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E090B9F623B3957E0088355B /* MixinNotificationService */;
@@ -3617,6 +3801,23 @@
 				DF6CF2E7221A801600B65294 /* ja */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		DFE861BD2422673B009B1833 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DFE861BE2422673B009B1833 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		DFE864ED24229EFB009B1833 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DFE864EC24229EFB009B1833 /* en */,
+				DFE864EE24229F06009B1833 /* zh-Hans */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -3739,6 +3940,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
@@ -3806,6 +4008,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
@@ -3865,6 +4068,51 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = arm64;
+			};
+			name = Release;
+		};
+		DFE861C42422673B009B1833 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 301;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.21.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DFE861C52422673B009B1833 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 301;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.21.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -3932,6 +4180,15 @@
 			buildConfigurations = (
 				277FF7141F909A1200DBB2EB /* Debug */,
 				277FF7151F909A1200DBB2EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFE861C62422673B009B1833 /* Build configuration list for PBXNativeTarget "MixinShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFE861C42422673B009B1833 /* Debug */,
+				DFE861C52422673B009B1833 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

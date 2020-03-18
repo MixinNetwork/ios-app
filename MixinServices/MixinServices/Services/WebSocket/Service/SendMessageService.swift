@@ -30,15 +30,18 @@ public class SendMessageService: MixinService {
         SendMessageService.shared.processMessages()
     }
 
-    public func sendMessage(message: Message, data: String?) {
+    public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true) {
         let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
             || message.category == MessageCategory.PLAIN_POST.rawValue
         let content = shouldEncodeContent ? data?.base64Encoded() : data
 
         MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
-        SendMessageService.shared.processMessages()
+        if immediatelySend {
+            SendMessageService.shared.processMessages()
+        }
     }
 
+    @discardableResult
     public func saveUploadJob(message: Message) -> String {
         let job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
         MixinDatabase.shared.insertOrReplace(objects: [job])

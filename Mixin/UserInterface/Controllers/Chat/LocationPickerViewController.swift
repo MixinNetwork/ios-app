@@ -59,6 +59,7 @@ class LocationPickerViewController: LocationViewController {
     private let nearbyLocationSearchingIndicator = ActivityIndicatorView()
     private let searchResultAnnotationReuseId = "search"
     private let locationManager = CLLocationManager()
+    private let locationSearchRadius = 5000
     
     private lazy var geocoder = CLGeocoder()
     private lazy var pinImageView = UIImageView(image: pinImage)
@@ -197,7 +198,6 @@ class LocationPickerViewController: LocationViewController {
                 if let anno = annotation {
                     mapView.deselectAnnotation(anno, animated: false)
                     mapView.selectAnnotation(anno, animated: true)
-                    mapView.showAnnotations([anno], animated: true)
                 }
             } else if let result = pickedSearchResult, indexPath.section == 0 {
                 send(coordinate: result.coordinate,
@@ -345,7 +345,7 @@ class LocationPickerViewController: LocationViewController {
         } else {
             coordinate = mapView.centerCoordinate
         }
-        lastSearchRequest = FoursquareAPI.search(coordinate: coordinate, query: keyword, completion: { [weak self] (result) in
+        lastSearchRequest = FoursquareAPI.search(coordinate: coordinate, radius: locationSearchRadius, query: keyword, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }
@@ -611,7 +611,7 @@ extension LocationPickerViewController {
         nearbyLocations = []
         tableView.reloadData()
         nearbyLocationsRequest?.cancel()
-        nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate, query: nil) { [weak self] (result) in
+        nearbyLocationsRequest = FoursquareAPI.search(coordinate: coordinate, radius: nil, query: nil) { [weak self] (result) in
             guard let self = self else {
                 return
             }

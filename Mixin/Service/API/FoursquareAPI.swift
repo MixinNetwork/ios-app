@@ -7,22 +7,27 @@ enum FoursquareAPI {
     
     typealias Completion = (Alamofire.Result<[Location]>) -> Void
     
-    static func search(coordinate: CLLocationCoordinate2D, query: String?, completion: @escaping Completion) -> Request? {
+    static func search(coordinate: CLLocationCoordinate2D, radius: Int?, query: String?, completion: @escaping Completion) -> Request? {
         guard let clientId = MixinKeys.Foursquare.clientId, let clientSecret = MixinKeys.Foursquare.clientSecret else {
             completion(.failure(ExternalApiError.noApiKey))
             return nil
         }
         var components = URLComponents(string: "https://api.foursquare.com/v2/venues/search")!
-        components.queryItems = [
+        var queryItems = [
             URLQueryItem(name: "ll", value: "\(coordinate.latitude),\(coordinate.longitude)"),
             URLQueryItem(name: "client_id", value: clientId),
             URLQueryItem(name: "client_secret", value: clientSecret),
             URLQueryItem(name: "v", value: "20200310"),
         ]
+        if let radius = radius {
+            let item = URLQueryItem(name: "radius", value: "\(radius)")
+            queryItems.append(item)
+        }
         if let query = query {
             let item = URLQueryItem(name: "query", value: query)
-            components.queryItems?.append(item)
+            queryItems.append(item)
         }
+        components.queryItems = queryItems
         return request(components.url!).responseJSON { (response) in
             switch response.result {
             case .success(let json as Location.FoursquareJson):

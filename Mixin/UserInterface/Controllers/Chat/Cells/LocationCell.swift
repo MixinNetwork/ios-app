@@ -33,6 +33,11 @@ class LocationCell: ModernSelectedBackgroundCell {
     
     private weak var navigationImageViewIfLoaded: UIImageView?
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        iconImageView.renderingMode = .alwaysTemplate
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         iconImageView.sd_cancelCurrentImageLoad()
@@ -41,9 +46,8 @@ class LocationCell: ModernSelectedBackgroundCell {
     
     func render(location: Location) {
         if let url = location.iconUrl {
-            iconBackgroundImageView.isHidden = false
-            iconImageView.renderingMode = .alwaysTemplate
-            iconImageView.contentMode = .scaleAspectFill
+            iconBackgroundImageView.image = R.image.conversation.bg_location_category()
+            iconImageView.isHidden = false
             iconImageView.sd_setImage(with: url, completed: nil)
         } else {
             renderAsUserRelatedLocation()
@@ -65,10 +69,8 @@ class LocationCell: ModernSelectedBackgroundCell {
     }
     
     private func renderAsUserRelatedLocation() {
-        iconBackgroundImageView.isHidden = true
-        iconImageView.renderingMode = .alwaysOriginal
-        iconImageView.contentMode = .center
-        iconImageView.image = R.image.conversation.ic_location_user()
+        iconImageView.isHidden = true
+        iconBackgroundImageView.image = R.image.conversation.ic_location_user()
     }
     
 }

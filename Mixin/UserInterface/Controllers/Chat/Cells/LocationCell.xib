@@ -27,22 +27,22 @@
                                         <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xOD-0i-bYT" customClass="RenderingModeSwitchableImageView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <rect key="frame" x="4" y="4" width="36" height="36"/>
                                         <color key="tintColor" name="text"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="xOD-0i-bYT" secondAttribute="trailing" id="3u6-M2-UE5"/>
+                                    <constraint firstAttribute="trailing" secondItem="xOD-0i-bYT" secondAttribute="trailing" constant="4" id="3u6-M2-UE5"/>
                                     <constraint firstItem="6bV-cR-mzR" firstAttribute="top" secondItem="DbX-BE-BGi" secondAttribute="top" id="5WE-8S-vRa"/>
                                     <constraint firstAttribute="width" constant="44" id="CR5-pZ-HBP"/>
-                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="leading" secondItem="DbX-BE-BGi" secondAttribute="leading" id="ICq-t4-brF"/>
+                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="leading" secondItem="DbX-BE-BGi" secondAttribute="leading" constant="4" id="ICq-t4-brF"/>
                                     <constraint firstAttribute="trailing" secondItem="6bV-cR-mzR" secondAttribute="trailing" id="Lc8-W3-9gS"/>
                                     <constraint firstItem="6bV-cR-mzR" firstAttribute="leading" secondItem="DbX-BE-BGi" secondAttribute="leading" id="Nob-vl-Gnf"/>
                                     <constraint firstAttribute="bottom" secondItem="6bV-cR-mzR" secondAttribute="bottom" id="VR0-jb-zRp"/>
-                                    <constraint firstAttribute="bottom" secondItem="xOD-0i-bYT" secondAttribute="bottom" id="cJj-Mu-U5Z"/>
+                                    <constraint firstAttribute="bottom" secondItem="xOD-0i-bYT" secondAttribute="bottom" constant="4" id="cJj-Mu-U5Z"/>
                                     <constraint firstAttribute="width" secondItem="DbX-BE-BGi" secondAttribute="height" id="exL-Jy-FZM"/>
-                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="top" secondItem="DbX-BE-BGi" secondAttribute="top" id="sDs-Or-xtD"/>
+                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="top" secondItem="DbX-BE-BGi" secondAttribute="top" constant="4" id="sDs-Or-xtD"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="2Wf-ca-iF8">

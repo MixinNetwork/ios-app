@@ -47,6 +47,7 @@ class LocationViewController: UIViewController {
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)
+        tableWrapperMaskView.isUserInteractionEnabled = false
         tableWrapperMaskView.backgroundColor = .black
         tableWrapperMaskView.layer.cornerRadius = 13
         tableWrapperMaskView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]

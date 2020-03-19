@@ -230,11 +230,12 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @IBAction func cancelSearchAction(_ sender: Any) {
-        searchBoxView?.textField.resignFirstResponder()
         searchResults = nil
         pickedSearchResult = nil
         tableView.reloadData()
         tableView.tableFooterView = nil
+        tableView.layoutIfNeeded()
+        searchBoxView?.textField.resignFirstResponder()
         let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
         mapView.removeAnnotations(annotations)
         mapView.showAnnotations(mapView.annotations, animated: true)
@@ -301,7 +302,7 @@ class LocationPickerViewController: LocationViewController {
         } else {
             keyboardHeightIfShow = endFrame.height
         }
-        let headerSize = CGSize(width: tableView.frame.width,
+        let headerSize = CGSize(width: tableView.bounds.width,
                                 height: view.bounds.height - minTableWrapperMaskHeight)
         tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
         tableView.tableHeaderView = tableHeaderView

@@ -12,11 +12,6 @@ class AssetInfoWindow: BottomSheetView {
     
     private var asset: AssetItem!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        contractLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(copyAction)))
-    }
-
     func presentWindow(asset: AssetItem) {
         self.asset = asset
         assetView.setIcon(asset: asset)
@@ -30,20 +25,6 @@ class AssetInfoWindow: BottomSheetView {
             contractView.isHidden = true
         }
         presentPopupControllerAnimated()
-    }
-
-    @objc func copyAction() {
-        guard asset != nil else {
-            return
-        }
-
-        let assetKey = asset.assetKey
-        let alc = UIAlertController(title: R.string.localizable.wallet_asset_key(), message: R.string.localizable.wallet_asset_key_copy_tips(), preferredStyle: .alert)
-        alc.addAction(UIAlertAction(title: R.string.localizable.action_copy(), style: .cancel, handler: { (_) in
-            UIPasteboard.general.string = assetKey
-            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
-        }))
-        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

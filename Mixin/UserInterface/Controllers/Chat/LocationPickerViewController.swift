@@ -25,19 +25,22 @@ class LocationPickerViewController: LocationViewController {
             pinImageViewIfLoaded?.center = pinImageViewCenter
             scrollToUserLocationButtonBottomConstraint.constant = tableWrapperMaskHeight + 20
             if isTableViewScrolling {
-                let point: CGPoint?
-                if let result = pickedSearchResult {
-                    point = mapView.convert(result.coordinate, toPointTo: mapView)
-                } else if userDidDropThePin {
-                    point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
-                } else {
-                    point = nil
+                func updateCenter(with point: CGPoint) {
+                    let diff = (tableWrapperMaskHeight - oldValue) / 2
+                    if diff != 0 {
+                        let newPoint = CGPoint(x: point.x, y: point.y + diff)
+                        let coordinate = mapView.convert(newPoint, toCoordinateFrom: mapView)
+                        mapView.setCenter(coordinate, animated: false)
+                    }
                 }
-                let diff = (tableWrapperMaskHeight - oldValue) / 2
-                if var point = point, diff != 0 {
-                    point.y += diff
-                    let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
-                    mapView.setCenter(coordinate, animated: false)
+                if let result = pickedSearchResult {
+                    let point = mapView.convert(result.coordinate, toPointTo: mapView)
+                    updateCenter(with: point)
+                } else if userDidDropThePin {
+                    let point = mapView.convert(mapView.centerCoordinate, toPointTo: mapView)
+                    updateCenter(with: point)
+                } else if searchResults != nil {
+                    mapView.showAnnotations(mapView.annotations, animated: false)
                 }
             }
         }
@@ -189,6 +192,7 @@ class LocationPickerViewController: LocationViewController {
                 if let anno = annotation {
                     mapView.deselectAnnotation(anno, animated: false)
                     mapView.selectAnnotation(anno, animated: true)
+                    mapView.showAnnotations([anno], animated: true)
                 }
             } else if let result = pickedSearchResult, indexPath.section == 0 {
                 send(coordinate: result.coordinate,
@@ -227,6 +231,7 @@ class LocationPickerViewController: LocationViewController {
         tableView.reloadData()
         let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
         mapView.removeAnnotations(annotations)
+        mapView.showAnnotations(mapView.annotations, animated: true)
         mapView.setUserTrackingMode(.follow, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
@@ -356,6 +361,7 @@ class LocationPickerViewController: LocationViewController {
             self.mapView.removeAnnotations(annotations)
             if let annotations = locations?.map(SearchResultAnnotation.init) {
                 self.mapView.addAnnotations(annotations)
+                self.mapView.showAnnotations(annotations, animated: true)
             }
         })
     }

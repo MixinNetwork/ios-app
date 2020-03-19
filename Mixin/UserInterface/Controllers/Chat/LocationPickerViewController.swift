@@ -63,6 +63,7 @@ class LocationPickerViewController: LocationViewController {
     private lazy var geocoder = CLGeocoder()
     private lazy var pinImageView = UIImageView(image: pinImage)
     private lazy var searchView = R.nib.locationSearchView(owner: self)!
+    private lazy var noSearchResultsView = R.nib.locationSearchNoResultView(owner: nil)!
     private lazy var mapViewPanRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     private lazy var mapViewPinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     
@@ -147,7 +148,6 @@ class LocationPickerViewController: LocationViewController {
             imageView.clipsToBounds = false
         }
         
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.delegate = self
         
         nearbyLocationSearchingIndicator.tintColor = .theme
@@ -229,6 +229,7 @@ class LocationPickerViewController: LocationViewController {
         searchResults = nil
         pickedSearchResult = nil
         tableView.reloadData()
+        tableView.tableFooterView = nil
         let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
         mapView.removeAnnotations(annotations)
         mapView.showAnnotations(mapView.annotations, animated: true)
@@ -321,6 +322,7 @@ class LocationPickerViewController: LocationViewController {
             searchBoxView?.isBusy = false
             searchResults = nil
             tableView.reloadData()
+            tableView.tableFooterView = nil
             return
         }
         perform(#selector(requestSearch(keyword:)), with: keyword, afterDelay: 1)
@@ -340,29 +342,36 @@ class LocationPickerViewController: LocationViewController {
             guard let self = self else {
                 return
             }
-            let locations: [Location]?
+            let locations: [Location]
             switch result {
             case .success(let resultLocations):
-                if resultLocations.isEmpty {
-                    locations = nil
+                locations = resultLocations
+            case .failure(let error):
+                let nsError = error as NSError
+                if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
+                    return
                 } else {
-                    locations = resultLocations
+                    locations = []
                 }
-            case .failure(_):
-                locations = nil
             }
             self.pickedSearchResult = nil
             self.searchResults = locations
             self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
             self.tableView.contentOffset = .zero
             self.tableView.reloadData()
+            if locations.isEmpty {
+                self.noSearchResultsView.label.text = R.string.localizable.chat_location_search_no_result(keyword)
+                self.noSearchResultsView.frame.size = CGSize(width: self.view.bounds.width, height: self.tableWrapperMaskHeight)
+                self.tableView.tableFooterView = self.noSearchResultsView
+            } else {
+                self.tableView.tableFooterView = nil
+            }
             self.searchBoxView?.isBusy = false
             let annotations = self.mapView.annotations.filter({ !($0 is MKUserLocation) })
             self.mapView.removeAnnotations(annotations)
-            if let annotations = locations?.map(SearchResultAnnotation.init) {
-                self.mapView.addAnnotations(annotations)
-                self.mapView.showAnnotations(annotations, animated: true)
-            }
+            let resultAnnotations = locations.map(SearchResultAnnotation.init)
+            self.mapView.addAnnotations(resultAnnotations)
+            self.mapView.showAnnotations(resultAnnotations, animated: true)
         })
     }
     
@@ -474,14 +483,16 @@ extension LocationPickerViewController: MKMapViewDelegate {
 extension LocationPickerViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if searchResults == nil {
-            return 2
-        } else {
-            if pickedSearchResult == nil {
+        if let searchResults = searchResults {
+            if searchResults.isEmpty {
+                return 0
+            } else if pickedSearchResult == nil {
                 return 1
             } else {
                 return 2
             }
+        } else {
+            return 2
         }
     }
     

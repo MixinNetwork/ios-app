@@ -83,6 +83,7 @@ class LocationPickerViewController: LocationViewController {
     private var nearbyLocationsSearchCoordinate: CLLocationCoordinate2D?
     private var nearbyLocations: [Location] = []
     private var keyboardHeightIfShow: CGFloat?
+    private var isSearching = false
     private var isKeyboardAnimating = false
     private var lastSearchRequest: Request?
     private var searchResults: [Location]?
@@ -230,15 +231,22 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @IBAction func cancelSearchAction(_ sender: Any) {
+        lastSearchRequest?.cancel()
+        let shouldLocateUserLocationAnnotation = searchResults != nil
         searchResults = nil
         pickedSearchResult = nil
         tableView.reloadData()
         tableView.tableFooterView = nil
         tableView.layoutIfNeeded()
-        searchBoxView?.textField.resignFirstResponder()
+        if let box = searchBoxView {
+            box.isBusy = false
+            box.textField.resignFirstResponder()
+        }
         let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
         mapView.removeAnnotations(annotations)
-        mapView.showAnnotations(mapView.annotations, animated: true)
+        if shouldLocateUserLocationAnnotation {
+            mapView.showAnnotations(mapView.annotations, animated: true)
+        }
         mapView.setUserTrackingMode(.follow, animated: true)
         UIView.animate(withDuration: 0.3, animations: {
             self.searchView.alpha = 0
@@ -248,6 +256,7 @@ class LocationPickerViewController: LocationViewController {
                 self.reloadNearbyLocations(coordinate: location.coordinate)
             }
         }
+        isSearching = false
     }
     
     @objc private func scrollToUserLocationAction(_ sender: Any) {
@@ -270,7 +279,7 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func dragMapAction(_ recognizer: UIPanGestureRecognizer) {
-        guard searchResults == nil else {
+        guard searchResults == nil, !isSearching else {
             return
         }
         userDidDropThePin = true
@@ -347,7 +356,7 @@ class LocationPickerViewController: LocationViewController {
             coordinate = mapView.centerCoordinate
         }
         lastSearchRequest = FoursquareAPI.search(coordinate: coordinate, radius: locationSearchRadius, query: keyword, completion: { [weak self] (result) in
-            guard let self = self else {
+            guard let self = self, self.isSearching else {
                 return
             }
             let locations: [Location]
@@ -389,6 +398,9 @@ class LocationPickerViewController: LocationViewController {
 extension LocationPickerViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
+        if pinImageView.superview != nil {
+            putUserPickedAnnotation()
+        }
         if searchView.superview == nil {
             container?.navigationBar.addSubview(searchView)
             searchView.snp.makeConstraints { (make) in
@@ -400,6 +412,7 @@ extension LocationPickerViewController: ContainerViewControllerDelegate {
         UIView.animate(withDuration: 0.3) {
             self.searchView.alpha = 1
         }
+        isSearching = true
         searchBoxView?.textField.becomeFirstResponder()
     }
     
@@ -424,7 +437,7 @@ extension LocationPickerViewController: CLLocationManagerDelegate {
         @unknown default:
             scrollToUserLocationButton.isHidden = true
             if !userDidDropThePin {
-                addUserPickedAnnotationAndRemoveThePlaceholder()
+                putUserPickedAnnotation()
                 userDidDropThePin = true
             }
         }
@@ -435,24 +448,14 @@ extension LocationPickerViewController: CLLocationManagerDelegate {
 extension LocationPickerViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        guard !isTableViewScrolling, userDidDropThePin, searchResults == nil else {
-            return
+        let shouldPutUserPickedAnnotation = !isTableViewScrolling
+            && userDidDropThePin
+            && searchResults == nil
+            && !isKeyboardAnimating
+            && !isSearching
+        if shouldPutUserPickedAnnotation {
+            putUserPickedAnnotation()
         }
-        addUserPickedAnnotationAndRemoveThePlaceholder()
-        let coordinate = mapView.convert(pinImageViewCenter, toCoordinateFrom: view)
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
-            guard let self = self else {
-                return
-            }
-            if let address = placemarks?.first?.postalAddress {
-                self.userPinnedLocationAddress = address.street
-            } else {
-                self.userPinnedLocationAddress = ""
-            }
-            self.reloadFirstCell()
-        }
-        reloadNearbyLocations(coordinate: coordinate)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -581,7 +584,7 @@ extension LocationPickerViewController {
         }
     }
     
-    private func addUserPickedAnnotationAndRemoveThePlaceholder() {
+    private func putUserPickedAnnotation() {
         guard pinImageView.superview != nil else {
             return
         }
@@ -590,6 +593,20 @@ extension LocationPickerViewController {
         let annotation = UserPickedLocationAnnotation(coordinate: coordinate)
         mapView.addAnnotation(annotation)
         DispatchQueue.main.async(execute: pinImageView.removeFromSuperview)
+        
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
+            guard let self = self else {
+                return
+            }
+            if let address = placemarks?.first?.postalAddress {
+                self.userPinnedLocationAddress = address.street
+            } else {
+                self.userPinnedLocationAddress = ""
+            }
+            self.reloadFirstCell()
+        }
+        reloadNearbyLocations(coordinate: coordinate)
     }
     
     private func reloadNearbyLocations(coordinate: CLLocationCoordinate2D) {

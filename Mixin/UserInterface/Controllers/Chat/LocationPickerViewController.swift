@@ -276,6 +276,7 @@ class LocationPickerViewController: LocationViewController {
         guard recognizer.state == .began else {
             return
         }
+        tableView.setContentOffset(tableView.contentOffset, animated: false)
         mapView.userTrackingMode = .none
         let userPickedAnnotations = mapView.annotations.filter({ $0 is UserPickedLocationAnnotation })
         mapView.removeAnnotations(userPickedAnnotations)

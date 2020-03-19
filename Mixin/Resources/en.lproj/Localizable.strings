@@ -378,7 +378,7 @@
 "wallet_deposit_eos" = "This address supports all base on EOS tokens, such as EOS, IQ, BLACK, OCT, KARMA, etc. ";
 "wallet_deposit_eth" = "This address supports all ERC 20 tokens, such as ETH, XIN, TUSD, HT, LOOM, DGD, LEO, etc. ";
 "wallet_deposit_btc" = "This address only supports BTC and Omni USDT.";
-"wallet_deposit_trx" = "This address supports all TRC 10 tokens, such as TRX, BTT, etc.";
+"wallet_deposit_trx" = "This address supports all TRC 10 and TRC 20 tokens, such as TRX, BTT, USDT-TRON, etc.";
 "wallet_deposit_other" = "This address only support %@.";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";

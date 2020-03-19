@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,11 +31,15 @@ Try a new search.</string>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="YNh-Wh-evE" secondAttribute="trailing" constant="20" id="3CZ-xL-PJP"/>
                 <constraint firstItem="YNh-Wh-evE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Cpj-Vk-Pvz"/>
-                <constraint firstItem="YNh-Wh-evE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="56" id="sfg-ra-lck"/>
+                <constraint firstItem="YNh-Wh-evE" firstAttribute="centerY" secondItem="DlO-t0-suG" secondAttribute="centerY" priority="250" id="LR6-mc-gBB"/>
+                <constraint firstItem="YNh-Wh-evE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="750" constant="56" id="vHM-x4-h35"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="DlO-t0-suG"/>
             <connections>
                 <outlet property="label" destination="YNh-Wh-evE" id="lUL-v5-Q8J"/>
+                <outlet property="labelCenterYConstraint" destination="LR6-mc-gBB" id="6rP-QW-fAb"/>
+                <outlet property="labelTopConstraint" destination="vHM-x4-h35" id="gFJ-ob-4fU"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="283.59375"/>
         </view>

@@ -63,11 +63,16 @@ class LocationPickerViewController: LocationViewController {
     private lazy var geocoder = CLGeocoder()
     private lazy var pinImageView = UIImageView(image: pinImage)
     private lazy var searchView = R.nib.locationSearchView(owner: self)!
-    private lazy var noSearchResultsView = R.nib.locationSearchNoResultView(owner: nil)!
     private lazy var mapViewPanRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     private lazy var mapViewPinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
+    private lazy var noSearchResultsView: LocationSearchNoResultView = {
+        let view = R.nib.locationSearchNoResultView(owner: nil)!
+        noSearchResultsViewIfLoaded = view
+        return view
+    }()
     
     private weak var pinImageViewIfLoaded: UIImageView?
+    private weak var noSearchResultsViewIfLoaded: LocationSearchNoResultView?
     
     private var input: ConversationInputViewController!
     private var scrollToUserLocationButtonBottomConstraint: NSLayoutConstraint!
@@ -308,6 +313,7 @@ class LocationPickerViewController: LocationViewController {
         if keyboardWillBeInvisible {
             tableView.contentOffset = .zero
         }
+        updateNoSearchResultsViewLayout(isKeyboardVisible: !keyboardWillBeInvisible)
         view.layoutIfNeeded()
     }
     
@@ -363,6 +369,7 @@ class LocationPickerViewController: LocationViewController {
                 self.noSearchResultsView.label.text = R.string.localizable.chat_location_search_no_result(keyword)
                 self.noSearchResultsView.frame.size = CGSize(width: self.view.bounds.width, height: self.tableWrapperMaskHeight)
                 self.tableView.tableFooterView = self.noSearchResultsView
+                self.updateNoSearchResultsViewLayout(isKeyboardVisible: self.keyboardHeightIfShow != nil)
             } else {
                 self.tableView.tableFooterView = nil
             }
@@ -640,6 +647,19 @@ extension LocationPickerViewController {
     private func reloadFirstCell() {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    private func updateNoSearchResultsViewLayout(isKeyboardVisible: Bool) {
+        guard let view = noSearchResultsViewIfLoaded else {
+            return
+        }
+        if isKeyboardVisible {
+            view.labelTopConstraint.priority = .defaultHigh
+            view.labelCenterYConstraint.priority = .defaultLow
+        } else {
+            view.labelTopConstraint.priority = .defaultLow
+            view.labelCenterYConstraint.priority = .defaultHigh
+        }
     }
     
 }

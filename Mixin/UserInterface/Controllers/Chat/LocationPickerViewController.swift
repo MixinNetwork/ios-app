@@ -14,7 +14,7 @@ class LocationPickerViewController: LocationViewController {
             }
             if let textField = searchBoxView?.textField {
                 textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
-                textField.keyboardType = .webSearch
+                textField.returnKeyType = .search
                 textField.delegate = self
             }
         }

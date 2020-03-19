@@ -7,6 +7,14 @@ open class Location: NSObject, Codable {
     public typealias Degrees = Double
     public typealias FoursquareJson = [String: Any]
     
+    private enum CodingKeys: String, CodingKey {
+        case latitude
+        case longitude
+        case name
+        case address
+        case venueType = "venue_type"
+    }
+    
     public let latitude: Degrees
     public let longitude: Degrees
     public let name: String?

@@ -166,8 +166,7 @@ extension ShareRecipientViewController {
 
         let supportedTextUTIs = [kUTTypeUTF8PlainText as String,
                                  kUTTypePlainText as String,
-                                 kUTTypeText as String,
-                                 kUTTypeURL as String]
+                                 kUTTypeText as String]
 
         let supportedImageUTIs = [kUTTypePNG as String,
                                   kUTTypeJPEG as String,
@@ -229,6 +228,11 @@ extension ShareRecipientViewController {
                                 return
                             }
                             weakSelf.shareTextMessage(content: content, conversation: conversation)
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
                         } else if supportedImageUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             guard let url = item as? URL else {
                                 return

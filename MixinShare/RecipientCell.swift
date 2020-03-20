@@ -26,20 +26,21 @@ class RecipientCell: UITableViewCell {
     }
 
     private func setAvatarImage(conversation: RecipientSearchItem) {
+        titleLabel.text = conversation.name
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let url = URL(string: conversation.avatarUrl) {
-                titleLabel.text = nil
+                avatarLabel.text = nil
                 avatarImageView.sd_setImage(with: url, placeholderImage: R.image.ic_place_holder(), options: .lowPriority)
             } else {
                 avatarImageView.image = UIImage(named: "AvatarBackground/color\(conversation.userId.positiveHashCode() % 24 + 1)")
                 if let firstLetter = conversation.name.first {
-                    titleLabel.text = String([firstLetter]).uppercased()
+                    avatarLabel.text = String([firstLetter]).uppercased()
                 } else {
-                    titleLabel.text = nil
+                    avatarLabel.text = nil
                 }
             }
         } else {
-            titleLabel.text = nil
+            avatarLabel.text = nil
             if !conversation.iconUrl.isEmpty {
                 let url = AppGroupContainer.groupIconsUrl.appendingPathComponent(conversation.iconUrl)
                 avatarImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)

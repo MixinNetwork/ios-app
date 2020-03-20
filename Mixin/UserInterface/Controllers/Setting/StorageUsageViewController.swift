@@ -2,53 +2,61 @@ import Foundation
 import UIKit
 import MixinServices
 
-class StorageUsageCell: ModernSelectedBackgroundCell {
+final class StorageUsageViewController: UIViewController {
     
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var sizeLabel: UILabel!
+    @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
+    @IBOutlet weak var tableView: UITableView!
     
-}
-
-class StorageUsageViewController: UITableViewController {
-    
-    @IBOutlet weak var storageLabel: UILabel!
+    @IBOutlet weak var activityIndicatorHeightConstraint: NSLayoutConstraint!
     
     private var conversations = [ConversationStorageUsage]()
     
+    class func instance() -> UIViewController {
+        let vc = R.storyboard.setting.storage_usage()!
+        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_STORAGE_USAGE)
+        return container
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
         tableView.tableFooterView = UIView()
         fetchConversations()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchConversations), name: .StorageUsageDidChange, object: nil)
     }
     
-    @objc func fetchConversations() {
+    @objc private func fetchConversations() {
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.storageUsageConversations()
+            Thread.sleep(forTimeInterval: 1)
             DispatchQueue.main.async {
-                self?.conversations = conversations
-                self?.tableView.reloadData()
+                self?.reload(conversations: conversations)
             }
         }
     }
     
-    class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.storage()!
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_STORAGE_USAGE)
-        return container
+    private func reload(conversations: [ConversationStorageUsage]) {
+        self.conversations = conversations
+        tableView.reloadData()
+        tableView.layoutIfNeeded()
+        activityIndicatorHeightConstraint.constant = 0
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            self.activityIndicatorView.stopAnimating()
+        }
     }
     
 }
 
-extension StorageUsageViewController {
+extension StorageUsageViewController: UITableViewDataSource {
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "storage_usage", for: indexPath) as! StorageUsageCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.storage_usage, for: indexPath)!
         let conversation = conversations[indexPath.row]
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
@@ -60,7 +68,7 @@ extension StorageUsageViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(ClearStorageViewController.instance(conversation: conversations[indexPath.row]), animated: true)
     }

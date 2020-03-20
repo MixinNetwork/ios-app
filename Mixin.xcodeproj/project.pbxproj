@@ -399,7 +399,7 @@
 		7BF196B52411650900CC8325 /* LocationMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF196B42411650900CC8325 /* LocationMessageCell.swift */; };
 		7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF196B9241209A900CC8325 /* ImageMessageCell.swift */; };
 		7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */; };
-		7BF19C22241E0DB600B192D5 /* UserPickedLocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */; };
+		7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */; };
 		7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
@@ -1126,7 +1126,7 @@
 		7BF196B42411650900CC8325 /* LocationMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMessageCell.swift; sourceTree = "<group>"; };
 		7BF196B9241209A900CC8325 /* ImageMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageCell.swift; sourceTree = "<group>"; };
 		7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationSearchView.xib; sourceTree = "<group>"; };
-		7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPickedLocationAnnotation.swift; sourceTree = "<group>"; };
+		7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPickedLocation.swift; sourceTree = "<group>"; };
 		7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinAnnotationView.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
@@ -1588,7 +1588,7 @@
 				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
-				7BF19C21241E0DB600B192D5 /* UserPickedLocationAnnotation.swift */,
+				7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */,
 				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 			);
 			path = Model;
@@ -3504,7 +3504,7 @@
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
-				7BF19C22241E0DB600B192D5 /* UserPickedLocationAnnotation.swift in Sources */,
+				7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */,
 				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,

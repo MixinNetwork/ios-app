@@ -26,8 +26,8 @@ class ShareRecipientViewController: UITableViewController {
             cancelShareAction()
             return
         }
-        
-        tableView.register(UINib(resource: R.nib.recipientHeaderView), forHeaderFooterViewReuseIdentifier: headerReuseId)
+
+        tableView.register(UINib(nibName: "RecipientHeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
         tableView.delegate = self
         initData()

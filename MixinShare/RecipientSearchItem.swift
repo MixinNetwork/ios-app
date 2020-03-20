@@ -11,12 +11,16 @@ class RecipientSearchItem {
     let category: String
     let isBot : Bool
     let isVerified : Bool
+    let identityNumber: String
+    let phoneNumber: String
 
     init?(conversation: ConversationItem) {
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             name = conversation.ownerFullName
+            identityNumber = conversation.ownerIdentityNumber
         } else if conversation.category == ConversationCategory.GROUP.rawValue {
             name = conversation.name
+            identityNumber = ""
         } else {
             return nil
         }
@@ -27,6 +31,7 @@ class RecipientSearchItem {
         conversationId = conversation.conversationId
         isBot = conversation.ownerIsBot
         isVerified = conversation.ownerIsVerified
+        phoneNumber = ""
     }
 
     init(user: UserItem) {
@@ -38,10 +43,12 @@ class RecipientSearchItem {
         avatarUrl = user.avatarUrl
         isBot = user.isBot
         isVerified = user.isVerified
+        identityNumber = user.identityNumber
+        phoneNumber = user.phone ?? ""
     }
 
     func matches(lowercasedKeyword keyword: String) -> Bool {
-        return name.lowercased().contains(keyword)
+        return name.lowercased().contains(keyword) || phoneNumber.contains(keyword) || identityNumber.contains(keyword)
     }
 
     var isSignalConversation: Bool {

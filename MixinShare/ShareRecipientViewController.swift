@@ -4,7 +4,11 @@ import MixinServices
 import Rswift
 import MobileCoreServices
 
-class ShareRecipientViewController: UITableViewController {
+class ShareRecipientViewController: UIViewController {
+
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var cancelButton: UIButton!
 
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
@@ -27,9 +31,14 @@ class ShareRecipientViewController: UITableViewController {
             return
         }
 
+        cancelButton.setTitle(R.string.localizable.action_cancel(), for: .normal)
+        searchTextField.placeholder = R.string.localizable.search_placeholder_contact()
+
         tableView.register(UINib(nibName: "RecipientHeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
         tableView.delegate = self
+        searchTextField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
+        tableView.tableFooterView = UIView()
         initData()
     }
 
@@ -48,7 +57,22 @@ class ShareRecipientViewController: UITableViewController {
         queue.addOperation(initDataOperation)
     }
 
-    func search(keyword: String) {
+    @objc func textFieldEditingChanged(_ textField: UITextField) {
+        let trimmedLowercaseKeyword = (textField.text ?? "")
+            .trimmingCharacters(in: .whitespaces)
+            .lowercased()
+        guard !trimmedLowercaseKeyword.isEmpty else {
+            searchingKeyword = nil
+            tableView.reloadData()
+            return
+        }
+        guard trimmedLowercaseKeyword != searchingKeyword else {
+            return
+        }
+        search(keyword: trimmedLowercaseKeyword)
+    }
+
+    private func search(keyword: String) {
         queue.operations
             .filter({ $0 != initDataOperation })
             .forEach({ $0.cancel() })
@@ -74,7 +98,18 @@ class ShareRecipientViewController: UITableViewController {
         queue.addOperation(op)
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    @IBAction func cancelAction(_ sender: Any) {
+        cancelShareAction()
+    }
+
+    private func cancelShareAction() {
+        extensionContext?.cancelRequest(withError: NSError(domain: "Mixin", code: 401, userInfo: nil))
+    }
+}
+
+extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RecipientCell.reuseIdentifier, for: indexPath) as! RecipientCell
         if isSearching {
             cell.render(conversation: searchResults[indexPath.row])
@@ -84,15 +119,15 @@ class ShareRecipientViewController: UITableViewController {
         return cell
     }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return isSearching ? 1 : conversations.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : conversations[section].count
     }
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard !isSearching, !sectionTitles.isEmpty, !sectionIsEmpty(section) else {
             return nil
         }
@@ -101,7 +136,7 @@ class ShareRecipientViewController: UITableViewController {
         return header
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if isSearching {
             return .leastNormalMagnitude
         } else if !sectionTitles.isEmpty {
@@ -111,7 +146,7 @@ class ShareRecipientViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let conversation = isSearching ? searchResults[indexPath.row] : conversations[indexPath.section][indexPath.row]
         shareAction(conversation: conversation)
     }
@@ -119,6 +154,10 @@ class ShareRecipientViewController: UITableViewController {
     private func sectionIsEmpty(_ section: Int) -> Bool {
         return self.tableView(tableView, numberOfRowsInSection: section) == 0
     }
+}
+
+
+extension ShareRecipientViewController {
 
     private func shareAction(conversation: RecipientSearchItem) {
         guard let extensionItems = extensionContext?.inputItems as? [NSExtensionItem] else {
@@ -211,13 +250,6 @@ class ShareRecipientViewController: UITableViewController {
         }
     }
 
-
-    private func cancelShareAction() {
-        extensionContext?.cancelRequest(withError: NSError(domain: "Mixin", code: 401, userInfo: nil))
-    }
-}
-
-extension ShareRecipientViewController {
     private func shareTextMessage(content: String, conversation: RecipientSearchItem) {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_TEXT : .PLAIN_TEXT
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)

@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class ConversationSearchItem {
+class RecipientSearchItem {
 
     let conversationId: String
     let name: String
@@ -43,17 +43,21 @@ class ConversationSearchItem {
     func matches(lowercasedKeyword keyword: String) -> Bool {
         return name.lowercased().contains(keyword)
     }
+
+    var isSignalConversation: Bool {
+        category == ConversationCategory.GROUP.rawValue || (category == ConversationCategory.CONTACT.rawValue && !isBot)
+    }
 }
 
-extension ConversationSearchItem: Equatable {
+extension RecipientSearchItem: Equatable {
 
-    static func == (lhs: ConversationSearchItem, rhs: ConversationSearchItem) -> Bool {
+    static func == (lhs: RecipientSearchItem, rhs: RecipientSearchItem) -> Bool {
         return lhs.conversationId == rhs.conversationId
     }
 
 }
 
-extension ConversationSearchItem: Hashable {
+extension RecipientSearchItem: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(conversationId)

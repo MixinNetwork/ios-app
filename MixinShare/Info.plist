@@ -26,8 +26,6 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
-				<key>NSExtensionActivationRule</key>
-				<string>TRUEPREDICATE</string>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
 				<integer>6</integer>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
@@ -41,7 +39,7 @@
 			</dict>
 		</dict>
 		<key>NSExtensionPrincipalClass</key>
-		<string>ShareViewController</string>
+		<string>ShareRecipientViewController</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
 	</dict>

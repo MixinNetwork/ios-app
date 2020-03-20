@@ -4,22 +4,6 @@ import MixinServices
 
 class VideoUploadJob: AttachmentUploadJob {
     
-    private lazy var videoSettings: [String: Any] = [
-        AVVideoCodecKey: AVVideoCodecType.h264,
-        AVVideoWidthKey: 1280,
-        AVVideoHeightKey: 720,
-        AVVideoCompressionPropertiesKey: [
-            AVVideoAverageBitRateKey: 1500000,
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
-        ]
-    ]
-    private lazy var audioSettings: [String: Any] = [
-        AVFormatIDKey: kAudioFormatMPEG4AAC,
-        AVNumberOfChannelsKey: 2,
-        AVSampleRateKey: 44100,
-        AVEncoderBitRateKey: 128000
-    ]
-    
     override var fileUrl: URL? {
         guard let mediaUrl = message.mediaUrl else {
             return nil
@@ -73,7 +57,7 @@ class VideoUploadJob: AttachmentUploadJob {
         let filename = message.messageId
         let videoFilename = filename + ExtensionName.mp4.withDot
         let videoUrl = AttachmentContainer.url(for: .videos, filename: videoFilename)
-        let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: videoUrl)
+        let exportSession = AssetExportSession(asset: asset, outputURL: videoUrl)
         exportSession.exportAsynchronously {
             semaphore.signal()
         }

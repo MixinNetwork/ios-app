@@ -1,6 +1,6 @@
 import UIKit
 
-class ConversationHeaderView: UITableViewHeaderFooterView {
+class RecipientHeaderView: UITableViewHeaderFooterView {
 
     @IBOutlet weak var headerLabel: UILabel!
 

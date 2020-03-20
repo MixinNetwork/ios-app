@@ -1,17 +1,17 @@
 import UIKit
 import MixinServices
 
-class ConversationCell: UITableViewCell {
+class RecipientCell: UITableViewCell {
 
     static let height: CGFloat = 70
-    static let reuseIdentifier = "conversation"
+    static let reuseIdentifier = "recipient"
 
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var avatarLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
 
-    func render(conversation: ConversationSearchItem) {
+    func render(conversation: RecipientSearchItem) {
         setAvatarImage(conversation: conversation)
         titleLabel.text = conversation.name
         if conversation.isVerified {
@@ -25,7 +25,7 @@ class ConversationCell: UITableViewCell {
         }
     }
 
-    private func setAvatarImage(conversation: ConversationSearchItem) {
+    private func setAvatarImage(conversation: RecipientSearchItem) {
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let url = URL(string: conversation.avatarUrl) {
                 titleLabel.text = nil

@@ -7,7 +7,11 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     override var statusNormalTintColor: UIColor {
         .white
     }
-
+    
+    override var trailingInfoColor: UIColor {
+        .white
+    }
+    
     override var maxNumberOfLines: Int? {
         10
     }

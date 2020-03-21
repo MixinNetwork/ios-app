@@ -51,6 +51,10 @@ class MessageViewModel: CustomDebugStringConvertible {
         }
     }
     
+    var trailingInfoColor: UIColor {
+        .accessoryText
+    }
+    
     private var _style: Style = []
     
     init(message: MessageItem) {

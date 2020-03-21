@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LocationViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="mapView" destination="VkP-p5-8St" id="bGW-6Y-ahJ"/>
+                <outlet property="tableView" destination="B7f-5h-4L5" id="mb5-pu-iOC"/>
+                <outlet property="tableWrapperView" destination="Onh-4t-Ori" id="ZSz-FP-WLO"/>
+                <outlet property="view" destination="PJf-0q-OB7" id="5hO-IF-S7Z"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="PJf-0q-OB7">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-p5-8St">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </mapView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Onh-4t-Ori" customClass="LocationTableWrapperView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" style="grouped" separatorStyle="none" rowHeight="62" estimatedRowHeight="62" sectionHeaderHeight="7" estimatedSectionHeaderHeight="7" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-5h-4L5">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <color key="backgroundColor" name="background"/>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="B7f-5h-4L5" firstAttribute="top" secondItem="Onh-4t-Ori" secondAttribute="top" id="OPl-HE-XVq"/>
+                        <constraint firstAttribute="bottom" secondItem="B7f-5h-4L5" secondAttribute="bottom" id="hnq-OT-KQO"/>
+                        <constraint firstItem="B7f-5h-4L5" firstAttribute="leading" secondItem="Onh-4t-Ori" secondAttribute="leading" id="l21-El-Lun"/>
+                        <constraint firstAttribute="trailing" secondItem="B7f-5h-4L5" secondAttribute="trailing" id="rda-fp-cjq"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Onh-4t-Ori" secondAttribute="trailing" id="0Pi-p5-cfp"/>
+                <constraint firstAttribute="bottom" secondItem="Onh-4t-Ori" secondAttribute="bottom" id="9ET-Ae-JAW"/>
+                <constraint firstItem="VkP-p5-8St" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="Al0-Yo-PjQ"/>
+                <constraint firstItem="Onh-4t-Ori" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="D6T-Z3-YDe"/>
+                <constraint firstItem="Onh-4t-Ori" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="H1H-sl-DCo"/>
+                <constraint firstItem="VkP-p5-8St" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="LLk-Ae-CTQ"/>
+                <constraint firstAttribute="bottom" secondItem="VkP-p5-8St" secondAttribute="bottom" id="dQZ-6a-u0B"/>
+                <constraint firstAttribute="trailing" secondItem="VkP-p5-8St" secondAttribute="trailing" id="jqi-es-pJ6"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="I12-qE-llk"/>
+            <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

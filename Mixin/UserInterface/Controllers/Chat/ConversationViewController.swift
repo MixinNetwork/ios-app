@@ -550,6 +550,10 @@ class ConversationViewController: UIViewController {
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
                 openAppCard(appCard: appCard, sendUserId: message.userId)
+            } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
+                let vc = LocationPreviewViewController(location: location)
+                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+                navigationController?.pushViewController(container, animated: true)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -747,14 +751,14 @@ class ConversationViewController: UIViewController {
         conversationInputViewController.textView.replaceInputingMentionToken(with: user)
     }
     
-    func documentAction() {
+    func presentDocumentPicker() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
         vc.modalPresentationStyle = .formSheet
         present(vc, animated: true, completion: nil)
     }
     
-    func transferAction() {
+    func showTransfer() {
         guard let user = ownerUser else {
             return
         }
@@ -766,19 +770,25 @@ class ConversationViewController: UIViewController {
         }
         navigationController?.pushViewController(viewController, animated: true)
     }
-
-    func contactAction() {
+    
+    func showLocationPicker() {
+        let vc = LocationPickerViewController(input: conversationInputViewController)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+        navigationController?.pushViewController(container, animated: true)
+    }
+    
+    func showContactSelector() {
         let vc = ContactSelectorViewController.instance(conversationInputViewController: conversationInputViewController)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func callAction() {
+    func callOwnerUserIfPresent() {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
         CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: ownerUser)
     }
-
+    
     func pickPhotoOrVideoAction() {
         PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
             guard authorized, let weakSelf = self else {

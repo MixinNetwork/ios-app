@@ -127,10 +127,11 @@
                                         <rect key="frame" x="0.0" y="20" width="375" height="56"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O59-FP-w9y">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="56"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="57" height="56"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="9Bq-OZ-R0P"/>
+                                                    <constraint firstAttribute="width" constant="57" id="9Bq-OZ-R0P"/>
                                                 </constraints>
+                                                <inset key="imageEdgeInsets" minX="7" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 <state key="normal" image="ic_title_back"/>
                                                 <connections>
                                                     <action selector="backAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="FG6-cG-FYk"/>
@@ -533,7 +534,7 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="296" y="-21" width="68" height="68"/>
+                                        <rect key="frame" x="294" y="-21" width="70" height="68"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                         <connections>
@@ -1077,7 +1078,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PBM-aj-DFX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2329" y="1180"/>
+            <point key="canvasLocation" x="1572" y="1180"/>
         </scene>
         <!--Sticker Manager View Controller-->
         <scene sceneID="rOV-Ph-qLi">
@@ -1141,7 +1142,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="me9-bd-H71" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3142" y="1180"/>
+            <point key="canvasLocation" x="2329" y="1180"/>
         </scene>
         <!--User Handle View Controller-->
         <scene sceneID="JyD-2v-BR8">

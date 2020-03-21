@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LocationPickerViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBoxView" destination="Qp6-WW-zT7" id="UXL-vS-AsO"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Qp6-WW-zT7" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="20" y="2" width="306" height="40"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="jES-lu-njE"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6L7-5u-NLh">
+                    <rect key="frame" x="326" y="0.0" width="88" height="44"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="Cancel"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="cancelSearchAction:" destination="-1" eventType="touchUpInside" id="OUf-Pm-uN4"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="6L7-5u-NLh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="CU0-9f-Luj"/>
+                <constraint firstAttribute="bottom" secondItem="6L7-5u-NLh" secondAttribute="bottom" id="P3h-fV-UQI"/>
+                <constraint firstItem="6L7-5u-NLh" firstAttribute="leading" secondItem="Qp6-WW-zT7" secondAttribute="trailing" id="d89-BZ-iZs"/>
+                <constraint firstItem="Qp6-WW-zT7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="dBE-PR-f0O"/>
+                <constraint firstItem="Qp6-WW-zT7" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="kTf-9h-5dL"/>
+                <constraint firstAttribute="trailing" secondItem="6L7-5u-NLh" secondAttribute="trailing" id="rGg-Bd-kyh"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="139" y="131"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

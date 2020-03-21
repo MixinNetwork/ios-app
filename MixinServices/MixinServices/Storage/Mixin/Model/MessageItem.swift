@@ -88,6 +88,16 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
     public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
     
+    public lazy var location: Location? = {
+        guard category.hasSuffix("_LOCATION") else {
+            return nil
+        }
+        guard let json = content.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(Location.self, from: json)
+    }()
+    
     public init() {
         
     }

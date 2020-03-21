@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="location" rowHeight="62" id="H5s-cv-4u9" customClass="LocationCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="H5s-cv-4u9" id="5TC-nX-VON">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Jpg-ed-hwO">
+                        <rect key="frame" x="20" y="9" width="374" height="44"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DbX-BE-BGi">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_location_category" translatesAutoresizingMaskIntoConstraints="NO" id="6bV-cR-mzR">
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xOD-0i-bYT" customClass="RenderingModeSwitchableImageView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="4" y="4" width="36" height="36"/>
+                                        <color key="tintColor" name="text"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="xOD-0i-bYT" secondAttribute="trailing" constant="4" id="3u6-M2-UE5"/>
+                                    <constraint firstItem="6bV-cR-mzR" firstAttribute="top" secondItem="DbX-BE-BGi" secondAttribute="top" id="5WE-8S-vRa"/>
+                                    <constraint firstAttribute="width" constant="44" id="CR5-pZ-HBP"/>
+                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="leading" secondItem="DbX-BE-BGi" secondAttribute="leading" constant="4" id="ICq-t4-brF"/>
+                                    <constraint firstAttribute="trailing" secondItem="6bV-cR-mzR" secondAttribute="trailing" id="Lc8-W3-9gS"/>
+                                    <constraint firstItem="6bV-cR-mzR" firstAttribute="leading" secondItem="DbX-BE-BGi" secondAttribute="leading" id="Nob-vl-Gnf"/>
+                                    <constraint firstAttribute="bottom" secondItem="6bV-cR-mzR" secondAttribute="bottom" id="VR0-jb-zRp"/>
+                                    <constraint firstAttribute="bottom" secondItem="xOD-0i-bYT" secondAttribute="bottom" constant="4" id="cJj-Mu-U5Z"/>
+                                    <constraint firstAttribute="width" secondItem="DbX-BE-BGi" secondAttribute="height" id="exL-Jy-FZM"/>
+                                    <constraint firstItem="xOD-0i-bYT" firstAttribute="top" secondItem="DbX-BE-BGi" secondAttribute="top" constant="4" id="sDs-Or-xtD"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="2Wf-ca-iF8">
+                                <rect key="frame" x="60" y="3" width="314" height="38"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Your Current Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sfw-aJ-opy">
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="18"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accurate to 65m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ods-5v-ffs">
+                                        <rect key="frame" x="0.0" y="22" width="314" height="16"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                        <color key="textColor" name="text_accessory"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="Jpg-ed-hwO" firstAttribute="centerY" secondItem="5TC-nX-VON" secondAttribute="centerY" id="62k-bK-JRm"/>
+                    <constraint firstItem="Jpg-ed-hwO" firstAttribute="leading" secondItem="5TC-nX-VON" secondAttribute="leading" constant="20" id="T2n-u0-swC"/>
+                    <constraint firstAttribute="trailing" secondItem="Jpg-ed-hwO" secondAttribute="trailing" constant="20" id="p1W-QI-nJz"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentStackView" destination="Jpg-ed-hwO" id="T1z-CM-lfs"/>
+                <outlet property="iconBackgroundImageView" destination="6bV-cR-mzR" id="Zet-yy-RgI"/>
+                <outlet property="iconImageView" destination="xOD-0i-bYT" id="aYB-Qa-Vfy"/>
+                <outlet property="subtitleLabel" destination="Ods-5v-ffs" id="DpX-Sx-tVb"/>
+                <outlet property="titleLabel" destination="Sfw-aJ-opy" id="b0X-YK-1Zl"/>
+            </connections>
+            <point key="canvasLocation" x="887" y="196"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Conversation/bg_location_category" width="42" height="42"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

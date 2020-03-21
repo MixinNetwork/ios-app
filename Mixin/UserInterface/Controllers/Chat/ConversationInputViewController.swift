@@ -461,6 +461,23 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    func send(location: Location) throws {
+        let conversationId = dataSource.conversationId
+        let ownerUser = dataSource.ownerUser
+        let isGroup = dataSource.conversation.isGroup()
+        let quoteMessageId = quote?.message.messageId
+        quote = nil
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
+                                            conversationId: conversationId,
+                                            userId: myUserId)
+        let jsonData = try JSONEncoder().encode(location)
+        message.content = String(data: jsonData, encoding: .utf8)
+        message.quoteMessageId = quoteMessageId
+        SendMessageService.shared.sendMessage(message: message,
+                                              ownerUser: ownerUser,
+                                              isGroupMessage: isGroup)
+    }
+    
 }
 
 // MARK: - Callbacks
@@ -765,11 +782,11 @@ extension ConversationInputViewController {
     
     private func reloadFixedExtensions() {
         if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
-            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact, .location]
         } else if let app = opponentApp, app.creatorId == myUserId {
-            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact, .location]
         } else {
-            extensionViewController.fixedExtensions = [.camera, .file, .contact]
+            extensionViewController.fixedExtensions = [.camera, .file, .contact, .location]
         }
     }
     

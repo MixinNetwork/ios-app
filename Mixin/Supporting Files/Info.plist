@@ -67,6 +67,8 @@
 		<string>yanxuan</string>
 		<string>taobaotravel</string>
 		<string>mogujie</string>
+		<string>iosamap</string>
+		<string>comgooglemaps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -81,6 +83,8 @@
 	<string>Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Mixin uses Face ID to authorize payment</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Mixin uses location to share with your contacts.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Mixin uses your microphone to record voice messages to share with your contacts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

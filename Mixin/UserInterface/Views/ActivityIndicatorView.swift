@@ -45,6 +45,9 @@ class ActivityIndicatorView: UIView {
         return usesLargerStyle ? 37 : 20
     }
     
+    // Indicator will stay in center vertically if indicatorCenterY is nil
+    var indicatorCenterY: CGFloat?
+    
     private var indicatorLayer: CAShapeLayer?
     private var _isAnimating = false
     
@@ -74,7 +77,11 @@ class ActivityIndicatorView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        indicatorLayer?.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        if let y = indicatorCenterY {
+            indicatorLayer?.position = CGPoint(x: bounds.midX, y: y)
+        } else {
+            indicatorLayer?.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
     
     override func didMoveToWindow() {

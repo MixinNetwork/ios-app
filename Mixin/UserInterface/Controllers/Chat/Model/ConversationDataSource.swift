@@ -893,6 +893,8 @@ extension ConversationDataSource {
                 viewModel = LiveMessageViewModel(message: message)
             } else if message.category.hasSuffix("_POST") {
                 viewModel = PostMessageViewModel(message: message)
+            } else if message.category.hasSuffix("_LOCATION") {
+                viewModel = LocationMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

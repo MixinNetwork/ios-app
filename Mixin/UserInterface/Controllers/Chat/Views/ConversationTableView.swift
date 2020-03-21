@@ -34,6 +34,8 @@ extension MessageItem {
             } else {
                 actions = [.reply, .delete]
             }
+        } else if category.hasSuffix("_LOCATION") {
+            actions = [.forward, .reply, .delete]
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
@@ -304,6 +306,7 @@ class ConversationTableView: UITableView {
         register(ContactMessageCell.self, forCellReuseIdentifier: ReuseId.contact.rawValue)
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
+        register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -347,6 +350,7 @@ extension ConversationTableView {
         case audio = "AudioMessageCell"
         case live = "LiveMessageCell"
         case post = "PostMessageCell"
+        case location = "LocationMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
         case header = "DateHeader"
         
@@ -369,6 +373,8 @@ extension ConversationTableView {
                 self = .live
             } else if category.hasSuffix("_POST") {
                 self = .post
+            } else if category.hasSuffix("_LOCATION") {
+                self = .location
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

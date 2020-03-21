@@ -15,12 +15,10 @@ class DetailInfoMessageCell: MessageCell {
     let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
     let highlightAnimationDuration: TimeInterval = 0.2
     
-    var trailingInfoColor: UIColor {
-        .accessoryText
-    }
-    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
+        encryptedImageView.tintColor = viewModel.trailingInfoColor
+        timeLabel.textColor = viewModel.trailingInfoColor
         if let viewModel = viewModel as? DetailInfoMessageViewModel {
             backgroundImageView.frame = viewModel.backgroundImageFrame
             backgroundImageView.image = viewModel.backgroundImage
@@ -63,14 +61,12 @@ class DetailInfoMessageCell: MessageCell {
         contentView.addSubview(fullnameButton)
         statusImageView.contentMode = .left
         contentView.addSubview(statusImageView)
-        encryptedImageView.tintColor = trailingInfoColor
         encryptedImageView.alpha = 0.7
         contentView.addSubview(encryptedImageView)
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
-        timeLabel.textColor = trailingInfoColor
         contentView.addSubview(timeLabel)
         contentView.addSubview(identityIconImageView)
     }

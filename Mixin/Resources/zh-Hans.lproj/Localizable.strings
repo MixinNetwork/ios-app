@@ -234,11 +234,17 @@
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_send_video_failed" = "发送视频失败，请稍后重试";
 "chat_send_audio_failed" = "发送语音失败，请稍后重试";
+"chat_send_location_failed" = "发送位置失败，请稍后重试";
+"chat_user_location_undetermined" = "目前无法确定位置，请稍候重试";
+"chat_open_external_maps_apple" = "在地图中打开";
+"chat_open_external_maps_google" = "在 Google Maps 中打开";
+"chat_open_external_maps_gaode" = "在高德地图中打开";
 "chat_menu_camera" = "相机";
 "chat_menu_photo" = "照片 & 视频";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
 "chat_menu_developer" = "开发者";
+"chat_menu_location" = "位置";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
 "chat_photo_save" = "保存到相册";
@@ -249,6 +255,7 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_quote_type_live" = "直播";
+"chat_quote_type_location" = "位置";
 "chat_search_giphy" = "在 GIPHY 上搜索";
 "chat_restore" = "恢复";
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
@@ -272,6 +279,13 @@
 "chat_app_reception_button_hi" = "打招呼";
 "chat_app_card_suspicious_link" = "可疑链接";
 "chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
+"chat_location_send_current" = "发送当前位置";
+"chat_location_accuracy" = "精确到 %@";
+"chat_location_send_user_picked" = "发送这个位置";
+"chat_location_reverse_geocode_processing" = "正在定位…";
+"chat_location_unnamed" = "未命名地点";
+"chat_location_distance" = "距离%@";
+"chat_location_search_no_result" = "找不到“%@”\n换个名字试试吧";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -722,6 +736,7 @@
 "notification_content_audio" = "[语音]";
 "notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
+"notification_content_location" = "[位置]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
@@ -736,6 +751,7 @@
 "alert_key_contact_audio_call_message" = "邀请你进行语音通话";
 "alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
 "alert_key_contact_post_message" = "发来一篇文章";
+"alert_key_contact_location_message" = "发来一处位置";
 
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
@@ -747,6 +763,7 @@
 "alert_key_group_contact_message" = "%@分享了一个联系人";
 "alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_group_post_message" = "%@发来了一篇文章";
+"alert_key_group_location_message" = "%@发来一处位置";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

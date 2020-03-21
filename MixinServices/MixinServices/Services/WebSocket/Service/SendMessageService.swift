@@ -4,7 +4,7 @@ import WCDBSwift
 public class SendMessageService: MixinService {
 
     public static let shared = SendMessageService()
-    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST"]
+    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
@@ -33,6 +33,7 @@ public class SendMessageService: MixinService {
     public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true) {
         let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
             || message.category == MessageCategory.PLAIN_POST.rawValue
+            || message.category == MessageCategory.PLAIN_LOCATION.rawValue
         let content = shouldEncodeContent ? data?.base64Encoded() : data
 
         MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
@@ -493,6 +494,7 @@ extension SendMessageService {
             if blazeMessage.params?.data == nil {
                 let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
                     || message.category == MessageCategory.PLAIN_POST.rawValue
+                    || message.category == MessageCategory.PLAIN_LOCATION.rawValue
                 if shouldEncodeContent {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {

@@ -35,6 +35,8 @@ extension SendMessageService {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_LIVE.rawValue :  MessageCategory.PLAIN_LIVE.rawValue
         } else if msg.category.hasSuffix("_POST") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_POST.rawValue :  MessageCategory.PLAIN_POST.rawValue
+        } else if msg.category.hasSuffix("_LOCATION") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_LOCATION.rawValue :  MessageCategory.PLAIN_LOCATION.rawValue
         }
 
         DispatchQueue.global().async {
@@ -52,7 +54,7 @@ extension SendMessageService {
                 }
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             }
-            if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
+            if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE", "_LOCATION"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                 SendMessageService.shared.sendMessage(message: msg, data: msg.content)
             } else if msg.category.hasSuffix("_IMAGE") {
                 let jobId = SendMessageService.shared.saveUploadJob(message: msg)

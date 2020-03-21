@@ -7,7 +7,7 @@ class AssetIconView: UIView {
     @IBInspectable var chainIconOutlineWidth: CGFloat = 2
     
     let iconImageView = UIImageView()
-    let chainBackgroundView = WhiteBackgroundedView()
+    let chainBackgroundView = SolidBackgroundColoredView()
     let chainImageView = UIImageView()
     let shadowOffset: CGFloat = 5
     

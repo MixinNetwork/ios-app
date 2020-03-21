@@ -9,10 +9,14 @@ class ShareRecipientViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var progressLabel: UILabel!
 
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
     private let headerReuseId = "header"
+
+    private weak var timer: Timer?
 
     private var sectionTitles = [R.string.localizable.chat_forward_chats(), R.string.localizable.chat_forward_contacts()]
     private var conversations = [[RecipientSearchItem]]()
@@ -21,6 +25,7 @@ class ShareRecipientViewController: UIViewController {
     private var isSearching: Bool {
         return searchingKeyword != nil
     }
+    private var exportSession: AssetExportSession?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +44,10 @@ class ShareRecipientViewController: UIViewController {
         searchTextField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         tableView.tableFooterView = UIView()
         initData()
+    }
+
+    deinit {
+        stopTimer()
     }
 
     func initData() {
@@ -146,6 +155,7 @@ extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let conversation = isSearching ? searchResults[indexPath.row] : conversations[indexPath.section][indexPath.row]
         shareAction(conversation: conversation)
     }
@@ -163,6 +173,9 @@ extension ShareRecipientViewController {
             return
         }
 
+        view.endEditing(true)
+        loadingView.isHidden = false
+
         let supportedTextUTIs = [kUTTypePlainText as String,
                                  kUTTypeText as String]
         let supportedImageUTI = kUTTypeImage as String
@@ -179,6 +192,8 @@ extension ShareRecipientViewController {
             }
             for attachment in attachments {
                 if attachment.hasItemConformingToTypeIdentifier(kUTTypeMovie as String) {
+                    progressLabel.text = "1%"
+                    progressLabel.isHidden = false
                     dispatchGroup.enter()
                     attachment.loadItem(forTypeIdentifier: kUTTypeMovie as String, options: nil) { [weak self](item, error) in
                         if let err = error {
@@ -200,9 +215,24 @@ extension ShareRecipientViewController {
                             if exportSession.status == .completed {
                                 self?.shareVideoMessage(url: videoUrl, conversation: conversation, messageId: messageId)
                             }
+                            self?.stopTimer()
                             dispatchGroup.leave()
                         }
+                        self?.exportSession = exportSession
                     }
+                    stopTimer()
+                    let timer = Timer(timeInterval: 1, repeats: true, block: { [weak self] (timer) in
+                        guard let progress = self?.exportSession?.progress else {
+                            self?.stopTimer()
+                            return
+                        }
+                        var safeProgress = Int(progress * 100)
+                        safeProgress = max(safeProgress, 1)
+                        safeProgress = min(safeProgress, 100)
+                        self?.progressLabel.text = "\(safeProgress)%"
+                    })
+                    RunLoop.main.add(timer, forMode: .common)
+                    self.timer = timer
                 } else {
                     guard let typeIdentifier = attachment.registeredTypeIdentifiers.first else {
                         continue
@@ -255,6 +285,11 @@ extension ShareRecipientViewController {
         dispatchGroup.notify(queue: .main) { [weak self] in
             self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         }
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 
     private func shareTextMessage(content: String, conversation: RecipientSearchItem) {

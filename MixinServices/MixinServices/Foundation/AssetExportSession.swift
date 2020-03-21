@@ -37,8 +37,8 @@ public class AssetExportSession {
 
 
     public private(set) var status = Status.unknown
-    private(set) var error: Error?
-    private(set) var progress: Double = 0
+    public private(set) var error: Error?
+    public private(set) var progress: Double = 0
 
     private let queue = DispatchQueue(label: "one.mixin.asset.export")
     private let epsilon = CGFloat(Double.ulpOfOne)

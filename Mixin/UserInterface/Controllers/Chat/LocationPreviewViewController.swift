@@ -44,6 +44,7 @@ class LocationPreviewViewController: LocationViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.isScrollEnabled = false
     }
     
     override func viewSafeAreaInsetsDidChange() {

@@ -29,22 +29,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var qrCodeString: String?
     
     private lazy var notificationController = NotificationController(delegate: self)
-    private lazy var videoSettings: [String: Any] = [
-        AVVideoCodecKey: AVVideoCodecType.h264,
-        AVVideoWidthKey: 1280,
-        AVVideoHeightKey: 720,
-        AVVideoCompressionPropertiesKey: [
-            AVVideoAverageBitRateKey: 1500000,
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
-        ]
-    ]
-    private lazy var audioSettings: [String: Any] = [
-        AVFormatIDKey: kAudioFormatMPEG4AAC,
-        AVNumberOfChannelsKey: 2,
-        AVSampleRateKey: 44100,
-        AVEncoderBitRateKey: 128000
-    ]
-    
+
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -222,7 +207,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         if let asset = self.videoAsset {
             let messageId = UUID().uuidString.lowercased()
             let outputURL = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.mp4.withDot)
-            let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: outputURL)
+            let exportSession = AssetExportSession(asset: asset, outputURL: outputURL)
             exportSession.exportAsynchronously { [weak self] in
                 guard let weakSelf = self else {
                     return

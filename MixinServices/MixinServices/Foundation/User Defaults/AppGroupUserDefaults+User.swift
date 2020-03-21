@@ -37,6 +37,7 @@ extension AppGroupUserDefaults {
             case autoDownloadFiles = "auto_download_files"
 
             case hasRecoverMedia = "has_recover_media"
+            case hasRestoreUploadAttachment = "has_restore_upload_attachment"
         }
         
         public static let version = 18
@@ -125,6 +126,9 @@ extension AppGroupUserDefaults {
 
         @Default(namespace: .user, key: Key.hasRecoverMedia, defaultValue: false)
         public static var hasRecoverMedia: Bool
+
+        @Default(namespace: .user, key: Key.hasRestoreUploadAttachment, defaultValue: false)
+        public static var hasRestoreUploadAttachment: Bool
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

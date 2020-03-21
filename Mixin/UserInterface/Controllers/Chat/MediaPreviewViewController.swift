@@ -2,6 +2,7 @@ import UIKit
 import Photos
 import YYImage
 import CoreServices
+import MixinServices
 
 final class MediaPreviewViewController: UIViewController {
     

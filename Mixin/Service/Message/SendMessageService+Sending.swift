@@ -44,11 +44,7 @@ extension SendMessageService {
                 }
                 let conversationId = ConversationDAO.shared.makeConversationId(userId: account.user_id, ownerUserId: user.userId)
                 msg.conversationId = conversationId
-
-                let createdAt = Date().toUTCString()
-                let participants = [ParticipantResponse(userId: user.userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: account.user_id, role: "", createdAt: createdAt)]
-                let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: user.userId, muteUntil: "")
-                ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
+                ConversationDAO.shared.createConversation(conversation: ConversationResponse(conversationId: conversationId, userId: user.userId, avatarUrl: user.avatarUrl), targetStatus: .START)
             }
             if !message.category.hasPrefix("WEBRTC_") {
                 if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > 64 * 1024 {

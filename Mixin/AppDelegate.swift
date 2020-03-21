@@ -80,6 +80,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
+        if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
+            DispatchQueue.global().async {
+                guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+                    return
+                }
+                guard AppGroupUserDefaults.User.hasRestoreUploadAttachment else {
+                    return
+                }
+                AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
+                JobService.shared.restoreUploadJobs()
+            }
+        }
         WebSocketService.shared.connectIfNeeded()
 
         if let chatVC = UIApplication.currentConversationViewController() {

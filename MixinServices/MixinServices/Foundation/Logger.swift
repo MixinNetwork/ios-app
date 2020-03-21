@@ -5,6 +5,14 @@ public enum Logger {
     
     private static let queue = DispatchQueue(label: "one.mixin.services.queue.log")
     private static let systemLog = "system"
+    private static let errorLog = "error"
+
+    public static func write(error: Error, extra: String = "") {
+        queue.async {
+            makeLogDirectoryIfNeeded()
+            writeLog(filename: errorLog, log: String(describing: error), newSection: true)
+        }
+    }
     
     public static func write(log: String, newSection: Bool = false) {
         queue.async {
@@ -75,9 +83,15 @@ public enum Logger {
         makeLogDirectoryIfNeeded()
         let conversationFile = AppGroupContainer.logUrl.appendingPathComponent("\(conversationId).txt")
         let systemFile = AppGroupContainer.logUrl.appendingPathComponent("\(systemLog).txt")
+        let errorFile = AppGroupContainer.logUrl.appendingPathComponent("\(errorLog).txt")
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
+
+        var logFiles = [conversationFile, systemFile]
+        if FileManager.default.fileSize(errorFile.path) > 0 {
+            logFiles += [errorFile]
+        }
         do {
-            return try Zip.quickZipFiles([conversationFile, systemFile], fileName: filename)
+            return try Zip.quickZipFiles(logFiles, fileName: filename)
         } catch {
             #if DEBUG
             print("======FileManagerExtension...exportLog...error:\(error)")

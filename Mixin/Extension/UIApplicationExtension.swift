@@ -64,6 +64,8 @@ extension UIApplication {
             return "background"
         case .inactive:
             return "inactive"
+        @unknown default:
+            return "unknown"
         }
     }
 }

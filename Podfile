@@ -36,3 +36,12 @@ target 'MixinNotificationService' do
   
   mixin_services
 end
+
+target 'MixinShare' do
+  use_frameworks!
+  inhibit_all_warnings!
+
+  pod 'R.swift'
+  mixin_services
+end
+

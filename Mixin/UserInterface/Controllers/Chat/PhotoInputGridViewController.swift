@@ -1,6 +1,7 @@
 import UIKit
 import Photos
 import MobileCoreServices
+import MixinServices
 
 class PhotoInputGridViewController: UIViewController, ConversationAccessible, ConversationInputAccessible {
     

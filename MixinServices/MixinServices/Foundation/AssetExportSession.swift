@@ -1,10 +1,10 @@
 import AVFoundation
 
-class AssetExportSession {
-    
-    typealias CompletionHandler = () -> Void
-    
-    enum Status {
+public class AssetExportSession {
+
+    public typealias CompletionHandler = () -> Void
+
+    public enum Status {
         case unknown
         case waiting
         case exporting
@@ -12,22 +12,37 @@ class AssetExportSession {
         case failed
         case cancelled
     }
-    
+
     let asset: AVAsset
     let outputURL: URL
-    let videoSettings: [String: Any]
-    let audioSettings: [String: Any]
     let fileType = AVFileType.mp4
     let timeRange = CMTimeRange(start: .zero, end: .positiveInfinity)
     let shouldOptimizeForNetworkUse = true
-    
-    private(set) var status = Status.unknown
-    private(set) var error: Error?
-    private(set) var progress: Double = 0
-    
+
+    private let videoSettings: [String: Any] = [
+        AVVideoCodecKey: AVVideoCodecType.h264,
+        AVVideoWidthKey: 1280,
+        AVVideoHeightKey: 720,
+        AVVideoCompressionPropertiesKey: [
+            AVVideoAverageBitRateKey: 1500000,
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
+        ]
+    ]
+    private let audioSettings: [String: Any] = [
+        AVFormatIDKey: kAudioFormatMPEG4AAC,
+        AVNumberOfChannelsKey: 2,
+        AVSampleRateKey: 44100,
+        AVEncoderBitRateKey: 128000
+    ]
+
+
+    public private(set) var status = Status.unknown
+    public private(set) var error: Error?
+    public private(set) var progress: Double = 0
+
     private let queue = DispatchQueue(label: "one.mixin.asset.export")
     private let epsilon = CGFloat(Double.ulpOfOne)
-    
+
     private var completionHandler: CompletionHandler?
     private var reader: AVAssetReader!
     private var writer: AVAssetWriter!
@@ -36,15 +51,13 @@ class AssetExportSession {
     private var videoInput: AVAssetWriterInput!
     private var audioOutput: AVAssetReaderAudioMixOutput?
     private var audioInput: AVAssetWriterInput!
-    
-    init(asset: AVAsset, videoSettings: [String: Any], audioSettings: [String: Any], outputURL: URL) {
+
+    public init(asset: AVAsset, outputURL: URL) {
         self.asset = asset
-        self.videoSettings = videoSettings
-        self.audioSettings = audioSettings
         self.outputURL = outputURL
     }
-    
-    func exportAsynchronously(completionHandler handler: @escaping CompletionHandler) {
+
+    public func exportAsynchronously(completionHandler handler: @escaping CompletionHandler) {
         status = .waiting
         self.completionHandler = handler
         do {
@@ -68,10 +81,10 @@ class AssetExportSession {
                     frameRate = 30
                 }
                 composition.frameDuration = CMTime(value: 1, timescale: frameRate)
-                
+
                 var naturalSize = track.naturalSize
                 var transform = track.preferredTransform
-                
+
                 let rotation = atan2(transform.b, transform.a)
                 if transform.tx < 0 && abs(transform.tx) != abs(naturalSize.width) && abs(transform.tx) != abs(naturalSize.height) {
                     transform.tx = 0
@@ -95,13 +108,13 @@ class AssetExportSession {
                         }
                     }
                 }
-                
+
                 if abs(rotation - .pi / 2) < epsilon || abs(rotation + .pi / 2) < epsilon {
                     swap(&naturalSize.width, &naturalSize.height)
                 }
-                
+
                 composition.renderSize = naturalSize
-                
+
                 let targetWidth = CGFloat((videoSettings[AVVideoWidthKey] as! NSNumber).floatValue)
                 let targetHeight = CGFloat((videoSettings[AVVideoHeightKey] as! NSNumber).floatValue)
                 let longSideRatio = max(targetWidth, targetHeight) / max(naturalSize.width, naturalSize.height)
@@ -116,7 +129,7 @@ class AssetExportSession {
                 }
                 sizeAdjustedVideoSettings[AVVideoWidthKey] = targetSize.width
                 sizeAdjustedVideoSettings[AVVideoHeightKey] = targetSize.height
-                
+
                 let xRatio = targetSize.width / naturalSize.width
                 let yRatio = targetSize.height / naturalSize.height
                 let ratio = min(xRatio, yRatio)
@@ -125,14 +138,14 @@ class AssetExportSession {
                 var matrix = CGAffineTransform(translationX: offset.x / xRatio, y: offset.y / yRatio)
                 matrix = matrix.scaledBy(x: ratio / xRatio, y: ratio / yRatio)
                 transform = transform.concatenating(matrix)
-                
+
                 let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: track)
                 layerInstruction.setTransform(transform, at: .zero)
                 let instruction = AVMutableVideoCompositionInstruction()
                 instruction.timeRange = CMTimeRange(start: .zero, duration: asset.duration)
                 instruction.layerInstructions = [layerInstruction]
                 composition.instructions = [instruction]
-                
+
                 // Video output
                 let videoOutput = AVAssetReaderVideoCompositionOutput(videoTracks: videoTracks, videoSettings: nil)
                 videoOutput.alwaysCopiesSampleData = false
@@ -164,12 +177,12 @@ class AssetExportSession {
                     writer.add(audioInput)
                 }
             }
-            
+
             writer.startWriting()
             reader.startReading()
             writer.startSession(atSourceTime: timeRange.start)
             status = .exporting
-            
+
             var videoCompleted = false
             var audioCompleted = false
             if let videoOutput = videoOutput {
@@ -202,7 +215,7 @@ class AssetExportSession {
             handler()
         }
     }
-    
+
     private func encodeSamples(from output: AVAssetReaderOutput, to input: AVAssetWriterInput) -> Bool {
         while input.isReadyForMoreMediaData {
             if let buffer = output.copyNextSampleBuffer() {
@@ -226,7 +239,7 @@ class AssetExportSession {
         }
         return true
     }
-    
+
     private func finish() {
         guard reader.status != .cancelled && writer.status != .cancelled else {
             return
@@ -240,7 +253,7 @@ class AssetExportSession {
             writer.finishWriting(completionHandler: complete)
         }
     }
-    
+
     private func complete() {
         if writer.status == .failed || writer.status == .cancelled {
             try? FileManager.default.removeItem(at: outputURL)
@@ -251,5 +264,5 @@ class AssetExportSession {
         completionHandler?()
         completionHandler = nil
     }
-    
+
 }

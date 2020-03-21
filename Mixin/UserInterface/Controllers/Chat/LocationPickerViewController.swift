@@ -48,12 +48,14 @@ class LocationPickerViewController: LocationViewController {
         }
     }
     
+    // meters according to https://developer.foursquare.com/docs/api/venues/search
+    private let locationSearchRadius = 1000
+    
     private let scrollToUserLocationButton = UIButton()
     private let pinImage = R.image.conversation.ic_annotation_pin()!
     private let nearbyLocationSearchingIndicator = ActivityIndicatorView()
     private let searchResultAnnotationReuseId = "search"
     private let locationManager = CLLocationManager()
-    private let locationSearchRadius = 5000 // km according to foursquare documentation
     
     private lazy var geocoder = CLGeocoder()
     private lazy var searchView = R.nib.locationSearchView(owner: self)!

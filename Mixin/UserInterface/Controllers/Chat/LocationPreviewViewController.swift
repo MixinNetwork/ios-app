@@ -5,7 +5,10 @@ import MapKit
 class LocationPreviewViewController: LocationViewController {
     
     override var minTableWrapperMaskHeight: CGFloat {
-        tableView.rowHeight + tableView.sectionHeaderHeight + view.safeAreaInsets.bottom
+        tableView.rowHeight
+            + tableView.sectionHeaderHeight
+            + tableView.contentInset.bottom
+            + view.safeAreaInsets.bottom
     }
     
     // https://developers.google.com/maps/documentation/urls/ios-urlscheme
@@ -45,16 +48,26 @@ class LocationPreviewViewController: LocationViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.isScrollEnabled = false
+        updateTableViewBottomInsetIfNeeded()
     }
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         resetTableWrapperMaskHeightAndHeaderView()
+        updateTableViewBottomInsetIfNeeded()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         openLocationInExternalMapApp()
+    }
+    
+    private func updateTableViewBottomInsetIfNeeded() {
+        if view.safeAreaInsets.bottom < 10 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
     }
     
     private func openLocationInExternalMapApp() {

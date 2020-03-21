@@ -11,6 +11,13 @@ class RecipientCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        selectedBackgroundView = UIView(frame: self.bounds)
+        selectedBackgroundView?.backgroundColor = R.color.background_selection()
+    }
+
     func render(conversation: RecipientSearchItem) {
         setAvatarImage(conversation: conversation)
         titleLabel.text = conversation.name

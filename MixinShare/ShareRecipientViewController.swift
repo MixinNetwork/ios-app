@@ -30,7 +30,7 @@ class ShareRecipientViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard LoginManager.shared.isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             cancelShareAction()
             return
         }
@@ -192,7 +192,6 @@ extension ShareRecipientViewController {
         let supportedPostUTIs = [kUTTypeSourceCode as String,
                                  kUTTypeScript as String,
                                  "dyn.age80s52"]    //golang
-        let supportedFileUTI = kUTTypeFileURL as String
 
         let dispatchGroup = DispatchGroup()
 
@@ -266,26 +265,26 @@ extension ShareRecipientViewController {
                                 return
                             }
                             weakSelf.sharePostMessage(url: url, conversation: conversation)
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.sharePhotoMessage(url: url, conversation: conversation, typeIdentifier: typeIdentifier as CFString)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             guard let content = item as? String else {
                                 return
                             }
                             weakSelf.shareTextMessage(content: content, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
-                            guard let url = item as? URL else {
-                                return
-                            }
-                            weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeMovie as String) {
-                            guard let url = item as? URL else {
-                                return
-                            }
-                            weakSelf.sharePhotoMessage(url: url, conversation: conversation, typeIdentifier: typeIdentifier as CFString)
-                        } else {
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeFileURL as String) {
                             guard let url = item as? URL else {
                                 return
                             }
                             weakSelf.shareFileMessage(url: url, conversation: conversation)
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
                         }
                     }
                 }
@@ -434,10 +433,11 @@ extension ShareRecipientViewController {
         }
         MessageDAO.shared.insertMessage(message: msg, messageSource: "")
 
-        if msg.category.hasSuffix("_TEXT") {
+        if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {
             SendMessageService.shared.sendMessage(message: msg, data: msg.content, immediatelySend: false)
         } else if ["_IMAGE", "_VIDEO", "_DATA"].contains(where: msg.category.hasSuffix) {
             SendMessageService.shared.saveUploadJob(message: msg)
+            AppGroupUserDefaults.User.hasRestoreUploadAttachment = true
         }
     }
 

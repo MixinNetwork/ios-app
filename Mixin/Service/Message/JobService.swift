@@ -17,6 +17,9 @@ class JobService {
 
                 JobService.shared.checkConversations()
                 JobService.shared.restoreUploadJobs()
+            } else if AppGroupUserDefaults.User.hasRestoreUploadAttachment {
+                AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
+                JobService.shared.restoreUploadJobs()
             }
             JobService.shared.recoverMediaJobs()
         }
@@ -44,7 +47,7 @@ class JobService {
         }
     }
 
-    private func restoreUploadJobs() {
+    func restoreUploadJobs() {
         let jobs = JobDAO.shared.nextJobs(category: .Task, action: .UPLOAD_ATTACHMENT)
         for (jobId, messageId) in jobs {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {

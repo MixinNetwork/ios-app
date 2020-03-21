@@ -21,10 +21,10 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="56"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vDt-2V-7MF">
-                                        <rect key="frame" x="16" y="12" width="318" height="32"/>
+                                        <rect key="frame" x="16" y="10" width="318" height="36"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="BaI-l9-VZZ">
-                                                <rect key="frame" x="16" y="0.0" width="298" height="32"/>
+                                                <rect key="frame" x="16" y="0.0" width="298" height="36"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
@@ -39,7 +39,7 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="16"/>
+                                                <integer key="value" value="18"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
@@ -57,8 +57,8 @@
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
-                                    <constraint firstItem="vDt-2V-7MF" firstAttribute="top" secondItem="Rq4-GG-Kfb" secondAttribute="top" constant="12" id="3uD-Kl-aQ1"/>
-                                    <constraint firstAttribute="bottom" secondItem="vDt-2V-7MF" secondAttribute="bottom" constant="12" id="JgP-UV-qzS"/>
+                                    <constraint firstItem="vDt-2V-7MF" firstAttribute="top" secondItem="Rq4-GG-Kfb" secondAttribute="top" constant="10" id="3uD-Kl-aQ1"/>
+                                    <constraint firstAttribute="bottom" secondItem="vDt-2V-7MF" secondAttribute="bottom" constant="10" id="JgP-UV-qzS"/>
                                     <constraint firstAttribute="height" constant="56" id="L0L-Z2-JDS"/>
                                     <constraint firstAttribute="trailing" secondItem="rIb-eD-fqO" secondAttribute="trailing" id="TEC-5n-rtd"/>
                                     <constraint firstItem="vDt-2V-7MF" firstAttribute="leading" secondItem="Rq4-GG-Kfb" secondAttribute="leading" constant="16" id="cr6-Z6-jF2"/>

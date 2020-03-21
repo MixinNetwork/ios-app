@@ -14,14 +14,13 @@ class ShareRecipientViewController: UIViewController {
     private let initDataOperation = BlockOperation()
     private let headerReuseId = "header"
 
+    private var sectionTitles = [R.string.localizable.chat_forward_chats(), R.string.localizable.chat_forward_contacts()]
+    private var conversations = [[RecipientSearchItem]]()
+    private var searchResults = [RecipientSearchItem]()
     private var searchingKeyword: String?
     private var isSearching: Bool {
         return searchingKeyword != nil
     }
-    private var sectionTitles = [R.string.localizable.chat_forward_chats(), R.string.localizable.chat_forward_contacts()]
-    private var conversations = [[RecipientSearchItem]]()
-
-    private var searchResults = [RecipientSearchItem]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -164,14 +163,13 @@ extension ShareRecipientViewController {
             return
         }
 
-        let supportedTextUTIs = [kUTTypeUTF8PlainText as String,
-                                 kUTTypePlainText as String,
+        let supportedTextUTIs = [kUTTypePlainText as String,
                                  kUTTypeText as String]
-
-        let supportedImageUTIs = [kUTTypePNG as String,
-                                  kUTTypeJPEG as String,
-                                  kUTTypeImage as String,
-                                  kUTTypeGIF as String]
+        let supportedImageUTI = kUTTypeImage as String
+        let supportedPostUTIs = [kUTTypeSourceCode as String,
+                                 kUTTypeScript as String,
+                                 "dyn.age80s52"]    //golang
+        let supportedFileUTI = kUTTypeFileURL as String
 
         let dispatchGroup = DispatchGroup()
 
@@ -223,17 +221,22 @@ extension ShareRecipientViewController {
                             return
                         }
 
-                        if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
+                        if supportedPostUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.sharePostMessage(url: url, conversation: conversation)
+                        } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             guard let content = item as? String else {
                                 return
                             }
                             weakSelf.shareTextMessage(content: content, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
                             guard let url = item as? URL else {
                                 return
                             }
                             weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
-                        } else if supportedImageUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeMovie as String) {
                             guard let url = item as? URL else {
                                 return
                             }
@@ -258,6 +261,16 @@ extension ShareRecipientViewController {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_TEXT : .PLAIN_TEXT
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         message.content = content
+        sendMessage(message: message, conversation: conversation)
+    }
+
+    private func sharePostMessage(url: URL, conversation: RecipientSearchItem) {
+        guard let data = try? Data(contentsOf: url), let content = String(data: data, encoding: .utf8) else {
+            return
+        }
+        let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_POST : .PLAIN_POST
+        var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
+        message.content = "```\n\(content)\n```"
         sendMessage(message: message, conversation: conversation)
     }
 

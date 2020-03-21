@@ -318,6 +318,7 @@
 		7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */ = {isa = PBXBuildFile; fileRef = 7BBD8A3220C1D51C00DF2735 /* recaptcha.html */; };
 		7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */; };
 		7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */; };
+		7BC03AB22424EA9B00931D21 /* StorageUsageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */; };
 		7BC1466D230D12680060FE19 /* CurrencySelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */; };
 		7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC1466E230D12B70060FE19 /* CurrencyCell.swift */; };
 		7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */; };
@@ -1054,6 +1055,7 @@
 		7BBD8A3220C1D51C00DF2735 /* recaptcha.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = recaptcha.html; sourceTree = "<group>"; };
 		7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
 		7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationTableViewCell.swift; sourceTree = "<group>"; };
+		7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsageCell.swift; sourceTree = "<group>"; };
 		7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorViewController.swift; sourceTree = "<group>"; };
 		7BC1466E230D12B70060FE19 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCellBackgroundView.swift; sourceTree = "<group>"; };
@@ -2312,6 +2314,7 @@
 				ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */,
 				ABE865BF23F260FE00C0167D /* SingleTextTableViewCell.xib */,
 				ABE865C023F260FE00C0167D /* SingleTextTableViewCell.swift */,
+				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3330,6 +3333,7 @@
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
+				7BC03AB22424EA9B00931D21 /* StorageUsageCell.swift in Sources */,
 				DFC0ECCE23BB5FDE0091E7AC /* EmergencySessionRequest.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,

@@ -18,7 +18,7 @@ class ShareRecipientViewController: UIViewController {
 
     private weak var timer: Timer?
 
-    private var sectionTitles = [R.string.localizable.chat_forward_chats(), R.string.localizable.chat_forward_contacts()]
+    private var sectionTitles = [String]()
     private var conversations = [[RecipientSearchItem]]()
     private var searchResults = [RecipientSearchItem]()
     private var searchingKeyword: String?
@@ -58,7 +58,17 @@ class ShareRecipientViewController: UIViewController {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.conversations = [conversations, users]
+
+                weakSelf.sectionTitles = []
+                weakSelf.conversations = []
+                if conversations.count > 0 {
+                    weakSelf.sectionTitles.append(R.string.localizable.chat_forward_chats())
+                    weakSelf.conversations.append(conversations)
+                }
+                if users.count > 0 {
+                    weakSelf.sectionTitles.append(R.string.localizable.chat_forward_contacts())
+                    weakSelf.conversations.append(users)
+                }
                 weakSelf.tableView.reloadData()
             }
         }

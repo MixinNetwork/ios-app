@@ -33,7 +33,6 @@ public extension UIImage {
         self.init(withFirstFrameOf: asset)
     }
 
-
     @discardableResult
     func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
         guard let data = self.jpegData(compressionQuality: quality) else {
@@ -46,7 +45,6 @@ public extension UIImage {
             return false
         }
     }
-
 
     public var base64: String? {
         let data = self.jpegData(compressionQuality: 0.75)

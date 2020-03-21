@@ -26,11 +26,18 @@ final class StorageUsageViewController: UIViewController {
     }
     
     @objc private func fetchConversations() {
+        let startTime = Date()
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.storageUsageConversations()
-            Thread.sleep(forTimeInterval: 1)
             DispatchQueue.main.async {
-                self?.reload(conversations: conversations)
+                let time = Date().timeIntervalSince(startTime)
+                if time < 1.5 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (1.5 - time), execute: {
+                        self?.reload(conversations: conversations)
+                    })
+                } else {
+                    self?.reload(conversations: conversations)
+                }
             }
         }
     }

@@ -77,6 +77,7 @@ class LocationPickerViewController: LocationViewController {
     
     private var input: ConversationInputViewController!
     private var scrollToUserLocationButtonBottomConstraint: NSLayoutConstraint!
+    private var permissionWasAuthorized: Bool?
     
     private var userWillPickLocation = false
     private weak var userPickedLocation: UserPickedLocation?
@@ -136,14 +137,13 @@ class LocationPickerViewController: LocationViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        locationManager.stopUpdatingLocation()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
-        mapView.showsUserLocation = true
-        mapView.userTrackingMode = .follow
         mapView.register(SearchResultAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: searchResultAnnotationReuseId)
         for recognizer in [mapViewPanRecognizer, mapViewPinchRecognizer] {
@@ -259,7 +259,9 @@ class LocationPickerViewController: LocationViewController {
                 self.mapView.setCenter(coor, animated: true)
             }
         }) { (_) in
-            self.mapView.setUserTrackingMode(.follow, animated: true)
+            if self.isAuthorized {
+                self.mapView.setUserTrackingMode(.follow, animated: true)
+            }
             self.searchBoxView?.textField.text = nil
             let coordinate = self.userPickedLocation?.coordinate
                 ?? self.mapView.userLocation.location?.coordinate
@@ -274,7 +276,9 @@ class LocationPickerViewController: LocationViewController {
         if searchResults != nil {
             mapView.setCenter(mapView.userLocation.coordinate, animated: true)
         } else {
-            mapView.setUserTrackingMode(.follow, animated: true)
+            if isAuthorized {
+                mapView.setUserTrackingMode(.follow, animated: true)
+            }
             if let location = userPickedLocation {
                 mapView.removeAnnotations([location])
                 if let location = mapView.userLocation.location {
@@ -432,21 +436,39 @@ extension LocationPickerViewController: ContainerViewControllerDelegate {
 
 extension LocationPickerViewController: CLLocationManagerDelegate {
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if !locations.isEmpty, !mapView.showsUserLocation {
+            mapView.showsUserLocation = true
+            if searchResults == nil, userPickedLocation == nil {
+                scrollToUserLocationAction(self)
+            }
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedAlways, .authorizedWhenInUse:
+            if let wasAuthorized = permissionWasAuthorized, !wasAuthorized {
+                if let location = userPickedLocation {
+                    mapView.removeAnnotation(location)
+                }
+                userPickedLocation = nil
+            }
             scrollToUserLocationButton.isHidden = false
-            cancelSearchAction(self)
+            manager.startUpdatingLocation()
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .restricted, .denied:
             fallthrough
         @unknown default:
+            mapView.showsUserLocation = false
+            manager.stopUpdatingLocation()
             scrollToUserLocationButton.isHidden = true
             if userPickedLocation == nil {
                 putUserPickedAnnotation()
             }
         }
+        permissionWasAuthorized = self.isAuthorized
     }
     
 }

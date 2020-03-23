@@ -65,13 +65,14 @@
                         </subviews>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" name="background"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="Jpg-ed-hwO" firstAttribute="centerY" secondItem="5TC-nX-VON" secondAttribute="centerY" id="62k-bK-JRm"/>
                     <constraint firstItem="Jpg-ed-hwO" firstAttribute="leading" secondItem="5TC-nX-VON" secondAttribute="leading" constant="20" id="T2n-u0-swC"/>
                     <constraint firstAttribute="trailing" secondItem="Jpg-ed-hwO" secondAttribute="trailing" constant="20" id="p1W-QI-nJz"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="contentStackView" destination="Jpg-ed-hwO" id="T1z-CM-lfs"/>
                 <outlet property="iconBackgroundImageView" destination="6bV-cR-mzR" id="Zet-yy-RgI"/>

@@ -234,7 +234,7 @@ CHECKOUT OPTIONS:
     :commit: 03bf83f6b5a6ef71419c0e93c222e16efdf6bb0b
     :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
   SwiftyMarkdown:
-    :commit: 7842e566c750e38920d90e0b25e38e63bfd117e7
+    :commit: 805ebcc950d9b9be4dd95544aa48ba9a3d2f9d18
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653

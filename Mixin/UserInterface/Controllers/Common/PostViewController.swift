@@ -173,7 +173,12 @@ extension PostViewController {
         
         var insets: DocumentInsets = DefaultDocumentInsets()
         var colors: DocumentColors = PostColors()
-        var values: DocumentValues = DefaultDocumentValues()
+        var values: DocumentValues = {
+            var values = DefaultDocumentValues()
+            let theme = UserInterfaceStyle.current == .dark ? "a11y-dark" : "a11y-light"
+            values.codeHighlighterTheme = theme
+            return values
+        }()
         var maakuStyle: Style = DefaultStyle(colors: PostColorStyle(),
                                              fonts: DefaultFontStyle(),
                                              hasStrikethrough: false)

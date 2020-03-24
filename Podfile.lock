@@ -107,6 +107,7 @@ PODS:
   - GoogleWebRTC (1.1.29400)
   - GTMSessionFetcher/Core (1.3.1)
   - GzipSwift (5.1.1)
+  - Highlightr (2.1.0)
   - libcmark_gfm (0.29.3)
   - libsignal-protocol-c (2.3.2)
   - Maaku/CMark (0.9.2):
@@ -194,6 +195,8 @@ PODS:
   - TexturedMaaku/Core (0.7.0):
     - Maaku/Core
     - Texture
+  - TexturedMaaku/SyntaxColors (0.7.0):
+    - Highlightr
   - WCDB.swift (1.0.8.2):
     - SQLiteRepairKit (~> 1.2.0)
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -219,6 +222,7 @@ DEPENDENCIES:
   - SnapKit
   - SwiftyMarkdown (from `https://github.com/wuyuehyang/SwiftyMarkdown.git`)
   - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
+  - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
 
 SPEC REPOS:
@@ -248,6 +252,7 @@ SPEC REPOS:
     - GoogleWebRTC
     - GTMSessionFetcher
     - GzipSwift
+    - Highlightr
     - libcmark_gfm
     - Maaku
     - nanopb
@@ -323,6 +328,7 @@ SPEC CHECKSUMS:
   GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
+  Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
   libcmark_gfm: cbf2fe0fd3983202f00b40d4742d82cd173ff7c3
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
@@ -350,6 +356,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 41214450a79c95a1eb388d295deed978fcd66285
+PODFILE CHECKSUM: 18b1d7b6e56e5391cdef58e04b58f26f0bc3df80
 
 COCOAPODS: 1.8.4

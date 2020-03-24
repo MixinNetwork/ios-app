@@ -12,12 +12,7 @@ class WebViewController: UIViewController {
     @IBOutlet weak var titleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
-    @IBOutlet weak var buttonsWrapperView: UIView!
-    @IBOutlet weak var buttonsBackgroundView: UIView!
-    @IBOutlet weak var buttonsBackgroundEffectView: UIVisualEffectView!
-    @IBOutlet weak var buttonsSeparatorLineView: UIView!
-    @IBOutlet weak var moreButton: UIButton!
-    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var pageControlView: PageControlView!
     @IBOutlet weak var suspicionView: UIView!
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
@@ -38,7 +33,6 @@ class WebViewController: UIViewController {
     
     private(set) var isBeingDismissedAsChild = false
     
-    private let buttonDarkColor = UIColor(displayP3RgbValue: 0x2E2F31)
     private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
     
     private var statusBarStyle = UIStatusBarStyle.default
@@ -46,8 +40,9 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        pageControlView.moreButton.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
+        pageControlView.dismissButton.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
         updateBackground(pageThemeColor: .background)
-        buttonsBackgroundView.layer.borderWidth = 1
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
         webView.isOpaque = false
@@ -74,18 +69,9 @@ class WebViewController: UIViewController {
         }
     }
     
-    @IBAction func moreAction(_ sender: Any) {
-        
-    }
-    
-    @IBAction func dismissAction(_ sender: Any) {
-        dismiss()
-    }
-
     @IBAction func continueAction(_ sender: Any) {
         
     }
-
     
     @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
         switch recognizer.state {
@@ -136,24 +122,22 @@ class WebViewController: UIViewController {
         }
     }
     
+    @objc func moreAction(_ sender: Any) {
+        
+    }
+    
+    @objc func dismissAction(_ sender: Any) {
+        dismiss()
+    }
+    
     func updateBackground(pageThemeColor: UIColor) {
         statusBarBackgroundView.backgroundColor = pageThemeColor
         titleWrapperView.backgroundColor = pageThemeColor
         webView.backgroundColor = pageThemeColor
         
         let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
-        buttonsBackgroundEffectView.effect = themeColorIsDark ? .darkBlur : .extraLightBlur
         titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
-        
-        let tintColor: UIColor = themeColorIsDark ? .white : buttonDarkColor
-        moreButton.tintColor = tintColor
-        dismissButton.tintColor = tintColor
-        
-        let outlineColor: UIColor = themeColorIsDark
-            ? UIColor.white.withAlphaComponent(0.1)
-            : UIColor.black.withAlphaComponent(0.06)
-        buttonsSeparatorLineView.backgroundColor = outlineColor
-        buttonsBackgroundView.layer.borderColor = outlineColor.cgColor
+        pageControlView.style = themeColorIsDark ? .dark : .light
         
         if #available(iOS 13.0, *) {
             statusBarStyle = themeColorIsDark ? .lightContent : .darkContent

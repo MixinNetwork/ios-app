@@ -27,6 +27,7 @@ target 'Mixin' do
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
+  pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git'
   mixin_services
 end
 

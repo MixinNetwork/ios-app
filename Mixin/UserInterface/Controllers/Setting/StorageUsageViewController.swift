@@ -20,6 +20,7 @@ final class StorageUsageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.tableFooterView = UIView()
         fetchConversations()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchConversations), name: .StorageUsageDidChange, object: nil)
@@ -74,6 +75,10 @@ extension StorageUsageViewController: UITableViewDataSource {
         cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize)
         return cell
     }
+    
+}
+
+extension StorageUsageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

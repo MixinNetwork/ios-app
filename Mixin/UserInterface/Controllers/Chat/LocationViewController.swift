@@ -44,6 +44,17 @@ class LocationViewController: UIViewController {
         super.viewDidLoad()
         mapView.register(PinAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: pinAnnotationReuseId)
+        if let popRecognizer = navigationController?.interactivePopGestureRecognizer {
+            var recognizersIncludingSubviews = mapView.subviews
+                .compactMap({ $0.gestureRecognizers })
+                .flatMap({ $0 })
+            if let recognizers = mapView.gestureRecognizers {
+                recognizersIncludingSubviews.append(contentsOf: recognizers)
+            }
+            for recognizer in recognizersIncludingSubviews {
+                recognizer.require(toFail: popRecognizer)
+            }
+        }
         tableView.register(R.nib.locationCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)

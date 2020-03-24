@@ -517,12 +517,17 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(contactData: transferData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_LOCATION") {
-            var content = plainText
+            let contentData: Data?
             if data.category.hasPrefix("PLAIN_") {
-                guard let decoded = plainText.base64Decoded() else {
-                    return
-                }
-                content = decoded
+                contentData = Data(base64Encoded: plainText)
+            } else {
+                contentData = plainText.data(using: .utf8)
+            }
+            guard let jsonData = contentData, (try? JSONDecoder.default.decode(Location.self, from: jsonData)) != nil else {
+                return
+            }
+            guard let content = String(data: jsonData, encoding: .utf8) else {
+                return
             }
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
@@ -571,7 +576,21 @@ public class ReceiveMessageService: MixinService {
                                                             category: data.category,
                                                             conversationId: data.conversationId,
                                                             messageSource: data.source)
-        case MessageCategory.SIGNAL_POST.rawValue, MessageCategory.SIGNAL_LOCATION.rawValue:
+        case MessageCategory.SIGNAL_POST.rawValue:
+            MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
+                                                            status: Message.getStatus(data: data),
+                                                            mention: nil,
+                                                            messageId: messageId,
+                                                            category: data.category,
+                                                            conversationId: data.conversationId,
+                                                            messageSource: data.source)
+        case MessageCategory.SIGNAL_LOCATION.rawValue:
+            guard let contentData = plainText.data(using: .utf8) else {
+                return
+            }
+            guard (try? JSONDecoder.default.decode(Location.self, from: contentData)) != nil else {
+                return
+            }
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: nil,

@@ -71,6 +71,7 @@ public class WebSocketService {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
             }
 
+            self.host = MixinServer.webSocketHost
             self.status = .connecting
 
             let socket = RocketWebSocket(host: MixinServer.webSocketHost, queue: self.queue)

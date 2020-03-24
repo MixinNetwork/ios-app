@@ -149,6 +149,9 @@ class LocationPickerViewController: LocationViewController {
         for recognizer in [mapViewPanRecognizer, mapViewPinchRecognizer] {
             mapView.addGestureRecognizer(recognizer)
             recognizer.delegate = self
+            if let popRecognizer = navigationController?.interactivePopGestureRecognizer {
+                recognizer.require(toFail: popRecognizer)
+            }
         }
         
         tableView.dataSource = self

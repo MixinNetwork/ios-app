@@ -7,7 +7,6 @@ enum Scope: String {
     case ASSETS = "ASSETS:READ"
     case APPS_READ = "APPS:READ"
     case APPS_WRITE = "APPS:WRITE"
-    case APPS_FAVORITE_READ = "APPS:FAVORITE:READ"
     case CONTACTS_READ = "CONTACTS:READ"
     case MESSAGES_REPRESENT = "MESSAGES:REPRESENT"
     case SNAPSHOTS_READ = "SNAPSHOTS:READ"
@@ -47,10 +46,6 @@ enum Scope: String {
         if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
             result.append((.APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE_DESCRIPTION))
             scopes.append(Scope.APPS_WRITE.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.APPS_FAVORITE_READ.rawValue) {
-            result.append((.APPS_FAVORITE_READ, R.string.localizable.auth_permission_apps_favorite_read(), R.string.localizable.auth_permission_apps_favorite_read_description()))
-            scopes.append(Scope.APPS_FAVORITE_READ.rawValue)
         }
         return (result, scopes)
     }

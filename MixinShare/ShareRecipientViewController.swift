@@ -128,7 +128,7 @@ class ShareRecipientViewController: UIViewController {
 extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RecipientCell.reuseIdentifier, for: indexPath) as! RecipientCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.recipient, for: indexPath)!
         if isSearching {
             cell.render(conversation: searchResults[indexPath.row])
         } else {

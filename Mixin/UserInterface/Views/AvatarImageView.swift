@@ -4,7 +4,7 @@ import MixinServices
 class AvatarImageView: UIView {
     
     @IBInspectable
-    var titleFontSize: CGFloat = 17 {
+    var titleFontSize: CGFloat = 24 {
         didSet {
             titleLabel.font = .systemFont(ofSize: titleFontSize)
         }
@@ -13,7 +13,7 @@ class AvatarImageView: UIView {
     @IBInspectable
     var hasShadow: Bool = false {
         didSet {
-            layer.shadowOpacity = hasShadow ? 0.2 : 0
+            layer.shadowOpacity = hasShadow ? 0.26 : 0
             setNeedsLayout()
         }
     }
@@ -25,10 +25,6 @@ class AvatarImageView: UIView {
         set {
             imageView.image = newValue
         }
-    }
-    
-    var isLoadingImage: Bool {
-        return imageView.sd_imageURL != nil
     }
     
     private let titleLabel = UILabel()
@@ -60,6 +56,7 @@ class AvatarImageView: UIView {
         titleLabel.text = nil
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
+        imageView.backgroundColor = .clear
     }
     
     func setGroupImage(conversation: ConversationItem) {
@@ -102,7 +99,8 @@ class AvatarImageView: UIView {
             let placeholder = placeholder ? R.image.ic_place_holder() : nil
             imageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
-            imageView.image = UIImage(named: "AvatarBackground/color\(userId.positiveHashCode() % 24 + 1)")
+            let index = userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
+            imageView.backgroundColor = UIColor.avatarBackgroundColors[index]
             if let firstLetter = name.first {
                 titleLabel.text = String([firstLetter]).uppercased()
             } else {
@@ -133,7 +131,8 @@ class AvatarImageView: UIView {
         titleLabel.font = .systemFont(ofSize: titleFontSize)
         titleLabel.textAlignment = .center
         addSubview(titleLabel)
-        titleLabel.snp.makeEdgesEqualToSuperview()
+        titleLabel.frame = bounds
+        titleLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
 }

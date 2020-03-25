@@ -2,21 +2,6 @@ import UIKit
 
 extension UIColor {
     
-    static let background = R.color.background()!
-    static let secondaryBackground = R.color.background_secondary()!
-    static let inputBackground = R.color.background_input()!
-    static let selectionBackground = R.color.background_selection()!
-    static let mixinGreen = R.color.green()!
-    static let mixinRed = R.color.red()!
-    static let title = R.color.title()!
-    static let text = R.color.text()!
-    static let theme = R.color.theme()!
-    
-    static let accessoryText = R.color.text_accessory()!
-    static let highlightedText = R.color.theme()!
-    static let shadow = R.color.table_shadow()!
-    static let chatText = R.color.chat_text()!
-    
     static let error = UIColor(rgbValue: 0xd73449)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)
@@ -39,6 +24,17 @@ extension UIColor {
             0x6AB48F, 0x71B15C, 0xB3B357, 0xA3B561, 0x909F45, 0x93B289,
             0x3D98D0, 0x429AB6, 0x4EABAA, 0x6BC0CE, 0x64B5D9, 0x3E9CCB,
             0x2887C4, 0x52A98B
+        ]
+        return values.map { UIColor(displayP3RgbValue: $0) }
+    }()
+    
+    static let avatarBackgroundColors: [UIColor] = {
+        let values: [UInt] = [
+            0xFFD659, 0xFFC168, 0xF58268, 0xF4979C, 0xEC7F87, 0xFF78CB,
+            0xC377E0, 0x8BAAFF, 0x78DCFA, 0x88E5B9, 0xBFF199, 0xC5E1A5,
+            0xCD907D, 0xBE938E, 0xB68F91, 0xBC987B, 0xA69E8E, 0xD4C99E,
+            0x93C2E6, 0x92C3D9, 0x8FBFC5, 0x80CBC4, 0xA4DBDB, 0xB2C8BD,
+            0xF7C8C9, 0xE2D4E7, 0xBABAE8, 0xBABCD5, 0xB5B5B5, 0x979797
         ]
         return values.map { UIColor(displayP3RgbValue: $0) }
     }()

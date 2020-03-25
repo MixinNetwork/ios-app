@@ -138,20 +138,20 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (3.2.0)
   - PhoneNumberKit/UIKit (3.2.0):
     - PhoneNumberKit/PhoneNumberKitCore
-  - PINCache (3.0.1-beta.6):
-    - PINCache/Arc-exception-safe (= 3.0.1-beta.6)
-    - PINCache/Core (= 3.0.1-beta.6)
-  - PINCache/Arc-exception-safe (3.0.1-beta.6):
+  - PINCache (3.0.1-beta.7):
+    - PINCache/Arc-exception-safe (= 3.0.1-beta.7)
+    - PINCache/Core (= 3.0.1-beta.7)
+  - PINCache/Arc-exception-safe (3.0.1-beta.7):
     - PINCache/Core
-  - PINCache/Core (3.0.1-beta.6):
-    - PINOperation (~> 1.1.0)
+  - PINCache/Core (3.0.1-beta.7):
+    - PINOperation (~> 1.1.1)
   - PINOperation (1.1.2)
-  - PINRemoteImage/Core (3.0.0-beta.13):
+  - PINRemoteImage/Core (3.0.0-beta.14):
     - PINOperation
-  - PINRemoteImage/iOS (3.0.0-beta.13):
+  - PINRemoteImage/iOS (3.0.0-beta.14):
     - PINRemoteImage/Core
-  - PINRemoteImage/PINCache (3.0.0-beta.13):
-    - PINCache (= 3.0.1-beta.6)
+  - PINRemoteImage/PINCache (3.0.0-beta.14):
+    - PINCache (= 3.0.1-beta.7)
     - PINRemoteImage/Core
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.3)
@@ -185,7 +185,7 @@ PODS:
   - Texture/Photos (2.8.1):
     - Texture/Core
   - Texture/PINRemoteImage (2.8.1):
-    - PINRemoteImage/iOS (= 3.0.0-beta.13)
+    - PINRemoteImage/iOS (= 3.0.0-beta.14)
     - PINRemoteImage/PINCache
     - Texture/Core
   - Texture/Video (2.8.1):
@@ -221,6 +221,7 @@ DEPENDENCIES:
   - RSKImageCropper
   - SnapKit
   - SwiftyMarkdown (from `https://github.com/wuyuehyang/SwiftyMarkdown.git`)
+  - Texture (from `https://github.com/TextureGroup/Texture.git`, branch `master`)
   - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
   - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
@@ -270,7 +271,6 @@ SPEC REPOS:
     - SnapKit
     - SocketRocket
     - SQLiteRepairKit
-    - Texture
     - WCDBOptimizedSQLCipher
     - YYImage
     - Zip
@@ -282,6 +282,9 @@ EXTERNAL SOURCES:
     :path: "./MixinServices"
   SwiftyMarkdown:
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
+  Texture:
+    :branch: master
+    :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
@@ -295,6 +298,9 @@ CHECKOUT OPTIONS:
   SwiftyMarkdown:
     :commit: 805ebcc950d9b9be4dd95544aa48ba9a3d2f9d18
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
+  Texture:
+    :commit: 70f61e9d01eff930f3f8e2bf4146a1841821c79a
+    :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
     :commit: f491023ac292d4a06e3a0dfb2728e0c59cc267c8
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
@@ -335,9 +341,9 @@ SPEC CHECKSUMS:
   MixinServices: fe6f31cfb652a079fe9dd327800ccb612b4d47c4
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
-  PINCache: d195fdba255283f7e9900a55e3cced377f431f9b
+  PINCache: 7cb9ae068c8f655717f7c644ef1dff9fd573e979
   PINOperation: 24b774353ca248fcf87d67b2d61eef42087c125a
-  PINRemoteImage: d6d51c5d2adda55f1ce30c96e850b6c4ebd2856a
+  PINRemoteImage: 81bbff853acc71c6de9e106e9e489a791b8bbb08
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
@@ -349,13 +355,13 @@ SPEC CHECKSUMS:
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   SwiftyMarkdown: 033abc9dad9a37903f81aec5188cade436f40520
-  Texture: 8ecf6984065a1e54f06bf97b349ecca28582acd7
+  Texture: 95cfad2ed5e7f06c32e34278c39d386568481f73
   TexturedMaaku: e868edf580d7466afe381d5380dea6751e9d99ca
   WCDB.swift: 2e767b45d58cfca1b12e7e9ab6d65d357d5c85e7
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 18b1d7b6e56e5391cdef58e04b58f26f0bc3df80
+PODFILE CHECKSUM: a583d065041a47bc01908c84c545fb29d5946647
 
 COCOAPODS: 1.8.4

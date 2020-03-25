@@ -69,6 +69,11 @@ class PostViewController: UIViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        controlView.style = .current
+    }
+    
     @objc func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
         switch recognizer.state {
         case .began:
@@ -137,6 +142,11 @@ extension PostViewController {
         
         override func contentSizeCategoryChange(_ contentSizeCategory: UIContentSizeCategory) {
             
+        }
+        
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            documentStyle = PostDocumentStyle()
         }
         
     }

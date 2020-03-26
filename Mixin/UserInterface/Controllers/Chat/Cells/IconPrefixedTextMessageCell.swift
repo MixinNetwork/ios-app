@@ -15,7 +15,7 @@ class IconPrefixedTextMessageCell: TextMessageCell {
     override func prepare() {
         super.prepare()
         prefixImageView.contentMode = .center
-        contentView.addSubview(prefixImageView)
+        messageContentView.addSubview(prefixImageView)
     }
     
 }

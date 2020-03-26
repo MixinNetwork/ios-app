@@ -19,11 +19,11 @@ class LiveMessageCell: PhotoRepresentableMessageCell {
     override func prepare() {
         super.prepare()
         contentImageView.backgroundColor = .black
-        contentView.addSubview(badgeView)
+        messageContentView.addSubview(badgeView)
         playButton.style = .finished(showPlayIcon: true)
         playButton.sizeToFit()
         playButton.isUserInteractionEnabled = false
-        contentView.addSubview(playButton)
+        messageContentView.addSubview(playButton)
         contentImageWrapperView.imageView.contentMode = .scaleAspectFill
     }
     

@@ -23,7 +23,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
             if viewModel.quotedMessageViewModel == nil {
-                maskingView.frame = contentView.bounds
+                maskingView.frame = messageContentView.bounds
                 contentImageWrapperView.frame = viewModel.photoFrame
                 maskingView.layer.cornerRadius = 0
                 if backgroundImageView.superview != nil {
@@ -39,7 +39,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
                     maskingView.layer.mask = nil
                 }
                 if backgroundImageView.superview == nil {
-                    contentView.insertSubview(backgroundImageView, at: 0)
+                    messageContentView.insertSubview(backgroundImageView, at: 0)
                 }
                 maskingView.layer.cornerRadius = Self.quotingPhotoCornerRadius
             }
@@ -57,14 +57,14 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
     }
     
     override func prepare() {
-        contentView.addSubview(maskingView)
+        messageContentView.addSubview(maskingView)
         maskingView.addSubview(contentImageWrapperView)
         updateAppearance(highlight: false, animated: false)
         contentImageWrapperView.addSubview(selectedOverlapView)
-        contentView.addSubview(trailingInfoBackgroundView)
+        messageContentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
         expandImageView.isHidden = true
-        contentView.addSubview(expandImageView)
+        messageContentView.addSubview(expandImageView)
         maskingView.clipsToBounds = true
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9

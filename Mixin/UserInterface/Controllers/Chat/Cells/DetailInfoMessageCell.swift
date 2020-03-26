@@ -58,17 +58,17 @@ class DetailInfoMessageCell: MessageCell {
         fullnameButton.contentHorizontalAlignment = .left
         fullnameButton.titleLabel?.lineBreakMode = .byTruncatingTail
         fullnameButton.addTarget(self, action: #selector(fullnameAction(_:)), for: .touchUpInside)
-        contentView.addSubview(fullnameButton)
+        messageContentView.addSubview(fullnameButton)
         statusImageView.contentMode = .left
-        contentView.addSubview(statusImageView)
+        messageContentView.addSubview(statusImageView)
         encryptedImageView.alpha = 0.7
-        contentView.addSubview(encryptedImageView)
+        messageContentView.addSubview(encryptedImageView)
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
-        contentView.addSubview(timeLabel)
-        contentView.addSubview(identityIconImageView)
+        messageContentView.addSubview(timeLabel)
+        messageContentView.addSubview(identityIconImageView)
     }
     
     @objc func fullnameAction(_ sender: Any) {

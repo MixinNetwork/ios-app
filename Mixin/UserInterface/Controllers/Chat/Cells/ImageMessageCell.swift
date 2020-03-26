@@ -10,7 +10,7 @@ class ImageMessageCell: DetailInfoMessageCell {
     lazy var selectedOverlapView: UIView = {
         let view = SelectedOverlapView()
         view.alpha = 0
-        contentView.addSubview(view)
+        messageContentView.addSubview(view)
         return view
     }()
     

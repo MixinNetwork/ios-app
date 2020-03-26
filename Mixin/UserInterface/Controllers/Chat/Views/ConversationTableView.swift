@@ -292,6 +292,7 @@ class ConversationTableView: UITableView {
     private func prepare() {
         register(UINib(nibName: "ConversationDateHeaderView", bundle: .main),
                  forHeaderFooterViewReuseIdentifier: ReuseId.header.rawValue)
+        register(SystemMessageCell.self, forCellReuseIdentifier: ReuseId.system.rawValue)
         register(TextMessageCell.self, forCellReuseIdentifier: ReuseId.text.rawValue)
         register(PhotoMessageCell.self, forCellReuseIdentifier: ReuseId.photo.rawValue)
         register(StickerMessageCell.self, forCellReuseIdentifier: ReuseId.sticker.rawValue)

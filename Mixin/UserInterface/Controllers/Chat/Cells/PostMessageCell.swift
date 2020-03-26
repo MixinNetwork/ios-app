@@ -6,9 +6,9 @@ class PostMessageCell: TextMessageCell {
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     
     override func prepare() {
-        contentView.addSubview(trailingInfoBackgroundView)
+        messageContentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
-        contentView.addSubview(expandImageView)
+        messageContentView.addSubview(expandImageView)
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }

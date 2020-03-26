@@ -2,6 +2,7 @@ import UIKit
 
 class MessageCell: UITableViewCell {
     
+    let messageContentView = UIView()
     let backgroundImageView = UIImageView()
     
     lazy var quotedMessageView: QuotedMessageView = {
@@ -32,7 +33,7 @@ class MessageCell: UITableViewCell {
         self.viewModel = viewModel
         if let quotedMessageViewModel = viewModel.quotedMessageViewModel {
             if quotedMessageView.superview == nil {
-                contentView.addSubview(quotedMessageView)
+                messageContentView.addSubview(quotedMessageView)
             }
             quotedMessageView.frame = viewModel.quotedMessageViewFrame
             quotedMessageView.render(viewModel: quotedMessageViewModel)
@@ -42,11 +43,15 @@ class MessageCell: UITableViewCell {
     }
     
     func prepare() {
+        messageContentView.frame = bounds
+        messageContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        messageContentView.backgroundColor = .clear
+        contentView.addSubview(messageContentView)
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = .clear
-        contentView.insertSubview(backgroundImageView, at: 0)
+        messageContentView.insertSubview(backgroundImageView, at: 0)
     }
     
 }

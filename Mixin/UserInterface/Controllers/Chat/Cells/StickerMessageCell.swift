@@ -45,7 +45,7 @@ class StickerMessageCell: DetailInfoMessageCell {
     }
     
     override func prepare() {
-        contentView.addSubview(contentImageView)
+        messageContentView.addSubview(contentImageView)
         contentImageView.contentMode = .scaleAspectFill
         contentImageView.clipsToBounds = true
         contentImageView.layer.cornerRadius = 6

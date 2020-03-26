@@ -29,7 +29,7 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
                 view.button.tag = i
                 view.button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
                 buttonViews.append(view)
-                contentView.addSubview(view)
+                messageContentView.addSubview(view)
             }
         }
     }

@@ -154,7 +154,7 @@ extension PostViewController {
     private struct PostColors: DocumentColors {
         
         var background: UIColor = .background
-        var blockQuoteLine: UIColor = .secondaryBackground
+        var blockQuoteLine: UIColor = .accessoryText
         var circleHeaderBackground: UIColor = .secondaryBackground
         var circleHeaderForeground: UIColor = .secondaryBackground
         var codeBlockBackground: UIColor = .secondaryBackground

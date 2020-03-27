@@ -135,14 +135,19 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
         let selections = self.selections
         DispatchQueue.global().async { [weak self] in
             for receiver in selections {
-                guard let message = MessageReceiverViewController.makeMessage(content: content, to: receiver.conversationId) else {
+                let messages = MessageReceiverViewController.makeMessages(content: content, to: receiver.conversationId)
+                guard !messages.isEmpty else {
                     continue
                 }
                 switch receiver.item {
                 case .group:
-                    SendMessageService.shared.sendMessage(message: message, ownerUser: nil, isGroupMessage: true)
+                    for msg in messages {
+                        SendMessageService.shared.sendMessage(message: msg, ownerUser: nil, isGroupMessage: true)
+                    }
                 case .user(let user):
-                    SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: false)
+                    for msg in messages {
+                        SendMessageService.shared.sendMessage(message: msg, ownerUser: user, isGroupMessage: false)
+                    }
                 }
             }
             DispatchQueue.main.async {
@@ -192,7 +197,7 @@ extension MessageReceiverViewController {
 extension MessageReceiverViewController {
     
     enum MessageContent {
-        case message(MessageItem)
+        case messages([MessageItem])
         case contact(String)
         case photo(UIImage)
         case text(String)
@@ -200,20 +205,26 @@ extension MessageReceiverViewController {
         case appCard(AppCardData)
     }
     
-    static func makeMessage(content: MessageContent, to conversationId: String) -> Message? {
+    static func makeMessages(content: MessageContent, to conversationId: String) -> [Message] {
         switch content {
-        case .message(let message):
-            return makeMessage(message: message, to: conversationId)
+        case .messages(let messages):
+            let date = Date()
+            let counter = Counter(value: -1)
+            return messages.compactMap({ (original) -> Message? in
+                let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
+                let createdAt = date.addingTimeInterval(interval).toUTCString()
+                return makeMessage(message: original, to: conversationId, createdAt: createdAt)
+            })
         case .contact(let userId):
-            return makeMessage(userId: userId, to: conversationId)
+            return [makeMessage(userId: userId, to: conversationId)].compactMap({ $0 })
         case .photo(let image):
-            return makeMessage(image: image, to: conversationId)
+            return [makeMessage(image: image, to: conversationId)].compactMap({ $0 })
         case .text(let text):
-            return makeMessage(text: text, to: conversationId)
+            return [makeMessage(text: text, to: conversationId)].compactMap({ $0 })
         case .video(let url):
-            return makeMessage(videoUrl: url, to: conversationId)
+            return [makeMessage(videoUrl: url, to: conversationId)].compactMap({ $0 })
         case .appCard(let appCard):
-            return makeMessage(appCard: appCard, to: conversationId)
+            return [makeMessage(appCard: appCard, to: conversationId)].compactMap({ $0 })
         }
     }
     
@@ -240,9 +251,10 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to conversationId: String) -> Message? {
+    static func makeMessage(message: MessageItem, to conversationId: String, createdAt: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
+                                               createdAt: createdAt,
                                                userId: myUserId)
         if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category.hasSuffix("_LOCATION") || message.category == MessageCategory.APP_CARD.rawValue {
             newMessage.content = message.content

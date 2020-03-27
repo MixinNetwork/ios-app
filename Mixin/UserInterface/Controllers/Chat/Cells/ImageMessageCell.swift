@@ -15,8 +15,9 @@ class ImageMessageCell: DetailInfoMessageCell {
     }()
     
     override func updateAppearance(highlight: Bool, animated: Bool) {
+        let shouldHighlight = highlight && !isMultipleSelecting
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
-            self.selectedOverlapView.alpha = highlight ? 1 : 0
+            self.selectedOverlapView.alpha = shouldHighlight ? 1 : 0
         }
         if viewModel?.quotedMessageViewModel != nil {
             super.updateAppearance(highlight: highlight, animated: animated)

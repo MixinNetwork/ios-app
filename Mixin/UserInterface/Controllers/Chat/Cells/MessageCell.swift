@@ -11,6 +11,18 @@ class MessageCell: UITableViewCell {
         return view
     }()
     
+    lazy var checkmarkView: CheckmarkView = {
+        let frame = CGRect(x: -checkmarkWidth, y: 0, width: checkmarkWidth, height: checkmarkWidth)
+        let view = CheckmarkView(frame: frame)
+        checkmarkViewIfLoaded = view
+        return view
+    }()
+    
+    private let checkmarkWidth: CGFloat = 16
+    
+    private(set) var isMultipleSelecting = false
+    
+    private(set) weak var checkmarkViewIfLoaded: CheckmarkView?
     private(set) weak var quotedMessageViewIfLoaded: QuotedMessageView?
     
     var viewModel: MessageViewModel?
@@ -29,16 +41,10 @@ class MessageCell: UITableViewCell {
         prepare()
     }
     
-    func render(viewModel: MessageViewModel) {
-        self.viewModel = viewModel
-        if let quotedMessageViewModel = viewModel.quotedMessageViewModel {
-            if quotedMessageView.superview == nil {
-                messageContentView.addSubview(quotedMessageView)
-            }
-            quotedMessageView.frame = viewModel.quotedMessageViewFrame
-            quotedMessageView.render(viewModel: quotedMessageViewModel)
-        } else {
-            quotedMessageViewIfLoaded?.removeFromSuperview()
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if isMultipleSelecting {
+            checkmarkView.status = selected ? .selected : .unselected
         }
     }
     
@@ -52,6 +58,60 @@ class MessageCell: UITableViewCell {
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = .clear
         messageContentView.insertSubview(backgroundImageView, at: 0)
+    }
+    
+    func render(viewModel: MessageViewModel) {
+        self.viewModel = viewModel
+        if let quotedMessageViewModel = viewModel.quotedMessageViewModel {
+            if quotedMessageView.superview == nil {
+                messageContentView.addSubview(quotedMessageView)
+            }
+            quotedMessageView.frame = viewModel.quotedMessageViewFrame
+            quotedMessageView.render(viewModel: quotedMessageViewModel)
+        } else {
+            quotedMessageViewIfLoaded?.removeFromSuperview()
+        }
+    }
+    
+    func setMultipleSelecting(_ multipleSelecting: Bool, animated: Bool) {
+        guard self.isMultipleSelecting != multipleSelecting else {
+            return
+        }
+        self.isMultipleSelecting = multipleSelecting
+        if multipleSelecting {
+            checkmarkView.status = isSelected ? .selected : .unselected
+            checkmarkView.frame.size.height = contentView.bounds.height
+            checkmarkView.frame.origin.x = -checkmarkWidth
+            checkmarkView.autoresizingMask = .flexibleHeight
+            contentView.addSubview(checkmarkView)
+            checkmarkView.setNeedsLayout()
+            checkmarkView.layoutIfNeeded()
+            let animation = {
+                self.checkmarkView.frame.origin.x = 22
+                if let viewModel = self.viewModel, viewModel.style.contains(.received) {
+                    self.messageContentView.frame.origin.x = self.checkmarkView.frame.maxX
+                }
+            }
+            if animated {
+                UIView.animate(withDuration: 0.3, animations: animation)
+            } else {
+                animation()
+            }
+        } else {
+            let animation = {
+                self.checkmarkView.frame.origin.x = -self.checkmarkWidth
+                self.messageContentView.frame.origin.x = 0
+            }
+            let completion: ((Bool) -> Void) = { (_: Bool) in
+                self.checkmarkViewIfLoaded?.removeFromSuperview()
+            }
+            if animated {
+                UIView.animate(withDuration: 0.3, animations: animation, completion: completion)
+            } else {
+                animation()
+                completion(false)
+            }
+        }
     }
     
 }

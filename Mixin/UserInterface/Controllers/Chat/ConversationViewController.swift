@@ -8,6 +8,7 @@ import TexturedMaaku
 class ConversationViewController: UIViewController {
     
     static var positions = [String: Position]()
+    static var allowReportSingleMessage = false
     
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -32,6 +33,8 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showInputWrapperConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideInputWrapperConstraint: NSLayoutConstraint!
     
     var dataSource: ConversationDataSource!
     var conversationId: String {
@@ -71,10 +74,10 @@ class ConversationViewController: UIViewController {
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
-    static var allowReportSingleMessage = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
+    private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     
     private lazy var strangerHintView: StrangerHintView = {
         let view = R.nib.strangerHintView(owner: nil)!
@@ -82,6 +85,7 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
+    
     private lazy var appReceptionView: AppReceptionView = {
         let view = R.nib.appReceptionView(owner: nil)!
         view.openHomePageButton.addTarget(conversationInputViewController,
@@ -97,6 +101,18 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
+    private lazy var cancelSelectionButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .background
+        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16),
+                                   adjustForContentSize: true)
+        button.setTitleColor(.theme, for: .normal)
+        button.setTitle(R.string.localizable.dialog_button_cancel(), for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        button.addTarget(self, action: #selector(endMultipleSelection), for: .touchUpInside)
+        return button
+    }()
+        
     private var unreadBadgeValue: Int = 0 {
         didSet {
             guard unreadBadgeValue != oldValue else {
@@ -331,6 +347,32 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @IBAction func multipleSelectionAction(_ sender: Any) {
+        switch multipleSelectionActionView.intent {
+        case .forward:
+            let messages = dataSource.selectedViewModels.values
+                .map({ $0.message })
+                .sorted(by: { $0.createdAt < $1.createdAt })
+            let vc = MessageReceiverViewController.instance(content: .messages(messages))
+            navigationController?.pushViewController(vc, animated: true)
+        case .delete:
+            let viewModels = dataSource.selectedViewModels.values.map({ $0 })
+            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
+                if AppGroupUserDefaults.User.hasShownRecallTips {
+                    self.deleteForEveryone(viewModels: viewModels)
+                } else {
+                    self.showRecallTips(viewModels: viewModels)
+                }
+            }))
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
+                self.deleteForMe(viewModels: viewModels)
+            }))
+            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
+        }
+    }
+    
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
         let location = recognizer.location(in: inputWrapperView)
         let verticalVelocity = recognizer.velocity(in: view).y
@@ -482,7 +524,28 @@ class ConversationViewController: UIViewController {
             dismissMenu(animated: true)
             return
         }
-        if let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = dataSource?.viewModel(for: indexPath) {
+        let tappedIndexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView))
+        let tappedViewModel: MessageViewModel? = {
+            if let indexPath = tappedIndexPath {
+                return dataSource?.viewModel(for: indexPath)
+            } else {
+                return nil
+            }
+        }()
+        if tableView.allowsMultipleSelection {
+            if let indexPath = tappedIndexPath, let viewModel = tappedViewModel {
+                if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.contains(indexPath) {
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    dataSource.selectedViewModels[viewModel.message.messageId] = nil
+                } else if viewModel.supportsMultipleSelection(with: multipleSelectionActionView.intent) {
+                    tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                    dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
+                }
+            }
+            multipleSelectionActionView.numberOfSelection = dataSource.selectedViewModels.count
+            return
+        }
+        if let indexPath = tappedIndexPath, let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = tappedViewModel {
             let message = viewModel.message
             let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
             let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
@@ -703,42 +766,42 @@ class ConversationViewController: UIViewController {
         previewDocumentMessageId = nil
     }
     
+    @objc func endMultipleSelection() {
+        dataSource.selectedViewModels.removeAll()
+        for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
+            cell.setMultipleSelecting(false, animated: true)
+        }
+        tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
+            tableView.deselectRow(at: indexPath, animated: true)
+        })
+        tableView.allowsMultipleSelection = false
+        cancelSelectionButton.removeFromSuperview()
+        
+        showInputWrapperConstraint.priority = .defaultHigh
+        hideInputWrapperConstraint.priority = .defaultLow
+        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: [], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
+                let old = self.multipleSelectionActionView.frame.height
+                let new = self.inputWrapperHeightConstraint.constant
+                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                self.multipleSelectionActionView.frame.origin.y = self.view.bounds.height
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                self.view.layoutIfNeeded()
+            }
+        }, completion: { _ in
+            self.multipleSelectionActionView.removeFromSuperview()
+        })
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
         inputWrapperHeightConstraint.constant = newHeight
-        tableView.scrollIndicatorInsets.bottom = newHeight - view.safeAreaInsets.bottom
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.5)
-            UIView.setAnimationCurve(.overdamped)
-        }
-        updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: oldHeight, newHeight: newHeight)
-        let bottomInset = newHeight + MessageViewModel.bottomSeparatorHeight
-        
-        var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
-        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
-            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
-            let availableSpace = focusRectY
-                - tableView.contentOffset.y
-                - tableView.contentInset.top
-                - ConversationDateHeaderView.height
-            if availableSpace > 0 {
-                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
-            } else {
-                newContentOffsetY = tableView.contentOffset.y
-            }
-        }
-        tableView.contentInset.bottom = bottomInset
-        if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
-            tableView.setContentOffsetYSafely(newContentOffsetY)
-        }
-        
-        view.layoutIfNeeded()
-        if animated {
-            UIView.commitAnimations()
-        }
+        updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
@@ -874,6 +937,9 @@ extension ConversationViewController: UITableViewDataSource {
             UIView.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
             }
+            if viewModel.supportsMultipleSelection(with: multipleSelectionActionView.intent) {
+                cell.setMultipleSelecting(tableView.allowsMultipleSelection, animated: false)
+            }
         }
         return cell
     }
@@ -906,10 +972,10 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         guard let message = dataSource?.viewModel(for: indexPath)?.message else {
             return false
         }
-        return message.allowedActions.contains(action)
+        return message.allowedSelectors.contains(action)
     }
     
-    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
+    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: MessageAction, forIndexPath indexPath: IndexPath) {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
@@ -920,29 +986,12 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
-            conversationInputViewController.textView.resignFirstResponder()
-            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if message.canRecall {
-                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
-                    if AppGroupUserDefaults.User.hasShownRecallTips {
-                        self.deleteForEveryone(viewModel: viewModel)
-                    } else {
-                        self.showRecallTips(viewModel: viewModel)
-                    }
-                }))
-            }
-            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
-                self.deleteForMe(viewModel: viewModel)
-            }))
-            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
+            beginMultipleSelection(on: indexPath, intent: .delete)
         case .forward:
-            conversationInputViewController.audioViewController.cancelIfRecording()
-            let vc = MessageReceiverViewController.instance(content: .message(message))
-            navigationController?.pushViewController(vc, animated: true)
+            beginMultipleSelection(on: indexPath, intent: .forward)
         case .reply:
             conversationInputViewController.quote = (message, viewModel.thumbnail)
-        case .add:
+        case .addToStickers:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
                 StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
                     switch result {
@@ -1084,16 +1133,15 @@ extension ConversationViewController: UITableViewDelegate {
         return header
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
-    }
-    
 }
 
 // MARK: - DetailInfoMessageCellDelegate
 extension ConversationViewController: DetailInfoMessageCellDelegate {
     
     func detailInfoMessageCellDidSelectFullname(_ cell: DetailInfoMessageCell) {
+        guard !tableView.allowsMultipleSelection else {
+            return
+        }
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
@@ -1107,6 +1155,9 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
 extension ConversationViewController: AppButtonGroupMessageCellDelegate {
     
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int) {
+        guard !tableView.allowsMultipleSelection else {
+            return
+        }
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let appButtons = message.appButtons, index < appButtons.count else {
             return
         }
@@ -1119,6 +1170,9 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell) {
+        guard !tableView.allowsMultipleSelection else {
+            return
+        }
         guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
@@ -1139,6 +1193,9 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        guard !tableView.allowsMultipleSelection else {
+            return
+        }
         guard !openUrlOutsideApplication(url) else {
             return
         }
@@ -1527,6 +1584,88 @@ extension ConversationViewController {
         }
     }
     
+    private func beginMultipleSelection(on indexPath: IndexPath, intent: MultipleSelectionIntent) {
+        conversationInputViewController.textView.resignFirstResponder()
+        conversationInputViewController.audioViewController.cancelIfRecording()
+        UIView.performWithoutAnimation {
+            navigationBarView.addSubview(cancelSelectionButton)
+            cancelSelectionButton.snp.makeConstraints { (make) in
+                make.leading.bottom.equalToSuperview()
+                make.height.equalTo(56)
+            }
+            navigationBarView.layoutIfNeeded()
+        }
+        tableView.allowsMultipleSelection = true
+        for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
+            guard let viewModel = cell.viewModel, viewModel.supportsMultipleSelection(with: intent) else {
+                continue
+            }
+            cell.setMultipleSelecting(true, animated: true)
+        }
+        multipleSelectionActionView.intent = intent
+        multipleSelectionActionView.numberOfSelection = 1
+        multipleSelectionActionView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: multipleSelectionActionView.preferredHeight)
+        multipleSelectionActionView.autoresizingMask = [.flexibleWidth]
+        view.addSubview(multipleSelectionActionView)
+        
+        showInputWrapperConstraint.priority = .defaultLow
+        hideInputWrapperConstraint.priority = .defaultHigh
+        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: [], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                self.view.layoutIfNeeded()
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                let y = self.view.bounds.height - self.multipleSelectionActionView.preferredHeight
+                self.multipleSelectionActionView.frame.origin.y = y
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
+                let old = self.inputWrapperHeightConstraint.constant
+                let new = self.multipleSelectionActionView.preferredHeight
+                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+            }
+        }, completion: nil)
+        DispatchQueue.main.async {
+            self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            if let viewModel = self.dataSource.viewModel(for: indexPath) {
+                self.dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
+            }
+        }
+    }
+    
+    private func updateTableViewBottomInsetWithBottomBarHeight(old: CGFloat, new: CGFloat, animated: Bool) {
+        tableView.scrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
+        if animated {
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(0.5)
+            UIView.setAnimationCurve(.overdamped)
+        }
+        updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
+        let bottomInset = new + MessageViewModel.bottomSeparatorHeight
+        
+        var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
+        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
+            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
+            let availableSpace = focusRectY
+                - tableView.contentOffset.y
+                - tableView.contentInset.top
+                - ConversationDateHeaderView.height
+            if availableSpace > 0 {
+                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
+            } else {
+                newContentOffsetY = tableView.contentOffset.y
+            }
+        }
+        tableView.contentInset.bottom = bottomInset
+        if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
+            tableView.setContentOffsetYSafely(newContentOffsetY)
+        }
+        
+        view.layoutIfNeeded()
+        if animated {
+            UIView.commitAnimations()
+        }
+    }
+    
 }
 
 // MARK: - Helpers
@@ -1755,39 +1894,53 @@ extension ConversationViewController {
         }
     }
     
-    private func deleteForMe(viewModel: MessageViewModel) {
-        let message = viewModel.message
-        if viewModel.message.messageId == AudioManager.shared.playingMessage?.messageId {
+    private func deleteForMe(viewModels: [MessageViewModel]) {
+        if let playingMessageId = AudioManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
             AudioManager.shared.stop()
         }
-        dataSource?.queue.async { [weak self] in
-            guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
-                return
-            }
-            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
-            if MessageDAO.shared.deleteMessage(id: message.messageId) {
-                ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
-            }
-            DispatchQueue.main.sync {
-                _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
-                weakSelf.tableView.reloadData()
-                weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+        for case let viewModel as AttachmentLoadingViewModel in viewModels {
+            viewModel.cancelAttachmentLoading(isTriggeredByUser: true)
+        }
+        for viewModel in viewModels {
+            dataSource?.queue.async { [weak self] in
+                let message = viewModel.message
+                guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
+                    return
+                }
+                if MessageDAO.shared.deleteMessage(id: message.messageId) {
+                    ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+                }
+                DispatchQueue.main.sync {
+                    _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
+                    weakSelf.tableView.reloadData()
+                    weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+                }
             }
         }
+        endMultipleSelection()
     }
     
-    private func deleteForEveryone(viewModel: MessageViewModel) {
-        let message = viewModel.message
-        if viewModel.message.messageId == AudioManager.shared.playingMessage?.messageId {
+    private func deleteForEveryone(viewModels: [MessageViewModel]) {
+        if let playingMessageId = AudioManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
             AudioManager.shared.stop()
         }
-        (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(isTriggeredByUser: true)
-        DispatchQueue.global().async {
-            SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status)
+        for case let viewModel as AttachmentLoadingViewModel in viewModels {
+            viewModel.cancelAttachmentLoading(isTriggeredByUser: true)
         }
+        DispatchQueue.global().async {
+            for viewModel in viewModels {
+                let message = viewModel.message
+                SendMessageService.shared.recallMessage(messageId: message.messageId,
+                                                        category: message.category,
+                                                        mediaUrl: message.mediaUrl,
+                                                        conversationId: message.conversationId,
+                                                        status: message.status)
+            }
+        }
+        endMultipleSelection()
     }
-
-    private func showRecallTips(viewModel: MessageViewModel) {
+    
+    private func showRecallTips(viewModels: [MessageViewModel]) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true
@@ -1795,7 +1948,7 @@ extension ConversationViewController {
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true
-            self.deleteForEveryone(viewModel: viewModel)
+            self.deleteForEveryone(viewModels: viewModels)
         }))
         present(alc, animated: true, completion: nil)
     }

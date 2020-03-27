@@ -79,8 +79,10 @@ class DetailInfoMessageCell: MessageCell {
         guard let viewModel = viewModel, let bubbleImageSet = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageSet else {
             return
         }
+        let shouldHighlight = highlight && !isMultipleSelecting
+        let image = bubbleImageSet.image(forStyle: viewModel.style, highlight: shouldHighlight)
         let transition = {
-            self.backgroundImageView.image = bubbleImageSet.image(forStyle: viewModel.style, highlight: highlight)
+            self.backgroundImageView.image = image
         }
         if animated {
             UIView.transition(with: backgroundImageView,

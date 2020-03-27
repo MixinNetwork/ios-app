@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationViewController" customModule="Mixin" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MultipleSelectionActionView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="0 Selected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IdU-o7-3e7">
+                    <rect key="frame" x="20" y="0.0" width="310" height="50"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gtO-VI-6kF">
+                    <rect key="frame" x="350" y="0.0" width="64" height="50"/>
+                    <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" image="Conversation/ic_selection_action_forward"/>
+                    <connections>
+                        <action selector="multipleSelectionAction:" destination="-1" eventType="touchUpInside" id="JWN-yK-zTR"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="gtO-VI-6kF" secondAttribute="trailing" id="DbF-Kv-Ywk"/>
+                <constraint firstItem="gtO-VI-6kF" firstAttribute="leading" secondItem="IdU-o7-3e7" secondAttribute="trailing" constant="20" id="bvd-sm-AaR"/>
+                <constraint firstItem="IdU-o7-3e7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="d4r-6v-YjR"/>
+                <constraint firstItem="Q1h-gb-Igu" firstAttribute="bottom" secondItem="gtO-VI-6kF" secondAttribute="bottom" id="iTU-8f-lug"/>
+                <constraint firstItem="IdU-o7-3e7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="lKm-4L-pzY"/>
+                <constraint firstItem="gtO-VI-6kF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="q4o-im-vPb"/>
+                <constraint firstItem="Q1h-gb-Igu" firstAttribute="bottom" secondItem="IdU-o7-3e7" secondAttribute="bottom" id="x4o-C5-VpO"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Q1h-gb-Igu"/>
+            <connections>
+                <outlet property="button" destination="gtO-VI-6kF" id="D7N-n0-frc"/>
+                <outlet property="label" destination="IdU-o7-3e7" id="Pww-Xd-0q2"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="88"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Conversation/ic_selection_action_forward" width="24" height="24"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -1,56 +1,31 @@
 import UIKit
 import MixinServices
 
-fileprivate extension Selector {
-    static let reply = #selector(ConversationTableView.replyAction(_:))
-    static let delete = #selector(ConversationTableView.deleteAction(_:))
-    static let forward = #selector(ConversationTableView.forwardAction(_:))
-    static let copy = #selector(ConversationTableView.copyAction(_:))
-    static let addToStickers = #selector(ConversationTableView.addToStickersAction(_:))
-    static let report = #selector(ConversationTableView.reportAction(_:))
+extension MessageAction {
+    
+    var selector: Selector {
+        switch self {
+        case .reply:
+            return #selector(ConversationTableView.replyAction(_:))
+        case .forward:
+            return #selector(ConversationTableView.forwardAction(_:))
+        case .copy:
+            return #selector(ConversationTableView.copyAction(_:))
+        case .delete:
+            return #selector(ConversationTableView.deleteAction(_:))
+        case .addToStickers:
+            return #selector(ConversationTableView.addToStickersAction(_:))
+        case .report:
+            return #selector(ConversationTableView.reportAction(_:))
+        }
+    }
+    
 }
 
 extension MessageItem {
     
-    var allowedActions: [Selector] {
-        var actions = [Selector]()
-        if status == MessageStatus.FAILED.rawValue || category.hasPrefix("WEBRTC_") {
-            actions = [.delete]
-        } else if category.hasSuffix("_TEXT") || category.hasSuffix("_POST") {
-            actions = [.reply, .forward, .copy, .delete]
-        } else if category.hasSuffix("_STICKER") {
-            actions = [.addToStickers, .reply, .forward, .delete]
-        } else if category.hasSuffix("_CONTACT") || category.hasSuffix("_LIVE") {
-            actions = [.reply, .forward, .delete]
-        } else if category.hasSuffix("_IMAGE") {
-            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
-                actions = [.addToStickers, .reply, .forward, .delete]
-            } else {
-                actions = [.reply, .delete]
-            }
-        } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
-            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
-                actions = [.reply, .forward, .delete]
-            } else {
-                actions = [.reply, .delete]
-            }
-        } else if category.hasSuffix("_LOCATION") {
-            actions = [.forward, .reply, .delete]
-        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            actions = [.delete]
-        } else if category == MessageCategory.APP_CARD.rawValue {
-            actions = [.forward, .reply, .delete]
-        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-            actions = [.delete]
-        } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
-            actions = [.delete]
-        } else {
-            actions = []
-        }
-        if ConversationViewController.allowReportSingleMessage {
-            actions += [.report]
-        }
-        return actions
+    var allowedSelectors: Set<Selector> {
+        Set(allowedActions.map { $0.selector })
     }
     
 }
@@ -60,7 +35,7 @@ protocol ConversationTableViewActionDelegate: class {
     func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView)
     func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool
     func conversationTableView(_ tableView: ConversationTableView, canPerformAction action: Selector, forIndexPath indexPath: IndexPath) -> Bool
-    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath)
+    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: MessageAction, forIndexPath indexPath: IndexPath)
 }
 
 class ConversationTableView: UITableView {
@@ -155,7 +130,7 @@ class ConversationTableView: UITableView {
     }
 
     @objc func addToStickersAction(_ sender: Any) {
-        invokeDelegate(action: .add)
+        invokeDelegate(action: .addToStickers)
     }
 
     @objc func reportAction(_ sender: Any) {
@@ -282,7 +257,7 @@ class ConversationTableView: UITableView {
         }
     }
     
-    private func invokeDelegate(action: Action) {
+    private func invokeDelegate(action: MessageAction) {
         guard let indexPath = indexPathForSelectedRow else {
             return
         }
@@ -325,15 +300,6 @@ class ConversationTableView: UITableView {
 }
 
 extension ConversationTableView {
-    
-    enum Action {
-        case reply
-        case forward
-        case copy
-        case delete
-        case add
-        case report
-    }
     
     enum ReuseId: String {
         case text = "TextMessageCell"

@@ -20,6 +20,8 @@ class ConversationDataSource {
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
     var focusIndexPath: IndexPath?
+    var selectedViewModels = [String: MessageViewModel]() // Key is message id
+    
     weak var tableView: ConversationTableView?
     
     private let windowRect = AppDelegate.current.window.bounds
@@ -165,13 +167,13 @@ class ConversationDataSource {
         var unreadMentionMessageIds = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
         
         if let initialMessageId = initialMessageId {
-            initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
+            initialIndexPath = firstIndexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
             if let position = ConversationViewController.positions[conversationId], initialMessageId == position.messageId, highlight == nil {
                 offset = position.offset
             } else {
                 offset -= ConversationDateHeaderView.height
             }
-        } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
+        } else if let unreadHintIndexPath = firstIndexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
             if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 initialIndexPath = IndexPath(row: 0, section: 0)
             } else {
@@ -225,6 +227,7 @@ class ConversationDataSource {
                 SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
             }
             self.didInitializedData = true
+            selectTableViewRowsWithPreviousSelection()
             completion?()
         }
     }
@@ -352,6 +355,7 @@ class ConversationDataSource {
                 tableView.reloadData()
                 let y = tableView.contentSize.height - bottomDistance
                 tableView.setContentOffsetYSafely(y)
+                self.selectTableViewRowsWithPreviousSelection()
                 self.isLoadingAbove = false
             }
         }
@@ -415,6 +419,7 @@ class ConversationDataSource {
                 if !viewModels.isEmpty {
                     tableView.reloadData()
                 }
+                self.selectTableViewRowsWithPreviousSelection()
                 self.didLoadLatestMessage = didLoadLatestMessage
                 self.isLoadingBelow = false
             }
@@ -467,7 +472,7 @@ class ConversationDataSource {
     }
     
     func indexPath(where predicate: (MessageItem) -> Bool) -> IndexPath? {
-        return indexPath(ofDates: dates, viewModels: viewModels, where: predicate)
+        return firstIndexPath(ofDates: dates, viewModels: viewModels, where: predicate)
     }
     
 }
@@ -661,6 +666,7 @@ extension ConversationDataSource {
                     let viewModel = self.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
                     self.viewModels[date]?[indexPath.row] = viewModel
                     tableView.reloadData()
+                    self.selectTableViewRowsWithPreviousSelection()
                 }
             }
         }
@@ -829,7 +835,7 @@ extension ConversationDataSource {
         }
     }
     
-    private func indexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {
+    private func firstIndexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {
         for (section, date) in dates.enumerated() {
             let viewModels = viewModels[date]!
             for (row, viewModel) in viewModels.enumerated() {
@@ -839,6 +845,29 @@ extension ConversationDataSource {
             }
         }
         return nil
+    }
+    
+    private func indexPaths(passing test: (MessageItem) -> Bool) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        for (section, date) in dates.enumerated() {
+            let viewModels = self.viewModels[date]!
+            for (row, viewModel) in viewModels.enumerated() {
+                if test(viewModel.message) {
+                    let indexPath = IndexPath(row: row, section: section)
+                    indexPaths.append(indexPath)
+                }
+            }
+        }
+        return indexPaths
+    }
+    
+    private func selectTableViewRowsWithPreviousSelection() {
+        guard let tableView = tableView else {
+            return
+        }
+        for indexPath in indexPaths(passing: { selectedViewModels[$0.messageId] != nil }) {
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
     }
     
     typealias CategorizedViewModels = (dates: [String], viewModels: [String: [MessageViewModel]])
@@ -1057,6 +1086,9 @@ extension ConversationDataSource {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
+            tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
+                tableView.deselectRow(at: indexPath, animated: false)
+            })
             if shouldRemoveAllHighlights {
                 self.viewModels.values.flatMap({ $0 }).forEach {
                     ($0 as? TextMessageViewModel)?.removeHighlights()
@@ -1100,6 +1132,7 @@ extension ConversationDataSource {
             } else {
                 postNewMessageOutOfBoundsNotification(message: message)
             }
+            selectTableViewRowsWithPreviousSelection()
         }
     }
     

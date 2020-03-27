@@ -39,8 +39,9 @@ class StickerMessageCell: DetailInfoMessageCell {
         }
         selectedOverlapImageView.image = overlapImage
         selectedOverlapImageView.frame = contentImageView.bounds
+        let shouldHighlight = highlight && !isMultipleSelecting
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
-            self.selectedOverlapImageView.alpha = highlight ? 1 : 0
+            self.selectedOverlapImageView.alpha = shouldHighlight ? 1 : 0
         }
     }
     

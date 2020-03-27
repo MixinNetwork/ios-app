@@ -193,6 +193,15 @@ extension PostViewController {
         
     }
     
+    private struct PostStyle: Style {
+        
+        var colors: ColorStyle = PostColorStyle()
+        var fonts: FontStyle = DefaultFontStyle()
+        var hasStrikethrough: Bool = false
+        var softbreakSeparator: String = "\n"
+        
+    }
+    
     private struct PostDocumentStyle: DocumentStyle {
         
         var insets: DocumentInsets = PostDocumentInsets()
@@ -203,9 +212,7 @@ extension PostViewController {
             values.codeHighlighterTheme = theme
             return values
         }()
-        var maakuStyle: Style = DefaultStyle(colors: PostColorStyle(),
-                                             fonts: DefaultFontStyle(),
-                                             hasStrikethrough: false)
+        var maakuStyle: Style = PostStyle()
         
     }
     

@@ -12,7 +12,7 @@ enum GroupIconMaker {
     
     private enum AvatarRepresentation {
         case image(UIImage)
-        case composed(background: UIImage, name: String)
+        case composed(backgroundColor: UIColor, name: String)
     }
     
     static func make(participants: [ParticipantUser]) -> UIImage? {
@@ -32,10 +32,11 @@ enum GroupIconMaker {
                 })
                 semaphore.wait()
             } else {
-                let colorIndex = participant.userId.positiveHashCode() % 24 + 1
-                if let background = UIImage(named: "AvatarBackground/color\(colorIndex)"), let firstLetter = participant.userFullName.first {
+                let index = participant.userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
+                let color = UIColor.avatarBackgroundColors[index]
+                if let firstLetter = participant.userFullName.first {
                     let name = String([firstLetter]).uppercased()
-                    avatars.append(.composed(background: background, name: name))
+                    avatars.append(.composed(backgroundColor: color, name: name))
                     isSucceed = true
                 }
             }
@@ -54,8 +55,8 @@ enum GroupIconMaker {
             switch avatar {
             case let .image(image):
                 return iconFragment(from: image, index: index, of: avatars.count)
-            case let .composed(background, name):
-                return iconFragment(name: name, background: background, index: index, of: avatars.count)
+            case let .composed(color, name):
+                return iconFragment(name: name, backgroundColor: color, index: index, of: avatars.count)
             }
         }
         
@@ -228,8 +229,8 @@ enum GroupIconMaker {
         }
     }
     
-    private static func iconFragment(name: String, background: UIImage, index: Int, of numberOfPieces: Int) -> UIImage {
-        let canvasSize = background.size
+    private static func iconFragment(name: String, backgroundColor: UIColor, index: Int, of numberOfPieces: Int) -> UIImage {
+        let canvasSize = CGSize(width: 48, height: 48)
         
         let fontSize: CGFloat
         switch numberOfPieces {
@@ -298,7 +299,8 @@ enum GroupIconMaker {
         let renderer = UIGraphicsImageRenderer(size: canvasSize)
         return renderer.image { (ctx) in
             path.addClip()
-            background.draw(in: CGRect(origin: .zero, size: canvasSize))
+            ctx.cgContext.setFillColor(backgroundColor.cgColor)
+            ctx.fill(CGRect(origin: .zero, size: canvasSize))
             (name as NSString).draw(at: origin, withAttributes: attributes)
         }
     }

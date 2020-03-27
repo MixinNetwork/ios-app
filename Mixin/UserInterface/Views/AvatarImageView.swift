@@ -4,7 +4,7 @@ import MixinServices
 class AvatarImageView: UIView {
     
     @IBInspectable
-    var titleFontSize: CGFloat = 24 {
+    var titleFontSize: CGFloat = 22 {
         didSet {
             titleLabel.font = .systemFont(ofSize: titleFontSize)
         }
@@ -13,7 +13,7 @@ class AvatarImageView: UIView {
     @IBInspectable
     var hasShadow: Bool = false {
         didSet {
-            layer.shadowOpacity = hasShadow ? 0.26 : 0
+            layer.shadowOpacity = hasShadow ? 0.2 : 0
             setNeedsLayout()
         }
     }

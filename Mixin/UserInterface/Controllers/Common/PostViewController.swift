@@ -179,9 +179,23 @@ extension PostViewController {
         
     }
     
+    private struct PostDocumentInsets: DocumentInsets {
+        
+        var document = UIEdgeInsets.zero
+        var blockQuote = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var codeBlock = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var footNoteDefinition = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var heading = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var horizontalRule = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var list = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var paragraph = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        var table = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        
+    }
+    
     private struct PostDocumentStyle: DocumentStyle {
         
-        var insets: DocumentInsets = DefaultDocumentInsets()
+        var insets: DocumentInsets = PostDocumentInsets()
         var colors: DocumentColors = PostColors()
         var values: DocumentValues = {
             var values = DefaultDocumentValues()

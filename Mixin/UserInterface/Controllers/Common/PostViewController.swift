@@ -158,7 +158,7 @@ extension PostViewController {
         var circleHeaderBackground: UIColor = .secondaryBackground
         var circleHeaderForeground: UIColor = .secondaryBackground
         var codeBlockBackground: UIColor = .secondaryBackground
-        var horizontalRule: UIColor = .secondaryBackground
+        var horizontalRule: UIColor = .accessoryText
         
     }
     
@@ -202,16 +202,24 @@ extension PostViewController {
         
     }
     
+    private struct PostDocumentValues: DocumentValues {
+        
+        var blockQuoteLineWidth: CGFloat = 3.0
+        var horizontalRuleHeight: CGFloat = 1
+        var circleHeaderRadius: CGFloat = 15.5
+        var circleHeaderFont: UIFont = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        var unorderedListSymbol: String = "•"
+        var circleHeadersEnabled: Bool = true
+        var codeHighlighterTheme: String = UserInterfaceStyle.current == .dark ? "a11y-dark" : "a11y-light"
+        var codeFont: UIFont = UIFont.preferredFont(forTextStyle: .body)
+        
+    }
+    
     private struct PostDocumentStyle: DocumentStyle {
         
         var insets: DocumentInsets = PostDocumentInsets()
         var colors: DocumentColors = PostColors()
-        var values: DocumentValues = {
-            var values = DefaultDocumentValues()
-            let theme = UserInterfaceStyle.current == .dark ? "a11y-dark" : "a11y-light"
-            values.codeHighlighterTheme = theme
-            return values
-        }()
+        var values: DocumentValues = PostDocumentValues()
         var maakuStyle: Style = PostStyle()
         
     }

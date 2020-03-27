@@ -28,8 +28,8 @@ target 'Mixin' do
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
   pod 'Texture', :git => 'https://github.com/TextureGroup/Texture.git', :branch => 'master'
-  pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git'
-  pod 'TexturedMaaku/SyntaxColors', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git'
+  pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
+  pod 'TexturedMaaku/SyntaxColors', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
   mixin_services
 end
 

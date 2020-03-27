@@ -222,8 +222,8 @@ DEPENDENCIES:
   - SnapKit
   - SwiftyMarkdown (from `https://github.com/wuyuehyang/SwiftyMarkdown.git`)
   - Texture (from `https://github.com/TextureGroup/Texture.git`, branch `master`)
-  - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
-  - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`)
+  - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
+  - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
 
 SPEC REPOS:
@@ -286,6 +286,7 @@ EXTERNAL SOURCES:
     :branch: master
     :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
+    :branch: mixin
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
     :branch: bugfix/fts
@@ -302,7 +303,7 @@ CHECKOUT OPTIONS:
     :commit: 70f61e9d01eff930f3f8e2bf4146a1841821c79a
     :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
-    :commit: f491023ac292d4a06e3a0dfb2728e0c59cc267c8
+    :commit: df3a4fd086c49d95c6ac75e7ce8987fb2945e6ca
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
@@ -362,6 +363,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: a583d065041a47bc01908c84c545fb29d5946647
+PODFILE CHECKSUM: bf4bc6670fe55ad98d272180c3ffd75f5b0721cd
 
 COCOAPODS: 1.8.4

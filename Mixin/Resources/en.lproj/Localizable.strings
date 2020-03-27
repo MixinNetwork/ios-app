@@ -283,6 +283,7 @@
 "chat_location_unnamed" = "Unnamed location";
 "chat_location_distance" = "Distance: %@";
 "chat_location_search_no_result" = "There were no results for \"%@\"\nTry a new search";
+"chat_number_of_selection" = "%@ Selected";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

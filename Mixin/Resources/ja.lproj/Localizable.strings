@@ -257,6 +257,7 @@
 "chat_location_unnamed" = "ある場所";
 "chat_location_distance" = "距離%@";
 "chat_location_search_no_result" = "「%@」の結果はありませんでした\n別のを試してください";
+"chat_number_of_selection" = "%@件選択済み";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

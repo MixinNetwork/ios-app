@@ -451,9 +451,8 @@ class ConversationViewController: UIViewController {
                 switch UserAPI.shared.reportUser(userId: inviterId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
                         hud.hide()
                         UIApplication.homeNavigationController?.backToHome()
                     }
@@ -1269,6 +1268,7 @@ extension ConversationViewController {
     
     private func updateSubtitleAndInputBar() {
         let conversationId = dataSource.conversationId
+        let conversationStatus = dataSource.conversation.status
         dataSource.queue.async { [weak self] in
             let isParticipant = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
             if isParticipant {
@@ -1279,7 +1279,7 @@ extension ConversationViewController {
                     }
                     weakSelf.numberOfParticipants = count
                     weakSelf.isMember = isParticipant
-                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
+                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = conversationStatus == ConversationStatus.QUIT.rawValue
                     weakSelf.conversationInputViewController.inputBarView.isHidden = false
                     weakSelf.subtitleLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: count)
                 }

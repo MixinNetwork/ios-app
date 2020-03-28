@@ -66,8 +66,16 @@ class ProfileViewController: UIViewController {
     var conversationId: String {
         return ""
     }
+
+    var conversationName: String {
+        return ""
+    }
     
     var isMuted: Bool {
+        return false
+    }
+
+    var isGroup: Bool {
         return false
     }
     
@@ -298,12 +306,17 @@ extension ProfileViewController {
     
     @objc func clearChat() {
         let conversationId = self.conversationId
-        let alert = UIAlertController(title: R.string.localizable.group_menu_clear(), message: nil, preferredStyle: .actionSheet)
+        let alert: UIAlertController
+        if isGroup {
+            alert = UIAlertController(title: R.string.localizable.profile_clear_group_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+        } else {
+            alert = UIAlertController(title: R.string.localizable.profile_clear_contact_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+        }
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)
             DispatchQueue.global().async {
-                ConversationDAO.shared.clearConversation(conversationId: conversationId)
+                ConversationDAO.shared.clearChat(conversationId: conversationId)
                 DispatchQueue.main.async {
                     showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
                 }

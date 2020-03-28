@@ -972,7 +972,7 @@ extension ReceiveMessageService {
             }
 
             if participantId == currentAccountId {
-                ConversationDAO.shared.clearConversation(conversationId: data.conversationId, exitConversation: true, autoNotification: false)
+                ConversationDAO.shared.exitGroup(conversationId: data.conversationId)
             } else {
                 SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
                 operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)

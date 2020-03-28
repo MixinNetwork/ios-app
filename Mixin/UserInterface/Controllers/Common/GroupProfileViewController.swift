@@ -6,9 +6,17 @@ final class GroupProfileViewController: ProfileViewController {
     override var conversationId: String {
         return conversation.conversationId
     }
+
+    override var conversationName: String {
+        return conversation.name
+    }
     
     override var isMuted: Bool {
         return conversation.isMuted
+    }
+
+    override var isGroup: Bool {
+        return true
     }
     
     private let conversation: ConversationItem
@@ -162,28 +170,34 @@ extension GroupProfileViewController {
         }
     }
     
-    @objc func exitGroup() {
+    @objc func exitGroupAction() {
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(), message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
-            self.dismiss(animated: true) {
-                if UIApplication.currentConversationId() == conversationId {
-                    hud.hide()
-                    UIApplication.homeNavigationController?.backToHome()
-                } else {
+            ConversationAPI.shared.exitConversation(conversationId: conversationId) { (result) in
+                switch result {
+                case .success:
                     hud.set(style: .notification, text: R.string.localizable.action_done())
-                    hud.scheduleAutoHidden()
+                    DispatchQueue.global().async {
+                        ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                    }
+                case let .failure(error):
+                    if error.code == 404 || error.code == 403 {
+                        hud.set(style: .notification, text: R.string.localizable.action_done())
+                        DispatchQueue.global().async {
+                            ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                        }
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
                 }
-            }
-        }))
+                hud.scheduleAutoHidden()
+            }        }))
         present(alert, animated: true, completion: nil)
     }
-    
 }
 
 // MARK: - Private works
@@ -366,7 +380,7 @@ extension GroupProfileViewController {
             ProfileMenuItem(title: R.string.localizable.group_menu_exit(),
                             subtitle: nil,
                             style: [.destructive],
-                            action: #selector(exitGroup))
+                            action: #selector(exitGroupAction))
         ])
         
         reloadMenu(groups: groups)

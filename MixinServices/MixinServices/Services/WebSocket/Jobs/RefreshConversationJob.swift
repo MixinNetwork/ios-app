@@ -44,7 +44,7 @@ public class RefreshConversationJob: BaseJob {
             participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]
         }
         guard participants.count > 0 else {
-            ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
+            ConversationDAO.shared.deleteChat(conversationId: conversationId)
             return
         }
         
@@ -69,7 +69,7 @@ public class RefreshConversationJob: BaseJob {
             }
         case let .failure(error):
             if (error.code == 404 || error.code == 403) && status == ConversationStatus.QUIT.rawValue {
-                ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
+                ConversationDAO.shared.exitGroup(conversationId: conversationId)
             } else {
                 throw error
             }

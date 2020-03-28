@@ -258,9 +258,6 @@ public class Localized {
     public static let GROUP_JOIN_FAIL_FULL = LocalizedString("group_join_fail_full", comment: "The group chat is full.")
     public static let GROUP_LINK_CHECKING = LocalizedString("group_link_checking", comment: "Checking invite link")
     public static let GROUP_REMOVE_TITLE = LocalizedString("group_remove_title", comment: "you were removed from the group")
-    public static let GROUP_MENU_CLEAR = LocalizedString("group_menu_clear", comment: "Clear Chat")
-    public static let GROUP_MENU_DELETE = LocalizedString("group_menu_delete", comment: "Delete Chat")
-    public static let GROUP_MENU_EXIT = LocalizedString("group_menu_exit", comment: "Delete and Exit")
     public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
     public static let GROUP_MENU_PARTICIPANTS = LocalizedString("group_menu_participants", comment: "Participants")
     public static func GROUP_TITLE_MEMBERS(count: String) -> String {

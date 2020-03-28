@@ -471,58 +471,97 @@ extension HomeViewController {
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        if conversation.category == ConversationCategory.CONTACT.rawValue {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_DELETE, style: .destructive, handler: { [weak self](action) in
-                self?.deleteAction(indexPath: indexPath)
+
+        alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { [weak self](action) in
+            self?.clearChatAction(indexPath: indexPath)
+        }))
+
+        if conversation.category == ConversationCategory.GROUP.rawValue {
+            alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { [weak self](action) in
+                self?.exitGroupAction(indexPath: indexPath)
             }))
         } else {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .default, handler: { [weak self](action) in
-                self?.clearChatAction(indexPath: indexPath)
+            alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { [weak self](action) in
+                self?.deleteChatAction(indexPath: indexPath)
             }))
         }
-        if conversation.category == ConversationCategory.GROUP.rawValue {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_EXIT, style: .destructive, handler: { [weak self](action) in
-                self?.deleteAndExitAction(indexPath: indexPath)
-            }))
-        }
+
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
         tableView.setEditing(false, animated: true)
     }
+
+    private func deleteChatAction(indexPath: IndexPath) {
+        let conversation = conversations[indexPath.row]
+        let conversationId = conversation.conversationId
+        let alert = UIAlertController(title: R.string.localizable.profile_delete_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
+            self.tableView.beginUpdates()
+            self.conversations.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.endUpdates()
+            DispatchQueue.global().async {
+                ConversationDAO.shared.deleteChat(conversationId: conversationId)
+            }
+        }))
+        present(alert, animated: true, completion: nil)
+    }
     
     private func clearChatAction(indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
-        tableView.beginUpdates()
-        conversations[indexPath.row].contentType = MessageCategory.UNKNOWN.rawValue
-        conversations[indexPath.row].unseenMessageCount = 0
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
-        DispatchQueue.global().async {
-            ConversationDAO.shared.clearConversation(conversationId: conversation.conversationId, autoNotification: false)
-            NotificationCenter.default.postOnMain(name: .StorageUsageDidChange)
+        let conversationId = conversation.conversationId
+        let alert: UIAlertController
+        if conversation.category == ConversationCategory.GROUP.rawValue {
+            alert = UIAlertController(title: R.string.localizable.profile_clear_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+        } else {
+            alert = UIAlertController(title: R.string.localizable.profile_clear_contact_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
         }
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
+            self.tableView.beginUpdates()
+            self.conversations[indexPath.row].contentType = MessageCategory.UNKNOWN.rawValue
+            self.conversations[indexPath.row].unseenMessageCount = 0
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            self.tableView.endUpdates()
+            DispatchQueue.global().async {
+                ConversationDAO.shared.clearChat(conversationId: conversationId)
+            }
+        }))
+        present(alert, animated: true, completion: nil)
     }
-    
-    private func deleteAction(indexPath: IndexPath) {
-        tableView.beginUpdates()
-        let conversation = conversations.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        tableView.endUpdates()
-        DispatchQueue.global().async {
-            ConversationDAO.shared.clearConversation(conversationId: conversation.conversationId, exitConversation: true)
-        }
-    }
-    
-    private func deleteAndExitAction(indexPath: IndexPath) {
+
+    private func exitGroupAction(indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
-        tableView.beginUpdates()
-        conversations.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        tableView.endUpdates()
-        DispatchQueue.global().async {
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversation.conversationId)
-        }
+        let conversationId = conversation.conversationId
+        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
+                switch result {
+                case .success:
+                    hud.hide()
+                    self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
+                    DispatchQueue.global().async {
+                        ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                    }
+                case let .failure(error):
+                    if error.code == 404 || error.code == 403 {
+                        hud.hide()
+                        self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
+                        DispatchQueue.global().async {
+                            ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                        }
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            }
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     private func hideCameraButton() {

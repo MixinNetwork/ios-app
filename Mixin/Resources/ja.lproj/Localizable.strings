@@ -526,7 +526,6 @@
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@まで消音しました";
 "profile_remove_hint" = "連絡先を削除しますか。会話内容は削除されません";
-"profile_exit_group_hint" = "チャットを削除しますか。会話内容も削除されます";
 "profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
 "profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";

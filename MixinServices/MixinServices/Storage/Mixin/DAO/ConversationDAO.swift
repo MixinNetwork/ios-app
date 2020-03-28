@@ -25,7 +25,7 @@ public final class ConversationDAO {
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
-    WHERE c.category IS NOT NULL AND c.status <> 2 %@
+    WHERE c.category IS NOT NULL %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
@@ -96,15 +96,6 @@ public final class ConversationDAO {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull())
     }
     
-    public func getQuitStatusConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue)
-    }
-    
-    public func makeQuitConversation(conversationId: String) {
-        MixinDatabase.shared.update(maps: [(Conversation.Properties.status, ConversationStatus.QUIT.rawValue)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
-        ConcurrentJobQueue.shared.addJob(job: ExitConversationJob(conversationId: conversationId))
-    }
-    
     public func updateConversationOwnerId(conversationId: String, ownerId: String) -> Bool {
         return MixinDatabase.shared.update(maps: [(Conversation.Properties.ownerId, ownerId)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
@@ -122,34 +113,48 @@ public final class ConversationDAO {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.pinTime, pinTime ?? MixinDatabase.NullValue())], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
 
-    public func clearConversation(conversationId: String, removeConversation: Bool = false, exitConversation: Bool = false, autoNotification: Bool = true) {
+    public func exitGroup(conversationId: String) {
+        MixinDatabase.shared.transaction { (db) in
+            try db.update(table: Conversation.tableName,
+                on: [Conversation.Properties.unseenMessageCount, Conversation.Properties.status],
+                with: [0, ConversationStatus.QUIT.rawValue],
+                where: Conversation.Properties.conversationId == conversationId)
+            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
+            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+        }
+        let change = ConversationChange(conversationId: conversationId, action: .reload)
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+    }
+
+    public func deleteChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
             try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
-            
-            if removeConversation || exitConversation {
-                try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
-            } else {
-                try db.update(table: Conversation.tableName,
-                    on: [Conversation.Properties.unseenMessageCount],
-                    with: [0],
-                    where: Conversation.Properties.conversationId == conversationId)
-            }
-
-            if exitConversation {
-                try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
-                try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
-            }
+            try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
+            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
+            try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
         }
 
         ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
 
-        if autoNotification {
-            let change = ConversationChange(conversationId: conversationId, action: .reload)
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        let change = ConversationChange(conversationId: conversationId, action: .reload)
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+    }
+
+    public func clearChat(conversationId: String) {
+        let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
+
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+            try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
         }
+
+        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+
+        let change = ConversationChange(conversationId: conversationId, action: .reload)
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
     public func getConversation(ownerUserId: String) -> ConversationItem? {

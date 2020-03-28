@@ -303,7 +303,7 @@ CHECKOUT OPTIONS:
     :commit: 70f61e9d01eff930f3f8e2bf4146a1841821c79a
     :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
-    :commit: df3a4fd086c49d95c6ac75e7ce8987fb2945e6ca
+    :commit: 93333070dce52a7ee036247bf35bca7ced1123ba
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653

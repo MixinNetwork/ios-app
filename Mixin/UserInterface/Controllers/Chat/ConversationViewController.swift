@@ -358,13 +358,15 @@ class ConversationViewController: UIViewController {
         case .delete:
             let viewModels = dataSource.selectedViewModels.values.map({ $0 })
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
-                if AppGroupUserDefaults.User.hasShownRecallTips {
-                    self.deleteForEveryone(viewModels: viewModels)
-                } else {
-                    self.showRecallTips(viewModels: viewModels)
-                }
-            }))
+            if !viewModels.contains(where: { $0.message.userId != myUserId }) {
+                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
+                    if AppGroupUserDefaults.User.hasShownRecallTips {
+                        self.deleteForEveryone(viewModels: viewModels)
+                    } else {
+                        self.showRecallTips(viewModels: viewModels)
+                    }
+                }))
+            }
             controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
                 self.deleteForMe(viewModels: viewModels)
             }))

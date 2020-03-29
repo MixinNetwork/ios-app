@@ -254,13 +254,20 @@ class ConversationInputViewController: UIViewController {
         }
         deleteConversationButton.isBusy = true
         let conversationId = dataSource.conversationId
-        DispatchQueue.global().async { [weak self] in
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
-            DispatchQueue.main.async {
-                self?.navigationController?.backToHome()
+
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { (_) in
+            self.deleteConversationButton.isBusy = false
+        }))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
+            DispatchQueue.global().async { [weak self] in
+                ConversationDAO.shared.deleteChat(conversationId: conversationId)
+                DispatchQueue.main.async {
+                    self?.navigationController?.backToHome()
+                }
             }
-        }
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {

@@ -53,10 +53,6 @@ public class ConversationAPI : BaseAPI {
         request(method: .post, url: url.exit(id: conversationId), completion: completion)
     }
     
-    public func exitConversation(conversationId: String) -> APIResult<EmptyResponse> {
-        return request(method: .post, url: url.exit(id: conversationId))
-    }
-    
     public func joinConversation(codeId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
         request(method: .post, url: url.join(codeId: codeId), completion: completion)
     }

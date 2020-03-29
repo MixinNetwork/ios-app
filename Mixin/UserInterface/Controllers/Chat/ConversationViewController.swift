@@ -451,9 +451,8 @@ class ConversationViewController: UIViewController {
                 switch UserAPI.shared.reportUser(userId: inviterId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
                         hud.hide()
                         UIApplication.homeNavigationController?.backToHome()
                     }

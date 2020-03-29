@@ -46,6 +46,7 @@ public struct ConversationChange {
         case reload
         case update(conversation: ConversationItem)
         case updateConversation(conversation: ConversationResponse)
+        case updateConversationStatus(status: ConversationStatus)
         case updateGroupIcon(iconUrl: String)
         case updateMessage(messageId: String)
         case updateMessageStatus(messageId: String, newStatus: MessageStatus)

@@ -24,5 +24,7 @@ public class AttachmentCleanUpJob: BaseJob {
         for (mediaUrl, category) in mediaUrls {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
+
+        NotificationCenter.default.postOnMain(name: .StorageUsageDidChange)
     }
 }

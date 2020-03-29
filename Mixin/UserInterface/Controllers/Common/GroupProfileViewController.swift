@@ -6,9 +6,17 @@ final class GroupProfileViewController: ProfileViewController {
     override var conversationId: String {
         return conversation.conversationId
     }
+
+    override var conversationName: String {
+        return conversation.name
+    }
     
     override var isMuted: Bool {
         return conversation.isMuted
+    }
+
+    override var isGroup: Bool {
+        return true
     }
     
     private let conversation: ConversationItem
@@ -162,28 +170,65 @@ extension GroupProfileViewController {
         }
     }
     
-    @objc func exitGroup() {
+    @objc func exitGroupAction() {
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(), message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.post(name: .ConversationDidChange, object: nil)
-            self.dismiss(animated: true) {
-                if UIApplication.currentConversationId() == conversationId {
-                    hud.hide()
-                    UIApplication.homeNavigationController?.backToHome()
-                } else {
+            ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
+                let exitSuccessBlock = {
+                    self?.conversation.status = ConversationStatus.QUIT.rawValue
                     hud.set(style: .notification, text: R.string.localizable.action_done())
-                    hud.scheduleAutoHidden()
+                    DispatchQueue.global().async {
+                        ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                        DispatchQueue.main.async {
+                            self?.reloadData()
+                        }
+                    }
+                }
+                switch result {
+                case .success:
+                    exitSuccessBlock()
+                case let .failure(error):
+                    if error.code == 404 || error.code == 403 {
+                        exitSuccessBlock()
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
+                }
+                hud.scheduleAutoHidden()
+            }
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    @objc func deleteChatAction() {
+        let conversationId = conversation.conversationId
+        let alert = UIAlertController(title: R.string.localizable.profile_delete_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { [weak self](_) in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            DispatchQueue.global().async {
+                ConversationDAO.shared.deleteChat(conversationId: conversationId)
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.dismiss(animated: true) {
+                        hud.set(style: .notification, text: R.string.localizable.action_done())
+                        hud.scheduleAutoHidden()
+                        if UIApplication.currentConversationId() == conversationId {
+                            UIApplication.homeNavigationController?.backToHome()
+                        }
+                    }
                 }
             }
         }))
         present(alert, animated: true, completion: nil)
     }
-    
 }
 
 // MARK: - Private works
@@ -357,24 +402,37 @@ extension GroupProfileViewController {
                 ])
             }
         }
-        
-        groups.append([
-            ProfileMenuItem(title: R.string.localizable.group_menu_clear(),
-                            subtitle: nil,
-                            style: [.destructive],
-                            action: #selector(clearChat)),
-            ProfileMenuItem(title: R.string.localizable.group_menu_exit(),
-                            subtitle: nil,
-                            style: [.destructive],
-                            action: #selector(exitGroup))
-        ])
+
+        if conversation.status == ConversationStatus.QUIT.rawValue {
+            groups.append([
+                ProfileMenuItem(title: R.string.localizable.group_menu_clear(),
+                                subtitle: nil,
+                                style: [.destructive],
+                                action: #selector(clearChat)),
+                ProfileMenuItem(title: R.string.localizable.group_menu_delete(),
+                                subtitle: nil,
+                                style: [.destructive],
+                                action: #selector(deleteChatAction))
+            ])
+        } else {
+            groups.append([
+                ProfileMenuItem(title: R.string.localizable.group_menu_clear(),
+                                subtitle: nil,
+                                style: [.destructive],
+                                action: #selector(clearChat)),
+                ProfileMenuItem(title: R.string.localizable.group_menu_exit(),
+                                subtitle: nil,
+                                style: [.destructive],
+                                action: #selector(exitGroupAction))
+            ])
+        }
         
         reloadMenu(groups: groups)
     }
     
     private func showConversation(with response: ConversationResponse) {
         DispatchQueue.global().async { [weak self] in
-            guard ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS), let conversation = ConversationDAO.shared.getConversation(conversationId: response.conversationId) else {
+            guard let conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS) else {
                 DispatchQueue.main.async {
                     self?.dismiss(animated: true, completion: nil)
                 }

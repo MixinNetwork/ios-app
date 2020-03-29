@@ -21,20 +21,16 @@ public class RefreshConversationJob: BaseJob {
         guard let conversationStatus = ConversationDAO.shared.getConversationStatus(conversationId: conversationId) else {
             return
         }
-        
-        switch conversationStatus {
-        case ConversationStatus.START.rawValue:
-            
+
+        if conversationStatus == ConversationStatus.START.rawValue {
             let category = ConversationDAO.shared.getConversationCategory(conversationId: conversationId) ?? ""
             if category.isEmpty {
                 try updateConversation(conversationStatus)
             } else if let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
                 try createConversation(conversation: conversation)
             }
-        case ConversationStatus.SUCCESS.rawValue:
+        } else {
             try updateConversation(conversationStatus)
-        default:
-            break
         }
     }
     
@@ -44,7 +40,7 @@ public class RefreshConversationJob: BaseJob {
             participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]
         }
         guard participants.count > 0 else {
-            ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
+            ConversationDAO.shared.deleteChat(conversationId: conversationId)
             return
         }
         
@@ -68,8 +64,8 @@ public class RefreshConversationJob: BaseJob {
                 ConversationDAO.shared.updateConversation(conversation: response)
             }
         case let .failure(error):
-            if (error.code == 404 || error.code == 403) && status == ConversationStatus.QUIT.rawValue {
-                ConversationDAO.shared.clearConversation(conversationId: conversationId, exitConversation: true, autoNotification: false)
+            if error.code == 404 || error.code == 403 {
+                ConversationDAO.shared.exitGroup(conversationId: conversationId)
             } else {
                 throw error
             }

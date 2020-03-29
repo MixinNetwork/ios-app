@@ -680,35 +680,43 @@ public class ReceiveMessageService: MixinService {
         guard data.conversationId != User.systemUser && data.conversationId != myUserId else {
             return
         }
-        if let status = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId) {
-            if status == ConversationStatus.SUCCESS.rawValue || status == ConversationStatus.QUIT.rawValue {
+
+        let conversationStatus = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId)
+        guard conversationStatus != ConversationStatus.SUCCESS.rawValue else {
+            return
+        }
+
+        if conversationStatus == ConversationStatus.START.rawValue && ConversationDAO.shared.getConversationCategory(conversationId: data.conversationId) == ConversationCategory.GROUP.rawValue {
+            // from NewGroupViewController
+            return
+        }
+
+        switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
+        case let .success(response):
+            let userIds = response.participants
+                .map{ $0.userId }
+                .filter{ $0 != currentAccountId }
+            if userIds.count > 0 {
+                switch UserSessionAPI.shared.showUsers(userIds: userIds) {
+                case let .success(users):
+                    UserDAO.shared.updateUsers(users: users)
+                case .failure:
+                    break
+                }
+            }
+
+            if conversationStatus == nil || conversationStatus == ConversationStatus.START.rawValue {
+                ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
                 return
-            } else if status == ConversationStatus.START.rawValue && ConversationDAO.shared.getConversationCategory(conversationId: data.conversationId) == ConversationCategory.GROUP.rawValue {
-                // from NewGroupViewController
+            } else {
+                ConversationDAO.shared.updateConversation(conversation: response)
                 return
             }
-        } else {
-            switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
-            case let .success(response):
-                let userIds = response.participants
-                    .map{ $0.userId }
-                    .filter{ $0 != currentAccountId }
-                var updatedUsers = true
-                if userIds.count > 0 {
-                    switch UserSessionAPI.shared.showUsers(userIds: userIds) {
-                    case let .success(users):
-                        UserDAO.shared.updateUsers(users: users)
-                    case .failure:
-                        updatedUsers = false
-                    }
-                }
-                if !ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS) || !updatedUsers {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
-                }
-                return
-            case .failure:
-                ConversationDAO.shared.createPlaceConversation(conversationId: data.conversationId, ownerId: data.userId)
-            }
+        case .failure:
+            break
+        }
+        if conversationStatus == nil {
+            ConversationDAO.shared.createPlaceConversation(conversationId: data.conversationId, ownerId: data.userId)
         }
         ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
     }
@@ -972,7 +980,7 @@ extension ReceiveMessageService {
             }
 
             if participantId == currentAccountId {
-                ConversationDAO.shared.clearConversation(conversationId: data.conversationId, exitConversation: true, autoNotification: false)
+                ConversationDAO.shared.exitGroup(conversationId: data.conversationId)
             } else {
                 SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
                 operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)

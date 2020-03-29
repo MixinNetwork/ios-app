@@ -12,6 +12,10 @@ final class UserProfileViewController: ProfileViewController {
     override var isMuted: Bool {
         return user.isMuted
     }
+
+    override var conversationName: String {
+        return user.fullName
+    }
     
     override var canBecomeFirstResponder: Bool {
         return true
@@ -491,8 +495,7 @@ extension UserProfileViewController {
                 switch UserAPI.shared.reportUser(userId: userId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.clearConversation(conversationId: conversationId, removeConversation: true)
-                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
+                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
                         hud.hide()
                         self.dismiss(animated: true) {

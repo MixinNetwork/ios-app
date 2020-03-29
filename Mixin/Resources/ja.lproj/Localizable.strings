@@ -351,7 +351,7 @@
 "wallet_caption_receive" = "受取";
 "wallet_deposit" = "受取";
 "wallet_deposit_eos" = "このアドレスはEOSトーケンズの全てのベース（EOS、IQ、BLACK、OCT、KARMAなど）をサポートしています。";
-"wallet_deposit_eth" = "このアドレスはERC 20トーケンズの全てのベース（ETH、XIN、TUSD、HT、LOOM、DGD、LEOなど）をサポートしています。";
+"wallet_deposit_eth" = "このアドレスはERC 20トーケンズの全てのベース（ETH、XIN、TUSD、HT、LOOM、LEOなど）をサポートしています。";
 "wallet_deposit_btc" = "このアドレスはBTCとOmni USDTだけをサポートしています。";
 "wallet_deposit_trx" = "このアドレスはTRC 10トーケンズの全て（TRX、BTTなど）をサポートしています。";
 "wallet_deposit_other" = "このアドレスは%@だけをサポートしています。";

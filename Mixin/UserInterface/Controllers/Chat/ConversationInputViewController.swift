@@ -256,7 +256,9 @@ class ConversationInputViewController: UIViewController {
         let conversationId = dataSource.conversationId
 
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { (_) in
+            self.deleteConversationButton.isBusy = false
+        }))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
             DispatchQueue.global().async { [weak self] in
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)

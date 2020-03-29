@@ -122,8 +122,9 @@ public final class ConversationDAO {
             try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
         }
-        let change = ConversationChange(conversationId: conversationId, action: .reload)
+        let change = ConversationChange(conversationId: conversationId, action: .updateConversationStatus(status: .QUIT))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
 
     public func deleteChat(conversationId: String) {
@@ -141,6 +142,7 @@ public final class ConversationDAO {
 
         let change = ConversationChange(conversationId: conversationId, action: .reload)
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
 
     public func clearChat(conversationId: String) {
@@ -240,9 +242,9 @@ public final class ConversationDAO {
         
         return (conversation, participantUsers)
     }
-    
+
     @discardableResult
-    public func createConversation(conversation: ConversationResponse, targetStatus: ConversationStatus) -> Bool {
+    public func createConversation(conversation: ConversationResponse, targetStatus: ConversationStatus) -> ConversationItem? {
         var ownerId = conversation.creatorId
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             if let ownerParticipant = conversation.participants.first(where: { (participant) -> Bool in
@@ -253,7 +255,8 @@ public final class ConversationDAO {
         }
 
         let conversationId = conversation.conversationId
-        return MixinDatabase.shared.transaction { (db) in
+        var resultConversation: ConversationItem?
+        MixinDatabase.shared.transaction { (db) in
             let oldStatus = try db.getValue(on: Conversation.Properties.status.asColumnResult(), fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
 
             guard oldStatus.type == .null || (oldStatus.int32Value != targetStatus.rawValue) else {
@@ -293,9 +296,12 @@ public final class ConversationDAO {
             if userIds.count > 0 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
+
+            resultConversation = try db.prepareSelectSQL(on: ConversationItem.Properties.all, sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).allObjects().first!
             
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
+        return resultConversation
     }
     
     public func updateConversation(conversation: ConversationResponse) {
@@ -332,7 +338,11 @@ public final class ConversationDAO {
             if userIds.count > 0 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
-            
+
+            if oldConversation.status != ConversationStatus.SUCCESS.rawValue {
+                let change = ConversationChange(conversationId: conversationId, action: .updateConversationStatus(status: .SUCCESS))
+                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            }
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
     }

@@ -486,6 +486,8 @@ extension ConversationDataSource {
             reload()
         case .update(let conversation):
             self.conversation = conversation
+        case .updateConversationStatus(let status):
+            self.conversation.status = status.rawValue
         case .updateGroupIcon(let iconUrl):
             conversation.iconUrl = iconUrl
         case .updateMessage(let messageId):

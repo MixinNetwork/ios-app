@@ -476,7 +476,7 @@ extension HomeViewController {
             self?.clearChatAction(indexPath: indexPath)
         }))
 
-        if conversation.category == ConversationCategory.GROUP.rawValue {
+        if conversation.category == ConversationCategory.GROUP.rawValue && conversation.status != ConversationStatus.QUIT.rawValue {
             alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { [weak self](action) in
                 self?.exitGroupAction(indexPath: indexPath)
             }))
@@ -494,7 +494,12 @@ extension HomeViewController {
     private func deleteChatAction(indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_delete_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
+        let alert: UIAlertController
+        if conversation.category == ConversationCategory.GROUP.rawValue {
+            alert = UIAlertController(title: R.string.localizable.profile_delete_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+        } else {
+            alert = UIAlertController(title: R.string.localizable.profile_delete_contact_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
+        }
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
             self.tableView.beginUpdates()

@@ -7,7 +7,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     typealias Snapshot = (image: UIImage, annotationCenter: CGPoint)
     
     override class var bubbleWidth: CGFloat {
-        296
+        ScreenSize.current <= .inch4 ? 260 : 296
     }
     
     let hasAddress: Bool

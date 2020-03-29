@@ -941,6 +941,8 @@ extension ConversationViewController: UITableViewDataSource {
             }
             if viewModel.supportsMultipleSelection(with: multipleSelectionActionView.intent) {
                 cell.setMultipleSelecting(tableView.allowsMultipleSelection, animated: false)
+            } else {
+                cell.setMultipleSelecting(false, animated: false)
             }
         }
         return cell

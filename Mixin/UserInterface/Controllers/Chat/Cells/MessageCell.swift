@@ -74,9 +74,6 @@ class MessageCell: UITableViewCell {
     }
     
     func setMultipleSelecting(_ multipleSelecting: Bool, animated: Bool) {
-        guard self.isMultipleSelecting != multipleSelecting else {
-            return
-        }
         self.isMultipleSelecting = multipleSelecting
         if multipleSelecting {
             checkmarkView.status = isSelected ? .selected : .unselected
@@ -90,6 +87,8 @@ class MessageCell: UITableViewCell {
                 self.checkmarkView.frame.origin.x = 22
                 if let viewModel = self.viewModel, viewModel.style.contains(.received) {
                     self.messageContentView.frame.origin.x = self.checkmarkView.frame.maxX
+                } else {
+                    self.messageContentView.frame.origin.x = 0
                 }
             }
             if animated {

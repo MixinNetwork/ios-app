@@ -140,9 +140,7 @@ public final class ConversationDAO {
 
         ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
 
-        let change = ConversationChange(conversationId: conversationId, action: .reload)
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
     }
 
     public func clearChat(conversationId: String) {

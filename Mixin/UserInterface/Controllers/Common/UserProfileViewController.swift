@@ -496,7 +496,6 @@ extension UserProfileViewController {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
-                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
                     DispatchQueue.main.async {
                         hud.hide()
                         self.dismiss(animated: true) {

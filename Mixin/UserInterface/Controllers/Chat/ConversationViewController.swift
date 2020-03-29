@@ -1017,8 +1017,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
 }
 
-// MARK: - UITableViewDelegate
-extension ConversationViewController: UITableViewDelegate {
+// MARK: - UIScrollViewDelegate
+extension ConversationViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateAccessoryButtons(animated: !isAppearanceAnimating)
@@ -1060,6 +1060,11 @@ extension ConversationViewController: UITableViewDelegate {
             }
         }
     }
+    
+}
+
+// MARK: - UITableViewDelegate
+extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let dataSource = dataSource else {
@@ -1137,6 +1142,10 @@ extension ConversationViewController: UITableViewDelegate {
         return header
     }
     
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        nil
+    }
+    
 }
 
 // MARK: - DetailInfoMessageCellDelegate
@@ -1197,9 +1206,6 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        guard !tableView.allowsMultipleSelection else {
-            return
-        }
         guard !openUrlOutsideApplication(url) else {
             return
         }

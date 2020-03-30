@@ -39,7 +39,7 @@ extension SendMessageService {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_LOCATION.rawValue :  MessageCategory.PLAIN_LOCATION.rawValue
         }
 
-        DispatchQueue.global().async {
+        jobCreationQueue.async {
             if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
                 guard let user = ownerUser else {
                     return

@@ -149,16 +149,16 @@ extension ClearStorageViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            photoCheckmark.status = isClearPhotos ? .selected : .unselected
+            photoCheckmark.status = isClearPhotos ? .selected : .deselected
             return photoCell
         case 1:
-            videoCheckmark.status = isClearVideos ? .selected : .unselected
+            videoCheckmark.status = isClearVideos ? .selected : .deselected
             return videoCell
         case 2:
-            audioCheckmark.status = isClearAudios ? .selected : .unselected
+            audioCheckmark.status = isClearAudios ? .selected : .deselected
             return audioCell
         case 3:
-            fileCheckmark.status = isClearFiles ? .selected : .unselected
+            fileCheckmark.status = isClearFiles ? .selected : .deselected
             return fileCell
         default:
             return UITableViewCell()

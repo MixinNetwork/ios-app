@@ -14,6 +14,8 @@ class MessageCell: UITableViewCell {
     lazy var checkmarkView: CheckmarkView = {
         let frame = CGRect(x: -checkmarkWidth, y: 0, width: checkmarkWidth, height: checkmarkWidth)
         let view = CheckmarkView(frame: frame)
+        view.usesHighContrastDeselectedIcon = true
+        view.frame.size = R.image.ic_deselected()!.size
         checkmarkViewIfLoaded = view
         return view
     }()
@@ -44,7 +46,7 @@ class MessageCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if isMultipleSelecting {
-            checkmarkView.status = selected ? .selected : .unselected
+            checkmarkView.status = selected ? .selected : .deselected
         }
     }
     
@@ -76,13 +78,15 @@ class MessageCell: UITableViewCell {
     func setMultipleSelecting(_ multipleSelecting: Bool, animated: Bool) {
         self.isMultipleSelecting = multipleSelecting
         if multipleSelecting {
-            checkmarkView.status = isSelected ? .selected : .unselected
-            checkmarkView.frame.size.height = contentView.bounds.height
+            checkmarkView.status = isSelected ? .selected : .deselected
             checkmarkView.frame.origin.x = -checkmarkWidth
-            checkmarkView.autoresizingMask = .flexibleHeight
+            if let viewModel = viewModel, viewModel.style.contains(.bottomSeparator) {
+                let y = (contentView.bounds.height - MessageViewModel.bottomSeparatorHeight) / 2
+                checkmarkView.center.y = floor(y)
+            } else {
+                checkmarkView.center.y = floor(contentView.bounds.height / 2)
+            }
             contentView.addSubview(checkmarkView)
-            checkmarkView.setNeedsLayout()
-            checkmarkView.layoutIfNeeded()
             let animation = {
                 self.checkmarkView.frame.origin.x = 22
                 if let viewModel = self.viewModel, viewModel.style.contains(.received) {

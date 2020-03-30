@@ -4,25 +4,30 @@ class CheckmarkView: UIView {
     
     enum Status {
         case selected
-        case unselected
+        case deselected
         case forceSelected
         case hidden
     }
     
     let imageView = UIImageView()
     
+    var usesHighContrastDeselectedIcon = false
+    
     var status = Status.hidden {
         didSet {
             switch status {
             case .selected:
-                imageView.image = UIImage(named: "ic_selected")
-            case .unselected:
-                imageView.image = UIImage(named: "ic_unselected")
+                imageView.image = R.image.ic_selected()
+            case .deselected:
+                imageView.image = usesHighContrastDeselectedIcon
+                    ? R.image.ic_deselected_high_contrast()
+                    : R.image.ic_deselected()
             case .forceSelected:
-                imageView.image = UIImage(named: "ic_force_selected")
+                imageView.image = R.image.ic_force_selected()
             case .hidden:
                 imageView.image = nil
             }
+            imageView.sizeToFit()
         }
     }
     
@@ -38,7 +43,7 @@ class CheckmarkView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView.frame = bounds
+        imageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     private func prepare() {

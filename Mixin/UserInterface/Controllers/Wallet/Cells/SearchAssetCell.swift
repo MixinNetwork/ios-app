@@ -15,7 +15,7 @@ class SearchAssetCell: UITableViewCell {
         if forceSelected {
             checkmarkView.status = .forceSelected
         } else {
-            checkmarkView.status = selected ? .selected : .unselected
+            checkmarkView.status = selected ? .selected : .deselected
         }
     }
     

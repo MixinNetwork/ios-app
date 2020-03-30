@@ -34,7 +34,7 @@ class LocationMessageCell: ImageMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? LocationMessageViewModel {
             if viewModel.quotedMessageViewModel == nil {
-                maskingView.frame = contentView.bounds
+                maskingView.frame = messageContentView.bounds
                 mapImageView.frame = viewModel.photoFrame
                 maskingView.layer.cornerRadius = 0
                 if backgroundImageView.superview != nil {
@@ -50,7 +50,7 @@ class LocationMessageCell: ImageMessageCell {
                     maskingView.layer.mask = nil
                 }
                 if backgroundImageView.superview == nil {
-                    contentView.insertSubview(backgroundImageView, at: 0)
+                    messageContentView.insertSubview(backgroundImageView, at: 0)
                 }
                 maskingView.layer.cornerRadius = Self.quotingPhotoCornerRadius
             }
@@ -82,13 +82,13 @@ class LocationMessageCell: ImageMessageCell {
     }
     
     override func prepare() {
-        contentView.addSubview(maskingView)
+        messageContentView.addSubview(maskingView)
         mapImageView.backgroundColor = .lightGray
         maskingView.addSubview(mapImageView)
         updateAppearance(highlight: false, animated: false)
         annotationView.isHidden = true
         mapImageView.addSubview(annotationView)
-        contentView.addSubview(trailingInfoBackgroundView)
+        messageContentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
         maskingView.addSubview(selectedOverlapView)
         backgroundImageView.removeFromSuperview()

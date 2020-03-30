@@ -10,14 +10,14 @@ extension AttachmentExpirationHintingMessageCell where Self: PhotoRepresentableM
     func prepareOperationButtonAndExpiredHintLabel() {
         operationButton.style = .finished(showPlayIcon: false)
         operationButton.bounds.size = CGSize(width: 60, height: 60)
-        contentView.addSubview(operationButton)
+        messageContentView.addSubview(operationButton)
         expiredHintLabel.text = Localized.CHAT_FILE_EXPIRED
         expiredHintLabel.textColor = UIColor(rgbValue: 0xEFEFF4)
         expiredHintLabel.font = .preferredFont(forTextStyle: .footnote)
         expiredHintLabel.adjustsFontForContentSizeCategory = true
         expiredHintLabel.sizeToFit()
         expiredHintLabel.isHidden = true
-        contentView.addSubview(expiredHintLabel)
+        messageContentView.addSubview(expiredHintLabel)
     }
     
     func updateOperationButtonAndExpiredHintLabel() {

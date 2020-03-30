@@ -101,7 +101,7 @@ class PostViewController: UIViewController {
     @objc func showMoreMenu() {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
-            let vc = MessageReceiverViewController.instance(content: .message(self.message))
+            let vc = MessageReceiverViewController.instance(content: .messages([self.message]))
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

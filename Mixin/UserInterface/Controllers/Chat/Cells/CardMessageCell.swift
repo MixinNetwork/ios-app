@@ -13,8 +13,8 @@ class CardMessageCell<LeftView: UIView, RightView: UIView>: DetailInfoMessageCel
     
     override func prepare() {
         super.prepare()
-        contentView.addSubview(leftView)
-        contentView.addSubview(rightView)
+        messageContentView.addSubview(leftView)
+        messageContentView.addSubview(rightView)
         leftViewLeadingConstraint = leftView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor)
         leftViewWidthConstraint = leftView.widthAnchor.constraint(equalToConstant: CardMessageViewModel.leftViewSideLength)
         leftViewBottomConstraint = backgroundImageView.bottomAnchor.constraint(equalTo: leftView.bottomAnchor)

@@ -21,6 +21,6 @@ class AuthorizationScopeCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        checkmarkView.status = selected ? .selected : .unselected
+        checkmarkView.status = selected ? .selected : .deselected
     }
 }

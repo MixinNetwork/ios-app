@@ -24,7 +24,7 @@ class CheckmarkPeerCell: PeerCell {
         if isForceSelected {
             checkmarkView.status = .forceSelected
         } else {
-            checkmarkView.status = selected ? .selected : .unselected
+            checkmarkView.status = selected ? .selected : .deselected
         }
     }
     

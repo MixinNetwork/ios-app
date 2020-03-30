@@ -13,7 +13,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
-        contentView.addSubview(lengthLabel)
+        messageContentView.addSubview(lengthLabel)
     }
     
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {

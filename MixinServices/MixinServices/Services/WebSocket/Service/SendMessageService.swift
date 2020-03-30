@@ -6,6 +6,8 @@ public class SendMessageService: MixinService {
     public static let shared = SendMessageService()
     static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
     
+    public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
+    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false

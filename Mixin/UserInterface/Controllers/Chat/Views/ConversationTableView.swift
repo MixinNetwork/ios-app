@@ -138,6 +138,9 @@ class ConversationTableView: UITableView {
     }
 
     @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
+        guard !allowsMultipleSelection else {
+            return
+        }
         guard recognizer.state == .began, let actionDelegate = actionDelegate else {
             return
         }

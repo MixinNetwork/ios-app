@@ -771,7 +771,7 @@ class ConversationViewController: UIViewController {
     @objc func endMultipleSelection() {
         dataSource.selectedViewModels.removeAll()
         for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
-            cell.setMultipleSelecting(false, animated: true)
+            cell.setMultipleSelecting(false, intent: nil, animated: true)
         }
         tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
             tableView.deselectRow(at: indexPath, animated: true)
@@ -939,10 +939,11 @@ extension ConversationViewController: UITableViewDataSource {
             UIView.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
             }
-            if viewModel.supportsMultipleSelection(with: multipleSelectionActionView.intent) {
-                cell.setMultipleSelecting(tableView.allowsMultipleSelection, animated: false)
+            if tableView.allowsMultipleSelection {
+                let intent = multipleSelectionActionView.intent
+                cell.setMultipleSelecting(true, intent: intent, animated: false)
             } else {
-                cell.setMultipleSelecting(false, animated: false)
+                cell.setMultipleSelecting(false, intent: nil, animated: false)
             }
         }
         return cell
@@ -1152,9 +1153,6 @@ extension ConversationViewController: UITableViewDelegate {
 extension ConversationViewController: DetailInfoMessageCellDelegate {
     
     func detailInfoMessageCellDidSelectFullname(_ cell: DetailInfoMessageCell) {
-        guard !tableView.allowsMultipleSelection else {
-            return
-        }
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
@@ -1168,9 +1166,6 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
 extension ConversationViewController: AppButtonGroupMessageCellDelegate {
     
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int) {
-        guard !tableView.allowsMultipleSelection else {
-            return
-        }
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let appButtons = message.appButtons, index < appButtons.count else {
             return
         }
@@ -1183,9 +1178,6 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell) {
-        guard !tableView.allowsMultipleSelection else {
-            return
-        }
         guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
@@ -1607,10 +1599,7 @@ extension ConversationViewController {
         }
         tableView.allowsMultipleSelection = true
         for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
-            guard let viewModel = cell.viewModel, viewModel.supportsMultipleSelection(with: intent) else {
-                continue
-            }
-            cell.setMultipleSelecting(true, animated: true)
+            cell.setMultipleSelecting(true, intent: intent, animated: true)
         }
         multipleSelectionActionView.intent = intent
         multipleSelectionActionView.numberOfSelection = 1

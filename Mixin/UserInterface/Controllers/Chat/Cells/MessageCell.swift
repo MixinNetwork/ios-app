@@ -75,12 +75,13 @@ class MessageCell: UITableViewCell {
         }
     }
     
-    func setMultipleSelecting(_ multipleSelecting: Bool, animated: Bool) {
+    func setMultipleSelecting(_ multipleSelecting: Bool, intent: MultipleSelectionIntent?, animated: Bool) {
+        messageContentView.isUserInteractionEnabled = !multipleSelecting
         self.isMultipleSelecting = multipleSelecting
-        if multipleSelecting {
+        if multipleSelecting, let viewModel = viewModel, let intent = intent, viewModel.supportsMultipleSelection(with: intent) {
             checkmarkView.status = isSelected ? .selected : .deselected
             checkmarkView.frame.origin.x = -checkmarkWidth
-            if let viewModel = viewModel, viewModel.style.contains(.bottomSeparator) {
+            if viewModel.style.contains(.bottomSeparator) {
                 let y = (contentView.bounds.height - MessageViewModel.bottomSeparatorHeight) / 2
                 checkmarkView.center.y = floor(y)
             } else {

@@ -24,9 +24,4 @@ class TextMessageCell: DetailInfoMessageCell {
         contentLabel.backgroundColor = .clear
     }
     
-    override func setMultipleSelecting(_ multipleSelecting: Bool, animated: Bool) {
-        super.setMultipleSelecting(multipleSelecting, animated: animated)
-        contentLabel.isUserInteractionEnabled = !multipleSelecting
-    }
-    
 }

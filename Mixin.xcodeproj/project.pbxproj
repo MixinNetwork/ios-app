@@ -181,7 +181,7 @@
 		7B746B4022A628ED0097D18A /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B746B3F22A628ED0097D18A /* Counter.swift */; };
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
-		7B7A243B236A9B86003F1458 /* ConversationUnreadCountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7A243A236A9B86003F1458 /* ConversationUnreadCountLabel.swift */; };
+		7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
 		7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */; };
 		7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */; };
@@ -925,7 +925,7 @@
 		7B746B3F22A628ED0097D18A /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
-		7B7A243A236A9B86003F1458 /* ConversationUnreadCountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationUnreadCountLabel.swift; sourceTree = "<group>"; };
+		7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInsetLabel.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
 		7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSearchableTableViewController.swift; sourceTree = "<group>"; };
 		7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSearchableTableView.xib; sourceTree = "<group>"; };
@@ -1763,7 +1763,7 @@
 				7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
 				7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */,
-				7B7A243A236A9B86003F1458 /* ConversationUnreadCountLabel.swift */,
+				7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3569,7 +3569,7 @@
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				7B369212233B5153007321A7 /* SharedMediaCell.swift in Sources */,
-				7B7A243B236A9B86003F1458 /* ConversationUnreadCountLabel.swift in Sources */,
+				7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */,
 				7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */,
 				7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */,
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,

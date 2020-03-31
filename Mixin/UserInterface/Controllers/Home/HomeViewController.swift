@@ -11,12 +11,13 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var searchContainerView: UIView!
+    @IBOutlet weak var circlesContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var cameraButtonWrapperView: UIView!
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleButton: UIButton!
     @IBOutlet weak var bulletinContentView: UIView!
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
@@ -46,6 +47,7 @@ class HomeViewController: UIViewController {
         }
     }
     
+    private lazy var circlesViewController = R.storyboard.home.circles()!
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
         let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
@@ -236,6 +238,25 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @IBAction func toggleCircles(_ sender: Any) {
+        if circlesContainerView.isHidden {
+            if circlesViewController.parent == nil {
+                circlesViewController.view.frame = circlesContainerView.bounds
+                circlesViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                addChild(circlesViewController)
+                circlesContainerView.addSubview(circlesViewController.view)
+                circlesViewController.didMove(toParent: self)
+            }
+            circlesViewController.setTableViewVisible(false, animated: false, completion: nil)
+            circlesContainerView.isHidden = false
+            circlesViewController.setTableViewVisible(true, animated: true, completion: nil)
+        } else {
+            circlesViewController.setTableViewVisible(false, animated: true, completion: {
+                self.circlesContainerView.isHidden = true
+            })
+        }
+    }
+    
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
@@ -251,7 +272,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
-        titleLabel.text = R.string.localizable.app_name()
+        titleButton.setTitle(R.string.localizable.app_name(), for: .normal)
         DispatchQueue.global().async {
             guard NetworkManager.shared.isReachableOnWiFi else {
                 return
@@ -267,7 +288,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidDisconnect(_ notification: Notification) {
         connectingView.startAnimating()
-        titleLabel.text = R.string.localizable.dialog_progress_connect()
+        titleButton.setTitle(R.string.localizable.dialog_progress_connect(), for: .normal)
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
@@ -278,10 +299,11 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleLabel.text = R.string.localizable.app_name()
+            titleButton.setTitle(R.string.localizable.app_name(), for: .normal)
             connectingView.stopAnimating()
         } else {
-            titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
+            let title = Localized.CONNECTION_HINT_PROGRESS(progress)
+            titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()
         }
     }

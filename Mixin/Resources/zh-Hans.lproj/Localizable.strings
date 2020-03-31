@@ -197,6 +197,14 @@
 "home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_button_notification" = "设置";
 
+// Circle
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "陌生人";
+"circle_default_bots" = "小程序";
+"circle_default_contacts" = "联系人";
+"circle_conversation_count" = "%@ 个会话";
+"circle_conversation_count_all" = "全部会话";
+
 // Chat
 "chat_time_today" = "今天";
 "chat_message_you" = "你";

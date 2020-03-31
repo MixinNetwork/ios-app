@@ -173,6 +173,14 @@
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
 
+// Circle
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "ストレンジャー";
+"circle_default_bots" = "アプリ";
+"circle_default_contacts" = "連絡先";
+"circle_conversation_count" = "%@つの会話";
+"circle_conversation_count_all" = "すべての会話";
+
 // Chat
 "chat_time_today" = "今日";
 "chat_message_you" = "あなた";

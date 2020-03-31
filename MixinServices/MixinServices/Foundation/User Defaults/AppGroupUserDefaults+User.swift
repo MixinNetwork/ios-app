@@ -40,7 +40,7 @@ extension AppGroupUserDefaults {
             case hasRestoreUploadAttachment = "has_restore_upload_attachment"
         }
         
-        public static let version = 18
+        public static let version = 19
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")

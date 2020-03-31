@@ -166,6 +166,7 @@
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
 		7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
+		7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */; };
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
 		7B66AC072428D72000869DBD /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66AC062428D72000869DBD /* PostViewController.swift */; };
@@ -323,6 +324,7 @@
 		7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB8417B2230C63000FB88B9 /* ConversationAccessible.swift */; };
 		7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
+		7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC913324333DCA00FC3F3A /* CircleCell.swift */; };
 		7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */; };
 		7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */ = {isa = PBXBuildFile; fileRef = 7BBD8A3220C1D51C00DF2735 /* recaptcha.html */; };
 		7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */; };
@@ -910,6 +912,7 @@
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
 		7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewModel.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
+		7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
 		7B66AC062428D72000869DBD /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
@@ -1065,6 +1068,7 @@
 		7BB8417B2230C63000FB88B9 /* ConversationAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationAccessible.swift; sourceTree = "<group>"; };
 		7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
+		7BBC913324333DCA00FC3F3A /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
 		7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckmarkView.swift; sourceTree = "<group>"; };
 		7BBD8A3220C1D51C00DF2735 /* recaptcha.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = recaptcha.html; sourceTree = "<group>"; };
 		7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
@@ -2280,6 +2284,7 @@
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
+				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2633,6 +2638,7 @@
 				DF121F301FA1C767000F701D /* ConversationCell.swift */,
 				7B5281752265F1730023616D /* RecentBotCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
+				7BBC913324333DCA00FC3F3A /* CircleCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3442,6 +3448,7 @@
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
+				7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */,
 				7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */,
 				7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
@@ -3538,6 +3545,7 @@
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
+				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */,
 				DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,

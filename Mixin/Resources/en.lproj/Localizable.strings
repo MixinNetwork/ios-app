@@ -196,6 +196,14 @@
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
 
+// Circle
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "Strangers";
+"circle_default_bots" = "Bots";
+"circle_default_contacts" = "Contacts";
+"circle_conversation_count" = "%@ Conversations";
+"circle_conversation_count_all" = "All Conversations";
+
 // Chat
 "chat_time_today" = "Today";
 "chat_message_you" = "You";

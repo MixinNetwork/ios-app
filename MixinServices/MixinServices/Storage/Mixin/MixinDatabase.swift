@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 18
+    private static let version: Int = 19
     
     override public var database: Database! {
         get { _database }
@@ -48,6 +48,9 @@ public class MixinDatabase: BaseDatabase {
                 try database.create(of: ParticipantSession.self)
                 
                 try database.create(of: MessageMention.self)
+                
+                try database.create(of: Circle.self)
+                try database.create(of: CircleConversation.self)
                 
                 try self.createAfter(database: database, localVersion: localVersion)
                 

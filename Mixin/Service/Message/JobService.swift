@@ -7,9 +7,16 @@ class JobService {
 
     private var isFirstRestore = true
 
+    private static var canBatchProcessMessages: Bool {
+        !isAppExtension &&
+        canProcessMessages &&
+        !MixinService.isStopProcessMessages &&
+        UIApplication.isApplicationActive
+    }
+
     @objc func restoreJobs() {
         DispatchQueue.global().async {
-            guard UIApplication.canBatchProcessMessages else {
+            guard JobService.canBatchProcessMessages else {
                 return
             }
             if JobService.shared.isFirstRestore {
@@ -63,7 +70,7 @@ class JobService {
 
     public func processDownloadJobs() {
         DispatchQueue.global().async {
-            guard UIApplication.canBatchProcessMessages else {
+            guard JobService.canBatchProcessMessages else {
                 return
             }
             JobService.shared.recoverMediaJobs()

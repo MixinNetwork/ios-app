@@ -176,7 +176,9 @@ public class SendMessageService: MixinService {
 
     public func processMessages() {
         processHttpMessages()
-        processWebSocketMessages()
+        if !isAppExtension {
+            processWebSocketMessages()
+        }
     }
 
     public func processHttpMessages() {

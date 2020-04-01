@@ -9,17 +9,21 @@ final class NotificationService: UNNotificationServiceExtension {
     private var conversationId: String?
     private var messageId = ""
     
-    deinit {
-        AppGroupUserDefaults.isProcessingMessagesInAppExtension = ReceiveMessageService.shared.isProcessingMessagesInAppExtension
-    }
-    
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
         self.rawContent = request.content
         self.conversationId = request.content.userInfo["conversation_id"] as? String
 
-        guard let messageId = request.content.userInfo["message_id"] as? String, canProcessMessages else {
+        guard let messageId = request.content.userInfo["message_id"] as? String else {
             deliverRawContent(from: "notification data broken")
+            return
+        }
+        guard canProcessMessages else {
+            deliverRawContent(from: "can't process messages")
+            return
+        }
+        guard !AppGroupUserDefaults.isRunningInMainApp else {
+            deliverRawContent(from: "main app is running")
             return
         }
 
@@ -72,9 +76,14 @@ final class NotificationService: UNNotificationServiceExtension {
         contentHandler?(rawContent)
 
         if let conversationId = self.conversationId {
-            let websocketStatus = AppGroupUserDefaults.websocketStatusInMainApp.rawValue
-            let isProcessingMessages = AppGroupUserDefaults.isProcessingMessagesInMainApp
-            Logger.write(conversationId: conversationId, log: "[AppExtension][\(self.messageId)]...websocketStatusInMainApp:\(websocketStatus)]...isProcessingMessagesInMainApp:\(isProcessingMessages)...isExpired:\(isExpired)...\(from)")
+            Logger.write(conversationId: conversationId, log: """
+                [AppExtension][\(self.messageId)]...\(from)...isExpired:\(isExpired)...
+                isLoggedIn:\(LoginManager.shared.isLoggedIn)]...
+                isDocumentsMigrated:\(AppGroupUserDefaults.isDocumentsMigrated)]...
+                needsUpgradeInMainApp:\(AppGroupUserDefaults.User.needsUpgradeInMainApp)]...
+                isProcessingMessagesInAppExtension:\(AppGroupUserDefaults.isProcessingMessagesInAppExtension)]...
+                isRunningInMainApp:\(AppGroupUserDefaults.isRunningInMainApp)]...
+            """)
         }
     }
     

@@ -27,13 +27,7 @@ public class WebSocketService {
     private var socket: WebSocketProvider?
     private var heartbeat: HeartbeatService?
     
-    private var status: Status = .disconnected {
-        didSet {
-            if !isAppExtension {
-                AppGroupUserDefaults.websocketStatusInMainApp = status
-            }
-        }
-    }
+    private var status: Status = .disconnected
     private var messageHandlers = SafeDictionary<String, IncomingMessageHandler>()
     private var httpUpgradeSigningDate = Date()
     private var lastConnectionDate = Date()
@@ -49,7 +43,7 @@ public class WebSocketService {
     
     public func connect(firstConnect: Bool = false) {
         enqueueOperation {
-            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+            guard canProcessMessages else {
                 return
             }
             guard NetworkManager.shared.isReachable else {
@@ -63,7 +57,7 @@ public class WebSocketService {
                 return
             }
 
-            if isAppExtension && !AppGroupUserDefaults.canProcessMessagesInAppExtension {
+            if isAppExtension && AppGroupUserDefaults.isRunningInMainApp {
                 return
             }
 

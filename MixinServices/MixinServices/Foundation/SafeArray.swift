@@ -15,6 +15,16 @@ public class SafeArray<Element> {
         }
     }
 
+    public func popFirst() -> Element? {
+		var result: Element?
+        queue.async(flags: .barrier) {
+			if self.array.count > 0 {
+				result = self.array.removeFirst()
+			}
+        }
+        return result
+    }
+
     public var first: Element? {
         var result: Element?
         queue.sync {
@@ -46,7 +56,7 @@ public extension SafeArray where Element: Equatable {
     public func remove(element: Element) {
         queue.async(flags: .barrier) {
             self.array = self.array.filter { $0 != element }
-       }
+        }
    }
 }
 

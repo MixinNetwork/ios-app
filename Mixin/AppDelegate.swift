@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.callMessageCoordinator = CallManager.shared
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
-        AppGroupUserDefaults.resetStatusInMainApp()
         updateSharedImageCacheConfig()
         _ = NetworkManager.shared
         _ = DarwinNotificationManager.shared
@@ -58,9 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
             self.cancelBackgroundTask()
         })
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
             self.cancelBackgroundTask()
         }
         self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
@@ -75,6 +76,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+        AppGroupUserDefaults.isRunningInMainApp = true
+
         guard LoginManager.shared.isLoggedIn else {
             return
         }
@@ -82,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.isStopProcessMessages = false
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
             DispatchQueue.global().async {
-                guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+                guard canProcessMessages else {
                     return
                 }
                 guard AppGroupUserDefaults.User.hasRestoreUploadAttachment else {
@@ -134,7 +138,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        AppGroupUserDefaults.resetStatusInMainApp()
+        AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

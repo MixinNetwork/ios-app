@@ -437,10 +437,12 @@ public final class MessageDAO {
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
 
         if isAppExtension {
-            guard AppGroupUserDefaults.User.currentConversationId == message.conversationId else {
-                return
-            }
-            AppGroupUserDefaults.User.reloadConversation = true
+			if AppGroupUserDefaults.isRunningInMainApp {
+				DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()
+			}
+			if AppGroupUserDefaults.User.currentConversationId == message.conversationId {
+				AppGroupUserDefaults.User.reloadConversation = true
+			}
         } else {
             guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
                 return

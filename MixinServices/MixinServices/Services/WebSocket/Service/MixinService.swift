@@ -15,7 +15,7 @@ public class MixinService {
 
     public static var isStopProcessMessages = false
     
-    var processing = false
+    public internal(set) var processing = false
     
     internal var currentAccountId: String {
         return myUserId

@@ -47,15 +47,6 @@ extension UIApplication {
         }
     }
 
-    static var canBatchProcessMessages: Bool {
-        return !isAppExtension &&
-               LoginManager.shared.isLoggedIn &&
-               !AppGroupUserDefaults.User.needsUpgradeInMainApp &&
-               !MixinService.isStopProcessMessages &&
-               isApplicationActive
-    }
-
-
     var applicationStateString: String {
         switch applicationState {
         case .active:

@@ -22,7 +22,6 @@ public class ReceiveMessageService: MixinService {
 
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
-    private let processOperationQueue = OperationQueue(maxConcurrentOperationCount: 1)
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private var listPendingCallWorkItems = [String: DispatchWorkItem]()
     private var listPendingCandidates = [String: [BlazeMessageData]]()
@@ -30,14 +29,24 @@ public class ReceiveMessageService: MixinService {
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
 
-    override var processing: Bool {
-        didSet {
-            guard !isAppExtension else {
-                return
-            }
-            AppGroupUserDefaults.isProcessingMessagesInMainApp = processing
-        }
-    }
+    private lazy var processOperationQueue = OperationQueue(maxConcurrentOperationCount: 1)
+	private var queueObservation : NSKeyValueObservation?
+
+	override init() {
+		super.init()
+		if isAppExtension {
+			queueObservation = processOperationQueue.observe(\.operationCount, options: [.new]) { (queue, change) in
+				guard let operationCount = change.newValue else {
+					return
+				}
+				AppGroupUserDefaults.isProcessingMessagesInAppExtension = operationCount > 0
+			}
+		}
+	}
+
+	deinit {
+		AppGroupUserDefaults.isProcessingMessagesInAppExtension = false
+	}
 
     public var isProcessingMessagesInAppExtension: Bool {
         return isAppExtension && processOperationQueue.operationCount == 0
@@ -76,22 +85,8 @@ public class ReceiveMessageService: MixinService {
     public func processReceiveMessage(messageId: String, conversationId: String?, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
         let startDate = Date()
         processOperationQueue.addOperation {
-            AppGroupUserDefaults.isProcessingMessagesInAppExtension = true
-
-            if AppGroupUserDefaults.websocketStatusInMainApp != .disconnected {
-                let oldDate = AppGroupUserDefaults.checkStatusTimeInMainApp
-                DarwinNotificationManager.shared.checkStatusInMainApp()
-                Thread.sleep(forTimeInterval: 2)
-
-                Logger.write(log: "[ReceiveMessageService] waiting for main app to process messages...checkStatusTimeInMainApp:\(oldDate)...isProcessingMessagesInMainApp:\(AppGroupUserDefaults.isProcessingMessagesInMainApp)")
-
-                if oldDate == AppGroupUserDefaults.checkStatusTimeInMainApp {
-                    AppGroupUserDefaults.websocketStatusInMainApp = .disconnected
-                }
-            }
-
             repeat {
-                if -startDate.timeIntervalSinceNow >= 15 || !AppGroupUserDefaults.canProcessMessagesInAppExtension || extensionTimeWillExpire() {
+                if -startDate.timeIntervalSinceNow >= 15 || AppGroupUserDefaults.isRunningInMainApp || extensionTimeWillExpire() {
                     if let conversationId = conversationId {
                         Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
                     }
@@ -106,7 +101,7 @@ public class ReceiveMessageService: MixinService {
                         }
 
                         for data in blazeMessageDatas {
-                            guard AppGroupUserDefaults.canProcessMessagesInAppExtension, !extensionTimeWillExpire() else {
+                            guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
                                 callback(nil)
                                 return
                             }
@@ -155,7 +150,7 @@ public class ReceiveMessageService: MixinService {
 
                     Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(MixinService.isStopProcessMessages)")
 
-                    DarwinNotificationManager.shared.checkStatusInAppExtension()
+                    DarwinNotificationManager.shared.checkAppExtensionStatus()
                     Thread.sleep(forTimeInterval: 2)
 
                     if oldDate == AppGroupUserDefaults.checkStatusTimeInAppExtension {

@@ -10,11 +10,12 @@ class CirclesViewController: UIViewController {
     @IBOutlet weak var showTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideTableViewConstraint: NSLayoutConstraint!
     
-    private let tableFooterButton = UIButton()
-    
-    private lazy var deleteAction = UITableViewRowAction(style: .destructive,
-                                                         title: Localized.MENU_DELETE,
-                                                         handler: tableViewCommitDeleteAction(action:indexPath:))
+    private lazy var tableFooterView = R.nib.circlesTableFooterView(owner: nil)!
+    private lazy var deleteAction = {
+        UITableViewRowAction(style: .destructive,
+                             title: Localized.MENU_DELETE,
+                             handler: tableViewCommitDeleteAction(action:indexPath:))
+    }()
     private lazy var editAction: UITableViewRowAction = {
         let action = UITableViewRowAction(style: .normal,
                                           title: R.string.localizable.menu_edit(),
@@ -39,7 +40,6 @@ class CirclesViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
-        tableFooterButton.backgroundColor = .clear
         DispatchQueue.global().async {
             self.reloadUserCirclesFromLocalStorage(completion: nil)
         }
@@ -50,7 +50,7 @@ class CirclesViewController: UIViewController {
         super.didMove(toParent: parent)
         if let parent = parent as? HomeViewController {
             let action = #selector(HomeViewController.toggleCircles(_:))
-            tableFooterButton.addTarget(parent, action: action, for: .touchUpInside)
+            tableFooterView.button.addTarget(parent, action: action, for: .touchUpInside)
             toggleCirclesButton.addTarget(parent, action: action, for: .touchUpInside)
         }
     }
@@ -271,11 +271,14 @@ extension CirclesViewController {
         DispatchQueue.main.sync {
             self.userCircles = circles
             self.tableView.reloadData()
+            self.tableFooterView.showsHintLabel = circles.isEmpty
+            self.tableView.tableFooterView = self.tableFooterView
             self.tableView.layoutIfNeeded()
-            self.tableView.tableFooterView = nil
-            let height = self.tableView.frame.height - self.tableView.contentSize.height
-            self.tableFooterButton.frame.size.height = height
-            self.tableView.tableFooterView = self.tableFooterButton
+            let cellsHeight = CGFloat(circles.count + 1) * self.tableView.rowHeight
+            let height = max(self.tableFooterView.contentView.frame.height,
+                             self.tableView.frame.height - cellsHeight)
+            self.tableFooterView.frame.size.height = height
+            self.tableView.tableFooterView = self.tableFooterView
             completion?()
         }
     }

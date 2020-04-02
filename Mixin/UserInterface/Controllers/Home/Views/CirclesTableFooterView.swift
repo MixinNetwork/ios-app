@@ -1,0 +1,16 @@
+import UIKit
+
+class CirclesTableFooterView: UIView {
+    
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var button: UIButton!
+    
+    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
+    
+    var showsHintLabel = false {
+        didSet {
+            contentViewHeightConstraint.priority = showsHintLabel ? .almostInexist : .almostRequired
+        }
+    }
+    
+}

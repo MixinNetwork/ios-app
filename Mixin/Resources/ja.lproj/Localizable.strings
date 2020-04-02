@@ -190,6 +190,7 @@
 "circle_member_category_chats" = "チャット";
 "circle_member_category_contacts" = "連絡先";
 "circle_member_category_bots" = "アプリ";
+"circle_add_hint" = "If you want to filter conversations, please set a circle for the conversation first.";
 
 // Chat
 "chat_time_today" = "今日";

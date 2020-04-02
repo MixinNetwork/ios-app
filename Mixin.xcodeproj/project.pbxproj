@@ -177,6 +177,8 @@
 		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
 		7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */; };
+		7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B710DFB243637A5008F0D73 /* CirclesTableFooterView.swift */; };
+		7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B710DFD243637D9008F0D73 /* CirclesTableFooterView.xib */; };
 		7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */; };
 		7B7264F0209C56E500F234BE /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7264EF209C56E500F234BE /* ProfileDescriptionLabel.swift */; };
 		7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */; };
@@ -931,6 +933,8 @@
 		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
 		7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaCollectionHeaderView.swift; sourceTree = "<group>"; };
+		7B710DFB243637A5008F0D73 /* CirclesTableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesTableFooterView.swift; sourceTree = "<group>"; };
+		7B710DFD243637D9008F0D73 /* CirclesTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CirclesTableFooterView.xib; sourceTree = "<group>"; };
 		7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHeaderView.swift; sourceTree = "<group>"; };
 		7B7264EF209C56E500F234BE /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextLabel.swift; sourceTree = "<group>"; };
@@ -1785,6 +1789,8 @@
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
 				7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */,
 				7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */,
+				7B710DFB243637A5008F0D73 /* CirclesTableFooterView.swift */,
+				7B710DFD243637D9008F0D73 /* CirclesTableFooterView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2966,6 +2972,7 @@
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
+				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
@@ -3584,6 +3591,7 @@
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
+				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,

@@ -212,6 +212,7 @@
 "circle_member_category_chats" = "Chats";
 "circle_member_category_contacts" = "Contacts";
 "circle_member_category_bots" = "Bots";
+"circle_add_hint" = "If you want to filter conversations, please set a circle for the conversation first.";
 
 // Chat
 "chat_time_today" = "Today";

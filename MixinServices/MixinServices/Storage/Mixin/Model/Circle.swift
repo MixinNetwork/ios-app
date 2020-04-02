@@ -25,4 +25,9 @@ public class Circle: BaseCodable {
     public let circleId: String
     public let name: String
     
+    public init(circleId: String, name: String) {
+        self.circleId = circleId
+        self.name = name
+    }
+    
 }

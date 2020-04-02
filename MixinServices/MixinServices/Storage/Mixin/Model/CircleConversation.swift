@@ -1,7 +1,7 @@
 import UIKit
 import WCDBSwift
 
-class CircleConversation: BaseCodable {
+public class CircleConversation: BaseCodable {
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -26,5 +26,11 @@ class CircleConversation: BaseCodable {
     public let circleId: String
     public let conversationId: String
     public let createdAt: String
+    
+    public init(circleId: String, conversationId: String, createdAt: String) {
+        self.circleId = circleId
+        self.conversationId = conversationId
+        self.createdAt = createdAt
+    }
     
 }

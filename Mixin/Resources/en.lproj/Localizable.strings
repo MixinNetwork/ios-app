@@ -13,6 +13,7 @@
 "dialog_button_login" = "Log In";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
+"action_add" = "Add";
 "action_next" = "Next";
 "action_camera" = "Camera";
 "action_continue" = "Continue";
@@ -65,6 +66,7 @@
 "search_placeholder_currency" = "Code";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
+"search_placeholder_name" = "Search name";
 "search_related_messages_count" = " related messages";
 "search_section_title_asset" = "Assets";
 "search_section_title_user" = "Contacts";
@@ -204,6 +206,7 @@
 "circle_conversation_count" = "%@ Conversations";
 "circle_conversation_count_all" = "All Conversations";
 "circle_action_edit_name" = "Edit Circle Name";
+"circle_action_add" = "Add Circle";
 "circle_action_edit_conversations" = "Edit Conversations";
 "circle_action_delete" = "Delete Circle";
 "circle_member_category_chats" = "Chats";

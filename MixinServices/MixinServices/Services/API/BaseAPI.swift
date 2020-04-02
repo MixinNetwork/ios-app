@@ -3,7 +3,7 @@ import Alamofire
 import Goutils
 import UIKit
 
-public enum APIResult<ResultType: Codable> {
+public enum APIResult<ResultType: Decodable> {
     case success(ResultType)
     case failure(APIError)
 
@@ -25,7 +25,7 @@ open class BaseAPI {
         
     }
     
-    private struct ResponseObject<ResultType: Codable>: Codable {
+    private struct ResponseObject<ResultType: Decodable>: Decodable {
         let data: ResultType?
         let error: APIError?
     }

@@ -3,21 +3,35 @@ import MixinServices
 
 class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPeerCell, CircleMemberSearchResult> {
     
+    enum Intent {
+        case create(name: String)
+        case update(id: String)
+    }
+    
     let collectionViewLayout = UICollectionViewFlowLayout()
     
     var collectionView: UICollectionView!
     
-    private var circleId = ""
-    private var circleMembers: [CircleMember] = []
+    private var intent: Intent!
+    private var selections: [CircleMember] = [] {
+        didSet {
+            let count = "\(selections.count)"
+            let text = R.string.localizable.circle_conversation_count(count)
+            container?.subtitleLabel.text = text
+        }
+    }
     
-    class func instance(circleId: String) -> UIViewController {
+    class func instance(intent: Intent) -> UIViewController {
         let vc = CircleEditorViewController()
-        vc.circleId = circleId
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.circle_action_edit_conversations())
+        vc.intent = intent
+        let title = R.string.localizable.circle_action_edit_conversations()
+        return ContainerViewController.instance(viewController: vc, title: title)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_name()
+        tableView.allowsMultipleSelection = true
         centerWrapperViewHeightConstraint.constant = 90
         collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
         collectionViewLayout.minimumInteritemSpacing = 0
@@ -33,15 +47,19 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         }
         collectionView.register(R.nib.circleMemberCell)
         collectionView.dataSource = self
-        let id = self.circleId
-        DispatchQueue.global().async { [weak self] in
-            let members = CircleDAO.shared.circleMembers(circleId: id)
-            DispatchQueue.main.sync {
-                guard let self = self else {
-                    return
+        switch intent! {
+        case .create(let name):
+            break
+        case .update(let id):
+            DispatchQueue.global().async { [weak self] in
+                let members = CircleDAO.shared.circleMembers(circleId: id)
+                DispatchQueue.main.sync {
+                    guard let self = self else {
+                        return
+                    }
+                    self.selections = members
+                    self.collectionView.reloadData()
                 }
-                self.circleMembers = members
-                self.collectionView.reloadData()
             }
         }
     }
@@ -51,6 +69,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         if let container = parent as? ContainerViewController {
             container.leftButton.tintColor = .text
             container.leftButton.setImage(R.image.ic_title_close(), for: .normal)
+            container.rightButton.isEnabled = true
         }
     }
     
@@ -118,6 +137,25 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         }
     }
     
+    override func reloadTableViewSelections() {
+        super.reloadTableViewSelections()
+        if isSearching {
+            for (index, result) in searchResults.enumerated() {
+                guard selections.contains(result.member) else {
+                    continue
+                }
+                let indexPath = IndexPath(row: index, section: 0)
+                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        } else {
+            for section in 0..<models.count {
+                for indexPath in indexPathsWhichMatchSelections(of: section) {
+                    tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                }
+            }
+        }
+    }
+    
     // MARK: - UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         return isSearching ? 1 : models.count
@@ -125,6 +163,23 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : models[section].count
+    }
+    
+    // MARK: - UITableViewDelegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let member = circleMember(at: indexPath)
+        let indexPath = IndexPath(item: selections.count, section: 0)
+        selections.append(member)
+        collectionView.insertItems(at: [indexPath])
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let member = circleMember(at: indexPath)
+        if let index = selections.firstIndex(of: member) {
+            let indexPath = IndexPath(item: index, section: 0)
+            selections.remove(at: index)
+            collectionView.deleteItems(at: [indexPath])
+        }
     }
     
 }
@@ -136,7 +191,32 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     }
     
     func barRightButtonTappedAction() {
-        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        switch intent! {
+        case let .create(name):
+            let selections = self.selections
+            CircleAPI.shared.create(name: name) { (result) in
+                switch result {
+                case .success(let circle):
+                    if selections.isEmpty {
+                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.scheduleAutoHidden()
+                        self.dismiss(animated: true, completion: nil)
+                    } else {
+                        DispatchQueue.global().async {
+                            CircleDAO.shared.insertOrReplace(circle: circle)
+                            self.updateCircle(of: circle.circleId, with: selections, hud: hud)
+                        }
+                    }
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        case let .update(id):
+            self.updateCircle(of: id, with: selections, hud: hud)
+        }
     }
     
     func textBarRightButton() -> String? {
@@ -148,12 +228,12 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
 extension CircleEditorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        circleMembers.count
+        selections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.circle_member, for: indexPath)!
-        let member = circleMembers[indexPath.row]
+        let member = selections[indexPath.row]
         cell.render(member: member)
         cell.delegate = self
         return cell
@@ -164,7 +244,77 @@ extension CircleEditorViewController: UICollectionViewDataSource {
 extension CircleEditorViewController: CircleMemberCellDelegate {
     
     func circleMemberCellDidSelectRemove(_ cell: UICollectionViewCell) {
-        
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        let deselected = selections[indexPath.row]
+        if isSearching {
+            if let item = searchResults.map({ $0.member }).firstIndex(of: deselected) {
+                let indexPath = IndexPath(item: item, section: 0)
+                tableView.deselectRow(at: indexPath, animated: true)
+                tableView(tableView, didDeselectRowAt: indexPath)
+            }
+        } else {
+            for section in 0..<models.count {
+                let members = models[section]
+                if let item = members.firstIndex(of: deselected) {
+                    let indexPath = IndexPath(item: item, section: section)
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    tableView(tableView, didDeselectRowAt: indexPath)
+                    break
+                }
+            }
+        }
+    }
+    
+}
+
+extension CircleEditorViewController {
+    
+    private func indexPathsWhichMatchSelections(of section: Int) -> [IndexPath] {
+        assert(!isSearching)
+        var indexPaths = [IndexPath]()
+        for (row, member) in models[section].enumerated() where selections.contains(member) {
+            indexPaths.append(IndexPath(row: row, section: section))
+        }
+        return indexPaths
+    }
+    
+    private func circleMember(at indexPath: IndexPath) -> CircleMember {
+        if isSearching {
+            return searchResults[indexPath.row].member
+        } else {
+            return models[indexPath.section][indexPath.row]
+        }
+    }
+    
+    private func updateCircle(of id: String, with members: [CircleMember], hud: Hud) {
+        CircleAPI.shared.updateCircle(of: id, members: members) { (result) in
+            switch result {
+            case .success:
+                DispatchQueue.global().async {
+                    let date = Date()
+                    let counter = Counter(value: -1)
+                    let objects = members.map { (member) -> CircleConversation in
+                        let createdAt = date
+                            .addingTimeInterval(TimeInterval(counter.advancedValue) / millisecondsPerSecond)
+                            .toUTCString()
+                        return CircleConversation(circleId: id,
+                                                  conversationId: member.conversationId,
+                                                  createdAt: createdAt)
+                    }
+                    CircleConversationDAO.shared.replaceCircleConversations(with: id, objects: objects)
+                    DispatchQueue.main.sync {
+                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.scheduleAutoHidden()
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
     }
     
 }

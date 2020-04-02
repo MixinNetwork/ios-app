@@ -13,6 +13,7 @@
 "dialog_progress_logout" = "退出登录...";
 "dialog_progress_connect" = "正在连接...";
 "dialog_button_no_remind" = "不再提醒";
+"action_add" = "添加";
 "action_next" = "下一步";
 "action_camera" = "相机";
 "action_continue" = "继续";
@@ -65,6 +66,7 @@
 "search_placeholder_currency" = "货币代码";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
+"search_placeholder_name" = "搜索名称";
 "search_related_messages_count" = "条相关消息";
 "search_section_title_asset" = "资产";
 "search_section_title_user" = "联系人";
@@ -205,6 +207,7 @@
 "circle_conversation_count" = "%@ 个会话";
 "circle_conversation_count_all" = "全部会话";
 "circle_action_edit_name" = "编辑圈子名称";
+"circle_action_add" = "添加圈子";
 "circle_action_edit_conversations" = "编辑会话";
 "circle_action_delete" = "删除圈子";
 "circle_member_category_chats" = "最近聊天";

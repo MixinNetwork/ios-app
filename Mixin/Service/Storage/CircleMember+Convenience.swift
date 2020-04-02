@@ -15,11 +15,12 @@ extension CircleMember {
     }
     
     convenience init(conversation: ConversationItem) {
+        let isGroup = conversation.category == ConversationCategory.GROUP.rawValue
         self.init(conversationId: conversation.conversationId,
                   ownerId: conversation.ownerId,
                   category: conversation.category ?? ConversationCategory.CONTACT.rawValue,
                   name: conversation.getConversationName(),
-                  iconUrl: conversation.iconUrl,
+                  iconUrl: isGroup ? conversation.iconUrl : conversation.ownerAvatarUrl,
                   badgeImage: nil)
     }
     

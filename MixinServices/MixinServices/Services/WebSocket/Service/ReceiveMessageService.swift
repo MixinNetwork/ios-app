@@ -702,11 +702,11 @@ public class ReceiveMessageService: MixinService {
 
             if conversationStatus == nil || conversationStatus == ConversationStatus.START.rawValue {
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-                return
             } else {
                 ConversationDAO.shared.updateConversation(conversation: response)
-                return
             }
+            CircleConversationDAO.shared.update(conversation: response)
+            return
         case .failure:
             break
         }

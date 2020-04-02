@@ -26,7 +26,11 @@ class CirclesViewController: UIViewController {
     private weak var editNameController: UIAlertController?
     
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
-    private var userCircles = CircleDAO.shared.circles()
+    private var userCircles: [CircleItem] = []
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +39,11 @@ class CirclesViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
-        tableView.layoutIfNeeded()
-        tableFooterButton.frame.size.height = tableView.frame.height - tableView.contentSize.height
         tableFooterButton.backgroundColor = .clear
-        tableView.tableFooterView = tableFooterButton
+        DispatchQueue.global().async {
+            self.reloadUserCirclesFromLocalStorage(completion: nil)
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(circleConversationsDidChange), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -51,8 +55,27 @@ class CirclesViewController: UIViewController {
         }
     }
     
+    @IBAction func newCircleAction(_ sender: Any) {
+        let addCircle = R.string.localizable.circle_action_add()
+        let add = R.string.localizable.action_add()
+        presentEditNameController(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
+            guard let name = alert.textFields?.first?.text else {
+                return
+            }
+            let vc = CircleEditorViewController.instance(intent: .create(name: name))
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func circleConversationsDidChange() {
+        DispatchQueue.global().async {
+            self.reloadUserCirclesFromLocalStorage(completion: nil)
+        }
+    }
+    
     func setTableViewVisible(_ visible: Bool, animated: Bool, completion: (() -> Void)?) {
         if visible {
+            reloadUserCircleFromRemote()
             showTableViewConstraint.priority = .defaultHigh
             hideTableViewConstraint.priority = .defaultLow
         } else {
@@ -134,49 +157,72 @@ extension CirclesViewController {
     
     private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
+        let editName = R.string.localizable.circle_action_edit_name()
+        let change = R.string.localizable.dialog_button_change()
+        let editConversation = R.string.localizable.circle_action_edit_conversations()
+        let cancel = R.string.localizable.dialog_button_cancel()
+        
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_edit_name(), style: .default, handler: { (_) in
-            self.presentEditNameController(circleId: circle.circleId, currentName: circle.name)
+        sheet.addAction(UIAlertAction(title: editName, style: .default, handler: { (_) in
+            self.presentEditNameController(title: editName, actionTitle: change, currentName: circle.name) { (alert) in
+                guard let name = alert.textFields?.first?.text else {
+                    return
+                }
+                self.editCircle(with: circle.circleId, name: name)
+            }
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_edit_conversations(), style: .default, handler: { (_) in
-            let vc = CircleEditorViewController.instance(circleId: circle.circleId)
+        sheet.addAction(UIAlertAction(title: editConversation, style: .default, handler: { (_) in
+            let vc = CircleEditorViewController.instance(intent: .update(id: circle.circleId))
             self.present(vc, animated: true, completion: nil)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
+        
         present(sheet, animated: true, completion: nil)
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
+        let delete = R.string.localizable.circle_action_delete()
+        let cancel = R.string.localizable.dialog_button_cancel()
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_delete(), style: .destructive, handler: { (_) in
-
+        sheet.addAction(UIAlertAction(title: delete, style: .destructive, handler: { (_) in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            CircleAPI.shared.delete(id: circle.circleId) { (result) in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        CircleDAO.shared.delete(circleId: circle.circleId)
+                        self.reloadUserCirclesFromLocalStorage {
+                            hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                        }
+                    }
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+            }
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
     
-    private func presentEditNameController(circleId: String, currentName: String) {
-        let title = R.string.localizable.circle_action_edit_name()
-        let changeActionTitle = R.string.localizable.dialog_button_change()
+    private func presentEditNameController(title: String, actionTitle: String, currentName: String?, handler: @escaping (UIAlertController) -> Void) {
+        let cancel = R.string.localizable.dialog_button_cancel()
         
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.text = currentName
             textField.addTarget(self, action: #selector(self.alertInputChangedAction(_:)), for: .editingChanged)
         }
-        
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        
-        let changeAction = UIAlertAction(title: changeActionTitle, style: .default, handler: { [unowned alert] _ in
-            guard let name = alert.textFields?.first?.text else {
-                return
-            }
-            self.editCircle(with: circleId, name: name)
+        alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
+        let action = UIAlertAction(title: actionTitle, style: .default, handler: { [unowned alert] _ in
+            handler(alert)
         })
-        changeAction.isEnabled = false
-        alert.addAction(changeAction)
+        action.isEnabled = false
+        alert.addAction(action)
         
+        self.editNameController = alert
         present(alert, animated: true, completion: {
             alert.textFields?.first?.selectAll(nil)
         })
@@ -190,7 +236,48 @@ extension CirclesViewController {
     }
     
     private func editCircle(with circleId: String, name: String) {
-        print("edit circle \(circleId), with \(name)")
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        CircleAPI.shared.update(id: circleId, name: name, completion: { result in
+            switch result {
+            case .success(let circle):
+                DispatchQueue.global().async {
+                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    self.reloadUserCirclesFromLocalStorage() {
+                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                    }
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
+            hud.scheduleAutoHidden()
+        })
+    }
+    
+    private func reloadUserCircleFromRemote() {
+        CircleAPI.shared.circles { [weak self] (result) in
+            guard case let .success(circles) = result else {
+                return
+            }
+            DispatchQueue.global().async {
+                CircleDAO.shared.insertOrReplace(circles: circles)
+                self?.reloadUserCirclesFromLocalStorage(completion: nil)
+            }
+        }
+    }
+    
+    private func reloadUserCirclesFromLocalStorage(completion: (() -> Void)?) {
+        let circles = CircleDAO.shared.circles()
+        DispatchQueue.main.sync {
+            self.userCircles = circles
+            self.tableView.reloadData()
+            self.tableView.layoutIfNeeded()
+            self.tableView.tableFooterView = nil
+            let height = self.tableView.frame.height - self.tableView.contentSize.height
+            self.tableFooterButton.frame.size.height = height
+            self.tableView.tableFooterView = self.tableFooterButton
+            completion?()
+        }
     }
     
 }

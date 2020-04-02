@@ -44,4 +44,12 @@ public final class CircleDAO {
                                                 values: [circleId])
     }
     
+    public func insertOrReplace(circles: [Circle]) {
+        MixinDatabase.shared.insertOrReplace(objects: circles)
+    }
+    
+    public func delete(circleId: String) {
+        MixinDatabase.shared.delete(table: Circle.tableName, condition: Circle.Properties.circleId == circleId)
+    }
+    
 }

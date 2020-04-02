@@ -12,6 +12,7 @@
 "dialog_button_login" = "ログイン";
 "dialog_progress_logout" = "ログアウト...";
 "dialog_progress_connect" = "接続中...";
+"action_add" = "追加";
 "action_next" = "次ヘ";
 "action_camera" = "カメラ";
 "action_continue" = "続く";
@@ -61,6 +62,7 @@
 "search_placeholder_currency" = "通貨コード";
 "search_placeholder_home" = "連絡先、資産、チャット";
 "search_placeholder_contact" = "MIXIN ID、名前、電話番号";
+"search_placeholder_name" = "名前を検索";
 "search_related_messages_count" = "メッセージ";
 "search_section_title_asset" = "資産";
 "search_section_title_user" = "連絡先";
@@ -182,6 +184,7 @@
 "circle_conversation_count" = "%@つの会話";
 "circle_conversation_count_all" = "すべての会話";
 "circle_action_edit_name" = "Edit Circle Name";
+"circle_action_add" = "Add Circle";
 "circle_action_edit_conversations" = "Edit Conversations";
 "circle_action_delete" = "Delete Circle";
 "circle_member_category_chats" = "チャット";

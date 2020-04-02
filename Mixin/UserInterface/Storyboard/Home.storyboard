@@ -1391,6 +1391,9 @@ chat history from icloud</string>
                                                 <rect key="frame" x="319" y="0.0" width="56" height="44"/>
                                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                 <state key="normal" image="ic_title_add"/>
+                                                <connections>
+                                                    <action selector="newCircleAction:" destination="rhC-hr-YBf" eventType="touchUpInside" id="B6d-Cj-5BT"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" name="background"/>

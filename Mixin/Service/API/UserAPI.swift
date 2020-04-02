@@ -102,10 +102,6 @@ final class UserAPI: UserSessionAPI {
         request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
     }
 
-    func getFavoriteApps(ofUserWith id: String) -> APIResult<[FavoriteApp]> {
-        return request(method: .get, url: url.getFavorite(userId: id))
-    }
-
     func getFavoriteApps(ofUserWith id: String, completion: @escaping (APIResult<[FavoriteApp]>) -> Void) {
         request(method: .get, url: url.getFavorite(userId: id), completion: completion)
     }

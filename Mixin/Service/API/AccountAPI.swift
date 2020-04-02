@@ -30,10 +30,6 @@ final class AccountAPI: BaseAPI {
 
         static let sessions = "sessions/fetch"
     }
-    
-    func me() -> APIResult<Account> {
-        return request(method: .get, url: url.me)
-    }
 
     func me(completion: @escaping (APIResult<Account>) -> Void) {
         request(method: .get, url: url.me, completion: completion)

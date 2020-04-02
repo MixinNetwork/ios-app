@@ -204,6 +204,12 @@
 "circle_default_contacts" = "联系人";
 "circle_conversation_count" = "%@ 个会话";
 "circle_conversation_count_all" = "全部会话";
+"circle_action_edit_name" = "编辑圈子名称";
+"circle_action_edit_conversations" = "编辑会话";
+"circle_action_delete" = "删除圈子";
+"circle_member_category_chats" = "最近聊天";
+"circle_member_category_contacts" = "联系人";
+"circle_member_category_bots" = "小程序";
 
 // Chat
 "chat_time_today" = "今天";

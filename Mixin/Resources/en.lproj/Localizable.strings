@@ -203,6 +203,12 @@
 "circle_default_contacts" = "Contacts";
 "circle_conversation_count" = "%@ Conversations";
 "circle_conversation_count_all" = "All Conversations";
+"circle_action_edit_name" = "Edit Circle Name";
+"circle_action_edit_conversations" = "Edit Conversations";
+"circle_action_delete" = "Delete Circle";
+"circle_member_category_chats" = "Chats";
+"circle_member_category_contacts" = "Contacts";
+"circle_member_category_bots" = "Bots";
 
 // Chat
 "chat_time_today" = "Today";

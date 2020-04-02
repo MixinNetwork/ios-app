@@ -38,6 +38,10 @@ class PeerCell: UITableViewCell {
         peerInfoView.render(receiver: receiver)
     }
     
+    func render(member: CircleMember) {
+        peerInfoView.render(member: member)
+    }
+    
     func makeSelectedBackgroundView() -> UIView? {
         return SelectedCellBackgroundView()
     }

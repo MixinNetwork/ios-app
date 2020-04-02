@@ -310,6 +310,12 @@
 		7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB06F44228EA7720048C2D6 /* NotificationView.xib */; };
 		7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F46228EA78F0048C2D6 /* NotificationController.swift */; };
 		7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F48228ED8650048C2D6 /* NotificationView.swift */; };
+		7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */; };
+		7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */; };
+		7BB0F9152434B03300BEDA97 /* CircleMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */; };
+		7BB0F9162434B03300BEDA97 /* CircleMemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */; };
+		7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */; };
+		7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */; };
 		7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB12FA62192C8DB009BEECF /* BarChartView.swift */; };
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
 		7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */; };
@@ -1054,6 +1060,12 @@
 		7BB06F44228EA7720048C2D6 /* NotificationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
 		7BB06F46228EA78F0048C2D6 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7BB06F48228ED8650048C2D6 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditorViewController.swift; sourceTree = "<group>"; };
+		7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAPI.swift; sourceTree = "<group>"; };
+		7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleMemberCell.swift; sourceTree = "<group>"; };
+		7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CircleMemberCell.xib; sourceTree = "<group>"; };
+		7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CircleMember+Convenience.swift"; sourceTree = "<group>"; };
+		7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleMemberSearchResult.swift; sourceTree = "<group>"; };
 		7BB12FA62192C8DB009BEECF /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionView.swift; sourceTree = "<group>"; };
@@ -1586,6 +1598,7 @@
 				7B35AF77228AA3BD00E8101D /* MessagesWithUserSearchResult.swift */,
 				7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */,
 				7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */,
+				7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */,
 			);
 			path = "Search Result";
 			sourceTree = "<group>";
@@ -2285,6 +2298,7 @@
 				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
+				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2498,6 +2512,7 @@
 				DFC0ECF223BB610B0091E7AC /* PhoneContactAPI.swift */,
 				DFC0ECF123BB610B0091E7AC /* ProvisioningAPI.swift */,
 				7BC96DE224176B390047471D /* FoursquareAPI.swift */,
+				7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -2639,6 +2654,8 @@
 				7B5281752265F1730023616D /* RecentBotCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
 				7BBC913324333DCA00FC3F3A /* CircleCell.swift */,
+				7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */,
+				7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2744,6 +2761,7 @@
 				E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */,
 				E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */,
 				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
+				7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -2910,6 +2928,7 @@
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				7BB0F9162434B03300BEDA97 /* CircleMemberCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* WebView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
@@ -3343,6 +3362,7 @@
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
+				7BB0F9152434B03300BEDA97 /* CircleMemberCell.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
@@ -3422,6 +3442,7 @@
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
+				7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
@@ -3454,6 +3475,7 @@
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				E0C7674D23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
+				7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */,
 				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
@@ -3665,6 +3687,7 @@
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
+				7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */,
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
@@ -3864,6 +3887,7 @@
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
+				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */,
 				7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */,

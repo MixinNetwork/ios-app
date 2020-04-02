@@ -12,7 +12,20 @@ class CirclesViewController: UIViewController {
     
     private let tableFooterButton = UIButton()
     
-    private let embeddedCircles = CircleDAO.shared.embeddedCircles()
+    private lazy var deleteAction = UITableViewRowAction(style: .destructive,
+                                                         title: Localized.MENU_DELETE,
+                                                         handler: tableViewCommitDeleteAction(action:indexPath:))
+    private lazy var editAction: UITableViewRowAction = {
+        let action = UITableViewRowAction(style: .normal,
+                                          title: R.string.localizable.menu_edit(),
+                                          handler: tableViewCommitEditAction(action:indexPath:))
+        action.backgroundColor = .theme
+        return action
+    }()
+    
+    private weak var editNameController: UIAlertController?
+    
+    private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles = CircleDAO.shared.circles()
     
     override func viewDidLoad() {
@@ -21,6 +34,7 @@ class CirclesViewController: UIViewController {
         tableHeaderView.frame.size.height = 0
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.reloadData()
         tableView.layoutIfNeeded()
         tableFooterButton.frame.size.height = tableView.frame.height - tableView.contentSize.height
@@ -99,11 +113,84 @@ extension CirclesViewController: UITableViewDataSource {
     
 }
 
+extension CirclesViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        indexPath.section == Section.user.rawValue
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        [deleteAction, editAction]
+    }
+    
+}
+
 extension CirclesViewController {
     
     private enum Section: Int, CaseIterable {
         case embedded = 0
         case user
+    }
+    
+    private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        let circle = userCircles[indexPath.row]
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_edit_name(), style: .default, handler: { (_) in
+            self.presentEditNameController(circleId: circle.circleId, currentName: circle.name)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_edit_conversations(), style: .default, handler: { (_) in
+            let vc = CircleEditorViewController.instance(circleId: circle.circleId)
+            self.present(vc, animated: true, completion: nil)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
+    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        let circle = userCircles[indexPath.row]
+        let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.circle_action_delete(), style: .destructive, handler: { (_) in
+
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
+    private func presentEditNameController(circleId: String, currentName: String) {
+        let title = R.string.localizable.circle_action_edit_name()
+        let changeActionTitle = R.string.localizable.dialog_button_change()
+        
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.text = currentName
+            textField.addTarget(self, action: #selector(self.alertInputChangedAction(_:)), for: .editingChanged)
+        }
+        
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        
+        let changeAction = UIAlertAction(title: changeActionTitle, style: .default, handler: { [unowned alert] _ in
+            guard let name = alert.textFields?.first?.text else {
+                return
+            }
+            self.editCircle(with: circleId, name: name)
+        })
+        changeAction.isEnabled = false
+        alert.addAction(changeAction)
+        
+        present(alert, animated: true, completion: {
+            alert.textFields?.first?.selectAll(nil)
+        })
+    }
+    
+    @objc private func alertInputChangedAction(_ sender: UITextField) {
+        guard let controller = editNameController, let text = controller.textFields?.first?.text else {
+            return
+        }
+        controller.actions[1].isEnabled = !text.isEmpty
+    }
+    
+    private func editCircle(with circleId: String, name: String) {
+        print("edit circle \(circleId), with \(name)")
     }
     
 }

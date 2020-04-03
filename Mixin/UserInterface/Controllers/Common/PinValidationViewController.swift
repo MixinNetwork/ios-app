@@ -55,7 +55,7 @@ class PinValidationViewController: UIViewController {
         AccountAPI.shared.verify(pin: pin) { (result) in
             switch result {
             case .success:
-				self.loadingIndicator.stopAnimating()
+                self.loadingIndicator.stopAnimating()
                 let interval = min(PeriodicPinVerificationInterval.max, AppGroupUserDefaults.Wallet.periodicPinVerificationInterval * 2)
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = interval
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
@@ -76,7 +76,7 @@ class PinValidationViewController: UIViewController {
         pinField.clear()
         pinField.receivesInput = true
         if error.code == 429 {
-			self.loadingIndicator.stopAnimating()
+            self.loadingIndicator.stopAnimating()
             limitationHintView.isHidden = false
             numberPadViewBottomConstraint.constant = numberPadView.frame.height
             UIView.animate(withDuration: 0.5, animations: {
@@ -84,12 +84,12 @@ class PinValidationViewController: UIViewController {
                 self.view.layoutIfNeeded()
             })
         } else {
-			error.pinErrorHandler { (errorMessage) in
-				self.loadingIndicator.stopAnimating()
-				self.pinField.isHidden = false
-				self.descriptionLabel.textColor = .mixinRed
-				self.descriptionLabel.text = errorMessage
-			}
+            error.pinErrorHandler { (errorMessage) in
+                self.loadingIndicator.stopAnimating()
+                self.pinField.isHidden = false
+                self.descriptionLabel.textColor = .mixinRed
+                self.descriptionLabel.text = errorMessage
+            }
         }
     }
     

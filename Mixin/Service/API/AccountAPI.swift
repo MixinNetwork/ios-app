@@ -25,9 +25,9 @@ final class AccountAPI: BaseAPI {
             if let offset = offset {
                 url += "?offset=\(offset)"
             }
-			if let limit = limit {
-				url += url.contains("?") ? "&limit=\(limit)" : "?limit=\(limit)"
-			}
+            if let limit = limit {
+                url += url.contains("?") ? "&limit=\(limit)" : "?limit=\(limit)"
+            }
             return url
         }
 

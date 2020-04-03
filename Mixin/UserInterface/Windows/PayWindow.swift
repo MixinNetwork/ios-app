@@ -516,20 +516,20 @@ extension PayWindow: PinFieldDelegate {
     }
 
     private func failedHandler(error: APIError) {
-		error.pinErrorHandler { [weak self](errorMsg) in
-			guard let self = self else {
-				return
-			}
-			switch error.code {
-			case 20118, 20119:
-				self.errorContinueAction = .retryPin
-			case 20120, 20117:
-				self.errorContinueAction = .changeAmount
-			default:
-				self.errorContinueAction = .close
-			}
-			self.failedHandler(errorMsg: errorMsg)
-		}
+        error.pinErrorHandler { [weak self](errorMsg) in
+            guard let self = self else {
+                return
+            }
+            switch error.code {
+            case 20118, 20119:
+                self.errorContinueAction = .retryPin
+            case 20120, 20117:
+                self.errorContinueAction = .changeAmount
+            default:
+                self.errorContinueAction = .close
+            }
+            self.failedHandler(errorMsg: errorMsg)
+        }
     }
 
     private func failedHandler(errorMsg: String) {

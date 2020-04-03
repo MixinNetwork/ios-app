@@ -49,16 +49,16 @@ class VerifyPinViewController: ContinueButtonViewController {
                 weakSelf.pinIsVerified(pin: pin)
             case let .failure(error):
                 weakSelf.pinField.clear()
-				weakSelf.alertPinError(error: error)
+                weakSelf.alertPinError(error: error)
             }
         }
     }
 
-	private func alertPinError(error: APIError) {
-		error.pinErrorHandler { [weak self](errorMsg) in
-			self?.alert(errorMsg)
-		}
-	}
+    private func alertPinError(error: APIError) {
+        error.pinErrorHandler { [weak self](errorMsg) in
+            self?.alert(errorMsg)
+        }
+    }
     
     func pinIsVerified(pin: String) {
         

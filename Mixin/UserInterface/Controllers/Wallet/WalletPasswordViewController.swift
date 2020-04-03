@@ -224,9 +224,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
-						error.pinErrorHandler { (errorMsg) in
-							self?.alert(errorMsg)
-						}
+                        error.pinErrorHandler { (errorMsg) in
+                            self?.alert(errorMsg)
+                        }
                     }
                 })
             } else {
@@ -248,9 +248,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
                     weakSelf.pinField.clear()
-					error.pinErrorHandler { (errorMsg) in
-						self?.alert(errorMsg)
-					}
+                    error.pinErrorHandler { (errorMsg) in
+                        self?.alert(errorMsg)
+                    }
                 }
             })
         case .changePinStep2(let old):
@@ -289,9 +289,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
-						error.pinErrorHandler { (errorMsg) in
-							self?.alert(errorMsg)
-						}
+                        error.pinErrorHandler { (errorMsg) in
+                            self?.alert(errorMsg)
+                        }
                     }
                 })
             } else {

@@ -43,19 +43,19 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
-            case let .failure(error):
-                weakSelf.isBusy = false
-                weakSelf.verificationCodeField.clear()
-				weakSelf.alertPinError(error: error)
-            }
+                case let .failure(error):
+                    weakSelf.isBusy = false
+                    weakSelf.verificationCodeField.clear()
+                    weakSelf.alertPinError(error: error)
+                }
         })
     }
 
-	private func alertPinError(error: APIError) {
-		error.pinErrorHandler { [weak self](errorMsg) in
-			self?.alert(errorMsg)
-		}
-	}
+    private func alertPinError(error: APIError) {
+        error.pinErrorHandler { [weak self](errorMsg) in
+            self?.alert(errorMsg)
+        }
+    }
     
     override func requestVerificationCode(reCaptchaToken token: String?) {
         AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in

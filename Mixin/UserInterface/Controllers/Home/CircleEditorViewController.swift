@@ -67,6 +67,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                     }
                     self.selections = members
                     self.collectionView.reloadData()
+                    self.reloadTableViewSelections()
                 }
             }
         }

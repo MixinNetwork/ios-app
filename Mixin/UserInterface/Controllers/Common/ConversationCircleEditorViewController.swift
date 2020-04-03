@@ -6,6 +6,18 @@ class ConversationCircleEditorViewController: UITableViewController {
     private let footerReuseId = "footer"
     
     private lazy var editNameController = EditNameController(presentingViewController: self)
+    private lazy var hintFooterView: UIView = {
+        let view = R.nib.circlesTableFooterView(owner: nil)!
+        view.showsHintLabel = true
+        view.labelTopConstraint.constant = 80
+        view.button.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.contentView.snp.bottom)
+        }
+        view.button.setTitle(R.string.localizable.circle_action_add(), for: .normal)
+        view.button.addTarget(self, action: #selector(addCircle), for: .touchUpInside)
+        return view
+    }()
     
     private var conversationId = ""
     private var ownerId: String?
@@ -52,8 +64,26 @@ class ConversationCircleEditorViewController: UITableViewController {
                 }
                 self.subordinateCircles = subordinateCircles
                 self.otherCircles = otherCircles
+                self.tableView.tableFooterView = nil
                 self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+                if allCircles.isEmpty {
+                    self.hintFooterView.frame.size.height = 300
+                    self.tableView.tableFooterView = self.hintFooterView
+                }
             }
+        }
+    }
+    
+    @objc func addCircle() {
+        let addCircle = R.string.localizable.circle_action_add()
+        let add = R.string.localizable.action_add()
+        editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
+            guard let name = alert.textFields?.first?.text else {
+                return
+            }
+            let vc = CircleEditorViewController.instance(name: name, intent: .create)
+            self.present(vc, animated: true, completion: nil)
         }
     }
     
@@ -130,15 +160,7 @@ extension ConversationCircleEditorViewController {
 extension ConversationCircleEditorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let addCircle = R.string.localizable.circle_action_add()
-        let add = R.string.localizable.action_add()
-        editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
-            guard let name = alert.textFields?.first?.text else {
-                return
-            }
-            let vc = CircleEditorViewController.instance(name: name, intent: .create)
-            self.present(vc, animated: true, completion: nil)
-        }
+        addCircle()
     }
     
     func imageBarRightButton() -> UIImage? {

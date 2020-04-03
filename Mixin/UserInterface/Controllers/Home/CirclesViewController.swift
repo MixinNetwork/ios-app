@@ -10,7 +10,14 @@ class CirclesViewController: UIViewController {
     @IBOutlet weak var showTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideTableViewConstraint: NSLayoutConstraint!
     
-    private lazy var tableFooterView = R.nib.circlesTableFooterView(owner: nil)!
+    private lazy var tableFooterView: CirclesTableFooterView = {
+        let view = R.nib.circlesTableFooterView(owner: nil)!
+        view.button.snp.makeConstraints { (make) in
+            make.top.equalTo(view.contentView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        return view
+    }()
     private lazy var deleteAction = {
         UITableViewRowAction(style: .destructive,
                              title: Localized.MENU_DELETE,

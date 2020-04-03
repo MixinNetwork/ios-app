@@ -74,10 +74,6 @@ class ProfileViewController: UIViewController {
     var isMuted: Bool {
         return false
     }
-
-    var isGroup: Bool {
-        return false
-    }
     
     private lazy var resizeRecognizerDelegate = ResizeRecognizerDelegate(scrollView: scrollView)
     
@@ -306,12 +302,13 @@ extension ProfileViewController {
     
     @objc func clearChat() {
         let conversationId = self.conversationId
-        let alert: UIAlertController
-        if isGroup {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_group_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+        let title: String
+        if self is GroupProfileViewController {
+            title = R.string.localizable.profile_clear_group_chat_hint(conversationName)
         } else {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_contact_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+            title = R.string.localizable.profile_clear_contact_chat_hint(conversationName)
         }
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)

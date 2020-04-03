@@ -14,10 +14,6 @@ final class GroupProfileViewController: ProfileViewController {
     override var isMuted: Bool {
         return conversation.isMuted
     }
-
-    override var isGroup: Bool {
-        return true
-    }
     
     private let conversation: ConversationItem
     private let response: ConversationResponse?

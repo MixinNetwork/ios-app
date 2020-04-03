@@ -23,8 +23,7 @@ class CirclesViewController: UIViewController {
         action.backgroundColor = .theme
         return action
     }()
-    
-    private weak var editNameController: UIAlertController?
+    private lazy var editNameController = EditNameController(presentingViewController: self)
     
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles: [CircleItem] = []
@@ -44,7 +43,8 @@ class CirclesViewController: UIViewController {
         DispatchQueue.global().async {
             self.reloadUserCirclesFromLocalStorage(completion: nil)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(circleConversationsDidChange), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -59,7 +59,7 @@ class CirclesViewController: UIViewController {
     @IBAction func newCircleAction(_ sender: Any) {
         let addCircle = R.string.localizable.circle_action_add()
         let add = R.string.localizable.action_add()
-        presentEditNameController(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
+        editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
             }
@@ -68,7 +68,7 @@ class CirclesViewController: UIViewController {
         }
     }
     
-    @objc func circleConversationsDidChange() {
+    @objc func reloadUserCircle() {
         DispatchQueue.global().async {
             self.reloadUserCirclesFromLocalStorage(completion: nil)
         }
@@ -165,7 +165,7 @@ extension CirclesViewController {
         
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: editName, style: .default, handler: { (_) in
-            self.presentEditNameController(title: editName, actionTitle: change, currentName: circle.name) { (alert) in
+            self.editNameController.present(title: editName, actionTitle: change, currentName: circle.name) { (alert) in
                 guard let name = alert.textFields?.first?.text else {
                     return
                 }
@@ -206,34 +206,6 @@ extension CirclesViewController {
         }))
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
-    }
-    
-    private func presentEditNameController(title: String, actionTitle: String, currentName: String?, handler: @escaping (UIAlertController) -> Void) {
-        let cancel = R.string.localizable.dialog_button_cancel()
-        
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.text = currentName
-            textField.addTarget(self, action: #selector(self.alertInputChangedAction(_:)), for: .editingChanged)
-        }
-        alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
-        let action = UIAlertAction(title: actionTitle, style: .default, handler: { [unowned alert] _ in
-            handler(alert)
-        })
-        action.isEnabled = false
-        alert.addAction(action)
-        
-        self.editNameController = alert
-        present(alert, animated: true, completion: {
-            alert.textFields?.first?.selectAll(nil)
-        })
-    }
-    
-    @objc private func alertInputChangedAction(_ sender: UITextField) {
-        guard let controller = editNameController, let text = controller.textFields?.first?.text else {
-            return
-        }
-        controller.actions[1].isEnabled = !text.isEmpty
     }
     
     private func editCircle(with circleId: String, name: String) {

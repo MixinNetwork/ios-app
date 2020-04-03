@@ -84,6 +84,11 @@ class ProfileViewController: UIViewController {
     
     private var menuItemGroups = [[ProfileMenuItem]]()
     private var reusableMenuItemViews = Set<ProfileMenuItemView>()
+    private var subordinateCircles: [CircleItem]? {
+        didSet {
+            circleItemView.names = subordinateCircles?.map(\.name) ?? []
+        }
+    }
     
     private weak var editNameController: UIAlertController?
     
@@ -245,7 +250,7 @@ class ProfileViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let circles = CircleDAO.shared.circles(of: conversationId)
             DispatchQueue.main.sync {
-                self?.circleItemView.names = circles.map(\.name)
+                self?.subordinateCircles = circles
             }
         }
     }
@@ -337,7 +342,8 @@ extension ProfileViewController {
     }
     
     @objc func editCircle() {
-        let vc = ConversationCircleEditorViewController.instance(name: conversationName)
+        let circles = subordinateCircles ?? []
+        let vc = ConversationCircleEditorViewController.instance(name: conversationName, conversationId: conversationId, subordinateCircles: circles)
         dismissAndPush(vc)
     }
     

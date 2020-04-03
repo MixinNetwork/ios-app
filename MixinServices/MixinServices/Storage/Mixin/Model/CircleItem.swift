@@ -29,3 +29,19 @@ public class CircleItem: TableDecodable {
     }
     
 }
+
+extension CircleItem: Equatable {
+    
+    public static func == (lhs: CircleItem, rhs: CircleItem) -> Bool {
+        lhs.circleId == rhs.circleId
+    }
+    
+}
+
+extension CircleItem: Hashable {
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(circleId)
+    }
+    
+}

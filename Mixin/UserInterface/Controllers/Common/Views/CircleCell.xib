@@ -119,6 +119,7 @@
                 <outlet property="circleImageView" destination="4vc-NV-AoN" id="vRl-X9-45x"/>
                 <outlet property="isSelectedImageView" destination="WQx-Bc-gmD" id="aT8-Nn-C0B"/>
                 <outlet property="subtitleLabel" destination="fqp-3A-Dtz" id="jOG-WN-S6P"/>
+                <outlet property="superscriptView" destination="GeU-eV-GT8" id="Ybt-1k-zSy"/>
                 <outlet property="titleLabel" destination="8GL-Oe-5s3" id="M5B-7H-yH2"/>
                 <outlet property="unreadMessageCountLabel" destination="e0C-5f-Hq4" id="gNe-VC-hzn"/>
             </connections>

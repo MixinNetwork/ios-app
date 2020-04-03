@@ -4,6 +4,7 @@ class CircleCell: UITableViewCell {
     
     @IBOutlet weak var circleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var superscriptView: UIView!
     @IBOutlet weak var isSelectedImageView: UIImageView!
     @IBOutlet weak var unreadMessageCountLabel: RoundedInsetLabel!
     @IBOutlet weak var subtitleLabel: UILabel!

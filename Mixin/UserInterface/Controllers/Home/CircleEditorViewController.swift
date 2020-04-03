@@ -209,9 +209,14 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                 switch result {
                 case .success(let circle):
                     if selections.isEmpty {
-                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
-                        hud.scheduleAutoHidden()
-                        self.dismiss(animated: true, completion: nil)
+                        DispatchQueue.global().async {
+                            CircleDAO.shared.insertOrReplace(circle: circle)
+                            DispatchQueue.main.sync {
+                                hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                                hud.scheduleAutoHidden()
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        }
                     } else {
                         self.intent = .update(id: circle.circleId)
                         DispatchQueue.global().async {

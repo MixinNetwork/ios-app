@@ -194,6 +194,7 @@ extension CirclesViewController {
                 case .success:
                     DispatchQueue.global().async {
                         CircleDAO.shared.delete(circleId: circle.circleId)
+                        CircleConversationDAO.shared.delete(circleId: circle.circleId)
                         self.reloadUserCirclesFromLocalStorage {
                             hud.set(style: .notification, text: R.string.localizable.toast_deleted())
                         }

@@ -17,7 +17,6 @@ final public class CircleConversationDAO {
     }
     
     public func replaceCircleConversations(with circleId: String, objects: [CircleConversation]) {
-        MixinDatabase.shared.insertOrReplace(objects: objects)
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: CircleConversation.tableName,
                           where: CircleConversation.Properties.circleId == circleId)
@@ -27,6 +26,11 @@ final public class CircleConversationDAO {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification, object: self)
         }
+    }
+    
+    public func delete(circleId: String) {
+        MixinDatabase.shared.delete(table: CircleConversation.tableName,
+                                    condition: CircleConversation.Properties.circleId == circleId)
     }
     
 }

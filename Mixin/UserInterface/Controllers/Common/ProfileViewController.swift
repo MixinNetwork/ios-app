@@ -343,7 +343,11 @@ extension ProfileViewController {
     
     @objc func editCircle() {
         let circles = subordinateCircles ?? []
-        let vc = ConversationCircleEditorViewController.instance(name: conversationName, conversationId: conversationId, subordinateCircles: circles)
+        let ownerId = (self as? UserProfileViewController)?.user.userId
+        let vc = ConversationCircleEditorViewController.instance(name: conversationName,
+                                                                 conversationId: conversationId,
+                                                                 ownerId: ownerId,
+                                                                 subordinateCircles: circles)
         dismissAndPush(vc)
     }
     

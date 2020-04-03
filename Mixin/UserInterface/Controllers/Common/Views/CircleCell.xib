@@ -27,7 +27,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4vc-NV-AoN">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4vc-NV-AoN">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
@@ -46,7 +46,7 @@
                                     <constraint firstAttribute="width" constant="50" id="sl3-iH-ilT"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="DMr-LG-cgp">
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="DMr-LG-cgp">
                                 <rect key="frame" x="66" y="5.5" width="269" height="39"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QuG-ab-FDj">
@@ -118,6 +118,7 @@
             <connections>
                 <outlet property="circleImageView" destination="4vc-NV-AoN" id="vRl-X9-45x"/>
                 <outlet property="isSelectedImageView" destination="WQx-Bc-gmD" id="aT8-Nn-C0B"/>
+                <outlet property="stackView" destination="Ynx-Ad-gz3" id="JCy-sQ-H8Q"/>
                 <outlet property="subtitleLabel" destination="fqp-3A-Dtz" id="jOG-WN-S6P"/>
                 <outlet property="superscriptView" destination="GeU-eV-GT8" id="Ybt-1k-zSy"/>
                 <outlet property="titleLabel" destination="8GL-Oe-5s3" id="M5B-7H-yH2"/>

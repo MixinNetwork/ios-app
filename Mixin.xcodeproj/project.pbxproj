@@ -164,6 +164,8 @@
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
 		7B5E9B4824373380000AE24E /* EditNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4724373380000AE24E /* EditNameController.swift */; };
 		7B5E9B4A243740C4000AE24E /* ConversationCircleEditorFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B49243740C4000AE24E /* ConversationCircleEditorFooterView.swift */; };
+		7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4B2437434D000AE24E /* CircleEditingButton.swift */; };
+		7B5E9B4E2437503A000AE24E /* UpdateCircleMemberRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4D2437503A000AE24E /* UpdateCircleMemberRequest.swift */; };
 		7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */; };
 		7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */; };
 		7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5F96682414241C003A087B /* LocationInformationView.swift */; };
@@ -925,6 +927,8 @@
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
 		7B5E9B4724373380000AE24E /* EditNameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameController.swift; sourceTree = "<group>"; };
 		7B5E9B49243740C4000AE24E /* ConversationCircleEditorFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorFooterView.swift; sourceTree = "<group>"; };
+		7B5E9B4B2437434D000AE24E /* CircleEditingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditingButton.swift; sourceTree = "<group>"; };
+		7B5E9B4D2437503A000AE24E /* UpdateCircleMemberRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCircleMemberRequest.swift; sourceTree = "<group>"; };
 		7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoSlider.swift; sourceTree = "<group>"; };
 		7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageCell.swift; sourceTree = "<group>"; };
 		7B5F96682414241C003A087B /* LocationInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInformationView.swift; sourceTree = "<group>"; };
@@ -1726,6 +1730,7 @@
 				7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */,
 				7BBC913324333DCA00FC3F3A /* CircleCell.swift */,
 				7B5E9B49243740C4000AE24E /* ConversationCircleEditorFooterView.swift */,
+				7B5E9B4B2437434D000AE24E /* CircleEditingButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2554,6 +2559,7 @@
 				DFC0ECCA23BB5FDD0091E7AC /* RelationshipRequest.swift */,
 				DFC0ECC923BB5FDC0091E7AC /* SessionRequest.swift */,
 				DFC0ECC823BB5FDC0091E7AC /* WithdrawalRequest.swift */,
+				7B5E9B4D2437503A000AE24E /* UpdateCircleMemberRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -3759,6 +3765,7 @@
 				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
+				7B5E9B4E2437503A000AE24E /* UpdateCircleMemberRequest.swift in Sources */,
 				DFC0ECF923BB610C0091E7AC /* AuthorizeAPI.swift in Sources */,
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
@@ -3874,6 +3881,7 @@
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
+				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,

@@ -304,7 +304,8 @@ extension CircleEditorViewController {
     }
     
     private func updateCircle(of id: String, with members: [CircleMember], hud: Hud) {
-        CircleAPI.shared.updateCircle(of: id, members: members) { (result) in
+        let requests = members.map(UpdateCircleMemberRequest.init)
+        CircleAPI.shared.updateCircle(of: id, requests: requests) { (result) in
             switch result {
             case .success:
                 DispatchQueue.global().async {

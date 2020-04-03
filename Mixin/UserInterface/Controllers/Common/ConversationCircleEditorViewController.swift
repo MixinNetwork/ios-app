@@ -8,13 +8,15 @@ class ConversationCircleEditorViewController: UITableViewController {
     private lazy var editNameController = EditNameController(presentingViewController: self)
     
     private var conversationId = ""
+    private var ownerId: String?
     private var embeddedCircle = CircleDAO.shared.embeddedCircles()
     private var subordinateCircles: [CircleItem] = []
     private var otherCircles: [CircleItem] = []
     
-    class func instance(name: String, conversationId: String, subordinateCircles: [CircleItem]) -> UIViewController {
+    class func instance(name: String, conversationId: String, ownerId: String?, subordinateCircles: [CircleItem]) -> UIViewController {
         let vc = ConversationCircleEditorViewController(style: .grouped)
         vc.conversationId = conversationId
+        vc.ownerId = ownerId
         vc.subordinateCircles = subordinateCircles
         let title = R.string.localizable.circle_conversation_editor_title(name)
         return ContainerViewController.instance(viewController: vc, title: title)
@@ -74,17 +76,21 @@ extension ConversationCircleEditorViewController {
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
             cell.unreadMessageCountLabel.text = nil
             cell.circleImageView.image = R.image.ic_circle_all()
+            cell.circleEditingStyle = CircleEditingButton.Style.none
         } else {
             let circle: CircleItem
             if indexPath.section == 0 {
                 circle = subordinateCircles[indexPath.row - embeddedCircle.count]
+                cell.circleEditingStyle = .delete
             } else {
                 circle = otherCircles[indexPath.row]
+                cell.circleEditingStyle = .insert
             }
             cell.titleLabel.text = circle.name
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
             cell.unreadMessageCountLabel.text = nil
             cell.circleImageView.image = R.image.ic_circle_user()
+            cell.delegate = self
         }
         cell.superscriptView.isHidden = true
         return cell
@@ -137,6 +143,91 @@ extension ConversationCircleEditorViewController: ContainerViewControllerDelegat
     
     func imageBarRightButton() -> UIImage? {
         R.image.ic_title_add()
+    }
+    
+}
+
+extension ConversationCircleEditorViewController: CircleCellDelegate {
+    
+    func circleCellDidSelectEditingButton(_ cell: CircleCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        guard indexPath.section == 1 || indexPath.row >= embeddedCircle.count else {
+            return
+        }
+        let conversationId = self.conversationId
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        if indexPath.section == 0 {
+            let index = indexPath.row - embeddedCircle.count
+            let circle = subordinateCircles[index]
+            DispatchQueue.global().async {
+                let requests = CircleDAO.shared
+                    .circleMembers(circleId: circle.circleId)
+                    .filter({ $0.conversationId != conversationId })
+                    .map(UpdateCircleMemberRequest.init)
+                let createdAt = Date().toUTCString()
+                CircleAPI.shared.updateCircle(of: circle.circleId, requests: requests) { (result) in
+                    switch result {
+                    case .success:
+                        DispatchQueue.global().async {
+                            let objects = requests.map { (request) -> CircleConversation in
+                                return CircleConversation(circleId: circle.circleId,
+                                                          conversationId: request.conversationId,
+                                                          createdAt: createdAt)
+                            }
+                            CircleConversationDAO.shared.replaceCircleConversations(with: circle.circleId, objects: objects)
+                            DispatchQueue.main.sync {
+                                hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                                hud.scheduleAutoHidden()
+                                let circle = self.subordinateCircles.remove(at: index)
+                                self.otherCircles.insert(circle, at: 0)
+                                self.tableView.moveRow(at: indexPath, to: IndexPath(row: 0, section: 1))
+                            }
+                        }
+                    case .failure(let error):
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            }
+        } else {
+            let index = indexPath.row
+            let circle = otherCircles[index]
+            let newRequest = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
+            DispatchQueue.global().async {
+                var requests = CircleDAO.shared
+                    .circleMembers(circleId: circle.circleId)
+                    .map(UpdateCircleMemberRequest.init)
+                requests.append(newRequest)
+                let createdAt = Date().toUTCString()
+                CircleAPI.shared.updateCircle(of: circle.circleId, requests: requests) { (result) in
+                    switch result {
+                    case .success:
+                        DispatchQueue.global().async {
+                            let objects = requests.map { (request) -> CircleConversation in
+                                return CircleConversation(circleId: circle.circleId,
+                                                          conversationId: request.conversationId,
+                                                          createdAt: createdAt)
+                            }
+                            CircleConversationDAO.shared.replaceCircleConversations(with: circle.circleId, objects: objects)
+                            DispatchQueue.main.sync {
+                                hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                                hud.scheduleAutoHidden()
+                                let circle = self.otherCircles.remove(at: index)
+                                let toIndexPath = IndexPath(row: self.subordinateCircles.count, section: 0)
+                                self.subordinateCircles.append(circle)
+                                self.tableView.moveRow(at: indexPath, to: toIndexPath)
+                            }
+                        }
+                    case .failure(let error):
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            }
+        }
     }
     
 }

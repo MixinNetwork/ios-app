@@ -21,6 +21,14 @@ final class UserProfileViewController: ProfileViewController {
         return true
     }
     
+    var user: UserItem! {
+        didSet {
+            isMe = user.userId == myUserId
+            relationship = Relationship(rawValue: user.relationship) ?? .ME
+            updateDeveloper()
+        }
+    }
+    
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     
@@ -32,13 +40,6 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
-    private var user: UserItem! {
-        didSet {
-            isMe = user.userId == myUserId
-            relationship = Relationship(rawValue: user.relationship) ?? .ME
-            updateDeveloper()
-        }
-    }
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)

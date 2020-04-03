@@ -32,15 +32,9 @@ final class CircleAPI: BaseAPI {
         request(method: .post, url: Url.update(id: id), parameters: param, completion: completion)
     }
     
-    func updateCircle(of id: String, members: [CircleMember], completion: @escaping (APIResult<EmptyResponse>) -> Void) {
-        let params = members.map({ member -> [String: String] in
-            var param = ["conversation_id": member.conversationId]
-            if member.category == ConversationCategory.CONTACT.rawValue {
-                param["contact_id"] = member.ownerId
-            }
-            return param
-        })
-        request(method: .post, url: Url.conversations(id: id), parameters: params.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
+    func updateCircle(of id: String, requests: [UpdateCircleMemberRequest], completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+        let params = requests.map(\.jsonObject).toParameters()
+        request(method: .post, url: Url.conversations(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
     func delete(id: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {

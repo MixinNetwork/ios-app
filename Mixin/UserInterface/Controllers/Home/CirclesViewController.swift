@@ -62,7 +62,7 @@ class CirclesViewController: UIViewController {
             guard let name = alert.textFields?.first?.text else {
                 return
             }
-            let vc = CircleEditorViewController.instance(intent: .create(name: name))
+            let vc = CircleEditorViewController.instance(name: name, intent: .create)
             self.present(vc, animated: true, completion: nil)
         }
     }
@@ -172,7 +172,7 @@ extension CirclesViewController {
             }
         }))
         sheet.addAction(UIAlertAction(title: editConversation, style: .default, handler: { (_) in
-            let vc = CircleEditorViewController.instance(intent: .update(id: circle.circleId))
+            let vc = CircleEditorViewController.instance(name: circle.name, intent: .update(id: circle.circleId))
             self.present(vc, animated: true, completion: nil)
         }))
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))

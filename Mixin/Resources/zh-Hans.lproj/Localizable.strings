@@ -209,6 +209,7 @@
 "circle_action_edit_name" = "编辑圈子名称";
 "circle_action_add" = "添加圈子";
 "circle_action_edit_conversations" = "编辑会话";
+"circle_action_add_conversation" = "添加会话";
 "circle_action_delete" = "删除圈子";
 "circle_member_category_chats" = "最近聊天";
 "circle_member_category_contacts" = "联系人";

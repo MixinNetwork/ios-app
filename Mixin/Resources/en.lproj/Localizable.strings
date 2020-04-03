@@ -208,6 +208,7 @@
 "circle_action_edit_name" = "Edit Circle Name";
 "circle_action_add" = "Add Circle";
 "circle_action_edit_conversations" = "Edit Conversations";
+"circle_action_add_conversation" = "Add Conversations";
 "circle_action_delete" = "Delete Circle";
 "circle_member_category_chats" = "Chats";
 "circle_member_category_contacts" = "Contacts";

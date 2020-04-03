@@ -186,6 +186,7 @@
 "circle_action_edit_name" = "Edit Circle Name";
 "circle_action_add" = "Add Circle";
 "circle_action_edit_conversations" = "Edit Conversations";
+"circle_action_add_conversation" = "会話を追加";
 "circle_action_delete" = "Delete Circle";
 "circle_member_category_chats" = "チャット";
 "circle_member_category_contacts" = "連絡先";

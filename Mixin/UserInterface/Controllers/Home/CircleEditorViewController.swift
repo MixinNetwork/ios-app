@@ -4,7 +4,7 @@ import MixinServices
 class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPeerCell, CircleMemberSearchResult> {
     
     enum Intent {
-        case create(name: String)
+        case create
         case update(id: String)
     }
     
@@ -12,19 +12,27 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     var collectionView: UICollectionView!
     
+    private var name = ""
     private var intent: Intent!
     private var selections: [CircleMember] = [] {
         didSet {
             let count = "\(selections.count)"
-            let text = R.string.localizable.circle_conversation_count(count)
-            container?.subtitleLabel.text = text
+            let subtitle = R.string.localizable.circle_conversation_count(count)
+            container?.setSubtitle(subtitle: subtitle)
         }
     }
     
-    class func instance(intent: Intent) -> UIViewController {
+    class func instance(name: String, intent: Intent) -> UIViewController {
         let vc = CircleEditorViewController()
+        vc.name = name
         vc.intent = intent
-        let title = R.string.localizable.circle_action_edit_conversations()
+        let title: String
+        switch intent {
+        case .create:
+            title = R.string.localizable.circle_action_add_conversation()
+        case .update:
+            title = name
+        }
         return ContainerViewController.instance(viewController: vc, title: title)
     }
     
@@ -48,7 +56,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         collectionView.register(R.nib.circleMemberCell)
         collectionView.dataSource = self
         switch intent! {
-        case .create(let name):
+        case .create:
             break
         case .update(let id):
             DispatchQueue.global().async { [weak self] in
@@ -194,7 +202,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         switch intent! {
-        case let .create(name):
+        case .create:
             let selections = self.selections
             CircleAPI.shared.create(name: name) { (result) in
                 switch result {
@@ -204,6 +212,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                         hud.scheduleAutoHidden()
                         self.dismiss(animated: true, completion: nil)
                     } else {
+                        self.intent = .update(id: circle.circleId)
                         DispatchQueue.global().async {
                             CircleDAO.shared.insertOrReplace(circle: circle)
                             self.updateCircle(of: circle.circleId, with: selections, hud: hud)

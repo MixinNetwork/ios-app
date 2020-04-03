@@ -21,7 +21,6 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private var conversationId = ""
     private var ownerId: String?
-    private var embeddedCircle = CircleDAO.shared.embeddedCircles()
     private var subordinateCircles: [CircleItem] = []
     private var otherCircles: [CircleItem] = []
     
@@ -93,7 +92,7 @@ extension ConversationCircleEditorViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return embeddedCircle.count + subordinateCircles.count
+            return subordinateCircles.count
         } else {
             return otherCircles.count
         }
@@ -101,27 +100,19 @@ extension ConversationCircleEditorViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.circle, for: indexPath)!
-        if indexPath.section == 0, indexPath.row < embeddedCircle.count {
-            cell.titleLabel.text = "Mixin"
-            cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
-            cell.unreadMessageCountLabel.text = nil
-            cell.circleImageView.image = R.image.ic_circle_all()
-            cell.circleEditingStyle = CircleEditingButton.Style.none
+        let circle: CircleItem
+        if indexPath.section == 0 {
+            circle = subordinateCircles[indexPath.row]
+            cell.circleEditingStyle = .delete
         } else {
-            let circle: CircleItem
-            if indexPath.section == 0 {
-                circle = subordinateCircles[indexPath.row - embeddedCircle.count]
-                cell.circleEditingStyle = .delete
-            } else {
-                circle = otherCircles[indexPath.row]
-                cell.circleEditingStyle = .insert
-            }
-            cell.titleLabel.text = circle.name
-            cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
-            cell.unreadMessageCountLabel.text = nil
-            cell.circleImageView.image = R.image.ic_circle_user()
-            cell.delegate = self
+            circle = otherCircles[indexPath.row]
+            cell.circleEditingStyle = .insert
         }
+        cell.titleLabel.text = circle.name
+        cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
+        cell.unreadMessageCountLabel.text = nil
+        cell.circleImageView.image = R.image.ic_circle_user()
+        cell.delegate = self
         cell.superscriptView.isHidden = true
         return cell
     }
@@ -139,7 +130,11 @@ extension ConversationCircleEditorViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        section == 0 ? 40 : .leastNormalMagnitude
+        if section == 0 && !subordinateCircles.isEmpty && !otherCircles.isEmpty {
+            return 40
+        } else {
+            return .leastNormalMagnitude
+        }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -147,7 +142,7 @@ extension ConversationCircleEditorViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
+        if section == 0 && !subordinateCircles.isEmpty && !otherCircles.isEmpty {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! ConversationCircleEditorFooterView
             return view
         } else {
@@ -175,14 +170,11 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
-        guard indexPath.section == 1 || indexPath.row >= embeddedCircle.count else {
-            return
-        }
         let conversationId = self.conversationId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         if indexPath.section == 0 {
-            let index = indexPath.row - embeddedCircle.count
+            let index = indexPath.row
             let circle = subordinateCircles[index]
             DispatchQueue.global().async {
                 let requests = CircleDAO.shared

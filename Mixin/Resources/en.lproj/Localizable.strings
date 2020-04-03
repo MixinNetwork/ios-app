@@ -514,6 +514,7 @@
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
+"transfer_error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrect. You still have %@ chances. Please wait for 24 hours to retry later.";
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_transfer_title" = "Transfer to %@";
 "pay_withdrawal_title" = "Withdraw to %@";

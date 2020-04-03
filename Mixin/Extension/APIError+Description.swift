@@ -76,5 +76,36 @@ extension APIError {
             return description
         }
     }
+
+	@discardableResult
+	func pinErrorHandler(callback: @escaping(String) -> Void) -> Bool {
+		if code == 20119 {
+			AccountAPI.shared.pinLogs(limit: 5) { (result) in
+				switch result {
+				case let .success(logs):
+					var errorCount = 0
+					for log in logs {
+						if -log.createdAt.toUTCDate().timeIntervalSinceNow < 86400 {
+							errorCount += 1
+						}
+					}
+					if errorCount == 5 {
+						callback(R.string.localizable.wallet_password_too_many_requests())
+					} else {
+						callback(R.string.localizable.transfer_error_pin_incorrect_with_times("\(5 - errorCount)"))
+					}
+				case .failure:
+					callback(R.string.localizable.transfer_error_pin_incorrect())
+				}
+			}
+			return true
+		} else if code == 429 {
+			callback(R.string.localizable.wallet_password_too_many_requests())
+			return true
+		} else {
+			callback(localizedDescription)
+			return false
+		}
+	}
     
 }

@@ -146,25 +146,4 @@ extension AddressViewController {
         AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: asset, addressRequest: nil, address: address, dismissCallback: nil)
     }
     
-    private func deleteAddress(at indexPath: IndexPath, pin: String) {
-        let addressId = addresses[indexPath.row].addressId
-        tableView.beginUpdates()
-        addresses.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        tableView.endUpdates()
-        let assetId = asset.assetId
-        WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { [weak self](result) in
-            switch result {
-            case .success:
-                AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
-            case let .failure(error):
-                if error.code == 429 {
-                    self?.alert(R.string.localizable.wallet_password_too_many_requests())
-                } else {
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
-        }
-    }
-    
 }

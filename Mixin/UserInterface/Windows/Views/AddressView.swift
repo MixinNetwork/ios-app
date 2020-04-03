@@ -107,12 +107,10 @@ extension AddressView: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
-                    if error.code == 429 {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.wallet_password_too_many_requests())
-                    } else {
-                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    }
-                    self?.superView?.dismissPopupControllerAnimated()
+					error.pinErrorHandler { (errorMsg) in
+						self?.superView?.alert(errorMsg)
+						self?.superView?.dismissPopupControllerAnimated()
+					}
                 }
             }
         } else {
@@ -129,12 +127,10 @@ extension AddressView: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case let .failure(error):
-                    if error.code == 429 {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.wallet_password_too_many_requests())
-                    } else {
-                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    }
-                    self?.superView?.dismissPopupControllerAnimated()
+					error.pinErrorHandler { (errorMsg) in
+						self?.superView?.alert(errorMsg)
+						self?.superView?.dismissPopupControllerAnimated()
+					}
                 }
             }
         }

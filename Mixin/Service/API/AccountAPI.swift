@@ -20,11 +20,14 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
-        static func pinLogs(offset: String? = nil) -> String {
+		static func pinLogs(offset: String? = nil, limit: Int? = nil) -> String {
             var url = "pin_logs"
             if let offset = offset {
                 url += "?offset=\(offset)"
             }
+			if let limit = limit {
+				url += url.contains("?") ? "&limit=\(limit)" : "?limit=\(limit)"
+			}
             return url
         }
 
@@ -121,8 +124,8 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
 
-    func pinLogs(offset: String? = nil, completion: @escaping (APIResult<[PINLogResponse]>) -> Void) {
-        request(method: .get, url: url.pinLogs(offset: offset), completion: completion)
+    func pinLogs(offset: String? = nil, limit: Int? = nil, completion: @escaping (APIResult<[PINLogResponse]>) -> Void) {
+		request(method: .get, url: url.pinLogs(offset: offset, limit: limit), completion: completion)
     }
 
     func logoutSession(sessionId: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {

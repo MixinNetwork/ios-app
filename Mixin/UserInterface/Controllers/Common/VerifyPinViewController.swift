@@ -49,14 +49,16 @@ class VerifyPinViewController: ContinueButtonViewController {
                 weakSelf.pinIsVerified(pin: pin)
             case let .failure(error):
                 weakSelf.pinField.clear()
-                if error.code == 429 {
-                    weakSelf.alert(R.string.localizable.wallet_password_too_many_requests())
-                } else {
-                    weakSelf.alert(error.localizedDescription)
-                }
+				weakSelf.alertPinError(error: error)
             }
         }
     }
+
+	private func alertPinError(error: APIError) {
+		error.pinErrorHandler { [weak self](errorMsg) in
+			self?.alert(errorMsg)
+		}
+	}
     
     func pinIsVerified(pin: String) {
         

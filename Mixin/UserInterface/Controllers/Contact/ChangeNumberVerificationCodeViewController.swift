@@ -46,14 +46,16 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case let .failure(error):
                 weakSelf.isBusy = false
                 weakSelf.verificationCodeField.clear()
-                if error.code == 429 {
-                    weakSelf.alert(R.string.localizable.wallet_password_too_many_requests())
-                } else {
-                    weakSelf.alert(error.localizedDescription)
-                }
+				weakSelf.alertPinError(error: error)
             }
         })
     }
+
+	private func alertPinError(error: APIError) {
+		error.pinErrorHandler { [weak self](errorMsg) in
+			self?.alert(errorMsg)
+		}
+	}
     
     override func requestVerificationCode(reCaptchaToken token: String?) {
         AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in

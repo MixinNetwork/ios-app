@@ -224,11 +224,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
                     case let .failure(error):
-                        if error.code == 429 {
-                            self?.alert(R.string.localizable.wallet_password_too_many_requests())
-                        } else {
-                            self?.alert(error.localizedDescription)
-                        }
+						error.pinErrorHandler { (errorMsg) in
+							self?.alert(errorMsg)
+						}
                     }
                 })
             } else {
@@ -250,11 +248,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
                     weakSelf.pinField.clear()
-                    if error.code == 429 {
-                        weakSelf.alert(R.string.localizable.wallet_password_too_many_requests())
-                    } else {
-                        weakSelf.alert(error.localizedDescription)
-                    }
+					error.pinErrorHandler { (errorMsg) in
+						self?.alert(errorMsg)
+					}
                 }
             })
         case .changePinStep2(let old):
@@ -293,11 +289,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
                     case let .failure(error):
-                        if error.code == 429 {
-                            self?.alert(R.string.localizable.wallet_password_too_many_requests())
-                        } else {
-                            self?.alert(error.localizedDescription)
-                        }
+						error.pinErrorHandler { (errorMsg) in
+							self?.alert(errorMsg)
+						}
                     }
                 })
             } else {

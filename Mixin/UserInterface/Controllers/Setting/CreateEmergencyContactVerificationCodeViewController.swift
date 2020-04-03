@@ -65,11 +65,11 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
                 LoginManager.shared.setAccount(account)
                 self?.showSuccessAlert()
             case .failure(let error):
-                if error.code == 429 {
-                    self?.alert(R.string.localizable.wallet_password_too_many_requests())
-                } else {
-                    self?.handleVerificationCodeError(error)
-                }
+				if !error.pinErrorHandler(callback: { (errorMsg) in
+					self?.alert(errorMsg)
+				}) {
+					self?.handleVerificationCodeError(error)
+				}
             }
             self?.isBusy = false
         }

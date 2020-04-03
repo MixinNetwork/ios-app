@@ -117,3 +117,11 @@ extension BottomSheetView {
 
 }
 
+extension BottomSheetView {
+
+	func alert(_ message: String, actionTitle: String = Localized.DIALOG_BUTTON_OK, cancelHandler: ((UIAlertAction) -> Void)? = nil) {
+        let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: actionTitle, style: .default, handler: cancelHandler))
+        AppDelegate.current.window.rootViewController?.present(alc, animated: true, completion: nil)
+    }
+}

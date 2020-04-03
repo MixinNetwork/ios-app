@@ -1,12 +1,17 @@
 import UIKit
 
-final class ProfileMenuItemView: UIView, XibDesignable {
+class ProfileMenuItemView: UIView, XibDesignable {
     
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
     weak var target: NSObject?
+    
+    var nibName: String {
+        return String(describing: type(of: self))
+    }
     
     var item: ProfileMenuItem? {
         didSet {
@@ -25,14 +30,12 @@ final class ProfileMenuItemView: UIView, XibDesignable {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        loadXib()
-        updateButtonBackground()
+        prepare()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadXib()
-        updateButtonBackground()
+        prepare()
     }
     
     convenience init() {
@@ -42,6 +45,11 @@ final class ProfileMenuItemView: UIView, XibDesignable {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        updateButtonBackground()
+    }
+    
+    func prepare() {
+        loadXib()
         updateButtonBackground()
     }
     

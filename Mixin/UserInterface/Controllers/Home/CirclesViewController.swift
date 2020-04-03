@@ -38,6 +38,7 @@ class CirclesViewController: UIViewController {
         let tableHeaderView = InfiniteTopView()
         tableHeaderView.frame.size.height = 0
         tableView.tableHeaderView = tableHeaderView
+        tableView.register(R.nib.circleCell)
         tableView.dataSource = self
         tableView.delegate = self
         DispatchQueue.global().async {

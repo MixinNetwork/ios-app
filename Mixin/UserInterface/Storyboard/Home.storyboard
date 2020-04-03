@@ -1235,121 +1235,6 @@ chat history from icloud</string>
                                     <tableView contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="B3S-im-FwI">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="circle" rowHeight="80" id="HnY-Zc-3LJ" customClass="CircleCell" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="28" width="375" height="80"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HnY-Zc-3LJ" id="K2b-io-EM9">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ZQA-PX-rBc">
-                                                            <rect key="frame" x="20" y="15" width="335" height="50"/>
-                                                            <subviews>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="at5-aB-IyT">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                    <subviews>
-                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_circle" translatesAutoresizingMaskIntoConstraints="NO" id="YA2-ka-6dA">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </imageView>
-                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F3J-s3-Odu">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </imageView>
-                                                                    </subviews>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="trailing" secondItem="F3J-s3-Odu" secondAttribute="trailing" id="3Qp-gV-xKP"/>
-                                                                        <constraint firstAttribute="bottom" secondItem="F3J-s3-Odu" secondAttribute="bottom" id="7Lz-YP-3UG"/>
-                                                                        <constraint firstAttribute="width" constant="50" id="MVu-oa-ZD0"/>
-                                                                        <constraint firstAttribute="width" secondItem="at5-aB-IyT" secondAttribute="height" id="ZYP-NC-0di"/>
-                                                                        <constraint firstItem="F3J-s3-Odu" firstAttribute="top" secondItem="at5-aB-IyT" secondAttribute="top" id="bDO-DV-avY"/>
-                                                                        <constraint firstItem="F3J-s3-Odu" firstAttribute="leading" secondItem="at5-aB-IyT" secondAttribute="leading" id="d2Y-GK-zN4"/>
-                                                                        <constraint firstAttribute="bottom" secondItem="YA2-ka-6dA" secondAttribute="bottom" id="hQ4-Oq-IlX"/>
-                                                                        <constraint firstItem="YA2-ka-6dA" firstAttribute="leading" secondItem="at5-aB-IyT" secondAttribute="leading" id="iPN-I9-dLa"/>
-                                                                        <constraint firstAttribute="trailing" secondItem="YA2-ka-6dA" secondAttribute="trailing" id="pVi-0X-yhj"/>
-                                                                        <constraint firstItem="YA2-ka-6dA" firstAttribute="top" secondItem="at5-aB-IyT" secondAttribute="top" id="xY2-45-3F5"/>
-                                                                    </constraints>
-                                                                </view>
-                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="F7V-bd-Zwq">
-                                                                    <rect key="frame" x="66" y="5.5" width="269" height="39"/>
-                                                                    <subviews>
-                                                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ir0-6r-aPP">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="269" height="16"/>
-                                                                            <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Mixin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bhT-ZI-tf4">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="255" height="16"/>
-                                                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                                                    <color key="textColor" name="text"/>
-                                                                                    <nil key="highlightedColor"/>
-                                                                                    <userDefinedRuntimeAttributes>
-                                                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                                                                                    </userDefinedRuntimeAttributes>
-                                                                                </label>
-                                                                                <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mIs-Hg-QFH">
-                                                                                    <rect key="frame" x="255" y="0.0" width="14" height="16"/>
-                                                                                    <subviews>
-                                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_circle_current" translatesAutoresizingMaskIntoConstraints="NO" id="LgB-xx-SzZ">
-                                                                                            <rect key="frame" x="0.0" y="0.0" width="14" height="16"/>
-                                                                                        </imageView>
-                                                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="1" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNt-MD-c2g" customClass="RoundedInsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                                                            <rect key="frame" x="0.0" y="0.0" width="14" height="16"/>
-                                                                                            <color key="backgroundColor" name="theme"/>
-                                                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                                            <nil key="highlightedColor"/>
-                                                                                            <userDefinedRuntimeAttributes>
-                                                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular12"/>
-                                                                                            </userDefinedRuntimeAttributes>
-                                                                                        </label>
-                                                                                    </subviews>
-                                                                                    <color key="backgroundColor" name="background"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="bottom" secondItem="LgB-xx-SzZ" secondAttribute="bottom" id="0qp-FQ-S0d"/>
-                                                                                        <constraint firstItem="tNt-MD-c2g" firstAttribute="top" secondItem="mIs-Hg-QFH" secondAttribute="top" id="6Wm-rF-hU5"/>
-                                                                                        <constraint firstAttribute="trailing" secondItem="LgB-xx-SzZ" secondAttribute="trailing" id="6kv-Oc-ygl"/>
-                                                                                        <constraint firstAttribute="trailing" secondItem="tNt-MD-c2g" secondAttribute="trailing" id="FWe-hk-wFy"/>
-                                                                                        <constraint firstAttribute="bottom" secondItem="tNt-MD-c2g" secondAttribute="bottom" id="ITI-cZ-ya0"/>
-                                                                                        <constraint firstItem="tNt-MD-c2g" firstAttribute="leading" secondItem="mIs-Hg-QFH" secondAttribute="leading" id="M3j-jd-TXE"/>
-                                                                                        <constraint firstAttribute="height" constant="16" id="TNi-68-Q58"/>
-                                                                                        <constraint firstItem="LgB-xx-SzZ" firstAttribute="top" secondItem="mIs-Hg-QFH" secondAttribute="top" id="cpg-Yi-lIb"/>
-                                                                                        <constraint firstItem="LgB-xx-SzZ" firstAttribute="leading" secondItem="mIs-Hg-QFH" secondAttribute="leading" id="gGs-0G-utm"/>
-                                                                                    </constraints>
-                                                                                </view>
-                                                                            </subviews>
-                                                                        </stackView>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gRd-Fd-d8v">
-                                                                            <rect key="frame" x="0.0" y="22" width="269" height="17"/>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                            <color key="textColor" name="text_accessory"/>
-                                                                            <nil key="highlightedColor"/>
-                                                                            <userDefinedRuntimeAttributes>
-                                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                                            </userDefinedRuntimeAttributes>
-                                                                        </label>
-                                                                    </subviews>
-                                                                </stackView>
-                                                            </subviews>
-                                                        </stackView>
-                                                    </subviews>
-                                                    <color key="backgroundColor" name="background"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="ZQA-PX-rBc" secondAttribute="trailing" constant="20" id="EHh-jW-pde"/>
-                                                        <constraint firstItem="ZQA-PX-rBc" firstAttribute="leading" secondItem="K2b-io-EM9" secondAttribute="leading" constant="20" id="cob-Sp-KeI"/>
-                                                        <constraint firstItem="ZQA-PX-rBc" firstAttribute="centerY" secondItem="K2b-io-EM9" secondAttribute="centerY" id="ngS-7w-iCV"/>
-                                                    </constraints>
-                                                </tableViewCellContentView>
-                                                <color key="backgroundColor" name="background"/>
-                                                <connections>
-                                                    <outlet property="circleImageView" destination="F3J-s3-Odu" id="l0q-EK-EdD"/>
-                                                    <outlet property="isSelectedImageView" destination="LgB-xx-SzZ" id="fiO-Sf-hI2"/>
-                                                    <outlet property="subtitleLabel" destination="gRd-Fd-d8v" id="bg7-oK-syY"/>
-                                                    <outlet property="titleLabel" destination="bhT-ZI-tf4" id="WTK-lw-cNo"/>
-                                                    <outlet property="unreadMessageCountLabel" destination="tNt-MD-c2g" id="2zh-Fk-fFH"/>
-                                                </connections>
-                                            </tableViewCell>
-                                        </prototypes>
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1444,12 +1329,10 @@ chat history from icloud</string>
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
-        <image name="bg_circle" width="50" height="50"/>
         <image name="bg_home_bottom" width="375" height="111"/>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
         <image name="ic_chat_time" width="9" height="9"/>
-        <image name="ic_circle_current" width="14" height="10"/>
         <image name="ic_clock_skew" width="72" height="72"/>
         <image name="ic_database" width="60" height="60"/>
         <image name="ic_home_camera" width="42" height="42"/>
@@ -1469,7 +1352,7 @@ chat history from icloud</string>
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

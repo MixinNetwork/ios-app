@@ -52,4 +52,16 @@ public final class CircleDAO {
         MixinDatabase.shared.delete(table: Circle.tableName, condition: Circle.Properties.circleId == circleId)
     }
     
+    public func circles(of conversationId: String) -> [CircleItem] {
+        let sql = """
+            SELECT c.circle_id, c.name,
+                (SELECT COUNT(*) FROM circle_conversations conv WHERE conv.circle_id = c.circle_id) as conversation_count
+            FROM circles c
+            INNER JOIN circle_conversations cc ON cc.circle_id = c.circle_id
+            INNER JOIN conversations conv ON cc.conversation_id = conv.conversation_id
+            WHERE conv.conversation_id = ?
+        """
+        return MixinDatabase.shared.getCodables(sql: sql, values: [conversationId])
+    }
+    
 }

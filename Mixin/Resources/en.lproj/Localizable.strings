@@ -199,6 +199,7 @@
 "home_bulletin_button_notification" = "Settings";
 
 // Circle
+"circle_title" = "Circle";
 "circle_default_all" = "Mixin";
 "circle_default_strangers" = "Strangers";
 "circle_default_bots" = "Bots";
@@ -214,6 +215,7 @@
 "circle_member_category_contacts" = "Contacts";
 "circle_member_category_bots" = "Bots";
 "circle_add_hint" = "If you want to filter conversations, please set a circle for the conversation first.";
+"circle_conversation_editor_title" = "%@'s Circle";
 
 // Chat
 "chat_time_today" = "Today";

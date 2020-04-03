@@ -200,6 +200,7 @@
 "home_bulletin_button_notification" = "设置";
 
 // Circle
+"circle_title" = "圈子";
 "circle_default_all" = "Mixin";
 "circle_default_strangers" = "陌生人";
 "circle_default_bots" = "小程序";
@@ -215,6 +216,7 @@
 "circle_member_category_contacts" = "联系人";
 "circle_member_category_bots" = "小程序";
 "circle_add_hint" = "新建一个圈子可以过滤会话";
+"circle_conversation_editor_title" = "%@的圈子";
 
 // Chat
 "chat_time_today" = "今天";

@@ -54,6 +54,7 @@ final class GroupProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadData()
+        reloadCircles(conversationId: conversationId)
         updatePreferredContentSizeHeight(size: size)
     }
     
@@ -424,6 +425,7 @@ extension GroupProfileViewController {
         }
         
         reloadMenu(groups: groups)
+        menuStackView.insertArrangedSubview(circleItemView, at: 1)
     }
     
     private func showConversation(with response: ConversationResponse) {

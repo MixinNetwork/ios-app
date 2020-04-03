@@ -51,6 +51,11 @@ class ProfileViewController: UIViewController {
         shortcutViewIfLoaded = view
         return view
     }()
+    lazy var circleItemView: CircleProfileMenuItemView = {
+        let view = CircleProfileMenuItemView()
+        view.button.addTarget(self, action: #selector(editCircle), for: .touchUpInside)
+        return view
+    }()
     
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
@@ -236,6 +241,15 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    func reloadCircles(conversationId: String) {
+        DispatchQueue.global().async { [weak self] in
+            let circles = CircleDAO.shared.circles(of: conversationId)
+            DispatchQueue.main.sync {
+                self?.circleItemView.names = circles.map(\.name)
+            }
+        }
+    }
+    
 }
 
 // MARK: - CoreTextLabelDelegate
@@ -320,6 +334,11 @@ extension ProfileViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func editCircle() {
+        let vc = ConversationCircleEditorViewController.instance(name: conversationName)
+        dismissAndPush(vc)
     }
     
 }

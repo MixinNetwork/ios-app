@@ -64,6 +64,9 @@ final class UserProfileViewController: ProfileViewController {
         super.viewDidLoad()
         reloadData()
         reloadFavoriteApps(userId: user.userId, fromRemote: true)
+        if !isMe {
+            reloadCircles(conversationId: conversationId)
+        }
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         recognizer.delegate = self
         view.addGestureRecognizer(recognizer)
@@ -794,6 +797,7 @@ extension UserProfileViewController {
             groups.append([reportItem])
             
             reloadMenu(groups: groups)
+            menuStackView.insertArrangedSubview(circleItemView, at: 2)
         }
         
         view.frame.size.width = AppDelegate.current.window.bounds.width

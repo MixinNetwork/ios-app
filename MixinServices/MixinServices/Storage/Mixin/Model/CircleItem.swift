@@ -19,7 +19,7 @@ public class CircleItem: TableDecodable {
     public let circleId: String
     public let name: String
     public let conversationCount: Int
-    public let unreadCount: Int
+    public var unreadCount: Int = 0
     
     public init(circleId: String, name: String, conversationCount: Int, unreadCount: Int) {
         self.circleId = circleId

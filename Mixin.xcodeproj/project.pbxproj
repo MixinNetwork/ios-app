@@ -68,6 +68,7 @@
 		7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */; };
 		7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
+		7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */; };
 		7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */; };
 		7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */; };
 		7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */; };
@@ -159,6 +160,8 @@
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
+		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
+		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
 		7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */; };
 		7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */; };
 		7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5F96682414241C003A087B /* LocationInformationView.swift */; };
@@ -826,6 +829,7 @@
 		7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEmergencyContactViewController.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
+		7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CircleCell.xib; sourceTree = "<group>"; };
 		7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactIdVerificationViewController.swift; sourceTree = "<group>"; };
 		7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInfoInputViewController.swift; sourceTree = "<group>"; };
 		7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginInfoInputView.xib; sourceTree = "<group>"; };
@@ -915,6 +919,8 @@
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
+		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
+		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
 		7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoSlider.swift; sourceTree = "<group>"; };
 		7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageCell.swift; sourceTree = "<group>"; };
 		7B5F96682414241C003A087B /* LocationInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInformationView.swift; sourceTree = "<group>"; };
@@ -1708,10 +1714,13 @@
 				E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */,
 				E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */,
 				E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */,
+				7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */,
 				E0BC7BB6238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib */,
 				E0BC7BB8238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift */,
 				7B9A18152428932A00187693 /* PageControlView.xib */,
 				7B9A18172428939A00187693 /* PageControlView.swift */,
+				7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */,
+				7BBC913324333DCA00FC3F3A /* CircleCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1845,6 +1854,7 @@
 				7B95860E2369599800F1F6E1 /* ProfileViewController.swift */,
 				E09C5EB72370057B0095F729 /* UserProfileViewController.swift */,
 				E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */,
+				7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */,
 				7B66AC062428D72000869DBD /* PostViewController.swift */,
 			);
 			path = Common;
@@ -2664,7 +2674,6 @@
 				DF121F301FA1C767000F701D /* ConversationCell.swift */,
 				7B5281752265F1730023616D /* RecentBotCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
-				7BBC913324333DCA00FC3F3A /* CircleCell.swift */,
 				7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */,
 				7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */,
 			);
@@ -2977,6 +2986,7 @@
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
+				7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */,
 				7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */,
 				DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
@@ -3402,6 +3412,7 @@
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
+				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
@@ -3895,6 +3906,7 @@
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
 				DFC0ECD323BB5FDE0091E7AC /* RelationshipRequest.swift in Sources */,
+				7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */,
 				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,

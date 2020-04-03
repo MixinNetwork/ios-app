@@ -327,6 +327,11 @@ class HomeViewController: UIViewController {
         view.endEditing(true)
     }
     
+    func setNeedsRefresh() {
+        needRefresh = true
+        fetchConversations()
+    }
+    
 }
 
 extension HomeViewController: UITableViewDataSource {
@@ -443,7 +448,8 @@ extension HomeViewController {
             let limit = (self.tableView.indexPathsForVisibleRows?.first?.row ?? 0) + self.messageCountPerPage
 
             DispatchQueue.global().async { [weak self] in
-                let conversations = ConversationDAO.shared.conversationList(limit: limit)
+                let circleId = AppGroupUserDefaults.User.circleId
+                let conversations = ConversationDAO.shared.conversationList(limit: limit, circleId: circleId)
                 let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
                 for conversation in groupIcons {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))

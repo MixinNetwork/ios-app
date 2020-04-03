@@ -25,13 +25,12 @@ public final class ConversationDAO {
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
+    %@
     WHERE c.category IS NOT NULL %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
-    private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
-    private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
-    private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
-    private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, " AND ((c.category = 'GROUP' AND c.name LIKE ? ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ? ESCAPE '/'))")
+    private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, "", " AND c.conversation_id = ? ")
+    private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, "", " AND ((c.category = 'GROUP' AND c.name LIKE ? ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ? ESCAPE '/'))")
     private static let sqlQueryStorageUsage = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
@@ -157,10 +156,6 @@ public final class ConversationDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
-    public func getConversation(ownerUserId: String) -> ConversationItem? {
-        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByOwnerId, values: [ownerUserId]).first
-    }
-    
     public func getConversation(conversationId: String) -> ConversationItem? {
         guard !conversationId.isEmpty else {
             return nil
@@ -192,12 +187,23 @@ public final class ConversationDAO {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.category, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
     
-    public func conversationList(limit: Int? = nil) -> [ConversationItem] {
-        var sql = ConversationDAO.sqlQueryConversationList
+    public func conversationList(limit: Int? = nil, circleId: String? = nil) -> [ConversationItem] {
+        var sql: String
+        if circleId == nil {
+            sql = String(format: Self.sqlQueryConversation, "", "")
+        } else {
+            sql = String(format: Self.sqlQueryConversation,
+                         "INNER JOIN circle_conversations cc ON cc.conversation_id = c.conversation_id",
+                         "AND cc.circle_id = ?")
+        }
         if let limit = limit {
             sql = sql + " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql)
+        if let id = circleId {
+            return MixinDatabase.shared.getCodables(sql: sql, values: [id])
+        } else {
+            return MixinDatabase.shared.getCodables(sql: sql)
+        }
     }
     
     public func createPlaceConversation(conversationId: String, ownerId: String) {

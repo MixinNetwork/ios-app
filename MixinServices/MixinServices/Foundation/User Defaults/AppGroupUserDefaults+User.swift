@@ -38,6 +38,8 @@ extension AppGroupUserDefaults {
 
             case hasRecoverMedia = "has_recover_media"
             case hasRestoreUploadAttachment = "has_restore_upload_attachment"
+            
+            case circleId = "circle_id"
         }
         
         public static let version = 19
@@ -129,6 +131,9 @@ extension AppGroupUserDefaults {
 
         @Default(namespace: .user, key: Key.hasRestoreUploadAttachment, defaultValue: false)
         public static var hasRestoreUploadAttachment: Bool
+        
+        @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
+        public static var circleId: String?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

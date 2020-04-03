@@ -154,6 +154,18 @@ extension CirclesViewController: UITableViewDelegate {
         [deleteAction, editAction]
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = Section(rawValue: indexPath.section)!
+        switch section {
+        case .embedded:
+            AppGroupUserDefaults.User.circleId = nil
+        case .user:
+            let circle = userCircles[indexPath.row]
+            AppGroupUserDefaults.User.circleId = circle.circleId
+        }
+        UIApplication.homeViewController?.setNeedsRefresh()
+    }
+    
 }
 
 extension CirclesViewController {
@@ -260,6 +272,13 @@ extension CirclesViewController {
                              self.tableView.frame.height - cellsHeight)
             self.tableFooterView.frame.size.height = height
             self.tableView.tableFooterView = self.tableFooterView
+            let indexPath: IndexPath
+            if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
+                indexPath = IndexPath(row: row, section: 1)
+            } else {
+                indexPath = IndexPath(row: 0, section: 0)
+            }
+            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             completion?()
         }
     }

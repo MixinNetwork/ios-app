@@ -126,12 +126,12 @@ extension CirclesViewController: UITableViewDataSource {
             let circle = embeddedCircles[indexPath.row]
             cell.titleLabel.text = "Mixin"
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
-            cell.unreadMessageCountLabel.text = "\(circle.unreadCount)"
+            cell.unreadCount = circle.unreadCount
         case .user:
             let circle = userCircles[indexPath.row]
             cell.titleLabel.text = circle.name
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
-            cell.unreadMessageCountLabel.text = "\(circle.unreadCount)"
+            cell.unreadCount = circle.unreadCount
         }
         return cell
     }

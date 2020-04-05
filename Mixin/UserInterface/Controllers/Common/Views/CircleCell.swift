@@ -22,6 +22,17 @@ class CircleCell: UITableViewCell {
         }
     }
     
+    var unreadCount = 0 {
+        didSet {
+            if unreadCount > 0 {
+                unreadMessageCountLabel.isHidden = false
+                unreadMessageCountLabel.text = "\(unreadCount)"
+            } else {
+                unreadMessageCountLabel.isHidden = true
+            }
+        }
+    }
+    
     private lazy var editingButton: CircleEditingButton = {
         let button = CircleEditingButton()
         button.addTarget(self, action: #selector(circleEditAction), for: .touchUpInside)
@@ -35,7 +46,7 @@ class CircleCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        unreadMessageCountLabel.isHidden = selected
+        unreadMessageCountLabel.isHidden = selected || unreadCount <= 0
         isSelectedImageView.isHidden = !selected
     }
     

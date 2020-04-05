@@ -40,7 +40,6 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         super.viewDidLoad()
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_name()
         tableView.allowsMultipleSelection = true
-        centerWrapperViewHeightConstraint.constant = 90
         collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
         collectionViewLayout.minimumInteritemSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
@@ -48,10 +47,10 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         collectionView.alwaysBounceHorizontal = true
         centerWrapperView.addSubview(collectionView)
         collectionView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview()
+            make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-10)
+            make.height.equalTo(80)
         }
         collectionView.register(R.nib.circleMemberCell)
         collectionView.dataSource = self
@@ -68,6 +67,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                     self.selections = members
                     self.collectionView.reloadData()
                     self.reloadTableViewSelections()
+                    self.setCollectionViewHidden(members.isEmpty)
                 }
             }
         }
@@ -180,6 +180,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         let indexPath = IndexPath(item: selections.count, section: 0)
         selections.append(member)
         collectionView.insertItems(at: [indexPath])
+        self.setCollectionViewHidden(false)
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -188,6 +189,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             let indexPath = IndexPath(item: index, section: 0)
             selections.remove(at: index)
             collectionView.deleteItems(at: [indexPath])
+            self.setCollectionViewHidden(selections.isEmpty)
         }
     }
     
@@ -330,6 +332,13 @@ extension CircleEditorViewController {
                 hud.set(style: .error, text: error.localizedDescription)
                 hud.scheduleAutoHidden()
             }
+        }
+    }
+    
+    private func setCollectionViewHidden(_ hidden: Bool) {
+        centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
     }
     

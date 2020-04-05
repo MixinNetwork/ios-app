@@ -30,9 +30,9 @@
                         <constraint firstAttribute="height" constant="40" id="UBO-jK-Xoh"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XLl-Eh-ZIn">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XLl-Eh-ZIn">
                     <rect key="frame" x="0.0" y="80" width="375" height="0.0"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="height" id="sQY-20-GMS"/>
                     </constraints>

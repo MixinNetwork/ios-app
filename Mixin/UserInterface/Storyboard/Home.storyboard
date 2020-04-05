@@ -1316,6 +1316,7 @@ chat history from icloud</string>
                     </view>
                     <connections>
                         <outlet property="hideTableViewConstraint" destination="c5r-x2-dlH" id="3wG-l7-Bf5"/>
+                        <outlet property="navigationBarView" destination="yM3-VU-f2k" id="lkb-sI-8bb"/>
                         <outlet property="showTableViewConstraint" destination="upP-1K-oZH" id="KNX-yz-F9s"/>
                         <outlet property="tableBackgroundView" destination="4yh-is-bUi" id="iW3-z2-0J9"/>
                         <outlet property="tableView" destination="B3S-im-FwI" id="Qst-xB-aGf"/>
@@ -1352,7 +1353,7 @@ chat history from icloud</string>
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

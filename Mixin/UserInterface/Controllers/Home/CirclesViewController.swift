@@ -3,6 +3,7 @@ import MixinServices
 
 class CirclesViewController: UIViewController {
     
+    @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var toggleCirclesButton: UIButton!
     @IBOutlet weak var tableBackgroundView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -124,7 +125,7 @@ extension CirclesViewController: UITableViewDataSource {
         switch section {
         case .embedded:
             let circle = embeddedCircles[indexPath.row]
-            cell.titleLabel.text = "Mixin"
+            cell.titleLabel.text = R.string.localizable.app_name()
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
             cell.unreadCount = circle.unreadCount
         case .user:
@@ -154,17 +155,27 @@ extension CirclesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = Section(rawValue: indexPath.section)!
+        let circleName: String
         switch section {
         case .embedded:
             AppGroupUserDefaults.User.circleId = nil
+            AppGroupUserDefaults.User.circleName = nil
+            circleName = R.string.localizable.app_name()
         case .user:
             let circle = userCircles[indexPath.row]
             AppGroupUserDefaults.User.circleId = circle.circleId
+            AppGroupUserDefaults.User.circleName = circle.name
+            circleName = circle.name
+        }
+        UIView.performWithoutAnimation {
+            toggleCirclesButton.setTitle(circleName, for: .normal)
+            navigationBarView.setNeedsLayout()
+            navigationBarView.layoutIfNeeded()
         }
         if let home = parent as? HomeViewController {
             home.setNeedsRefresh()
             home.toggleCircles(tableView)
-        }        
+        }
     }
     
 }
@@ -235,6 +246,10 @@ extension CirclesViewController {
         CircleAPI.shared.update(id: circleId, name: name, completion: { result in
             switch result {
             case .success(let circle):
+                if circle.circleId == AppGroupUserDefaults.User.circleId {
+                    AppGroupUserDefaults.User.circleName = circle.name
+                    self.toggleCirclesButton.setTitle(circle.name, for: .normal)
+                }
                 DispatchQueue.global().async {
                     CircleDAO.shared.insertOrReplace(circle: circle)
                     self.reloadUserCirclesFromLocalStorage() {

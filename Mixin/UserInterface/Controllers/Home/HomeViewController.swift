@@ -46,6 +46,9 @@ class HomeViewController: UIViewController {
             layoutBulletinView()
         }
     }
+    private var topLeftTitle: String {
+        AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
+    }
     
     private lazy var circlesViewController = R.storyboard.home.circles()!
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
@@ -73,6 +76,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleButton.setTitle(topLeftTitle, for: .normal)
         isBulletinViewHidden = true
         updateBulletinView()
         updateCameraWrapperHeight()
@@ -95,6 +99,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
@@ -272,7 +277,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
-        titleButton.setTitle(R.string.localizable.app_name(), for: .normal)
+        titleButton.setTitle(topLeftTitle, for: .normal)
         DispatchQueue.global().async {
             guard NetworkManager.shared.isReachableOnWiFi else {
                 return
@@ -299,7 +304,7 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleButton.setTitle(R.string.localizable.app_name(), for: .normal)
+            titleButton.setTitle(topLeftTitle, for: .normal)
             connectingView.stopAnimating()
         } else {
             let title = Localized.CONNECTION_HINT_PROGRESS(progress)
@@ -325,6 +330,10 @@ class HomeViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
         view.endEditing(true)
+    }
+    
+    @objc func circleNameDidChange() {
+        titleButton.setTitle(topLeftTitle, for: .normal)
     }
     
     func setNeedsRefresh() {

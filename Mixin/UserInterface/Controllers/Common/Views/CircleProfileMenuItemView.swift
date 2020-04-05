@@ -51,6 +51,7 @@ final class CircleProfileMenuItemView: ProfileMenuItemView {
             return label
         } else {
             let label = InsetLabel()
+            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             label.textColor = .accessoryText
             label.contentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
             label.layer.borderColor = R.color.line()!.cgColor

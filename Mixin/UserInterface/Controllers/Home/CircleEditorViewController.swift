@@ -3,17 +3,13 @@ import MixinServices
 
 class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPeerCell, CircleMemberSearchResult> {
     
-    enum Intent {
-        case create
-        case update(id: String)
-    }
-    
     let collectionViewLayout = UICollectionViewFlowLayout()
     
     var collectionView: UICollectionView!
     
     private var name = ""
-    private var intent: Intent!
+    private var circleId = ""
+    
     private var selections: [CircleMember] = [] {
         didSet {
             let count = "\(selections.count)"
@@ -22,15 +18,14 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         }
     }
     
-    class func instance(name: String, intent: Intent) -> UIViewController {
+    class func instance(name: String, circleId: String, isNewCreatedCircle: Bool) -> UIViewController {
         let vc = CircleEditorViewController()
         vc.name = name
-        vc.intent = intent
+        vc.circleId = circleId
         let title: String
-        switch intent {
-        case .create:
+        if isNewCreatedCircle {
             title = R.string.localizable.circle_action_add_conversation()
-        case .update:
+        } else {
             title = name
         }
         return ContainerViewController.instance(viewController: vc, title: title)
@@ -54,21 +49,17 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         }
         collectionView.register(R.nib.circleMemberCell)
         collectionView.dataSource = self
-        switch intent! {
-        case .create:
-            break
-        case .update(let id):
-            DispatchQueue.global().async { [weak self] in
-                let members = CircleDAO.shared.circleMembers(circleId: id)
-                DispatchQueue.main.sync {
-                    guard let self = self else {
-                        return
-                    }
-                    self.selections = members
-                    self.collectionView.reloadData()
-                    self.reloadTableViewSelections()
-                    self.setCollectionViewHidden(members.isEmpty)
+        let circleId = self.circleId
+        DispatchQueue.global().async { [weak self] in
+            let members = CircleDAO.shared.circleMembers(circleId: circleId)
+            DispatchQueue.main.sync {
+                guard let self = self else {
+                    return
                 }
+                self.selections = members
+                self.collectionView.reloadData()
+                self.reloadTableViewSelections()
+                self.setCollectionViewHidden(members.isEmpty)
             }
         }
     }
@@ -204,35 +195,33 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        switch intent! {
-        case .create:
-            let selections = self.selections
-            CircleAPI.shared.create(name: name) { (result) in
-                switch result {
-                case .success(let circle):
-                    if selections.isEmpty {
-                        DispatchQueue.global().async {
-                            CircleDAO.shared.insertOrReplace(circle: circle)
-                            DispatchQueue.main.sync {
-                                hud.set(style: .notification, text: R.string.localizable.toast_saved())
-                                hud.scheduleAutoHidden()
-                                self.dismiss(animated: true, completion: nil)
-                            }
-                        }
-                    } else {
-                        self.intent = .update(id: circle.circleId)
-                        DispatchQueue.global().async {
-                            CircleDAO.shared.insertOrReplace(circle: circle)
-                            self.updateCircle(of: circle.circleId, with: selections, hud: hud)
-                        }
+        let requests = selections.map(UpdateCircleMemberRequest.init)
+        let circleId = self.circleId
+        CircleAPI.shared.updateCircle(of: circleId, requests: requests) { (result) in
+            switch result {
+            case .success:
+                DispatchQueue.global().async {
+                    let date = Date()
+                    let counter = Counter(value: -1)
+                    let objects = requests.map { (member) -> CircleConversation in
+                        let createdAt = date
+                            .addingTimeInterval(TimeInterval(counter.advancedValue) / millisecondsPerSecond)
+                            .toUTCString()
+                        return CircleConversation(circleId: circleId,
+                                                  conversationId: member.conversationId,
+                                                  createdAt: createdAt)
                     }
-                case .failure(let error):
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
+                    CircleConversationDAO.shared.replaceCircleConversations(with: circleId, objects: objects)
+                    DispatchQueue.main.sync {
+                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.scheduleAutoHidden()
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
-        case let .update(id):
-            self.updateCircle(of: id, with: selections, hud: hud)
         }
     }
     
@@ -302,36 +291,6 @@ extension CircleEditorViewController {
             return searchResults[indexPath.row].member
         } else {
             return models[indexPath.section][indexPath.row]
-        }
-    }
-    
-    private func updateCircle(of id: String, with members: [CircleMember], hud: Hud) {
-        let requests = members.map(UpdateCircleMemberRequest.init)
-        CircleAPI.shared.updateCircle(of: id, requests: requests) { (result) in
-            switch result {
-            case .success:
-                DispatchQueue.global().async {
-                    let date = Date()
-                    let counter = Counter(value: -1)
-                    let objects = members.map { (member) -> CircleConversation in
-                        let createdAt = date
-                            .addingTimeInterval(TimeInterval(counter.advancedValue) / millisecondsPerSecond)
-                            .toUTCString()
-                        return CircleConversation(circleId: id,
-                                                  conversationId: member.conversationId,
-                                                  createdAt: createdAt)
-                    }
-                    CircleConversationDAO.shared.replaceCircleConversations(with: id, objects: objects)
-                    DispatchQueue.main.sync {
-                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
-                        hud.scheduleAutoHidden()
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                }
-            case .failure(let error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
-            }
         }
     }
     

@@ -71,8 +71,7 @@ class CirclesViewController: UIViewController {
             guard let name = alert.textFields?.first?.text else {
                 return
             }
-            let vc = CircleEditorViewController.instance(name: name, intent: .create)
-            self.present(vc, animated: true, completion: nil)
+            self.addCircle(name: name)
         }
     }
     
@@ -183,7 +182,9 @@ extension CirclesViewController {
             }
         }))
         sheet.addAction(UIAlertAction(title: editConversation, style: .default, handler: { (_) in
-            let vc = CircleEditorViewController.instance(name: circle.name, intent: .update(id: circle.circleId))
+            let vc = CircleEditorViewController.instance(name: circle.name,
+                                                         circleId: circle.circleId,
+                                                         isNewCreatedCircle: false)
             self.present(vc, animated: true, completion: nil)
         }))
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
@@ -220,6 +221,30 @@ extension CirclesViewController {
         }))
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
+    }
+    
+    private func addCircle(name: String) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        CircleAPI.shared.create(name: name) { (result) in
+            switch result {
+            case .success(let circle):
+                DispatchQueue.global().async {
+                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    DispatchQueue.main.sync {
+                        hud.set(style: .notification, text: R.string.localizable.toast_added())
+                        hud.scheduleAutoHidden()
+                        let vc = CircleEditorViewController.instance(name: circle.name,
+                                                                     circleId: circle.circleId,
+                                                                     isNewCreatedCircle: true)
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
     }
     
     private func editCircle(with circleId: String, name: String) {

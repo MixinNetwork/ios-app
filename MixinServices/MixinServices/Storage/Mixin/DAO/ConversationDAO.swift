@@ -45,6 +45,9 @@ public final class ConversationDAO {
     WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
     """
     private static let sqlUnreadMessageCount = """
+    SELECT ifnull(SUM(unseen_message_count),0) FROM (SELECT c.unseen_message_count FROM conversations c)
+    """
+    private static let sqlUnreadMessageCountWithoutMuted = """
     SELECT ifnull(SUM(unseen_message_count),0) FROM (
         SELECT c.unseen_message_count, CASE WHEN c.category = 'CONTACT' THEN u.mute_until ELSE c.mute_until END as muteUntil
         FROM conversations c
@@ -54,7 +57,11 @@ public final class ConversationDAO {
     """
     
     public func getUnreadMessageCount() -> Int {
-        let value = MixinDatabase.shared.scalar(sql: ConversationDAO.sqlUnreadMessageCount, values: [Date().toUTCString()]).int64Value
+        Int(MixinDatabase.shared.scalar(sql: Self.sqlUnreadMessageCount).int64Value)
+    }
+    
+    public func getUnreadMessageCountWithoutMuted() -> Int {
+        let value = MixinDatabase.shared.scalar(sql: ConversationDAO.sqlUnreadMessageCountWithoutMuted, values: [Date().toUTCString()]).int64Value
         return Int(value)
     }
     

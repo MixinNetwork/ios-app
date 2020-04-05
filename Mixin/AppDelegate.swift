@@ -210,7 +210,7 @@ extension AppDelegate {
     
     @objc func updateApplicationIconBadgeNumber() {
         DispatchQueue.global().async {
-            let number = min(99, ConversationDAO.shared.getUnreadMessageCount())
+            let number = min(99, ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = number
             }

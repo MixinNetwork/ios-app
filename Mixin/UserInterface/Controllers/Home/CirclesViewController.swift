@@ -161,7 +161,10 @@ extension CirclesViewController: UITableViewDelegate {
             let circle = userCircles[indexPath.row]
             AppGroupUserDefaults.User.circleId = circle.circleId
         }
-        UIApplication.homeViewController?.setNeedsRefresh()
+        if let home = parent as? HomeViewController {
+            home.setNeedsRefresh()
+            home.toggleCircles(tableView)
+        }        
     }
     
 }

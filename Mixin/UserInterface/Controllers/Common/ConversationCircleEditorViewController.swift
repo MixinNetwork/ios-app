@@ -15,7 +15,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             make.top.equalTo(view.contentView.snp.bottom)
         }
         view.button.setTitle(R.string.localizable.circle_action_add(), for: .normal)
-        view.button.addTarget(self, action: #selector(addCircle), for: .touchUpInside)
+        view.button.addTarget(self, action: #selector(addCircle(_:)), for: .touchUpInside)
         return view
     }()
     
@@ -74,15 +74,53 @@ class ConversationCircleEditorViewController: UITableViewController {
         }
     }
     
-    @objc func addCircle() {
+    @objc func addCircle(_ sender: Any) {
         let addCircle = R.string.localizable.circle_action_add()
         let add = R.string.localizable.action_add()
         editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
             }
-            let vc = CircleEditorViewController.instance(name: name, intent: .create)
-            self.present(vc, animated: true, completion: nil)
+            self.performAddCircle(name: name)
+        }
+    }
+    
+    private func performAddCircle(name: String) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        CircleAPI.shared.create(name: name) { (result) in
+            switch result {
+            case .success(let circle):
+                DispatchQueue.global().async {
+                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    self.updateCircle(of: circle.circleId, hud: hud)
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
+    }
+    
+    private func updateCircle(of id: String, hud: Hud) {
+        let request = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
+        let relation = CircleConversation(circleId: id,
+                                          conversationId: conversationId,
+                                          createdAt: Date().toUTCString())
+        CircleAPI.shared.updateCircle(of: id, requests: [request]) { (result) in
+            switch result {
+            case .success:
+                DispatchQueue.global().async {
+                    CircleConversationDAO.shared.replaceCircleConversations(with: id, objects: [relation])
+                    DispatchQueue.main.sync {
+                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
         }
     }
     
@@ -153,7 +191,7 @@ extension ConversationCircleEditorViewController {
 extension ConversationCircleEditorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        addCircle()
+        addCircle(self)
     }
     
     func imageBarRightButton() -> UIImage? {

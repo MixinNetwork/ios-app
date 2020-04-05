@@ -154,28 +154,7 @@ extension CirclesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let section = Section(rawValue: indexPath.section)!
-        let circleName: String
-        switch section {
-        case .embedded:
-            AppGroupUserDefaults.User.circleId = nil
-            AppGroupUserDefaults.User.circleName = nil
-            circleName = R.string.localizable.app_name()
-        case .user:
-            let circle = userCircles[indexPath.row]
-            AppGroupUserDefaults.User.circleId = circle.circleId
-            AppGroupUserDefaults.User.circleName = circle.name
-            circleName = circle.name
-        }
-        UIView.performWithoutAnimation {
-            toggleCirclesButton.setTitle(circleName, for: .normal)
-            navigationBarView.setNeedsLayout()
-            navigationBarView.layoutIfNeeded()
-        }
-        if let home = parent as? HomeViewController {
-            home.setNeedsRefresh()
-            home.toggleCircles(tableView)
-        }
+        switchToCircle(at: indexPath, dismissAfterFinished: true)
     }
     
 }
@@ -228,6 +207,9 @@ extension CirclesViewController {
                         CircleConversationDAO.shared.delete(circleId: circle.circleId)
                         self.reloadUserCirclesFromLocalStorage {
                             hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                            let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
+                            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                            self.switchToCircle(at: indexPath, dismissAfterFinished: false)
                         }
                     }
                 case .failure(let error):
@@ -296,6 +278,33 @@ extension CirclesViewController {
             }
             self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             completion?()
+        }
+    }
+    
+    private func switchToCircle(at indexPath: IndexPath, dismissAfterFinished: Bool) {
+        let section = Section(rawValue: indexPath.section)!
+        let circleName: String
+        switch section {
+        case .embedded:
+            AppGroupUserDefaults.User.circleId = nil
+            AppGroupUserDefaults.User.circleName = nil
+            circleName = R.string.localizable.app_name()
+        case .user:
+            let circle = userCircles[indexPath.row]
+            AppGroupUserDefaults.User.circleId = circle.circleId
+            AppGroupUserDefaults.User.circleName = circle.name
+            circleName = circle.name
+        }
+        UIView.performWithoutAnimation {
+            toggleCirclesButton.setTitle(circleName, for: .normal)
+            navigationBarView.setNeedsLayout()
+            navigationBarView.layoutIfNeeded()
+        }
+        if let home = parent as? HomeViewController {
+            home.setNeedsRefresh()
+            if dismissAfterFinished {
+                home.toggleCircles(self)
+            }
         }
     }
     

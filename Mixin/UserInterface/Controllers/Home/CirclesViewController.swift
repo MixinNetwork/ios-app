@@ -127,13 +127,11 @@ extension CirclesViewController: UITableViewDataSource {
             cell.titleLabel.text = "Mixin"
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
             cell.unreadMessageCountLabel.text = "\(circle.unreadCount)"
-            cell.circleImageView.image = R.image.ic_circle_all()
         case .user:
             let circle = userCircles[indexPath.row]
             cell.titleLabel.text = circle.name
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
             cell.unreadMessageCountLabel.text = "\(circle.unreadCount)"
-            cell.circleImageView.image = R.image.ic_circle_user()
         }
         return cell
     }

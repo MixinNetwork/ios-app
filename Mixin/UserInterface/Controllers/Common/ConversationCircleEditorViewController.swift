@@ -111,7 +111,6 @@ extension ConversationCircleEditorViewController {
         cell.titleLabel.text = circle.name
         cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
         cell.unreadMessageCountLabel.text = nil
-        cell.circleImageView.image = R.image.ic_circle_user()
         cell.delegate = self
         cell.superscriptView.isHidden = true
         return cell

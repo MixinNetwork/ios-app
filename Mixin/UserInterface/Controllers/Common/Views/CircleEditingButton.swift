@@ -21,10 +21,10 @@ class CircleEditingButton: UIButton {
     private let contentSize = CGSize(width: 36, height: 80)
     
     private func setImage(style: Style) {
-        let image: UIImage
+        let image: UIImage?
         switch style {
         case .none:
-            image = R.image.ic_circle_edit_none()!
+            image = nil
         case .delete:
             image = R.image.ic_circle_edit_delete()!
         case .insert:

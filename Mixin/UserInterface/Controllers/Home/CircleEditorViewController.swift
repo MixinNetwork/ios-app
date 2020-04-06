@@ -53,7 +53,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                 self.selections = members
                 self.collectionView.reloadData()
                 self.reloadTableViewSelections()
-                self.setCollectionViewHidden(members.isEmpty)
+                self.setCollectionViewHidden(members.isEmpty, animated: false)
             }
         }
     }
@@ -165,7 +165,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         let indexPath = IndexPath(item: selections.count, section: 0)
         selections.append(member)
         collectionView.insertItems(at: [indexPath])
-        self.setCollectionViewHidden(false)
+        self.setCollectionViewHidden(false, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -174,7 +174,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             let indexPath = IndexPath(item: index, section: 0)
             selections.remove(at: index)
             collectionView.deleteItems(at: [indexPath])
-            self.setCollectionViewHidden(selections.isEmpty)
+            self.setCollectionViewHidden(selections.isEmpty, animated: true)
         }
     }
     
@@ -288,10 +288,15 @@ extension CircleEditorViewController {
         }
     }
     
-    private func setCollectionViewHidden(_ hidden: Bool) {
+    private func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
         centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
-        UIView.animate(withDuration: 0.3) {
+        let work = {
             self.view.layoutIfNeeded()
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: work)
+        } else {
+            UIView.performWithoutAnimation(work)
         }
     }
     

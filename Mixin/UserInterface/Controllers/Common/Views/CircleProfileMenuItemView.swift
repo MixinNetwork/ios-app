@@ -20,6 +20,7 @@ final class CircleProfileMenuItemView: ProfileMenuItemView {
     override func prepare() {
         super.prepare()
         label.text = R.string.localizable.circle_title()
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         subtitleLabel.removeFromSuperview()
         separator.setContentHuggingPriority(.defaultLow, for: .horizontal)
         stackView.spacing = 8
@@ -37,9 +38,10 @@ final class CircleProfileMenuItemView: ProfileMenuItemView {
             let label = dequeueReusableLabel()
             label.text = name
             label.sizeToFit()
-            if label.frame.width < separator.frame.width + stackView.spacing {
+            if label.frame.width < separator.frame.width + stackView.spacing * 2 {
                 label.layer.cornerRadius = label.bounds.height / 2
                 stackView.addArrangedSubview(label)
+                stackView.layoutIfNeeded()
             } else {
                 break
             }
@@ -57,6 +59,7 @@ final class CircleProfileMenuItemView: ProfileMenuItemView {
             label.layer.borderColor = R.color.line()!.cgColor
             label.layer.borderWidth = 1
             label.layer.masksToBounds = true
+            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             return label
         }
     }

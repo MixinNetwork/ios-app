@@ -293,7 +293,7 @@ extension CirclesViewController {
             self.tableView.layoutIfNeeded()
             let cellsHeight = CGFloat(circles.count + 1) * self.tableView.rowHeight
             let height = max(self.tableFooterView.contentView.frame.height,
-                             self.tableView.frame.height - cellsHeight)
+                             self.tableView.frame.height - self.tableView.adjustedContentInset.vertical - cellsHeight)
             self.tableFooterView.frame.size.height = height
             self.tableView.tableFooterView = self.tableFooterView
             let indexPath: IndexPath

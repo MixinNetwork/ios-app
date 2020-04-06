@@ -22,13 +22,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         let vc = CircleEditorViewController()
         vc.name = name
         vc.circleId = circleId
-        let title: String
-        if isNewCreatedCircle {
-            title = R.string.localizable.circle_action_add_conversation()
-        } else {
-            title = name
-        }
-        return ContainerViewController.instance(viewController: vc, title: title)
+        return ContainerViewController.instance(viewController: vc, title: name)
     }
     
     override func viewDidLoad() {

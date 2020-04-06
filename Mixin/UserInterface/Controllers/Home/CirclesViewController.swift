@@ -128,11 +128,13 @@ extension CirclesViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.app_name()
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
             cell.unreadCount = circle.unreadCount
+            cell.setImagePatternColor(id: nil)
         case .user:
             let circle = userCircles[indexPath.row]
             cell.titleLabel.text = circle.name
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
             cell.unreadCount = circle.unreadCount
+            cell.setImagePatternColor(id: circle.circleId)
         }
         cell.isCurrent = indexPath == currentCircleIndexPath
         return cell

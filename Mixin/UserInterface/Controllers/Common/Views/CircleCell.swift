@@ -58,6 +58,15 @@ class CircleCell: UITableViewCell {
         }
     }
     
+    func setImagePatternColor(id: String?) {
+        if let id = id {
+            let index = id.positiveHashCode() % UIColor.avatarBackgroundColors.count
+            circleImageView.tintColor = UIColor.avatarBackgroundColors[index]
+        } else {
+            circleImageView.tintColor = R.color.icon_fill()
+        }
+    }
+    
     @objc private func circleEditAction() {
         delegate?.circleCellDidSelectEditingButton(self)
     }

@@ -146,6 +146,7 @@ extension ConversationCircleEditorViewController {
             circle = otherCircles[indexPath.row]
             cell.circleEditingStyle = .insert
         }
+        cell.setImagePatternColor(id: circle.circleId)
         cell.titleLabel.text = circle.name
         cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
         cell.delegate = self

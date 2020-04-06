@@ -74,24 +74,14 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             .filter({ $0.category == ConversationCategory.CONTACT.rawValue })
             .map({ $0.ownerId })
         let presentedUserIdSet = Set(presentedUserIds)
-        var contacts = [UserItem]()
-        var bots = [UserItem]()
-        for user in users.filter({ !presentedUserIdSet.contains($0.userId) }) {
-            if user.isBot {
-                bots.append(user)
-            } else {
-                contacts.append(user)
-            }
-        }
+        let contacts = users.filter({ !presentedUserIdSet.contains($0.userId) })
         let titles = [
             R.string.localizable.circle_member_category_chats(),
             R.string.localizable.circle_member_category_contacts(),
-            R.string.localizable.circle_member_category_bots()
         ]
         let models = [
             conversations,
             contacts.map(CircleMember.init),
-            bots.map(CircleMember.init)
         ]
         return (titles, models)
     }

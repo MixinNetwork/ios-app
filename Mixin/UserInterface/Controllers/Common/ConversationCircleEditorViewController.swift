@@ -47,7 +47,6 @@ class ConversationCircleEditorViewController: UITableViewController {
         tableView.register(ConversationCircleEditorFooterView.self,
                            forHeaderFooterViewReuseIdentifier: footerReuseId)
         reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: CircleDAO.circleDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
     }
     
@@ -107,7 +106,7 @@ class ConversationCircleEditorViewController: UITableViewController {
         let relation = CircleConversation(circleId: id,
                                           conversationId: conversationId,
                                           createdAt: Date().toUTCString())
-        CircleAPI.shared.updateCircle(of: id, requests: [request]) { (result) in
+        CircleAPI.shared.updateCircle(of: id, requests: [request]) { [weak self] (result) in
             switch result {
             case .success:
                 DispatchQueue.global().async {
@@ -120,6 +119,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)
                 hud.scheduleAutoHidden()
+                self?.reloadData()
             }
         }
     }

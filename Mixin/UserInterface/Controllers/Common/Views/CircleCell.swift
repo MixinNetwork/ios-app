@@ -50,6 +50,13 @@ class CircleCell: UITableViewCell {
         isSelectedImageView.isHidden = !selected
     }
     
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        if let superview = superview, !(superview is UITableView) {
+            superview.backgroundColor = .background
+        }
+    }
+    
     @objc private func circleEditAction() {
         delegate?.circleCellDidSelectEditingButton(self)
     }

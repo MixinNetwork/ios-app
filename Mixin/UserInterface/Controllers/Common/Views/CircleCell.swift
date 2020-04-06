@@ -10,7 +10,7 @@ class CircleCell: UITableViewCell {
     @IBOutlet weak var circleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var superscriptView: UIView!
-    @IBOutlet weak var isSelectedImageView: UIImageView!
+    @IBOutlet weak var isCurrentImageView: UIImageView!
     @IBOutlet weak var unreadMessageCountLabel: RoundedInsetLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
@@ -33,6 +33,13 @@ class CircleCell: UITableViewCell {
         }
     }
     
+    var isCurrent = false {
+        didSet {
+            unreadMessageCountLabel.isHidden = isCurrent || unreadCount <= 0
+            isCurrentImageView.isHidden = !isCurrent
+        }
+    }
+    
     private lazy var editingButton: CircleEditingButton = {
         let button = CircleEditingButton()
         button.addTarget(self, action: #selector(circleEditAction), for: .touchUpInside)
@@ -43,12 +50,6 @@ class CircleCell: UITableViewCell {
     }()
     
     private weak var editingButtonIfLoaded: CircleEditingButton?
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        unreadMessageCountLabel.isHidden = selected || unreadCount <= 0
-        isSelectedImageView.isHidden = !selected
-    }
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()

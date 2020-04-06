@@ -117,7 +117,7 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="circleImageView" destination="4vc-NV-AoN" id="vRl-X9-45x"/>
-                <outlet property="isSelectedImageView" destination="WQx-Bc-gmD" id="aT8-Nn-C0B"/>
+                <outlet property="isCurrentImageView" destination="WQx-Bc-gmD" id="aT8-Nn-C0B"/>
                 <outlet property="stackView" destination="Ynx-Ad-gz3" id="JCy-sQ-H8Q"/>
                 <outlet property="subtitleLabel" destination="fqp-3A-Dtz" id="jOG-WN-S6P"/>
                 <outlet property="superscriptView" destination="GeU-eV-GT8" id="Ybt-1k-zSy"/>
@@ -138,7 +138,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

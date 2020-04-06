@@ -35,6 +35,7 @@ class CirclesViewController: UIViewController {
     
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles: [CircleItem] = []
+    private var currentCircleIndexPath: IndexPath?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -133,6 +134,7 @@ extension CirclesViewController: UITableViewDataSource {
             cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
             cell.unreadCount = circle.unreadCount
         }
+        cell.isCurrent = indexPath == currentCircleIndexPath
         return cell
     }
     
@@ -209,7 +211,6 @@ extension CirclesViewController {
                         self.reloadUserCirclesFromLocalStorage {
                             hud.set(style: .notification, text: R.string.localizable.toast_deleted())
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
-                            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                             self.switchToCircle(at: indexPath, dismissAfterFinished: false)
                         }
                     }
@@ -301,7 +302,7 @@ extension CirclesViewController {
             } else {
                 indexPath = IndexPath(row: 0, section: 0)
             }
-            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            setRow(at: indexPath, isCurrent: true)
             completion?()
         }
     }
@@ -331,6 +332,17 @@ extension CirclesViewController {
                 home.toggleCircles(self)
             }
         }
+        setRow(at: indexPath, isCurrent: true)
+    }
+    
+    private func setRow(at indexPath: IndexPath, isCurrent: Bool) {
+        if let indexPath = currentCircleIndexPath, let cell = tableView.cellForRow(at: indexPath) as? CircleCell {
+            cell.isCurrent = false
+        }
+        if let cell = tableView.cellForRow(at: indexPath) as? CircleCell {
+            cell.isCurrent = true
+        }
+        currentCircleIndexPath = indexPath
     }
     
 }

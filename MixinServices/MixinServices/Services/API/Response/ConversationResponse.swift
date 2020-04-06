@@ -27,7 +27,7 @@ public struct ConversationResponse: Codable {
         case creatorId = "creator_id"
         case muteUntil = "mute_until"
         case participantSessions = "participant_sessions"
-        case circles = "conversation_circles"
+        case circles = "circles"
     }
     
     public init(conversationId: String, name: String, category: String, iconUrl: String, announcement: String, createdAt: String, participants: [ConversationResponse.Participant], participantSessions: [UserSession]?, codeUrl: String, creatorId: String, muteUntil: String, circles: [ConversationResponse.Circle]) {

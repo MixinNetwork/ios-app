@@ -6,6 +6,7 @@ final public class CircleConversationDAO {
     public static let shared = CircleConversationDAO()
     
     public static let circleConversationsDidChangeNotification = Notification.Name("one.mixin.messenger.circle_conversations.did_change")
+    public static let circleIdUserInfoKey = "cid"
     
     public func update(conversation: ConversationResponse) {
         MixinDatabase.shared.transaction { (db) in
@@ -50,8 +51,9 @@ final public class CircleConversationDAO {
             try db.insertOrReplace(objects: objects,
                                    intoTable: CircleConversation.tableName)
         }
+        let userInfo = [Self.circleIdUserInfoKey: circleId]
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification, object: self)
+            NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
         }
     }
     

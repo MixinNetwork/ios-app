@@ -16,19 +16,15 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var guideLabel: UILabel!
     @IBOutlet weak var guideButton: UIButton!
-    @IBOutlet weak var cameraButtonWrapperView: UIView!
-    @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinContentView: UIView!
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
+    @IBOutlet weak var bottomBarView: UIView!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showCameraButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideCameraButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraWrapperSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
@@ -81,7 +77,6 @@ class HomeViewController: UIViewController {
         titleButton.setTitle(topLeftTitle, for: .normal)
         isBulletinViewHidden = true
         updateBulletinView()
-        updateCameraWrapperHeight()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
@@ -114,29 +109,10 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        qrcodeImageView.isHidden = AppGroupUserDefaults.User.hasPerformedQrCodeScanning
         if needRefresh {
             fetchConversations()
         }
-        showCameraButton()
         checkServerStatus()
-    }
-
-    private func checkServerStatus() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        guard !WebSocketService.shared.isConnected else {
-            return
-        }
-        AccountAPI.shared.me { [weak self](result) in
-            guard let weakSelf = self else {
-                return
-            }
-            if case let .failure(error) = result, error.code == 10006 {
-                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
-            }
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -164,32 +140,13 @@ class HomeViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        updateCameraWrapperHeight()
+        let bottom = bottomBarView.frame.height - view.safeAreaInsets.bottom
+        tableView.contentInset.bottom = bottom
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         DispatchQueue.main.async(execute: layoutBulletinView)
-    }
-    
-    @IBAction func cameraAction(_ sender: Any) {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            navigationController?.pushViewController(CameraViewController.instance(), animated: true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
-                guard granted else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(CameraViewController.instance(), animated: true)
-                }
-            })
-        case .denied, .restricted:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
-        @unknown default:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
-        }
     }
     
     @IBAction func walletAction(_ sender: Any) {
@@ -433,13 +390,6 @@ extension HomeViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if abs(scrollView.contentOffset.y - beginDraggingOffset) > 10 {
-            if scrollView.contentOffset.y > beginDraggingOffset {
-                hideCameraButton()
-            } else {
-                showCameraButton()
-            }
-        }
         if scrollView.contentOffset.y <= -dragDownThreshold && !dragDownIndicator.isHighlighted {
             dragDownIndicator.isHighlighted = true
             feedback.selectionChanged()
@@ -460,9 +410,21 @@ extension HomeViewController: UIScrollViewDelegate {
 
 extension HomeViewController {
     
-    private func updateCameraWrapperHeight() {
-        cameraWrapperSafeAreaPlaceholderHeightConstraint.constant = view.safeAreaInsets.bottom
-        cameraButtonWrapperView.layoutIfNeeded()
+    private func checkServerStatus() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        guard !WebSocketService.shared.isConnected else {
+            return
+        }
+        AccountAPI.shared.me { [weak self](result) in
+            guard let weakSelf = self else {
+                return
+            }
+            if case let .failure(error) = result, error.code == 10006 {
+                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
+            }
+        }
     }
     
     private func fetchConversations() {
@@ -658,30 +620,6 @@ extension HomeViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func hideCameraButton() {
-        guard cameraButtonWrapperView.alpha != 0 else {
-            return
-        }
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.cameraButtonWrapperView.alpha = 0
-            self.hideCameraButtonConstraint.priority = .defaultHigh
-            self.showCameraButtonConstraint.priority = .defaultLow
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-    }
-    
-    private func showCameraButton() {
-        guard cameraButtonWrapperView.alpha != 1 else {
-            return
-        }
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.cameraButtonWrapperView.alpha = 1
-            self.hideCameraButtonConstraint.priority = .defaultLow
-            self.showCameraButtonConstraint.priority = .defaultHigh
-            self.view.layoutIfNeeded()
-        }, completion: nil)
     }
     
     private func requestAppStoreReviewIfNeeded() {

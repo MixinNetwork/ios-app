@@ -193,7 +193,8 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                             .toUTCString()
                         return CircleConversation(circleId: circleId,
                                                   conversationId: member.conversationId,
-                                                  createdAt: createdAt)
+                                                  createdAt: createdAt,
+                                                  pinTime: nil)
                     }
                     CircleConversationDAO.shared.replaceCircleConversations(with: circleId, objects: objects)
                     DispatchQueue.main.sync {

@@ -104,14 +104,15 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private func updateCircle(of id: String, hud: Hud) {
         let request = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
-        let relation = CircleConversation(circleId: id,
-                                          conversationId: conversationId,
-                                          createdAt: Date().toUTCString())
+        let object = CircleConversation(circleId: id,
+                                        conversationId: conversationId,
+                                        createdAt: Date().toUTCString(),
+                                        pinTime: nil)
         CircleAPI.shared.updateCircle(of: id, requests: [request]) { [weak self] (result) in
             switch result {
             case .success:
                 DispatchQueue.global().async {
-                    CircleConversationDAO.shared.replaceCircleConversations(with: id, objects: [relation])
+                    CircleConversationDAO.shared.insert(object)
                     DispatchQueue.main.sync {
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
                         hud.scheduleAutoHidden()
@@ -227,7 +228,8 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                             let objects = requests.map { (request) -> CircleConversation in
                                 return CircleConversation(circleId: circle.circleId,
                                                           conversationId: request.conversationId,
-                                                          createdAt: createdAt)
+                                                          createdAt: createdAt,
+                                                          pinTime: nil)
                             }
                             CircleConversationDAO.shared.replaceCircleConversations(with: circle.circleId, objects: objects)
                             DispatchQueue.main.sync {
@@ -261,7 +263,8 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                             let objects = requests.map { (request) -> CircleConversation in
                                 return CircleConversation(circleId: circle.circleId,
                                                           conversationId: request.conversationId,
-                                                          createdAt: createdAt)
+                                                          createdAt: createdAt,
+                                                          pinTime: nil)
                             }
                             CircleConversationDAO.shared.replaceCircleConversations(with: circle.circleId, objects: objects)
                             DispatchQueue.main.sync {

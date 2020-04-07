@@ -482,17 +482,22 @@ extension HomeViewController {
     }
     
     private func tableViewCommitPinAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        let dao = ConversationDAO.shared
         let conversation = conversations[indexPath.row]
         let destinationIndex: Int
         if conversation.pinTime == nil {
             let pinTime = Date().toUTCString()
             conversation.pinTime = pinTime
-            ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: pinTime)
+            dao.updateConversation(with: conversation.conversationId,
+                                   inCirleOf: AppGroupUserDefaults.User.circleId,
+                                   pinTime: pinTime)
             conversations.remove(at: indexPath.row)
             destinationIndex = 0
         } else {
             conversation.pinTime = nil
-            ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: nil)
+            dao.updateConversation(with: conversation.conversationId,
+                                   inCirleOf: AppGroupUserDefaults.User.circleId,
+                                   pinTime: nil)
             conversations.remove(at: indexPath.row)
             destinationIndex = conversations.firstIndex(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
         }

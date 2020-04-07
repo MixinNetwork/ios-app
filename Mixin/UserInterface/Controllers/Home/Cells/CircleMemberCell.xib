@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KoP-QW-ySu" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="8" y="0.0" width="50" height="50"/>
+                        <rect key="frame" x="8" y="2" width="50" height="50"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="KoP-QW-ySu" secondAttribute="height" id="Hop-kt-jGD"/>
@@ -26,7 +26,7 @@
                         </constraints>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mnx-JQ-E6s">
-                        <rect key="frame" x="38" y="0.0" width="20" height="22"/>
+                        <rect key="frame" x="40" y="0.0" width="20" height="22"/>
                         <state key="normal" image="ic_circle_member_remove"/>
                         <connections>
                             <action selector="removeAction:" destination="gTV-IL-0wX" eventType="touchUpInside" id="ds6-if-fdh"/>
@@ -45,20 +45,20 @@
             </view>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="mnx-JQ-E6s" firstAttribute="trailing" secondItem="KoP-QW-ySu" secondAttribute="trailing" id="2a6-mu-QJw"/>
+                <constraint firstItem="mnx-JQ-E6s" firstAttribute="trailing" secondItem="KoP-QW-ySu" secondAttribute="trailing" constant="2" id="2a6-mu-QJw"/>
                 <constraint firstItem="Tjn-WJ-FOE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="NNQ-T7-RAY"/>
                 <constraint firstAttribute="bottom" secondItem="Tjn-WJ-FOE" secondAttribute="bottom" id="OaE-vo-q1Z"/>
                 <constraint firstItem="KoP-QW-ySu" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="SiB-E9-ZTR"/>
                 <constraint firstItem="Tjn-WJ-FOE" firstAttribute="top" relation="greaterThanOrEqual" secondItem="KoP-QW-ySu" secondAttribute="bottom" id="ZRw-pX-1CQ"/>
                 <constraint firstAttribute="trailing" secondItem="Tjn-WJ-FOE" secondAttribute="trailing" id="fhO-EQ-DX2"/>
-                <constraint firstItem="KoP-QW-ySu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="lLF-hi-hLz"/>
-                <constraint firstItem="mnx-JQ-E6s" firstAttribute="top" secondItem="KoP-QW-ySu" secondAttribute="top" id="yZa-mi-hvV"/>
+                <constraint firstItem="KoP-QW-ySu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="lLF-hi-hLz"/>
+                <constraint firstItem="mnx-JQ-E6s" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="rJV-5U-gXw"/>
             </constraints>
             <connections>
                 <outlet property="imageView" destination="KoP-QW-ySu" id="QzN-lO-AEO"/>
                 <outlet property="nameLabel" destination="Tjn-WJ-FOE" id="eL3-xK-I3p"/>
             </connections>
-            <point key="canvasLocation" x="139" y="131"/>
+            <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
         </collectionViewCell>
     </objects>
     <resources>
@@ -67,7 +67,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

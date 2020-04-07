@@ -295,7 +295,7 @@ public final class ConversationDAO {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
 
-            resultConversation = try db.prepareSelectSQL(on: ConversationItem.Properties.all, sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).allObjects().first!
+            resultConversation = try db.prepareSelectSQL(on: ConversationItem.Properties.all, sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).allObjects().first
             
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }

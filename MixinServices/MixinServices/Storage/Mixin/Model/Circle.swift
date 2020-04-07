@@ -17,6 +17,7 @@ public class Circle: BaseCodable {
         
         case circleId = "circle_id"
         case name
+        case createdAt = "created_at"
         
     }
     
@@ -24,10 +25,12 @@ public class Circle: BaseCodable {
     
     public let circleId: String
     public let name: String
+    public let createdAt: String
     
-    public init(circleId: String, name: String) {
+    public init(circleId: String, name: String, createdAt: String) {
         self.circleId = circleId
         self.name = name
+        self.createdAt = createdAt
     }
     
 }

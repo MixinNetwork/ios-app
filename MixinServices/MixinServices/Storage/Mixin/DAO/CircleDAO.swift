@@ -24,6 +24,7 @@ public final class CircleDAO {
                 (SELECT COUNT(*) FROM circle_conversations conv WHERE conv.circle_id = c.circle_id) as conversation_count,
                 (SELECT SUM(unseen_message_count) FROM conversations conv INNER JOIN circle_conversations cc ON cc.circle_id = c.circle_id WHERE conv.conversation_id = cc.conversation_id) as unread_count
             FROM circles c
+            ORDER BY c.created_at ASC
         """
         return MixinDatabase.shared.getCodables(sql: sql)
     }
@@ -60,6 +61,7 @@ public final class CircleDAO {
             INNER JOIN circle_conversations cc ON cc.circle_id = c.circle_id
             INNER JOIN conversations conv ON cc.conversation_id = conv.conversation_id
             WHERE conv.conversation_id = ?
+            ORDER BY c.created_at ASC
         """
         return MixinDatabase.shared.getCodables(sql: sql, values: [conversationId])
     }

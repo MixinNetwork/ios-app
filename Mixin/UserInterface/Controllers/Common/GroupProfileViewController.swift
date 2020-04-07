@@ -250,13 +250,13 @@ extension GroupProfileViewController {
         updateSubtitle()
         
         if !isMember && codeId != nil {
-            isResizeGestureEnabled = false
+            resizeRecognizer.isEnabled = false
             relationshipView.style = .joinGroup
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(joinGroup), for: .touchUpInside)
             centerStackView.addArrangedSubview(relationshipView)
         } else {
-            isResizeGestureEnabled = true
+            resizeRecognizer.isEnabled = true
         }
         
         if !conversation.announcement.isEmpty {

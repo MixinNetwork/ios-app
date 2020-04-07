@@ -7,6 +7,7 @@ class CirclesTableFooterView: UIView {
     @IBOutlet weak var button: UIButton!
     
     @IBOutlet weak var labelTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var buttonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
     
     var showsHintLabel = false {

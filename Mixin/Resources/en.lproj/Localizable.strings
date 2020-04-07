@@ -212,7 +212,8 @@
 "circle_action_delete" = "Delete Circle";
 "circle_member_category_chats" = "Chats";
 "circle_member_category_contacts" = "Contacts";
-"circle_add_hint" = "If you want to filter conversations, please set a circle for the conversation first.";
+"circle_add_hint" = "Create circles for different groups of chats and quickly switch between them";
+"circle_add_hint_in_conversation" = "If you want to filter conversations, please set a circle for the conversation first";
 "circle_conversation_editor_title" = "%@'s Circle";
 
 // Chat

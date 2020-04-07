@@ -18,7 +18,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="15"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAj-eE-ABK">
-                            <rect key="frame" x="38" y="30" width="338" height="33.5"/>
+                            <rect key="frame" x="38" y="80" width="338" height="33.5"/>
                             <string key="text">If you want to filter conversations, please 
 set a circle for the conversation first.</string>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -26,7 +26,6 @@ set a circle for the conversation first.</string>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="circle_add_hint"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>
@@ -34,9 +33,9 @@ set a circle for the conversation first.</string>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="lAj-eE-ABK" secondAttribute="trailing" constant="38" id="Mvb-JK-bod"/>
                         <constraint firstItem="lAj-eE-ABK" firstAttribute="leading" secondItem="jMM-DP-g98" secondAttribute="leading" constant="38" id="YAh-v1-axU"/>
-                        <constraint firstItem="lAj-eE-ABK" firstAttribute="top" secondItem="jMM-DP-g98" secondAttribute="top" constant="30" id="mfz-cJ-HY6"/>
+                        <constraint firstItem="lAj-eE-ABK" firstAttribute="top" secondItem="jMM-DP-g98" secondAttribute="top" constant="80" id="mfz-cJ-HY6"/>
                         <constraint firstAttribute="height" priority="750" constant="15" id="sEr-wX-8R8"/>
-                        <constraint firstAttribute="bottom" secondItem="lAj-eE-ABK" secondAttribute="bottom" priority="500" constant="30" id="xcw-SW-IwU"/>
+                        <constraint firstAttribute="bottom" secondItem="lAj-eE-ABK" secondAttribute="bottom" priority="500" constant="100" id="xcw-SW-IwU"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jvy-9r-6oM">
@@ -61,6 +60,7 @@ set a circle for the conversation first.</string>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="button" destination="jvy-9r-6oM" id="dGQ-Nx-0V9"/>
+                <outlet property="buttonTopConstraint" destination="5ih-qg-Ad3" id="WJY-TC-f1v"/>
                 <outlet property="contentView" destination="jMM-DP-g98" id="Jux-3w-B64"/>
                 <outlet property="contentViewHeightConstraint" destination="sEr-wX-8R8" id="7fo-UQ-fvc"/>
                 <outlet property="label" destination="lAj-eE-ABK" id="ltg-MF-own"/>

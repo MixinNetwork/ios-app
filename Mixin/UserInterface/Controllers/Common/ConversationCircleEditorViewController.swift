@@ -8,8 +8,9 @@ class ConversationCircleEditorViewController: UITableViewController {
     private lazy var editNameController = EditNameController(presentingViewController: self)
     private lazy var hintFooterView: UIView = {
         let view = R.nib.circlesTableFooterView(owner: nil)!
+        view.label.text = R.string.localizable.circle_add_hint_in_conversation()
+        view.buttonTopConstraint.constant = -80
         view.showsHintLabel = true
-        view.labelTopConstraint.constant = 80
         view.button.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.contentView.snp.bottom)

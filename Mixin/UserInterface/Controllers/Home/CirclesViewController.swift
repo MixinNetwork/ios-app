@@ -13,6 +13,7 @@ class CirclesViewController: UIViewController {
     
     private lazy var tableFooterView: CirclesTableFooterView = {
         let view = R.nib.circlesTableFooterView(owner: nil)!
+        view.label.text = R.string.localizable.circle_add_hint()
         view.button.snp.makeConstraints { (make) in
             make.top.equalTo(view.contentView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()

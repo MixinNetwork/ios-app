@@ -55,6 +55,17 @@ public final class ConversationDAO {
     )
     """
     
+    public func hasUnreadMessage(outsideCircleWith id: String) -> Bool {
+        let sql = """
+            SELECT 1
+            FROM conversations c
+            INNER JOIN circle_conversations cc ON c.conversation_id = cc.conversation_id
+            WHERE cc.circle_id != ? AND c.unseen_message_count > 0
+            LIMIT 1
+        """
+        return MixinDatabase.shared.scalar(sql: sql, values: [id]).int64Value > 0
+    }
+    
     public func getUnreadMessageCount() -> Int {
         Int(MixinDatabase.shared.scalar(sql: Self.sqlUnreadMessageCount).int64Value)
     }

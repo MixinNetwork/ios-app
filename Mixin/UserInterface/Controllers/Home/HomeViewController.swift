@@ -17,7 +17,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var cameraButtonWrapperView: UIView!
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
-    @IBOutlet weak var titleButton: UIButton!
+    @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinContentView: UIView!
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
@@ -465,6 +465,9 @@ extension HomeViewController {
         needRefresh = false
 
         DispatchQueue.main.async {
+            if AppGroupUserDefaults.User.circleId == nil {
+                self.titleButton.showsTopRightDot = false
+            }
             let limit = (self.tableView.indexPathsForVisibleRows?.first?.row ?? 0) + self.messageCountPerPage
 
             DispatchQueue.global().async { [weak self] in
@@ -474,6 +477,13 @@ extension HomeViewController {
                 for conversation in groupIcons {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
                 }
+                let hasUnreadMessagesOutsideCircle: Bool = {
+                    if let id = circleId {
+                        return ConversationDAO.shared.hasUnreadMessage(outsideCircleWith: id)
+                    } else {
+                        return false
+                    }
+                }()
                 DispatchQueue.main.async {
                     guard self?.tableView != nil else {
                         return
@@ -481,6 +491,7 @@ extension HomeViewController {
                     self?.guideView.isHidden = conversations.count != 0
                     self?.conversations = conversations
                     self?.tableView.reloadData()
+                    self?.titleButton.showsTopRightDot = hasUnreadMessagesOutsideCircle
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
                         self?.refreshing = false
                         if self?.needRefresh ?? false {

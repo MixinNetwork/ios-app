@@ -54,7 +54,7 @@ final class GroupProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadData()
-        reloadCircles(conversationId: conversationId)
+        reloadCircles(conversationId: conversationId, userId: nil)
         updatePreferredContentSizeHeight(size: size)
     }
     

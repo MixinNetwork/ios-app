@@ -53,9 +53,10 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     @objc func reloadData() {
         let conversationId = self.conversationId
+        let userId = self.ownerId
         DispatchQueue.global().async { [weak self] in
             let allCircles = CircleDAO.shared.circles()
-            let subordinateCircles = CircleDAO.shared.circles(of: conversationId)
+            let subordinateCircles = CircleDAO.shared.circles(of: conversationId, userId: userId)
             let otherCircles = allCircles.filter({ !subordinateCircles.contains($0) })
             DispatchQueue.main.async {
                 guard let self = self else {
@@ -93,7 +94,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             case .success(let circle):
                 DispatchQueue.global().async {
                     CircleDAO.shared.insertOrReplace(circle: circle)
-                    self.updateCircle(of: circle.circleId, hud: hud)
+                    self.addThisConversationIntoCircle(with: circle.circleId, hud: hud)
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -102,10 +103,11 @@ class ConversationCircleEditorViewController: UITableViewController {
         }
     }
     
-    private func updateCircle(of id: String, hud: Hud) {
+    private func addThisConversationIntoCircle(with id: String, hud: Hud) {
         let request = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
         let object = CircleConversation(circleId: id,
                                         conversationId: conversationId,
+                                        userId: ownerId,
                                         createdAt: Date().toUTCString(),
                                         pinTime: nil)
         CircleAPI.shared.updateCircle(of: id, requests: [request]) { [weak self] (result) in
@@ -210,6 +212,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
             return
         }
         let conversationId = self.conversationId
+        let userId = self.ownerId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         if indexPath.section == 0 {
@@ -228,6 +231,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                             let objects = requests.map { (request) -> CircleConversation in
                                 return CircleConversation(circleId: circle.circleId,
                                                           conversationId: request.conversationId,
+                                                          userId: userId,
                                                           createdAt: createdAt,
                                                           pinTime: nil)
                             }
@@ -263,6 +267,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                             let objects = requests.map { (request) -> CircleConversation in
                                 return CircleConversation(circleId: circle.circleId,
                                                           conversationId: request.conversationId,
+                                                          userId: userId,
                                                           createdAt: createdAt,
                                                           pinTime: nil)
                             }

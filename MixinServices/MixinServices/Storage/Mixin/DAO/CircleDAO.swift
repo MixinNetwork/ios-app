@@ -32,12 +32,13 @@ public final class CircleDAO {
     public func circleMembers(circleId: String) -> [CircleMember] {
         let sql = """
             SELECT
-                conv.conversation_id, conv.owner_id, conv.category,
-                CASE WHEN conv.category = 'CONTACT' THEN u.full_name ELSE conv.name END AS name,
-                CASE WHEN conv.category = 'CONTACT' THEN u.avatar_url ELSE conv.icon_url END AS icon_url
+                cc.conversation_id, cc.user_id as owner_id,
+                CASE WHEN conv.category IS NULL THEN 'CONTACT' ELSE conv.category END AS category,
+                CASE WHEN conv.category = 'GROUP' THEN conv.name ELSE u.full_name END AS name,
+                CASE WHEN conv.category = 'GROUP' THEN conv.icon_url ELSE u.avatar_url END AS icon_url
             FROM circle_conversations cc
             LEFT JOIN conversations conv ON conv.conversation_id = cc.conversation_id
-            LEFT JOIN users u ON u.user_id = conv.owner_id
+            LEFT JOIN users u ON u.user_id = cc.user_id
             WHERE cc.circle_id = ?
         """
         return MixinDatabase.shared.getCodables(on: CircleMember.Properties.all,
@@ -53,17 +54,25 @@ public final class CircleDAO {
         MixinDatabase.shared.delete(table: Circle.tableName, condition: Circle.Properties.circleId == circleId)
     }
     
-    public func circles(of conversationId: String) -> [CircleItem] {
+    public func circles(of conversationId: String, userId: String?) -> [CircleItem] {
+        var values = [conversationId]
+        let userIdCondition: String
+        if let userId = userId {
+            userIdCondition = "OR cc.user_id = ?"
+            values.append(userId)
+        } else {
+            userIdCondition = ""
+        }
         let sql = """
             SELECT c.circle_id, c.name,
                 (SELECT COUNT(*) FROM circle_conversations conv WHERE conv.circle_id = c.circle_id) as conversation_count
             FROM circles c
             INNER JOIN circle_conversations cc ON cc.circle_id = c.circle_id
-            INNER JOIN conversations conv ON cc.conversation_id = conv.conversation_id
-            WHERE conv.conversation_id = ?
+            LEFT JOIN conversations conv ON cc.conversation_id = conv.conversation_id
+            WHERE conv.conversation_id = ? \(userIdCondition)
             ORDER BY c.created_at ASC
         """
-        return MixinDatabase.shared.getCodables(sql: sql, values: [conversationId])
+        return MixinDatabase.shared.getCodables(sql: sql, values: values)
     }
     
 }

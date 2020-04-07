@@ -69,7 +69,7 @@ class PeerInfoView: UIView, XibDesignable {
             if member.category == ConversationCategory.GROUP.rawValue {
                 avatarImageView.setGroupImage(with: member.iconUrl)
             } else {
-                avatarImageView.setImage(with: member.iconUrl, userId: member.ownerId, name: member.name)
+                avatarImageView.setImage(with: member.iconUrl, userId: member.userId ?? "", name: member.name)
             }
         default:
             break
@@ -133,7 +133,7 @@ class PeerInfoView: UIView, XibDesignable {
             avatarImageView.setGroupImage(with: member.iconUrl)
         } else {
             avatarImageView.setImage(with: member.iconUrl,
-                                     userId: member.ownerId,
+                                     userId: member.userId ?? "",
                                      name: member.name)
         }
         titleLabel.text = member.name

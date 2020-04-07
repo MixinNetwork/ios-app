@@ -10,7 +10,7 @@ public class CircleMember: TableDecodable {
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
         
         case conversationId = "conversation_id"
-        case ownerId = "owner_id"
+        case userId = "user_id"
         case category
         case name
         case iconUrl = "icon_url"
@@ -18,16 +18,16 @@ public class CircleMember: TableDecodable {
     }
     
     public let conversationId: String
-    public let ownerId: String
+    public let userId: String?
     public let category: String
     public let name: String
     public let iconUrl: String
     
     public var badgeImage: UIImage? = nil
     
-    public init(conversationId: String, ownerId: String, category: String, name: String, iconUrl: String, badgeImage: UIImage? = nil) {
+    public init(conversationId: String, userId: String, category: String, name: String, iconUrl: String, badgeImage: UIImage? = nil) {
         self.conversationId = conversationId
-        self.ownerId = ownerId
+        self.userId = userId
         self.category = category
         self.name = name
         self.iconUrl = iconUrl

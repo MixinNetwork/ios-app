@@ -13,14 +13,13 @@ final public class CircleConversationDAO {
             let objects = conversation.circles.map { (circle) -> CircleConversation in
                 let object = CircleConversation(circleId: circle.circleId,
                                                 conversationId: conversation.conversationId,
+                                                userId: nil,
                                                 createdAt: circle.createdAt,
                                                 pinTime: nil)
-                
-                let pinTime = try? db.getValue(on: CircleConversation.Properties.pinTime.asColumnResult(),
-                                               fromTable: CircleConversation.tableName,
-                                               where: CircleConversation.Properties.conversationId == object.conversationId)
-                if let pinTime = pinTime, pinTime.type == .text {
-                    object.pinTime = pinTime.stringValue
+                let oldValue: CircleConversation? = try? db.getObject(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == object.conversationId)
+                if let old = oldValue {
+                    object.userId = old.userId
+                    object.pinTime = old.pinTime
                 }
                 return object
             }
@@ -33,16 +32,21 @@ final public class CircleConversationDAO {
     
     public func insert(_ object: CircleConversation) {
         MixinDatabase.shared.insert(objects: [object])
+        let userInfo = [Self.circleIdUserInfoKey: object.circleId]
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification,
+                                            object: self,
+                                            userInfo: userInfo)
+        }
     }
     
     public func replaceCircleConversations(with circleId: String, objects: [CircleConversation]) {
         MixinDatabase.shared.transaction { (db) in
             for object in objects {
-                let value = try db.getValue(on: CircleConversation.Properties.pinTime.asColumnResult(),
-                                            fromTable: CircleConversation.tableName,
-                                            where: CircleConversation.Properties.conversationId == object.conversationId)
-                if value.type == .text {
-                    object.pinTime = value.stringValue
+                let oldValue: CircleConversation? = try? db.getObject(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == object.conversationId)
+                if let old = oldValue {
+                    object.userId = old.userId
+                    object.pinTime = old.pinTime
                 }
             }
             

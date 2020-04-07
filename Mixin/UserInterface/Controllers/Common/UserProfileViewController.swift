@@ -66,7 +66,7 @@ final class UserProfileViewController: ProfileViewController {
         reloadData()
         reloadFavoriteApps(userId: user.userId, fromRemote: true)
         if !isMe {
-            reloadCircles(conversationId: conversationId)
+            reloadCircles(conversationId: conversationId, userId: user.userId)
         }
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         recognizer.delegate = self

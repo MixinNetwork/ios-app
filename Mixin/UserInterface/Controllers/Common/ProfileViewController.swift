@@ -246,9 +246,9 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    func reloadCircles(conversationId: String) {
+    func reloadCircles(conversationId: String, userId: String?) {
         DispatchQueue.global().async { [weak self] in
-            let circles = CircleDAO.shared.circles(of: conversationId)
+            let circles = CircleDAO.shared.circles(of: conversationId, userId: userId)
             DispatchQueue.main.sync {
                 self?.subordinateCircles = circles
             }

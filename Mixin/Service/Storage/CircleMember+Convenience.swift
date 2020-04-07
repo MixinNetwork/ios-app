@@ -7,7 +7,7 @@ extension CircleMember {
         let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
         let badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         self.init(conversationId: conversationId,
-                  ownerId: user.userId,
+                  userId: user.userId,
                   category: ConversationCategory.CONTACT.rawValue,
                   name: user.fullName,
                   iconUrl: user.avatarUrl,
@@ -17,7 +17,7 @@ extension CircleMember {
     convenience init(conversation: ConversationItem) {
         let isGroup = conversation.category == ConversationCategory.GROUP.rawValue
         self.init(conversationId: conversation.conversationId,
-                  ownerId: conversation.ownerId,
+                  userId: conversation.ownerId,
                   category: conversation.category ?? ConversationCategory.CONTACT.rawValue,
                   name: conversation.getConversationName(),
                   iconUrl: isGroup ? conversation.iconUrl : conversation.ownerAvatarUrl,

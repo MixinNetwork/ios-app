@@ -27,7 +27,7 @@ class CircleMemberCell: UICollectionViewCell {
             imageView.setGroupImage(with: member.iconUrl)
         } else {
             imageView.setImage(with: member.iconUrl,
-                               userId: member.ownerId,
+                               userId: member.userId ?? "",
                                name: member.name)
         }
         nameLabel.text = member.name

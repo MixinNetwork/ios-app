@@ -22,7 +22,7 @@ class UpdateCircleMemberRequest: Encodable {
     init(member: CircleMember) {
         self.conversationId = member.conversationId
         if member.category == ConversationCategory.CONTACT.rawValue {
-            self.userId = member.ownerId
+            self.userId = member.userId
         } else {
             self.userId = nil
         }

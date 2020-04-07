@@ -17,6 +17,7 @@ public class CircleConversation: BaseCodable {
         
         case circleId = "circle_id"
         case conversationId = "conversation_id"
+        case userId = "user_id"
         case createdAt = "created_at"
         case pinTime = "pin_time"
         
@@ -26,12 +27,14 @@ public class CircleConversation: BaseCodable {
     
     public let circleId: String
     public let conversationId: String
+    public var userId: String?
     public let createdAt: String
     public var pinTime: String?
     
-    public init(circleId: String, conversationId: String, createdAt: String, pinTime: String?) {
+    public init(circleId: String, conversationId: String, userId: String?, createdAt: String, pinTime: String?) {
         self.circleId = circleId
         self.conversationId = conversationId
+        self.userId = userId
         self.createdAt = createdAt
         self.pinTime = pinTime
     }

@@ -72,7 +72,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             .compactMap(CircleMember.init)
         let presentedUserIds = conversations
             .filter({ $0.category == ConversationCategory.CONTACT.rawValue })
-            .map({ $0.ownerId })
+            .map({ $0.userId })
         let presentedUserIdSet = Set(presentedUserIds)
         let contacts = users.filter({ !presentedUserIdSet.contains($0.userId) })
         let titles = [
@@ -193,6 +193,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                             .toUTCString()
                         return CircleConversation(circleId: circleId,
                                                   conversationId: member.conversationId,
+                                                  userId: member.userId,
                                                   createdAt: createdAt,
                                                   pinTime: nil)
                     }

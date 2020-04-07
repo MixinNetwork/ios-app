@@ -76,6 +76,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
                 weakSelf.sectionTitles = catalogedModels.titles
                 weakSelf.models = catalogedModels.models
                 weakSelf.tableView.reloadData()
+                weakSelf.reloadTableViewSelections()
             }
         }
         queue.addOperation(initDataOperation)

@@ -44,6 +44,8 @@ class CirclesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let title = AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
+        toggleCirclesButton.setTitle(title, for: .normal)
         let tableHeaderView = InfiniteTopView()
         tableHeaderView.frame.size.height = 0
         tableView.tableHeaderView = tableHeaderView

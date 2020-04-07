@@ -15,13 +15,16 @@ public final class AssetAPI: BaseAPI {
             return "assets/\(assetId)/fee"
         }
 
-        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> String {
+        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> String {
             var url = "snapshots?limit=\(limit)"
             if let offset = offset {
                 url += "&offset=\(offset)"
             }
             if let assetId = assetId {
                 url += "&asset=\(assetId)"
+            }
+            if let opponentId = opponentId {
+                url += "&opponent=\(opponentId)"
             }
             return url
         }
@@ -52,9 +55,9 @@ public final class AssetAPI: BaseAPI {
     public func asset(assetId: String) -> APIResult<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
-    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> APIResult<[Snapshot]> {
+    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> APIResult<[Snapshot]> {
         assert(limit <= 500)
-        return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId))
+        return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId))
     }
     
     public func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {

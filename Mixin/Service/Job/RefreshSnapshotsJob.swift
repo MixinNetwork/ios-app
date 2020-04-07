@@ -34,7 +34,7 @@ class RefreshSnapshotsJob: BaseJob {
         case .all:
             result = AssetAPI.shared.snapshots(limit: limit)
         case .opponent(let id):
-            result = SnapshotAPI.shared.snapshots(opponentId: id)
+            result = AssetAPI.shared.snapshots(limit: limit, opponentId: id)
         case .asset(let id):
             result = AssetAPI.shared.snapshots(limit: limit, assetId: id)
         }
@@ -54,8 +54,8 @@ class RefreshSnapshotsJob: BaseJob {
             AppGroupUserDefaults.Wallet.allTransactionsOffset = newValue
         case .asset(let id):
             AppGroupUserDefaults.Wallet.assetTransactionsOffset[id] = newValue
-        case .opponent:
-            break
+        case .opponent(let id):
+            AppGroupUserDefaults.Wallet.opponentTransactionsOffset[id] = newValue
         }
     }
     
@@ -65,8 +65,8 @@ class RefreshSnapshotsJob: BaseJob {
             return AppGroupUserDefaults.Wallet.allTransactionsOffset
         case .asset(let id):
             return AppGroupUserDefaults.Wallet.assetTransactionsOffset[id]
-        case .opponent:
-            return nil
+        case .opponent(let id):
+            return AppGroupUserDefaults.Wallet.opponentTransactionsOffset[id]
         }
     }
     

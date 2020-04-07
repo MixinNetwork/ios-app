@@ -3,27 +3,6 @@ import MixinServices
 final class PaymentAPI: BaseAPI {
 
     private enum url {
-        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> String {
-            var url = "snapshots?limit=\(limit)"
-            if let offset = offset {
-                url += "&offset=\(offset)"
-            }
-            if let assetId = assetId {
-                url += "&asset=\(assetId)"
-            }
-            return url
-        }
-        static func snapshots(opponentId: String) -> String {
-            return "mutual_snapshots/\(opponentId)"
-        }
-
-        static func snapshot(snapshotId: String) -> String {
-            return "snapshots/\(snapshotId)"
-        }
-        static func snapshot(traceId: String) -> String {
-            return "transfers/trace/\(traceId)"
-        }
-
         static let transactions = "transactions"
         static let transfers = "transfers"
         static let payments = "payments"

@@ -53,7 +53,7 @@ class CirclesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         DispatchQueue.global().async {
-            self.reloadUserCirclesFromLocalStorage(completion: nil)
+            self.reloadAllCirclesFromLocalStorage(completion: nil)
         }
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
@@ -81,7 +81,7 @@ class CirclesViewController: UIViewController {
     
     @objc func reloadUserCircle() {
         DispatchQueue.global().async {
-            self.reloadUserCirclesFromLocalStorage(completion: nil)
+            self.reloadAllCirclesFromLocalStorage(completion: nil)
         }
     }
     
@@ -213,7 +213,7 @@ extension CirclesViewController {
                     DispatchQueue.global().async {
                         CircleDAO.shared.delete(circleId: circle.circleId)
                         CircleConversationDAO.shared.delete(circleId: circle.circleId)
-                        self.reloadUserCirclesFromLocalStorage {
+                        self.reloadAllCirclesFromLocalStorage {
                             hud.set(style: .notification, text: R.string.localizable.toast_deleted())
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
                             self.switchToCircle(at: indexPath, dismissAfterFinished: false)
@@ -265,7 +265,7 @@ extension CirclesViewController {
                 }
                 DispatchQueue.global().async {
                     CircleDAO.shared.insertOrReplace(circle: circle)
-                    self.reloadUserCirclesFromLocalStorage() {
+                    self.reloadAllCirclesFromLocalStorage() {
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
                     }
                 }
@@ -283,14 +283,16 @@ extension CirclesViewController {
             }
             DispatchQueue.global().async {
                 CircleDAO.shared.replaceAllCircles(with: circles)
-                self?.reloadUserCirclesFromLocalStorage(completion: nil)
+                self?.reloadAllCirclesFromLocalStorage(completion: nil)
             }
         }
     }
     
-    private func reloadUserCirclesFromLocalStorage(completion: (() -> Void)?) {
+    private func reloadAllCirclesFromLocalStorage(completion: (() -> Void)?) {
+        let embeddedCircles = CircleDAO.shared.embeddedCircles()
         let circles = CircleDAO.shared.circles()
         DispatchQueue.main.sync {
+            self.embeddedCircles = embeddedCircles
             self.userCircles = circles
             self.tableView.reloadData()
             self.tableFooterView.showsHintLabel = circles.isEmpty

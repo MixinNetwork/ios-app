@@ -269,7 +269,7 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="contactsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="fbV-Bf-pkW"/>
+                                                    <action selector="guideAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="hmZ-ME-OvE"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -483,6 +483,8 @@
                         <outlet property="cameraWrapperSafeAreaPlaceholderHeightConstraint" destination="HM0-tb-6J4" id="6oX-tf-lCs"/>
                         <outlet property="circlesContainerView" destination="tgL-jC-hwU" id="Jbu-y0-Oeu"/>
                         <outlet property="connectingView" destination="px1-MZ-UBh" id="pJF-Aq-gui"/>
+                        <outlet property="guideButton" destination="mGh-0e-UXt" id="luZ-zh-eKQ"/>
+                        <outlet property="guideLabel" destination="ihi-Yl-qaN" id="8oB-nb-bkP"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
                         <outlet property="hideCameraButtonConstraint" destination="L0c-Rs-bUL" id="kqw-0d-Pm4"/>
                         <outlet property="navigationBarView" destination="2PV-tA-eIh" id="CLx-za-35J"/>

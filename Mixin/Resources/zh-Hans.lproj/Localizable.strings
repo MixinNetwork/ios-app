@@ -215,6 +215,8 @@
 "circle_member_category_contacts" = "联系人";
 "circle_add_hint" = "创建圈子并加入会话，即可在其中快速切换";
 "circle_add_hint_in_conversation" = "新建一个圈子即可过滤会话";
+"circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
+"circle_no_conversation_action" = "添加会话";
 "circle_conversation_editor_title" = "%@的圈子";
 
 // Chat

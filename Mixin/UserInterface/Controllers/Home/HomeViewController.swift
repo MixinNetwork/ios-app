@@ -14,6 +14,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var circlesContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
+    @IBOutlet weak var guideLabel: UILabel!
+    @IBOutlet weak var guideButton: UIButton!
     @IBOutlet weak var cameraButtonWrapperView: UIView!
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
@@ -230,6 +232,16 @@ class HomeViewController: UIViewController {
     
     @IBAction func contactsAction(_ sender: Any) {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
+    }
+    
+    @IBAction func guideAction(_ sender: Any) {
+        if let circleId = AppGroupUserDefaults.User.circleId, let name = AppGroupUserDefaults.User.circleName {
+            let editor = CircleEditorViewController.instance(name: name, circleId: circleId, isNewCreatedCircle: false)
+            present(editor, animated: true, completion: nil)
+        } else {
+            let vc = ContactViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @IBAction func bulletinContinueAction(_ sender: Any) {
@@ -488,10 +500,10 @@ extension HomeViewController {
                     guard self?.tableView != nil else {
                         return
                     }
-                    self?.guideView.isHidden = conversations.count != 0
                     self?.conversations = conversations
                     self?.tableView.reloadData()
                     self?.titleButton.showsTopRightDot = hasUnreadMessagesOutsideCircle
+                    self?.updateGuideView()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
                         self?.refreshing = false
                         if self?.needRefresh ?? false {
@@ -501,6 +513,21 @@ extension HomeViewController {
                 }
             }
         }
+    }
+    
+    private func updateGuideView() {
+        guard conversations.isEmpty else {
+            guideView.isHidden = true
+            return
+        }
+        if AppGroupUserDefaults.User.circleId == nil {
+            guideLabel.text = R.string.localizable.home_start_messaging_guide()
+            guideButton.setTitle(R.string.localizable.home_start_messaging(), for: .normal)
+        } else {
+            guideLabel.text = R.string.localizable.circle_no_conversation_hint()
+            guideButton.setTitle(R.string.localizable.circle_no_conversation_action(), for: .normal)
+        }
+        guideView.isHidden = false
     }
     
     private func tableViewCommitPinAction(action: UITableViewRowAction, indexPath: IndexPath) {

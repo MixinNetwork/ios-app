@@ -46,8 +46,11 @@ public final class CircleDAO {
                                                 values: [circleId])
     }
     
-    public func insertOrReplace(circles: [Circle]) {
-        MixinDatabase.shared.insertOrReplace(objects: circles)
+    public func replaceAllCircles(with circles: [Circle]) {
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Circle.tableName)
+            try db.insert(objects: circles, intoTable: Circle.tableName)
+        }
     }
     
     public func delete(circleId: String) {

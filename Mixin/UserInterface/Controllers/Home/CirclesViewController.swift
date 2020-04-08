@@ -282,7 +282,7 @@ extension CirclesViewController {
                 return
             }
             DispatchQueue.global().async {
-                CircleDAO.shared.insertOrReplace(circles: circles)
+                CircleDAO.shared.replaceAllCircles(with: circles)
                 self?.reloadUserCirclesFromLocalStorage(completion: nil)
             }
         }

@@ -5,7 +5,7 @@ class CirclesViewController: UIViewController {
     
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var toggleCirclesButton: UIButton!
-    @IBOutlet weak var tableBackgroundView: UIView!
+    @IBOutlet weak var tableBackgroundButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var showTableViewConstraint: NSLayoutConstraint!
@@ -63,8 +63,9 @@ class CirclesViewController: UIViewController {
         super.didMove(toParent: parent)
         if let parent = parent as? HomeViewController {
             let action = #selector(HomeViewController.toggleCircles(_:))
-            tableFooterView.button.addTarget(parent, action: action, for: .touchUpInside)
-            toggleCirclesButton.addTarget(parent, action: action, for: .touchUpInside)
+            for button in [tableFooterView.button, toggleCirclesButton, tableBackgroundButton] {
+                button!.addTarget(parent, action: action, for: .touchUpInside)
+            }
         }
     }
     
@@ -96,7 +97,7 @@ class CirclesViewController: UIViewController {
         }
         let work = {
             self.view.layoutIfNeeded()
-            self.tableBackgroundView.alpha = visible ? 1 : 0
+            self.tableBackgroundButton.alpha = visible ? 1 : 0
         }
         if animated {
             UIView.animate(withDuration: 0.3, animations: work) { (_) in

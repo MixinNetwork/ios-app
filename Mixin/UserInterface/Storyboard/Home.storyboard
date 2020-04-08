@@ -1230,12 +1230,12 @@ chat history from icloud</string>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x0w-h0-Art" userLabel="Table View Wrapper">
                                 <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4yh-is-bUi">
+                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4yh-is-bUi">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
-                                    <tableView contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="B3S-im-FwI">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                    </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="B3S-im-FwI">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="473"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
                                 </subviews>
@@ -1245,7 +1245,7 @@ chat history from icloud</string>
                                     <constraint firstItem="4yh-is-bUi" firstAttribute="top" secondItem="x0w-h0-Art" secondAttribute="top" id="X8A-ch-FnD"/>
                                     <constraint firstItem="4yh-is-bUi" firstAttribute="leading" secondItem="x0w-h0-Art" secondAttribute="leading" id="a30-Ly-i0k"/>
                                     <constraint firstAttribute="top" secondItem="B3S-im-FwI" secondAttribute="bottom" priority="250" id="c5r-x2-dlH"/>
-                                    <constraint firstItem="B3S-im-FwI" firstAttribute="height" secondItem="x0w-h0-Art" secondAttribute="height" id="eLY-PS-LE4"/>
+                                    <constraint firstItem="B3S-im-FwI" firstAttribute="height" secondItem="x0w-h0-Art" secondAttribute="height" constant="-150" id="eLY-PS-LE4"/>
                                     <constraint firstAttribute="bottom" secondItem="4yh-is-bUi" secondAttribute="bottom" id="kC2-K4-YFR"/>
                                     <constraint firstItem="B3S-im-FwI" firstAttribute="leading" secondItem="x0w-h0-Art" secondAttribute="leading" id="lQN-Rx-xhD"/>
                                     <constraint firstItem="B3S-im-FwI" firstAttribute="top" secondItem="x0w-h0-Art" secondAttribute="top" priority="750" id="upP-1K-oZH"/>
@@ -1323,7 +1323,7 @@ chat history from icloud</string>
                         <outlet property="hideTableViewConstraint" destination="c5r-x2-dlH" id="3wG-l7-Bf5"/>
                         <outlet property="navigationBarView" destination="yM3-VU-f2k" id="lkb-sI-8bb"/>
                         <outlet property="showTableViewConstraint" destination="upP-1K-oZH" id="KNX-yz-F9s"/>
-                        <outlet property="tableBackgroundView" destination="4yh-is-bUi" id="iW3-z2-0J9"/>
+                        <outlet property="tableBackgroundButton" destination="4yh-is-bUi" id="iW3-z2-0J9"/>
                         <outlet property="tableView" destination="B3S-im-FwI" id="Qst-xB-aGf"/>
                         <outlet property="toggleCirclesButton" destination="Md7-dd-SzI" id="FYx-uc-s9N"/>
                     </connections>

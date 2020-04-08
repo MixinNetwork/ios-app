@@ -180,7 +180,7 @@ extension CirclesViewController {
         let editConversation = R.string.localizable.circle_action_edit_conversations()
         let cancel = R.string.localizable.dialog_button_cancel()
         
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: editName, style: .default, handler: { (_) in
             self.editNameController.present(title: editName, actionTitle: change, currentName: circle.name) { (alert) in
                 guard let name = alert.textFields?.first?.text else {

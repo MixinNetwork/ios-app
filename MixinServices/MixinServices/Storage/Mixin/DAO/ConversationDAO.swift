@@ -59,11 +59,12 @@ public final class ConversationDAO {
         let sql = """
             SELECT 1
             FROM conversations c
-            INNER JOIN circle_conversations cc ON c.conversation_id = cc.conversation_id
-            WHERE cc.circle_id != ? AND c.unseen_message_count > 0
+            LEFT JOIN circle_conversations cc ON c.conversation_id = cc.conversation_id
+            WHERE (cc.circle_id != ? OR cc.circle_id IS NULL) AND c.unseen_message_count > 0
             LIMIT 1
         """
-        return MixinDatabase.shared.scalar(sql: sql, values: [id]).int64Value > 0
+        let value = MixinDatabase.shared.scalar(sql: sql, values: [id])
+        return value.int64Value > 0
     }
     
     public func getUnreadMessageCount() -> Int {

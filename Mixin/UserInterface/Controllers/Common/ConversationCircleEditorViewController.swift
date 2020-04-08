@@ -154,7 +154,7 @@ extension ConversationCircleEditorViewController {
         cell.titleLabel.text = circle.name
         cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
         cell.delegate = self
-        cell.superscriptView.isHidden = true
+        cell.rightView.isHidden = true
         return cell
     }
     

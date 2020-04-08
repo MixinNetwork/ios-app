@@ -9,7 +9,7 @@ class CircleCell: UITableViewCell {
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var circleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var superscriptView: UIView!
+    @IBOutlet weak var rightView: UIView!
     @IBOutlet weak var isCurrentImageView: UIImageView!
     @IBOutlet weak var unreadMessageCountLabel: RoundedInsetLabel!
     @IBOutlet weak var subtitleLabel: UILabel!

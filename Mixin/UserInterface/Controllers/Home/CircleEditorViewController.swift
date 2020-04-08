@@ -27,7 +27,6 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_name()
         tableView.allowsMultipleSelection = true
         collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
         collectionViewLayout.minimumInteritemSpacing = 0

@@ -66,7 +66,6 @@
 "search_placeholder_currency" = "Code";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
-"search_placeholder_name" = "Search name";
 "search_related_messages_count" = " related messages";
 "search_section_title_asset" = "Assets";
 "search_section_title_user" = "Contacts";

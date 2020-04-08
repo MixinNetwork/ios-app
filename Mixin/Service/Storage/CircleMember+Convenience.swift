@@ -11,6 +11,8 @@ extension CircleMember {
                   category: ConversationCategory.CONTACT.rawValue,
                   name: user.fullName,
                   iconUrl: user.avatarUrl,
+                  identityNumber: user.identityNumber,
+                  phoneNumber: user.phone,
                   badgeImage: badgeImage)
     }
     
@@ -21,6 +23,8 @@ extension CircleMember {
                   category: conversation.category ?? ConversationCategory.CONTACT.rawValue,
                   name: conversation.getConversationName(),
                   iconUrl: isGroup ? conversation.iconUrl : conversation.ownerAvatarUrl,
+                  identityNumber: conversation.ownerIdentityNumber,
+                  phoneNumber: nil,
                   badgeImage: nil)
     }
     

@@ -14,6 +14,8 @@ public class CircleMember: TableDecodable {
         case category
         case name
         case iconUrl = "icon_url"
+        case identityNumber = "identity_number"
+        case phoneNumber = "phone"
         
     }
     
@@ -22,20 +24,26 @@ public class CircleMember: TableDecodable {
     public let category: String
     public let name: String
     public let iconUrl: String
+    public let identityNumber: String?
+    public let phoneNumber: String?
     
     public var badgeImage: UIImage? = nil
     
-    public init(conversationId: String, userId: String, category: String, name: String, iconUrl: String, badgeImage: UIImage? = nil) {
+    public func matches(lowercasedKeyword keyword: String) -> Bool {
+        name.lowercased().contains(keyword)
+            || (identityNumber?.contains(keyword) ?? false)
+            || (phoneNumber?.contains(keyword) ?? false)
+    }
+    
+    public init(conversationId: String, userId: String?, category: String, name: String, iconUrl: String, identityNumber: String?, phoneNumber: String?, badgeImage: UIImage? = nil) {
         self.conversationId = conversationId
         self.userId = userId
         self.category = category
         self.name = name
         self.iconUrl = iconUrl
+        self.identityNumber = identityNumber
+        self.phoneNumber = phoneNumber
         self.badgeImage = badgeImage
-    }
-    
-    public func matches(lowercasedKeyword keyword: String) -> Bool {
-        name.lowercased().contains(keyword)
     }
     
 }

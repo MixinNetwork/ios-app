@@ -42,7 +42,7 @@ extension SearchResult {
     }
     static var highlightedNormalDescriptionAttributes: Attributes {
         return [.font: UIFont.preferredFont(forTextStyle: .caption1),
-                .foregroundColor: UIColor.accessoryText]
+                .foregroundColor: UIColor.highlightedText]
     }
     
     static var largerDescriptionAttributes: Attributes {
@@ -82,15 +82,15 @@ extension SearchResult {
         }
     }
     
-    static func description(user: UserItem, keyword: String) -> NSAttributedString? {
-        if user.identityNumber.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_id() + user.identityNumber
+    static func description(identityNumber: String?, phoneNumber: String?, keyword: String) -> NSAttributedString? {
+        if let identityNumber = identityNumber, identityNumber.contains(keyword) {
+            let text = R.string.localizable.search_result_prefix_id() + identityNumber
             return SearchResult.attributedText(text: text,
                                                textAttributes: SearchResult.normalDescriptionAttributes,
                                                keyword: keyword,
                                                keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
-        } else if let phone = user.phone, phone.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_phone() + phone
+        } else if let phoneNumber = phoneNumber, phoneNumber.contains(keyword) {
+            let text = R.string.localizable.search_result_prefix_phone() + phoneNumber
             return SearchResult.attributedText(text: text,
                                                textAttributes: SearchResult.normalDescriptionAttributes,
                                                keyword: keyword,
@@ -98,6 +98,10 @@ extension SearchResult {
         } else {
             return nil
         }
+    }
+    
+    static func description(user: UserItem, keyword: String) -> NSAttributedString? {
+        description(identityNumber: user.identityNumber, phoneNumber: user.phone, keyword: keyword)
     }
     
 }

@@ -140,7 +140,7 @@
 		7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */; };
 		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
 		7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentAppsViewController.swift */; };
-		7B5281762265F1730023616D /* RecentBotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281752265F1730023616D /* RecentBotCell.swift */; };
+		7B5281762265F1730023616D /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281752265F1730023616D /* AppCell.swift */; };
 		7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B54F94F22B22E2900908A9D /* VerifyPinView.xib */; };
 		7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */; };
 		7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */; };
@@ -908,7 +908,7 @@
 		7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerificationCodeView.xib; sourceTree = "<group>"; };
 		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B5281732265D7E30023616D /* RecentAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentAppsViewController.swift; sourceTree = "<group>"; };
-		7B5281752265F1730023616D /* RecentBotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBotCell.swift; sourceTree = "<group>"; };
+		7B5281752265F1730023616D /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		7B54F94F22B22E2900908A9D /* VerifyPinView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyPinView.xib; sourceTree = "<group>"; };
 		7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactSelectorViewController.swift; sourceTree = "<group>"; };
@@ -2705,7 +2705,7 @@
 			isa = PBXGroup;
 			children = (
 				DF121F301FA1C767000F701D /* ConversationCell.swift */,
-				7B5281752265F1730023616D /* RecentBotCell.swift */,
+				7B5281752265F1730023616D /* AppCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
 				7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */,
 				7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */,
@@ -3669,7 +3669,7 @@
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */,
 				DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */,
-				7B5281762265F1730023616D /* RecentBotCell.swift in Sources */,
+				7B5281762265F1730023616D /* AppCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,

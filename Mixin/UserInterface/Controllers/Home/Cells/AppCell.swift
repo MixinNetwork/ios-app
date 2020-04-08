@@ -1,18 +1,18 @@
 import UIKit
 import MixinServices
 
-class RecentAppCell: UICollectionViewCell {
+class AppCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: AvatarImageView!
     @IBOutlet weak var label: UILabel!
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.sd_cancelCurrentImageLoad()
+        imageView.prepareForReuse()
     }
     
     func render(user: UserItem) {
-        imageView.sd_setImage(with: URL(string: user.avatarUrl), completed: nil)
+        imageView.setImage(with: user)
         label.text = user.fullName
     }
     

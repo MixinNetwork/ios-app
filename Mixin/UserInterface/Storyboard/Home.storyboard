@@ -378,7 +378,7 @@
                                 <rect key="frame" x="0.0" y="592" width="375" height="75"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-36" width="375" height="111"/>
+                                        <rect key="frame" x="0.0" y="-34" width="375" height="109"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
                                         <rect key="frame" x="69.5" y="0.0" width="236" height="44"/>
@@ -668,25 +668,20 @@
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells>
-                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="recent_app" id="hDP-Tv-XXM" customClass="RecentAppCell" customModule="Mixin" customModuleProvider="target">
+                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="recent_app" id="hDP-Tv-XXM" customClass="AppCell" customModule="Mixin" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="109"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                                     <rect key="frame" x="0.0" y="0.0" width="60" height="109"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
-                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cpS-4e-0xb">
+                                                                        <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cpS-4e-0xb" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="cpS-4e-0xb" secondAttribute="height" id="C2f-DK-oEc"/>
                                                                                 <constraint firstAttribute="width" constant="60" id="bRI-QA-Rhz"/>
                                                                             </constraints>
-                                                                            <userDefinedRuntimeAttributes>
-                                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                                    <integer key="value" value="30"/>
-                                                                                </userDefinedRuntimeAttribute>
-                                                                            </userDefinedRuntimeAttributes>
-                                                                        </imageView>
+                                                                        </view>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEA-e7-GQV">
                                                                             <rect key="frame" x="2" y="71" width="56" height="20"/>
                                                                             <constraints>
@@ -706,7 +701,7 @@
                                                                     <constraint firstItem="cpS-4e-0xb" firstAttribute="top" secondItem="hDP-Tv-XXM" secondAttribute="top" id="n3s-9L-VOD"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="imageView" destination="cpS-4e-0xb" id="4Si-Qv-mjM"/>
+                                                                    <outlet property="imageView" destination="cpS-4e-0xb" id="qs2-Eh-saz"/>
                                                                     <outlet property="label" destination="aEA-e7-GQV" id="7dP-Y4-pkf"/>
                                                                 </connections>
                                                             </collectionViewCell>

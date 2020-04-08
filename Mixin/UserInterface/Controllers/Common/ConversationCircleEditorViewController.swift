@@ -104,7 +104,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     }
     
     private func addThisConversationIntoCircle(with id: String, hud: Hud) {
-        let request = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
+        let request = UpdateCircleMemberRequest(conversationId: conversationId, userId: ownerId)
         let object = CircleConversation(circleId: id,
                                         conversationId: conversationId,
                                         userId: ownerId,
@@ -253,7 +253,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         } else {
             let index = indexPath.row
             let circle = otherCircles[index]
-            let newRequest = UpdateCircleMemberRequest(conversationId: conversationId, contactId: ownerId)
+            let newRequest = UpdateCircleMemberRequest(conversationId: conversationId, userId: ownerId)
             DispatchQueue.global().async {
                 var requests = CircleDAO.shared
                     .circleMembers(circleId: circle.circleId)

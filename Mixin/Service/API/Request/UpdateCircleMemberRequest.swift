@@ -8,15 +8,15 @@ class UpdateCircleMemberRequest: Encodable {
     
     var jsonObject: [String: String] {
         var object = ["conversation_id": conversationId]
-        if let contactId = userId {
-            object["user_id"] = contactId
+        if let userId = userId {
+            object["user_id"] = userId
         }
         return object
     }
     
-    init(conversationId: String, contactId: String?) {
+    init(conversationId: String, userId: String?) {
         self.conversationId = conversationId
-        self.userId = contactId
+        self.userId = userId
     }
     
     init(member: CircleMember) {

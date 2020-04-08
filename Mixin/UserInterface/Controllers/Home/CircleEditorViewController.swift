@@ -30,9 +30,11 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         tableView.allowsMultipleSelection = true
         collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
         collectionViewLayout.minimumInteritemSpacing = 0
+        collectionViewLayout.scrollDirection = .horizontal
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = .background
         collectionView.alwaysBounceHorizontal = true
+        collectionView.showsHorizontalScrollIndicator = false
         centerWrapperView.addSubview(collectionView)
         collectionView.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()

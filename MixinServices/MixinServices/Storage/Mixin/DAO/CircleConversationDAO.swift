@@ -30,13 +30,16 @@ final public class CircleConversationDAO {
         }
     }
     
-    public func insert(_ object: CircleConversation) {
-        MixinDatabase.shared.insert(objects: [object])
-        let userInfo = [Self.circleIdUserInfoKey: object.circleId]
+    public func insert(_ objects: [CircleConversation]) {
+        MixinDatabase.shared.insert(objects: objects)
+        let changedCircleIds = Set(objects.map(\.circleId))
+        let userInfos = changedCircleIds.map { [Self.circleIdUserInfoKey: $0] }
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification,
-                                            object: self,
-                                            userInfo: userInfo)
+            for userInfo in userInfos {
+                NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification,
+                                                object: self,
+                                                userInfo: userInfo)
+            }
         }
     }
     
@@ -64,6 +67,15 @@ final public class CircleConversationDAO {
     public func delete(circleId: String) {
         MixinDatabase.shared.delete(table: CircleConversation.tableName,
                                     condition: CircleConversation.Properties.circleId == circleId)
+    }
+    
+    public func delete(circleId: String, conversationId: String, userId: String?) {
+        var condition: Expression = CircleConversation.Properties.conversationId == conversationId
+        if let userId = userId {
+            condition = condition || CircleConversation.Properties.userId == userId
+        }
+        condition = condition && CircleConversation.Properties.circleId == circleId
+        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: condition)
     }
     
 }

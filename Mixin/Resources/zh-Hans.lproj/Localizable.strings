@@ -216,6 +216,7 @@
 "circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
 "circle_no_conversation_action" = "添加会话";
 "circle_conversation_editor_title" = "%@的圈子";
+"circle_conversation_add_reach_limit" = "最多添加5个圈子";
 
 // Chat
 "chat_time_today" = "今天";

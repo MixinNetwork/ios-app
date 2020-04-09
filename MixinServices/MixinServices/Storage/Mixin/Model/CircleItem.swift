@@ -18,7 +18,7 @@ public class CircleItem: TableDecodable {
     
     public let circleId: String
     public let name: String
-    public let conversationCount: Int
+    public var conversationCount: Int
     public var unreadCount: Int = 0
     
     public init(circleId: String, name: String, conversationCount: Int, unreadCount: Int) {

@@ -193,7 +193,7 @@
 "circle_no_conversation_hint" = "You can add contacts or groups to the current circle.";
 "circle_no_conversation_action" = "Add Conversations";
 "circle_conversation_editor_title" = "%@'s Circle";
-"circle_conversation_add_reach_limit" = "The conversation has too many circles. The maximum is 5.";
+"circle_conversation_add_reach_limit" = "The conversation has too many circles";
 
 // Chat
 "chat_time_today" = "今日";

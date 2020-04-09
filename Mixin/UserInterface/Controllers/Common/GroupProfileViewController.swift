@@ -425,7 +425,7 @@ extension GroupProfileViewController {
         }
         
         reloadMenu(groups: groups)
-        menuStackView.insertArrangedSubview(circleItemView, at: 1)
+        menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 1)
     }
     
     private func showConversation(with response: ConversationResponse) {

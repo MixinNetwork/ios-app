@@ -40,7 +40,7 @@ class DepositViewController: UIViewController {
             warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             lowerDepositFieldView.isHidden = true
-            if asset.isXRPAsset {
+            if asset.isXRPChain {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention_xrp()
             } else {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention()

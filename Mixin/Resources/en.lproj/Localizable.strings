@@ -422,6 +422,7 @@
 "wallet_address_tag" = "Tag";
 "wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
+"wallet_deposit_attention_xrp" = "Please try a small amount for the first deposit. Deposit at least 20 XRP for the first time.";
 "wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";

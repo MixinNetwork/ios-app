@@ -760,27 +760,6 @@ public class ReceiveMessageService: MixinService {
         return false
     }
 
-    private func syncCircle(circleId: String) -> Bool {
-        guard !circleId.isEmpty else {
-            return false
-        }
-
-        repeat {
-            switch CircleAPI.shared.circle(id: circleId) {
-            case let .success(response):
-                CircleDAO.shared.insertOrReplace(circle: response)
-                return true
-            case let .failure(error):
-                guard error.code != 404 else {
-                    return false
-                }
-                checkNetworkAndWebSocket()
-            }
-        } while LoginManager.shared.isLoggedIn
-
-        return false
-    }
-
     private func processPlainMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("PLAIN_") else {
             return
@@ -914,10 +893,14 @@ extension ReceiveMessageService {
         }
 
         if systemCircle.action == SystemCircleMessageAction.CREATE.rawValue || systemCircle.action == SystemCircleMessageAction.UPDATE.rawValue {
-            syncCircle(circleId: systemCircle.circleId)
+            ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: systemCircle.circleId))
         } else if systemCircle.action == SystemCircleMessageAction.ADD.rawValue {
             guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
                 return
+            }
+
+            if !CircleDAO.shared.isExist(circleId: systemCircle.circleId) {
+                ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: systemCircle.circleId))
             }
 
             let circleConversation = CircleConversation(circleId: systemCircle.circleId, conversationId: conversationId, userId: systemCircle.userId, createdAt: data.updatedAt, pinTime: nil)
@@ -931,6 +914,8 @@ extension ReceiveMessageService {
             }
             
             CircleConversationDAO.shared.delete(circleId: systemCircle.circleId, conversationId: conversationId)
+        } else if systemCircle.action == SystemCircleMessageAction.DELETE.rawValue {
+            CircleDAO.shared.delete(circleId: systemCircle.circleId)
         }
     }
 

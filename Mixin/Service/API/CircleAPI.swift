@@ -24,10 +24,6 @@ final class CircleAPI: BaseAPI {
     
     static let shared = CircleAPI()
     
-    func circles(completion: @escaping (APIResult<[Circle]>) -> Void) {
-        request(method: .get, url: Url.circles, completion: completion)
-    }
-    
     func create(name: String, completion: @escaping (APIResult<CircleResponse>) -> Void) {
         let param = ["name": name]
         request(method: .post, url: Url.circles, parameters: param, completion: completion)

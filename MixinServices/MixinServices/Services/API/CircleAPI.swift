@@ -13,4 +13,8 @@ class CircleAPI: BaseAPI {
     func circle(id: String) -> APIResult<CircleResponse> {
         return request(method: .get, url: Url.circle(id: id))
     }
+
+    func circle(id: String, completion: @escaping (APIResult<CircleResponse>) -> Void) {
+        request(method: .get, url: Url.circle(id: id), completion: completion)
+    }
 }

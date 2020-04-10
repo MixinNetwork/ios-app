@@ -17,9 +17,11 @@ struct SystemCircleMessagePayload: Codable {
 
 enum SystemCircleMessageAction: String {
     case CREATE
+    case DELETE
+    case UPDATE
+
     case ADD
     case REMOVE
-    case UPDATE
 }
 
 extension SystemCircleMessagePayload {

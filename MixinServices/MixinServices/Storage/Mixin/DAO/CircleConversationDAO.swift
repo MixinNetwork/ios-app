@@ -10,18 +10,27 @@ final public class CircleConversationDAO {
     
     public func update(conversation: ConversationResponse) {
         MixinDatabase.shared.transaction { (db) in
+            let circleIds = conversation.circles.map { $0.circleId }
+
+            let refreshCirclesIds = try db.getColumn(on: Circle.Properties.circleId, fromTable: Circle.tableName, where: Circle.Properties.circleId.notIn(circleIds)).map { $0.stringValue }
+            for circleId in refreshCirclesIds {
+                ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: circleId))
+            }
+
+            let oldCircles: [CircleConversation] = try db.getObjects(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == conversation.conversationId && CircleConversation.Properties.circleId.in(circleIds))
+            let dict = oldCircles.toDictionary { $0.circleId }
+
             let objects = conversation.circles.map { (circle) -> CircleConversation in
-                let object = CircleConversation(circleId: circle.circleId,
+                let circleConversation = CircleConversation(circleId: circle.circleId,
                                                 conversationId: conversation.conversationId,
                                                 userId: nil,
                                                 createdAt: circle.createdAt,
                                                 pinTime: nil)
-                let oldValue: CircleConversation? = try? db.getObject(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == object.conversationId)
-                if let old = oldValue {
-                    object.userId = old.userId
-                    object.pinTime = old.pinTime
+                if let oldCircleConversation = dict[circle.circleId] {
+                    circleConversation.userId = oldCircleConversation.userId
+                    circleConversation.pinTime = oldCircleConversation.pinTime
                 }
-                return object
+                return circleConversation
             }
             try db.delete(fromTable: CircleConversation.tableName,
                           where: CircleConversation.Properties.conversationId == conversation.conversationId)
@@ -71,6 +80,18 @@ final public class CircleConversationDAO {
     
     public func delete(circleId: String, conversationId: String) {
         MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId == conversationId)
+    }
+    
+}
+
+fileprivate extension Array {
+
+    public func toDictionary<Key: Hashable>(with selectKey: (Element) -> Key) -> [Key: Element] {
+        var dict = [Key: Element]()
+        for element in self {
+            dict[selectKey(element)] = element
+        }
+        return dict
     }
     
 }

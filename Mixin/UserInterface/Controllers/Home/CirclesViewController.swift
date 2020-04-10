@@ -88,7 +88,6 @@ class CirclesViewController: UIViewController {
     
     func setTableViewVisible(_ visible: Bool, animated: Bool, completion: (() -> Void)?) {
         if visible {
-            reloadUserCircleFromRemote()
             showTableViewConstraint.priority = .defaultHigh
             hideTableViewConstraint.priority = .defaultLow
         } else {
@@ -276,19 +275,7 @@ extension CirclesViewController {
             hud.scheduleAutoHidden()
         })
     }
-    
-    private func reloadUserCircleFromRemote() {
-        CircleAPI.shared.circles { [weak self] (result) in
-            guard case let .success(circles) = result else {
-                return
-            }
-            DispatchQueue.global().async {
-                CircleDAO.shared.replaceAllCircles(with: circles)
-                self?.reloadAllCirclesFromLocalStorage(completion: nil)
-            }
-        }
-    }
-    
+
     private func reloadAllCirclesFromLocalStorage(completion: (() -> Void)?) {
         let embeddedCircles = CircleDAO.shared.embeddedCircles()
         let circles = CircleDAO.shared.circles()

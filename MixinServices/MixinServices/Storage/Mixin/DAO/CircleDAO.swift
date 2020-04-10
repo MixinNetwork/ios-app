@@ -14,6 +14,10 @@ public final class CircleDAO {
         }
     }
 
+    public func isExist(circleId: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Circle.self, condition: Circle.Properties.circleId == circleId)
+    }
+
     public func embeddedCircles() -> [EmbeddedCircle] {
         var circles = [EmbeddedCircle]()
         for category in EmbeddedCircle.Category.allCases {
@@ -65,7 +69,10 @@ public final class CircleDAO {
     }
     
     public func delete(circleId: String) {
-        MixinDatabase.shared.delete(table: Circle.tableName, condition: Circle.Properties.circleId == circleId)
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Circle.tableName, where: Circle.Properties.circleId == circleId)
+            try db.delete(fromTable: CircleConversation.tableName, where: CircleConversation.Properties.circleId == circleId)
+        }
     }
     
     public func circles(of conversationId: String, userId: String?) -> [CircleItem] {

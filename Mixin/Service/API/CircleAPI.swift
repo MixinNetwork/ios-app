@@ -33,20 +33,20 @@ final class CircleAPI: BaseAPI {
         let param = ["name": name]
         request(method: .post, url: Url.update(id: id), parameters: param, completion: completion)
     }
-    
-    func updateCircle(of id: String, requests: [UpdateCircleMemberRequest], completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+
+    func updateCircle(of id: String, requests: [CircleConversationRequest], completion: @escaping (APIResult<[CircleConversation]>) -> Void) {
         let params = requests.map(\.jsonObject).toParameters()
         request(method: .post, url: Url.conversations(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func updateCircles(with ids: [String], forConversationWith id: String, completion: @escaping (APIResult<[CircleConversation]>) -> Void) {
-        let param = ids.map({ ["circle_id": $0] }).toParameters()
-        request(method: .post, url: Url.updateCircleForConversation(id: id), parameters: param, encoding: JSONArrayEncoding(), completion: completion)
+    func updateCircles(forConversationWith id: String, requests: [ConversationCircleRequest], completion: @escaping (APIResult<[CircleConversation]>) -> Void) {
+        let params = requests.map(\.jsonObject).toParameters()
+        request(method: .post, url: Url.updateCircleForConversation(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func updateCircles(with ids: [String], forUserWith id: String, completion: @escaping (APIResult<[CircleConversation]>) -> Void) {
-        let param = ids.map({ ["circle_id": $0] }).toParameters()
-        request(method: .post, url: Url.updateCircleForUser(id: id), parameters: param, encoding: JSONArrayEncoding(), completion: completion)
+    func updateCircles(forUserWith id: String, requests: [ConversationCircleRequest], completion: @escaping (APIResult<[CircleConversation]>) -> Void) {
+        let params = requests.map(\.jsonObject).toParameters()
+        request(method: .post, url: Url.updateCircleForUser(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
     func delete(id: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {

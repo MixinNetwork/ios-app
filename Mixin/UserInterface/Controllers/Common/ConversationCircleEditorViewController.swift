@@ -94,7 +94,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             case .success(let circle):
                 DispatchQueue.global().async {
                     CircleDAO.shared.insertOrReplace(circle: circle)
-                    self.addThisConversationIntoCircle(with: circle.circleId, hud: hud)
+                    self.addThisConversationIntoCircle(circleId: circle.circleId, hud: hud)
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -103,15 +103,12 @@ class ConversationCircleEditorViewController: UITableViewController {
         }
     }
     
-    private func addThisConversationIntoCircle(with id: String, hud: Hud) {
-        var ids = subordinateCircles.map(\.circleId)
-        ids.append(id)
+    private func addThisConversationIntoCircle(circleId: String, hud: Hud) {
         let completion = { [weak self] (result: APIResult<[CircleConversation]>) in
             switch result {
-            case .success(var objects):
+            case .success(let objects):
                 DispatchQueue.global().async {
-                    objects.removeAll(where: { $0.circleId != id })
-                    CircleConversationDAO.shared.insert(objects)
+                    CircleConversationDAO.shared.insertOrReplace(circleId: circleId, objects: objects)
                     DispatchQueue.main.sync {
                         self?.reloadData()
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
@@ -123,10 +120,11 @@ class ConversationCircleEditorViewController: UITableViewController {
                 hud.scheduleAutoHidden()
             }
         }
+        let requests = [ConversationCircleRequest(action: .ADD, circleId: circleId)]
         if let userId = ownerId {
-            CircleAPI.shared.updateCircles(with: ids, forUserWith: userId, completion: completion)
+            CircleAPI.shared.updateCircles(forUserWith: userId, requests: requests, completion: completion)
         } else {
-            CircleAPI.shared.updateCircles(with: ids, forConversationWith: conversationId, completion: completion)
+            CircleAPI.shared.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
         }
     }
     
@@ -218,17 +216,19 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
         var ids = subordinateCircles.map(\.circleId)
         let completion: (APIResult<[CircleConversation]>) -> Void
+        let requests: [ConversationCircleRequest]
         
         if indexPath.section == 0 {
             let index = indexPath.row
             let circle = subordinateCircles[index]
+            requests = [ConversationCircleRequest(action: .REMOVE, circleId: circle.circleId)]
             ids.removeAll(where: { $0 == circle.circleId })
             completion = { (result) in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         CircleConversationDAO.shared.delete(circleId: circle.circleId,
-                                                            conversationId: self.conversationId)
+                                                            conversationId: conversationId)
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()
@@ -247,12 +247,12 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
             let index = indexPath.row
             let circle = otherCircles[index]
             ids.append(circle.circleId)
+            requests = [ConversationCircleRequest(action: .ADD, circleId: circle.circleId)]
             completion = { (result) in
                 switch result {
-                case .success(var objects):
+                case .success(let objects):
                     DispatchQueue.global().async {
-                        objects.removeAll(where: { $0.circleId != circle.circleId })
-                        CircleConversationDAO.shared.insert(objects)
+                        CircleConversationDAO.shared.insertOrReplace(circleId: circle.circleId, objects: objects)
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()
@@ -270,9 +270,9 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         }
         
         if let userId = ownerId {
-            CircleAPI.shared.updateCircles(with: ids, forUserWith: userId, completion: completion)
+            CircleAPI.shared.updateCircles(forUserWith: userId, requests: requests, completion: completion)
         } else {
-            CircleAPI.shared.updateCircles(with: ids, forConversationWith: conversationId, completion: completion)
+            CircleAPI.shared.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
         }
     }
     

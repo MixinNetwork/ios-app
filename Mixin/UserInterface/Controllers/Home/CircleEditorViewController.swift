@@ -9,7 +9,8 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     private var name = ""
     private var circleId = ""
-    
+
+    private var oldMembers = Set<CircleMember>()
     private var selections: [CircleMember] = [] {
         didSet {
             let count = "\(selections.count)"
@@ -52,6 +53,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                     return
                 }
                 self.selections = members
+                self.oldMembers = Set<CircleMember>(members)
                 self.collectionView.reloadData()
                 self.reloadTableViewSelections()
                 self.setCollectionViewHidden(members.isEmpty, animated: false)
@@ -180,25 +182,20 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        let requests = selections.map(UpdateCircleMemberRequest.init)
+
+        let newMembers = Set<CircleMember>(selections)
+        let intersectMembers = oldMembers.intersection(newMembers)
+        let addMembers = newMembers.subtracting(intersectMembers).map { CircleConversationRequest.create(action: .ADD, member: $0) }
+        let removeMembers = oldMembers.subtracting(intersectMembers).map { CircleConversationRequest.create(action: .REMOVE, member: $0) }
+
+        let requests = addMembers + removeMembers
         let circleId = self.circleId
         CircleAPI.shared.updateCircle(of: circleId, requests: requests) { (result) in
             switch result {
-            case .success:
+            case let .success(circles):
                 DispatchQueue.global().async {
-                    let date = Date()
-                    let counter = Counter(value: -1)
-                    let objects = requests.map { (member) -> CircleConversation in
-                        let createdAt = date
-                            .addingTimeInterval(TimeInterval(counter.advancedValue) / millisecondsPerSecond)
-                            .toUTCString()
-                        return CircleConversation(circleId: circleId,
-                                                  conversationId: member.conversationId,
-                                                  userId: member.userId,
-                                                  createdAt: createdAt,
-                                                  pinTime: nil)
-                    }
-                    CircleConversationDAO.shared.replaceCircleConversations(with: circleId, objects: objects)
+                    CircleConversationDAO.shared.insertOrReplace(circleId: circleId, objects: circles, sendNotificationAfterFinished: false)
+                    CircleConversationDAO.shared.delete(circleId: circleId, conversationIds: removeMembers.map { $0.conversationId })
                     DispatchQueue.main.sync {
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
                         hud.scheduleAutoHidden()

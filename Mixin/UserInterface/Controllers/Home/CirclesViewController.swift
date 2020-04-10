@@ -160,6 +160,7 @@ extension CirclesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) 
         switchToCircle(at: indexPath, dismissAfterFinished: true)
     }
     
@@ -212,7 +213,6 @@ extension CirclesViewController {
                 case .success:
                     DispatchQueue.global().async {
                         CircleDAO.shared.delete(circleId: circle.circleId)
-                        CircleConversationDAO.shared.delete(circleId: circle.circleId)
                         self.reloadAllCirclesFromLocalStorage {
                             hud.set(style: .notification, text: R.string.localizable.toast_deleted())
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)

@@ -2,12 +2,12 @@ import UIKit
 
 public extension NotificationCenter {
 
-    func postOnMain(name: NSNotification.Name, object: Any? = nil) {
+    func postOnMain(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         if Thread.isMainThread {
-            post(name: name, object: object)
+            post(name: name, object: object, userInfo: userInfo)
         } else {
             DispatchQueue.main.async {
-                self.post(name: name, object: object)
+                self.post(name: name, object: object, userInfo: userInfo)
             }
         }
     }

@@ -907,7 +907,7 @@ extension ReceiveMessageService {
             if let userId = systemCircle.userId {
                 syncUser(userId: userId)
             }
-            MixinDatabase.shared.insertOrReplace(objects: [circleConversation])
+            CircleConversationDAO.shared.insertOrReplace(circleId: systemCircle.circleId, objects: [circleConversation])
         } else if systemCircle.action == SystemCircleMessageAction.REMOVE.rawValue {
             guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
                 return

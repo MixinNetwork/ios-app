@@ -38,50 +38,27 @@ final public class CircleConversationDAO {
                                    intoTable: CircleConversation.tableName)
         }
     }
-    
-    public func insert(_ objects: [CircleConversation]) {
-        MixinDatabase.shared.insert(objects: objects)
-        let changedCircleIds = Set(objects.map(\.circleId))
-        let userInfos = changedCircleIds.map { [Self.circleIdUserInfoKey: $0] }
-        DispatchQueue.main.async {
-            for userInfo in userInfos {
-                NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification,
-                                                object: self,
-                                                userInfo: userInfo)
-            }
+
+    public func insertOrReplace(circleId: String, objects: [CircleConversation], sendNotificationAfterFinished: Bool = true) {
+        MixinDatabase.shared.insertOrReplace(objects: objects)
+
+        if sendNotificationAfterFinished {
+            let userInfo = [Self.circleIdUserInfoKey: circleId]
+            NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
         }
-    }
-    
-    public func replaceCircleConversations(with circleId: String, objects: [CircleConversation]) {
-        MixinDatabase.shared.transaction { (db) in
-            for object in objects {
-                let oldValue: CircleConversation? = try? db.getObject(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == object.conversationId)
-                if let old = oldValue {
-                    object.userId = old.userId
-                    object.pinTime = old.pinTime
-                }
-            }
-            
-            try db.delete(fromTable: CircleConversation.tableName,
-                          where: CircleConversation.Properties.circleId == circleId)
-            try db.insertOrReplace(objects: objects,
-                                   intoTable: CircleConversation.tableName)
-        }
-        let userInfo = [Self.circleIdUserInfoKey: circleId]
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
-        }
-    }
-    
-    public func delete(circleId: String) {
-        MixinDatabase.shared.delete(table: CircleConversation.tableName,
-                                    condition: CircleConversation.Properties.circleId == circleId)
     }
     
     public func delete(circleId: String, conversationId: String) {
         MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId == conversationId)
+        let userInfo = [Self.circleIdUserInfoKey: circleId]
+        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
     }
-    
+
+    public func delete(circleId: String, conversationIds: [String]) {
+        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId.in(conversationIds))
+        let userInfo = [Self.circleIdUserInfoKey: circleId]
+        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
+    }
 }
 
 fileprivate extension Array {

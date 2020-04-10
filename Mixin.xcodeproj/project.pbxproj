@@ -117,8 +117,6 @@
 		7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */; };
 		7B402F88214692C300383687 /* BubbleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B402F87214692C200383687 /* BubbleLayer.swift */; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
-		7B43D8A62435B8C00066F2A7 /* CircleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B43D8A52435B8C00066F2A7 /* CircleResponse.swift */; };
-		7B43D8A82435BCE20066F2A7 /* CircleDAO+Insert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B43D8A72435BCE20066F2A7 /* CircleDAO+Insert.swift */; };
 		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
@@ -881,8 +879,6 @@
 		7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentExpirationHintingMessageCell.swift; sourceTree = "<group>"; };
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
-		7B43D8A52435B8C00066F2A7 /* CircleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CircleResponse.swift; path = ../../../../MixinServices/MixinServices/Services/API/Response/CircleResponse.swift; sourceTree = "<group>"; };
-		7B43D8A72435BCE20066F2A7 /* CircleDAO+Insert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CircleDAO+Insert.swift"; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
@@ -2580,7 +2576,6 @@
 				DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */,
 				DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */,
 				DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */,
-				7B43D8A52435B8C00066F2A7 /* CircleResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -2796,7 +2791,6 @@
 				E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */,
 				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
 				7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */,
-				7B43D8A72435BCE20066F2A7 /* CircleDAO+Insert.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -3372,7 +3366,6 @@
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
-				7B43D8A62435B8C00066F2A7 /* CircleResponse.swift in Sources */,
 				7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
@@ -3382,7 +3375,6 @@
 				DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
-				7B43D8A82435BCE20066F2A7 /* CircleDAO+Insert.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,

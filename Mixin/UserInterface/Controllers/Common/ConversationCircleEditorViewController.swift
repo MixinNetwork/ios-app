@@ -228,8 +228,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                 case .success:
                     DispatchQueue.global().async {
                         CircleConversationDAO.shared.delete(circleId: circle.circleId,
-                                                            conversationId: self.conversationId,
-                                                            userId: self.ownerId)
+                                                            conversationId: self.conversationId)
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()

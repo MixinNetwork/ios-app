@@ -69,13 +69,8 @@ final public class CircleConversationDAO {
                                     condition: CircleConversation.Properties.circleId == circleId)
     }
     
-    public func delete(circleId: String, conversationId: String, userId: String?) {
-        var condition: Expression = CircleConversation.Properties.conversationId == conversationId
-        if let userId = userId {
-            condition = condition || CircleConversation.Properties.userId == userId
-        }
-        condition = condition && CircleConversation.Properties.circleId == circleId
-        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: condition)
+    public func delete(circleId: String, conversationId: String) {
+        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId == conversationId)
     }
     
 }

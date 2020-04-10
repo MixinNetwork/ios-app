@@ -3,7 +3,17 @@ import WCDBSwift
 public final class CircleDAO {
     
     public static let shared = CircleDAO()
-    
+
+    public static let circleDidChangeNotification = Notification.Name("one.mixin.messenger.circle.did_change")
+
+    public func insertOrReplace(circle: CircleResponse) {
+        let circle = Circle(circleId: circle.circleId, name: circle.name, createdAt: circle.createdAt)
+        MixinDatabase.shared.insertOrReplace(objects: [circle])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Self.circleDidChangeNotification, object: self)
+        }
+    }
+
     public func embeddedCircles() -> [EmbeddedCircle] {
         var circles = [EmbeddedCircle]()
         for category in EmbeddedCircle.Category.allCases {

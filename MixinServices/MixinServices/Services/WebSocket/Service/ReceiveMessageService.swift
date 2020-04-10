@@ -760,6 +760,27 @@ public class ReceiveMessageService: MixinService {
         return false
     }
 
+    private func syncCircle(circleId: String) -> Bool {
+        guard !circleId.isEmpty else {
+            return false
+        }
+
+        repeat {
+            switch CircleAPI.shared.circle(id: circleId) {
+            case let .success(response):
+                CircleDAO.shared.insertOrReplace(circle: response)
+                return true
+            case let .failure(error):
+                guard error.code != 404 else {
+                    return false
+                }
+                checkNetworkAndWebSocket()
+            }
+        } while LoginManager.shared.isLoggedIn
+
+        return false
+    }
+
     private func processPlainMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("PLAIN_") else {
             return
@@ -866,10 +887,51 @@ extension ReceiveMessageService {
             processSystemSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SESSION.rawValue:
             processSystemSessionMessage(data: data)
+        case MessageCategory.SYSTEM_USER.rawValue:
+            processSystemUserMessage(data: data)
+        case MessageCategory.SYSTEM_CIRCLE.rawValue:
+            processSystemCircleMessage(data: data)
         default:
             break
         }
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func processSystemUserMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let systemUser = (try? JSONDecoder.default.decode(SystemUserMessagePayload.self, from: base64Data)) else {
+            return
+        }
+
+        if systemUser.action == SystemUserMessageAction.UPDATE.rawValue {
+            syncUser(userId: systemUser.userId)
+            NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)
+        }
+    }
+
+    private func processSystemCircleMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let systemCircle = (try? JSONDecoder.default.decode(SystemCircleMessagePayload.self, from: base64Data)) else {
+            return
+        }
+
+        if systemCircle.action == SystemCircleMessageAction.CREATE.rawValue || systemCircle.action == SystemCircleMessageAction.UPDATE.rawValue {
+            syncCircle(circleId: systemCircle.circleId)
+        } else if systemCircle.action == SystemCircleMessageAction.ADD.rawValue {
+            guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
+                return
+            }
+
+            let circleConversation = CircleConversation(circleId: systemCircle.circleId, conversationId: conversationId, userId: systemCircle.userId, createdAt: data.updatedAt, pinTime: nil)
+            if let userId = systemCircle.userId {
+                syncUser(userId: userId)
+            }
+            MixinDatabase.shared.insertOrReplace(objects: [circleConversation])
+        } else if systemCircle.action == SystemCircleMessageAction.REMOVE.rawValue {
+            guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
+                return
+            }
+            
+            CircleConversationDAO.shared.delete(circleId: systemCircle.circleId, conversationId: conversationId)
+        }
     }
 
     private func processSystemSnapshotMessage(data: BlazeMessageData) {

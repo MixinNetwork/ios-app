@@ -12,3 +12,8 @@ struct SystemSessionMessagePayload: Codable {
         case sessionId = "session_id"
     }
 }
+
+enum SystemSessionMessageAction: String {
+    case PROVISION
+    case DESTROY
+}

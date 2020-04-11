@@ -210,6 +210,9 @@ extension AppDelegate {
     
     @objc func updateApplicationIconBadgeNumber() {
         DispatchQueue.global().async {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+                return
+            }
             let number = min(99, ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = number

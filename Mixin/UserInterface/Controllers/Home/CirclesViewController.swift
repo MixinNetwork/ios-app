@@ -37,6 +37,8 @@ class CirclesViewController: UIViewController {
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles: [CircleItem] = []
     private var currentCircleIndexPath: IndexPath?
+    private var needRefresh = true
+    private var refreshing = false
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -52,11 +54,11 @@ class CirclesViewController: UIViewController {
         tableView.register(R.nib.circleCell)
         tableView.dataSource = self
         tableView.delegate = self
-        DispatchQueue.global().async {
-            self.reloadAllCirclesFromLocalStorage(completion: nil)
-        }
+        reloadCircles()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MessageDAO.didInsertMessageNotification, object: nil)
     }
     
     override func didMove(toParent parent: UIViewController?) {
@@ -81,8 +83,13 @@ class CirclesViewController: UIViewController {
     }
     
     @objc func reloadUserCircle() {
-        DispatchQueue.global().async {
-            self.reloadAllCirclesFromLocalStorage(completion: nil)
+        guard tableBackgroundButton != nil else {
+            return
+        }
+        if tableBackgroundButton.alpha == 1 {
+            reloadCircles()
+        } else {
+            needRefresh = true
         }
     }
     
@@ -90,6 +97,9 @@ class CirclesViewController: UIViewController {
         if visible {
             showTableViewConstraint.priority = .defaultHigh
             hideTableViewConstraint.priority = .defaultLow
+            if needRefresh {
+                reloadCircles()
+            }
         } else {
             showTableViewConstraint.priority = .defaultLow
             hideTableViewConstraint.priority = .defaultHigh
@@ -213,16 +223,18 @@ extension CirclesViewController {
                 case .success:
                     DispatchQueue.global().async {
                         CircleDAO.shared.delete(circleId: circle.circleId)
-                        self.reloadAllCirclesFromLocalStorage {
-                            hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                        DispatchQueue.main.sync {
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
                             self.switchToCircle(at: indexPath, dismissAfterFinished: false)
+                            self.reloadCircles()
+                            hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                            hud.scheduleAutoHidden()
                         }
                     }
                 case .failure(let error):
                     hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
                 }
-                hud.scheduleAutoHidden()
             }
         }))
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
@@ -265,40 +277,62 @@ extension CirclesViewController {
                 }
                 DispatchQueue.global().async {
                     CircleDAO.shared.insertOrReplace(circle: circle)
-                    self.reloadAllCirclesFromLocalStorage() {
+                    DispatchQueue.main.async {
+                        self.reloadCircles()
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.scheduleAutoHidden()
+
                     }
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
-            hud.scheduleAutoHidden()
         })
     }
 
-    private func reloadAllCirclesFromLocalStorage(completion: (() -> Void)?) {
-        let embeddedCircles = CircleDAO.shared.embeddedCircles()
-        let circles = CircleDAO.shared.circles()
-        DispatchQueue.main.sync {
-            self.embeddedCircles = embeddedCircles
-            self.userCircles = circles
-            self.tableView.reloadData()
-            self.tableFooterView.showsHintLabel = circles.isEmpty
-            self.tableView.tableFooterView = self.tableFooterView
-            self.tableView.layoutIfNeeded()
-            let cellsHeight = CGFloat(circles.count + 1) * self.tableView.rowHeight
-            let height = max(self.tableFooterView.contentView.frame.height,
-                             self.tableView.frame.height - self.tableView.adjustedContentInset.vertical - cellsHeight)
-            self.tableFooterView.frame.size.height = height
-            self.tableView.tableFooterView = self.tableFooterView
-            let indexPath: IndexPath
-            if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
-                indexPath = IndexPath(row: row, section: 1)
-            } else {
-                indexPath = IndexPath(row: 0, section: 0)
+    private func reloadCircles() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        guard !refreshing else {
+            needRefresh = true
+            return
+        }
+        refreshing = true
+        needRefresh = false
+
+        DispatchQueue.global().async { [weak self] in
+            let embeddedCircles = CircleDAO.shared.embeddedCircles()
+            let circles = CircleDAO.shared.circles()
+            DispatchQueue.main.async {
+                if let self = self {
+                    self.embeddedCircles = embeddedCircles
+                    self.userCircles = circles
+                    self.tableView.reloadData()
+                    self.tableFooterView.showsHintLabel = circles.isEmpty
+                    self.tableView.tableFooterView = self.tableFooterView
+                    self.tableView.layoutIfNeeded()
+                    let cellsHeight = CGFloat(circles.count + 1) * self.tableView.rowHeight
+                    let height = max(self.tableFooterView.contentView.frame.height,
+                                     self.tableView.frame.height - self.tableView.adjustedContentInset.vertical - cellsHeight)
+                    self.tableFooterView.frame.size.height = height
+                    self.tableView.tableFooterView = self.tableFooterView
+                    let indexPath: IndexPath
+                    if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
+                        indexPath = IndexPath(row: row, section: 1)
+                    } else {
+                        indexPath = IndexPath(row: 0, section: 0)
+                    }
+                    self.setRow(at: indexPath, isCurrent: true)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
+                    self?.refreshing = false
+                    if self?.needRefresh ?? false {
+                        self?.reloadCircles()
+                    }
+                })
             }
-            setRow(at: indexPath, isCurrent: true)
-            completion?()
         }
     }
     

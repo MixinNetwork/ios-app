@@ -35,12 +35,7 @@ class JobService {
     private func checkConversations() {
         let startConversationIds = ConversationDAO.shared.getStartStatusConversations()
         for conversationId in startConversationIds {
-            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversationId))
-        }
-
-        let problemConversationIds = ConversationDAO.shared.getProblemConversations()
-        for conversationId in problemConversationIds {
-            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversationId))
+            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationId))
         }
 
         let participantIds = ParticipantDAO.shared.getSyncParticipantIds()

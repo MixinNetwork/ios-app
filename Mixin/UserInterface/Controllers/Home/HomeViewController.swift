@@ -386,7 +386,7 @@ extension HomeViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let conversation = conversations[indexPath.row]
         if conversation.status == ConversationStatus.START.rawValue {
-            let job = RefreshConversationJob(conversationId: conversation.conversationId)
+            let job = CreateConversationJob(conversationId: conversation.conversationId)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else {
             conversation.unseenMessageCount = 0

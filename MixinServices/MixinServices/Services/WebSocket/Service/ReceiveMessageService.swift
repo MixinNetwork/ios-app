@@ -199,7 +199,9 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
-        ReceiveMessageService.shared.syncConversation(data: data)
+        if data.category != MessageCategory.SYSTEM_USER.rawValue && data.category != MessageCategory.SYSTEM_CONVERSATION.rawValue {
+            ReceiveMessageService.shared.syncConversation(data: data)
+        }
         ReceiveMessageService.shared.checkSession(data: data)
 
         if MessageCategory.isLegal(category: data.category) {
@@ -712,8 +714,10 @@ public class ReceiveMessageService: MixinService {
         }
         if conversationStatus == nil {
             ConversationDAO.shared.createPlaceConversation(conversationId: data.conversationId, ownerId: data.userId)
+            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: data.conversationId))
+        } else {
+            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
         }
-        ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
     }
 
     @discardableResult
@@ -882,8 +886,7 @@ extension ReceiveMessageService {
         }
 
         if systemUser.action == SystemUserMessageAction.UPDATE.rawValue {
-            syncUser(userId: systemUser.userId)
-            NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)
+            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [systemUser.userId]))
         }
     }
 
@@ -975,6 +978,10 @@ extension ReceiveMessageService {
             return
         }
 
+        if sysMessage.action != SystemConversationAction.UPDATE.rawValue {
+            syncConversation(data: data)
+        }
+
         let userId = sysMessage.userId ?? data.userId
         let messageId = data.messageId
         var operSuccess = true
@@ -984,7 +991,7 @@ extension ReceiveMessageService {
             Logger.write(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(usernameOrId)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
         }
 
-        if (userId == User.systemUser) {
+        if userId == User.systemUser {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 

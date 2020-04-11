@@ -38,6 +38,15 @@ extension UIColor {
         ]
         return values.map { UIColor(displayP3RgbValue: $0) }
     }()
+
+    static let circleColors: [UIColor] = {
+        let values: [UInt] = [
+            0x8E7BFF, 0x5377FF, 0x4B00D8, 0xBD6DDA, 0xFD89F1, 0xFA7B95,
+            0xE94156, 0xFA9652, 0xF1D22B, 0xBAE361, 0x5EDD5E, 0x49919C,
+            0x45B7FE, 0x5DDEF3, 0x72B6E8, 0xCEA06B
+        ]
+        return values.map { UIColor(displayP3RgbValue: $0) }
+    }()
     
     convenience init(rgbValue: UInt, alpha: CGFloat = 1.0) {
         self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,

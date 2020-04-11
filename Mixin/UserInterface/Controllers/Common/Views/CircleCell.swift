@@ -60,8 +60,8 @@ class CircleCell: UITableViewCell {
     
     func setImagePatternColor(id: String?) {
         if let id = id {
-            let index = id.positiveHashCode() % UIColor.usernameColors.count
-            circleImageView.tintColor = UIColor.usernameColors[index]
+            let index = id.positiveHashCode() % UIColor.circleColors.count
+            circleImageView.tintColor = UIColor.circleColors[index]
         } else {
             circleImageView.tintColor = R.color.icon_fill()
         }

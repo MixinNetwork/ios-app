@@ -28,8 +28,6 @@ public final class ConversationDAO {
     WHERE c.category IS NOT NULL %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
-    private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
-    private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
     private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, " AND ((c.category = 'GROUP' AND c.name LIKE ? ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ? ESCAPE '/'))")
     private static let sqlQueryStorageUsage = """
@@ -45,7 +43,7 @@ public final class ConversationDAO {
     SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
     WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
     """
-    private static let sqlUnreadMessageCount = """
+    private static let sqlUnreadMessageCountWithoutMuted = """
     SELECT ifnull(SUM(unseen_message_count),0) FROM (
         SELECT c.unseen_message_count, CASE WHEN c.category = 'CONTACT' THEN u.mute_until ELSE c.mute_until END as muteUntil
         FROM conversations c
@@ -54,8 +52,26 @@ public final class ConversationDAO {
     )
     """
     
+    public func hasUnreadMessage(outsideCircleWith id: String) -> Bool {
+        let sql = """
+            SELECT 1 FROM conversations
+            WHERE conversation_id NOT IN (
+                SELECT conversation_id FROM circle_conversations WHERE circle_id = ?
+            ) AND unseen_message_count > 0
+            LIMIT 1
+        """
+        let value = MixinDatabase.shared.scalar(sql: sql, values: [id])
+        return value.int64Value > 0
+    }
+    
     public func getUnreadMessageCount() -> Int {
-        let value = MixinDatabase.shared.scalar(sql: ConversationDAO.sqlUnreadMessageCount, values: [Date().toUTCString()]).int64Value
+        let sql = "SELECT ifnull(SUM(unseen_message_count),0) FROM conversations"
+        let value = MixinDatabase.shared.scalar(sql: sql)
+        return Int(value.int64Value)
+    }
+    
+    public func getUnreadMessageCountWithoutMuted() -> Int {
+        let value = MixinDatabase.shared.scalar(sql: ConversationDAO.sqlUnreadMessageCountWithoutMuted, values: [Date().toUTCString()]).int64Value
         return Int(value)
     }
     
@@ -92,10 +108,6 @@ public final class ConversationDAO {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue)
     }
     
-    public func getProblemConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull())
-    }
-    
     public func updateConversationOwnerId(conversationId: String, ownerId: String) -> Bool {
         return MixinDatabase.shared.update(maps: [(Conversation.Properties.ownerId, ownerId)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
@@ -109,10 +121,21 @@ public final class ConversationDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
-    public func updateConversationPinTime(conversationId: String, pinTime: String?) {
-        MixinDatabase.shared.update(maps: [(Conversation.Properties.pinTime, pinTime ?? MixinDatabase.NullValue())], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
+    public func updateConversation(with conversationId: String, inCirleOf circleId: String?, pinTime: String?) {
+        let pinTime: ColumnEncodable = pinTime ?? MixinDatabase.NullValue()
+        if let circleId = circleId {
+            let condition = CircleConversation.Properties.circleId == circleId
+                && CircleConversation.Properties.conversationId == conversationId
+            MixinDatabase.shared.update(maps: [(CircleConversation.Properties.pinTime, pinTime)],
+                                        tableName: CircleConversation.tableName,
+                                        condition: condition)
+        } else {
+            MixinDatabase.shared.update(maps: [(Conversation.Properties.pinTime, pinTime)],
+                                        tableName: Conversation.tableName,
+                                        condition: Conversation.Properties.conversationId == conversationId)
+        }
     }
-
+    
     public func exitGroup(conversationId: String) {
         MixinDatabase.shared.transaction { (db) in
             try db.update(table: Conversation.tableName,
@@ -157,10 +180,6 @@ public final class ConversationDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
-    public func getConversation(ownerUserId: String) -> ConversationItem? {
-        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByOwnerId, values: [ownerUserId]).first
-    }
-    
     public func getConversation(conversationId: String) -> ConversationItem? {
         guard !conversationId.isEmpty else {
             return nil
@@ -192,12 +211,43 @@ public final class ConversationDAO {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.category, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
     
-    public func conversationList(limit: Int? = nil) -> [ConversationItem] {
-        var sql = ConversationDAO.sqlQueryConversationList
+    public func conversationList(limit: Int? = nil, circleId: String? = nil) -> [ConversationItem] {
+        var sql: String
+        if circleId == nil {
+            sql = String(format: Self.sqlQueryConversation, "")
+        } else {
+            sql = """
+                SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
+                c.announcement as announcement, c.category as category, c.name as name, c.status as status,
+                c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
+                (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
+                CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
+                c.code_url as codeUrl, cc.pin_time as pinTime,
+                m.content as content, m.category as contentType, m.created_at as createdAt,
+                m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
+                u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
+                m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId,
+                m.status as messageStatus, m.id as messageId, u1.app_id as appId,
+                mm.mentions
+                FROM conversations c
+                LEFT JOIN messages m ON c.last_message_id = m.id
+                LEFT JOIN users u ON u.user_id = m.user_id
+                LEFT JOIN users u2 ON u2.user_id = m.participant_id
+                LEFT JOIN message_mentions mm ON m.id = mm.message_id
+                INNER JOIN users u1 ON u1.user_id = c.owner_id
+                INNER JOIN circle_conversations cc ON cc.conversation_id = c.conversation_id
+                WHERE c.category IS NOT NULL AND cc.circle_id = ?
+                ORDER BY cc.pin_time DESC, c.last_message_created_at DESC
+            """
+        }
         if let limit = limit {
             sql = sql + " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql)
+        if let id = circleId {
+            return MixinDatabase.shared.getCodables(sql: sql, values: [id])
+        } else {
+            return MixinDatabase.shared.getCodables(sql: sql)
+        }
     }
     
     public func createPlaceConversation(conversationId: String, ownerId: String) {

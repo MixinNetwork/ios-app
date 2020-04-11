@@ -199,7 +199,9 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
-        ReceiveMessageService.shared.syncConversation(data: data)
+        if data.category != MessageCategory.SYSTEM_USER.rawValue && data.category != MessageCategory.SYSTEM_CONVERSATION.rawValue {
+            ReceiveMessageService.shared.syncConversation(data: data)
+        }
         ReceiveMessageService.shared.checkSession(data: data)
 
         if MessageCategory.isLegal(category: data.category) {
@@ -702,18 +704,20 @@ public class ReceiveMessageService: MixinService {
 
             if conversationStatus == nil || conversationStatus == ConversationStatus.START.rawValue {
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-                return
             } else {
                 ConversationDAO.shared.updateConversation(conversation: response)
-                return
             }
+            CircleConversationDAO.shared.update(conversation: response)
+            return
         case .failure:
             break
         }
         if conversationStatus == nil {
             ConversationDAO.shared.createPlaceConversation(conversationId: data.conversationId, ownerId: data.userId)
+            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: data.conversationId))
+        } else {
+            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
         }
-        ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
     }
 
     @discardableResult
@@ -866,10 +870,56 @@ extension ReceiveMessageService {
             processSystemSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SESSION.rawValue:
             processSystemSessionMessage(data: data)
+        case MessageCategory.SYSTEM_USER.rawValue:
+            processSystemUserMessage(data: data)
+        case MessageCategory.SYSTEM_CIRCLE.rawValue:
+            processSystemCircleMessage(data: data)
         default:
             break
         }
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func processSystemUserMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let systemUser = (try? JSONDecoder.default.decode(SystemUserMessagePayload.self, from: base64Data)) else {
+            return
+        }
+
+        if systemUser.action == SystemUserMessageAction.UPDATE.rawValue {
+            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [systemUser.userId]))
+        }
+    }
+
+    private func processSystemCircleMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let systemCircle = (try? JSONDecoder.default.decode(SystemCircleMessagePayload.self, from: base64Data)) else {
+            return
+        }
+
+        if systemCircle.action == SystemCircleMessageAction.CREATE.rawValue || systemCircle.action == SystemCircleMessageAction.UPDATE.rawValue {
+            ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: systemCircle.circleId))
+        } else if systemCircle.action == SystemCircleMessageAction.ADD.rawValue {
+            guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
+                return
+            }
+
+            if !CircleDAO.shared.isExist(circleId: systemCircle.circleId) {
+                ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: systemCircle.circleId))
+            }
+
+            let circleConversation = CircleConversation(circleId: systemCircle.circleId, conversationId: conversationId, userId: systemCircle.userId, createdAt: data.updatedAt, pinTime: nil)
+            if let userId = systemCircle.userId {
+                syncUser(userId: userId)
+            }
+            CircleConversationDAO.shared.insertOrReplace(circleId: systemCircle.circleId, objects: [circleConversation])
+        } else if systemCircle.action == SystemCircleMessageAction.REMOVE.rawValue {
+            guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
+                return
+            }
+            
+            CircleConversationDAO.shared.delete(circleId: systemCircle.circleId, conversationId: conversationId)
+        } else if systemCircle.action == SystemCircleMessageAction.DELETE.rawValue {
+            CircleDAO.shared.delete(circleId: systemCircle.circleId)
+        }
     }
 
     private func processSystemSnapshotMessage(data: BlazeMessageData) {
@@ -928,6 +978,10 @@ extension ReceiveMessageService {
             return
         }
 
+        if sysMessage.action != SystemConversationAction.UPDATE.rawValue {
+            syncConversation(data: data)
+        }
+
         let userId = sysMessage.userId ?? data.userId
         let messageId = data.messageId
         var operSuccess = true
@@ -937,7 +991,7 @@ extension ReceiveMessageService {
             Logger.write(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(usernameOrId)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
         }
 
-        if (userId == User.systemUser) {
+        if userId == User.systemUser {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 

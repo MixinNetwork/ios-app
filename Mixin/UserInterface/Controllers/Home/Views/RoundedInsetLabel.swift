@@ -1,6 +1,6 @@
 import UIKit
 
-class ConversationUnreadCountLabel: InsetLabel {
+class RoundedInsetLabel: InsetLabel {
     
     override func layoutSubviews() {
         super.layoutSubviews()

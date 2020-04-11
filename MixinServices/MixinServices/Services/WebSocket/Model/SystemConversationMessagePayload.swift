@@ -15,11 +15,6 @@ struct SystemConversationMessagePayload: Codable {
     }
 }
 
-enum SystemSessionMessageAction: String {
-    case PROVISION
-    case DESTROY
-}
-
 public enum SystemConversationAction: String {
     
     case CREATE

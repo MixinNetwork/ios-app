@@ -8,11 +8,12 @@ public struct ConversationResponse: Codable {
     public let iconUrl: String
     public let announcement: String
     public let createdAt: String
-    public let participants: [ParticipantResponse]
+    public let participants: [ConversationResponse.Participant]
     public let participantSessions: [UserSession]?
     public let codeUrl: String
     public let creatorId: String
     public let muteUntil: String
+    public let circles: [ConversationResponse.Circle]
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -26,9 +27,10 @@ public struct ConversationResponse: Codable {
         case creatorId = "creator_id"
         case muteUntil = "mute_until"
         case participantSessions = "participant_sessions"
+        case circles = "circles"
     }
     
-    public init(conversationId: String, name: String, category: String, iconUrl: String, announcement: String, createdAt: String, participants: [ParticipantResponse], participantSessions: [UserSession]?, codeUrl: String, creatorId: String, muteUntil: String) {
+    public init(conversationId: String, name: String, category: String, iconUrl: String, announcement: String, createdAt: String, participants: [ConversationResponse.Participant], participantSessions: [UserSession]?, codeUrl: String, creatorId: String, muteUntil: String, circles: [ConversationResponse.Circle]) {
         self.conversationId = conversationId
         self.name = name
         self.category = category
@@ -40,31 +42,66 @@ public struct ConversationResponse: Codable {
         self.codeUrl = codeUrl
         self.creatorId = creatorId
         self.muteUntil = muteUntil
+        self.circles = circles
     }
-
+    
     public init(conversationId: String, userId: String, avatarUrl: String) {
         let createdAt = Date().toUTCString()
-        let participants = [ParticipantResponse(userId: userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt), ParticipantResponse(userId: myUserId, role: "", createdAt: createdAt)]
-        self.init(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, participantSessions: nil, codeUrl: "", creatorId: userId, muteUntil: "")
+        let participants = [
+            Participant(userId: userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt),
+            Participant(userId: myUserId, role: "", createdAt: createdAt)
+        ]
+        self.init(conversationId: conversationId,
+                  name: "",
+                  category: ConversationCategory.CONTACT.rawValue,
+                  iconUrl: avatarUrl,
+                  announcement: "",
+                  createdAt: Date().toUTCString(),
+                  participants: participants,
+                  participantSessions: nil,
+                  codeUrl: "",
+                  creatorId: userId,
+                  muteUntil: "",
+                  circles: [])
     }
+    
 }
 
-public struct ParticipantResponse: Codable {
+// MARK: - Embedded structs
+extension ConversationResponse {
     
-    public let userId: String
-    public let role: String
-    public let createdAt: String
-    
-    enum CodingKeys: String, CodingKey {
-        case userId = "user_id"
-        case role
-        case createdAt = "created_at"
+    public struct Circle: Codable {
+        
+        public let type: String
+        public let circleId: String
+        public let createdAt: String
+        
+        public enum CodingKeys: String, CodingKey {
+            case type
+            case circleId = "circle_id"
+            case createdAt = "created_at"
+        }
+        
     }
     
-    public init(userId: String, role: String, createdAt: String) {
-        self.userId = userId
-        self.role = role
-        self.createdAt = createdAt
+    public struct Participant: Codable {
+        
+        public let userId: String
+        public let role: String
+        public let createdAt: String
+        
+        enum CodingKeys: String, CodingKey {
+            case userId = "user_id"
+            case role
+            case createdAt = "created_at"
+        }
+        
+        public init(userId: String, role: String, createdAt: String) {
+            self.userId = userId
+            self.role = role
+            self.createdAt = createdAt
+        }
+        
     }
     
 }

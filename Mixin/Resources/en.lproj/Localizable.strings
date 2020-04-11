@@ -13,6 +13,7 @@
 "dialog_button_login" = "Log In";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
+"action_add" = "Add";
 "action_next" = "Next";
 "action_camera" = "Camera";
 "action_continue" = "Continue";
@@ -195,6 +196,26 @@
 "home_bulletin_title_notification" = "Turn ON Notifications";
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
+
+// Circle
+"circle_title" = "Circle";
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "Strangers";
+"circle_default_bots" = "Bots";
+"circle_default_contacts" = "Contacts";
+"circle_conversation_count" = "%@ Conversations";
+"circle_conversation_count_all" = "All Conversations";
+"circle_action_edit_name" = "Edit Circle Name";
+"circle_action_add" = "Add Circle";
+"circle_action_edit_conversations" = "Edit Conversations";
+"circle_action_delete" = "Delete Circle";
+"circle_member_category_chats" = "Chats";
+"circle_member_category_contacts" = "Contacts";
+"circle_add_hint" = "Create circles for different groups of chats and quickly switch between them";
+"circle_no_conversation_hint" = "You can add contacts or groups to the current circle";
+"circle_no_conversation_action" = "Add Conversations";
+"circle_conversation_editor_title" = "%@'s Circle";
+"circle_conversation_add_reach_limit" = "The conversation has too many circles";
 
 // Chat
 "chat_time_today" = "Today";
@@ -402,6 +423,7 @@
 "wallet_address_tag" = "Tag";
 "wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
+"wallet_deposit_attention_xrp" = "Please try a small amount for the first deposit. Deposit at least 20 XRP for the first time.";
 "wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";

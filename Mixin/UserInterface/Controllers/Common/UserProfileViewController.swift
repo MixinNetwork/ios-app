@@ -21,6 +21,14 @@ final class UserProfileViewController: ProfileViewController {
         return true
     }
     
+    var user: UserItem! {
+        didSet {
+            isMe = user.userId == myUserId
+            relationship = Relationship(rawValue: user.relationship) ?? .ME
+            updateDeveloper()
+        }
+    }
+    
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     
@@ -32,13 +40,6 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
-    private var user: UserItem! {
-        didSet {
-            isMe = user.userId == myUserId
-            relationship = Relationship(rawValue: user.relationship) ?? .ME
-            updateDeveloper()
-        }
-    }
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -64,6 +65,9 @@ final class UserProfileViewController: ProfileViewController {
         super.viewDidLoad()
         reloadData()
         reloadFavoriteApps(userId: user.userId, fromRemote: true)
+        if !isMe {
+            reloadCircles(conversationId: conversationId, userId: user.userId)
+        }
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         recognizer.delegate = self
         view.addGestureRecognizer(recognizer)
@@ -794,6 +798,7 @@ extension UserProfileViewController {
             groups.append([reportItem])
             
             reloadMenu(groups: groups)
+            menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
         }
         
         view.frame.size.width = AppDelegate.current.window.bounds.width

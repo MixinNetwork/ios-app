@@ -12,6 +12,7 @@
 "dialog_button_login" = "ログイン";
 "dialog_progress_logout" = "ログアウト...";
 "dialog_progress_connect" = "接続中...";
+"action_add" = "追加";
 "action_next" = "次ヘ";
 "action_camera" = "カメラ";
 "action_continue" = "続く";
@@ -42,6 +43,7 @@
 "action_learn_more" = "もっと知りたい";
 "action_later" = "後で";
 "menu_delete" = "デリート";
+"menu_edit" = "編集";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
 "title_help" = "お手伝い";
@@ -172,6 +174,26 @@
 "home_bulletin_title_notification" = "Turn ON Notifications";
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
+
+// Circle
+"circle_title" = "Circle";
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "ストレンジャー";
+"circle_default_bots" = "アプリ";
+"circle_default_contacts" = "連絡先";
+"circle_conversation_count" = "%@つの会話";
+"circle_conversation_count_all" = "すべての会話";
+"circle_action_edit_name" = "Edit Circle Name";
+"circle_action_add" = "Add Circle";
+"circle_action_edit_conversations" = "Edit Conversations";
+"circle_action_delete" = "Delete Circle";
+"circle_member_category_chats" = "チャット";
+"circle_member_category_contacts" = "連絡先";
+"circle_add_hint" = "Create circles for different groups of chats and quickly switch between them";
+"circle_no_conversation_hint" = "You can add contacts or groups to the current circle.";
+"circle_no_conversation_action" = "Add Conversations";
+"circle_conversation_editor_title" = "%@'s Circle";
+"circle_conversation_add_reach_limit" = "The conversation has too many circles";
 
 // Chat
 "chat_time_today" = "今日";

@@ -49,6 +49,8 @@ extension APIError {
             return R.string.localizable.withdrawal_memo_format_incorrect()
         case 20132:
             return R.string.localizable.profile_shared_app_reach_limit()
+        case 20133:
+            return R.string.localizable.circle_conversation_add_reach_limit()
         case 30100:
             return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
         case 30102:

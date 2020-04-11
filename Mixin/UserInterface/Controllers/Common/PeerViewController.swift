@@ -5,6 +5,9 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var centerWrapperView: UIView!
+    
+    @IBOutlet weak var centerWrapperViewHeightConstraint: NSLayoutConstraint!
     
     let queue = OperationQueue()
     let initDataOperation = BlockOperation()
@@ -73,6 +76,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
                 weakSelf.sectionTitles = catalogedModels.titles
                 weakSelf.models = catalogedModels.models
                 weakSelf.tableView.reloadData()
+                weakSelf.reloadTableViewSelections()
             }
         }
         queue.addOperation(initDataOperation)

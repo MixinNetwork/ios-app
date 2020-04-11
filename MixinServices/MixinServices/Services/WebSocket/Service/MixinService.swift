@@ -103,6 +103,7 @@ public class MixinService {
             switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
+                CircleConversationDAO.shared.update(conversation: response)
                 return
             case let .failure(error):
                 if error.code == 401 {

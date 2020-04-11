@@ -14,10 +14,6 @@ final class GroupProfileViewController: ProfileViewController {
     override var isMuted: Bool {
         return conversation.isMuted
     }
-
-    override var isGroup: Bool {
-        return true
-    }
     
     private let conversation: ConversationItem
     private let response: ConversationResponse?
@@ -58,6 +54,7 @@ final class GroupProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadData()
+        reloadCircles(conversationId: conversationId, userId: nil)
         updatePreferredContentSizeHeight(size: size)
     }
     
@@ -428,6 +425,7 @@ extension GroupProfileViewController {
         }
         
         reloadMenu(groups: groups)
+        menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 1)
     }
     
     private func showConversation(with response: ConversationResponse) {

@@ -99,7 +99,7 @@ public class BaseDatabase {
         return try! database.getValue(on: type.Properties.all[0].asColumn(), fromTable: type.tableName, where: condition).type != .null
     }
     
-    public func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = []) -> [T] {
+    public func getCodables<T: TableDecodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = []) -> [T] {
         return try! database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
     
@@ -124,7 +124,7 @@ public class BaseDatabase {
         return try! database.getObjects(on: T.Properties.all, stmt: statement)
     }
     
-    public func getCodable<T: BaseCodable>(condition: Condition, orderBy orderList: [OrderBy]? = nil) -> T? {
+    public func getCodable<T: BaseDecodable>(condition: Condition, orderBy orderList: [OrderBy]? = nil) -> T? {
         return try! database.getObject(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList)
     }
     

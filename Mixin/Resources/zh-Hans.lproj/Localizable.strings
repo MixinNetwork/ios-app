@@ -13,6 +13,7 @@
 "dialog_progress_logout" = "退出登录...";
 "dialog_progress_connect" = "正在连接...";
 "dialog_button_no_remind" = "不再提醒";
+"action_add" = "添加";
 "action_next" = "下一步";
 "action_camera" = "相机";
 "action_continue" = "继续";
@@ -196,6 +197,26 @@
 "home_bulletin_title_notification" = "打开推送消息";
 "home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_button_notification" = "设置";
+
+// Circle
+"circle_title" = "圈子";
+"circle_default_all" = "Mixin";
+"circle_default_strangers" = "陌生人";
+"circle_default_bots" = "小程序";
+"circle_default_contacts" = "联系人";
+"circle_conversation_count" = "%@ 个会话";
+"circle_conversation_count_all" = "全部会话";
+"circle_action_edit_name" = "编辑圈子名称";
+"circle_action_add" = "添加圈子";
+"circle_action_edit_conversations" = "编辑会话";
+"circle_action_delete" = "删除圈子";
+"circle_member_category_chats" = "最近聊天";
+"circle_member_category_contacts" = "联系人";
+"circle_add_hint" = "创建圈子并加入会话，即可在其中快速切换";
+"circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
+"circle_no_conversation_action" = "添加会话";
+"circle_conversation_editor_title" = "%@的圈子";
+"circle_conversation_add_reach_limit" = "已达圈子数上限";
 
 // Chat
 "chat_time_today" = "今天";
@@ -407,6 +428,7 @@
 "wallet_address_tag" = "Tag（标签）";
 "wallet_address_memo" = "Memo（标签）";
 "wallet_deposit_attention" = "首次充值请小额尝试！";
+"wallet_deposit_attention_xrp" = "首次充值请小额尝试！首次充值至少 20 XRP！";
 "wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";

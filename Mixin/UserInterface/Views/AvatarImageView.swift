@@ -28,7 +28,7 @@ class AvatarImageView: UIView {
     }
     
     private let titleLabel = UILabel()
-    private let imageView = UIImageView()
+    private let imageView = SolidBackgroundColorImageView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -56,7 +56,7 @@ class AvatarImageView: UIView {
         titleLabel.text = nil
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
-        imageView.backgroundColor = .clear
+        imageView.backgroundColorIgnoringSystemSettings = .clear
     }
     
     func setGroupImage(conversation: ConversationItem) {
@@ -100,7 +100,7 @@ class AvatarImageView: UIView {
             imageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
             let index = userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
-            imageView.backgroundColor = UIColor.avatarBackgroundColors[index]
+            imageView.backgroundColorIgnoringSystemSettings = UIColor.avatarBackgroundColors[index]
             if let firstLetter = name.first {
                 titleLabel.text = String([firstLetter]).uppercased()
             } else {

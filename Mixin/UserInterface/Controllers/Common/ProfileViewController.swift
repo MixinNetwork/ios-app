@@ -51,6 +51,11 @@ class ProfileViewController: UIViewController {
         shortcutViewIfLoaded = view
         return view
     }()
+    lazy var circleItemView: CircleProfileMenuItemView = {
+        let view = CircleProfileMenuItemView()
+        view.button.addTarget(self, action: #selector(editCircle), for: .touchUpInside)
+        return view
+    }()
     
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
@@ -74,15 +79,16 @@ class ProfileViewController: UIViewController {
     var isMuted: Bool {
         return false
     }
-
-    var isGroup: Bool {
-        return false
-    }
     
     private lazy var resizeRecognizerDelegate = ResizeRecognizerDelegate(scrollView: scrollView)
     
     private var menuItemGroups = [[ProfileMenuItem]]()
     private var reusableMenuItemViews = Set<ProfileMenuItemView>()
+    private var subordinateCircles: [CircleItem]? {
+        didSet {
+            circleItemView.names = subordinateCircles?.map(\.name) ?? []
+        }
+    }
     
     private weak var editNameController: UIAlertController?
     
@@ -240,6 +246,15 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    func reloadCircles(conversationId: String, userId: String?) {
+        DispatchQueue.global().async { [weak self] in
+            let circles = CircleDAO.shared.circles(of: conversationId, userId: userId)
+            DispatchQueue.main.sync {
+                self?.subordinateCircles = circles
+            }
+        }
+    }
+    
 }
 
 // MARK: - CoreTextLabelDelegate
@@ -306,12 +321,13 @@ extension ProfileViewController {
     
     @objc func clearChat() {
         let conversationId = self.conversationId
-        let alert: UIAlertController
-        if isGroup {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_group_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+        let title: String
+        if self is GroupProfileViewController {
+            title = R.string.localizable.profile_clear_group_chat_hint(conversationName)
         } else {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_contact_chat_hint(conversationName), message: nil, preferredStyle: .actionSheet)
+            title = R.string.localizable.profile_clear_contact_chat_hint(conversationName)
         }
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)
@@ -323,6 +339,16 @@ extension ProfileViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func editCircle() {
+        let circles = subordinateCircles ?? []
+        let ownerId = (self as? UserProfileViewController)?.user.userId
+        let vc = ConversationCircleEditorViewController.instance(name: conversationName,
+                                                                 conversationId: conversationId,
+                                                                 ownerId: ownerId,
+                                                                 subordinateCircles: circles)
+        dismissAndPush(vc)
     }
     
 }

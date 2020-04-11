@@ -38,12 +38,16 @@ extension AppGroupUserDefaults {
 
             case hasRecoverMedia = "has_recover_media"
             case hasRestoreUploadAttachment = "has_restore_upload_attachment"
+            
+            case circleId = "circle_id"
+            case circleName = "circle_name"
         }
         
-        public static let version = 18
+        public static let version = 19
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
+        public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version || needsRebuildDatabase
@@ -129,6 +133,16 @@ extension AppGroupUserDefaults {
 
         @Default(namespace: .user, key: Key.hasRestoreUploadAttachment, defaultValue: false)
         public static var hasRestoreUploadAttachment: Bool
+        
+        @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
+        public static var circleId: String?
+        
+        @Default(namespace: .user, key: Key.circleName, defaultValue: nil)
+        public static var circleName: String? {
+            didSet {
+                NotificationCenter.default.postOnMain(name: circleNameDidChangeNotification, object: self)
+            }
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

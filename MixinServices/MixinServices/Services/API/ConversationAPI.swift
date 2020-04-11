@@ -41,10 +41,6 @@ public class ConversationAPI : BaseAPI {
         return request(method: .post, url: url.conversations, parameters: conversation.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>())
     }
     
-    public func getConversation(conversationId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        request(method: .get, url: url.conversations(id: conversationId), completion: completion)
-    }
-    
     public func getConversation(conversationId: String) -> APIResult<ConversationResponse> {
         return request(method: .get, url: url.conversations(id: conversationId))
     }

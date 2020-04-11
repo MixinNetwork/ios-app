@@ -241,6 +241,8 @@ public enum MessageCategory: String {
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT
     case SYSTEM_SESSION
+    case SYSTEM_USER
+    case SYSTEM_CIRCLE
     case WEBRTC_AUDIO_OFFER
     case WEBRTC_AUDIO_ANSWER
     case WEBRTC_AUDIO_CANCEL

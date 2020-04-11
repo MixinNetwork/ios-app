@@ -647,7 +647,7 @@ extension UrlWindow {
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
         DispatchQueue.global().async {
-            let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
+            let subParticipants = conversation.participants.prefix(4)
             let accountUserId = myUserId
             let conversationId = conversation.conversationId
             let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil

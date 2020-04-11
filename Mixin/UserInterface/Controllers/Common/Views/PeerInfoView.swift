@@ -64,6 +64,13 @@ class PeerInfoView: UIView, XibDesignable {
             case .user(let user):
                 avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
             }
+        case let result as CircleMemberSearchResult:
+            let member = result.member
+            if member.category == ConversationCategory.GROUP.rawValue {
+                avatarImageView.setGroupImage(with: member.iconUrl)
+            } else {
+                avatarImageView.setImage(with: member.iconUrl, userId: member.userId ?? "", name: member.name)
+            }
         default:
             break
         }
@@ -116,6 +123,21 @@ class PeerInfoView: UIView, XibDesignable {
         }
         titleLabel.text = receiver.name
         badgeImageView.image = receiver.badgeImage
+        superscriptLabel.text = nil
+        fileIcon.isHidden = true
+        descriptionLabel.isHidden = true
+    }
+    
+    func render(member: CircleMember) {
+        if member.category == ConversationCategory.GROUP.rawValue {
+            avatarImageView.setGroupImage(with: member.iconUrl)
+        } else {
+            avatarImageView.setImage(with: member.iconUrl,
+                                     userId: member.userId ?? "",
+                                     name: member.name)
+        }
+        titleLabel.text = member.name
+        badgeImageView.image = member.badgeImage
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true

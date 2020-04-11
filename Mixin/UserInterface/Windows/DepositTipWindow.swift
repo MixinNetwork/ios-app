@@ -39,7 +39,11 @@ class DepositTipWindow: BottomSheetView {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDownAction), userInfo: nil, repeats: true)
         } else {
             continueButton.isEnabled = true
-            warningLabel.text = R.string.localizable.wallet_deposit_attention()
+            if asset.isXRPChain {
+                warningLabel.text = R.string.localizable.wallet_deposit_attention_xrp()
+            } else {
+                warningLabel.text = R.string.localizable.wallet_deposit_attention()
+            }
         }
         assetView.setIcon(asset: asset)
         return self

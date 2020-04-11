@@ -11,12 +11,15 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var searchContainerView: UIView!
+    @IBOutlet weak var circlesContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
+    @IBOutlet weak var guideLabel: UILabel!
+    @IBOutlet weak var guideButton: UIButton!
     @IBOutlet weak var cameraButtonWrapperView: UIView!
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinContentView: UIView!
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
@@ -45,7 +48,11 @@ class HomeViewController: UIViewController {
             layoutBulletinView()
         }
     }
+    private var topLeftTitle: String {
+        AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
+    }
     
+    private lazy var circlesViewController = R.storyboard.home.circles()!
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
         let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
@@ -71,6 +78,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleButton.setTitle(topLeftTitle, for: .normal)
         isBulletinViewHidden = true
         updateBulletinView()
         updateCameraWrapperHeight()
@@ -88,11 +96,13 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
@@ -224,6 +234,16 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
     }
     
+    @IBAction func guideAction(_ sender: Any) {
+        if let circleId = AppGroupUserDefaults.User.circleId, let name = AppGroupUserDefaults.User.circleName {
+            let editor = CircleEditorViewController.instance(name: name, circleId: circleId, isNewCreatedCircle: false)
+            present(editor, animated: true, completion: nil)
+        } else {
+            let vc = ContactViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     @IBAction func bulletinContinueAction(_ sender: Any) {
         UIApplication.openAppSettings()
     }
@@ -233,6 +253,25 @@ class HomeViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             self.isBulletinViewHidden = true
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    @IBAction func toggleCircles(_ sender: Any) {
+        if circlesContainerView.isHidden {
+            if circlesViewController.parent == nil {
+                circlesViewController.view.frame = circlesContainerView.bounds
+                circlesViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                addChild(circlesViewController)
+                circlesContainerView.addSubview(circlesViewController.view)
+                circlesViewController.didMove(toParent: self)
+            }
+            circlesViewController.setTableViewVisible(false, animated: false, completion: nil)
+            circlesContainerView.isHidden = false
+            circlesViewController.setTableViewVisible(true, animated: true, completion: nil)
+        } else {
+            circlesViewController.setTableViewVisible(false, animated: true, completion: {
+                self.circlesContainerView.isHidden = true
+            })
         }
     }
     
@@ -249,9 +288,19 @@ class HomeViewController: UIViewController {
         fetchConversations()
     }
     
+    @objc func circleConversationDidChange(_ notification: Notification) {
+        guard let circleId = notification.userInfo?[CircleConversationDAO.circleIdUserInfoKey] as? String else {
+            return
+        }
+        guard circleId == AppGroupUserDefaults.User.circleId else {
+            return
+        }
+        setNeedsRefresh()
+    }
+    
     @objc func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
-        titleLabel.text = R.string.localizable.app_name()
+        titleButton.setTitle(topLeftTitle, for: .normal)
         DispatchQueue.global().async {
             guard NetworkManager.shared.isReachableOnWiFi else {
                 return
@@ -267,7 +316,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidDisconnect(_ notification: Notification) {
         connectingView.startAnimating()
-        titleLabel.text = R.string.localizable.dialog_progress_connect()
+        titleButton.setTitle(R.string.localizable.dialog_progress_connect(), for: .normal)
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
@@ -278,10 +327,11 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleLabel.text = R.string.localizable.app_name()
+            titleButton.setTitle(topLeftTitle, for: .normal)
             connectingView.stopAnimating()
         } else {
-            titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
+            let title = Localized.CONNECTION_HINT_PROGRESS(progress)
+            titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()
         }
     }
@@ -303,6 +353,15 @@ class HomeViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
         view.endEditing(true)
+    }
+    
+    @objc func circleNameDidChange() {
+        titleButton.setTitle(topLeftTitle, for: .normal)
+    }
+    
+    func setNeedsRefresh() {
+        needRefresh = true
+        fetchConversations()
     }
     
 }
@@ -327,7 +386,7 @@ extension HomeViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let conversation = conversations[indexPath.row]
         if conversation.status == ConversationStatus.START.rawValue {
-            let job = RefreshConversationJob(conversationId: conversation.conversationId)
+            let job = CreateConversationJob(conversationId: conversation.conversationId)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else {
             conversation.unseenMessageCount = 0
@@ -418,21 +477,33 @@ extension HomeViewController {
         needRefresh = false
 
         DispatchQueue.main.async {
+            if AppGroupUserDefaults.User.circleId == nil {
+                self.titleButton.showsTopRightDot = false
+            }
             let limit = (self.tableView.indexPathsForVisibleRows?.first?.row ?? 0) + self.messageCountPerPage
 
             DispatchQueue.global().async { [weak self] in
-                let conversations = ConversationDAO.shared.conversationList(limit: limit)
+                let circleId = AppGroupUserDefaults.User.circleId
+                let conversations = ConversationDAO.shared.conversationList(limit: limit, circleId: circleId)
                 let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
                 for conversation in groupIcons {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
                 }
+                let hasUnreadMessagesOutsideCircle: Bool = {
+                    if let id = circleId {
+                        return ConversationDAO.shared.hasUnreadMessage(outsideCircleWith: id)
+                    } else {
+                        return false
+                    }
+                }()
                 DispatchQueue.main.async {
                     guard self?.tableView != nil else {
                         return
                     }
-                    self?.guideView.isHidden = conversations.count != 0
                     self?.conversations = conversations
                     self?.tableView.reloadData()
+                    self?.titleButton.showsTopRightDot = hasUnreadMessagesOutsideCircle
+                    self?.updateGuideView()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
                         self?.refreshing = false
                         if self?.needRefresh ?? false {
@@ -444,18 +515,38 @@ extension HomeViewController {
         }
     }
     
+    private func updateGuideView() {
+        guard conversations.isEmpty else {
+            guideView.isHidden = true
+            return
+        }
+        if AppGroupUserDefaults.User.circleId == nil {
+            guideLabel.text = R.string.localizable.home_start_messaging_guide()
+            guideButton.setTitle(R.string.localizable.home_start_messaging(), for: .normal)
+        } else {
+            guideLabel.text = R.string.localizable.circle_no_conversation_hint()
+            guideButton.setTitle(R.string.localizable.circle_no_conversation_action(), for: .normal)
+        }
+        guideView.isHidden = false
+    }
+    
     private func tableViewCommitPinAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        let dao = ConversationDAO.shared
         let conversation = conversations[indexPath.row]
         let destinationIndex: Int
         if conversation.pinTime == nil {
             let pinTime = Date().toUTCString()
             conversation.pinTime = pinTime
-            ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: pinTime)
+            dao.updateConversation(with: conversation.conversationId,
+                                   inCirleOf: AppGroupUserDefaults.User.circleId,
+                                   pinTime: pinTime)
             conversations.remove(at: indexPath.row)
             destinationIndex = 0
         } else {
             conversation.pinTime = nil
-            ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: nil)
+            dao.updateConversation(with: conversation.conversationId,
+                                   inCirleOf: AppGroupUserDefaults.User.circleId,
+                                   pinTime: nil)
             conversations.remove(at: indexPath.row)
             destinationIndex = conversations.firstIndex(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
         }

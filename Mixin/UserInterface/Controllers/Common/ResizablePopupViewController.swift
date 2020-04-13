@@ -30,7 +30,6 @@ class ResizablePopupViewController: UIViewController {
     }
     
     lazy var resizeRecognizer = UIPanGestureRecognizer(target: self, action: #selector(changeSizeAction(_:)))
-    lazy var resizeRecognizerDelegate = ResizeRecognizerDelegate(scrollView: resizableScrollView)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +37,6 @@ class ResizablePopupViewController: UIViewController {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
         setNeedsSizeAppearanceUpdated(size: size)
-        resizeRecognizer.delegate = resizeRecognizerDelegate
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -170,38 +168,6 @@ class ResizablePopupViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
         return animator
-    }
-    
-}
-
-extension ResizablePopupViewController {
-    
-    class ResizeRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
-        
-        private weak var scrollView: UIScrollView?
-        
-        init(scrollView: UIScrollView?) {
-            self.scrollView = scrollView
-            super.init()
-        }
-        
-        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            guard let scrollView = scrollView else {
-                return true
-            }
-            let canDragDown: Bool
-            if let recognizer = gestureRecognizer as? UIPanGestureRecognizer {
-                canDragDown = abs(scrollView.contentOffset.y) < 0.1 && recognizer.velocity(in: nil).y > 0
-            } else {
-                canDragDown = false
-            }
-            return !scrollView.isScrollEnabled || canDragDown
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return true
-        }
-        
     }
     
 }

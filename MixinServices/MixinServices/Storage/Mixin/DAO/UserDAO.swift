@@ -57,6 +57,10 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword])
     }
     
+    public func getUser(withAppId id: String) -> User? {
+        MixinDatabase.shared.getCodable(condition: User.Properties.appId == id)
+    }
+    
     public func getUsers(ofAppIds ids: [String]) -> [UserItem] {
         guard ids.count > 0 else {
             return []
@@ -73,6 +77,16 @@ public final class UserDAO {
     
     public func getAppUsers(inConversationOf conversationId: String) -> [User] {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryAppUserInConversation, values: [conversationId])
+    }
+    
+    public func getAppUsers() -> [User] {
+        let sql = """
+            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id
+            ORDER BY u.full_name ASC
+        """
+        return MixinDatabase.shared.getCodables(sql: sql)
     }
     
     public func appFriends(notIn ids: [String]) -> [User] {

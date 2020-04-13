@@ -17,3 +17,21 @@ class AppCell: UICollectionViewCell {
     }
     
 }
+
+extension AppCell: HomeAppCell {
+    
+    var imageViewFrame: CGRect {
+        imageView.frame
+    }
+    
+    func render(user: User) {
+        imageView.setImage(with: user)
+        label.text = user.fullName
+    }
+    
+    func render(app: EmbeddedHomeApp) {
+        imageView.image = app.image
+        label.text = app.name
+    }
+    
+}

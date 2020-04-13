@@ -197,6 +197,7 @@
 "home_bulletin_title_notification" = "打开推送消息";
 "home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_button_notification" = "设置";
+"home_title_apps" = "小程序";
 
 // Circle
 "circle_title" = "圈子";

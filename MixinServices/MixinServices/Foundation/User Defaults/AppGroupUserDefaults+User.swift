@@ -42,6 +42,8 @@ extension AppGroupUserDefaults {
             case circleId = "circle_id"
             case circleName = "circle_name"
             case isCircleSynchronized = "is_circle_synchronized"
+            
+            case homeApp = "home_app"
         }
         
         public static let version = 19
@@ -49,6 +51,7 @@ extension AppGroupUserDefaults {
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
+        public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version || needsRebuildDatabase
@@ -145,6 +148,13 @@ extension AppGroupUserDefaults {
         public static var circleName: String? {
             didSet {
                 NotificationCenter.default.postOnMain(name: circleNameDidChangeNotification, object: self)
+            }
+        }
+        
+        @Default(namespace: .user, key: Key.homeApp, defaultValue: [])
+        public static var homeAppIds: [Any] {
+            didSet {
+                NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)
             }
         }
         

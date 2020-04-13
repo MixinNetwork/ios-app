@@ -121,6 +121,10 @@
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
 		7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */; };
+		7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */; };
+		7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */; };
+		7B4BE55F243E0FEC00198EE9 /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */; };
+		7B4BE561243E105000198EE9 /* EmbeddedHomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE560243E105000198EE9 /* EmbeddedHomeApp.swift */; };
 		7B4C656F242354AE003B78F9 /* LocationSearchNoResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B4C656E242354AE003B78F9 /* LocationSearchNoResultView.xib */; };
 		7B4C6571242358D5003B78F9 /* LocationSearchNoResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C6570242358D5003B78F9 /* LocationSearchNoResultView.swift */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
@@ -449,6 +453,12 @@
 		7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5374820076BB500257D6C /* ShutterAnimationView.swift */; };
 		7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5DCE924001F760093968C /* MixinInternalUrl.swift */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
+		7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */; };
+		7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */; };
+		7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */; };
+		7BF8AD892440545C0038D293 /* PinnedHomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */; };
+		7BF8ADC1244060A60038D293 /* HomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */; };
+		7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */; };
@@ -889,6 +899,10 @@
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
 		7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizablePopupViewController.swift; sourceTree = "<group>"; };
+		7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsViewController.swift; sourceTree = "<group>"; };
+		7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateHomeAppsModelController.swift; sourceTree = "<group>"; };
+		7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
+		7B4BE560243E105000198EE9 /* EmbeddedHomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedHomeApp.swift; sourceTree = "<group>"; };
 		7B4C656E242354AE003B78F9 /* LocationSearchNoResultView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationSearchNoResultView.xib; sourceTree = "<group>"; };
 		7B4C6570242358D5003B78F9 /* LocationSearchNoResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchNoResultView.swift; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
@@ -1227,6 +1241,12 @@
 		7BF5374820076BB500257D6C /* ShutterAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterAnimationView.swift; sourceTree = "<group>"; };
 		7BF5DCE924001F760093968C /* MixinInternalUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinInternalUrl.swift; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
+		7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupResizeGestureCoordinator.swift; sourceTree = "<group>"; };
+		7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppResizeGestureCoordinator.swift; sourceTree = "<group>"; };
+		7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedHomeAppCell.swift; sourceTree = "<group>"; };
+		7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedHomeAppsModelController.swift; sourceTree = "<group>"; };
+		7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsModelController.swift; sourceTree = "<group>"; };
+		7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppCell.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationCell.xib; sourceTree = "<group>"; };
@@ -1784,6 +1804,19 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		7B4BE55B243E0F0400198EE9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7B4BE560243E105000198EE9 /* EmbeddedHomeApp.swift */,
+				7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */,
+				7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */,
+				7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */,
+				7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */,
+				7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		7B51DDB3223A488D008ACDBB /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2333,6 +2366,7 @@
 		DF5D9F491F9CDC200036D5FD /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				7B4BE55B243E0F0400198EE9 /* Model */,
 				7B9553322243757400CE95E6 /* Views */,
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				7B34A19622C0B59200665F41 /* MixinNavigationAnimating.swift */,
@@ -2351,6 +2385,7 @@
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
+				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2705,7 +2740,9 @@
 			isa = PBXGroup;
 			children = (
 				DF121F301FA1C767000F701D /* ConversationCell.swift */,
+				7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */,
 				7B5281752265F1730023616D /* AppCell.swift */,
+				7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
 				7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */,
 				7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */,
@@ -2836,6 +2873,7 @@
 			children = (
 				E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */,
 				7B5E9B4724373380000AE24E /* EditNameController.swift */,
+				7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3399,6 +3437,7 @@
 				DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
+				7B4BE561243E105000198EE9 /* EmbeddedHomeApp.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
@@ -3412,6 +3451,7 @@
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
+				7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */,
 				DFC0ECE523BB60DE0091E7AC /* PINLogResponse.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
@@ -3434,6 +3474,7 @@
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
+				7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
 				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
@@ -3454,6 +3495,7 @@
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
 				E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */,
+				7B4BE55F243E0FEC00198EE9 /* HomeApp.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */,
@@ -3470,6 +3512,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
+				7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
 				7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */,
@@ -3481,6 +3524,7 @@
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
+				7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */,
 				DFC0ECF523BB610C0091E7AC /* PaymentAPI.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
@@ -3563,6 +3607,7 @@
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
+				7BF8AD892440545C0038D293 /* PinnedHomeAppsModelController.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */,
@@ -3727,6 +3772,7 @@
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
+				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
@@ -3794,6 +3840,7 @@
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,
+				7BF8ADC1244060A60038D293 /* HomeAppsModelController.swift in Sources */,
 				7B7264F0209C56E500F234BE /* ProfileDescriptionLabel.swift in Sources */,
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
@@ -3934,6 +3981,7 @@
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
+				7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,

@@ -196,6 +196,7 @@
 "home_bulletin_title_notification" = "Turn ON Notifications";
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
+"home_title_apps" = "Bots";
 
 // Circle
 "circle_title" = "Circle";

@@ -56,6 +56,8 @@ class ProfileViewController: ResizablePopupViewController {
         return false
     }
     
+    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    
     private var menuItemGroups = [[ProfileMenuItem]]()
     private var reusableMenuItemViews = Set<ProfileMenuItemView>()
     private var subordinateCircles: [CircleItem]? {
@@ -69,6 +71,7 @@ class ProfileViewController: ResizablePopupViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         contentView.addGestureRecognizer(resizeRecognizer)
+        resizeRecognizer.delegate = resizeRecognizerDelegate
     }
     
     override func setNeedsSizeAppearanceUpdated(size: Size) {

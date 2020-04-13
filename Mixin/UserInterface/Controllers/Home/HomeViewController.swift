@@ -22,6 +22,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
     @IBOutlet weak var bottomBarView: UIView!
+    @IBOutlet weak var leftAppButton: UIButton!
+    @IBOutlet weak var rightAppButton: UIButton!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
@@ -39,6 +41,9 @@ class HomeViewController: UIViewController {
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
+    private var leftAppAction: (() -> Void)?
+    private var rightAppAction: (() -> Void)?
+    
     private var isBulletinViewHidden = false {
         didSet {
             layoutBulletinView()
@@ -87,6 +92,7 @@ class HomeViewController: UIViewController {
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
         tableView.addSubview(dragDownIndicator)
         view.layoutIfNeeded()
+        updateHomeApps()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
@@ -98,6 +104,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
@@ -149,7 +156,7 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
-    @IBAction func walletAction(_ sender: Any) {
+    @IBAction func walletAction() {
         guard let account = LoginManager.shared.account else {
             return
         }
@@ -230,6 +237,19 @@ class HomeViewController: UIViewController {
                 self.circlesContainerView.isHidden = true
             })
         }
+    }
+    
+    @IBAction func showAppsAction(_ sender: Any) {
+        let vc = HomeAppsViewController.instance()
+        present(vc, animated: true, completion: nil)
+    }
+    
+    @IBAction func leftAppAction(_ sender: Any) {
+        leftAppAction?()
+    }
+    
+    @IBAction func rightAppAction(_ sender: Any) {
+        rightAppAction?()
     }
     
     @objc func applicationDidBecomeActive(_ sender: Notification) {
@@ -316,9 +336,88 @@ class HomeViewController: UIViewController {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
     
+    @objc func updateHomeApps() {
+        func setImage(with app: HomeApp, to button: UIButton) {
+            button.sd_cancelCurrentImageLoad()
+            button.setImage(nil, for: .normal)
+            switch app {
+            case .embedded(let app):
+                button.setImage(app.image, for: .normal)
+                leftAppAction = {
+                    app.action(self)
+                }
+            case .external(let user):
+                if let string = user.avatarUrl {
+                    button.sd_setImage(with: URL(string: string), for: .normal, completed: nil)
+                }
+            }
+        }
+        
+        func action(for app: HomeApp) -> (() -> Void) {
+            switch app {
+            case .embedded(let app):
+                return {
+                    app.action(self)
+                }
+            case .external(let user):
+                return {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [user.userId]))
+                    if let app = user.app {
+                        let userInfo = ["source": "Home", "identityNumber": app.appNumber]
+                        reporter.report(event: .openApp, userInfo: userInfo)
+                        MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: self)
+                    } else {
+                        reporter.report(error: MixinError.missingApp)
+                    }
+                }
+            }
+        }
+        
+        DispatchQueue.global().async {
+            let apps = AppGroupUserDefaults.User.homeAppIds.compactMap(HomeApp.init).prefix(2)
+            DispatchQueue.main.async {
+                if let left = apps.first {
+                    setImage(with: left, to: self.leftAppButton)
+                    self.leftAppAction = action(for: left)
+                    self.leftAppButton.alpha = 1
+                } else {
+                    self.leftAppButton.alpha = 0
+                }
+                if apps.count == 2 {
+                    let app = apps[1]
+                    setImage(with: app, to: self.rightAppButton)
+                    self.rightAppAction = action(for: app)
+                    self.rightAppButton.alpha = 1
+                } else {
+                    self.rightAppButton.alpha = 0
+                }
+            }
+        }
+    }
+    
     func setNeedsRefresh() {
         needRefresh = true
         fetchConversations()
+    }
+    
+    func showCamera() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            navigationController?.pushViewController(CameraViewController.instance(), animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.navigationController?.pushViewController(CameraViewController.instance(), animated: true)
+                }
+            })
+        case .denied, .restricted:
+            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        @unknown default:
+            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        }
     }
     
 }

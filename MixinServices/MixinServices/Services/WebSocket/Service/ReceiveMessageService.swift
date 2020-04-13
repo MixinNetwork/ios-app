@@ -962,6 +962,9 @@ extension ReceiveMessageService {
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
+            guard AppGroupUserDefaults.Account.extensionSession == systemSession.sessionId else {
+                return
+            }
             AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 

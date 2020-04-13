@@ -281,7 +281,6 @@ extension CirclesViewController {
                         self.reloadCircles()
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
                         hud.scheduleAutoHidden()
-
                     }
                 }
             case .failure(let error):

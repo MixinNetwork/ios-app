@@ -485,6 +485,8 @@
 		DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */; };
 		DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */; };
 		DF08F0A623828B8F005CFD34 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */; };
+		DF0A09742444AD7600378B4F /* BlurHashEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A09722444AD7600378B4F /* BlurHashEncode.swift */; };
+		DF0A09752444AD7600378B4F /* BlurHashDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A09732444AD7600378B4F /* BlurHashDecode.swift */; };
 		DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */; };
 		DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */; };
 		DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */; };
@@ -1262,6 +1264,8 @@
 		DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginConfirmWindow.xib; sourceTree = "<group>"; };
 		DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConfirmWindow.swift; sourceTree = "<group>"; };
 		DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
+		DF0A09722444AD7600378B4F /* BlurHashEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurHashEncode.swift; sourceTree = "<group>"; };
+		DF0A09732444AD7600378B4F /* BlurHashDecode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurHashDecode.swift; sourceTree = "<group>"; };
 		DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalTipWindow.xib; sourceTree = "<group>"; };
 		DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalTipWindow.swift; sourceTree = "<group>"; };
 		DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTextSizeExtension.swift; sourceTree = "<group>"; };
@@ -1552,6 +1556,7 @@
 		275339881F975D9800DD4C26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF0A09712444AD7600378B4F /* BlurHash */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,
 			);
 			path = Frameworks;
@@ -2083,6 +2088,15 @@
 				7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		DF0A09712444AD7600378B4F /* BlurHash */ = {
+			isa = PBXGroup;
+			children = (
+				DF0A09722444AD7600378B4F /* BlurHashEncode.swift */,
+				DF0A09732444AD7600378B4F /* BlurHashDecode.swift */,
+			);
+			path = BlurHash;
 			sourceTree = "<group>";
 		};
 		DF2081B320060C4400B87DB0 /* Camera */ = {
@@ -3474,6 +3488,7 @@
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
+				DF0A09752444AD7600378B4F /* BlurHashDecode.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
@@ -3793,6 +3808,7 @@
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
 				DFC0ECE323BB60DE0091E7AC /* ProvisioningResponse.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
+				DF0A09742444AD7600378B4F /* BlurHashEncode.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,

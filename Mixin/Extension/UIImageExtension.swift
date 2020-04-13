@@ -46,3 +46,21 @@ extension UIImage {
     }
     
 }
+
+extension UIImage {
+
+    static func createImageFromString(thumbImage: String?) -> UIImage? {
+        guard let thumb = thumbImage else {
+            return nil
+        }
+
+        if let image = UIImage(blurHash: thumb, size: CGSize(width: 100, height: 100)) {
+            return image
+        } else if let imageData = Data(base64Encoded: thumb) {
+            return UIImage(data: imageData)
+        }
+
+        return nil
+    }
+
+}

@@ -123,7 +123,8 @@ final class UserProfileViewController: ProfileViewController {
         let userId = user.userId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        ConversationAPI.shared.mute(userId: userId, duration: interval) { [weak self] (result) in
+        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil)
+        ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.user.muteUntil = response.muteUntil

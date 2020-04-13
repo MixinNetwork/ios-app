@@ -63,7 +63,8 @@ final class GroupProfileViewController: ProfileViewController {
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.window)
-        ConversationAPI.shared.mute(conversationId: conversationId, duration: interval) { [weak self] (result) in
+        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.GROUP.rawValue, participants: nil, duration: interval, announcement: nil)
+        ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.conversation.muteUntil = response.muteUntil

@@ -78,13 +78,7 @@ public class ConversationAPI : BaseAPI {
         request(method: .post, url: url.conversations(id: conversationId), parameters: conversationRequest.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     
-    public func mute(userId: String, duration: Int64, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: userId)
-        mute(conversationId: conversationId, duration: duration, completion: completion)
-    }
-    
-    public func mute(conversationId: String, duration: Int64, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: nil, participants: nil, duration: duration, announcement: nil)
+    public func mute(conversationId: String, conversationRequest: ConversationRequest, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
         request(method: .post, url: url.mute(conversationId: conversationId), parameters: conversationRequest.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     

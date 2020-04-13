@@ -1048,7 +1048,11 @@ extension ReceiveMessageService {
             operSuccess = ParticipantDAO.shared.updateParticipantRole(message: message, conversationId: data.conversationId, participantId: participantId, role: role, source: data.source)
             return
         case SystemConversationAction.UPDATE.rawValue:
-            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+            if let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser {
+                ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [participantId]))
+            } else {
+                ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
+            }
             return
         default:
             break

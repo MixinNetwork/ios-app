@@ -10,7 +10,6 @@ public final class UserDAO {
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
     
-    private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
@@ -97,7 +96,13 @@ public final class UserDAO {
     }
     
     public func contacts() -> [UserItem] {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
+        let sql = "\(Self.sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+        return MixinDatabase.shared.getCodables(sql: sql)
+    }
+    
+    public func contactsWithoutApp() -> [UserItem] {
+        let sql = "\(Self.sqlQueryColumns) WHERE u.app_id IS NULL AND u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+        return MixinDatabase.shared.getCodables(sql: sql)
     }
     
     public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {

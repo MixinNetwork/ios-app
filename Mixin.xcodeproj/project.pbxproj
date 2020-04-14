@@ -329,8 +329,8 @@
 		7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F48228ED8650048C2D6 /* NotificationView.swift */; };
 		7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */; };
 		7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */; };
-		7BB0F9152434B03300BEDA97 /* CircleMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */; };
-		7BB0F9162434B03300BEDA97 /* CircleMemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */; };
+		7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */; };
+		7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB0F9142434B03300BEDA97 /* SelectedPeerCell.xib */; };
 		7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */; };
 		7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */; };
 		7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB12FA62192C8DB009BEECF /* BarChartView.swift */; };
@@ -1104,8 +1104,8 @@
 		7BB06F48228ED8650048C2D6 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditorViewController.swift; sourceTree = "<group>"; };
 		7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAPI.swift; sourceTree = "<group>"; };
-		7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleMemberCell.swift; sourceTree = "<group>"; };
-		7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CircleMemberCell.xib; sourceTree = "<group>"; };
+		7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPeerCell.swift; sourceTree = "<group>"; };
+		7BB0F9142434B03300BEDA97 /* SelectedPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectedPeerCell.xib; sourceTree = "<group>"; };
 		7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CircleMember+Convenience.swift"; sourceTree = "<group>"; };
 		7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleMemberSearchResult.swift; sourceTree = "<group>"; };
 		7BB12FA62192C8DB009BEECF /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
@@ -1737,6 +1737,8 @@
 				7BFE47DC228432A600FC4379 /* PeerInfoView.xib */,
 				7BFE47DE228432C800FC4379 /* PeerInfoView.swift */,
 				7BFE47E42284530200FC4379 /* PeerHeaderView.swift */,
+				7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */,
+				7BB0F9142434B03300BEDA97 /* SelectedPeerCell.xib */,
 				7B2A116022C20F5F00AD029C /* PlayerView.swift */,
 				7B2A115E22C1ECB100AD029C /* RoundedBlurButton.swift */,
 				7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */,
@@ -2744,8 +2746,6 @@
 				7B5281752265F1730023616D /* AppCell.swift */,
 				7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
-				7BB0F9132434B03300BEDA97 /* CircleMemberCell.swift */,
-				7BB0F9142434B03300BEDA97 /* CircleMemberCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3020,7 +3020,7 @@
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
-				7BB0F9162434B03300BEDA97 /* CircleMemberCell.xib in Resources */,
+				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* WebView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
@@ -3459,7 +3459,7 @@
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
-				7BB0F9152434B03300BEDA97 /* CircleMemberCell.swift in Sources */,
+				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,

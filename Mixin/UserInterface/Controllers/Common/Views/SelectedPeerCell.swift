@@ -1,16 +1,16 @@
 import UIKit
 import MixinServices
 
-protocol CircleMemberCellDelegate: class {
-    func circleMemberCellDidSelectRemove(_ cell: UICollectionViewCell)
+protocol SelectedPeerCellDelegate: class {
+    func selectedPeerCellDidSelectRemove(_ cell: UICollectionViewCell)
 }
 
-class CircleMemberCell: UICollectionViewCell {
+class SelectedPeerCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
-    weak var delegate: CircleMemberCellDelegate?
+    weak var delegate: SelectedPeerCellDelegate?
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -19,7 +19,7 @@ class CircleMemberCell: UICollectionViewCell {
     }
     
     @IBAction func removeAction(_ sender: Any) {
-        delegate?.circleMemberCellDidSelectRemove(self)
+        delegate?.selectedPeerCellDidSelectRemove(self)
     }
     
     func render(member: CircleMember) {
@@ -31,6 +31,16 @@ class CircleMemberCell: UICollectionViewCell {
                                name: member.name)
         }
         nameLabel.text = member.name
+    }
+    
+    func render(receiver: MessageReceiver) {
+        switch receiver.item {
+        case .group(let conversation):
+            imageView.setGroupImage(conversation: conversation)
+        case .user(let user):
+            imageView.setImage(with: user)
+        }
+        nameLabel.text = receiver.name
     }
     
 }

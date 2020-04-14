@@ -81,7 +81,7 @@ class ContactViewController: UITableViewController {
     
     @objc func reloadContacts() {
         DispatchQueue.global().async { [weak self] in
-            let contacts = UserDAO.shared.contacts()
+            let contacts = UserDAO.shared.contactsWithoutApp()
             DispatchQueue.main.sync {
                 guard let weakSelf = self else {
                     return

@@ -3,6 +3,10 @@ import MixinServices
 
 class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: SearchResult>: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    class var showSelectionsOnTop: Bool {
+        false
+    }
+    
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var centerWrapperView: UIView!
@@ -12,6 +16,9 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     let queue = OperationQueue()
     let initDataOperation = BlockOperation()
     let headerReuseId = "header"
+    
+    lazy var collectionViewLayout = UICollectionViewFlowLayout()
+    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     
     var sectionTitles = [String]()
     var models = [ModelType]()
@@ -33,6 +40,22 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         tableView.register(PeerHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
         tableView.delegate = self
+        if Self.showSelectionsOnTop {
+            collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
+            collectionViewLayout.minimumInteritemSpacing = 0
+            collectionViewLayout.scrollDirection = .horizontal
+            collectionView.backgroundColor = .background
+            collectionView.alwaysBounceHorizontal = true
+            collectionView.showsHorizontalScrollIndicator = false
+            centerWrapperView.addSubview(collectionView)
+            collectionView.snp.makeConstraints { (make) in
+                make.centerY.equalToSuperview()
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.height.equalTo(80)
+            }
+            collectionView.register(R.nib.selectedPeerCell)
+        }
         searchBoxView.textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
         initData()
@@ -102,6 +125,18 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     
     func sectionIsEmpty(_ section: Int) -> Bool {
         return self.tableView(tableView, numberOfRowsInSection: section) == 0
+    }
+    
+    func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
+        centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
+        let work = {
+            self.view.layoutIfNeeded()
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: work)
+        } else {
+            UIView.performWithoutAnimation(work)
+        }
     }
     
     // MARK: - UITableViewDataSource

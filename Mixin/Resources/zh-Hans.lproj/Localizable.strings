@@ -214,6 +214,7 @@
 "circle_action_delete" = "删除圈子";
 "circle_member_category_chats" = "最近聊天";
 "circle_member_category_contacts" = "联系人";
+"circle_member_category_apps" = "小程序";
 "circle_add_hint" = "创建圈子并加入会话，即可在其中快速切换";
 "circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
 "circle_no_conversation_action" = "添加会话";
@@ -251,6 +252,7 @@
 "chat_forward_title" = "转发";
 "chat_forward_chats" = "最近聊天";
 "chat_forward_contacts" = "联系人";
+"chat_forward_apps" = "小程序";
 "chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
 "chat_decryption_failed_link" = "了解更多。";
 "chat_send_photo_failed" = "发送图片失败，请稍后重试";

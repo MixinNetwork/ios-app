@@ -312,20 +312,16 @@ class HomeViewController: UIViewController {
     
     @objc func updateHomeApps() {
         func setImage(with app: HomeApp, to button: UIButton) {
-            button.sd_cancelCurrentImageLoad()
-            button.setImage(nil, for: .normal)
             switch app {
             case .embedded(let app):
-                button.setImage(app.image, for: .normal)
+                button.setImage(app.categoryIcon, for: .normal)
                 if button == leftAppButton {
                     leftAppAction = app.action
                 } else if button == rightAppButton {
                     rightAppAction = app.action
                 }
             case .external(let user):
-                if let string = user.avatarUrl {
-                    button.sd_setImage(with: URL(string: string), for: .normal, completed: nil)
-                }
+                button.setImage(R.image.ic_app_category_other(), for: .normal)
             }
         }
         

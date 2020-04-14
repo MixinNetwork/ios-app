@@ -30,7 +30,7 @@ extension AppCell: HomeAppCell {
     }
     
     func render(app: EmbeddedHomeApp) {
-        imageView.image = app.image
+        imageView.image = app.icon
         label.text = app.name
     }
     

@@ -197,6 +197,7 @@
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_button_notification" = "Settings";
 "home_title_apps" = "Bots";
+"home_apps_candidate_empty" = "Please add your favorite bot first.";
 
 // Circle
 "circle_title" = "Circle";

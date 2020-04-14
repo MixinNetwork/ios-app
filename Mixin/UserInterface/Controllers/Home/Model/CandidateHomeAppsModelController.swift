@@ -9,7 +9,7 @@ class CandidateHomeAppsModelController: HomeAppsModelController {
         R.reuseIdentifier.home_app.identifier
     }
     
-    func reloadData() {
+    func reloadData(completion: @escaping ([User]) -> Void) {
         DispatchQueue.global().async { [weak self] in
             let pinned = AppGroupUserDefaults.User.homeAppIds
             
@@ -36,6 +36,7 @@ class CandidateHomeAppsModelController: HomeAppsModelController {
                 }
                 self.apps = apps
                 self.collectionView.reloadData()
+                completion(appUsers)
             }
         }
     }

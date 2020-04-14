@@ -948,7 +948,76 @@
                                     <constraint firstAttribute="height" constant="70" id="oec-ry-GMg"/>
                                 </constraints>
                             </view>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ej-wk-Qvq">
+                                <rect key="frame" x="0.0" y="70" width="375" height="109"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kTb-Tu-KFj">
+                                        <rect key="frame" x="20" y="21" width="335" height="82"/>
+                                        <color key="backgroundColor" name="background_secondary"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AbY-x2-upI">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="16" minY="16" maxX="16" maxY="16"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="home_app_selected" id="hct-KW-Hoa" customClass="PinnedHomeAppCell" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="16" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="bzD-HM-Vnr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9k1-5D-DaO" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="9k1-5D-DaO" secondAttribute="trailing" id="Eld-Ue-baU"/>
+                                                        <constraint firstItem="9k1-5D-DaO" firstAttribute="leading" secondItem="bzD-HM-Vnr" secondAttribute="leading" id="JYe-Ox-9oK"/>
+                                                        <constraint firstItem="9k1-5D-DaO" firstAttribute="top" secondItem="bzD-HM-Vnr" secondAttribute="top" id="nxp-vJ-0Nl"/>
+                                                        <constraint firstAttribute="bottom" secondItem="9k1-5D-DaO" secondAttribute="bottom" id="sLW-KX-SGs"/>
+                                                    </constraints>
+                                                </collectionViewCellContentView>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <size key="customSize" width="50" height="50"/>
+                                                <connections>
+                                                    <outlet property="imageView" destination="9k1-5D-DaO" id="XtJ-Y4-moH"/>
+                                                </connections>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="16"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </collectionView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press and drag a bot to pin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Nf-kR-8cU">
+                                        <rect key="frame" x="40" y="41" width="295" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_accessory"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="bottom" secondItem="6Nf-kR-8cU" secondAttribute="bottom" constant="20" id="PoV-3R-wDX"/>
+                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="leading" secondItem="2ej-wk-Qvq" secondAttribute="leading" constant="20" id="RoT-v5-GG6"/>
+                                    <constraint firstItem="6Nf-kR-8cU" firstAttribute="leading" secondItem="kTb-Tu-KFj" secondAttribute="leading" constant="20" id="Wao-Wd-L7U"/>
+                                    <constraint firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="20" id="e0G-bz-rGL"/>
+                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="21" id="hjq-HI-uXW"/>
+                                    <constraint firstAttribute="height" constant="109" id="jdA-qv-Lse"/>
+                                    <constraint firstItem="6Nf-kR-8cU" firstAttribute="top" secondItem="kTb-Tu-KFj" secondAttribute="top" constant="20" id="kXt-zT-gfq"/>
+                                    <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="6" id="tMk-Hv-bmI"/>
+                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="trailing" secondItem="6Nf-kR-8cU" secondAttribute="trailing" constant="20" id="zay-VY-Xpf"/>
+                                </constraints>
+                            </view>
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
                                 <rect key="frame" x="0.0" y="179" width="375" height="488"/>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
@@ -1004,64 +1073,8 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ej-wk-Qvq">
-                                <rect key="frame" x="0.0" y="70" width="375" height="109"/>
-                                <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kTb-Tu-KFj">
-                                        <rect key="frame" x="20" y="21" width="335" height="82"/>
-                                        <color key="backgroundColor" name="background_secondary"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AbY-x2-upI">
-                                            <size key="itemSize" width="50" height="50"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="16" minY="16" maxX="16" maxY="16"/>
-                                        </collectionViewFlowLayout>
-                                        <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="home_app_selected" id="hct-KW-Hoa" customClass="PinnedHomeAppCell" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="16" width="50" height="50"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="bzD-HM-Vnr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9k1-5D-DaO" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </view>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="9k1-5D-DaO" secondAttribute="trailing" id="Eld-Ue-baU"/>
-                                                        <constraint firstItem="9k1-5D-DaO" firstAttribute="leading" secondItem="bzD-HM-Vnr" secondAttribute="leading" id="JYe-Ox-9oK"/>
-                                                        <constraint firstItem="9k1-5D-DaO" firstAttribute="top" secondItem="bzD-HM-Vnr" secondAttribute="top" id="nxp-vJ-0Nl"/>
-                                                        <constraint firstAttribute="bottom" secondItem="9k1-5D-DaO" secondAttribute="bottom" id="sLW-KX-SGs"/>
-                                                    </constraints>
-                                                </collectionViewCellContentView>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <size key="customSize" width="50" height="50"/>
-                                                <connections>
-                                                    <outlet property="imageView" destination="9k1-5D-DaO" id="XtJ-Y4-moH"/>
-                                                </connections>
-                                            </collectionViewCell>
-                                        </cells>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="16"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </collectionView>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="leading" secondItem="2ej-wk-Qvq" secondAttribute="leading" constant="20" id="RoT-v5-GG6"/>
-                                    <constraint firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="20" id="e0G-bz-rGL"/>
-                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="21" id="hjq-HI-uXW"/>
-                                    <constraint firstAttribute="height" constant="109" id="jdA-qv-Lse"/>
-                                    <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="6" id="tMk-Hv-bmI"/>
-                                </constraints>
-                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="qIs-RA-yvT" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="3Ug-i9-K3F"/>
                             <constraint firstItem="LDb-PZ-N3K" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="Ccc-jp-7OO"/>
@@ -1079,9 +1092,10 @@
                         <outlet property="candidateCollectionLayout" destination="TuB-8c-Jea" id="jIU-Gm-i69"/>
                         <outlet property="candidateCollectionView" destination="LDb-PZ-N3K" id="8KB-Ur-3tv"/>
                         <outlet property="candidateCollectionViewHeightConstraint" destination="QTq-YP-lKy" id="Thn-L8-DbJ"/>
+                        <outlet property="noPinnedHintLabel" destination="6Nf-kR-8cU" id="qw3-hx-gcC"/>
                         <outlet property="pinnedCollectionLayout" destination="AbY-x2-upI" id="I0h-xe-XA8"/>
                         <outlet property="pinnedCollectionView" destination="kTb-Tu-KFj" id="eMu-1W-fHt"/>
-                        <outlet property="selectedWrapperHeightConstraint" destination="jdA-qv-Lse" id="YaL-Nr-ZLf"/>
+                        <outlet property="pinnedWrapperHeightConstraint" destination="jdA-qv-Lse" id="YaL-Nr-ZLf"/>
                         <outlet property="titleBarHeightConstraint" destination="oec-ry-GMg" id="wdi-DW-2bh"/>
                     </connections>
                 </viewController>

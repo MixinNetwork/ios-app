@@ -4,13 +4,14 @@ import AlignedCollectionViewFlowLayout
 
 final class HomeAppsViewController: ResizablePopupViewController {
     
+    @IBOutlet weak var noPinnedHintLabel: UILabel!
     @IBOutlet weak var pinnedCollectionView: UICollectionView!
     @IBOutlet weak var pinnedCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var candidateCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
     
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var selectedWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pinnedWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     
     override var resizableScrollView: UIScrollView? {
@@ -20,9 +21,21 @@ final class HomeAppsViewController: ResizablePopupViewController {
     private let cellCountPerRow = 4
     
     private lazy var resizeGestureCoordinator = HomeAppResizeGestureCoordinator(scrollView: candidateCollectionView)
+    private lazy var candidateEmptyHintLabel: UILabel = {
+        let label = UILabel()
+        label.text = R.string.localizable.home_apps_candidate_empty()
+        label.backgroundColor = .background
+        label.textColor = .accessoryText
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
+        candidateEmptyHintLabelIfLoaded = label
+        return label
+    }()
     
     private var pinnedAppModelController: PinnedHomeAppsModelController!
     private var candidateAppModelController: CandidateHomeAppsModelController!
+    private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     class func instance() -> HomeAppsViewController {
         let vc = R.storyboard.home.apps()!
@@ -41,19 +54,25 @@ final class HomeAppsViewController: ResizablePopupViewController {
         pinnedCollectionView.dragInteractionEnabled = true
         pinnedCollectionView.dragDelegate = pinnedAppModelController
         pinnedCollectionView.dropDelegate = pinnedAppModelController
-        pinnedAppModelController.reloadData()
+        pinnedAppModelController.reloadData(completion: { [weak self] apps in
+            self?.noPinnedHintLabel.isHidden = !apps.isEmpty
+        })
         
         candidateAppModelController = CandidateHomeAppsModelController(collectionView: candidateCollectionView)
         candidateCollectionView.dataSource = candidateAppModelController
         candidateCollectionView.dragInteractionEnabled = true
         candidateCollectionView.dragDelegate = candidateAppModelController
         candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
-        candidateAppModelController.reloadData()
+        candidateAppModelController.reloadData(completion: { [weak self] users in
+            self?.setCandidateEmptyHintHidden(!users.isEmpty)
+        })
         
         let window = AppDelegate.current.window
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
-        let deselectedHeight = maxHeight - titleBarHeightConstraint.constant - selectedWrapperHeightConstraint.constant
-        candidateCollectionViewHeightConstraint.constant = deselectedHeight
+        let candidateHeight = maxHeight - titleBarHeightConstraint.constant - pinnedWrapperHeightConstraint.constant
+        candidateCollectionViewHeightConstraint.constant = candidateHeight
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
     }
     
     override func viewWillLayoutSubviews() {
@@ -85,12 +104,35 @@ final class HomeAppsViewController: ResizablePopupViewController {
         case .expanded, .unavailable:
             return window.bounds.height - window.safeAreaInsets.top
         case .compressed:
-            return window.bounds.height / 2
+            return window.bounds.height / 3 * 2
         }
     }
     
     @IBAction func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func updateNoPinnedHint() {
+        noPinnedHintLabel.isHidden = !AppGroupUserDefaults.User.homeAppIds.isEmpty
+    }
+    
+    func setCandidateEmptyHintHidden(_ hidden: Bool) {
+        if hidden {
+            candidateEmptyHintLabelIfLoaded?.removeFromSuperview()
+        } else {
+            let x = candidateCollectionLayout.sectionInset.left
+            let y = candidateCollectionLayout.itemSize.height
+            let width = candidateCollectionView.bounds.width
+                - candidateCollectionLayout.sectionInset.horizontal
+            let height = preferredContentSize.height
+                - titleBarHeightConstraint.constant
+                - pinnedWrapperHeightConstraint.constant
+                - candidateCollectionLayout.itemSize.height
+            candidateEmptyHintLabel.frame = CGRect(x: x, y: y, width: width, height: height)
+            if candidateEmptyHintLabel.superview == nil {
+                candidateCollectionView.addSubview(candidateEmptyHintLabel)
+            }
+        }
     }
     
 }

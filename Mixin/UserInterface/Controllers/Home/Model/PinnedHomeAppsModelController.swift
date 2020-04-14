@@ -7,13 +7,19 @@ class PinnedHomeAppsModelController: HomeAppsModelController {
         R.reuseIdentifier.home_app_selected.identifier
     }
     
-    func reloadData() {
+    override func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        super.collectionView(collectionView, dragSessionDidEnd: session)
+        AppGroupUserDefaults.User.homeAppIds = apps.map({ $0.id })
+    }
+    
+    func reloadData(completion: @escaping ([HomeApp]) -> Void) {
         DispatchQueue.global().async {
             let ids = AppGroupUserDefaults.User.homeAppIds
             let apps = ids.compactMap(HomeApp.init)
             DispatchQueue.main.sync {
                 self.apps = apps
                 self.collectionView.reloadData()
+                completion(apps)
             }
         }
     }
@@ -44,17 +50,6 @@ class PinnedHomeAppsModelController: HomeAppsModelController {
 
 extension PinnedHomeAppsModelController: UICollectionViewDropDelegate {
     
-    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        guard let context = session.localDragSession?.localContext as? DragSessionContext else {
-            return false
-        }
-        if context.dragFromPinned {
-            return true
-        } else {
-            return apps.count < 4
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         guard let item = coordinator.items.first, let app = item.dragItem.localObject as? HomeApp else {
             return
@@ -81,6 +76,17 @@ extension PinnedHomeAppsModelController: UICollectionViewDropDelegate {
         context.didPerformDrop = true
         context.dropToCandidate = false
         AppGroupUserDefaults.User.homeAppIds = apps.map({ $0.id })
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        guard let context = session.localDragSession?.localContext as? DragSessionContext else {
+            return false
+        }
+        if context.dragFromPinned {
+            return true
+        } else {
+            return apps.count < 4
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {

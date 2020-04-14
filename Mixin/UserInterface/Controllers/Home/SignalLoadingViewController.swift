@@ -10,13 +10,14 @@ class SignalLoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.write(log: "SignalLoadingView...isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded)...isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized)")
+        Logger.write(log: "SignalLoadingView...isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded)...isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized)...isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
             try! SignalDatabase.shared.initDatabase()
 
             self.syncSignalKeys()
             self.syncSession()
+            self.syncCircles()
 
             DispatchQueue.main.async {
                 let time = Date().timeIntervalSince(startTime)
@@ -53,6 +54,52 @@ class SignalLoadingViewController: UIViewController {
                 guard error.code != 401 else {
                     return
                 }
+                Thread.sleep(forTimeInterval: 2)
+                reporter.report(error: error)
+            }
+        } while true
+    }
+
+    private func syncCircles() {
+        guard !AppGroupUserDefaults.User.isCircleSynchronized else {
+            return
+        }
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            switch CircleAPI.shared.circles() {
+            case let .success(response):
+                let circles = response.map { Circle(circleId: $0.circleId, name: $0.name, createdAt: $0.createdAt) }
+                MixinDatabase.shared.insertOrReplace(objects: circles)
+
+                for circle in circles {
+                    syncCircleConversations(circleId: circle.circleId)
+                }
+                AppGroupUserDefaults.User.isCircleSynchronized = true
+                return
+            case let .failure(error):
+                Thread.sleep(forTimeInterval: 2)
+                reporter.report(error: error)
+            }
+        } while true
+    }
+
+    private func syncCircleConversations(circleId: String) {
+        var offset: String?
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+
+            switch CircleAPI.shared.circleConversations(circleId: circleId, offset: offset, limit: 500) {
+            case let .success(conversations):
+                MixinDatabase.shared.insertOrReplace(objects: conversations)
+                offset = conversations.last?.createdAt
+                if conversations.count < 500 {
+                    return
+                }
+            case let .failure(error):
                 Thread.sleep(forTimeInterval: 2)
                 reporter.report(error: error)
             }

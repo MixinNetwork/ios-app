@@ -70,6 +70,7 @@ class RestoreViewController: UIViewController {
                 AppGroupUserDefaults.Account.canRestoreMedia = true
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
                 AppGroupUserDefaults.User.needsRebuildDatabase = true
+                AppGroupUserDefaults.User.isCircleSynchronized = false
                 
                 DispatchQueue.main.async {
                     AppDelegate.current.window.rootViewController = makeInitialViewController()

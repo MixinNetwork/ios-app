@@ -20,10 +20,25 @@ final class CircleAPI: BaseAPI {
         static func conversations(id: String) -> String {
             "circles/\(id)/conversations"
         }
+        static func conversations(id: String, offset: String?, limit: Int) -> String {
+            var url = "circles/\(id)/conversations?limit=\(limit)"
+            if let offset = offset {
+                url += "&offset=\(offset)"
+            }
+            return url
+        }
     }
     
     static let shared = CircleAPI()
-    
+
+    func circles() -> APIResult<[CircleResponse]> {
+        return request(method: .get, url: Url.circles)
+    }
+
+    func circleConversations(circleId: String, offset: String?, limit: Int) -> APIResult<[CircleConversation]> {
+        return request(method: .get, url: Url.conversations(id: circleId, offset: offset, limit: limit))
+    }
+
     func create(name: String, completion: @escaping (APIResult<CircleResponse>) -> Void) {
         let param = ["name": name]
         request(method: .post, url: Url.circles, parameters: param, completion: completion)

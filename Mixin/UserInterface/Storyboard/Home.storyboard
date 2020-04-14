@@ -368,6 +368,10 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHT-NY-1rS">
                                 <rect key="frame" x="0.0" y="592" width="375" height="75"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cix-KB-afd">
+                                        <rect key="frame" x="0.0" y="75" width="375" height="0.0"/>
+                                        <color key="backgroundColor" name="background"/>
+                                    </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
                                         <rect key="frame" x="0.0" y="-34" width="375" height="109"/>
                                     </imageView>
@@ -410,11 +414,14 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="cix-KB-afd" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="09G-MV-xYm"/>
                                     <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="G7H-AD-3c2"/>
+                                    <constraint firstItem="cix-KB-afd" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="HqI-QZ-h0t"/>
                                     <constraint firstItem="NKg-z2-Eo8" firstAttribute="top" secondItem="iHT-NY-1rS" secondAttribute="top" id="Km3-pf-yHX"/>
-                                    <constraint firstAttribute="bottom" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="Lh0-rb-QQH"/>
                                     <constraint firstItem="NKg-z2-Eo8" firstAttribute="centerX" secondItem="iHT-NY-1rS" secondAttribute="centerX" id="PEd-KM-jqp"/>
+                                    <constraint firstAttribute="bottom" secondItem="cix-KB-afd" secondAttribute="bottom" id="Snq-gY-G1L"/>
                                     <constraint firstAttribute="height" constant="75" id="cQF-MN-LDQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="cix-KB-afd" secondAttribute="trailing" id="oFw-dX-SGJ"/>
                                     <constraint firstItem="kA4-pv-sCo" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="vb5-rb-gAi"/>
                                 </constraints>
                             </view>
@@ -449,6 +456,7 @@
                             <constraint firstAttribute="trailing" secondItem="tgL-jC-hwU" secondAttribute="trailing" id="lDO-HN-MrD"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lic-EF-P70"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" constant="-28" id="o6R-WF-m77"/>
+                            <constraint firstItem="cix-KB-afd" firstAttribute="top" secondItem="5mk-Fk-SFN" secondAttribute="bottom" id="oA4-y4-QK3"/>
                             <constraint firstItem="BAu-gi-TQg" firstAttribute="height" secondItem="2PV-tA-eIh" secondAttribute="height" id="swY-bH-tag"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="tuS-El-9K3"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="top" secondItem="JkM-gn-X6q" secondAttribute="top" priority="999" id="vPl-Uf-b9R"/>

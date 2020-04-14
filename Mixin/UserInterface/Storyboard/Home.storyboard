@@ -318,7 +318,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <button opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l2d-Un-d5h" customClass="HomeTitleButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="183" height="44"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="237" height="44"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <state key="normal" title="Mixin">
                                                     <color key="titleColor" name="text"/>
@@ -333,7 +333,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DbF-VG-Rtb">
-                                                <rect key="frame" x="193" y="0.0" width="44" height="44"/>
+                                                <rect key="frame" x="247" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="DbF-VG-Rtb" secondAttribute="height" id="tod-VS-i2v"/>
                                                 </constraints>
@@ -343,23 +343,13 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgk-eO-xl5">
-                                                <rect key="frame" x="247" y="0.0" width="44" height="44"/>
+                                                <rect key="frame" x="301" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="sgk-eO-xl5" secondAttribute="height" id="vpg-Rw-5UU"/>
                                                 </constraints>
                                                 <state key="normal" image="ic_title_contact"/>
                                                 <connections>
                                                     <action selector="contactsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="WPi-vz-bR7"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XNQ-RS-HxM">
-                                                <rect key="frame" x="301" y="0.0" width="44" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="XNQ-RS-HxM" secondAttribute="height" id="wMg-jN-nS7"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_title_wallet"/>
-                                                <connections>
-                                                    <action selector="walletAction" destination="hQE-mj-dkd" eventType="touchUpInside" id="uMB-jU-jWR"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -379,7 +369,7 @@
                                 <rect key="frame" x="0.0" y="592" width="375" height="75"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-36" width="375" height="111"/>
+                                        <rect key="frame" x="0.0" y="-34" width="375" height="109"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
                                         <rect key="frame" x="71.5" y="0.0" width="232" height="44"/>
@@ -1534,7 +1524,6 @@ chat history from icloud</string>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_title_contact" width="23" height="19"/>
         <image name="ic_title_search" width="19" height="19"/>
-        <image name="ic_title_wallet" width="20" height="21"/>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

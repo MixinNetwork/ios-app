@@ -4,7 +4,7 @@ import MixinServices
 final class EmbeddedHomeApp {
     
     static let wallet = EmbeddedHomeApp(id: 0, image: R.image.ic_home_app_wallet()!, name: R.string.localizable.wallet_title()) {
-        UIApplication.homeViewController?.walletAction()
+        UIApplication.homeViewController?.showWallet()
     }
     
     static let scan = EmbeddedHomeApp(id: 1, image: R.image.ic_home_app_scan()!, name: R.string.localizable.scan_qr_code()) {

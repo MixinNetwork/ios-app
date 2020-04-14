@@ -156,32 +156,6 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
-    @IBAction func walletAction() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        if account.has_pin {
-            let shouldValidatePin: Bool
-            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
-                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
-            } else {
-                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                shouldValidatePin = true
-            }
-            
-            if shouldValidatePin {
-                let validator = PinValidationViewController(onSuccess: { [weak self](_) in
-                    self?.navigationController?.pushViewController(WalletViewController.instance(), animated: false)
-                })
-                present(validator, animated: true, completion: nil)
-            } else {
-                navigationController?.pushViewController(WalletViewController.instance(), animated: true)
-            }
-        } else {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
-        }
-    }
-    
     @IBAction func showSearchAction() {
         searchViewController.prepareForReuse()
         searchContainerTopConstraint.constant = 0
@@ -413,6 +387,32 @@ class HomeViewController: UIViewController {
             alertSettings(Localized.PERMISSION_DENIED_CAMERA)
         @unknown default:
             alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        }
+    }
+    
+    func showWallet() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        if account.has_pin {
+            let shouldValidatePin: Bool
+            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
+                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            } else {
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                shouldValidatePin = true
+            }
+            
+            if shouldValidatePin {
+                let validator = PinValidationViewController(onSuccess: { [weak self](_) in
+                    self?.navigationController?.pushViewController(WalletViewController.instance(), animated: false)
+                })
+                present(validator, animated: true, completion: nil)
+            } else {
+                navigationController?.pushViewController(WalletViewController.instance(), animated: true)
+            }
+        } else {
+            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
         }
     }
     

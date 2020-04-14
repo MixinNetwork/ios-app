@@ -63,7 +63,8 @@ extension PinnedHomeAppsModelController: UICollectionViewDropDelegate {
             ?? IndexPath(item: 0, section: 0)
         if context.dragFromPinned {
             collectionView.performBatchUpdates({
-                apps.swapAt(context.fromIndexPath.item, destination.item)
+                let app = apps.remove(at: context.fromIndexPath.item)
+                apps.insert(app, at: destination.item)
                 collectionView.moveItem(at: context.fromIndexPath, to: destination)
             }, completion: nil)
         } else {

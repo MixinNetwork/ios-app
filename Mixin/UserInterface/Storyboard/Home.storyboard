@@ -1007,7 +1007,7 @@
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="trailing" secondItem="6Nf-kR-8cU" secondAttribute="trailing" constant="20" id="zay-VY-Xpf"/>
                                 </constraints>
                             </view>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
                                 <rect key="frame" x="0.0" y="179" width="375" height="488"/>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>

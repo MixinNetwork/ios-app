@@ -317,7 +317,11 @@ class HomeViewController: UIViewController {
             switch app {
             case .embedded(let app):
                 button.setImage(app.image, for: .normal)
-                leftAppAction = app.action
+                if button == leftAppButton {
+                    leftAppAction = app.action
+                } else if button == rightAppButton {
+                    rightAppAction = app.action
+                }
             case .external(let user):
                 if let string = user.avatarUrl {
                     button.sd_setImage(with: URL(string: string), for: .normal, completed: nil)

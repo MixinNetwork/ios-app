@@ -343,9 +343,7 @@ class HomeViewController: UIViewController {
             switch app {
             case .embedded(let app):
                 button.setImage(app.image, for: .normal)
-                leftAppAction = {
-                    app.action(self)
-                }
+                leftAppAction = app.action
             case .external(let user):
                 if let string = user.avatarUrl {
                     button.sd_setImage(with: URL(string: string), for: .normal, completed: nil)
@@ -356,9 +354,7 @@ class HomeViewController: UIViewController {
         func action(for app: HomeApp) -> (() -> Void) {
             switch app {
             case .embedded(let app):
-                return {
-                    app.action(self)
-                }
+                return app.action
             case .external(let user):
                 return {
                     ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [user.userId]))

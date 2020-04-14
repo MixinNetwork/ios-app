@@ -51,6 +51,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
         
         pinnedAppModelController = PinnedHomeAppsModelController(collectionView: pinnedCollectionView)
         pinnedCollectionView.dataSource = pinnedAppModelController
+        pinnedCollectionView.delegate = self
         pinnedCollectionView.dragInteractionEnabled = true
         pinnedCollectionView.dragDelegate = pinnedAppModelController
         pinnedCollectionView.dropDelegate = pinnedAppModelController
@@ -60,6 +61,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
         
         candidateAppModelController = CandidateHomeAppsModelController(collectionView: candidateCollectionView)
         candidateCollectionView.dataSource = candidateAppModelController
+        candidateCollectionView.delegate = self
         candidateCollectionView.dragInteractionEnabled = true
         candidateCollectionView.dragDelegate = candidateAppModelController
         candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
@@ -132,6 +134,30 @@ final class HomeAppsViewController: ResizablePopupViewController {
             if candidateEmptyHintLabel.superview == nil {
                 candidateCollectionView.addSubview(candidateEmptyHintLabel)
             }
+        }
+    }
+    
+}
+
+extension HomeAppsViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let app: HomeApp
+        if collectionView == pinnedCollectionView {
+            app = pinnedAppModelController.apps[indexPath.row]
+        } else if collectionView == candidateCollectionView {
+            app = candidateAppModelController.apps[indexPath.row]
+        } else {
+            return
+        }
+        switch app {
+        case let .embedded(app):
+            dismiss(animated: true, completion: app.action)
+        case let .external(user):
+            let item = UserItem.createUser(from: user)
+            let vc = UserProfileViewController(user: item)
+            dismissAndPresent(vc)
         }
     }
     

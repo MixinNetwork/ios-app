@@ -41,6 +41,7 @@ extension AppGroupUserDefaults {
             
             case circleId = "circle_id"
             case circleName = "circle_name"
+            case isCircleSynchronized = "is_circle_synchronized"
         }
         
         public static let version = 19
@@ -136,6 +137,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
         public static var circleId: String?
+
+        @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: true)
+        public static var isCircleSynchronized: Bool
         
         @Default(namespace: .user, key: Key.circleName, defaultValue: nil)
         public static var circleName: String? {

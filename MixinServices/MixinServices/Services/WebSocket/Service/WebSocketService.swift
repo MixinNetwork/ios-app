@@ -111,7 +111,7 @@ public class WebSocketService {
 
     public func connectIfNeeded() {
         enqueueOperation {
-            guard LoginManager.shared.isLoggedIn else {
+            guard canProcessMessages else {
                 return
             }
             guard NetworkManager.shared.isReachable else {

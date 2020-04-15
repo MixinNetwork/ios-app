@@ -20,7 +20,13 @@ public var globalSignalContext: OpaquePointer {
 }
 
 public var canProcessMessages: Bool {
-    LoginManager.shared.isLoggedIn && AppGroupUserDefaults.isDocumentsMigrated && !AppGroupUserDefaults.User.needsUpgradeInMainApp
+    LoginManager.shared.isLoggedIn &&
+    AppGroupUserDefaults.isDocumentsMigrated &&
+    !AppGroupUserDefaults.User.needsUpgradeInMainApp &&
+    !AppGroupUserDefaults.Account.isClockSkewed &&
+    AppGroupUserDefaults.Crypto.isPrekeyLoaded &&
+    AppGroupUserDefaults.Crypto.isSessionSynchronized &&
+    AppGroupUserDefaults.User.isCircleSynchronized
 }
 
 public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.extension" as CFString)

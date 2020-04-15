@@ -62,7 +62,7 @@ class MessageViewModel: CustomDebugStringConvertible {
         self.isEncrypted = message.category.hasPrefix("SIGNAL_")
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
 
-        thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage)
+        thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage, width: message.mediaWidth, height: message.mediaHeight)
         if Self.supportsQuoting, let quoteContent = message.quoteContent, let quote = Quote(quoteContent: quoteContent) {
             quotedMessageViewModel = QuotedMessageViewModel(quote: quote)
         } else {

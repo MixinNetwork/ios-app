@@ -93,7 +93,7 @@ struct GalleryItem: Equatable {
             self.thumbnail = .url(url)
         } else if self.category == .video, let url = url, let coverUrl = GalleryItem.videoCoverUrl(mediaUrl: url) {
             self.thumbnail = .url(coverUrl)
-        } else if let image = UIImage.createImageFromString(thumbImage: thumbImage) {
+        } else if let image = UIImage.createImageFromString(thumbImage: thumbImage, width: mediaWidth, height: mediaHeight) {
             self.thumbnail = .image(image)
         } else {
             self.thumbnail = .none

@@ -1,7 +1,7 @@
 import UIKit
 
 extension UIImage {
-    public func blurHash(numberOfComponents components: (Int, Int)) -> String? {
+    public func blurHash(numberOfComponents components: (Int, Int) = (4, 3)) -> String {
 		let pixelWidth = Int(round(size.width * scale))
 		let pixelHeight = Int(round(size.height * scale))
 
@@ -26,7 +26,7 @@ extension UIImage {
 		let data = dataProvider.data,
 		let pixels = CFDataGetBytePtr(data) else {
 			assertionFailure("Unexpected error!")
-			return nil
+			return "L:F~zBWBofj[_4ayjuj[xvofjtfQ"
 		}
 
         let width = cgImage.width

@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-internal class RefreshOffsetJob: BaseJob {
+class RefreshOffsetJob: BaseJob {
 
     override func getJobId() -> String {
         return "refresh-offset"

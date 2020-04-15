@@ -75,8 +75,8 @@ public final class AssetAPI: BaseAPI {
         return request(method: .get, url: url)
     }
     
-    public func topAssets() -> APIResult<[Asset]> {
-        return request(method: .get, url: url.top)
+    public func topAssets(completion: @escaping (APIResult<[Asset]>) -> Void) {
+        request(method: .get, url: url.top, completion: completion)
     }
     
     public func fiats() -> APIResult<[FiatMoney]> {

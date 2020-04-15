@@ -1,19 +1,23 @@
 import UIKit
 import MixinServices
 
-class RefreshTopAssetsJob: BaseJob {
+class RefreshTopAssetsJob: AsynchronousJob {
     
     override func getJobId() -> String {
         return "refresh-top-assets"
     }
     
-    override func run() throws {
-        switch AssetAPI.shared.topAssets() {
-        case let .success(assets):
-            TopAssetsDAO.shared.replaceAssets(assets)
-        case let .failure(error):
-            throw error
+    override func execute() -> Bool {
+        AssetAPI.shared.topAssets { (result) in
+            switch result {
+            case let .success(assets):
+                TopAssetsDAO.shared.replaceAssets(assets)
+            case .failure:
+                break
+            }
+            self.finishJob()
         }
+        return true
     }
     
 }

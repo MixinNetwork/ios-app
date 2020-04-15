@@ -487,6 +487,7 @@
 		DF08F0A623828B8F005CFD34 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */; };
 		DF0A09742444AD7600378B4F /* BlurHashEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A09722444AD7600378B4F /* BlurHashEncode.swift */; };
 		DF0A09752444AD7600378B4F /* BlurHashDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A09732444AD7600378B4F /* BlurHashDecode.swift */; };
+		DF0A0A5E24476EA000378B4F /* RefreshOffsetJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A0A5D24476EA000378B4F /* RefreshOffsetJob.swift */; };
 		DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */; };
 		DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */; };
 		DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */; };
@@ -1266,6 +1267,7 @@
 		DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
 		DF0A09722444AD7600378B4F /* BlurHashEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurHashEncode.swift; sourceTree = "<group>"; };
 		DF0A09732444AD7600378B4F /* BlurHashDecode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurHashDecode.swift; sourceTree = "<group>"; };
+		DF0A0A5D24476EA000378B4F /* RefreshOffsetJob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshOffsetJob.swift; sourceTree = "<group>"; };
 		DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalTipWindow.xib; sourceTree = "<group>"; };
 		DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalTipWindow.swift; sourceTree = "<group>"; };
 		DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTextSizeExtension.swift; sourceTree = "<group>"; };
@@ -2775,6 +2777,7 @@
 				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
 				7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */,
 				DF1A9A7F1FF25DB600A95188 /* RequestInAppNotificationJob.swift */,
+				DF0A0A5D24476EA000378B4F /* RefreshOffsetJob.swift */,
 				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
@@ -3687,6 +3690,7 @@
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				7B4C6571242358D5003B78F9 /* LocationSearchNoResultView.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
+				DF0A0A5E24476EA000378B4F /* RefreshOffsetJob.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,

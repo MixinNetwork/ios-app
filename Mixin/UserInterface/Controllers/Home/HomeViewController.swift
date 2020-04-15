@@ -301,17 +301,6 @@ class HomeViewController: UIViewController {
     @objc func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
         titleButton.setTitle(topLeftTitle, for: .normal)
-        DispatchQueue.global().async {
-            guard NetworkManager.shared.isReachableOnWiFi else {
-                return
-            }
-            if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
-                BackupJobQueue.shared.addJob(job: BackupJob())
-            }
-            if AppGroupUserDefaults.Account.canRestoreMedia {
-                BackupJobQueue.shared.addJob(job: RestoreJob())
-            }
-        }
     }
     
     @objc func webSocketDidDisconnect(_ notification: Notification) {

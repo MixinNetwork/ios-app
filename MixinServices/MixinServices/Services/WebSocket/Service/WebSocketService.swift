@@ -21,7 +21,6 @@ public class WebSocketService {
     private let queue = DispatchQueue(label: "one.mixin.services.queue.websocket")
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
-    private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
     
     private var host: String?
     private var socket: WebSocketProvider?
@@ -214,13 +213,6 @@ extension WebSocketService: WebSocketProviderDelegate {
         requestListPendingMessages()
         ConcurrentJobQueue.shared.resume()
         heartbeat?.start()
-
-        if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > refreshOneTimePreKeyInterval {
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
-            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
-        }
-        AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
-        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
     }
     
     func websocketDidDisconnect(socket: WebSocketProvider, isSwitchNetwork: Bool) {

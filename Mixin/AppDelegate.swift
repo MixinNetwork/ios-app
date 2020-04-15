@@ -57,6 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...")
+            if UIApplication.shared.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
             AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
             self.cancelBackgroundTask()
         })
@@ -185,6 +190,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WebSocketService.shared.connectIfNeeded()
 
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            Logger.write(log: "[AppDelegate] didReceiveRemoteNotification...expirationHandler...")
+            if UIApplication.shared.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
             self.cancelBackgroundTask()
             completionHandler(.newData)
         }
@@ -205,7 +215,30 @@ extension AppDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(JobService.shared, selector: #selector(JobService.restoreJobs), name: WebSocketService.didSendListPendingMessageNotification, object: nil)
+    }
+
+    @objc func webSocketDidConnect() {
+        guard canProcessMessages, UIApplication.isApplicationActive else {
+            return
+        }
+
+        if NetworkManager.shared.isReachableOnWiFi {
+            if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
+                BackupJobQueue.shared.addJob(job: BackupJob())
+            }
+            if AppGroupUserDefaults.Account.canRestoreMedia {
+                BackupJobQueue.shared.addJob(job: RestoreJob())
+            }
+        }
+
+        if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > 3600 * 2 {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
+        }
+        AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()
+        ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
     }
     
     @objc func updateApplicationIconBadgeNumber() {

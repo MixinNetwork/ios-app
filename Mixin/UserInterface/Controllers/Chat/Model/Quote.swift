@@ -61,7 +61,7 @@ struct Quote {
             } else if message.category.hasSuffix("_CONTACT") {
                 image = .user(urlString: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
             }
-            if image == nil, let thumbString = message.thumbImage, let data = Data(base64Encoded: thumbString), let thumbnail = UIImage(data: data) {
+            if image == nil, let thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage, width: message.mediaWidth, height: message.mediaHeight) {
                 image = .thumbnail(thumbnail)
             }
             self.image = image

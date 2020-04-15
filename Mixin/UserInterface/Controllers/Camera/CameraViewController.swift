@@ -4,11 +4,6 @@ import Photos
 import AVKit
 import MixinServices
 
-enum DetechStatus {
-    case detecting
-    case failed
-}
-
 protocol CameraViewControllerDelegate: class {
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool
 }
@@ -25,17 +20,20 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var switchCameraButton: BouncingButton!
     @IBOutlet weak var cameraFlashButton: BouncingButton!
     @IBOutlet weak var snapshotImageView: UIImageView!
-    @IBOutlet weak var qrcodeTipsView: UIView!
+    @IBOutlet weak var qrCodeScanningView: UIView!
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var timeView: UIView!
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var qrCodeBorderView: UIImageView!
+    @IBOutlet weak var scanIndicatorView: UIImageView!
+    @IBOutlet weak var qrCodeToolbarView: UIStackView!
     
     @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
     
     weak var delegate: CameraViewControllerDelegate?
     
-    var scanQrCodeOnly = false
+    var asQrCodeScanner = false
     
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
@@ -50,14 +48,12 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
     private var flashOn = false
-    private var detectedQRCodes = Set<String>()
-    private var detectText = ""
+    private var detectedQrCodes = Set<String>()
     private var recordTimer: Timer?
     private var audioRecordPermissionIsGranted: Bool {
         return AVAudioSession.sharedInstance().recordPermission == .granted
     }
 
-    private lazy var notificationController = NotificationController(delegate: self)
     private lazy var shutterAnimationView = ShutterAnimationView()
     private lazy var videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera],
                                                                                     mediaType: AVMediaType.video,
@@ -69,20 +65,37 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         sessionQueue.async {
             self.configureSession()
         }
-
-        if !AppGroupUserDefaults.User.hasShownCameraQrCodeTips {
-            qrcodeTipsView.isHidden = false
-        }
         prepareRecord()
-        if scanQrCodeOnly {
+        if asQrCodeScanner {
             sendButton.isHidden = true
             takeButton.isHidden = true
             saveButton.isHidden = true
             albumButton.isHidden = true
             switchCameraButton.isHidden = true
+            cameraFlashButton.isHidden = true
+            qrCodeScanningView.isHidden = false
+            qrCodeToolbarView.isHidden = false
+            view.layoutIfNeeded()
+            scanIndicatorView.center.x = view.bounds.width / 2
+            scanIndicatorView.frame.origin.y = qrCodeBorderView.frame.origin.y
+            UIView.animateKeyframes(withDuration: 4, delay: 0, options: [.repeat], animations: {
+                UIView.setAnimationCurve(.linear)
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                    self.scanIndicatorView.frame.origin.y = self.qrCodeBorderView.frame.maxY - self.scanIndicatorView.frame.height
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0) {
+                    self.scanIndicatorView.transform = CGAffineTransform(scaleX: 1, y: -1)
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    self.scanIndicatorView.frame.origin.y = self.qrCodeBorderView.frame.origin.y
+                }
+                UIView.addKeyframe(withRelativeStartTime: 1, relativeDuration: 0) {
+                    self.scanIndicatorView.transform = .identity
+                }
+            }, completion: nil)
         }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -106,12 +119,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         }
     }
     
-    @IBAction func hideTipsAction(_ sender: Any) {
-        AppGroupUserDefaults.User.hasShownCameraQrCodeTips = true
-        qrcodeTipsView.isHidden = true
-    }
-
-
     @IBAction func savePhotoAction(_ sender: Any) {
         guard didTakePhoto, let photo = photoCaptureProcessor?.photo else {
             return
@@ -571,27 +578,26 @@ extension CameraViewController {
 extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard !didTakePhoto, qrcodeTipsView.isHidden else {
+        guard asQrCodeScanner else {
             return
         }
-        guard metadataObjects.count > 0, let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject else {
+        guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject else {
             return
         }
-        guard let urlString = object.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines), !urlString.isEmpty else {
+        guard let string = object.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines), !string.isEmpty else {
             return
         }
-        guard !detectedQRCodes.contains(urlString) else {
+        guard !detectedQrCodes.contains(string) else {
             return
         }
-        
-        detectedQRCodes.insert(urlString)
-        
-        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: urlString) {
+        detectedQrCodes.insert(string)
+        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
             return
         }
-
-        detectText = urlString
-        notificationController.present(urlString: urlString)
+        if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
+            return
+        }
+        RecognizeWindow.instance().presentWindow(text: string)
     }
     
 }
@@ -602,18 +608,6 @@ extension CameraViewController: PhotoAssetPickerDelegate {
         let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
         vc.detectsQrCode = true
         navigationController?.pushViewController(vc, animated: true)
-    }
-    
-}
-
-extension CameraViewController: NotificationControllerDelegate {
-    
-    func notificationControllerDidSelectNotification(_ controller: NotificationController) {
-        AppGroupUserDefaults.User.hasPerformedQrCodeScanning = true
-        if let url = URL(string: detectText), UrlWindow.checkUrl(url: url) {
-            return
-        }
-        RecognizeWindow.instance().presentWindow(text: detectText)
     }
     
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -176,60 +176,65 @@
                                     <action selector="savePhotoAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="vcf-xX-1Ne"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNM-S5-JoA">
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="RwT-bg-B6J">
+                                <rect key="frame" x="99.5" y="565" width="176" height="72"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kj3-VA-Juy">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Kj3-VA-Juy" secondAttribute="height" id="KTu-qZ-DQW"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_camera_album"/>
+                                        <connections>
+                                            <action selector="albumAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="WTW-au-TjX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I9q-fn-2qR">
+                                        <rect key="frame" x="104" y="0.0" width="72" height="72"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="I9q-fn-2qR" secondAttribute="height" id="Yit-CO-KFr"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_scan_qr_code_torch"/>
+                                        <connections>
+                                            <action selector="changeFlashAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="vDS-dM-nFB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="n1W-yV-IbH"/>
+                                </constraints>
+                            </stackView>
+                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNM-S5-JoA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="2X6-GY-egt">
-                                        <rect key="frame" x="57.5" y="209" width="260" height="189"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Camera" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VMD-0x-hnr">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="26.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_tips_title"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more options." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tm2-EX-DbT">
-                                                <rect key="frame" x="0.0" y="36.5" width="260" height="50.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_tips_summary"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TO7-zt-85u">
-                                                <rect key="frame" x="0.0" y="97" width="260" height="50"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="sZT-g2-URY"/>
-                                                </constraints>
-                                            </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ki-tE-NJ2">
-                                                <rect key="frame" x="0.0" y="157" width="260" height="32"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                <state key="normal" title="Continue"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="hideTipsAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="bBC-TG-YTC"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Sy-ix-nF6">
+                                        <rect key="frame" x="20" y="18" width="335" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular18"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="scan_qr_code"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_qr_code_border" translatesAutoresizingMaskIntoConstraints="NO" id="khA-xf-LgL">
+                                        <rect key="frame" x="72" y="218" width="231" height="231"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="260" id="YGl-ek-4oo"/>
+                                            <constraint firstAttribute="width" secondItem="khA-xf-LgL" secondAttribute="height" id="xAa-m7-7W0"/>
                                         </constraints>
-                                    </stackView>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_scan_indicator" translatesAutoresizingMaskIntoConstraints="NO" id="rXw-q8-tK5">
+                                        <rect key="frame" x="72.5" y="218" width="230" height="37.5"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="2X6-GY-egt" firstAttribute="centerX" secondItem="WNM-S5-JoA" secondAttribute="centerX" id="pov-Oh-r4o"/>
-                                    <constraint firstItem="2X6-GY-egt" firstAttribute="centerY" secondItem="WNM-S5-JoA" secondAttribute="centerY" constant="-30" id="xuv-EY-AKt"/>
+                                    <constraint firstItem="khA-xf-LgL" firstAttribute="leading" secondItem="WNM-S5-JoA" secondAttribute="leading" constant="72" id="FHE-iZ-vbK"/>
+                                    <constraint firstItem="4Sy-ix-nF6" firstAttribute="leading" secondItem="WNM-S5-JoA" secondAttribute="leading" constant="20" id="WAL-9t-30u"/>
+                                    <constraint firstItem="khA-xf-LgL" firstAttribute="centerY" secondItem="WNM-S5-JoA" secondAttribute="centerY" id="aBz-nv-kGh"/>
+                                    <constraint firstAttribute="trailing" secondItem="khA-xf-LgL" secondAttribute="trailing" constant="72" id="hmt-TI-7Be"/>
+                                    <constraint firstAttribute="trailing" secondItem="4Sy-ix-nF6" secondAttribute="trailing" constant="20" id="nz8-1j-DM4"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -237,6 +242,7 @@
                         <constraints>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" id="0ZW-LT-9fS"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="leading" secondItem="LBJ-RT-mbD" secondAttribute="leading" id="4PU-8s-ypb"/>
+                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="RwT-bg-B6J" secondAttribute="bottom" constant="30" id="5Sc-aZ-jCc"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="5sm-8G-Krj" secondAttribute="trailing" id="7PC-Qa-UVF"/>
                             <constraint firstItem="tep-6D-z0y" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" id="8f5-1g-NKO"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" priority="750" id="9Ac-h9-fyK"/>
@@ -247,11 +253,13 @@
                             <constraint firstAttribute="bottom" secondItem="WNM-S5-JoA" secondAttribute="bottom" id="Lt7-Ck-FwU"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="top" secondItem="LBJ-RT-mbD" secondAttribute="top" id="MEx-aV-YLO"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="Ogw-Vy-yTn"/>
+                            <constraint firstItem="RwT-bg-B6J" firstAttribute="centerX" secondItem="ADJ-U9-E6n" secondAttribute="centerX" id="RPF-bY-l2n"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="WNM-S5-JoA" secondAttribute="trailing" id="SId-qr-ESJ"/>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="W89-ez-v1g"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="ZJy-mI-7RA"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" priority="500" id="aVK-Ir-3VC"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerY" secondItem="5sm-8G-Krj" secondAttribute="centerY" id="adt-op-H7l"/>
+                            <constraint firstItem="4Sy-ix-nF6" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" constant="18" id="axb-VA-cNe"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerY" secondItem="ADJ-U9-E6n" secondAttribute="centerY" id="bmo-jI-9FY"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerX" secondItem="5sm-8G-Krj" secondAttribute="centerX" id="cDv-XC-X0w"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="9hJ-zq-Afw" secondAttribute="bottom" id="caf-qy-Pe9"/>
@@ -278,9 +286,12 @@
                         <outlet property="loadingView" destination="o5Y-dL-Imf" id="EUb-EZ-MAk"/>
                         <outlet property="navigationOverridesStatusBarConstraint" destination="9Ac-h9-fyK" id="5Ph-yv-gn5"/>
                         <outlet property="previewView" destination="LBJ-RT-mbD" id="fOG-82-anz"/>
-                        <outlet property="qrcodeTipsView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
+                        <outlet property="qrCodeBorderView" destination="khA-xf-LgL" id="ys9-7a-vJT"/>
+                        <outlet property="qrCodeScanningView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
+                        <outlet property="qrCodeToolbarView" destination="RwT-bg-B6J" id="NrN-7n-6S5"/>
                         <outlet property="recordingRedDotView" destination="98N-CS-DAD" id="cxX-Ik-fTW"/>
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
+                        <outlet property="scanIndicatorView" destination="rXw-q8-tK5" id="5RZ-Ea-sTm"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
                         <outlet property="snapshotImageView" destination="Lks-aY-qYz" id="yyp-b9-zGn"/>
                         <outlet property="switchCameraButton" destination="jHd-gi-a9Q" id="kSL-4U-uWZ"/>
@@ -302,5 +313,8 @@
         <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_camera_switch" width="28" height="22"/>
+        <image name="ic_qr_code_border" width="92.5" height="92.5"/>
+        <image name="ic_scan_indicator" width="230" height="37.5"/>
+        <image name="ic_scan_qr_code_torch" width="30" height="32"/>
     </resources>
 </document>

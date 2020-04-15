@@ -12,8 +12,6 @@ extension AppGroupUserDefaults {
             case isLogoutByServer = "logged_out_by_server"
             
             case hasShownRecallTips = "session_secret"
-            case hasShownCameraQrCodeTips = "shown_camera_qrcode_tips"
-            case hasPerformedQrCodeScanning = "has_scanned_qr_code"
             case hasPerformedTransfer = "has_performed_transfer"
             
             case autoBackup = "auto_backup"
@@ -74,12 +72,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.hasShownRecallTips, defaultValue: false)
         public static var hasShownRecallTips: Bool
-        
-        @Default(namespace: .user, key: Key.hasShownCameraQrCodeTips, defaultValue: false)
-        public static var hasShownCameraQrCodeTips: Bool
-        
-        @Default(namespace: .user, key: Key.hasPerformedQrCodeScanning, defaultValue: false)
-        public static var hasPerformedQrCodeScanning: Bool
         
         @Default(namespace: .user, key: Key.hasPerformedTransfer, defaultValue: false)
         public static var hasPerformedTransfer: Bool
@@ -185,8 +177,6 @@ extension AppGroupUserDefaults {
             isLogoutByServer = CommonUserDefault.shared.hasForceLogout
             
             hasShownRecallTips = CommonUserDefault.shared.isRecallTips
-            hasShownCameraQrCodeTips = CommonUserDefault.shared.isCameraQRCodeTips
-            hasPerformedQrCodeScanning = CommonUserDefault.shared.hasPerformedQRCodeScanning
             hasPerformedTransfer = CommonUserDefault.shared.hasPerformedTransfer
             
             autoBackup = CommonUserDefault.shared.backupCategory

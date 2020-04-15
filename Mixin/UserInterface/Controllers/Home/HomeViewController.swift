@@ -370,17 +370,19 @@ class HomeViewController: UIViewController {
         fetchConversations()
     }
     
-    func showCamera() {
+    func showCamera(asQrCodeScanner: Bool) {
+        let vc = CameraViewController.instance()
+        vc.asQrCodeScanner = asQrCodeScanner
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            navigationController?.pushViewController(CameraViewController.instance(), animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
                 guard granted else {
                     return
                 }
                 DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(CameraViewController.instance(), animated: true)
+                    self?.navigationController?.pushViewController(vc, animated: true)
                 }
             })
         case .denied, .restricted:

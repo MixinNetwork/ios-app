@@ -14,14 +14,14 @@ final class EmbeddedHomeApp {
                                       icon: R.image.ic_home_app_scan()!,
                                       categoryIcon: R.image.ic_app_category_scan()!,
                                       name: R.string.localizable.scan_qr_code()) {
-        UIApplication.homeViewController?.showCamera()
+        UIApplication.homeViewController?.showCamera(asQrCodeScanner: true)
     }
     
     static let camera = EmbeddedHomeApp(id: 2,
                                         icon: R.image.ic_home_app_camera()!,
                                         categoryIcon: R.image.ic_app_category_camera()!,
                                         name: R.string.localizable.action_camera()) {
-        UIApplication.homeViewController?.showCamera()
+        UIApplication.homeViewController?.showCamera(asQrCodeScanner: false)
     }
     
     static let all: [EmbeddedHomeApp] = [.wallet, .scan, .camera]

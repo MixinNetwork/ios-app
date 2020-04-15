@@ -3,10 +3,10 @@ import MixinServices
 
 enum HomeApp {
     
-    case embedded(EmbeddedHomeApp)
+    case embedded(EmbeddedApp)
     case external(User)
     
-    var id: Any {
+    var id: String {
         switch self {
         case .embedded(let app):
             return app.id
@@ -16,11 +16,10 @@ enum HomeApp {
         }
     }
     
-    init?(id: Any) {
-        if let id = id as? Int, id < EmbeddedHomeApp.all.count {
-            let app = EmbeddedHomeApp.all[id]
+    init?(id: String) {
+        if let app = EmbeddedApp.all.first(where: { $0.id == id }) {
             self = .embedded(app)
-        } else if let id = id as? String, var user = UserDAO.shared.getUser(withAppId: id) {
+        } else if var user = UserDAO.shared.getUser(withAppId: id) {
             user.app = AppDAO.shared.getApp(appId: id)
             self = .external(user)
         } else {
@@ -33,13 +32,7 @@ enum HomeApp {
 extension HomeApp: Equatable {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
-        if case let .embedded(lApp) = lhs, case let .embedded(rApp) = rhs {
-            return lApp.id == rApp.id
-        } else if case let .external(lUser) = lhs, case let .external(rUser) = rhs {
-            return lUser.userId == rUser.userId
-        } else {
-            return false
-        }
+        lhs.id == rhs.id
     }
     
 }

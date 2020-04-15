@@ -6,6 +6,6 @@ protocol HomeAppCell: UICollectionViewCell {
     var imageViewFrame: CGRect { get }
     
     func render(user: User)
-    func render(app: EmbeddedHomeApp)
+    func render(app: EmbeddedApp)
     
 }

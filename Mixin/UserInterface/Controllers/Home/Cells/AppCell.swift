@@ -29,7 +29,7 @@ extension AppCell: HomeAppCell {
         label.text = user.fullName
     }
     
-    func render(app: EmbeddedHomeApp) {
+    func render(app: EmbeddedApp) {
         imageView.image = app.icon
         label.text = app.name
     }

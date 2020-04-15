@@ -17,7 +17,7 @@ extension PinnedHomeAppCell: HomeAppCell {
         imageView.setImage(with: user)
     }
     
-    func render(app: EmbeddedHomeApp) {
+    func render(app: EmbeddedApp) {
         imageView.image = app.icon
     }
     

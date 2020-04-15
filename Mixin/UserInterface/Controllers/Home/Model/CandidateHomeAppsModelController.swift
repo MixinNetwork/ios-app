@@ -11,19 +11,17 @@ class CandidateHomeAppsModelController: HomeAppsModelController {
     
     func reloadData(completion: @escaping ([User]) -> Void) {
         DispatchQueue.global().async { [weak self] in
-            let pinned = AppGroupUserDefaults.User.homeAppIds
+            let pinned = Set(AppGroupUserDefaults.User.homeAppIds)
             
-            let pinnedEmbeddedAppIds = pinned.compactMap({ $0 as? Int })
-            var embeddedApps = EmbeddedHomeApp.all
+            var embeddedApps = EmbeddedApp.all
             embeddedApps.removeAll(where: {
-                pinnedEmbeddedAppIds.contains($0.id)
+                pinned.contains($0.id)
             })
             
-            let pinnedAppIds = pinned.compactMap({ $0 as? String })
             var appUsers = UserDAO.shared.getAppUsers()
             appUsers.removeAll(where: {
                 if let id = $0.appId {
-                    return pinnedAppIds.contains(id)
+                    return pinned.contains(id)
                 } else {
                     return true
                 }
@@ -60,7 +58,7 @@ extension CandidateHomeAppsModelController: UIDropInteractionDelegate {
             return
         }
         let item: Int
-        let embeddedIds = apps.compactMap({ $0.id as? Int })
+        let embeddedIds = apps.map(\.id)
         switch app {
         case .embedded(let app):
             if let index = embeddedIds.firstIndex(where: { $0 > app.id }) {

@@ -429,9 +429,11 @@ extension UserProfileViewController {
     
     @objc func removeFriend() {
         let userId = user.userId
-        let alert = UIAlertController(title: R.string.localizable.profile_remove_hint(), message: nil, preferredStyle: .actionSheet)
+        let hint = user.isBot ? R.string.localizable.profile_remove_hint_bot() : R.string.localizable.profile_remove_hint_contact()
+        let removeTitle = user.isBot ? R.string.localizable.profile_remove_bot() : R.string.localizable.profile_remove_contact()
+        let alert = UIAlertController(title: hint, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.profile_remove(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: removeTitle, style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.window)
             UserAPI.shared.removeFriend(userId: userId, completion: { [weak self] (result) in
@@ -587,7 +589,11 @@ extension UserProfileViewController {
         case .ME, .FRIEND:
             break
         case .STRANGER:
-            relationshipView.style = .addContact
+            if user.isBot {
+                relationshipView.style = .addBot
+            } else {
+                relationshipView.style = .addContact
+            }
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(addContact), for: .touchUpInside)
             centerStackView.addArrangedSubview(relationshipView)
@@ -769,7 +775,8 @@ extension UserProfileViewController {
                 case .ME:
                     group = []
                 case .FRIEND:
-                    group = [ProfileMenuItem(title: R.string.localizable.profile_remove(),
+                    let removeTitle = user.isBot ? R.string.localizable.profile_remove_bot() : R.string.localizable.profile_remove_contact()
+                    group = [ProfileMenuItem(title: removeTitle,
                                              subtitle: nil,
                                              style: [.destructive],
                                              action: #selector(removeFriend))]

@@ -523,8 +523,10 @@
 "profile_transactions" = "取引履歴";
 "profile_open_bot" = "アプリを開く";
 "profile_notification" = "通知";
-"profile_add" = "連絡先に追加";
-"profile_remove" = "連絡先を削除します";
+"profile_add_contact" = "連絡先に追加";
+"profile_add_bot" = "アプリを追加";
+"profile_remove_contact" = "連絡先を削除します";
+"profile_remove_bot" = "アプリを削除します";
 "profile_block" = "ブロック";
 "profile_unblock" = "ブロック解除";
 "profile_photo" = "プロフィール写真";
@@ -540,8 +542,8 @@
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "評判スコア: %@";
 "profile_edit_name" = "名前を編集";
-"profile_add_contact_fail" = "連絡先を追加できませんでした";
-"profile_remove_contact_fail" = "連絡先を削除できませんでした";
+"profile_add_contact_fail" = "追加できませんでした";
+"profile_remove_contact_fail" = "削除できませんでした";
 "profile_mute_duration_8h" = "8時間";
 "profile_mute_duration_1week" = "1週間";
 "profile_mute_duration_1year" = "1年";
@@ -552,9 +554,10 @@
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@まで消音しました";
-"profile_remove_hint" = "連絡先を削除しますか。会話内容は削除されません";
+"profile_remove_hint_contact" = "連絡先を削除しますか。会話内容は削除されません";
+"profile_remove_hint_bot" = "アプリを削除しますか。会話内容は削除されません";
 "profile_block_hint" = "ブロックされた連絡先は、電話したりメッセージを送信したりできなくなります";
-"profile_report_hint" = "この連絡先を報告してブロックしますか。このチャットと会話内容も削除されます";
+"profile_report_hint" = "報告してブロックしますか。このチャットと会話内容も削除されます";
 "profile_join_in" = "%@から参加しました";
 "profile_my_shared_apps" = "My Shared Apps";
 "profile_share_app_hint" = "If you want to share an app, add it to your contacts first";

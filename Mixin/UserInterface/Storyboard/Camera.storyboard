@@ -223,10 +223,6 @@
                                             <constraint firstAttribute="width" secondItem="khA-xf-LgL" secondAttribute="height" id="xAa-m7-7W0"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_scan_indicator" translatesAutoresizingMaskIntoConstraints="NO" id="rXw-q8-tK5">
-                                        <rect key="frame" x="72.5" y="218" width="230" height="37.5"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -291,7 +287,6 @@
                         <outlet property="qrCodeToolbarView" destination="RwT-bg-B6J" id="NrN-7n-6S5"/>
                         <outlet property="recordingRedDotView" destination="98N-CS-DAD" id="cxX-Ik-fTW"/>
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
-                        <outlet property="scanIndicatorView" destination="rXw-q8-tK5" id="5RZ-Ea-sTm"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
                         <outlet property="snapshotImageView" destination="Lks-aY-qYz" id="yyp-b9-zGn"/>
                         <outlet property="switchCameraButton" destination="jHd-gi-a9Q" id="kSL-4U-uWZ"/>
@@ -314,7 +309,6 @@
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_camera_switch" width="28" height="22"/>
         <image name="ic_qr_code_border" width="92.5" height="92.5"/>
-        <image name="ic_scan_indicator" width="230" height="37.5"/>
         <image name="ic_scan_qr_code_torch" width="30" height="32"/>
     </resources>
 </document>

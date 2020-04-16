@@ -26,7 +26,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var qrCodeBorderView: UIImageView!
-    @IBOutlet weak var scanIndicatorView: UIImageView!
     @IBOutlet weak var qrCodeToolbarView: UIStackView!
     
     @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
@@ -75,24 +74,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             cameraFlashButton.isHidden = true
             qrCodeScanningView.isHidden = false
             qrCodeToolbarView.isHidden = false
-            view.layoutIfNeeded()
-            scanIndicatorView.center.x = view.bounds.width / 2
-            scanIndicatorView.frame.origin.y = qrCodeBorderView.frame.origin.y
-            UIView.animateKeyframes(withDuration: 4, delay: 0, options: [.repeat], animations: {
-                UIView.setAnimationCurve(.linear)
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
-                    self.scanIndicatorView.frame.origin.y = self.qrCodeBorderView.frame.maxY - self.scanIndicatorView.frame.height
-                }
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0) {
-                    self.scanIndicatorView.transform = CGAffineTransform(scaleX: 1, y: -1)
-                }
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
-                    self.scanIndicatorView.frame.origin.y = self.qrCodeBorderView.frame.origin.y
-                }
-                UIView.addKeyframe(withRelativeStartTime: 1, relativeDuration: 0) {
-                    self.scanIndicatorView.transform = .identity
-                }
-            }, completion: nil)
         }
     }
     

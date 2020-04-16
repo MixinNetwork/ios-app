@@ -80,22 +80,21 @@ final class HomeAppsViewController: ResizablePopupViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
+        candidateCollectionLayout.sectionInset.left = 25
+        candidateCollectionLayout.sectionInset.right = 25
         let candidateSpacing: CGFloat = {
             let cellsWidth = candidateCollectionLayout.itemSize.width * CGFloat(cellCountPerRow)
-            let totalSpacing = view.bounds.width - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCountPerRow + 1))
+            let totalSpacing = view.bounds.width - candidateCollectionLayout.sectionInset.horizontal - cellsWidth
+            return floor(totalSpacing / CGFloat(cellCountPerRow - 1))
         }()
-        candidateCollectionLayout.sectionInset.left = candidateSpacing
-        candidateCollectionLayout.sectionInset.right = candidateSpacing
         candidateCollectionLayout.minimumInteritemSpacing = candidateSpacing
-        
-        let inset = candidateSpacing - 20 + (candidateCollectionLayout.itemSize.width - pinnedCollectionLayout.itemSize.width) / 2
-        pinnedCollectionLayout.sectionInset.left = inset
-        pinnedCollectionLayout.sectionInset.right = inset
+
+        pinnedCollectionLayout.sectionInset.left = 16
+        pinnedCollectionLayout.sectionInset.right = 16
         let pinnedSpacing: CGFloat = {
             let cellsWidth = pinnedCollectionLayout.itemSize.width * CGFloat(cellCountPerRow)
             let totalSpacing = view.bounds.width - 40 - pinnedCollectionLayout.sectionInset.horizontal - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCountPerRow))
+            return floor(totalSpacing / CGFloat(cellCountPerRow - 1))
         }()
         pinnedCollectionLayout.minimumInteritemSpacing = pinnedSpacing
     }

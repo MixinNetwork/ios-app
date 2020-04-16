@@ -58,7 +58,14 @@ extension CandidateHomeAppsModelController: UIDropInteractionDelegate {
             return
         }
         let item: Int
-        let embeddedIds = apps.map(\.id)
+        let embeddedIds = apps.compactMap { app -> String? in
+            switch app {
+            case .embedded(let app):
+                return app.id
+            case .external:
+                return nil
+            }
+        }
         switch app {
         case .embedded(let app):
             if let index = embeddedIds.firstIndex(where: { $0 > app.id }) {

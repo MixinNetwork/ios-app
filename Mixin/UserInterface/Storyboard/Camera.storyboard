@@ -176,8 +176,8 @@
                                     <action selector="savePhotoAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="vcf-xX-1Ne"/>
                                 </connections>
                             </button>
-                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="RwT-bg-B6J">
-                                <rect key="frame" x="99.5" y="565" width="176" height="72"/>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="54" translatesAutoresizingMaskIntoConstraints="NO" id="RwT-bg-B6J">
+                                <rect key="frame" x="88.5" y="565" width="198" height="72"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kj3-VA-Juy">
                                         <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
@@ -190,7 +190,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I9q-fn-2qR">
-                                        <rect key="frame" x="104" y="0.0" width="72" height="72"/>
+                                        <rect key="frame" x="126" y="0.0" width="72" height="72"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="I9q-fn-2qR" secondAttribute="height" id="Yit-CO-KFr"/>
                                         </constraints>

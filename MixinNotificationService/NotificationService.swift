@@ -12,9 +12,10 @@ final class NotificationService: UNNotificationServiceExtension {
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
         self.rawContent = request.content
+        self.messageId = request.content.userInfo["message_id"] as? String ?? ""
         self.conversationId = request.content.userInfo["conversation_id"] as? String
 
-        guard let messageId = request.content.userInfo["message_id"] as? String else {
+        guard !messageId.isEmpty else {
             deliverRawContent(from: "notification data broken")
             return
         }
@@ -27,11 +28,10 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        self.messageId = messageId
         _ = DarwinNotificationManager.shared
         _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
-        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, conversationId: self.conversationId, extensionTimeWillExpire: { [weak self]() -> Bool in
+        ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, conversationId: conversationId, extensionTimeWillExpire: { [weak self]() -> Bool in
             return self?.isExpired ?? true
         }) { [weak self](messageItem) in
             guard let weakSelf = self else {
@@ -77,7 +77,7 @@ final class NotificationService: UNNotificationServiceExtension {
 
         if let conversationId = self.conversationId {
             Logger.write(conversationId: conversationId, log: """
-                [AppExtension][\(self.messageId)]...\(from)...isExpired:\(isExpired)...
+                [\(messageId)]...\(from)...isExpired:\(isExpired)...
                 isLoggedIn:\(LoginManager.shared.isLoggedIn)]...
                 isDocumentsMigrated:\(AppGroupUserDefaults.isDocumentsMigrated)]...
                 needsUpgradeInMainApp:\(AppGroupUserDefaults.User.needsUpgradeInMainApp)]...

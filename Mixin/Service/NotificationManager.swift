@@ -64,7 +64,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
         guard let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String else {
             return
         }
-        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+        guard canProcessMessages else {
             return
         }
         if response.actionIdentifier == NotificationActionIdentifier.reply {
@@ -103,6 +103,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                     return
                 }
                 DispatchQueue.main.async {
+                    WebSocketService.shared.connectIfNeeded()
                     func pushConversationController() {
                         let vc = ConversationViewController.instance(conversation: conversation)
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)

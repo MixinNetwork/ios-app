@@ -31,6 +31,7 @@ public enum Logger {
             return
         }
         guard !conversationId.isEmpty else {
+            write(log: log, newSection: newSection)
             return
         }
         queue.async {

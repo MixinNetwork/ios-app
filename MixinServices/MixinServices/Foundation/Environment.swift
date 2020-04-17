@@ -15,6 +15,8 @@ public var currentDecimalSeparator: String {
     Locale.current.decimalSeparator ?? "."
 }
 
+public var requestTimeout = isAppExtension ? 3 : 5
+
 public var globalSignalContext: OpaquePointer {
     return Signal.context
 }
@@ -25,8 +27,7 @@ public var canProcessMessages: Bool {
     !AppGroupUserDefaults.User.needsUpgradeInMainApp &&
     !AppGroupUserDefaults.Account.isClockSkewed &&
     AppGroupUserDefaults.Crypto.isPrekeyLoaded &&
-    AppGroupUserDefaults.Crypto.isSessionSynchronized &&
-    AppGroupUserDefaults.User.isCircleSynchronized
+    AppGroupUserDefaults.Crypto.isSessionSynchronized
 }
 
 public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.extension" as CFString)

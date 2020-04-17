@@ -28,6 +28,7 @@ public enum MixinServicesError: Error {
     case messageTooBig(gzipSize: Int, category: String, conversationId: String)
     case gzipFailed
     case backgroundUpgradeDatabase
+    case requestTimeout(String)
     
 }
 
@@ -77,6 +78,8 @@ extension MixinServicesError: CustomNSError {
             return 18
         case .backgroundUpgradeDatabase:
             return 19
+        case .requestTimeout:
+            return 20
         }
     }
     
@@ -128,6 +131,8 @@ extension MixinServicesError: CustomNSError {
             userInfo["conversationId"] = conversationId
             userInfo["category"] = category
             userInfo["size"] = "\(gzipSize / 1024)kb"
+        case let .requestTimeout(category):
+            return ["category": category]
         default:
             userInfo = [:]
         }

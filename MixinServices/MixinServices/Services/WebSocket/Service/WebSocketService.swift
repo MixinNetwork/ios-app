@@ -165,8 +165,12 @@ public class WebSocketService {
                 throw err
             }
 
-            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut, let conversationId = message.params?.conversationId {
-                Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage]...semaphore timeout...")
+            if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut {
+                reporter.report(error: MixinServicesError.requestTimeout("websocket"))
+                let category = message.params?.category ?? ""
+                let log = "[WebSocketService][RespondedMessage][\(category)]...semaphore timeout...requestTimeout:\(requestTimeout)"
+                let conversationId = message.params?.conversationId ?? ""
+                Logger.write(conversationId: conversationId, log: log)
             }
             
             guard let blazeMessage = response else {

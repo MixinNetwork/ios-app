@@ -55,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
+        requestTimeout = 3
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...")
@@ -87,6 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
+        requestTimeout = 5
         cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {

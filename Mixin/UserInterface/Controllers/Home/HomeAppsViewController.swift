@@ -150,7 +150,7 @@ extension HomeAppsViewController: UICollectionViewDelegate {
         }
         switch app {
         case let .embedded(app):
-            dismiss(animated: true, completion: app.action)
+            dismissAsChild(completion: app.action)
         case let .external(user):
             let item = UserItem.createUser(from: user)
             let vc = UserProfileViewController(user: item)

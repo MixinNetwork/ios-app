@@ -24,6 +24,8 @@ class ResizablePopupViewController: UIViewController {
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
     
+    private(set) var isPresentingAsChild = false
+    
     // Override this variable and provides the scroll view
     var resizableScrollView: UIScrollView? {
         nil
@@ -116,27 +118,35 @@ class ResizablePopupViewController: UIViewController {
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        guard !isPresentingAsChild else {
+            return
+        }
+        UIView.animate(withDuration: 0.3, animations: {
             self.view.frame.origin.y = self.backgroundButton.bounds.height
             self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
         }) { (finished) in
+            self.willMove(toParent: nil)
             self.view.removeFromSuperview()
+            self.removeFromParent()
             self.backgroundButton.removeFromSuperview()
             completion?()
         }
     }
     
     func presentAsChild(of parent: UIViewController) {
-        var realParent: UIViewController? = parent
-        while let maybeRealParent = realParent as? ResizablePopupViewController {
-            realParent = maybeRealParent.parent
-        }
-        guard let parent = realParent else {
-            assertionFailure("Finds no parent")
-            return
+        
+        func realParent(of viewController: UIViewController) -> UIViewController {
+            if let vc = viewController as? ResizablePopupViewController, let parent = vc.parent {
+                return realParent(of: parent)
+            } else if let container = viewController.container {
+                return realParent(of: container)
+            } else {
+                return viewController
+            }
         }
         
+        let parent = realParent(of: parent)
+        isPresentingAsChild = true
         loadViewIfNeeded()
         backgroundButton.frame = parent.view.bounds
         backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -151,11 +161,12 @@ class ResizablePopupViewController: UIViewController {
                             height: backgroundButton.bounds.height)
         view.autoresizingMask = .flexibleTopMargin
         backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.3, animations: {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        })
+        }) { _ in
+            self.isPresentingAsChild = false
+        }
     }
     
     func updatePreferredContentSizeHeight(size: Size) {

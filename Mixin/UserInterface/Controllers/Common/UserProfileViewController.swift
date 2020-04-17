@@ -251,13 +251,14 @@ extension UserProfileViewController {
             return
         }
         if let vc = navigationController.viewControllers.last as? ConversationViewController, vc.dataSource?.category == .contact && vc.dataSource?.conversation.ownerId == user.userId {
-            dismiss(animated: true, completion: nil)
+            dismissAsChild(completion: nil)
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        dismiss(animated: true) {
+        dismissAsChild {
             UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
         }
+        dismissSiblingHomeApps()
     }
     
     @objc func showMyQrCode() {
@@ -322,7 +323,7 @@ extension UserProfileViewController {
     
     @objc func openApp() {
         let userId = user.userId
-        dismiss(animated: true) {
+        dismissAsChild {
             guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                 return
             }
@@ -342,6 +343,7 @@ extension UserProfileViewController {
                 reporter.report(event: .openApp, userInfo: ["source": "UserWindow", "identityNumber": app.appNumber])
             }
         }
+        dismissSiblingHomeApps()
     }
     
     @objc func transfer() {
@@ -411,9 +413,10 @@ extension UserProfileViewController {
     
     @objc func callWithMixin() {
         let user = self.user!
-        dismiss(animated: true) {
+        dismissAsChild {
             CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: user)
         }
+        dismissSiblingHomeApps()
     }
     
     @objc func callPhone() {
@@ -501,12 +504,13 @@ extension UserProfileViewController {
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
                         hud.hide()
-                        self.dismiss(animated: true) {
+                        self.dismissAsChild {
                             guard UIApplication.currentConversationId() == conversationId else {
                                 return
                             }
                             UIApplication.homeNavigationController?.backToHome()
                         }
+                        self.dismissSiblingHomeApps()
                     }
                 case let .failure(error):
                     DispatchQueue.main.async {

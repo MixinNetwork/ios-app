@@ -95,11 +95,11 @@ extension GroupProfileViewController {
         guard let response = response else {
             // Currently group profile without response is only
             // triggered by tapping on Converation's top right icon
-            dismiss(animated: true, completion: nil)
+            dismissAsChild(completion: nil)
             return
         }
         guard UIApplication.currentConversationId() != conversation.conversationId else {
-            dismiss(animated: true, completion: nil)
+            dismissAsChild(completion: nil)
             return
         }
         button.isBusy = true
@@ -211,13 +211,14 @@ extension GroupProfileViewController {
                     guard let self = self else {
                         return
                     }
-                    self.dismiss(animated: true) {
+                    self.dismissAsChild {
                         hud.set(style: .notification, text: R.string.localizable.action_done())
                         hud.scheduleAutoHidden()
                         if UIApplication.currentConversationId() == conversationId {
                             UIApplication.homeNavigationController?.backToHome()
                         }
                     }
+                    self.dismissSiblingHomeApps()
                 }
             }
         }))
@@ -429,15 +430,16 @@ extension GroupProfileViewController {
         DispatchQueue.global().async { [weak self] in
             guard let conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS) else {
                 DispatchQueue.main.async {
-                    self?.dismiss(animated: true, completion: nil)
+                    self?.dismissAsChild(completion: nil)
                 }
                 return
             }
             DispatchQueue.main.async {
-                self?.dismiss(animated: true, completion: {
+                self?.dismissAsChild {
                     let vc = ConversationViewController.instance(conversation: conversation)
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
-                })
+                }
+                self?.dismissSiblingHomeApps()
             }
         }
     }

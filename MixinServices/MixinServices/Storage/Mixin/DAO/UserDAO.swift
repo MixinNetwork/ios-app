@@ -82,7 +82,7 @@ public final class UserDAO {
         let sql = """
             SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
             FROM apps a, users u
-            WHERE a.app_id = u.app_id
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
             ORDER BY u.full_name ASC
         """
         return MixinDatabase.shared.getCodables(sql: sql)

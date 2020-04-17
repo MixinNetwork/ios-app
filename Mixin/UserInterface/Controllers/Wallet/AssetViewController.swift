@@ -213,10 +213,8 @@ extension AssetViewController: SnapshotCellDelegate {
                 return
             }
             DispatchQueue.main.async { [weak self] in
-                if let self = self {
-                    let vc = UserProfileViewController(user: user)
-                    vc.presentAsChild(of: self)
-                }
+                let vc = UserProfileViewController(user: user)
+                self?.present(vc, animated: true, completion: nil)
             }
         }
     }

@@ -43,6 +43,8 @@ final class UserProfileViewController: ProfileViewController {
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
+        modalPresentationStyle = .custom
+        transitioningDelegate = PopupPresentationManager.shared
         defer {
             // Defer closure escapes from subclass init
             // Make sure user's didSet is called
@@ -222,6 +224,8 @@ extension UserProfileViewController {
             return
         }
         let vc = R.storyboard.contact.shared_apps()!
+        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.modalPresentationStyle = .custom
         vc.loadViewIfNeeded()
         vc.titleLabel.text = R.string.localizable.profile_shared_app_of_user(user.fullName)
         vc.users = users
@@ -251,14 +255,13 @@ extension UserProfileViewController {
             return
         }
         if let vc = navigationController.viewControllers.last as? ConversationViewController, vc.dataSource?.category == .contact && vc.dataSource?.conversation.ownerId == user.userId {
-            dismissAsChild(completion: nil)
+            dismiss(animated: true, completion: nil)
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        dismissAsChild {
+        dismiss(animated: true) {
             UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
         }
-        dismissSiblingHomeApps()
     }
     
     @objc func showMyQrCode() {
@@ -323,7 +326,7 @@ extension UserProfileViewController {
     
     @objc func openApp() {
         let userId = user.userId
-        dismissAsChild {
+        dismiss(animated: true) {
             guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                 return
             }
@@ -343,7 +346,6 @@ extension UserProfileViewController {
                 reporter.report(event: .openApp, userInfo: ["source": "UserWindow", "identityNumber": app.appNumber])
             }
         }
-        dismissSiblingHomeApps()
     }
     
     @objc func transfer() {
@@ -413,10 +415,14 @@ extension UserProfileViewController {
     
     @objc func callWithMixin() {
         let user = self.user!
-        dismissAsChild {
+        dismiss(animated: true) {
             CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: user)
         }
-        dismissSiblingHomeApps()
+    }
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: completion)
+        UIApplication.homeViewController?.dismissAppsWindow()
     }
     
     @objc func callPhone() {
@@ -504,13 +510,12 @@ extension UserProfileViewController {
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
                         hud.hide()
-                        self.dismissAsChild {
+                        self.dismiss(animated: true) {
                             guard UIApplication.currentConversationId() == conversationId else {
                                 return
                             }
                             UIApplication.homeNavigationController?.backToHome()
                         }
-                        self.dismissSiblingHomeApps()
                     }
                 case let .failure(error):
                     DispatchQueue.main.async {

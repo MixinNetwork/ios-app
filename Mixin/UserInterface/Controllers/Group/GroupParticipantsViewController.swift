@@ -179,7 +179,7 @@ extension GroupParticipantsViewController {
     
     private func showInfo(user: UserItem) {
         let vc = UserProfileViewController(user: user)
-        vc.presentAsChild(of: self)
+        present(vc, animated: true, completion: nil)
     }
     
     private func sendMessage(to user: UserItem) {

@@ -271,9 +271,7 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                if let container = UIApplication.homeContainerViewController {
-                    vc.presentAsChild(of: container)
-                }
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }

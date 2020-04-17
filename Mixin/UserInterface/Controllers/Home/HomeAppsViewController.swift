@@ -32,6 +32,12 @@ final class HomeAppsViewController: ResizablePopupViewController {
         candidateEmptyHintLabelIfLoaded = label
         return label
     }()
+    private lazy var backgroundButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.black.withAlphaComponent(0)
+        button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
+        return button
+    }()
     
     private var pinnedAppModelController: PinnedHomeAppsModelController!
     private var candidateAppModelController: CandidateHomeAppsModelController!
@@ -43,6 +49,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updatePreferredContentSizeHeight(size: size)
         view.addGestureRecognizer(resizeRecognizer)
         resizeRecognizer.delegate = resizeGestureCoordinator
         
@@ -133,6 +140,63 @@ final class HomeAppsViewController: ResizablePopupViewController {
             }
         }
     }
+
+    override func changeSizeAction(_ recognizer: UIPanGestureRecognizer) {
+        guard size != .unavailable else {
+            return
+        }
+        switch recognizer.state {
+        case .began:
+            resizableScrollView?.isScrollEnabled = false
+            size = size.opposite
+            let animator = makeSizeAnimator(destination: size)
+            animator.pauseAnimation()
+            sizeAnimator = animator
+        case .changed:
+            if let animator = sizeAnimator {
+                let translation = recognizer.translation(in: backgroundButton)
+                var fractionComplete = translation.y / (backgroundButton.bounds.height - preferredContentHeight(forSize: .compressed))
+                if size == .expanded {
+                    fractionComplete *= -1
+                }
+                animator.fractionComplete = fractionComplete
+            }
+        case .ended:
+            if let animator = sizeAnimator {
+                let locationAboveBegan = recognizer.translation(in: backgroundButton).y <= 0
+                let isGoingUp = recognizer.velocity(in: backgroundButton).y <= 0
+                let locationUnderBegan = recognizer.translation(in: backgroundButton).y >= 0
+                let isGoingDown = recognizer.velocity(in: backgroundButton).y >= 0
+                let shouldExpand = size == .expanded
+                    && ((locationAboveBegan && isGoingUp) || isGoingUp)
+                let shouldCompress = size == .compressed
+                    && ((locationUnderBegan && isGoingDown) || isGoingDown)
+                let shouldReverse = !shouldExpand && !shouldCompress
+                let completionSize = shouldReverse ? size.opposite : size
+                animator.isReversed = shouldReverse
+                animator.addCompletion { (position) in
+                    self.size = completionSize
+                    self.updatePreferredContentSizeHeight(size: completionSize)
+                    self.setNeedsSizeAppearanceUpdated(size: completionSize)
+                    self.sizeAnimator = nil
+                    recognizer.isEnabled = true
+                }
+                recognizer.isEnabled = false
+                animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
+            }
+        default:
+            break
+        }
+    }
+
+    override func updatePreferredContentSizeHeight(size: ResizablePopupViewController.Size) {
+        guard !isBeingDismissed else {
+            return
+        }
+        let height = preferredContentHeight(forSize: size)
+        preferredContentSize.height = height
+        view.frame.origin.y = backgroundButton.bounds.height - height
+    }
     
 }
 
@@ -154,8 +218,50 @@ extension HomeAppsViewController: UICollectionViewDelegate {
         case let .external(user):
             let item = UserItem.createUser(from: user)
             let vc = UserProfileViewController(user: item)
-            vc.presentAsChild(of: self)
+            present(vc, animated: true, completion: nil)
         }
     }
-    
+
+}
+
+extension HomeAppsViewController {
+
+    @objc func backgroundTappingAction() {
+        dismissAsChild(completion: nil)
+    }
+
+    func dismissAsChild(completion: (() -> Void)?) {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.frame.origin.y = self.backgroundButton.bounds.height
+            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
+        }) { (finished) in
+            self.willMove(toParent: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+            self.backgroundButton.removeFromSuperview()
+            completion?()
+        }
+    }
+
+    func presentAsChild(of parent: UIViewController) {
+        loadViewIfNeeded()
+        backgroundButton.frame = parent.view.bounds
+        backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        parent.addChild(self)
+        parent.view.addSubview(backgroundButton)
+        didMove(toParent: parent)
+
+        view.frame = CGRect(x: 0,
+                            y: backgroundButton.bounds.height,
+                            width: backgroundButton.bounds.width,
+                            height: backgroundButton.bounds.height)
+        view.autoresizingMask = .flexibleTopMargin
+        backgroundButton.addSubview(view)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
+            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        })
+    }
+
 }

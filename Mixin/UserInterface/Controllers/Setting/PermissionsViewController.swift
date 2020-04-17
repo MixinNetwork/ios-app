@@ -70,10 +70,8 @@ class PermissionsViewController: UIViewController {
             }
 
             DispatchQueue.main.async {
-                if let self = self {
-                    let vc = UserProfileViewController(user: user)
-                    vc.presentAsChild(of: self)
-                }
+                let vc = UserProfileViewController(user: user)
+                self?.present(vc, animated: true, completion: nil)
             }
         }
     }

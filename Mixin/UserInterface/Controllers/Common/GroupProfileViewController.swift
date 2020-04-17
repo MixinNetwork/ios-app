@@ -32,6 +32,8 @@ final class GroupProfileViewController: ProfileViewController {
         self.isMember = isMember
         self.participantsCount = numberOfParticipants
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
+        modalPresentationStyle = .custom
+        transitioningDelegate = PopupPresentationManager.shared
     }
     
     init(response: ConversationResponse, codeId: String, participants: [ParticipantUser], isMember: Bool) {
@@ -41,6 +43,8 @@ final class GroupProfileViewController: ProfileViewController {
         self.isMember = isMember
         self.participantsCount = response.participants.count
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
+        modalPresentationStyle = .custom
+        transitioningDelegate = PopupPresentationManager.shared
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,11 +99,11 @@ extension GroupProfileViewController {
         guard let response = response else {
             // Currently group profile without response is only
             // triggered by tapping on Converation's top right icon
-            dismissAsChild(completion: nil)
+            dismiss(animated: true, completion: nil)
             return
         }
         guard UIApplication.currentConversationId() != conversation.conversationId else {
-            dismissAsChild(completion: nil)
+            dismiss(animated: true, completion: nil)
             return
         }
         button.isBusy = true
@@ -211,14 +215,13 @@ extension GroupProfileViewController {
                     guard let self = self else {
                         return
                     }
-                    self.dismissAsChild {
+                    self.dismiss(animated: true) {
                         hud.set(style: .notification, text: R.string.localizable.action_done())
                         hud.scheduleAutoHidden()
                         if UIApplication.currentConversationId() == conversationId {
                             UIApplication.homeNavigationController?.backToHome()
                         }
                     }
-                    self.dismissSiblingHomeApps()
                 }
             }
         }))
@@ -430,16 +433,15 @@ extension GroupProfileViewController {
         DispatchQueue.global().async { [weak self] in
             guard let conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS) else {
                 DispatchQueue.main.async {
-                    self?.dismissAsChild(completion: nil)
+                    self?.dismiss(animated: true, completion: nil)
                 }
                 return
             }
             DispatchQueue.main.async {
-                self?.dismissAsChild {
+                self?.dismiss(animated: true, completion: {
                     let vc = ConversationViewController.instance(conversation: conversation)
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
-                }
-                self?.dismissSiblingHomeApps()
+                })
             }
         }
     }

@@ -147,7 +147,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
             return
         }
         let vc = UserProfileViewController(user: user)
-        vc.presentAsChild(of: self)
+        present(vc, animated: true, completion: nil)
     }
     
     private func reloadMessages(keyword: String) {

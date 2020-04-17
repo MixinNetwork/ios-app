@@ -64,7 +64,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
                 let userItem = UserItem.createUser(from: user)
                 let vc = UserProfileViewController(user: userItem)
                 vc.updateUserFromRemoteAfterReloaded = false
-                vc.presentAsChild(of: weakSelf)
+                weakSelf.present(vc, animated: true, completion: nil)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }

@@ -309,6 +309,12 @@ class HomeViewController: UIViewController {
     @objc func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
+
+    func dismissAppsWindow() {
+        if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
+            homeApps.dismissAsChild(completion: nil)
+        }
+    }
     
     @objc func updateHomeApps() {
         func setImage(with app: HomeApp, to button: UIButton) {
@@ -320,7 +326,7 @@ class HomeViewController: UIViewController {
                 } else if button == rightAppButton {
                     rightAppAction = app.action
                 }
-            case .external(let user):
+            case .external:
                 button.setImage(R.image.ic_app_category_other(), for: .normal)
             }
         }

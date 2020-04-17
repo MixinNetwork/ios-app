@@ -104,28 +104,12 @@ class ProfileViewController: ResizablePopupViewController {
         }
     }
     
-    override func dismissAndPush(_ viewController: UIViewController) {
-        super.dismissAndPush(viewController)
-        dismissSiblingHomeApps()
-    }
-    
-    override func dismissAndPresent(_ viewController: UIViewController) {
-        super.dismissAndPresent(viewController)
-        dismissSiblingHomeApps()
-    }
-    
     @IBAction func dismissAction(_ sender: Any) {
-        dismissAsChild(completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func previewAvatarAction(_ sender: Any) {
         
-    }
-    
-    func dismissSiblingHomeApps() {
-        if let homeApps = parent?.children.compactMap({ $0 as? HomeAppsViewController }).first {
-            homeApps.dismissAsChild(completion: nil)
-        }
     }
     
     func presentEditNameController(title: String, text: String, placeholder: String, onChange: @escaping (String) -> Void) {

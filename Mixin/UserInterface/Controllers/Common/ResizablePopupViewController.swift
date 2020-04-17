@@ -24,8 +24,6 @@ class ResizablePopupViewController: UIViewController {
     var size = Size.compressed
     var sizeAnimator: UIViewPropertyAnimator?
     
-    private(set) var isPresentingAsChild = false
-    
     // Override this variable and provides the scroll view
     var resizableScrollView: UIScrollView? {
         nil
@@ -33,19 +31,11 @@ class ResizablePopupViewController: UIViewController {
     
     lazy var resizeRecognizer = UIPanGestureRecognizer(target: self, action: #selector(changeSizeAction(_:)))
     
-    private lazy var backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.black.withAlphaComponent(0)
-        button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
-        return button
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateBottomInset()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
-        updatePreferredContentSizeHeight(size: size)
         setNeedsSizeAppearanceUpdated(size: size)
     }
     
@@ -66,7 +56,7 @@ class ResizablePopupViewController: UIViewController {
     }
     
     @objc func changeSizeAction(_ recognizer: UIPanGestureRecognizer) {
-        guard size != .unavailable else {
+        guard size != .unavailable, let superview = view.superview else {
             return
         }
         switch recognizer.state {
@@ -78,8 +68,8 @@ class ResizablePopupViewController: UIViewController {
             sizeAnimator = animator
         case .changed:
             if let animator = sizeAnimator {
-                let translation = recognizer.translation(in: backgroundButton)
-                var fractionComplete = translation.y / (backgroundButton.bounds.height - preferredContentHeight(forSize: .compressed))
+                let translation = recognizer.translation(in: superview)
+                var fractionComplete = translation.y / (superview.bounds.height - preferredContentHeight(forSize: .compressed))
                 if size == .expanded {
                     fractionComplete *= -1
                 }
@@ -87,10 +77,10 @@ class ResizablePopupViewController: UIViewController {
             }
         case .ended:
             if let animator = sizeAnimator {
-                let locationAboveBegan = recognizer.translation(in: backgroundButton).y <= 0
-                let isGoingUp = recognizer.velocity(in: backgroundButton).y <= 0
-                let locationUnderBegan = recognizer.translation(in: backgroundButton).y >= 0
-                let isGoingDown = recognizer.velocity(in: backgroundButton).y >= 0
+                let locationAboveBegan = recognizer.translation(in: superview).y <= 0
+                let isGoingUp = recognizer.velocity(in: superview).y <= 0
+                let locationUnderBegan = recognizer.translation(in: superview).y >= 0
+                let isGoingDown = recognizer.velocity(in: superview).y >= 0
                 let shouldExpand = size == .expanded
                     && ((locationAboveBegan && isGoingUp) || isGoingUp)
                 let shouldCompress = size == .compressed
@@ -112,87 +102,23 @@ class ResizablePopupViewController: UIViewController {
             break
         }
     }
-    
-    @objc func backgroundTappingAction() {
-        dismissAsChild(completion: nil)
-    }
-    
-    func dismissAsChild(completion: (() -> Void)?) {
-        guard !isPresentingAsChild else {
-            return
-        }
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
-        }) { (finished) in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            self.backgroundButton.removeFromSuperview()
-            completion?()
-        }
-    }
-    
-    func presentAsChild(of parent: UIViewController) {
-        
-        func realParent(of viewController: UIViewController) -> UIViewController {
-            if let vc = viewController as? ResizablePopupViewController, let parent = vc.parent {
-                return realParent(of: parent)
-            } else if let container = viewController.container {
-                return realParent(of: container)
-            } else {
-                return viewController
-            }
-        }
-        
-        let parent = realParent(of: parent)
-        isPresentingAsChild = true
-        loadViewIfNeeded()
-        backgroundButton.frame = parent.view.bounds
-        backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        parent.addChild(self)
-        parent.view.addSubview(backgroundButton)
-        didMove(toParent: parent)
-        
-        view.frame = CGRect(x: 0,
-                            y: backgroundButton.bounds.height,
-                            width: backgroundButton.bounds.width,
-                            height: backgroundButton.bounds.height)
-        view.autoresizingMask = .flexibleTopMargin
-        backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        }) { _ in
-            self.isPresentingAsChild = false
-        }
-    }
-    
+
     func updatePreferredContentSizeHeight(size: Size) {
         guard !isBeingDismissed else {
             return
         }
-        let height = preferredContentHeight(forSize: size)
-        preferredContentSize.height = height
-        view.frame.origin.y = backgroundButton.bounds.height - height
+        preferredContentSize.height = preferredContentHeight(forSize: size)
     }
     
     func dismissAndPresent(_ viewController: UIViewController) {
-        guard let parent = parent else {
-            return
-        }
-        dismissAsChild {
-            if let viewController = viewController as? ResizablePopupViewController {
-                viewController.presentAsChild(of: parent)
-            } else {
-                parent.present(viewController, animated: true, completion: nil)
-            }
+        let presenting = presentingViewController
+        dismiss(animated: true) {
+            presenting?.present(viewController, animated: true, completion: nil)
         }
     }
     
     func dismissAndPush(_ viewController: UIViewController) {
-        dismissAsChild {
+        dismiss(animated: true) {
             UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
         }
     }

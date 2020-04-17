@@ -62,7 +62,7 @@ extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
         let user = users[indexPath.row]
         if user.isCreatedByMessenger {
             let vc = UserProfileViewController(user: user)
-            vc.presentAsChild(of: self)
+            present(vc, animated: true, completion: nil)
         }
     }
     

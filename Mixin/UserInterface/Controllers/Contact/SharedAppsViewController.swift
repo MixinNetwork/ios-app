@@ -50,7 +50,7 @@ extension SharedAppsViewController: UITableViewDelegate {
         let item = UserItem.createUser(from: user)
         dismiss(animated: true) {
             let vc = UserProfileViewController(user: item)
-            presenting.present(vc, animated: true, completion: nil)
+            vc.presentAsChild(of: presenting)
         }
     }
     

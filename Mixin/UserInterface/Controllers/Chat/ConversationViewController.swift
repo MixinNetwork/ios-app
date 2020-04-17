@@ -297,7 +297,7 @@ class ConversationViewController: UIViewController {
             present(vc, animated: true, completion: nil)
         } else if let user = ownerUser, user.isCreatedByMessenger {
             let vc = UserProfileViewController(user: user)
-            present(vc, animated: true, completion: nil)
+            vc.presentAsChild(of: self)
         }
     }
     
@@ -592,10 +592,10 @@ class ConversationViewController: UIViewController {
                     }
                     let user = UserItem.createUser(from: account)
                     let vc = UserProfileViewController(user: user)
-                    present(vc, animated: true, completion: nil)
+                    vc.presentAsChild(of: self)
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId), user.isCreatedByMessenger {
                     let vc = UserProfileViewController(user: user)
-                    present(vc, animated: true, completion: nil)
+                    vc.presentAsChild(of: self)
                 }
             } else if message.category.hasSuffix("_POST") {
                 PostViewController.presentInstance(with: message, asChildOf: self)
@@ -1157,7 +1157,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
             return
         }
         let vc = UserProfileViewController(user: user)
-        present(vc, animated: true, completion: nil)
+        vc.presentAsChild(of: self)
     }
     
 }

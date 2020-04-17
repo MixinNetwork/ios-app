@@ -105,7 +105,7 @@ class ProfileViewController: ResizablePopupViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismissAsChild(completion: nil)
     }
     
     @IBAction func previewAvatarAction(_ sender: Any) {

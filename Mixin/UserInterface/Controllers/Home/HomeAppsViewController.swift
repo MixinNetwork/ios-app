@@ -38,10 +38,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     class func instance() -> HomeAppsViewController {
-        let vc = R.storyboard.home.apps()!
-        vc.modalPresentationStyle = .custom
-        vc.transitioningDelegate = PopupPresentationManager.shared
-        return vc
+        R.storyboard.home.apps()!
     }
     
     override func viewDidLoad() {
@@ -111,7 +108,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismissAsChild(completion: nil)
     }
     
     @objc func updateNoPinnedHint() {
@@ -157,7 +154,7 @@ extension HomeAppsViewController: UICollectionViewDelegate {
         case let .external(user):
             let item = UserItem.createUser(from: user)
             let vc = UserProfileViewController(user: item)
-            dismissAndPresent(vc)
+            vc.presentAsChild(of: self)
         }
     }
     

@@ -43,8 +43,6 @@ final class UserProfileViewController: ProfileViewController {
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
-        modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
         defer {
             // Defer closure escapes from subclass init
             // Make sure user's didSet is called
@@ -224,8 +222,6 @@ extension UserProfileViewController {
             return
         }
         let vc = R.storyboard.contact.shared_apps()!
-        vc.transitioningDelegate = PopupPresentationManager.shared
-        vc.modalPresentationStyle = .custom
         vc.loadViewIfNeeded()
         vc.titleLabel.text = R.string.localizable.profile_shared_app_of_user(user.fullName)
         vc.users = users
@@ -587,7 +583,7 @@ extension UserProfileViewController {
         
         switch relationship {
         case .ME, .FRIEND:
-            break
+            relationshipView.style = .none
         case .STRANGER:
             if user.isBot {
                 relationshipView.style = .addBot

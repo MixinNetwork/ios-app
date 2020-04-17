@@ -150,8 +150,10 @@ extension AllTransactionsViewController: SnapshotCellDelegate {
                 return
             }
             DispatchQueue.main.async { [weak self] in
-                let vc = UserProfileViewController(user: user)
-                self?.present(vc, animated: true, completion: nil)
+                if let self = self {
+                    let vc = UserProfileViewController(user: user)
+                    vc.presentAsChild(of: self)
+                }
             }
         }
     }

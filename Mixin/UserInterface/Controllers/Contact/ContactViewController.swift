@@ -55,7 +55,7 @@ class ContactViewController: UITableViewController {
         }
         let user = UserItem.createUser(from: account)
         let vc = UserProfileViewController(user: user)
-        present(vc, animated: true, completion: nil)
+        vc.presentAsChild(of: self)
     }
     
     @IBAction func newGroupAction(_ sender: Any) {

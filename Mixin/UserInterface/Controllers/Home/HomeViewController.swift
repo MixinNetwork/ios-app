@@ -215,7 +215,7 @@ class HomeViewController: UIViewController {
     
     @IBAction func showAppsAction(_ sender: Any) {
         let vc = HomeAppsViewController.instance()
-        present(vc, animated: true, completion: nil)
+        vc.presentAsChild(of: self)
     }
     
     @IBAction func leftAppAction(_ sender: Any) {

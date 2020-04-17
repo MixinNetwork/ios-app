@@ -99,7 +99,9 @@ class UrlWindow {
                 } else {
                     let vc = UserProfileViewController(user: user)
                     vc.updateUserFromRemoteAfterReloaded = refreshUser
-                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                    if let container = UIApplication.homeContainerViewController {
+                        vc.presentAsChild(of: container)
+                    }
                 }
             }
         }
@@ -202,7 +204,9 @@ class UrlWindow {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                if let container = UIApplication.homeContainerViewController {
+                    vc.presentAsChild(of: container)
+                }
             }
         }
         return true
@@ -238,7 +242,9 @@ class UrlWindow {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                if let container =  UIApplication.homeContainerViewController {
+                    vc.presentAsChild(of: container)
+                }
             }
         }
         return true
@@ -629,7 +635,9 @@ extension UrlWindow {
                 hud.hide()
                 let user = UserItem.createUser(from: user)
                 let vc = UserProfileViewController(user: user)
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                if let container =  UIApplication.homeContainerViewController {
+                    vc.presentAsChild(of: container)
+                }
             }
         }
     }

@@ -32,8 +32,6 @@ final class GroupProfileViewController: ProfileViewController {
         self.isMember = isMember
         self.participantsCount = numberOfParticipants
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
-        modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
     }
     
     init(response: ConversationResponse, codeId: String, participants: [ParticipantUser], isMember: Bool) {
@@ -43,8 +41,6 @@ final class GroupProfileViewController: ProfileViewController {
         self.isMember = isMember
         self.participantsCount = response.participants.count
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
-        modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -73,7 +73,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
             self?.setCandidateEmptyHintHidden(!users.isEmpty)
         })
         
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
         let candidateHeight = maxHeight - titleBarHeightConstraint.constant - pinnedWrapperHeightConstraint.constant
         candidateCollectionViewHeightConstraint.constant = candidateHeight
@@ -102,7 +102,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         switch size {
         case .expanded, .unavailable:
             return window.bounds.height - window.safeAreaInsets.top

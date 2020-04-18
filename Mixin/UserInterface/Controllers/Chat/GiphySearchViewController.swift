@@ -221,7 +221,7 @@ extension GiphySearchViewController {
     }
     
     private func updatePreferredContentSizeHeight() {
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
     }
     

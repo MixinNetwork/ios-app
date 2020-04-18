@@ -12,7 +12,7 @@ class NotificationController: NSObject {
     private var isPresenting = false
     
     private var presentingViewFrameY: CGFloat {
-        return AppDelegate.current.window.safeAreaInsets.top
+        return AppDelegate.current.mainWindow.safeAreaInsets.top
     }
     
     override init() {
@@ -113,7 +113,7 @@ class NotificationController: NSObject {
             }, completion: nil)
         } else {
             isPresenting = true
-            let window = AppDelegate.current.window
+            let window = AppDelegate.current.mainWindow
             view.frame = CGRect(x: window.safeAreaInsets.left,
                                 y: -view.frame.height,
                                 width: window.bounds.width - window.safeAreaInsets.horizontal,

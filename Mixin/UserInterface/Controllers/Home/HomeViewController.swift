@@ -699,7 +699,7 @@ extension HomeViewController {
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
                 switch result {
                 case .success:

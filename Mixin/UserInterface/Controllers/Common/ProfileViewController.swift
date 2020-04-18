@@ -91,7 +91,7 @@ class ProfileViewController: ResizablePopupViewController {
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
         switch size {
         case .expanded, .unavailable:

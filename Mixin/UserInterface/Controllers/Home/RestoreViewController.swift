@@ -73,7 +73,7 @@ class RestoreViewController: UIViewController {
                 AppGroupUserDefaults.User.isCircleSynchronized = false
                 
                 DispatchQueue.main.async {
-                    AppDelegate.current.window.rootViewController = makeInitialViewController()
+                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             } catch {
                 self.restoreFailed(error: error)
@@ -84,7 +84,7 @@ class RestoreViewController: UIViewController {
     @IBAction func skipAction(_ sender: Any) {
         AppGroupUserDefaults.Account.canRestoreChat = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
-        AppDelegate.current.window.rootViewController =
+        AppDelegate.current.mainWindow.rootViewController =
             makeInitialViewController()
     }
 

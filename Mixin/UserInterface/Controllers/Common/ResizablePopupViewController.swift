@@ -154,7 +154,7 @@ class ResizablePopupViewController: UIViewController {
     
     func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
         return maxHeight
     }

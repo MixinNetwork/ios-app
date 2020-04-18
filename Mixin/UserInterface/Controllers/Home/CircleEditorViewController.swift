@@ -176,7 +176,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
 
         let newMembers = Set<CircleMember>(selections)
         let intersectMembers = oldMembers.intersection(newMembers)

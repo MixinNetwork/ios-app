@@ -11,6 +11,8 @@ final class HomeAppsViewController: ResizablePopupViewController {
     @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
     
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pinnedCollectionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pinnedCollectionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinnedWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     
@@ -84,18 +86,31 @@ final class HomeAppsViewController: ResizablePopupViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        candidateCollectionLayout.sectionInset.left = 25
-        candidateCollectionLayout.sectionInset.right = 25
-        let spacing = view.bounds.width - candidateCollectionLayout.sectionInset.horizontal - candidateCollectionLayout.minimumInteritemSpacing * CGFloat(cellCountPerRow - 1)
-        let cellWidth = floor(spacing / CGFloat(cellCountPerRow))
-        candidateCollectionLayout.itemSize.width = cellWidth
+        let cellCount = CGFloat(cellCountPerRow)
+        let iconInset: CGFloat = 36
         
-        pinnedCollectionLayout.sectionInset.left = 16
-        pinnedCollectionLayout.sectionInset.right = 16
+        let candidateInset = round((view.bounds.width - 2 * cellCount * iconInset - cellCount * pinnedCollectionLayout.itemSize.width) / (2 - 2 * cellCount))
+        candidateCollectionLayout.sectionInset.left = candidateInset
+        candidateCollectionLayout.sectionInset.right = candidateInset
+        let candidateCellsWidth = view.bounds.width
+            - candidateCollectionLayout.sectionInset.horizontal
+            - candidateCollectionLayout.minimumInteritemSpacing * CGFloat(cellCountPerRow - 1)
+        let candidateCellWidth = floor(candidateCellsWidth / CGFloat(cellCountPerRow))
+        candidateCollectionLayout.itemSize.width = candidateCellWidth
+        
+        let inset = candidateCollectionLayout.sectionInset.left
+            - pinnedCollectionViewLeadingConstraint.constant
+            + (candidateCollectionLayout.itemSize.width - pinnedCollectionLayout.itemSize.width) / 2
+        pinnedCollectionLayout.sectionInset.left = inset
+        pinnedCollectionLayout.sectionInset.right = inset
         let pinnedSpacing: CGFloat = {
             let cellsWidth = pinnedCollectionLayout.itemSize.width * CGFloat(cellCountPerRow)
-            let totalSpacing = view.bounds.width - 40 - pinnedCollectionLayout.sectionInset.horizontal - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCountPerRow - 1))
+            let totalSpacing = view.bounds.width
+                - pinnedCollectionViewLeadingConstraint.constant
+                - pinnedCollectionViewTrailingConstraint.constant
+                - pinnedCollectionLayout.sectionInset.horizontal
+                - cellsWidth
+            return floor(totalSpacing / CGFloat(cellCountPerRow))
         }()
         pinnedCollectionLayout.minimumInteritemSpacing = pinnedSpacing
     }

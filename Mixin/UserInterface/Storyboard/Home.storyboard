@@ -373,7 +373,7 @@
                                         <color key="backgroundColor" name="background"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-36" width="375" height="111"/>
+                                        <rect key="frame" x="0.0" y="-34" width="375" height="109"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
                                         <rect key="frame" x="71.5" y="0.0" width="232" height="44"/>
@@ -1093,6 +1093,8 @@
                         <outlet property="noPinnedHintLabel" destination="6Nf-kR-8cU" id="qw3-hx-gcC"/>
                         <outlet property="pinnedCollectionLayout" destination="AbY-x2-upI" id="I0h-xe-XA8"/>
                         <outlet property="pinnedCollectionView" destination="kTb-Tu-KFj" id="eMu-1W-fHt"/>
+                        <outlet property="pinnedCollectionViewLeadingConstraint" destination="RoT-v5-GG6" id="4Ga-za-gwa"/>
+                        <outlet property="pinnedCollectionViewTrailingConstraint" destination="e0G-bz-rGL" id="uuW-dg-xjP"/>
                         <outlet property="pinnedWrapperHeightConstraint" destination="jdA-qv-Lse" id="YaL-Nr-ZLf"/>
                         <outlet property="titleBarHeightConstraint" destination="oec-ry-GMg" id="wdi-DW-2bh"/>
                     </connections>

@@ -107,7 +107,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
         case .expanded, .unavailable:
             return window.bounds.height - window.safeAreaInsets.top
         case .compressed:
-            return window.bounds.height / 3 * 2
+            return floor(window.bounds.height / 3 * 2)
         }
     }
     

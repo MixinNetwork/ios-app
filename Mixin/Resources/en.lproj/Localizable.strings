@@ -346,10 +346,6 @@
 "camera_save_video_success" = "Video saved.";
 "camera_save_video_failed" = "Unable to save video.";
 "image_picker_title_albums" = "Albums";
-"camera_qrcode_title" = "TEXT QR CODE";
-"camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";
-"camera_qrcode_tips_title" = "QR Code Camera";
-"camera_qrcode_tips_summary" = "Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more information.";
 
 // Group
 "group_navigation_title_add_member" = "Add Participants";
@@ -565,6 +561,7 @@
 "multisig_state_unlocked" = "This multisig link has already been revoked by someone, you can not make a duplicate operation.";
 
 // QRCode
+"qr_code_not_found" = "QR Code not found";
 "myqrcode_title" = "My QR Code";
 "myqrcode_prompt" = "Scan the QR Code to add me on Mixin";
 "transfer_qrcode_prompt" = "Scan the QR Code to transfer me on Mixin";

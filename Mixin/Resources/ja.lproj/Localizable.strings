@@ -315,10 +315,6 @@
 "camera_save_video_success" = "動画を保存しました。";
 "camera_save_video_failed" = "ビデオを保存できません。";
 "image_picker_title_albums" = "アルバム";
-"camera_qrcode_title" = "テキストQRコード";
-"camera_qrcode_codes" = "Mixin QRコードを検出し、タップして認識します";
-"camera_qrcode_tips_title" = "QRコードカメラ";
-"camera_qrcode_tips_summary" = "QRコードをスキャンするために内蔵カメラを使用してください。 コードが検出されたら、通知をタップして詳細情報を表示します。";
 
 // Group
 "group_navigation_title_add_member" = "参加者を追加";
@@ -494,6 +490,7 @@
 "transfer_use_touch" = "Touch Payを使います";
 
 // QRCode
+"qr_code_not_found" = "QR Code not found";
 "myqrcode_title" = "私のQRコード";
 "myqrcode_prompt" = "QRコードをスキャンしてMixinに追加してください。";
 "transfer_qrcode_prompt" = "QRコードをスキャンしてと振込してください";

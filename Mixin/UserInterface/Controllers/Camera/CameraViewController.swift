@@ -57,6 +57,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private lazy var videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera],
                                                                                     mediaType: AVMediaType.video,
                                                                                     position: .unspecified)
+    private lazy var assetQrCodeScanningController = AssetQrCodeScanningController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +124,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBAction func albumAction(_ sender: Any) {
         PHPhotoLibrary.checkAuthorization { (granted) in
             if granted {
-                let vc = PhotoAssetPickerNavigationController.instance(pickerDelegate: self)
+                let vc = PhotoAssetPickerNavigationController.instance(pickerDelegate: self, showImageOnly: self.asQrCodeScanner)
                 self.present(vc, animated: true, completion: nil)
             }
         }
@@ -553,7 +554,17 @@ extension CameraViewController {
             }
         }
     }
-
+    
+    private func handleQrCodeDetection(string: String) {
+        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
+            return
+        }
+        if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
+            return
+        }
+        RecognizeWindow.instance().presentWindow(text: string)
+    }
+    
 }
 
 extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
@@ -572,13 +583,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
         detectedQrCodes.insert(string)
-        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
-            return
-        }
-        if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
-            return
-        }
-        RecognizeWindow.instance().presentWindow(text: string)
+        handleQrCodeDetection(string: string)
     }
     
 }
@@ -586,8 +591,32 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
 extension CameraViewController: PhotoAssetPickerDelegate {
     
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
-        navigationController?.pushViewController(vc, animated: true)
+        if asQrCodeScanner {
+            assetQrCodeScanningController.delegate = self
+            assetQrCodeScanningController.load(asset: asset)
+        } else {
+            let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+}
+
+extension CameraViewController: AssetQrCodeScanningControllerDelegate {
+    
+    var previewImageViewContainer: UIView {
+        qrCodeScanningView
+    }
+    
+    func assetQrCodeScanningController(_ controller: AssetQrCodeScanningController, didRecognizeString string: String) {
+        navigationController?.popViewController(animated: true)
+        handleQrCodeDetection(string: string)
+    }
+    
+    func assetQrCodeScanningControllerDidRecognizeNothing(_ controller: AssetQrCodeScanningController) {
+        alert(R.string.localizable.qr_code_not_found(), message: nil) { (_) in
+            controller.unload()
+        }
     }
     
 }

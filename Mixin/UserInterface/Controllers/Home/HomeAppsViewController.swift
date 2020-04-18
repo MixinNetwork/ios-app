@@ -86,13 +86,10 @@ final class HomeAppsViewController: ResizablePopupViewController {
         
         candidateCollectionLayout.sectionInset.left = 25
         candidateCollectionLayout.sectionInset.right = 25
-        let candidateSpacing: CGFloat = {
-            let cellsWidth = candidateCollectionLayout.itemSize.width * CGFloat(cellCountPerRow)
-            let totalSpacing = view.bounds.width - candidateCollectionLayout.sectionInset.horizontal - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCountPerRow - 1))
-        }()
-        candidateCollectionLayout.minimumInteritemSpacing = candidateSpacing
-
+        let spacing = view.bounds.width - candidateCollectionLayout.sectionInset.horizontal - candidateCollectionLayout.minimumInteritemSpacing * CGFloat(cellCountPerRow - 1)
+        let cellWidth = floor(spacing / CGFloat(cellCountPerRow))
+        candidateCollectionLayout.itemSize.width = cellWidth
+        
         pinnedCollectionLayout.sectionInset.left = 16
         pinnedCollectionLayout.sectionInset.right = 16
         let pinnedSpacing: CGFloat = {

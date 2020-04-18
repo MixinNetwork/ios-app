@@ -587,7 +587,6 @@ extension CameraViewController: PhotoAssetPickerDelegate {
     
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
-        vc.detectsQrCode = true
         navigationController?.pushViewController(vc, animated: true)
     }
     

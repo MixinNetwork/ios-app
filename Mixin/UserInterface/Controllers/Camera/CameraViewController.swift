@@ -610,7 +610,9 @@ extension CameraViewController: AssetQrCodeScanningControllerDelegate {
     
     func assetQrCodeScanningController(_ controller: AssetQrCodeScanningController, didRecognizeString string: String) {
         navigationController?.popViewController(animated: true)
-        handleQrCodeDetection(string: string)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.handleQrCodeDetection(string: string)
+        }
     }
     
     func assetQrCodeScanningControllerDidRecognizeNothing(_ controller: AssetQrCodeScanningController) {

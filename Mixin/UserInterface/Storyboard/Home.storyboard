@@ -947,10 +947,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ej-wk-Qvq">
-                                <rect key="frame" x="0.0" y="70" width="375" height="109"/>
+                                <rect key="frame" x="0.0" y="70" width="375" height="110"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kTb-Tu-KFj">
-                                        <rect key="frame" x="20" y="21" width="335" height="82"/>
+                                        <rect key="frame" x="20" y="10" width="335" height="82"/>
                                         <color key="backgroundColor" name="background_secondary"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AbY-x2-upI">
                                             <size key="itemSize" width="50" height="50"/>
@@ -993,7 +993,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </collectionView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press and drag a bot to pin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Nf-kR-8cU">
-                                        <rect key="frame" x="40" y="41" width="295" height="42"/>
+                                        <rect key="frame" x="40" y="30" width="295" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
@@ -1008,15 +1008,15 @@
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="leading" secondItem="2ej-wk-Qvq" secondAttribute="leading" constant="20" id="RoT-v5-GG6"/>
                                     <constraint firstItem="6Nf-kR-8cU" firstAttribute="leading" secondItem="kTb-Tu-KFj" secondAttribute="leading" constant="20" id="Wao-Wd-L7U"/>
                                     <constraint firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="20" id="e0G-bz-rGL"/>
-                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="21" id="hjq-HI-uXW"/>
-                                    <constraint firstAttribute="height" constant="109" id="jdA-qv-Lse"/>
+                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="10" id="hjq-HI-uXW"/>
+                                    <constraint firstAttribute="height" constant="110" id="jdA-qv-Lse"/>
                                     <constraint firstItem="6Nf-kR-8cU" firstAttribute="top" secondItem="kTb-Tu-KFj" secondAttribute="top" constant="20" id="kXt-zT-gfq"/>
-                                    <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="6" id="tMk-Hv-bmI"/>
+                                    <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="18" id="tMk-Hv-bmI"/>
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="trailing" secondItem="6Nf-kR-8cU" secondAttribute="trailing" constant="20" id="zay-VY-Xpf"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
-                                <rect key="frame" x="0.0" y="179" width="375" height="488"/>
+                                <rect key="frame" x="0.0" y="180" width="375" height="488"/>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="488" id="QTq-YP-lKy"/>

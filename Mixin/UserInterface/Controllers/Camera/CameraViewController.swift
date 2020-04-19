@@ -556,13 +556,16 @@ extension CameraViewController {
     }
     
     private func handleQrCodeDetection(string: String) {
-        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
-            return
+        navigationController?.popViewController(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
+                return
+            }
+            if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
+                return
+            }
+            RecognizeWindow.instance().presentWindow(text: string)
         }
-        if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
-            return
-        }
-        RecognizeWindow.instance().presentWindow(text: string)
     }
     
 }
@@ -609,10 +612,7 @@ extension CameraViewController: AssetQrCodeScanningControllerDelegate {
     }
     
     func assetQrCodeScanningController(_ controller: AssetQrCodeScanningController, didRecognizeString string: String) {
-        navigationController?.popViewController(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.handleQrCodeDetection(string: string)
-        }
+        handleQrCodeDetection(string: string)
     }
     
     func assetQrCodeScanningControllerDidRecognizeNothing(_ controller: AssetQrCodeScanningController) {

@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UIApplication.shared.delegate as! AppDelegate
     }
     
-    let window = UIWindow(frame: UIScreen.main.bounds)
+    lazy var mainWindow = UIWindow(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
@@ -169,7 +169,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         LoginManager.shared.reloadAccountFromUserDefaults()
         configAnalytics()
-        if LoginManager.shared.isLoggedIn && !(window.rootViewController is HomeContainerViewController) {
+        if LoginManager.shared.isLoggedIn && !(mainWindow.rootViewController is HomeContainerViewController) {
             checkLogin()
         }
     }
@@ -266,16 +266,16 @@ extension AppDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
         UIApplication.shared.unregisterForRemoteNotifications()
         
-        let oldRootViewController = window.rootViewController
-        window.rootViewController = LoginNavigationController.instance()
+        let oldRootViewController = mainWindow.rootViewController
+        mainWindow.rootViewController = LoginNavigationController.instance()
         oldRootViewController?.navigationController?.removeFromParent()
     }
     
     @objc func handleClockSkew() {
-        if let viewController = window.rootViewController as? ClockSkewViewController {
+        if let viewController = mainWindow.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
         } else {
-            window.rootViewController = makeInitialViewController()
+            mainWindow.rootViewController = makeInitialViewController()
         }
     }
     
@@ -284,9 +284,9 @@ extension AppDelegate {
 extension AppDelegate {
     
     private func checkLogin() {
-        window.backgroundColor = .black
+        mainWindow.backgroundColor = .black
         if LoginManager.shared.isLoggedIn {
-            window.rootViewController = makeInitialViewController()
+            mainWindow.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
@@ -294,13 +294,13 @@ extension AppDelegate {
             }
         } else {
             if UIApplication.shared.isProtectedDataAvailable {
-                window.rootViewController = LoginNavigationController.instance()
+                mainWindow.rootViewController = LoginNavigationController.instance()
             } else {
-                window.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
+                mainWindow.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
             }
         }
         UIApplication.shared.setShortcutItemsEnabled(LoginManager.shared.isLoggedIn)
-        window.makeKeyAndVisible()
+        mainWindow.makeKeyAndVisible()
     }
     
     private func configAnalytics() {

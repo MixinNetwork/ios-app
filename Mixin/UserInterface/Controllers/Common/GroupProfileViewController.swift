@@ -62,7 +62,7 @@ final class GroupProfileViewController: ProfileViewController {
         let conversationId = conversation.conversationId
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.GROUP.rawValue, participants: nil, duration: interval, announcement: nil)
         ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
@@ -153,7 +153,7 @@ extension GroupProfileViewController {
         presentEditNameController(title: Localized.CONTACT_TITLE_CHANGE_NAME, text: conversation.name, placeholder: Localized.PLACEHOLDER_NEW_NAME) { [weak self] (name) in
             NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.shared.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in
                 switch result {
                 case .success:
@@ -174,7 +174,7 @@ extension GroupProfileViewController {
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
                 let exitSuccessBlock = {
                     self?.conversation.status = ConversationStatus.QUIT.rawValue
@@ -208,7 +208,7 @@ extension GroupProfileViewController {
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { [weak self](_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)
                 DispatchQueue.main.async {
@@ -250,13 +250,13 @@ extension GroupProfileViewController {
         updateSubtitle()
         
         if !isMember && codeId != nil {
-            isResizeGestureEnabled = false
+            resizeRecognizer.isEnabled = false
             relationshipView.style = .joinGroup
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(joinGroup), for: .touchUpInside)
             centerStackView.addArrangedSubview(relationshipView)
         } else {
-            isResizeGestureEnabled = true
+            resizeRecognizer.isEnabled = true
         }
         
         if !conversation.announcement.isEmpty {

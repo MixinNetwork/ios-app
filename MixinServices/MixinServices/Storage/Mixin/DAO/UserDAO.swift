@@ -10,7 +10,6 @@ public final class UserDAO {
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
     
-    private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
@@ -57,6 +56,10 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword])
     }
     
+    public func getUser(withAppId id: String) -> User? {
+        MixinDatabase.shared.getCodable(condition: User.Properties.appId == id)
+    }
+    
     public func getUsers(ofAppIds ids: [String]) -> [UserItem] {
         guard ids.count > 0 else {
             return []
@@ -75,6 +78,16 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryAppUserInConversation, values: [conversationId])
     }
     
+    public func getAppUsers() -> [User] {
+        let sql = """
+            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+            ORDER BY u.full_name ASC
+        """
+        return MixinDatabase.shared.getCodables(sql: sql)
+    }
+    
     public func appFriends(notIn ids: [String]) -> [User] {
         let condition = User.Properties.relationship == Relationship.FRIEND.rawValue
             && User.Properties.appId.isNotNull()
@@ -83,7 +96,13 @@ public final class UserDAO {
     }
     
     public func contacts() -> [UserItem] {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
+        let sql = "\(Self.sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+        return MixinDatabase.shared.getCodables(sql: sql)
+    }
+    
+    public func contactsWithoutApp() -> [UserItem] {
+        let sql = "\(Self.sqlQueryColumns) WHERE u.app_id IS NULL AND u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+        return MixinDatabase.shared.getCodables(sql: sql)
     }
     
     public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {
@@ -107,6 +126,11 @@ public final class UserDAO {
                 UserDAO.shared.updateUsers(users: users, sendNotificationAfterFinished: sendNotificationAfterFinished, updateParticipantStatus: updateParticipantStatus, notifyContact: notifyContact)
             }
         } else {
+            var isAppUpdated = false
+            if sendNotificationAfterFinished, users.count == 1, let newApp = users[0].app {
+                isAppUpdated = AppDAO.shared.getApp(appId: newApp.appId)?.updatedAt != newApp.updatedAt
+            }
+
             MixinDatabase.shared.transaction { (db) in
                 for user in users {
                     try db.insertOrReplace(objects: User.createUser(from: user), intoTable: User.tableName)
@@ -123,6 +147,9 @@ public final class UserDAO {
                 if users.count == 1 {
                     NotificationCenter.default.afterPostOnMain(name: .UserDidChange, object: UserItem.createUser(from: users[0]))
                 }
+            }
+            if isAppUpdated {
+                NotificationCenter.default.afterPostOnMain(name: .AppDidChange, object: users[0].app?.appId)
             }
             if notifyContact {
                 NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)

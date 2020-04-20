@@ -88,7 +88,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private func performAddCircle(name: String) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         CircleAPI.shared.create(name: name) { (result) in
             switch result {
             case .success(let circle):
@@ -213,7 +213,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         }
         let conversationId = self.conversationId
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let completion: (APIResult<[CircleConversation]>) -> Void
         let requests: [ConversationCircleRequest]
         

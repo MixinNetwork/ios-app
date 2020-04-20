@@ -145,7 +145,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
                 return
             }
 
-            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, isFilterCustomSticker: true, scrollToOffset: weakSelf.pickerContentOffset)
+            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, showImageOnly: true, scrollToOffset: weakSelf.pickerContentOffset)
             weakSelf.present(picker, animated: true, completion: nil)
         }
     }

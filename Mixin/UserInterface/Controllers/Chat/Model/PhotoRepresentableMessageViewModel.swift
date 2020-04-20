@@ -11,7 +11,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     
     private var maxPresentationHeight: CGFloat {
         return performSynchronouslyOnMainThread {
-            AppDelegate.current.window.bounds.height / 2
+            AppDelegate.current.mainWindow.bounds.height / 2
         }
     }
     

@@ -8,7 +8,7 @@ func showAutoHiddenHud(style: Hud.Style, text: String) {
         return
     }
     let hud = Hud()
-    hud.show(style: style, text: text, on: AppDelegate.current.window)
+    hud.show(style: style, text: text, on: AppDelegate.current.mainWindow)
     hud.scheduleAutoHidden()
 }
 

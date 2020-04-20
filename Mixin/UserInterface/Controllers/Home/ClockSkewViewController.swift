@@ -28,7 +28,7 @@ class ClockSkewViewController: UIViewController {
             switch result {
             case .success:
                 AppGroupUserDefaults.Account.isClockSkewed = false
-                AppDelegate.current.window.rootViewController = makeInitialViewController()
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.continueButton.isBusy = false

@@ -197,12 +197,14 @@
 "home_bulletin_title_notification" = "打开推送消息";
 "home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_button_notification" = "设置";
+"home_title_apps" = "机器人";
+"home_apps_candidate_empty" = "可以添加你喜欢的机器人";
 
 // Circle
 "circle_title" = "圈子";
 "circle_default_all" = "Mixin";
 "circle_default_strangers" = "陌生人";
-"circle_default_bots" = "小程序";
+"circle_default_bots" = "机器人";
 "circle_default_contacts" = "联系人";
 "circle_conversation_count" = "%@ 个会话";
 "circle_conversation_count_all" = "全部会话";
@@ -212,6 +214,7 @@
 "circle_action_delete" = "删除圈子";
 "circle_member_category_chats" = "最近聊天";
 "circle_member_category_contacts" = "联系人";
+"circle_member_category_apps" = "机器人";
 "circle_add_hint" = "创建圈子并加入会话，即可在其中快速切换";
 "circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
 "circle_no_conversation_action" = "添加会话";
@@ -249,6 +252,7 @@
 "chat_forward_title" = "转发";
 "chat_forward_chats" = "最近聊天";
 "chat_forward_contacts" = "联系人";
+"chat_forward_apps" = "机器人";
 "chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
 "chat_decryption_failed_link" = "了解更多。";
 "chat_send_photo_failed" = "发送图片失败，请稍后重试";
@@ -295,7 +299,7 @@
 "chat_invited_by_stranger" = "邀请人不是你的联系人";
 "chat_exit_group_and_report_inviter" = "退出群组并举报邀请人";
 "chat_exit_group_and_report_inviter_confirmation" = "确认退出群组并举报邀请人？";
-"chat_app_reception_title" = "点击按钮使用小程序";
+"chat_app_reception_title" = "点击按钮使用机器人";
 "chat_app_reception_button_home" = "打开主页";
 "chat_app_reception_button_hi" = "打招呼";
 "chat_app_card_suspicious_link" = "可疑链接";
@@ -345,11 +349,6 @@
 "camera_save_video_success" = "视频已成功保存在相册";
 "camera_save_video_failed" = "保存视频失败";
 "image_picker_title_albums" = "相册";
-"camera_qrcode_title" = "文本二维码";
-"camera_qrcode_codes" = "检测到一个 Mixin 二维码，点击识别";
-"camera_qrcode_tips_title" = "自动识别二维码";
-"camera_qrcode_tips_summary" = "打开相机会默认开启二维码识别，当二维码被检测到时会显示一个通知，点击通知识别二维码。";
-
 
 // Group
 "group_navigation_title_add_member" = "添加成员";
@@ -375,7 +374,7 @@
 "group_role_admin" = "管理员";
 "group_role_owner" = "群主";
 "group_participant_add_full" = "不能再添加成员，群已经满员了！";
-"group_participant_add_limit" = "不能再添加成员，一次最多只能加 50 个联系人。";
+"group_participant_add_limit" = "不能再添加成员，一次最多添加 50 个。";
 "group_participant_menu_info" = "信息";
 "group_participant_menu_send" = "发送消息";
 "group_participant_menu_admin" = "设为管理员";
@@ -566,6 +565,7 @@
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 
 // QRCode
+"qr_code_not_found" = "未检测到二维码";
 "myqrcode_title" = "我的二维码";
 "myqrcode_prompt" = "用 Mixin 扫描二维码加我为联系人";
 "transfer_qrcode_prompt" = "用 Mixin 扫描二维码给我转账";
@@ -594,13 +594,15 @@
 // Profile
 "profile_title" = "信息";
 "profile_send_message" = "发消息";
-"profile_open_bot" = "打开小程序";
+"profile_open_bot" = "打开机器人";
 "profile_share_card" = "分享他的名片";
 "profile_search_conversation" = "搜索聊天记录";
 "profile_transactions" = "转账记录";
 "profile_notification" = "通知";
-"profile_add" = "添加联系人";
-"profile_remove" = "删除联系人";
+"profile_add_contact" = "添加联系人";
+"profile_add_bot" = "添加机器人";
+"profile_remove_contact" = "删除联系人";
+"profile_remove_bot" = "删除机器人";
 "profile_block" = "屏蔽用户";
 "profile_unblock" = "解除屏蔽";
 "profile_photo" = "个人头像";
@@ -617,8 +619,8 @@
 "profile_reputation_score" = "荣誉值: %@";
 "profile_edit_name" = "编辑名称";
 "profile_edit_biography" = "编辑个人简介";
-"profile_add_contact_fail" = "添加联系人失败，请稍后重试";
-"profile_remove_contact_fail" = "删除联系人失败，请稍后重试";
+"profile_add_contact_fail" = "添加失败，请稍后重试";
+"profile_remove_contact_fail" = "删除失败，请稍后重试";
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
@@ -629,14 +631,15 @@
 "profile_report" = "举报";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-"profile_remove_hint" = "删除联系人？聊天记录将会保留";
+"profile_remove_hint_contact" = "删除联系人？聊天记录将会保留";
+"profile_remove_hint_bot" = "删除机器人？聊天记录将会保留";
 "profile_exit_group_hint" = "退出\"%@\"?";
 "profile_delete_contact_chat_hint" = "删除与\"%@\"的聊天?";
 "profile_delete_group_chat_hint" = "删除\"%@\"的聊天?";
 "profile_clear_contact_chat_hint" = "清空与\"%@\"的聊天记录?";
 "profile_clear_group_chat_hint" = "清空\"%@\"的聊天记录?";
-"profile_block_hint" = "屏蔽后该联系人无法向您拨打电话或发送消息";
-"profile_report_hint" = "举报并屏蔽这个联系人？你们的对话会被立即删除";
+"profile_block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
+"profile_report_hint" = "举报并屏蔽？你们的对话会被立即删除";
 "profile_join_in" = "%@ 加入";
 "profile_my_shared_apps" = "分享的应用";
 "profile_share_app_hint" = "若要分享应用，请添加其为联系人";

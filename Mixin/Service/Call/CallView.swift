@@ -44,7 +44,7 @@ class CallView: UIVisualEffectView {
     }
     
     func show() {
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         window.endEditing(true)
         frame = window.bounds
         window.addSubview(self)

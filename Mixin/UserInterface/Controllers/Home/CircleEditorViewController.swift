@@ -3,9 +3,9 @@ import MixinServices
 
 class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPeerCell, CircleMemberSearchResult> {
     
-    let collectionViewLayout = UICollectionViewFlowLayout()
-    
-    var collectionView: UICollectionView!
+    override class var showSelectionsOnTop: Bool {
+        true
+    }
     
     private var name = ""
     private var circleId = ""
@@ -29,21 +29,6 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
-        collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
-        collectionViewLayout.minimumInteritemSpacing = 0
-        collectionViewLayout.scrollDirection = .horizontal
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
-        collectionView.backgroundColor = .background
-        collectionView.alwaysBounceHorizontal = true
-        collectionView.showsHorizontalScrollIndicator = false
-        centerWrapperView.addSubview(collectionView)
-        collectionView.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.height.equalTo(80)
-        }
-        collectionView.register(R.nib.circleMemberCell)
         collectionView.dataSource = self
         let circleId = self.circleId
         DispatchQueue.global().async { [weak self] in
@@ -77,14 +62,24 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             .filter({ $0.category == ConversationCategory.CONTACT.rawValue })
             .map({ $0.userId })
         let presentedUserIdSet = Set(presentedUserIds)
-        let contacts = users.filter({ !presentedUserIdSet.contains($0.userId) })
+        var contacts = [UserItem]()
+        var apps = [UserItem]()
+        for user in users.filter({ !presentedUserIdSet.contains($0.userId) }) {
+            if user.isBot {
+                apps.append(user)
+            } else {
+                contacts.append(user)
+            }
+        }
         let titles = [
             R.string.localizable.circle_member_category_chats(),
             R.string.localizable.circle_member_category_contacts(),
+            R.string.localizable.circle_member_category_apps()
         ]
         let models = [
             conversations,
             contacts.map(CircleMember.init),
+            apps.map(CircleMember.init),
         ]
         return (titles, models)
     }
@@ -181,7 +176,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
 
         let newMembers = Set<CircleMember>(selections)
         let intersectMembers = oldMembers.intersection(newMembers)
@@ -222,7 +217,7 @@ extension CircleEditorViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.circle_member, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.selected_peer, for: indexPath)!
         let member = selections[indexPath.row]
         cell.render(member: member)
         cell.delegate = self
@@ -231,9 +226,9 @@ extension CircleEditorViewController: UICollectionViewDataSource {
     
 }
 
-extension CircleEditorViewController: CircleMemberCellDelegate {
+extension CircleEditorViewController: SelectedPeerCellDelegate {
     
-    func circleMemberCellDidSelectRemove(_ cell: UICollectionViewCell) {
+    func selectedPeerCellDidSelectRemove(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
@@ -275,18 +270,6 @@ extension CircleEditorViewController {
             return searchResults[indexPath.row].member
         } else {
             return models[indexPath.section][indexPath.row]
-        }
-    }
-    
-    private func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
-        centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
-        let work = {
-            self.view.layoutIfNeeded()
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: work)
-        } else {
-            UIView.performWithoutAnimation(work)
         }
     }
     

@@ -14,6 +14,7 @@ public struct App: BaseCodable {
     public let homeUri: String
     public let creatorId: String
     public let updatedAt: String?
+    public let category: String
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = App
@@ -21,6 +22,7 @@ public struct App: BaseCodable {
         case appNumber = "app_number"
         case redirectUri = "redirect_uri"
         case name
+        case category
         case iconUrl = "icon_url"
         case capabilities = "capabilites"
         case resourcePatterns = "resource_patterns"
@@ -36,4 +38,22 @@ public struct App: BaseCodable {
         }
     }
     
+}
+
+public enum AppCategory: String, Codable {
+
+    case OTHER
+    case WALLET
+    case TRADING
+    case BUSINESS
+    case SOCIAL
+    case SHOPPING
+    case EDUCATION
+    case NEWS
+    case TOOLS
+    case GAMES
+    case BOOKS
+    case MUSIC
+    case PHOTO
+    case VIDEO
 }

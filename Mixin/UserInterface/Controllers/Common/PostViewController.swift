@@ -32,7 +32,7 @@ class PostViewController: UIViewController {
             vc.view.center.y = parent.view.bounds.height / 2
         }
         
-        AppDelegate.current.window.endEditing(true)
+        AppDelegate.current.mainWindow.endEditing(true)
     }
     
     override func viewDidLoad() {

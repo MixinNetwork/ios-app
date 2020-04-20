@@ -2893,7 +2893,7 @@
 				F5646909209AA0566E934C2C /* [CP] Embed Pods Frameworks */,
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */,
-				DF1BD0B42292AF2900EBDC22 /* Fabric */,
+				DF1BD0B42292AF2900EBDC22 /* Crashlytics */,
 				776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */,
 				E090B9FF23B3957E0088355B /* Embed App Extensions */,
 			);
@@ -3234,9 +3234,9 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DF1BD0B42292AF2900EBDC22 /* Fabric */ = {
+		DF1BD0B42292AF2900EBDC22 /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -3244,14 +3244,14 @@
 			inputPaths = (
 				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = Fabric;
+			name = Crashlytics;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3265,7 +3265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /usr/bin/ruby;
-			shellScript = "fork do\nProcess.setsid\nSTDIN.reopen(\"/dev/null\")\nSTDOUT.reopen(\"/dev/null\", \"a\")\nSTDERR.reopen(\"/dev/null\", \"a\")\n\nrequire 'shellwords'\n\nDir[\"#{ENV[\"DWARF_DSYM_FOLDER_PATH\"]}/*/Contents/Resources/DWARF/*\"].each do |dsym|\nsystem(\"curl -F dsym=@#{Shellwords.escape(dsym)} -F projectRoot=#{Shellwords.escape(ENV[\"PROJECT_DIR\"])} https://upload.bugsnag.com/\")\nend\nend";
+			shellScript = "fork do\nProcess.setsid\nSTDIN.reopen(\"/dev/null\")\nSTDOUT.reopen(\"/dev/null\", \"a\")\nSTDERR.reopen(\"/dev/null\", \"a\")\n\nrequire 'shellwords'\n\nDir[\"#{ENV[\"DWARF_DSYM_FOLDER_PATH\"]}/*/Contents/Resources/DWARF/*\"].each do |dsym|\nsystem(\"curl -F dsym=@#{Shellwords.escape(dsym)} -F projectRoot=#{Shellwords.escape(ENV[\"PROJECT_DIR\"])} https://upload.bugsnag.com/\")\nend\nend\n";
 		};
 		DFE86358242281C6009B1833 /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;

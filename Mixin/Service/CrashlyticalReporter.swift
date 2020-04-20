@@ -1,7 +1,7 @@
 import UIKit
 import FirebaseCore
 import FirebaseAnalytics
-import Crashlytics
+import FirebaseCrashlytics
 import MixinServices
 
 class CrashlyticalReporter: Reporter {
@@ -9,10 +9,10 @@ class CrashlyticalReporter: Reporter {
     override func registerUserInformation() {
         super.registerUserInformation()
         if let account = LoginManager.shared.account {
-            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
-            Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
-            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
+            Crashlytics.crashlytics().setUserID(account.user_id)
+            Crashlytics.crashlytics().setCustomValue(account.full_name, forKey: "FullName")
+            Crashlytics.crashlytics().setCustomValue(account.identity_number, forKey: "IdentityNumber")
+            Crashlytics.crashlytics().setCustomValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
     }
     
@@ -23,12 +23,12 @@ class CrashlyticalReporter: Reporter {
     
     override func report(error: Error) {
         super.report(error: error)
-        Crashlytics.sharedInstance().recordError(error)
+        Crashlytics.crashlytics().record(error: error)
     }
     
     override func reportErrorToFirebase(_ error: Error) {
         super.reportErrorToFirebase(error)
-        Crashlytics.sharedInstance().recordError(error)
+        Crashlytics.crashlytics().record(error: error)
     }
     
 }

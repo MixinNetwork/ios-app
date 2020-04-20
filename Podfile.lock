@@ -2,10 +2,7 @@ PODS:
   - Alamofire (4.9.1)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Bugsnag (5.23.0)
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
   - DeviceGuru (6.0.3)
-  - Fabric (1.10.2)
   - Firebase/Analytics (6.16.0):
     - Firebase/Core
   - Firebase/Core (6.16.0):
@@ -13,6 +10,9 @@ PODS:
     - FirebaseAnalytics (= 6.2.2)
   - Firebase/CoreOnly (6.16.0):
     - FirebaseCore (= 6.6.1)
+  - Firebase/Crashlytics (6.16.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 4.0.0-beta.2)
   - Firebase/Performance (6.16.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 3.1.9)
@@ -42,6 +42,11 @@ PODS:
     - GoogleUtilities/Logger (~> 6.5)
     - nanopb (~> 0.3.901)
   - FirebaseCoreDiagnosticsInterop (1.2.0)
+  - FirebaseCrashlytics (4.0.0-beta.5):
+    - FirebaseAnalyticsInterop (~> 1.2)
+    - FirebaseCore (~> 6.6)
+    - FirebaseInstallations (~> 1.1)
+    - PromisesObjC (~> 1.2)
   - FirebaseInstallations (1.1.0):
     - FirebaseCore (~> 6.6)
     - GoogleUtilities/UserDefaults (~> 6.5)
@@ -208,10 +213,9 @@ PODS:
 
 DEPENDENCIES:
   - AlignedCollectionViewFlowLayout
-  - Crashlytics
-  - Fabric
   - Firebase/Analytics
   - Firebase/Core
+  - Firebase/Crashlytics
   - Firebase/Performance
   - GoogleWebRTC
   - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
@@ -231,9 +235,7 @@ SPEC REPOS:
     - Alamofire
     - AlignedCollectionViewFlowLayout
     - Bugsnag
-    - Crashlytics
     - DeviceGuru
-    - Fabric
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -241,6 +243,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseCoreDiagnosticsInterop
+    - FirebaseCrashlytics
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebasePerformance
@@ -313,9 +316,7 @@ SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Bugsnag: 1f33ee5b55bc4b131a30e0fe6db714da9c6609f6
-  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DeviceGuru: 5c377d56350f05590eeb7908a53088bd86cd8cdc
-  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 497158b816d0a86fc31babbd05546fcd7e6083ff
   FirebaseABTesting: 0d10f3cdc3fa00f3f175b5b56c1003c8e888299f
   FirebaseAnalytics: cf95d3aab897612783020fbd98401d5366f135ee
@@ -323,6 +324,7 @@ SPEC CHECKSUMS:
   FirebaseCore: 85064903ed6c28e47fec9c7bd149d94ba1b6b6e7
   FirebaseCoreDiagnostics: 5e78803ab276bc5b50340e3c539c06c3de35c649
   FirebaseCoreDiagnosticsInterop: 296e2c5f5314500a850ad0b83e9e7c10b011a850
+  FirebaseCrashlytics: 7c95218730d1debf493e987233c7b41dd7ba1329
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   FirebaseInstanceID: 6668efc1655a4052c083f287a7141f1ead12f9c2
   FirebasePerformance: 18ac5d515f0da0a96cde94b7fc5b1514b235e2d9
@@ -363,6 +365,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: bf4bc6670fe55ad98d272180c3ffd75f5b0721cd
+PODFILE CHECKSUM: 631bef59d80c8e843558bfec918a945a43537506
 
 COCOAPODS: 1.9.1

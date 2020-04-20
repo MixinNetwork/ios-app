@@ -447,10 +447,6 @@ extension CameraViewController {
             }
         }
 
-        if audioRecordPermissionIsGranted {
-            addAudioDeviceInputIfNeeded()
-        }
-
         if session.canAddOutput(metadataOutput) {
             session.addOutput(metadataOutput)
 
@@ -460,15 +456,21 @@ extension CameraViewController {
             }
         }
 
-        capturePhotoOutput = AVCapturePhotoOutput()
-        capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecType.jpeg])], completionHandler: nil)
-        if session.canAddOutput(capturePhotoOutput) {
-            session.addOutput(capturePhotoOutput)
-        }
+        if !asQrCodeScanner {
+            if audioRecordPermissionIsGranted {
+                addAudioDeviceInputIfNeeded()
+            }
 
-        captureVideoOutput.maxRecordedDuration = CMTime(seconds: 15, preferredTimescale: 30)
-        if session.canAddOutput(captureVideoOutput) {
-            session.addOutput(captureVideoOutput)
+            capturePhotoOutput = AVCapturePhotoOutput()
+            capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecType.jpeg])], completionHandler: nil)
+            if session.canAddOutput(capturePhotoOutput) {
+                session.addOutput(capturePhotoOutput)
+            }
+
+            captureVideoOutput.maxRecordedDuration = CMTime(seconds: 15, preferredTimescale: 30)
+            if session.canAddOutput(captureVideoOutput) {
+                session.addOutput(captureVideoOutput)
+            }
         }
 
         session.commitConfiguration()
@@ -557,7 +559,7 @@ extension CameraViewController {
     
     private func handleQrCodeDetection(string: String) {
         navigationController?.popViewController(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
                 return
             }

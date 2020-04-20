@@ -23,7 +23,6 @@ class PopupResizeGestureCoordinator: NSObject, UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        print(otherGestureRecognizer)
         return true
     }
     

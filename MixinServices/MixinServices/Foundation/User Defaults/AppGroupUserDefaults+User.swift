@@ -12,8 +12,6 @@ extension AppGroupUserDefaults {
             case isLogoutByServer = "logged_out_by_server"
             
             case hasShownRecallTips = "session_secret"
-            case hasShownCameraQrCodeTips = "shown_camera_qrcode_tips"
-            case hasPerformedQrCodeScanning = "has_scanned_qr_code"
             case hasPerformedTransfer = "has_performed_transfer"
             
             case autoBackup = "auto_backup"
@@ -42,13 +40,16 @@ extension AppGroupUserDefaults {
             case circleId = "circle_id"
             case circleName = "circle_name"
             case isCircleSynchronized = "is_circle_synchronized"
+            
+            case homeApp = "home_app"
         }
         
-        public static let version = 19
+        public static let version = 20
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
+        public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version || needsRebuildDatabase
@@ -71,12 +72,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.hasShownRecallTips, defaultValue: false)
         public static var hasShownRecallTips: Bool
-        
-        @Default(namespace: .user, key: Key.hasShownCameraQrCodeTips, defaultValue: false)
-        public static var hasShownCameraQrCodeTips: Bool
-        
-        @Default(namespace: .user, key: Key.hasPerformedQrCodeScanning, defaultValue: false)
-        public static var hasPerformedQrCodeScanning: Bool
         
         @Default(namespace: .user, key: Key.hasPerformedTransfer, defaultValue: false)
         public static var hasPerformedTransfer: Bool
@@ -148,6 +143,13 @@ extension AppGroupUserDefaults {
             }
         }
         
+        @Default(namespace: .user, key: Key.homeApp, defaultValue: [])
+        public static var homeAppIds: [String] {
+            didSet {
+                NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)
+            }
+        }
+        
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds
@@ -175,8 +177,6 @@ extension AppGroupUserDefaults {
             isLogoutByServer = CommonUserDefault.shared.hasForceLogout
             
             hasShownRecallTips = CommonUserDefault.shared.isRecallTips
-            hasShownCameraQrCodeTips = CommonUserDefault.shared.isCameraQRCodeTips
-            hasPerformedQrCodeScanning = CommonUserDefault.shared.hasPerformedQRCodeScanning
             hasPerformedTransfer = CommonUserDefault.shared.hasPerformedTransfer
             
             autoBackup = CommonUserDefault.shared.backupCategory

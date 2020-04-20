@@ -3,7 +3,7 @@ import MixinServices
 
 func makeInitialViewController() -> UIViewController {
     if AppGroupUserDefaults.Account.isClockSkewed {
-        if let viewController = AppDelegate.current.window.rootViewController as? ClockSkewViewController {
+        if let viewController = AppDelegate.current.mainWindow.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
             return viewController
         } else {

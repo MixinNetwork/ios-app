@@ -6,7 +6,7 @@ extension LoginManager {
     func updateProvision(id: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
         
         func alert(_ str: String) {
-            AppDelegate.current.window.rootViewController?.alert(str)
+            AppDelegate.current.mainWindow.rootViewController?.alert(str)
         }
         
         guard let identityKeyPair = try? PreKeyUtil.getIdentityKeyPair() else {

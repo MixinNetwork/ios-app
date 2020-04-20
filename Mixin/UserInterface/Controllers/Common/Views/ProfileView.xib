@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,13 +14,13 @@
                 <outlet property="avatarImageView" destination="c9U-ZP-8h8" id="6Cv-IX-zQm"/>
                 <outlet property="badgeImageView" destination="IYX-s8-hzB" id="2kh-Is-egu"/>
                 <outlet property="centerStackView" destination="hlu-Uq-je9" id="FjV-Iq-Jax"/>
-                <outlet property="contentView" destination="QK7-x5-erA" id="Cxs-M9-JkL"/>
+                <outlet property="contentView" destination="eVe-on-Rhz" id="IXm-ds-rai"/>
                 <outlet property="headerView" destination="nch-xR-kOZ" id="brW-oc-SwB"/>
                 <outlet property="hideContentConstraint" destination="Cba-Nz-vQg" id="mZh-uf-O1m"/>
                 <outlet property="menuStackView" destination="Vct-6M-HB1" id="gO6-ij-NNF"/>
                 <outlet property="menuStackViewTopConstraint" destination="tbU-OG-tOZ" id="aO1-0w-Qzp"/>
-                <outlet property="resizeRecognizer" destination="CGc-vj-5U8" id="Y7O-9J-WXl"/>
                 <outlet property="scrollView" destination="11M-an-G3B" id="zfL-ul-lAW"/>
+                <outlet property="scrollViewContentView" destination="QK7-x5-erA" id="Cxs-M9-JkL"/>
                 <outlet property="subtitleLabel" destination="G6c-CA-ndz" id="icm-jc-6ea"/>
                 <outlet property="titleLabel" destination="YSA-gG-P4u" id="iW4-FA-ju3"/>
                 <outlet property="titleViewHeightConstraint" destination="pGf-J3-iqe" id="6j8-eX-3Pr"/>
@@ -180,9 +180,6 @@
                         <constraint firstItem="11M-an-G3B" firstAttribute="top" secondItem="Rp2-mO-mI8" secondAttribute="bottom" id="Jwl-Xv-SzK"/>
                         <constraint firstAttribute="bottom" secondItem="11M-an-G3B" secondAttribute="bottom" id="tRq-d4-ItZ"/>
                     </constraints>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="CGc-vj-5U8" appends="YES" id="8bM-em-jbL"/>
-                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -196,11 +193,6 @@
             <viewLayoutGuide key="safeArea" id="oiH-m2-EcJ"/>
             <point key="canvasLocation" x="139" y="154"/>
         </view>
-        <panGestureRecognizer minimumNumberOfTouches="1" id="CGc-vj-5U8">
-            <connections>
-                <action selector="changeSizeAction:" destination="-1" id="Uh1-mT-t4z"/>
-            </connections>
-        </panGestureRecognizer>
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>

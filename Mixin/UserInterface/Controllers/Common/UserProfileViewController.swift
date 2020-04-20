@@ -79,7 +79,7 @@ final class UserProfileViewController: ProfileViewController {
         super.viewWillDisappear(animated)
         if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView {
             coordinator.animate(alongsideTransition: { (context) in
-                imageView.frame.origin.y = AppDelegate.current.window.bounds.height
+                imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
             }) { (_) in
                 imageView.removeFromSuperview()
             }
@@ -98,7 +98,7 @@ final class UserProfileViewController: ProfileViewController {
         guard let image = avatarImageView.image else {
             return
         }
-        let window = AppDelegate.current.window
+        let window = AppDelegate.current.mainWindow
         let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
         let imageView = UIImageView(frame: initialFrame)
         imageView.layer.cornerRadius = initialFrame.height / 2
@@ -122,7 +122,7 @@ final class UserProfileViewController: ProfileViewController {
     override func updateMuteInterval(inSeconds interval: Int64) {
         let userId = user.userId
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil)
         ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
@@ -175,7 +175,7 @@ final class UserProfileViewController: ProfileViewController {
                 menuDismissResponder = MenuDismissResponder()
                 self.menuDismissResponder = menuDismissResponder
             }
-            AppDelegate.current.window.addSubview(menuDismissResponder)
+            AppDelegate.current.mainWindow.addSubview(menuDismissResponder)
         }
     }
     
@@ -295,7 +295,7 @@ extension UserProfileViewController {
     @objc func editMyName() {
         presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { (name) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             AccountAPI.shared.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
@@ -362,7 +362,7 @@ extension UserProfileViewController {
         let userId = user.userId
         presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { [weak self] (name) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             UserAPI.shared.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -419,6 +419,11 @@ extension UserProfileViewController {
             CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: user)
         }
     }
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: completion)
+        UIApplication.homeViewController?.dismissAppsWindow()
+    }
     
     @objc func callPhone() {
         guard let phone = user.phone, !phone.isEmpty, let url = URL(string: "tel://" + phone) else {
@@ -429,11 +434,13 @@ extension UserProfileViewController {
     
     @objc func removeFriend() {
         let userId = user.userId
-        let alert = UIAlertController(title: R.string.localizable.profile_remove_hint(), message: nil, preferredStyle: .actionSheet)
+        let hint = user.isBot ? R.string.localizable.profile_remove_hint_bot() : R.string.localizable.profile_remove_hint_contact()
+        let removeTitle = user.isBot ? R.string.localizable.profile_remove_bot() : R.string.localizable.profile_remove_contact()
+        let alert = UIAlertController(title: hint, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.profile_remove(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: removeTitle, style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             UserAPI.shared.removeFriend(userId: userId, completion: { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -455,7 +462,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_block(), style: .destructive, handler: { (_) in
             self.relationshipView.isBusy = true
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -474,7 +481,7 @@ extension UserProfileViewController {
     @objc func unblockUser() {
         relationshipView.isBusy = true
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
             switch result {
             case let .success(response):
@@ -495,7 +502,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
                 switch UserAPI.shared.reportUser(userId: userId) {
                 case let .success(user):
@@ -549,7 +556,7 @@ extension UserProfileViewController {
     class MenuDismissResponder: UIButton {
         
         convenience init() {
-            let frame = AppDelegate.current.window.bounds
+            let frame = AppDelegate.current.mainWindow.bounds
             self.init(frame: frame)
             backgroundColor = .clear
             addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
@@ -585,9 +592,13 @@ extension UserProfileViewController {
         
         switch relationship {
         case .ME, .FRIEND:
-            break
+            relationshipView.style = .none
         case .STRANGER:
-            relationshipView.style = .addContact
+            if user.isBot {
+                relationshipView.style = .addBot
+            } else {
+                relationshipView.style = .addContact
+            }
             relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
             relationshipView.button.addTarget(self, action: #selector(addContact), for: .touchUpInside)
             centerStackView.addArrangedSubview(relationshipView)
@@ -769,7 +780,8 @@ extension UserProfileViewController {
                 case .ME:
                     group = []
                 case .FRIEND:
-                    group = [ProfileMenuItem(title: R.string.localizable.profile_remove(),
+                    let removeTitle = user.isBot ? R.string.localizable.profile_remove_bot() : R.string.localizable.profile_remove_contact()
+                    group = [ProfileMenuItem(title: removeTitle,
                                              subtitle: nil,
                                              style: [.destructive],
                                              action: #selector(removeFriend))]
@@ -802,7 +814,7 @@ extension UserProfileViewController {
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
         }
         
-        view.frame.size.width = AppDelegate.current.window.bounds.width
+        view.frame.size.width = AppDelegate.current.mainWindow.bounds.width
         updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {

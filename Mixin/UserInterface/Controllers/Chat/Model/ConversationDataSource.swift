@@ -24,7 +24,7 @@ class ConversationDataSource {
     
     weak var tableView: ConversationTableView?
     
-    private let windowRect = AppDelegate.current.window.bounds
+    private let windowRect = AppDelegate.current.mainWindow.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = LoginManager.shared.account!

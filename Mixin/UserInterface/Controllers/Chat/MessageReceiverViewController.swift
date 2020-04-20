@@ -4,6 +4,10 @@ import MixinServices
 
 class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell, MessageReceiverSearchResult> {
     
+    override class var showSelectionsOnTop: Bool {
+        true
+    }
+    
     private var messageContent: MessageContent!
     private var selections = [MessageReceiver]() {
         didSet {
@@ -20,15 +24,27 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
+        collectionView.dataSource = self
     }
     
     override func catalog(users: [UserItem]) -> (titles: [String], models: [[MessageReceiver]]) {
-        let users = users.map(MessageReceiver.init)
+        var contacts = [UserItem]()
+        var apps = [UserItem]()
+        for user in users {
+            if user.isBot {
+                apps.append(user)
+            } else {
+                contacts.append(user)
+            }
+        }
+        let contactReceivers = contacts.map(MessageReceiver.init)
+        let appReceivers = apps.map(MessageReceiver.init)
         let conversations = ConversationDAO.shared.conversationList()
             .compactMap(MessageReceiver.init)
         let titles = [R.string.localizable.chat_forward_chats(),
-                      R.string.localizable.chat_forward_contacts()]
-        return (titles, [conversations, users])
+                      R.string.localizable.chat_forward_contacts(),
+                      R.string.localizable.chat_forward_apps()]
+        return (titles, [conversations, contactReceivers, appReceivers])
     }
     
     override func search(keyword: String) {
@@ -98,27 +114,38 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
         selections.append(receiver)
+        let indexPath = IndexPath(item: selections.count - 1, section: 0)
+        collectionView.insertItems(at: [indexPath])
         if !isSearching {
-            let counterSection = indexPath.section == 0 ? 1 : 0
-            for indexPath in receiverIndexPathsWhichMatchSelections(of: counterSection) {
+            var counterSections = Array(0..<numberOfSections(in: tableView))
+            counterSections.removeAll(where: { $0 == indexPath.section })
+            let indexPaths = counterSections.flatMap(receiverIndexPathsWhichMatchSelections)
+            for indexPath in indexPaths {
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
         }
+        setCollectionViewHidden(false, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
-        if let idx = selections.firstIndex(of: receiver) {
-            selections.remove(at: idx)
+        if let index = selections.firstIndex(of: receiver) {
+            selections.remove(at: index)
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.deleteItems(at: [indexPath])
         }
         if !isSearching {
-            let counterSection = indexPath.section == 0 ? 1 : 0
-            let enumeratedReceivers = models[counterSection].enumerated()
-            if let (row, _) = enumeratedReceivers.first(where: { $1.conversationId == receiver.conversationId }) {
-                let indexPath = IndexPath(row: row, section: counterSection)
-                tableView.deselectRow(at: indexPath, animated: false)
+            var counterSections = Array(0..<numberOfSections(in: tableView))
+            counterSections.removeAll(where: { $0 == indexPath.section })
+            for section in counterSections {
+                let enumeratedReceivers = models[section].enumerated()
+                if let (row, _) = enumeratedReceivers.first(where: { $1.conversationId == receiver.conversationId }) {
+                    let indexPath = IndexPath(row: row, section: section)
+                    tableView.deselectRow(at: indexPath, animated: false)
+                }
             }
         }
+        setCollectionViewHidden(selections.isEmpty, animated: true)
     }
     
 }
@@ -152,6 +179,50 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
             }
             DispatchQueue.main.async {
                 self?.popToConversationWithLastSelection()
+            }
+        }
+    }
+    
+}
+
+extension MessageReceiverViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        selections.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.selected_peer, for: indexPath)!
+        let receiver = selections[indexPath.row]
+        cell.render(receiver: receiver)
+        cell.delegate = self
+        return cell
+    }
+    
+}
+
+extension MessageReceiverViewController: SelectedPeerCellDelegate {
+    
+    func selectedPeerCellDidSelectRemove(_ cell: UICollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        let deselected = selections[indexPath.row]
+        if isSearching {
+            if let item = searchResults.map({ $0.receiver }).firstIndex(of: deselected) {
+                let indexPath = IndexPath(item: item, section: 0)
+                tableView.deselectRow(at: indexPath, animated: true)
+                tableView(tableView, didDeselectRowAt: indexPath)
+            }
+        } else {
+            for section in 0..<models.count {
+                let members = models[section]
+                if let item = members.firstIndex(of: deselected) {
+                    let indexPath = IndexPath(item: item, section: section)
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    tableView(tableView, didDeselectRowAt: indexPath)
+                    break
+                }
             }
         }
     }

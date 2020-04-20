@@ -5,6 +5,7 @@ final class ProfileRelationshipView: UIView {
     enum Style {
         case none
         case addContact
+        case addBot
         case unblock
         case joinGroup
     }
@@ -52,7 +53,10 @@ final class ProfileRelationshipView: UIView {
                 button.setTitle(nil, for: .normal)
             case .addContact:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
-                button.setTitle(R.string.localizable.profile_add(), for: .normal)
+                button.setTitle(R.string.localizable.profile_add_contact(), for: .normal)
+            case .addBot:
+                button.setImage(R.image.ic_profile_add(), for: .normal)
+                button.setTitle(R.string.localizable.profile_add_bot(), for: .normal)
             case .unblock:
                 button.setImage(R.image.ic_profile_unblock(), for: .normal)
                 button.setTitle(R.string.localizable.profile_unblock(), for: .normal)

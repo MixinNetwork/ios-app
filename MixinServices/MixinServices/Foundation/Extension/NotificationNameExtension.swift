@@ -8,6 +8,8 @@ public extension NSNotification.Name {
 
     static let UserDidChange = NSNotification.Name("one.mixin.services.user.changed")
 
+    static let AppDidChange = NSNotification.Name("one.mixin.services.app.changed")
+
     static let SyncMessageDidAppear = NSNotification.Name("one.mixin.services.sync.message")
 
     static let ParticipantDidChange = NSNotification.Name("one.mixin.services.participant.changed")

@@ -2,7 +2,7 @@ import UIKit
 import LocalAuthentication
 import MixinServices
 
-class WalletViewController: UIViewController {
+class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: WalletHeaderView!
@@ -43,6 +43,14 @@ class WalletViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if let leftButton = container?.leftButton {
+            leftButton.setImage(R.image.ic_title_close(), for: .normal)
+            leftButton.tintColor = .title
+        }
     }
     
 }

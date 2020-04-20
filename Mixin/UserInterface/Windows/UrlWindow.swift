@@ -115,7 +115,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             var snapshotItem: SnapshotItem?
             if let traceId = traceId  {
@@ -304,7 +304,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
@@ -363,7 +363,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
@@ -393,7 +393,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             guard var asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
@@ -494,7 +494,7 @@ extension UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
 
         UserAPI.shared.codes(codeId: codeId) { (result) in
             switch result {

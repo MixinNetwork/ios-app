@@ -145,7 +145,7 @@ class ConversationViewController: UIViewController {
     }
     
     private var maxInputWrapperHeight: CGFloat {
-        return AppDelegate.current.window.frame.height
+        return AppDelegate.current.mainWindow.frame.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
     }
@@ -1482,7 +1482,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, AppDelegate.current.window.safeAreaInsets.top)
+        titleViewTopConstraint.constant = max(20, AppDelegate.current.mainWindow.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
         tableView.scrollIndicatorInsets.top = tableView.contentInset.top
     }

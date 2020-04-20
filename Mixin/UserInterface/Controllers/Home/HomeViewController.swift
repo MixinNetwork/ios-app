@@ -16,19 +16,17 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var guideLabel: UILabel!
     @IBOutlet weak var guideButton: UIButton!
-    @IBOutlet weak var cameraButtonWrapperView: UIView!
-    @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinContentView: UIView!
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
+    @IBOutlet weak var bottomBarView: UIView!
+    @IBOutlet weak var leftAppButton: UIButton!
+    @IBOutlet weak var rightAppButton: UIButton!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showCameraButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideCameraButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraWrapperSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
@@ -43,6 +41,9 @@ class HomeViewController: UIViewController {
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
+    private var leftAppAction: (() -> Void)?
+    private var rightAppAction: (() -> Void)?
+    
     private var isBulletinViewHidden = false {
         didSet {
             layoutBulletinView()
@@ -81,7 +82,6 @@ class HomeViewController: UIViewController {
         titleButton.setTitle(topLeftTitle, for: .normal)
         isBulletinViewHidden = true
         updateBulletinView()
-        updateCameraWrapperHeight()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
@@ -92,10 +92,12 @@ class HomeViewController: UIViewController {
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
         tableView.addSubview(dragDownIndicator)
         view.layoutIfNeeded()
+        updateHomeApps()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: .AppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
@@ -103,6 +105,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
@@ -114,29 +117,10 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        qrcodeImageView.isHidden = AppGroupUserDefaults.User.hasPerformedQrCodeScanning
         if needRefresh {
             fetchConversations()
         }
-        showCameraButton()
         checkServerStatus()
-    }
-
-    private func checkServerStatus() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        guard !WebSocketService.shared.isConnected else {
-            return
-        }
-        AccountAPI.shared.me { [weak self](result) in
-            guard let weakSelf = self else {
-                return
-            }
-            if case let .failure(error) = result, error.code == 10006 {
-                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
-            }
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -164,58 +148,13 @@ class HomeViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        updateCameraWrapperHeight()
+        let bottom = bottomBarView.frame.height - view.safeAreaInsets.bottom
+        tableView.contentInset.bottom = bottom
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         DispatchQueue.main.async(execute: layoutBulletinView)
-    }
-    
-    @IBAction func cameraAction(_ sender: Any) {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            navigationController?.pushViewController(CameraViewController.instance(), animated: true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
-                guard granted else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(CameraViewController.instance(), animated: true)
-                }
-            })
-        case .denied, .restricted:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
-        @unknown default:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
-        }
-    }
-    
-    @IBAction func walletAction(_ sender: Any) {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        if account.has_pin {
-            let shouldValidatePin: Bool
-            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
-                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
-            } else {
-                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                shouldValidatePin = true
-            }
-            
-            if shouldValidatePin {
-                let validator = PinValidationViewController(onSuccess: { [weak self](_) in
-                    self?.navigationController?.pushViewController(WalletViewController.instance(), animated: false)
-                })
-                present(validator, animated: true, completion: nil)
-            } else {
-                navigationController?.pushViewController(WalletViewController.instance(), animated: true)
-            }
-        } else {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
-        }
     }
     
     @IBAction func showSearchAction() {
@@ -275,6 +214,19 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @IBAction func showAppsAction(_ sender: Any) {
+        let vc = HomeAppsViewController.instance()
+        vc.presentAsChild(of: self)
+    }
+    
+    @IBAction func leftAppAction(_ sender: Any) {
+        leftAppAction?()
+    }
+    
+    @IBAction func rightAppAction(_ sender: Any) {
+        rightAppAction?()
+    }
+    
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
@@ -286,6 +238,17 @@ class HomeViewController: UIViewController {
             return
         }
         fetchConversations()
+    }
+
+    @objc func appDidChange(_ notification: Notification) {
+        guard let appId = notification.object as? String, !appId.isEmpty else {
+            return
+        }
+        guard AppGroupUserDefaults.User.homeAppIds.contains(appId) else {
+            return
+        }
+
+        updateHomeApps()
     }
     
     @objc func circleConversationDidChange(_ notification: Notification) {
@@ -347,10 +310,119 @@ class HomeViewController: UIViewController {
     @objc func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
+
+    func dismissAppsWindow() {
+        if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
+            homeApps.dismissAsChild(completion: nil)
+        }
+    }
+    
+    @objc func updateHomeApps() {
+        func setImage(with app: HomeApp, to button: UIButton) {
+            button.setImage(app.categoryIcon, for: .normal)
+            switch app {
+            case .embedded(let app):
+                if button == leftAppButton {
+                    leftAppAction = app.action
+                } else if button == rightAppButton {
+                    rightAppAction = app.action
+                }
+            case .external:
+                break
+            }
+        }
+        
+        func action(for app: HomeApp) -> (() -> Void) {
+            switch app {
+            case .embedded(let app):
+                return app.action
+            case .external(let user):
+                return {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [user.userId]))
+                    if let app = user.app {
+                        let userInfo = ["source": "Home", "identityNumber": app.appNumber]
+                        reporter.report(event: .openApp, userInfo: userInfo)
+                        MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: self)
+                    } else {
+                        reporter.report(error: MixinError.missingApp)
+                    }
+                }
+            }
+        }
+        
+        DispatchQueue.global().async {
+            let apps = AppGroupUserDefaults.User.homeAppIds.compactMap(HomeApp.init).prefix(2)
+            DispatchQueue.main.async {
+                if let left = apps.first {
+                    setImage(with: left, to: self.leftAppButton)
+                    self.leftAppAction = action(for: left)
+                    self.leftAppButton.alpha = 1
+                } else {
+                    self.leftAppButton.alpha = 0
+                }
+                if apps.count == 2 {
+                    let app = apps[1]
+                    setImage(with: app, to: self.rightAppButton)
+                    self.rightAppAction = action(for: app)
+                    self.rightAppButton.alpha = 1
+                } else {
+                    self.rightAppButton.alpha = 0
+                }
+            }
+        }
+    }
     
     func setNeedsRefresh() {
         needRefresh = true
         fetchConversations()
+    }
+    
+    func showCamera(asQrCodeScanner: Bool) {
+        let vc = CameraViewController.instance()
+        vc.asQrCodeScanner = asQrCodeScanner
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            navigationController?.pushViewController(vc, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+            })
+        case .denied, .restricted:
+            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        @unknown default:
+            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        }
+    }
+    
+    func showWallet() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        if account.has_pin {
+            let shouldValidatePin: Bool
+            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
+                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            } else {
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                shouldValidatePin = true
+            }
+            
+            if shouldValidatePin {
+                let validator = PinValidationViewController(onSuccess: { [weak self](_) in
+                    self?.navigationController?.pushViewController(WalletViewController.instance(), animated: false)
+                })
+                present(validator, animated: true, completion: nil)
+            } else {
+                navigationController?.pushViewController(WalletViewController.instance(), animated: true)
+            }
+        } else {
+            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
+        }
     }
     
 }
@@ -422,13 +494,6 @@ extension HomeViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if abs(scrollView.contentOffset.y - beginDraggingOffset) > 10 {
-            if scrollView.contentOffset.y > beginDraggingOffset {
-                hideCameraButton()
-            } else {
-                showCameraButton()
-            }
-        }
         if scrollView.contentOffset.y <= -dragDownThreshold && !dragDownIndicator.isHighlighted {
             dragDownIndicator.isHighlighted = true
             feedback.selectionChanged()
@@ -449,9 +514,21 @@ extension HomeViewController: UIScrollViewDelegate {
 
 extension HomeViewController {
     
-    private func updateCameraWrapperHeight() {
-        cameraWrapperSafeAreaPlaceholderHeightConstraint.constant = view.safeAreaInsets.bottom
-        cameraButtonWrapperView.layoutIfNeeded()
+    private func checkServerStatus() {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        guard !WebSocketService.shared.isConnected else {
+            return
+        }
+        AccountAPI.shared.me { [weak self](result) in
+            guard let weakSelf = self else {
+                return
+            }
+            if case let .failure(error) = result, error.code == 10006 {
+                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
+            }
+        }
     }
     
     private func fetchConversations() {
@@ -623,7 +700,7 @@ extension HomeViewController {
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.window)
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
                 switch result {
                 case .success:
@@ -647,30 +724,6 @@ extension HomeViewController {
             }
         }))
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func hideCameraButton() {
-        guard cameraButtonWrapperView.alpha != 0 else {
-            return
-        }
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.cameraButtonWrapperView.alpha = 0
-            self.hideCameraButtonConstraint.priority = .defaultHigh
-            self.showCameraButtonConstraint.priority = .defaultLow
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-    }
-    
-    private func showCameraButton() {
-        guard cameraButtonWrapperView.alpha != 1 else {
-            return
-        }
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.cameraButtonWrapperView.alpha = 1
-            self.hideCameraButtonConstraint.priority = .defaultLow
-            self.showCameraButtonConstraint.priority = .defaultHigh
-            self.view.layoutIfNeeded()
-        }, completion: nil)
     }
     
     private func requestAppStoreReviewIfNeeded() {

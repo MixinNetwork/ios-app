@@ -143,7 +143,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBAction func scanAddressAction(_ sender: Any) {
         let vc = CameraViewController.instance()
         vc.delegate = self
-        vc.scanQrCodeOnly = true
+        vc.asQrCodeScanner = true
         navigationController?.pushViewController(vc, animated: true)
         qrCodeScanningDestination = addressTextView
     }
@@ -151,7 +151,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBAction func scanMemoAction(_ sender: Any) {
         let vc = CameraViewController.instance()
         vc.delegate = self
-        vc.scanQrCodeOnly = true
+        vc.asQrCodeScanner = true
         navigationController?.pushViewController(vc, animated: true)
         qrCodeScanningDestination = memoTextView
     }

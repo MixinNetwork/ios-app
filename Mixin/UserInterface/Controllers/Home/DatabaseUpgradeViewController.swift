@@ -70,7 +70,7 @@ class DatabaseUpgradeViewController: UIViewController {
     }
 
     private func dismiss() {
-        AppDelegate.current.window.rootViewController = makeInitialViewController()
+        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
     }
 
     @objc private func applicationDidBecomeActive(_ notification: Notification) {

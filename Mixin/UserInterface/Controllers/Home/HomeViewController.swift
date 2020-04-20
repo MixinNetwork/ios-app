@@ -97,6 +97,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: .AppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
@@ -237,6 +238,17 @@ class HomeViewController: UIViewController {
             return
         }
         fetchConversations()
+    }
+
+    @objc func appDidChange(_ notification: Notification) {
+        guard let appId = notification.object as? String, !appId.isEmpty else {
+            return
+        }
+        guard AppGroupUserDefaults.User.homeAppIds.contains(appId) else {
+            return
+        }
+
+        updateHomeApps()
     }
     
     @objc func circleConversationDidChange(_ notification: Notification) {

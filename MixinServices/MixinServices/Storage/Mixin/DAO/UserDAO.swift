@@ -126,6 +126,11 @@ public final class UserDAO {
                 UserDAO.shared.updateUsers(users: users, sendNotificationAfterFinished: sendNotificationAfterFinished, updateParticipantStatus: updateParticipantStatus, notifyContact: notifyContact)
             }
         } else {
+            var isAppUpdated = false
+            if sendNotificationAfterFinished, users.count == 1, let newApp = users[0].app {
+                isAppUpdated = AppDAO.shared.getApp(appId: newApp.appId)?.updatedAt != newApp.updatedAt
+            }
+
             MixinDatabase.shared.transaction { (db) in
                 for user in users {
                     try db.insertOrReplace(objects: User.createUser(from: user), intoTable: User.tableName)
@@ -142,6 +147,9 @@ public final class UserDAO {
                 if users.count == 1 {
                     NotificationCenter.default.afterPostOnMain(name: .UserDidChange, object: UserItem.createUser(from: users[0]))
                 }
+            }
+            if isAppUpdated {
+                NotificationCenter.default.afterPostOnMain(name: .AppDidChange, object: users[0].app?.appId)
             }
             if notifyContact {
                 NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)

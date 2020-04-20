@@ -318,16 +318,16 @@ class HomeViewController: UIViewController {
     
     @objc func updateHomeApps() {
         func setImage(with app: HomeApp, to button: UIButton) {
+            button.setImage(app.categoryIcon, for: .normal)
             switch app {
             case .embedded(let app):
-                button.setImage(app.categoryIcon, for: .normal)
                 if button == leftAppButton {
                     leftAppAction = app.action
                 } else if button == rightAppButton {
                     rightAppAction = app.action
                 }
             case .external:
-                button.setImage(R.image.ic_app_category_other(), for: .normal)
+                break
             }
         }
         

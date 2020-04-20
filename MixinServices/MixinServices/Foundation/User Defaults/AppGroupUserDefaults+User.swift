@@ -44,7 +44,7 @@ extension AppGroupUserDefaults {
             case homeApp = "home_app"
         }
         
-        public static let version = 19
+        public static let version = 20
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")

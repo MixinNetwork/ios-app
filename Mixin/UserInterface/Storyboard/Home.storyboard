@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -373,7 +373,7 @@
                                         <color key="backgroundColor" name="background"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-34" width="375" height="109"/>
+                                        <rect key="frame" x="0.0" y="-36" width="375" height="111"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
                                         <rect key="frame" x="71.5" y="0.0" width="232" height="44"/>
@@ -383,6 +383,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="vqg-GI-nmb" secondAttribute="height" id="CNE-MX-Vhp"/>
                                                 </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <connections>
                                                     <action selector="leftAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="T87-qH-8PF"/>
                                                 </connections>
@@ -402,6 +403,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Fjb-22-pJO" secondAttribute="height" id="GMH-Wl-Nxj"/>
                                                 </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <connections>
                                                     <action selector="rightAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="Dku-Pe-9lm"/>
                                                 </connections>
@@ -1541,11 +1543,14 @@ chat history from icloud</string>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

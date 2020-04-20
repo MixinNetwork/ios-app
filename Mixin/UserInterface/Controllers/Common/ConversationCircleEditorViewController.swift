@@ -214,15 +214,12 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         let conversationId = self.conversationId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        var ids = subordinateCircles.map(\.circleId)
         let completion: (APIResult<[CircleConversation]>) -> Void
         let requests: [ConversationCircleRequest]
         
         if indexPath.section == 0 {
-            let index = indexPath.row
-            let circle = subordinateCircles[index]
+            let circle = subordinateCircles[indexPath.row]
             requests = [ConversationCircleRequest(action: .REMOVE, circleId: circle.circleId)]
-            ids.removeAll(where: { $0 == circle.circleId })
             completion = { (result) in
                 switch result {
                 case .success:
@@ -232,9 +229,11 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()
-                            let circle = self.subordinateCircles.remove(at: index)
-                            circle.conversationCount -= 1
-                            self.otherCircles.insert(circle, at: 0)
+                            if let index = self.subordinateCircles.firstIndex(where: { $0.circleId == circle.circleId }) {
+                                let circle = self.subordinateCircles.remove(at: index)
+                                circle.conversationCount -= 1
+                                self.otherCircles.insert(circle, at: 0)
+                            }
                             self.tableView.reloadData()
                         }
                     }
@@ -244,9 +243,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                 }
             }
         } else {
-            let index = indexPath.row
-            let circle = otherCircles[index]
-            ids.append(circle.circleId)
+            let circle = otherCircles[indexPath.row]
             requests = [ConversationCircleRequest(action: .ADD, circleId: circle.circleId)]
             completion = { (result) in
                 switch result {
@@ -256,9 +253,11 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()
-                            let circle = self.otherCircles.remove(at: index)
-                            circle.conversationCount += 1
-                            self.subordinateCircles.append(circle)
+                            if let index = self.otherCircles.firstIndex(where: { $0.circleId == circle.circleId }) {
+                                let circle = self.otherCircles.remove(at: index)
+                                circle.conversationCount += 1
+                                self.subordinateCircles.append(circle)
+                            }
                             self.tableView.reloadData()
                         }
                     }

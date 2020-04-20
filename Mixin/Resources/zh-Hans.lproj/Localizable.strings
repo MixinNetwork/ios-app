@@ -199,6 +199,7 @@
 "home_bulletin_button_notification" = "设置";
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";
+"home_apps_pin_empty" = "长按并拖拽机器人置顶";
 
 // Circle
 "circle_title" = "圈子";
@@ -589,7 +590,7 @@
 "auth_profile_description" = "%@, %@, 头像";
 "auth_success" = "成功登录 %@";
 "auth_description" = "需要访问你的";
-"scan_qr_code" = "识别二维码";
+"scan_qr_code" = "扫码";
 
 // Profile
 "profile_title" = "信息";

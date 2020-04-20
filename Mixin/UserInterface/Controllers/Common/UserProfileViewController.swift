@@ -40,6 +40,7 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
+    private var dismissHomeAppsWindow = true
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -73,6 +74,11 @@ final class UserProfileViewController: ProfileViewController {
         view.addGestureRecognizer(recognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
+    }
+
+    override func dismissAction(_ sender: Any) {
+        dismissHomeAppsWindow = false
+        super.dismissAction(sender)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -422,7 +428,9 @@ extension UserProfileViewController {
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
-        UIApplication.homeViewController?.dismissAppsWindow()
+        if dismissHomeAppsWindow {
+            UIApplication.homeViewController?.dismissAppsWindow()
+        }
     }
     
     @objc func callPhone() {

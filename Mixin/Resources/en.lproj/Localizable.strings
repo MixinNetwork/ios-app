@@ -198,6 +198,7 @@
 "home_bulletin_button_notification" = "Settings";
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";
+"home_apps_pin_empty" = "Long press and drag a bot to pin";
 
 // Circle
 "circle_title" = "Circle";

@@ -1,9 +1,7 @@
 import UIKit
 import MixinServices
 
-class SettingViewController: UIViewController {
-    
-    @IBOutlet weak var tableView: UITableView!
+class SettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: nil, rows: [
@@ -38,8 +36,8 @@ class SettingViewController: UIViewController {
     ])
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.instantiateInitialViewController()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
+        let vc = SettingViewController()
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_title())
     }
     
     override func viewDidLoad() {

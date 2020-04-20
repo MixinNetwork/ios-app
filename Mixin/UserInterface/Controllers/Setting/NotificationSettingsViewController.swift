@@ -43,7 +43,7 @@ class NotificationSettingsViewController: UITableViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.notification()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_title())
     }
 
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

@@ -431,6 +431,7 @@
 		7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */; };
 		7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */; };
 		7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */; };
+		7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */; };
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
@@ -1226,6 +1227,7 @@
 		7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDataSource.swift; sourceTree = "<group>"; };
 		7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRow.swift; sourceTree = "<group>"; };
+		7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
@@ -2774,6 +2776,7 @@
 			children = (
 				ABE865BC23F2453D00C0167D /* Model */,
 				DF8CECF01FC4255700E40064 /* Cells */,
+				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
@@ -3449,6 +3452,7 @@
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
+				7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,

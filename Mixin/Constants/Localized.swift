@@ -465,7 +465,6 @@ public class Localized {
     }
 
     // Setting
-    public static let SETTING_TITLE = LocalizedString("setting_title", comment: "Setting")
     public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
     public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")

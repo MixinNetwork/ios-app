@@ -744,6 +744,7 @@
 "setting_contacts_upload" = "Upload Mobile Contacts";
 "setting_permissions" = "Permission list";
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
+"setting_appearance" = "Appearance";
 
 // Notifications
 "notification_reply" = "Reply";

@@ -3,67 +3,50 @@ import MixinServices
 
 class SettingViewController: UIViewController {
     
-    enum ReuseId {
-        static let footer = "footer"
-    }
-    
     @IBOutlet weak var tableView: UITableView!
     
-    private let titles = [
-        [Localized.SETTING_PRIVACY_AND_SECURITY,
-         Localized.SETTING_NOTIFICATION,
-         Localized.SETTING_BACKUP_TITLE,
-         R.string.localizable.setting_data_and_storage()],
-        [R.string.localizable.wallet_setting()],
-        [Localized.SETTING_DESKTOP],
-        [Localized.SETTING_ABOUT]
-    ]
-    
-    private var numberOfBlockedUsers = 0
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.register(R.nib.settingCell)
-        tableView.register(SeparatorShadowFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseId.footer)
-        tableView.dataSource = self
-        tableView.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(updateWalletSettingTitle), name: LoginManager.accountDidChangeNotification, object: nil)
-        updateWalletSettingTitle()
-    }
-    
-    @objc func updateWalletSettingTitle() {
-        DispatchQueue.main.async {
-            guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? SettingCell else {
-                return
-            }
-            let hasPin = LoginManager.shared.account?.has_pin ?? false
-            let title = hasPin ? R.string.localizable.wallet_setting() : R.string.localizable.wallet_pin_title()
-            cell.titleLabel.text = title
-        }
-    }
+    private let dataSource = SettingsDataSource(sections: [
+        SettingsSection(footer: nil, rows: [
+            SettingsRow(icon: R.image.setting.ic_category_security(),
+                        title: R.string.localizable.setting_privacy_and_security(),
+                        accessory: .disclosure),
+            SettingsRow(icon: R.image.setting.ic_category_notification(),
+                        title: R.string.localizable.setting_notification(),
+                        accessory: .disclosure),
+            SettingsRow(icon: R.image.setting.ic_category_backup(),
+                        title: R.string.localizable.setting_backup_title(),
+                        accessory: .disclosure),
+            SettingsRow(icon: R.image.setting.ic_category_storage(),
+                        title: R.string.localizable.setting_data_and_storage(),
+                        accessory: .disclosure),
+        ]),
+        SettingsSection(footer: nil, rows: [
+            SettingsRow(icon: R.image.setting.ic_category_appearance(),
+                        title: R.string.localizable.setting_appearance(),
+                        accessory: .disclosure)
+        ]),
+        SettingsSection(footer: nil, rows: [
+            SettingsRow(icon: R.image.setting.ic_category_desktop(),
+                        title: R.string.localizable.setting_desktop(),
+                        accessory: .disclosure)
+        ]),
+        SettingsSection(footer: nil, rows: [
+            SettingsRow(icon: R.image.setting.ic_category_about(),
+                        title: R.string.localizable.setting_about(),
+                        accessory: .disclosure)
+        ])
+    ])
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.instantiateInitialViewController()!
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
     }
     
-}
-
-extension SettingViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return titles[section].count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
-        cell.titleLabel.text = titles[indexPath.section][indexPath.row]
-        return cell
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return titles.count
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dataSource.tableView = tableView
+        dataSource.tableViewDelegate = self
+        tableView.dataSource = dataSource
     }
     
 }
@@ -81,36 +64,23 @@ extension SettingViewController: UITableViewDelegate {
             case 1:
                 vc = NotificationSettingsViewController.instance()
             case 2:
-                guard FileManager.default.ubiquityIdentityToken != nil else  {
+                if FileManager.default.ubiquityIdentityToken == nil {
                     alert(Localized.SETTING_BACKUP_DISABLE_TIPS)
                     return
+                } else {
+                    vc = BackupViewController.instance()
                 }
-                vc = BackupViewController.instance()
             default:
                 vc = DataStorageUsageViewController.instance()
             }
         case 1:
-            if LoginManager.shared.account?.has_pin ?? false {
-                vc = WalletSettingViewController.instance()
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
-            }
+            return
         case 2:
             vc = DesktopViewController.instance()
         default:
             vc = AboutViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
-        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
-        return view
     }
     
 }

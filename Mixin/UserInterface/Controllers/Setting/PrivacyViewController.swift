@@ -15,7 +15,7 @@ final class PrivacyViewController: UITableViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.privacy()!
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_PRIVACY_AND_SECURITY)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_privacy_and_security())
         return container
     }
     

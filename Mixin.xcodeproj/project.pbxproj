@@ -428,6 +428,9 @@
 		7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */; };
 		7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */; };
 		7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */; };
+		7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */; };
+		7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */; };
+		7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */; };
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
@@ -1220,6 +1223,9 @@
 		7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeight.swift; sourceTree = "<group>"; };
 		7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageCell.swift; sourceTree = "<group>"; };
 		7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHintViewModel.swift; sourceTree = "<group>"; };
+		7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDataSource.swift; sourceTree = "<group>"; };
+		7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRow.swift; sourceTree = "<group>"; };
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
@@ -2069,6 +2075,9 @@
 			isa = PBXGroup;
 			children = (
 				ABE865BD23F2455800C0167D /* Scope.swift */,
+				7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */,
+				7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */,
+				7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3561,6 +3570,7 @@
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
+				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
@@ -3939,6 +3949,7 @@
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
+				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
@@ -3948,6 +3959,7 @@
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
 				7B66AC072428D72000869DBD /* PostViewController.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
+				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,

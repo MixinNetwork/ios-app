@@ -10,7 +10,7 @@ class DesktopViewController: UITableViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.desktop()!
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_desktop())
         return container
     }
     

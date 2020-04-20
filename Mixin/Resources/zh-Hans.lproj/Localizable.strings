@@ -749,6 +749,7 @@
 "setting_contacts_upload" = "上传手机通讯录";
 "setting_permissions" = "授权列表";
 "setting_permissions_date" = "授权时间: %@, 上次访问: %@";
+"setting_appearance" = "显示";
 
 // Notifications
 "notification_reply" = "回复";

@@ -143,7 +143,7 @@ extension AppGroupUserDefaults {
             }
         }
         
-        @Default(namespace: .user, key: Key.homeApp, defaultValue: [])
+        @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.walletAppId, App.cameraAppId])
         public static var homeAppIds: [String] {
             didSet {
                 NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)

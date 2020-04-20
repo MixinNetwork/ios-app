@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class SettingViewController: SettingsTableViewController {
+class SettingsViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: nil, rows: [
@@ -36,7 +36,7 @@ class SettingViewController: SettingsTableViewController {
     ])
     
     class func instance() -> UIViewController {
-        let vc = SettingViewController()
+        let vc = SettingsViewController()
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_title())
     }
     
@@ -49,7 +49,7 @@ class SettingViewController: SettingsTableViewController {
     
 }
 
-extension SettingViewController: UITableViewDelegate {
+extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

@@ -664,7 +664,7 @@
 		DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE1F9821FAB51DA00537D43 /* Common.storyboard */; };
 		DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */; };
 		DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE356B41FB4990100E0E3A8 /* Setting.storyboard */; };
-		DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */; };
+		DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */; };
 		DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */; };
 		DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */; };
 		DFE861BC2422673B009B1833 /* ShareRecipientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE861BB2422673B009B1833 /* ShareRecipientViewController.swift */; };
@@ -1472,7 +1472,7 @@
 		DFE1F9821FAB51DA00537D43 /* Common.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Common.storyboard; sourceTree = "<group>"; };
 		DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		DFE356B41FB4990100E0E3A8 /* Setting.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
-		DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsageViewController.swift; sourceTree = "<group>"; };
 		DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearStorageViewController.swift; sourceTree = "<group>"; };
 		DFE861B92422673B009B1833 /* MixinShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MixinShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2777,7 +2777,7 @@
 				ABE865BC23F2453D00C0167D /* Model */,
 				DF8CECF01FC4255700E40064 /* Cells */,
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
-				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
+				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
@@ -3975,7 +3975,7 @@
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationSettingsViewController.swift in Sources */,
 				DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */,
-				DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */,
+				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,

@@ -26,10 +26,12 @@ class UrlWindow {
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case .send:
                 return checkSendUrl(url: url)
-            case .device:
-                return false
+            case let .device(id, publicKey):
+                LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
+                return true
             case .upgradeDesktop:
-                return false
+                UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
+                return true
             case .unknown:
                 return false
             }

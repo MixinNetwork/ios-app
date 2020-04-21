@@ -17,7 +17,8 @@ class HomeAppsModelController: NSObject {
         
     }
     
-    lazy var moveAndInsertProposal = UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    private(set) lazy var moveAndInsertProposal = UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    private(set) lazy var feedback = UISelectionFeedbackGenerator()
     
     weak var collectionView: UICollectionView!
     
@@ -68,6 +69,7 @@ extension HomeAppsModelController: UICollectionViewDragDelegate {
         let item = UIDragItem(itemProvider: NSItemProvider())
         let app = apps[indexPath.item]
         item.localObject = app
+        feedback.selectionChanged()
         return [item]
     }
     

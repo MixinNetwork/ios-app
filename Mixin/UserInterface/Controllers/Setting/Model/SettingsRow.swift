@@ -1,7 +1,13 @@
 import UIKit
 import Rswift
 
-class SettingsRow: NSObject {
+final class SettingsRow: NSObject {
+    
+    enum Style {
+        case normal
+        case highlighted
+        case destructive
+    }
     
     enum Accessory {
         case none
@@ -15,6 +21,7 @@ class SettingsRow: NSObject {
     
     let icon: UIImage?
     let title: String
+    let titleStyle: Style
     
     var subtitle: String? {
         didSet {
@@ -28,9 +35,10 @@ class SettingsRow: NSObject {
         }
     }
     
-    init(icon: UIImage? = nil, title: String, subtitle: String? = nil, accessory: Accessory = .none) {
+    init(icon: UIImage? = nil, title: String, titleStyle: Style = .normal, subtitle: String? = nil, accessory: Accessory = .none) {
         self.icon = icon
         self.title = title
+        self.titleStyle = titleStyle
         self.subtitle = subtitle
         self.accessory = accessory
         super.init()

@@ -40,6 +40,16 @@ final class SettingCell: ModernSelectedBackgroundCell {
                 iconImageView.isHidden = true
             }
             titleLabel.text = row.title
+            titleLabel.textColor = {
+                switch row.titleStyle {
+                case .normal:
+                    return .text
+                case .highlighted:
+                    return .theme
+                case .destructive:
+                    return .walletRed
+                }
+            }()
             subtitleLabel.text = row.subtitle
             updateAccessory(row.accessory, animated: false)
         }

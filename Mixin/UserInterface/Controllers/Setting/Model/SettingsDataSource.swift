@@ -59,15 +59,15 @@ class SettingsDataSource: NSObject {
         sections[indexPath.section].rows[indexPath.row]
     }
     
-    func reloadRow(_ row: SettingsRow, at indexPath: IndexPath, animation: UITableView.RowAnimation) {
-        sections[indexPath.section].rows[indexPath.row] = row
-        tableView?.reloadRows(at: [indexPath], with: animation)
-        reloadIndexPaths()
-    }
-    
     func insertSection(_ section: SettingsSection, at location: Int, animation: UITableView.RowAnimation) {
         sections.insert(section, at: location)
         tableView?.insertSections(IndexSet(integer: location), with: animation)
+        reloadIndexPaths()
+    }
+    
+    func reloadSections(_ sections: [SettingsSection]) {
+        self.sections = sections
+        tableView?.reloadData()
         reloadIndexPaths()
     }
     
@@ -79,22 +79,19 @@ class SettingsDataSource: NSObject {
         }
         sections[section].rows.append(contentsOf: rows)
         tableView?.insertRows(at: indexPaths, with: animation)
+        reloadIndexPaths()
     }
     
     func deleteRow(at indexPath: IndexPath, animation: UITableView.RowAnimation) {
         sections[indexPath.section].rows.remove(at: indexPath.row)
         tableView?.deleteRows(at: [indexPath], with: animation)
+        reloadIndexPaths()
     }
     
-    func reloadIndexPaths() {
-        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
-        for (sectionIndex, section) in sections.enumerated() {
-            for (rowIndex, row) in section.rows.enumerated() {
-                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
-                indexPaths[row] = indexPath
-            }
-        }
-        self.indexPaths = indexPaths
+    func reloadRow(_ row: SettingsRow, at indexPath: IndexPath, animation: UITableView.RowAnimation) {
+        sections[indexPath.section].rows[indexPath.row] = row
+        tableView?.reloadRows(at: [indexPath], with: animation)
+        reloadIndexPaths()
     }
     
     @objc func updateSubtitle(_ notification: Notification) {
@@ -121,6 +118,17 @@ class SettingsDataSource: NSObject {
             return
         }
         cell.updateAccessory(row.accessory, animated: true)
+    }
+    
+    private func reloadIndexPaths() {
+        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
+        for (sectionIndex, section) in sections.enumerated() {
+            for (rowIndex, row) in section.rows.enumerated() {
+                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+                indexPaths[row] = indexPath
+            }
+        }
+        self.indexPaths = indexPaths
     }
     
 }

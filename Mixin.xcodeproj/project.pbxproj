@@ -84,6 +84,7 @@
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
 		7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */; };
 		7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */; };
+		7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */; };
 		7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BA922B9EAFE00C16652 /* IntroTextView.swift */; };
 		7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */; };
 		7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B31E565236181C9004F891A /* BubbleImageSet.swift */; };
@@ -872,6 +873,7 @@
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
 		7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFooterView.swift; sourceTree = "<group>"; };
 		7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingsViewController.swift; sourceTree = "<group>"; };
+		7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmergencyContactTableHeaderView.xib; sourceTree = "<group>"; };
 		7B311BA922B9EAFE00C16652 /* IntroTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroTextView.swift; sourceTree = "<group>"; };
 		7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
 		7B31E565236181C9004F891A /* BubbleImageSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleImageSet.swift; sourceTree = "<group>"; };
@@ -1820,6 +1822,7 @@
 			isa = PBXGroup;
 			children = (
 				7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */,
+				7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3131,6 +3134,7 @@
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
+				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
 				DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,

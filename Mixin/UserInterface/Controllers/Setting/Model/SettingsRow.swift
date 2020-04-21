@@ -1,12 +1,6 @@
 import UIKit
 import Rswift
 
-protocol SettingsRowObserver: class {
-    
-    func settingsRow(_ row: SettingsRow, subtitleDidChangeTo newValue: String?)
-    
-}
-
 class SettingsRow: NSObject {
     
     enum Accessory {
@@ -16,16 +10,23 @@ class SettingsRow: NSObject {
         case checkmark(Bool)
     }
     
-    weak var observer: SettingsRowObserver?
+    static let subtitleDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.subtitle.change")
+    static let accessoryDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.accessory.change")
     
     let icon: UIImage?
     let title: String
+    
     var subtitle: String? {
         didSet {
-            observer?.settingsRow(self, subtitleDidChangeTo: subtitle)
+            NotificationCenter.default.postOnMain(name: Self.subtitleDidChangeNotification, object: self, userInfo: nil)
         }
     }
-    let accessory: Accessory
+    
+    var accessory: Accessory {
+        didSet {
+            NotificationCenter.default.postOnMain(name: Self.accessoryDidChangeNotification, object: self, userInfo: nil)
+        }
+    }
     
     init(icon: UIImage? = nil, title: String, subtitle: String? = nil, accessory: Accessory = .none) {
         self.icon = icon

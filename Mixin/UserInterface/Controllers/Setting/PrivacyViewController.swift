@@ -71,8 +71,7 @@ extension PrivacyViewController: UITableViewDelegate {
         switch indexPath.section {
         case 0:
             if indexPath.row == 0 {
-                // FIXME
-                return
+                vc = PinSettingsViewController.instance()
             } else {
                 if accountHasPin {
                     vc = EmergencyContactViewController.instance()

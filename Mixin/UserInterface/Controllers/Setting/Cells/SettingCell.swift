@@ -19,6 +19,8 @@ final class SettingCell: ModernSelectedBackgroundCell {
         let accessorySwitch = UISwitch()
         accessorySwitch.setContentHuggingPriority(.required, for: .horizontal)
         accessorySwitch.setContentCompressionResistancePriority(.required, for: .horizontal)
+        accessorySwitch.addTarget(self, action: #selector(switchAction(_:)), for: .valueChanged)
+        accessorySwitch.onTintColor = .theme
         accessorySwitchIfLoaded = accessorySwitch
         return accessorySwitch
     }()
@@ -26,16 +28,25 @@ final class SettingCell: ModernSelectedBackgroundCell {
     private(set) var accessoryImageViewIfLoaded: UIImageView?
     private(set) var accessorySwitchIfLoaded: UISwitch?
     
-    func render(row: SettingsRow) {
-        if let icon = row.icon {
-            iconImageView.image = icon
-            iconImageView.isHidden = false
-        } else {
-            iconImageView.isHidden = true
+    var row: SettingsRow? {
+        didSet {
+            guard let row = row else {
+                return
+            }
+            if let icon = row.icon {
+                iconImageView.image = icon
+                iconImageView.isHidden = false
+            } else {
+                iconImageView.isHidden = true
+            }
+            titleLabel.text = row.title
+            subtitleLabel.text = row.subtitle
+            updateAccessory(row.accessory, animated: false)
         }
-        titleLabel.text = row.title
-        subtitleLabel.text = row.subtitle
-        switch row.accessory {
+    }
+    
+    func updateAccessory(_ accessory: SettingsRow.Accessory, animated: Bool) {
+        switch accessory {
         case .none:
             accessoryImageViewIfLoaded?.isHidden = true
             accessorySwitchIfLoaded?.isHidden = true
@@ -53,8 +64,15 @@ final class SettingCell: ModernSelectedBackgroundCell {
             if accessoryImageView.superview == nil {
                 contentStackView.addArrangedSubview(accessorySwitch)
             }
-            accessorySwitch.isOn = isOn
+            accessorySwitch.setOn(isOn, animated: animated)
         }
+    }
+    
+    @objc func switchAction(_ sender: UISwitch) {
+        guard let row = row, case .switch = row.accessory else {
+            return
+        }
+        row.accessory = .switch(sender.isOn)
     }
     
 }

@@ -28,15 +28,17 @@ class SettingsDataSource: NSObject {
     init(sections: [SettingsSection]) {
         self.sections = sections
         super.init()
-        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
-        for (sectionIndex, section) in sections.enumerated() {
-            for (rowIndex, row) in section.rows.enumerated() {
-                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
-                indexPaths[row] = indexPath
-                row.observer = self
-            }
-        }
-        self.indexPaths = indexPaths
+        reloadIndexPaths()
+        
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(updateSubtitle(_:)),
+                           name: SettingsRow.subtitleDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateAccessory(_:)),
+                           name: SettingsRow.accessoryDidChangeNotification,
+                           object: nil)
     }
     
     override func responds(to aSelector: Selector!) -> Bool {
@@ -57,9 +59,68 @@ class SettingsDataSource: NSObject {
         sections[indexPath.section].rows[indexPath.row]
     }
     
-    func reloadRow(at indexPath: IndexPath, with row: SettingsRow, animation: UITableView.RowAnimation) {
+    func reloadRow(_ row: SettingsRow, at indexPath: IndexPath, animation: UITableView.RowAnimation) {
         sections[indexPath.section].rows[indexPath.row] = row
         tableView?.reloadRows(at: [indexPath], with: animation)
+        reloadIndexPaths()
+    }
+    
+    func insertSection(_ section: SettingsSection, at location: Int, animation: UITableView.RowAnimation) {
+        sections.insert(section, at: location)
+        tableView?.insertSections(IndexSet(integer: location), with: animation)
+        reloadIndexPaths()
+    }
+    
+    func appendRows(_ rows: [SettingsRow], into section: Int, animation: UITableView.RowAnimation) {
+        let start = sections[section].rows.count
+        let end = sections[section].rows.count + rows.count
+        let indexPaths = (start..<end).map { (row) -> IndexPath in
+            IndexPath(row: row, section: section)
+        }
+        sections[section].rows.append(contentsOf: rows)
+        tableView?.insertRows(at: indexPaths, with: animation)
+    }
+    
+    func deleteRow(at indexPath: IndexPath, animation: UITableView.RowAnimation) {
+        sections[indexPath.section].rows.remove(at: indexPath.row)
+        tableView?.deleteRows(at: [indexPath], with: animation)
+    }
+    
+    func reloadIndexPaths() {
+        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
+        for (sectionIndex, section) in sections.enumerated() {
+            for (rowIndex, row) in section.rows.enumerated() {
+                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+                indexPaths[row] = indexPath
+            }
+        }
+        self.indexPaths = indexPaths
+    }
+    
+    @objc func updateSubtitle(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard let indexPath = indexPaths[row] else {
+            return
+        }
+        guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
+            return
+        }
+        cell.subtitleLabel.text = row.subtitle
+    }
+    
+    @objc func updateAccessory(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard let indexPath = indexPaths[row] else {
+            return
+        }
+        guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
+            return
+        }
+        cell.updateAccessory(row.accessory, animated: true)
     }
     
 }
@@ -73,7 +134,7 @@ extension SettingsDataSource: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
         let row = sections[indexPath.section].rows[indexPath.row]
-        cell.render(row: row)
+        cell.row = row
         return cell
     }
     
@@ -93,20 +154,6 @@ extension SettingsDataSource: UITableViewDelegate {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
         view.text = sections[section].footer
         return view
-    }
-    
-}
-
-extension SettingsDataSource: SettingsRowObserver {
-    
-    func settingsRow(_ row: SettingsRow, subtitleDidChangeTo newValue: String?) {
-        guard let indexPath = indexPaths[row] else {
-            return
-        }
-        guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
-            return
-        }
-        cell.subtitleLabel.text = newValue
     }
     
 }

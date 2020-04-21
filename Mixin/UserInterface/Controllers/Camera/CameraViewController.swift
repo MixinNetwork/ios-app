@@ -566,6 +566,18 @@ extension CameraViewController {
             if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
                 return
             }
+            if let url = MixinURL(string: string) {
+                switch url {
+                case .upgradeDesktop:
+                    UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
+                    return
+                case let .device(id, publicKey):
+                    LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
+                    return
+                default:
+                    break
+                }
+            }
             RecognizeWindow.instance().presentWindow(text: string)
         }
     }

@@ -31,11 +31,6 @@ open class Reporter {
     }
     
     public required init() {
-        #if RELEASE
-        if let path = Bundle.mixinServicesResource.path(forResource: "ApiKeys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["Bugsnag"] as? String {
-            Bugsnag.start(withApiKey: key)
-        }
-        #endif
     }
     
     open func registerUserInformation() {

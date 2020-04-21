@@ -1,5 +1,6 @@
 import UserNotifications
 import MixinServices
+import Bugsnag
 
 final class NotificationService: UNNotificationServiceExtension {
     
@@ -8,6 +9,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private var isExpired = false
     private var conversationId: String?
     private var messageId = ""
+    private static var isInitiatedBugsnag = false
     
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
@@ -28,6 +30,7 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
+        initBugsnag()
         _ = DarwinNotificationManager.shared
         _ = NetworkManager.shared
         MixinService.callMessageCoordinator = CallManager.shared
@@ -42,6 +45,17 @@ final class NotificationService: UNNotificationServiceExtension {
             } else {
                 weakSelf.deliverRawContent(from: "no message")
             }
+        }
+    }
+
+    private func initBugsnag() {
+        guard !Self.isInitiatedBugsnag else {
+            return
+        }
+        Self.isInitiatedBugsnag = true
+
+        if let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["Bugsnag"] as? String {
+            Bugsnag.start(withApiKey: key)
         }
     }
     

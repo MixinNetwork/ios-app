@@ -553,6 +553,7 @@
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
+		DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF68CD71244EC1970059A678 /* Mixin-Keys.plist */; };
 		DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* AddressWindow.xib */; };
 		DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ABB152295049E00A012B2 /* AddressWindow.swift */; };
 		DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */; };
@@ -1349,6 +1350,7 @@
 		DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNProvisionCryptor.h; sourceTree = "<group>"; };
 		DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNProvisionCryptor.m; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
+		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
 		DF6ABB152295049E00A012B2 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
 		DF6CF2E6221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2862,6 +2864,7 @@
 				E00A69ED23BB234C00984FF3 /* MixinNotificationService.entitlements */,
 				E090B9F923B3957E0088355B /* NotificationService.swift */,
 				E00A69EE23BB46F200984FF3 /* CallManager.swift */,
+				DF68CD71244EC1970059A678 /* Mixin-Keys.plist */,
 				DF2EAEB523EF0646005E5A4F /* Localizable.strings */,
 				E090B9FB23B3957E0088355B /* Info.plist */,
 			);
@@ -3133,6 +3136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */,
 				DF2EAEB823EF0A05005E5A4F /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

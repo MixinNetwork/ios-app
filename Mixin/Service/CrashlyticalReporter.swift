@@ -3,9 +3,20 @@ import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
 import MixinServices
+import Bugsnag
 
 class CrashlyticalReporter: Reporter {
-    
+
+    required init() {
+        super.init()
+
+        #if RELEASE
+        if let key = MixinKeys.bugsnag {
+            Bugsnag.start(withApiKey: key)
+        }
+        #endif
+    }
+
     override func registerUserInformation() {
         super.registerUserInformation()
         if let account = LoginManager.shared.account {

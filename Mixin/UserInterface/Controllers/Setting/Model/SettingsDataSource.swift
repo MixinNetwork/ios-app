@@ -23,8 +23,20 @@ class SettingsDataSource: NSObject {
     
     private(set) var sections: [SettingsSection]
     
+    private var indexPaths = [SettingsRow: IndexPath]()
+    
     init(sections: [SettingsSection]) {
         self.sections = sections
+        super.init()
+        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
+        for (sectionIndex, section) in sections.enumerated() {
+            for (rowIndex, row) in section.rows.enumerated() {
+                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+                indexPaths[row] = indexPath
+                row.observer = self
+            }
+        }
+        self.indexPaths = indexPaths
     }
     
     override func responds(to aSelector: Selector!) -> Bool {
@@ -81,6 +93,20 @@ extension SettingsDataSource: UITableViewDelegate {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
         view.text = sections[section].footer
         return view
+    }
+    
+}
+
+extension SettingsDataSource: SettingsRowObserver {
+    
+    func settingsRow(_ row: SettingsRow, subtitleDidChangeTo newValue: String?) {
+        guard let indexPath = indexPaths[row] else {
+            return
+        }
+        guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
+            return
+        }
+        cell.subtitleLabel.text = newValue
     }
     
 }

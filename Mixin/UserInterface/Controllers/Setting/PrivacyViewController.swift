@@ -57,7 +57,6 @@ final class PrivacyViewController: SettingsTableViewController {
                 } else {
                     row.subtitle = R.string.localizable.setting_blocked_user_count_none()
                 }
-                self.dataSource.reloadRow(at: indexPath, with: row, animation: .none)
             }
         }
     }

@@ -1,7 +1,13 @@
 import UIKit
 import Rswift
 
-class SettingsRow {
+protocol SettingsRowObserver: class {
+    
+    func settingsRow(_ row: SettingsRow, subtitleDidChangeTo newValue: String?)
+    
+}
+
+class SettingsRow: NSObject {
     
     enum Accessory {
         case none
@@ -10,9 +16,15 @@ class SettingsRow {
         case checkmark(Bool)
     }
     
+    weak var observer: SettingsRowObserver?
+    
     let icon: UIImage?
     let title: String
-    var subtitle: String?
+    var subtitle: String? {
+        didSet {
+            observer?.settingsRow(self, subtitleDidChangeTo: subtitle)
+        }
+    }
     let accessory: Accessory
     
     init(icon: UIImage? = nil, title: String, subtitle: String? = nil, accessory: Accessory = .none) {
@@ -20,6 +32,7 @@ class SettingsRow {
         self.title = title
         self.subtitle = subtitle
         self.accessory = accessory
+        super.init()
     }
     
 }

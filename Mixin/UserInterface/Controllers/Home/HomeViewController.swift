@@ -43,6 +43,7 @@ class HomeViewController: UIViewController {
     private var loadMoreMessageThreshold = 10
     private var leftAppAction: (() -> Void)?
     private var rightAppAction: (() -> Void)?
+    private var isEditingRow = false
     
     private var isBulletinViewHidden = false {
         didSet {
@@ -459,6 +460,15 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+
+    func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        isEditingRow = true
+    }
+
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        isEditingRow = false
+        fetchConversations()
+    }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let conversation = conversations[indexPath.row]
@@ -563,7 +573,8 @@ extension HomeViewController {
                     }
                 }()
                 DispatchQueue.main.async {
-                    guard self?.tableView != nil else {
+                    guard self?.tableView != nil, !(self?.isEditingRow ?? false) else {
+                         self?.refreshing = false
                         return
                     }
                     self?.conversations = conversations

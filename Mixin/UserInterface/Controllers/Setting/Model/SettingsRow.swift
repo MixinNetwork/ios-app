@@ -12,7 +12,7 @@ class SettingsRow {
     
     let icon: UIImage?
     let title: String
-    let subtitle: String?
+    var subtitle: String?
     let accessory: Accessory
     
     init(icon: UIImage? = nil, title: String, subtitle: String? = nil, accessory: Accessory = .none) {

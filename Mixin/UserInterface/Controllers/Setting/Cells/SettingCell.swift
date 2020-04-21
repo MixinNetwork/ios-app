@@ -26,11 +26,6 @@ final class SettingCell: ModernSelectedBackgroundCell {
     private(set) var accessoryImageViewIfLoaded: UIImageView?
     private(set) var accessorySwitchIfLoaded: UISwitch?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        subtitleLabel.isHidden = true
-    }
-    
     func render(row: SettingsRow) {
         if let icon = row.icon {
             iconImageView.image = icon

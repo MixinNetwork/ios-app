@@ -42,9 +42,8 @@ class SettingsViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataSource.tableView = tableView
         dataSource.tableViewDelegate = self
-        tableView.dataSource = dataSource
+        dataSource.tableView = tableView
     }
     
 }

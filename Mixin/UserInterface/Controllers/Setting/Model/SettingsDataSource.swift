@@ -2,19 +2,26 @@ import UIKit
 
 class SettingsDataSource: NSObject {
     
+    // This variable must be set before tableView is set
+    // Or the delegate forwarding will be unavailable
+    weak var tableViewDelegate: UITableViewDelegate?
+    
     weak var tableView: UITableView? {
         didSet {
             guard let tableView = tableView else {
                 return
             }
             tableView.register(R.nib.settingCell)
+            tableView.register(SettingsFooterView.self,
+                               forHeaderFooterViewReuseIdentifier: footerReuseId)
+            tableView.dataSource = self
             tableView.delegate = self
         }
     }
     
-    weak var tableViewDelegate: UITableViewDelegate?
+    private let footerReuseId = "footer"
     
-    let sections: [SettingsSection]
+    private(set) var sections: [SettingsSection]
     
     init(sections: [SettingsSection]) {
         self.sections = sections
@@ -32,6 +39,15 @@ class SettingsDataSource: NSObject {
         } else {
             return super.forwardingTarget(for: aSelector)
         }
+    }
+    
+    func row(at indexPath: IndexPath) -> SettingsRow {
+        sections[indexPath.section].rows[indexPath.row]
+    }
+    
+    func reloadRow(at indexPath: IndexPath, with row: SettingsRow, animation: UITableView.RowAnimation) {
+        sections[indexPath.section].rows[indexPath.row] = row
+        tableView?.reloadRows(at: [indexPath], with: animation)
     }
     
 }
@@ -59,6 +75,12 @@ extension SettingsDataSource: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         64
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
+        view.text = sections[section].footer
+        return view
     }
     
 }

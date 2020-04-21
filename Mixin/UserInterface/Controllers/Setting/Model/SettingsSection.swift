@@ -2,8 +2,8 @@ import UIKit
 
 class SettingsSection {
     
-    let footer: String?
-    let rows: [SettingsRow]
+    var footer: String?
+    var rows: [SettingsRow]
     
     init(footer: String?, rows: [SettingsRow]) {
         self.footer = footer

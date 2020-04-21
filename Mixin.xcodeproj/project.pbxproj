@@ -82,6 +82,7 @@
 		7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F411F9CD1630036D5FD /* CountryCode.plist */; };
 		7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */; };
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
+		7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */; };
 		7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BA922B9EAFE00C16652 /* IntroTextView.swift */; };
 		7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */; };
 		7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B31E565236181C9004F891A /* BubbleImageSet.swift */; };
@@ -868,6 +869,7 @@
 		7B2E3E501FA07F7B00DDDDEB /* CountryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCell.swift; sourceTree = "<group>"; };
 		7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
+		7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFooterView.swift; sourceTree = "<group>"; };
 		7B311BA922B9EAFE00C16652 /* IntroTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroTextView.swift; sourceTree = "<group>"; };
 		7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
 		7B31E565236181C9004F891A /* BubbleImageSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleImageSet.swift; sourceTree = "<group>"; };
@@ -1810,6 +1812,14 @@
 				7B9863901FA313E300D4B16C /* BottomWrapperView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7B2E56AE244EA6A20073102C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		7B3F78512264689B00029D48 /* View */ = {
@@ -2775,9 +2785,11 @@
 			isa = PBXGroup;
 			children = (
 				ABE865BC23F2453D00C0167D /* Model */,
+				7B2E56AE244EA6A20073102C /* View */,
 				DF8CECF01FC4255700E40064 /* Cells */,
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
+				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
@@ -2788,7 +2800,6 @@
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
-				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 				7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */,
 				7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */,
 				7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */,
@@ -3891,6 +3902,7 @@
 				DF0A09742444AD7600378B4F /* BlurHashEncode.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
+				7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,
 				E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */,

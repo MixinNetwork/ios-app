@@ -340,7 +340,9 @@ extension AppDelegate {
             if navigationController.viewControllers.last is CameraViewController {
                return
             }
-            navigationController.pushViewController(withBackRoot: CameraViewController.instance())
+            let vc = CameraViewController.instance()
+            vc.asQrCodeScanner = true
+            navigationController.pushViewController(withBackRoot: vc)
         }
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {

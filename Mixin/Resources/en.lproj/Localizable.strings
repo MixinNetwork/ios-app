@@ -737,7 +737,7 @@
 "setting_auto_download_wifi" = "Wi-Fi";
 "setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
 "setting_auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded";
-"setting_contacts_title" = "Mobile Contacts";
+"setting_contacts_title" = "Phone Contacts";
 "setting_contacts_delete" = "Delete Synced Contacts";
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";

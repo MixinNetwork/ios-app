@@ -198,13 +198,13 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="nlN-sg-Adq">
                                                             <rect key="frame" x="65" y="19.5" width="232" height="41.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2p-Yy-sgH">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2p-Yy-sgH">
                                                                     <rect key="frame" x="0.0" y="0.0" width="232" height="19.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pt1-GX-Ih1">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pt1-GX-Ih1">
                                                                     <rect key="frame" x="0.0" y="24.5" width="232" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
@@ -316,14 +316,14 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="DIM-3x-tKW">
                                                             <rect key="frame" x="66" y="4.5" width="231" height="41.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Mixin Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-Th-zLF">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" ambiguous="YES" text="Mixin Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-Th-zLF">
                                                                     <rect key="frame" x="0.0" y="0.0" width="231" height="19.5"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 MB" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQc-PT-83N">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="10 MB" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQc-PT-83N">
                                                                     <rect key="frame" x="0.0" y="24.5" width="231" height="17"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1034,66 +1034,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZjH-w5-xgf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1468" y="-11"/>
-        </scene>
-        <!--Contact Setting View Controller-->
-        <scene sceneID="MP7-3u-wFp">
-            <objects>
-                <tableViewController storyboardIdentifier="contacts" id="gWr-Gp-XhY" customClass="ContactSettingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="-1" estimatedSectionFooterHeight="42" id="SwF-QN-5an">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="background_secondary"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="Ycw-5j-Xx0" customClass="EmergencyContactTableHeaderView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="264"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="ic_mobile_contact" translatesAutoresizingMaskIntoConstraints="NO" id="mIX-cW-6a3">
-                                    <rect key="frame" x="157" y="50" width="61" height="114.5"/>
-                                </imageView>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJy-ak-X20" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="254" width="375" height="10"/>
-                                    <color key="backgroundColor" name="background_secondary"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="10" id="5Oe-6L-Uxq"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                                    </userDefinedRuntimeAttributes>
-                                </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Mixin syncs your address book to Mixin servers to help you connect with other Mixin users." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8R-W5-pZ2">
-                                    <rect key="frame" x="30" y="188.5" width="315" height="33.5"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" name="text_accessory"/>
-                                    <nil key="highlightedColor"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_contacts_tips"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                    </userDefinedRuntimeAttributes>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" name="background"/>
-                            <constraints>
-                                <constraint firstItem="M8R-W5-pZ2" firstAttribute="top" secondItem="mIX-cW-6a3" secondAttribute="bottom" constant="24" id="5K4-Zw-nkg"/>
-                                <constraint firstItem="M8R-W5-pZ2" firstAttribute="leading" secondItem="Ycw-5j-Xx0" secondAttribute="leading" constant="30" id="Dr9-yT-wab"/>
-                                <constraint firstAttribute="bottom" secondItem="dJy-ak-X20" secondAttribute="bottom" id="I8Y-Qs-nyW"/>
-                                <constraint firstItem="mIX-cW-6a3" firstAttribute="top" secondItem="Ycw-5j-Xx0" secondAttribute="top" constant="50" id="PI3-FA-jHS"/>
-                                <constraint firstItem="dJy-ak-X20" firstAttribute="top" secondItem="M8R-W5-pZ2" secondAttribute="bottom" constant="32" id="XcL-SS-Dg2"/>
-                                <constraint firstItem="mIX-cW-6a3" firstAttribute="centerX" secondItem="Ycw-5j-Xx0" secondAttribute="centerX" id="Ylv-Lv-U3u"/>
-                                <constraint firstItem="dJy-ak-X20" firstAttribute="leading" secondItem="Ycw-5j-Xx0" secondAttribute="leading" id="mT8-HO-9ga"/>
-                                <constraint firstAttribute="trailing" secondItem="M8R-W5-pZ2" secondAttribute="trailing" constant="30" id="vxS-gn-OQb"/>
-                                <constraint firstAttribute="trailing" secondItem="dJy-ak-X20" secondAttribute="trailing" id="xed-Ae-geX"/>
-                            </constraints>
-                        </view>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="gWr-Gp-XhY" id="YEk-NU-qdk"/>
-                            <outlet property="delegate" destination="gWr-Gp-XhY" id="v5H-v0-r7I"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KFh-Ei-mQv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3501.5999999999999" y="662.51874062968523"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="WuJ-Ge-HpB">
@@ -1871,7 +1811,6 @@
         <image name="Setting/ic_desktop" width="113" height="72"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_emergency" width="140" height="162"/>
-        <image name="ic_mobile_contact" width="61" height="67"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

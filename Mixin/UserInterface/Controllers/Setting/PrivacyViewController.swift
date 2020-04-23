@@ -14,7 +14,7 @@ final class PrivacyViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "[FIXME] Phone Number", accessory: .disclosure),
-            SettingsRow(title: "[FIXME] Phone Contacts", accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.setting_contacts_title(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
@@ -86,8 +86,12 @@ extension PrivacyViewController: UITableViewDelegate {
                 vc = ConversationSettingViewController.instance()
             }
         case 2:
-            // FIXME
-            return
+            if indexPath.row == 0 {
+                // FIXME
+                return
+            } else {
+                vc = PhoneContactsSettingViewController.instance()
+            }
         default:
             vc = AuthorizationsViewController.instance()
         }

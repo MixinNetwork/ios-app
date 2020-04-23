@@ -55,10 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
+        let startDate = Date()
         requestTimeout = 3
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...")
+            Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
             if UIApplication.shared.applicationState != .active {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
@@ -187,16 +188,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
+        let startDate = Date()
         cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
 
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            Logger.write(log: "[AppDelegate] didReceiveRemoteNotification...expirationHandler...")
+        requestTimeout = 3
+        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            Logger.write(log: "[AppDelegate] didReceiveRemoteNotification...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
             if UIApplication.shared.applicationState != .active {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
+            self.cancelBackgroundTask()
+            completionHandler(.newData)
+        })
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
             self.cancelBackgroundTask()
             completionHandler(.newData)
         }

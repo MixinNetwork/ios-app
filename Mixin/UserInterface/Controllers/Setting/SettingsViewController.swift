@@ -4,7 +4,7 @@ import MixinServices
 class SettingsViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_security(),
                         title: R.string.localizable.setting_privacy_and_security(),
                         accessory: .disclosure),
@@ -18,17 +18,17 @@ class SettingsViewController: SettingsTableViewController {
                         title: R.string.localizable.setting_data_and_storage(),
                         accessory: .disclosure),
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_appearance(),
                         title: R.string.localizable.setting_appearance(),
                         accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_desktop(),
                         title: R.string.localizable.setting_desktop(),
                         accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_about(),
                         title: R.string.localizable.setting_about(),
                         accessory: .disclosure)

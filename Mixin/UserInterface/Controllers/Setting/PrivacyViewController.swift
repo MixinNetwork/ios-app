@@ -4,7 +4,7 @@ import MixinServices
 final class PrivacyViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: "PIN", accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_emergency_contact(), accessory: .disclosure)
         ]),
@@ -12,11 +12,11 @@ final class PrivacyViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.setting_blocked(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_conversation(), accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: "[FIXME] Phone Number", accessory: .disclosure),
             SettingsRow(title: "[FIXME] Phone Contacts", accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
         ])
     ])

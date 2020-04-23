@@ -345,6 +345,8 @@
 		7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB6111922BA4179000E758C /* PinValidationView.xib */; };
 		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
+		7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78723245132570057B4ED /* SettingsHeaderView.swift */; };
+		7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
 		7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */; };
 		7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B5216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib */; };
@@ -1131,6 +1133,8 @@
 		7BB6111922BA4179000E758C /* PinValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinValidationView.xib; sourceTree = "<group>"; };
 		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
+		7BB78723245132570057B4ED /* SettingsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderView.swift; sourceTree = "<group>"; };
+		7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderFooterView.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultFooterView.xib; sourceTree = "<group>"; };
 		7BB788B5216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GiphyPoweredFooterView.xib; sourceTree = "<group>"; };
@@ -1821,7 +1825,9 @@
 		7B2E56AE244EA6A20073102C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */,
 				7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */,
+				7BB78723245132570057B4ED /* SettingsHeaderView.swift */,
 				7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */,
 			);
 			path = View;
@@ -3739,6 +3745,7 @@
 				E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
+				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
@@ -3862,6 +3869,7 @@
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
+				7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */,
 				DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */,
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
 				DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */,

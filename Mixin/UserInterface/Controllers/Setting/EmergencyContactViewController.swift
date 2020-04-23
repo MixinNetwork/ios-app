@@ -6,19 +6,19 @@ final class EmergencyContactViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [])
     
     private lazy var hasEmergencyContactSections = [
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.emergency_view(), titleStyle: .normal, accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.emergency_change(), titleStyle: .normal, accessory: .disclosure)
         ]),
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.emergency_remove(), titleStyle: .destructive)
         ])
     ]
     
     private lazy var noEmergencyContactSections = [
-        SettingsSection(footer: nil, rows: [
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.enable_emergency_contact(), titleStyle: .highlighted, accessory: .disclosure)
         ])
     ]

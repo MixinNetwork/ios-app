@@ -1,73 +1,53 @@
 import UIKit
 import MixinServices
 
-class ConversationSettingViewController: UITableViewController {
+class ConversationSettingViewController: SettingsTableViewController {
     
-    @IBOutlet weak var messageSourceEverybodyCell: ModernSelectedBackgroundCell!
-    @IBOutlet weak var messageSourceEverybodyIndicator: ActivityIndicatorView!
-    @IBOutlet weak var messageSourceEverybodyCheckmarkView: CheckmarkView!
-    @IBOutlet weak var messageSourceContactsCell: ModernSelectedBackgroundCell!
-    @IBOutlet weak var messageSourceContactsIndicator: ActivityIndicatorView!
-    @IBOutlet weak var messageSourceContactsCheckmarkView: CheckmarkView!
-    @IBOutlet weak var conversationSourceEverybodyCell: ModernSelectedBackgroundCell!
-    @IBOutlet weak var conversationSourceEverybodyIndicator: ActivityIndicatorView!
-    @IBOutlet weak var conversationSourceEverybodyCheckmarkView: CheckmarkView!
-    @IBOutlet weak var conversationSourceContactsCell: ModernSelectedBackgroundCell!
-    @IBOutlet weak var conversationSourceContactsIndicator: ActivityIndicatorView!
-    @IBOutlet weak var conversationSourceContactsCheckmarkView: CheckmarkView!
+    private let messageSourceSection = SettingsRadioSection(header: R.string.localizable.setting_header_message_source(), rows: [
+        SettingsRow(title: R.string.localizable.setting_source_everybody(), accessory: .none),
+        SettingsRow(title: R.string.localizable.setting_source_contacts(), accessory: .none)
+    ])
+    private let conversationSourceSection = SettingsRadioSection(header: R.string.localizable.setting_header_conversation_source(), rows: [
+        SettingsRow(title: R.string.localizable.setting_source_everybody(), accessory: .none),
+        SettingsRow(title: R.string.localizable.setting_source_contacts(), accessory: .none)
+    ])
     
-    @IBOutlet var checkmarkViews: [CheckmarkView]!
-    
-    private let footerReuseId = "footer"
+    private lazy var dataSource = SettingsDataSource(sections: [messageSourceSection, conversationSourceSection])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(SeparatorShadowFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: footerReuseId)
-        checkmarkViews.forEach {
-            $0.status = .selected
-            $0.alpha = 0
-        }
         if let account = LoginManager.shared.account {
             switch account.receive_message_source {
             case ReceiveMessageSource.everybody.rawValue:
-                messageSourceEverybodyCheckmarkView.alpha = 1
+                messageSourceSection.setAccessory(.checkmark, forRowAt: 0)
             case ReceiveMessageSource.contacts.rawValue:
-                messageSourceContactsCheckmarkView.alpha = 1
+                messageSourceSection.setAccessory(.checkmark, forRowAt: 1)
             default:
                 break
             }
             switch account.accept_conversation_source {
             case AcceptConversationSource.everybody.rawValue:
-                conversationSourceEverybodyCheckmarkView.alpha = 1
+                conversationSourceSection.setAccessory(.checkmark, forRowAt: 0)
             case AcceptConversationSource.contacts.rawValue:
-                conversationSourceContactsCheckmarkView.alpha = 1
+                conversationSourceSection.setAccessory(.checkmark, forRowAt: 1)
             default:
                 break
             }
         }
+        dataSource.tableViewDelegate = self
+        dataSource.tableView = tableView
     }
     
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: R.storyboard.setting.conversation()!, title: Localized.SETTING_CONVERSATION)
-    }
-
-}
-
-extension ConversationSettingViewController {
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return Localized.SETTING_HEADER_MESSAGE_SOURCE
-        case 1:
-            return Localized.SETTING_HEADER_CONVERSATION_SOURCE
-        default:
-            return nil
-        }
+        let vc = ConversationSettingViewController()
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_conversation())
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+}
+
+extension ConversationSettingViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let newSource: ReceiveMessageSource = indexPath.row == 0 ? .everybody : .contacts
@@ -92,96 +72,82 @@ extension ConversationSettingViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
-        return view
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 10
-        } else {
-            return 15 // Avoid shadow from being clipped
-        }
-    }
-    
 }
 
 extension ConversationSettingViewController {
     
     private func setMessageSourceEverybody() {
-        messageSourceContactsCheckmarkView.alpha = 0
-        messageSourceEverybodyCheckmarkView.alpha = 0
-        messageSourceEverybodyIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue), completion: { [weak self] (result) in
-            self?.messageSourceEverybodyIndicator.stopAnimating()
-            self?.tableView.isUserInteractionEnabled = true
-            self?.messageSourceEverybodyCheckmarkView.alpha = 1
+        messageSourceSection.setAccessory(.busy, forRowAt: 0)
+        let request = UserPreferenceRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue)
+        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            self.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
-                self?.messageSourceEverybodyCheckmarkView.alpha = 1
+                self.messageSourceSection.setAccessory(.checkmark, forRowAt: 0)
                 LoginManager.shared.setAccount(account)
             case let .failure(error):
+                self.messageSourceSection.setAccessory(.checkmark, forRowAt: 1)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                self?.messageSourceContactsCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setMessageSourceContacts() {
-        messageSourceEverybodyCheckmarkView.alpha = 0
-        messageSourceContactsCheckmarkView.alpha = 0
-        messageSourceContactsIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue), completion: { [weak self] (result) in
-            self?.messageSourceContactsIndicator.stopAnimating()
-            self?.messageSourceContactsCheckmarkView.alpha = 1
-            self?.tableView.isUserInteractionEnabled = true
+        messageSourceSection.setAccessory(.busy, forRowAt: 1)
+        let request = UserPreferenceRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue)
+        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            self.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
-                self?.messageSourceContactsCheckmarkView.alpha = 1
+                self.messageSourceSection.setAccessory(.checkmark, forRowAt: 1)
                 LoginManager.shared.setAccount(account)
             case let .failure(error):
+                self.messageSourceSection.setAccessory(.checkmark, forRowAt: 0)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                self?.messageSourceEverybodyCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setConversationSourceEverybody() {
-        conversationSourceContactsCheckmarkView.alpha = 0
-        conversationSourceEverybodyCheckmarkView.alpha = 0
-        conversationSourceEverybodyIndicator.startAnimating()
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue), completion: { [weak self] (result) in
-            self?.conversationSourceEverybodyIndicator.stopAnimating()
-            self?.conversationSourceEverybodyCheckmarkView.alpha = 1
-            self?.tableView.isUserInteractionEnabled = true
+        conversationSourceSection.setAccessory(.busy, forRowAt: 0)
+        let request = UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue)
+        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            self.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
-                self?.conversationSourceEverybodyCheckmarkView.alpha = 1
+                self.conversationSourceSection.setAccessory(.checkmark, forRowAt: 0)
                 LoginManager.shared.setAccount(account)
             case let .failure(error):
+                self.conversationSourceSection.setAccessory(.checkmark, forRowAt: 1)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                self?.conversationSourceContactsCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setConversationSourceContacts() {
-        conversationSourceContactsIndicator.startAnimating()
-        conversationSourceEverybodyCheckmarkView.alpha = 0
-        conversationSourceContactsCheckmarkView.alpha = 0
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue), completion: { [weak self] (result) in
-            self?.conversationSourceContactsIndicator.stopAnimating()
-            self?.tableView.isUserInteractionEnabled = true
-            self?.conversationSourceContactsCheckmarkView.alpha = 1
+        conversationSourceSection.setAccessory(.busy, forRowAt: 1)
+        let request = UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue)
+        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            self.tableView.isUserInteractionEnabled = true
             switch result {
             case .success(let account):
-                self?.conversationSourceContactsCheckmarkView.alpha = 1
+                self.conversationSourceSection.setAccessory(.checkmark, forRowAt: 1)
                 LoginManager.shared.setAccount(account)
             case let .failure(error):
+                self.conversationSourceSection.setAccessory(.checkmark, forRowAt: 0)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                self?.conversationSourceEverybodyCheckmarkView.alpha = 1
             }
         })
     }

@@ -465,7 +465,6 @@ public class Localized {
     }
 
     // Setting
-    public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
     public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")
     public static let SETTING_NO_AUTHORIZATIONS = LocalizedString("setting_no_authorizations", comment: "NO AUTHORIZATIONS")
@@ -475,8 +474,6 @@ public class Localized {
     public static let SETTING_NOTIFICATION_GROUP = LocalizedString("setting_notification_group", comment: "GROUP NOTIFICATIONS")
     public static let SETTING_NOTIFICATION_GROUP_SUMMARY = LocalizedString("setting_notification_group_summary", comment: "You can set custom notifications for specific groups on their Group Info page.")
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
-    public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
-    public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
     public static func SETTING_DESKTOP_LAST_ACTIVE(time: String) -> String {
         return String(format: LocalizedString("setting_desktop_last_active", comment: "Last active %@"), time)
     }

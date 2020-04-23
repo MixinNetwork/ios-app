@@ -13,7 +13,8 @@ final class SettingsRow: NSObject {
         case none
         case disclosure
         case `switch`(Bool)
-        case checkmark(Bool)
+        case checkmark
+        case busy
     }
     
     static let subtitleDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.subtitle.change")

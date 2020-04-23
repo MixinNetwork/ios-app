@@ -347,6 +347,7 @@
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78723245132570057B4ED /* SettingsHeaderView.swift */; };
 		7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */; };
+		7BB78728245136850057B4ED /* SettingsRadioSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78727245136850057B4ED /* SettingsRadioSection.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
 		7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */; };
 		7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B5216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib */; };
@@ -1135,6 +1136,7 @@
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB78723245132570057B4ED /* SettingsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderView.swift; sourceTree = "<group>"; };
 		7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderFooterView.swift; sourceTree = "<group>"; };
+		7BB78727245136850057B4ED /* SettingsRadioSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRadioSection.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultFooterView.xib; sourceTree = "<group>"; };
 		7BB788B5216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GiphyPoweredFooterView.xib; sourceTree = "<group>"; };
@@ -2100,6 +2102,7 @@
 				ABE865BD23F2455800C0167D /* Scope.swift */,
 				7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */,
 				7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */,
+				7BB78727245136850057B4ED /* SettingsRadioSection.swift */,
 				7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */,
 			);
 			path = Model;
@@ -2802,9 +2805,9 @@
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
+				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
-				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */,
 				7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
@@ -3547,6 +3550,7 @@
 				E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */,
 				7B4BE55F243E0FEC00198EE9 /* HomeApp.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
+				7BB78728245136850057B4ED /* SettingsRadioSection.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */,
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,

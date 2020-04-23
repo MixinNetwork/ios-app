@@ -146,7 +146,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
                 - titleBarHeightConstraint.constant
                 - pinnedWrapperHeightConstraint.constant
                 - candidateCollectionLayout.itemSize.height
-            candidateEmptyHintLabel.frame = CGRect(x: x, y: y, width: width, height: height)
+            candidateEmptyHintLabel.frame = CGRect(x: x, y: y, width: width, height: round(height / 3 * 2))
             if candidateEmptyHintLabel.superview == nil {
                 candidateCollectionView.addSubview(candidateEmptyHintLabel)
             }

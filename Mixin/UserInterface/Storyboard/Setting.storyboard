@@ -605,10 +605,10 @@
             </objects>
             <point key="canvasLocation" x="2845" y="663"/>
         </scene>
-        <!--Block User View Controller-->
+        <!--Blocked Users View Controller-->
         <scene sceneID="6nc-6T-mfW">
             <objects>
-                <viewController storyboardIdentifier="block" id="FRN-eQ-tG3" customClass="BlockUserViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="block" id="FRN-eQ-tG3" customClass="BlockedUsersViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vfL-V9-sMO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

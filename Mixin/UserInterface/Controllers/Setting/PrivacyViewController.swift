@@ -81,7 +81,7 @@ extension PrivacyViewController: UITableViewDelegate {
             }
         case 1:
             if indexPath.row == 0 {
-                vc = BlockUserViewController.instance()
+                vc = BlockedUsersViewController.instance()
             } else {
                 vc = ConversationSettingViewController.instance()
             }

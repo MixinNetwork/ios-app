@@ -9,6 +9,7 @@ class HomeTitleButton: UIButton {
         view.layer.cornerRadius = 4
         view.backgroundColor = .theme
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
         addSubview(view)
         return view
     }()

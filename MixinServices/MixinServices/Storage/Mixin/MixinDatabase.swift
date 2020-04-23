@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 20
+    private static let version: Int = 21
     
     override public var database: Database! {
         get { _database }
@@ -110,6 +110,11 @@ public class MixinDatabase: BaseDatabase {
             try database.insert(objects: jobs, intoTable: Job.tableName)
 
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_pending_indexs").execute()
+        }
+
+        if localVersion < 21 {
+            try database.prepareUpdateSQL(sql: "UPDATE assets SET reserve = '0'").execute()
+            try database.prepareUpdateSQL(sql: "UPDATE top_assets SET reserve = '0'").execute()
         }
     }
     

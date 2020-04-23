@@ -428,7 +428,7 @@
 "wallet_address_tag" = "Tag（标签）";
 "wallet_address_memo" = "Memo（标签）";
 "wallet_deposit_attention" = "首次充值请小额尝试！";
-"wallet_deposit_attention_xrp" = "首次充值请小额尝试！首次充值至少 20 XRP！";
+"wallet_deposit_attention_minimum" = "首次充值请小额尝试！首次充值至少 %@ %@！";
 "wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";

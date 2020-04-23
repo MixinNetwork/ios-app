@@ -20,6 +20,7 @@ public struct Asset: BaseCodable {
     public let chainId: String
     public let confirmations: Int
     public let assetKey: String
+    public let reserve: String
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -47,10 +48,11 @@ public struct Asset: BaseCodable {
         case chainId = "chain_id"
         case confirmations
         case assetKey = "asset_key"
+        case reserve
         
     }
     
-    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String) {
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String) {
         self.assetId = assetId
         self.type = type
         self.symbol = symbol
@@ -65,6 +67,7 @@ public struct Asset: BaseCodable {
         self.chainId = chainId
         self.confirmations = confirmations
         self.assetKey = assetKey
+        self.reserve = reserve
     }
     
     public init(item: AssetItem) {
@@ -81,7 +84,8 @@ public struct Asset: BaseCodable {
                   changeUsd: item.changeUsd,
                   chainId: item.chainId,
                   confirmations: item.confirmations,
-                  assetKey: item.assetKey)
+                  assetKey: item.assetKey,
+                  reserve: item.reserve)
     }
     
 }

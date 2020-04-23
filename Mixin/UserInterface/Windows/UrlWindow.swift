@@ -369,11 +369,15 @@ class UrlWindow {
         PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
-                hud.hide()
-                let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
-                let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
-                let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
-                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
+                if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) {
+                    hud.hide()
+                    let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset.iconUrl, chainName: chainAsset.name, chainSymbol: chainAsset.symbol)
+                    let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+                    PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
+                } else {
+                    hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
                 hud.scheduleAutoHidden()

@@ -21,6 +21,8 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
     public var accountTag: String?
     public let assetKey: String
     public let chainName: String?
+    public let chainSymbol: String
+    public let reserve: String
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -44,6 +46,8 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
         case confirmations
         case assetKey = "asset_key"
         case chainName = "chain_name"
+        case chainSymbol = "chain_symbol"
+        case reserve
         
     }
     
@@ -68,7 +72,7 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
         return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
     }()
     
-    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, chainId: String, chainIconUrl: String?, changeUsd: String, confirmations: Int, assetKey: String, chainName: String?) {
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, chainId: String, chainIconUrl: String?, changeUsd: String, confirmations: Int, assetKey: String, chainName: String?, chainSymbol: String, reserve: String) {
         self.assetId = assetId
         self.type = type
         self.symbol = symbol
@@ -85,9 +89,11 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
         self.confirmations = confirmations
         self.assetKey = assetKey
         self.chainName = chainName
+        self.chainSymbol = chainSymbol
+        self.reserve = reserve
     }
     
-    public convenience init(asset: Asset, chainIconUrl: String?, chainName: String?) {
+    public convenience init(asset: Asset, chainIconUrl: String?, chainName: String?, chainSymbol: String) {
         self.init(assetId: asset.assetId,
                   type: asset.type,
                   symbol: asset.symbol,
@@ -103,7 +109,9 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
                   changeUsd: asset.changeUsd,
                   confirmations: asset.confirmations,
                   assetKey: asset.assetKey,
-                  chainName: chainName)
+                  chainName: chainName,
+                  chainSymbol: chainSymbol,
+                  reserve: asset.reserve)
     }
     
 }
@@ -118,10 +126,7 @@ extension AssetItem {
     public var isBitcoinChain: Bool {
         return chainId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     }
-
-    public var isXRPChain: Bool {
-        return chainId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
-    }
+    
 }
 
 extension AssetItem {
@@ -141,6 +146,6 @@ extension AssetItem {
                                       changeUsd: "0",
                                       confirmations: 100,
                                       assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
-                                      chainName: "Ether")
+                                      chainName: "Ether", chainSymbol: "ETH", reserve: "0")
     
 }

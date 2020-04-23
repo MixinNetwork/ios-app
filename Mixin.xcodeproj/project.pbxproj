@@ -170,7 +170,7 @@
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
 		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
-		7B5E9B4824373380000AE24E /* EditNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4724373380000AE24E /* EditNameController.swift */; };
+		7B5E9B4824373380000AE24E /* AlertEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4724373380000AE24E /* AlertEditorController.swift */; };
 		7B5E9B4A243740C4000AE24E /* ConversationCircleEditorFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B49243740C4000AE24E /* ConversationCircleEditorFooterView.swift */; };
 		7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4B2437434D000AE24E /* CircleEditingButton.swift */; };
 		7B5E9B4E2437503A000AE24E /* CircleConversationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4D2437503A000AE24E /* CircleConversationRequest.swift */; };
@@ -963,7 +963,7 @@
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
 		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
-		7B5E9B4724373380000AE24E /* EditNameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameController.swift; sourceTree = "<group>"; };
+		7B5E9B4724373380000AE24E /* AlertEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertEditorController.swift; sourceTree = "<group>"; };
 		7B5E9B49243740C4000AE24E /* ConversationCircleEditorFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorFooterView.swift; sourceTree = "<group>"; };
 		7B5E9B4B2437434D000AE24E /* CircleEditingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditingButton.swift; sourceTree = "<group>"; };
 		7B5E9B4D2437503A000AE24E /* CircleConversationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleConversationRequest.swift; sourceTree = "<group>"; };
@@ -2933,7 +2933,7 @@
 			isa = PBXGroup;
 			children = (
 				E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */,
-				7B5E9B4724373380000AE24E /* EditNameController.swift */,
+				7B5E9B4724373380000AE24E /* AlertEditorController.swift */,
 				7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */,
 			);
 			path = Model;
@@ -3511,7 +3511,7 @@
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B50DE112333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift in Sources */,
 				DFC0ECD623BB5FDE0091E7AC /* EmergencyRequest.swift in Sources */,
-				7B5E9B4824373380000AE24E /* EditNameController.swift in Sources */,
+				7B5E9B4824373380000AE24E /* AlertEditorController.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,

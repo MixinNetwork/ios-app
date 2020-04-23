@@ -5,7 +5,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private let footerReuseId = "footer"
     
-    private lazy var editNameController = EditNameController(presentingViewController: self)
+    private lazy var editNameController = AlertEditorController(presentingViewController: self)
     private lazy var hintFooterView: UIView = {
         let view = R.nib.circlesTableFooterView(owner: nil)!
         view.label.text = R.string.localizable.circle_add_hint()
@@ -78,7 +78,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     @objc func addCircle(_ sender: Any) {
         let addCircle = R.string.localizable.circle_action_add()
         let add = R.string.localizable.action_add()
-        editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
+        editNameController.present(title: addCircle, actionTitle: add) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
             }

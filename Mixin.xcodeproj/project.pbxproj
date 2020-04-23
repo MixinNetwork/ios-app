@@ -1975,6 +1975,21 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		7BB78729245149040057B4ED /* Emergency Contact */ = {
+			isa = PBXGroup;
+			children = (
+				7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */,
+				7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */,
+				7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */,
+				7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */,
+				7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */,
+				7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */,
+				7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */,
+				7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */,
+			);
+			path = "Emergency Contact";
+			sourceTree = "<group>";
+		};
 		7BB788BB216CD1DA00EDE7B4 /* Call */ = {
 			isa = PBXGroup;
 			children = (
@@ -2805,6 +2820,7 @@
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
+				7BB78729245149040057B4ED /* Emergency Contact */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
@@ -2815,14 +2831,6 @@
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
-				7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */,
-				7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */,
-				7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */,
-				7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */,
-				7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */,
-				7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */,
-				7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */,
-				7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */,
 				DFD1FBC422FD809700C570D4 /* ContactSettingViewController.swift */,
 				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,

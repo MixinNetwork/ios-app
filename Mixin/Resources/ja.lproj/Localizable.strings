@@ -617,6 +617,13 @@
 "setting_change_emergency_contact_success" = "緊急連絡先を変更しました";
 "setting_logout" = "ログアウト";
 "setting_notification_message_preview" = "メッセージプレビュー";
+"setting_notification_message_preview_description" = "Preview message text inside new message notifications";
+"setting_notification_transfer" = "Transfer Notifications";
+"setting_notification_transfer_amount" = "Transfer Amount(%@)";
+"setting_notification_transfer_summary" = "Show notifications when receiving a transfer greater than or equal to %@.";
+"setting_transfer_large" = "Large Amount Confirmation";
+"setting_transfer_large_title" = "Large Amount Confirmation(%@)";
+"setting_transfer_large_summary" = "Show confirmation dialog when transfer greater than or equal to %@.";
 "setting_backup_title" = "チャットバックアップ";
 "setting_backup_now" = "今すぐバックアップ";
 "setting_backing" = "バックアップ中";

@@ -59,6 +59,12 @@ class SettingsDataSource: NSObject {
         sections[indexPath.section].rows[indexPath.row]
     }
     
+    func replaceSection(at location: Int, with section: SettingsSection, animation: UITableView.RowAnimation) {
+        sections[location] = section
+        tableView?.reloadSections(IndexSet(integer: location), with: animation)
+        reloadIndexPaths()
+    }
+    
     func insertSection(_ section: SettingsSection, at location: Int, animation: UITableView.RowAnimation) {
         sections.insert(section, at: location)
         tableView?.insertSections(IndexSet(integer: location), with: animation)

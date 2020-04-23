@@ -59,7 +59,7 @@ extension SettingsViewController: UITableViewDelegate {
             case 0:
                 vc = PrivacyViewController.instance()
             case 1:
-                vc = NotificationSettingsViewController.instance()
+                vc = NotificationAndConfirmationSettingsViewController.instance()
             case 2:
                 if FileManager.default.ubiquityIdentityToken == nil {
                     alert(Localized.SETTING_BACKUP_DISABLE_TIPS)

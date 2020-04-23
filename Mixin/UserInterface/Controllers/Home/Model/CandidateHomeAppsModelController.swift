@@ -9,32 +9,33 @@ class CandidateHomeAppsModelController: HomeAppsModelController {
         R.reuseIdentifier.home_app.identifier
     }
     
-    func reloadData(completion: @escaping ([User]) -> Void) {
+    func reloadData(completion: @escaping (_ appUsers: [User], _ candidateAppUsers: [User]) -> Void) {
         DispatchQueue.global().async { [weak self] in
             let pinned = Set(AppGroupUserDefaults.User.homeAppIds)
             
-            var embeddedApps = EmbeddedApp.all
-            embeddedApps.removeAll(where: {
+            var candidateEmbeddedApps = EmbeddedApp.all
+            candidateEmbeddedApps.removeAll(where: {
                 pinned.contains($0.id)
             })
             
-            var appUsers = UserDAO.shared.getAppUsers()
-            appUsers.removeAll(where: {
-                if let id = $0.appId {
-                    return pinned.contains(id)
+            let appUsers = UserDAO.shared.getAppUsers()
+            let candidateAppUsers = appUsers.filter { (user) -> Bool in
+                if let id = user.appId {
+                    return !pinned.contains(id)
                 } else {
-                    return true
+                    return false
                 }
-            })
+            }
             
-            let apps: [HomeApp] = embeddedApps.map({ .embedded($0) }) + appUsers.map({ .external($0) })
+            let apps: [HomeApp] = candidateEmbeddedApps.map({ .embedded($0) })
+                + candidateAppUsers.map({ .external($0) })
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
                 }
                 self.apps = apps
                 self.collectionView.reloadData()
-                completion(appUsers)
+                completion(appUsers, candidateAppUsers)
             }
         }
     }

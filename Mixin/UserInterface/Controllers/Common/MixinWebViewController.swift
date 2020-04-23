@@ -376,6 +376,8 @@ extension MixinWebViewController {
                 "app_version": Bundle.main.shortVersion,
                 "immersive": isImmersive,
                 "appearance": appearance,
+                "currency": Currency.current.code,
+                "locale": "\(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? "")",
                 "platform": "iOS",
                 "conversation_id": conversationId
             ]

@@ -373,10 +373,10 @@
                                         <color key="backgroundColor" name="background"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-36" width="375" height="111"/>
+                                        <rect key="frame" x="0.0" y="-45" width="375" height="120"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
-                                        <rect key="frame" x="71.5" y="0.0" width="232" height="44"/>
+                                        <rect key="frame" x="71.5" y="23" width="232" height="44"/>
                                         <subviews>
                                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqg-GI-nmb">
                                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -419,7 +419,6 @@
                                     <constraint firstItem="cix-KB-afd" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="09G-MV-xYm"/>
                                     <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="G7H-AD-3c2"/>
                                     <constraint firstItem="cix-KB-afd" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="HqI-QZ-h0t"/>
-                                    <constraint firstItem="NKg-z2-Eo8" firstAttribute="top" secondItem="iHT-NY-1rS" secondAttribute="top" id="Km3-pf-yHX"/>
                                     <constraint firstItem="NKg-z2-Eo8" firstAttribute="centerX" secondItem="iHT-NY-1rS" secondAttribute="centerX" id="PEd-KM-jqp"/>
                                     <constraint firstAttribute="bottom" secondItem="cix-KB-afd" secondAttribute="bottom" id="Snq-gY-G1L"/>
                                     <constraint firstAttribute="height" constant="75" id="cQF-MN-LDQ"/>
@@ -446,6 +445,7 @@
                             <constraint firstAttribute="bottom" secondItem="iHT-NY-1rS" secondAttribute="bottom" id="7vz-Ps-kqi"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
                             <constraint firstItem="tgL-jC-hwU" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Bx7-4f-VwT"/>
+                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="NKg-z2-Eo8" secondAttribute="bottom" constant="8" id="FfU-Cc-iFt"/>
                             <constraint firstAttribute="bottom" secondItem="tgL-jC-hwU" secondAttribute="bottom" id="Glt-3l-wx7"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="iHT-NY-1rS" secondAttribute="trailing" id="Ib9-w1-7Cu"/>
@@ -470,6 +470,7 @@
                     <navigationItem key="navigationItem" id="Zif-1j-Fve"/>
                     <connections>
                         <outlet property="bottomBarView" destination="iHT-NY-1rS" id="VGV-Cg-Gt1"/>
+                        <outlet property="bottomNavigationBottomConstraint" destination="FfU-Cc-iFt" id="RTk-iN-DDP"/>
                         <outlet property="bulletinContentTopConstraint" destination="0Nv-vF-vKp" id="7i0-04-M7u"/>
                         <outlet property="bulletinContentView" destination="MKi-tW-5Ah" id="mo7-3L-PIs"/>
                         <outlet property="bulletinDescriptionView" destination="N2Y-Hr-CBC" id="bO8-h6-VE8"/>
@@ -1523,7 +1524,7 @@ chat history from icloud</string>
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
-        <image name="bg_home_bottom" width="375" height="111"/>
+        <image name="bg_home_bottom" width="375" height="120"/>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
         <image name="ic_chat_time" width="9" height="9"/>
@@ -1551,7 +1552,7 @@ chat history from icloud</string>
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

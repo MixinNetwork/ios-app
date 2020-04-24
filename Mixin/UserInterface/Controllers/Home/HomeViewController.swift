@@ -28,6 +28,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomNavigationBottomConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
@@ -151,6 +152,10 @@ class HomeViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         let bottom = bottomBarView.frame.height - view.safeAreaInsets.bottom
         tableView.contentInset.bottom = bottom
+        if view.safeAreaInsets.bottom < 1 {
+            bottomNavigationBottomConstraint.constant = 24
+            bottomBarView.layoutIfNeeded()
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

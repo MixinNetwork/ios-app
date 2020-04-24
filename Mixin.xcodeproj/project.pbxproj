@@ -507,7 +507,6 @@
 		DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */; };
 		DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */; };
 		DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */; };
-		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
 		DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */; };
 		DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */; };
 		DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */; };
@@ -1316,7 +1315,6 @@
 		DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSelectedBackgroundCell.swift; sourceTree = "<group>"; };
 		DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineHeightLabel.swift; sourceTree = "<group>"; };
-		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
 		DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
 		DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginConfirmWindow.xib; sourceTree = "<group>"; };
@@ -2847,7 +2845,6 @@
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
-				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
 				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
 			);
@@ -4071,7 +4068,6 @@
 				DFC0ECE223BB60DE0091E7AC /* EmergencyResponse.swift in Sources */,
 				7B81DD6822EACF7500A36186 /* GalleryView.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
-				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,

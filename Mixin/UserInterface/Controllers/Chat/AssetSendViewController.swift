@@ -13,6 +13,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var sendButton: StateResponsiveButton!
     @IBOutlet weak var dismissButton: BouncingButton!
     
+    var detectsQrCode = false
     var showSaveButton = false
     
     private weak var dataSource: ConversationDataSource?
@@ -25,8 +26,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var videoAsset: AVAsset?
     private var isObservingRate = false
     private var seekToZero = false
-    private var qrCodeString: String?
     
+    private lazy var notificationController = NotificationController(delegate: self)
+
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -36,6 +38,11 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         saveButton.isHidden = !showSaveButton
         if let image = self.image {
             photoImageView.image = image
+            if detectsQrCode {
+                DispatchQueue.global().async { [weak self] in
+                    self?.detectQrCode(image: image)
+                }
+            }
         } else if let asset = self.videoAsset {
             DispatchQueue.global().async { [weak self] in
                 let thumbnail = UIImage(withFirstFrameOf: asset)
@@ -63,7 +70,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             do {
                                 try data?.write(to: tempUrl)
                                 self?.animateURL = tempUrl
-                                self?.photoImageView.sd_setImage(with: tempUrl, placeholderImage: nil, context: localImageContext)
+                                self?.photoImageView.sd_setImage(with: tempUrl, placeholderImage: nil, context: localImageContext, progress: nil, completed: { (image, _, _, _) in
+                                    guard let image = image, let weakSelf = self, weakSelf.detectsQrCode else {
+                                        return
+                                    }
+                                    weakSelf.detectQrCode(image: image)
+                                })
                             } catch {
                                 self?.requestAssetImage(asset: asset)
                             }
@@ -113,8 +125,32 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         requestOptions.deliveryMode = .highQualityFormat
         requestOptions.isNetworkAccessAllowed = true
         PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self] (image, _) in
-            self?.photoImageView.image = image
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.photoImageView.image = image
+            if let image = image, weakSelf.detectsQrCode {
+                DispatchQueue.global().async {
+                    self?.detectQrCode(image: image)
+                }
+            }
         })
+    }
+    
+    private func detectQrCode(image: UIImage) {
+        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
+            return
+        }
+        let ciImage = CIImage(cgImage: cgImage)
+        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+            guard let string = feature.messageString, !string.isEmpty else {
+                continue
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.notificationController.presentQrCodeDetection(string)
+            }
+            break
+        }
     }
     
     private func loadAsset(asset: AVAsset, thumbnail: UIImage?) {
@@ -278,4 +314,17 @@ extension AssetSendViewController {
     @objc func playerItemDidReachEnd(_ notification: Notification) {
         seekToZero = true
     }
+}
+
+extension AssetSendViewController: NotificationControllerDelegate {
+    
+    func notificationController(_ controller: NotificationController, didSelectNotificationWith localObject: Any?) {
+        guard let string = localObject as? String, let url = URL(string: string) else {
+            return
+        }
+        if !UrlWindow.checkUrl(url: url) {
+            RecognizeWindow.instance().presentWindow(text: string)
+        }
+    }
+    
 }

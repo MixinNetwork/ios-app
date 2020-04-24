@@ -347,6 +347,7 @@
 "camera_save_video_success" = "Video saved.";
 "camera_save_video_failed" = "Unable to save video.";
 "image_picker_title_albums" = "Albums";
+"camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";
 
 // Group
 "group_navigation_title_add_member" = "Add Participants";

@@ -316,6 +316,7 @@
 "camera_save_video_success" = "動画を保存しました。";
 "camera_save_video_failed" = "ビデオを保存できません。";
 "image_picker_title_albums" = "アルバム";
+"camera_qrcode_codes" = "Mixin QRコードを検出し、タップして認識します";
 
 // Group
 "group_navigation_title_add_member" = "参加者を追加";

@@ -350,6 +350,7 @@
 "camera_save_video_success" = "视频已成功保存在相册";
 "camera_save_video_failed" = "保存视频失败";
 "image_picker_title_albums" = "相册";
+"camera_qrcode_codes" = "检测到一个 Mixin 二维码，点击识别";
 
 // Group
 "group_navigation_title_add_member" = "添加成员";

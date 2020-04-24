@@ -68,7 +68,7 @@ extension SettingsViewController: UITableViewDelegate {
                     vc = BackupViewController.instance()
                 }
             default:
-                vc = DataStorageUsageViewController.instance()
+                vc = DataAndStorageSettingsViewController.instance()
             }
         case 1:
             return

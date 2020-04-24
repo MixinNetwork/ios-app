@@ -71,7 +71,7 @@ extension SettingsViewController: UITableViewDelegate {
                 vc = DataAndStorageSettingsViewController.instance()
             }
         case 1:
-            return
+            vc = AppearanceSettingsViewController.instance()
         case 2:
             vc = DesktopViewController.instance()
         default:

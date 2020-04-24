@@ -1,9 +1,15 @@
 import UIKit
 
-class SettingsSection {
+class SettingsSection: NSObject {
     
-    var header: String?
-    var footer: String?
+    static let footerDidChangeNotification = Notification.Name("one.mixin.messenger.settings.section.footer.change")
+    
+    let header: String?
+    var footer: String? {
+        didSet {
+            NotificationCenter.default.postOnMain(name: Self.footerDidChangeNotification, object: self, userInfo: nil)
+        }
+    }
     var rows: [SettingsRow]
     
     init(header: String? = nil, footer: String? = nil, rows: [SettingsRow]) {

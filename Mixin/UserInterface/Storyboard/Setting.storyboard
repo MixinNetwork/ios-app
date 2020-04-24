@@ -316,14 +316,14 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="DIM-3x-tKW">
                                                             <rect key="frame" x="66" y="4.5" width="231" height="41.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" ambiguous="YES" text="Mixin Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-Th-zLF">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Mixin Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpi-Th-zLF">
                                                                     <rect key="frame" x="0.0" y="0.0" width="231" height="19.5"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="10 MB" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQc-PT-83N">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 MB" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQc-PT-83N">
                                                                     <rect key="frame" x="0.0" y="24.5" width="231" height="17"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -682,246 +682,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06H-8X-0js" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1468" y="663"/>
-        </scene>
-        <!--Backup View Controller-->
-        <scene sceneID="JpF-vX-BnH">
-            <objects>
-                <tableViewController storyboardIdentifier="backup" id="Pmh-0V-gRc" customClass="BackupViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="-1" estimatedSectionFooterHeight="42" id="fFZ-Yn-2eZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="background_secondary"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="5nz-ff-aT7" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" ambiguous="YES" image="Setting/ic_backup" translatesAutoresizingMaskIntoConstraints="NO" id="L0K-mV-3EM">
-                                    <rect key="frame" x="143.5" y="50" width="88" height="89.5"/>
-                                </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q2k-IN-s6s">
-                                    <rect key="frame" x="30" y="179.5" width="315" height="100.5"/>
-                                    <string key="text">Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.</string>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" name="text_accessory"/>
-                                    <nil key="highlightedColor"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_tips"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                    </userDefinedRuntimeAttributes>
-                                </label>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eha-2i-Jfl" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="320" width="375" height="10"/>
-                                    <color key="backgroundColor" name="background_secondary"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="10" id="1fS-8w-pzI"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" name="background"/>
-                            <constraints>
-                                <constraint firstAttribute="trailing" secondItem="q2k-IN-s6s" secondAttribute="trailing" constant="30" id="2ac-tB-xpB"/>
-                                <constraint firstItem="Eha-2i-Jfl" firstAttribute="leading" secondItem="5nz-ff-aT7" secondAttribute="leading" id="4aC-Pc-uSx"/>
-                                <constraint firstItem="L0K-mV-3EM" firstAttribute="top" secondItem="5nz-ff-aT7" secondAttribute="top" constant="50" id="8d3-EY-oKH" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="35"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                            <real key="value" value="35"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                            <real key="value" value="35"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </constraint>
-                                <constraint firstAttribute="bottom" secondItem="q2k-IN-s6s" secondAttribute="bottom" constant="50" id="UlB-cV-p3a"/>
-                                <constraint firstItem="L0K-mV-3EM" firstAttribute="centerX" secondItem="5nz-ff-aT7" secondAttribute="centerX" id="g6U-6D-ss6"/>
-                                <constraint firstItem="q2k-IN-s6s" firstAttribute="top" secondItem="L0K-mV-3EM" secondAttribute="bottom" constant="40" id="hQO-yx-Uoh" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="20"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                            <real key="value" value="20"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                            <real key="value" value="20"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </constraint>
-                                <constraint firstAttribute="bottom" secondItem="Eha-2i-Jfl" secondAttribute="bottom" id="jyF-UZ-DDq"/>
-                                <constraint firstAttribute="trailing" secondItem="Eha-2i-Jfl" secondAttribute="trailing" id="rRT-FV-UDE"/>
-                                <constraint firstItem="q2k-IN-s6s" firstAttribute="leading" secondItem="5nz-ff-aT7" secondAttribute="leading" constant="30" id="s62-6a-EIz"/>
-                            </constraints>
-                        </view>
-                        <sections>
-                            <tableViewSection id="scg-ML-X0g">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="oTN-oQ-Mze">
-                                        <rect key="frame" x="0.0" y="348" width="375" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oTN-oQ-Mze" id="2K7-F4-IMA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Back Up Now" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="814-d3-ePT">
-                                                    <rect key="frame" x="20" y="22.5" width="98" height="19.5"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                    <color key="textColor" name="text"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_now"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="5N8-W9-npF" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="339" y="22" width="20" height="20"/>
-                                                    <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </view>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="5N8-W9-npF" firstAttribute="centerY" secondItem="2K7-F4-IMA" secondAttribute="centerY" id="HUb-LA-oyY"/>
-                                                <constraint firstItem="814-d3-ePT" firstAttribute="leading" secondItem="2K7-F4-IMA" secondAttribute="leading" constant="20" id="bgO-Ok-Va5"/>
-                                                <constraint firstAttribute="trailing" secondItem="5N8-W9-npF" secondAttribute="trailing" constant="16" id="ePd-L7-t8A"/>
-                                                <constraint firstItem="814-d3-ePT" firstAttribute="centerY" secondItem="2K7-F4-IMA" secondAttribute="centerY" id="qcs-Kc-bdp"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                            <tableViewSection id="sMg-hc-Tne">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="MDe-0H-ZUN">
-                                        <rect key="frame" x="0.0" y="447.5" width="375" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MDe-0H-ZUN" id="6lD-xC-pCV">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jJ5-no-kfK">
-                                                    <rect key="frame" x="20" y="22.5" width="339" height="19.5"/>
-                                                    <subviews>
-                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="750" insetsLayoutMarginsFromSafeArea="NO" text="Auto Backup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbf-BI-qT4">
-                                                            <rect key="frame" x="0.0" y="0.0" width="92.5" height="19.5"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                            <color key="textColor" name="text"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_auto"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalCompressionResistancePriority="250" insetsLayoutMarginsFromSafeArea="NO" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qld-F5-PXt">
-                                                            <rect key="frame" x="100.5" y="2.5" width="224.5" height="14.5"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="B9W-wp-mle">
-                                                            <rect key="frame" x="333" y="4.5" width="6" height="10"/>
-                                                        </imageView>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="jJ5-no-kfK" firstAttribute="centerY" secondItem="6lD-xC-pCV" secondAttribute="centerY" id="UMg-HJ-lbW"/>
-                                                <constraint firstItem="jJ5-no-kfK" firstAttribute="leading" secondItem="6lD-xC-pCV" secondAttribute="leading" constant="20" id="qEd-qu-Tq6"/>
-                                                <constraint firstAttribute="trailing" secondItem="jJ5-no-kfK" secondAttribute="trailing" constant="16" id="zm6-Zg-sL6"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ILJ-gK-vU0">
-                                        <rect key="frame" x="0.0" y="511.5" width="375" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ILJ-gK-vU0" id="SAe-rA-tZl">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Include Files" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fsg-P7-fCy">
-                                                    <rect key="frame" x="20" y="22.5" width="90.5" height="19.5"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                    <color key="textColor" name="text"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_files"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sVG-X5-64M">
-                                                    <rect key="frame" x="310" y="16.5" width="51" height="31"/>
-                                                    <color key="onTintColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <connections>
-                                                        <action selector="switchIncludeFiles:" destination="Pmh-0V-gRc" eventType="valueChanged" id="KHw-ze-SHy"/>
-                                                    </connections>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="sVG-X5-64M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fsg-P7-fCy" secondAttribute="trailing" constant="8" id="SpR-d7-TKB"/>
-                                                <constraint firstItem="sVG-X5-64M" firstAttribute="centerY" secondItem="SAe-rA-tZl" secondAttribute="centerY" id="ULv-hx-wno"/>
-                                                <constraint firstItem="fsg-P7-fCy" firstAttribute="leading" secondItem="SAe-rA-tZl" secondAttribute="leading" constant="20" id="VAM-25-DfZ"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="sVG-X5-64M" secondAttribute="trailing" id="jsf-WX-tkA"/>
-                                                <constraint firstItem="fsg-P7-fCy" firstAttribute="centerY" secondItem="SAe-rA-tZl" secondAttribute="centerY" id="ora-rd-p6D"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="4ip-On-eQn">
-                                        <rect key="frame" x="0.0" y="575.5" width="375" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4ip-On-eQn" id="INw-af-djn">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Include Videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z73-p6-vgr">
-                                                    <rect key="frame" x="20" y="22.5" width="107" height="19.5"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                    <color key="textColor" name="text"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_videos"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5kh-D3-WeL">
-                                                    <rect key="frame" x="310" y="16.5" width="51" height="31"/>
-                                                    <color key="onTintColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <connections>
-                                                        <action selector="switchIncludeVideos:" destination="Pmh-0V-gRc" eventType="valueChanged" id="ua1-pk-TaJ"/>
-                                                    </connections>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="5kh-D3-WeL" secondAttribute="trailing" id="a2E-wj-duJ"/>
-                                                <constraint firstItem="5kh-D3-WeL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="z73-p6-vgr" secondAttribute="trailing" constant="8" id="cdq-CC-UEm"/>
-                                                <constraint firstItem="z73-p6-vgr" firstAttribute="leading" secondItem="INw-af-djn" secondAttribute="leading" constant="20" id="mSI-eJ-JXG"/>
-                                                <constraint firstItem="z73-p6-vgr" firstAttribute="centerY" secondItem="INw-af-djn" secondAttribute="centerY" id="rS1-f2-3ro"/>
-                                                <constraint firstItem="5kh-D3-WeL" firstAttribute="centerY" secondItem="INw-af-djn" secondAttribute="centerY" id="zce-pm-5Y0"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
-                        <connections>
-                            <outlet property="dataSource" destination="Pmh-0V-gRc" id="VeR-Pm-0FW"/>
-                            <outlet property="delegate" destination="Pmh-0V-gRc" id="Mb6-z6-hko"/>
-                        </connections>
-                    </tableView>
-                    <connections>
-                        <outlet property="backupIndicatorView" destination="5N8-W9-npF" id="6Rz-CO-xcR"/>
-                        <outlet property="backupLabel" destination="814-d3-ePT" id="cAb-xa-uS0"/>
-                        <outlet property="categoryLabel" destination="Qld-F5-PXt" id="Mzc-Ol-T4u"/>
-                        <outlet property="switchIncludeFiles" destination="sVG-X5-64M" id="Iwo-6I-Wus"/>
-                        <outlet property="switchIncludeVideos" destination="5kh-D3-WeL" id="TqY-pd-2YS"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZjH-w5-xgf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1468" y="-11"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="WuJ-Ge-HpB">
@@ -1695,7 +1455,6 @@
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
-        <image name="Setting/ic_backup" width="88" height="58"/>
         <image name="Setting/ic_desktop" width="113" height="72"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_emergency" width="140" height="162"/>
@@ -1712,10 +1471,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

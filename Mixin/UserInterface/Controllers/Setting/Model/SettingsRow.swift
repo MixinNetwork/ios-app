@@ -12,16 +12,23 @@ final class SettingsRow: NSObject {
     enum Accessory {
         case none
         case disclosure
-        case `switch`(Bool)
+        case `switch`(isOn: Bool, isEnabled: Bool = true)
         case checkmark
         case busy
     }
     
+    static let titleDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.title.change")
     static let subtitleDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.subtitle.change")
     static let accessoryDidChangeNotification = Notification.Name("one.mixin.messenger.settings.row.accessory.change")
     
     let icon: UIImage?
-    let title: String
+    
+    var title: String {
+        didSet {
+            NotificationCenter.default.postOnMain(name: Self.titleDidChangeNotification, object: self, userInfo: nil)
+        }
+    }
+    
     let titleStyle: Style
     
     var subtitle: String? {

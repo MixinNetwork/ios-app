@@ -32,6 +32,14 @@ class SettingsDataSource: NSObject {
         
         let center = NotificationCenter.default
         center.addObserver(self,
+                           selector: #selector(updateSectionFooter(_:)),
+                           name: SettingsSection.footerDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateTitle(_:)),
+                           name: SettingsRow.titleDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
                            selector: #selector(updateSubtitle(_:)),
                            name: SettingsRow.subtitleDidChangeNotification,
                            object: nil)
@@ -98,6 +106,32 @@ class SettingsDataSource: NSObject {
         sections[indexPath.section].rows[indexPath.row] = row
         tableView?.reloadRows(at: [indexPath], with: animation)
         reloadIndexPaths()
+    }
+    
+    @objc func updateSectionFooter(_ notification: Notification) {
+        guard let section = notification.object as? SettingsSection else {
+            return
+        }
+        guard let index = sections.firstIndex(of: section) else {
+            return
+        }
+        guard let view = tableView?.footerView(forSection: index) as? SettingsFooterView else {
+            return
+        }
+        view.text = section.footer
+    }
+    
+    @objc func updateTitle(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard let indexPath = indexPaths[row] else {
+            return
+        }
+        guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
+            return
+        }
+        cell.titleLabel.text = row.title
     }
     
     @objc func updateSubtitle(_ notification: Notification) {

@@ -88,7 +88,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
                 contentStackView.addArrangedSubview(accessoryImageView)
             }
             accessoryImageView.isHidden = false
-        case .switch(let isOn):
+        case let .switch(isOn, isEnabled):
             if animated {
                 UIView.setAnimationsEnabled(false)
             }
@@ -100,6 +100,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             if animated {
                 UIView.setAnimationsEnabled(true)
             }
+            accessorySwitch.isEnabled = isEnabled
             accessorySwitch.setOn(isOn, animated: animated)
         case .busy:
             if accessoryBusyIndicator.superview == nil {
@@ -115,7 +116,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
         guard let row = row, case .switch = row.accessory else {
             return
         }
-        row.accessory = .switch(sender.isOn)
+        row.accessory = .switch(isOn: sender.isOn)
     }
     
 }

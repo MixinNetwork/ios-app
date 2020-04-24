@@ -12,7 +12,7 @@ final class PinSettingsViewController: SettingsTableViewController {
     ])
     
     private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.wallet_enable_biometric_pay_title(biometryType.localizedName),
-                                                      accessory: .switch(AppGroupUserDefaults.Wallet.payWithBiometricAuthentication))
+                                                      accessory: .switch(isOn: AppGroupUserDefaults.Wallet.payWithBiometricAuthentication))
     private lazy var pinIntervalRow = SettingsRow(title: R.string.localizable.wallet_pin_pay_interval(),
                                                   accessory: .disclosure)
     
@@ -71,13 +71,13 @@ final class PinSettingsViewController: SettingsTableViewController {
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { (_) in
                 self.isBiometricPaymentChangingInProgress = true
-                self.biometricSwitchRow.accessory = .switch(AppGroupUserDefaults.Wallet.payWithBiometricAuthentication)
+                self.biometricSwitchRow.accessory = .switch(isOn: AppGroupUserDefaults.Wallet.payWithBiometricAuthentication)
             }))
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_DISABLE, style: .default, handler: { (_) in
                 Keychain.shared.clearPIN()
                 AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
                 self.isBiometricPaymentChangingInProgress = true
-                self.biometricSwitchRow.accessory = .switch(false)
+                self.biometricSwitchRow.accessory = .switch(isOn: false)
             }))
             present(alc, animated: true, completion: nil)
         } else {
@@ -92,15 +92,15 @@ final class PinSettingsViewController: SettingsTableViewController {
             let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {
                     self.isBiometricPaymentChangingInProgress = true
-                    self.biometricSwitchRow.accessory = .switch(false)
+                    self.biometricSwitchRow.accessory = .switch(isOn: false)
                     return
                 }
                 AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = true
                 self.isBiometricPaymentChangingInProgress = true
-                self.biometricSwitchRow.accessory = .switch(true)
+                self.biometricSwitchRow.accessory = .switch(isOn: true)
             }, onFailed: {
                 self.isBiometricPaymentChangingInProgress = true
-                self.biometricSwitchRow.accessory = .switch(false)
+                self.biometricSwitchRow.accessory = .switch(isOn: false)
             })
             present(validator, animated: true, completion: nil)
         }

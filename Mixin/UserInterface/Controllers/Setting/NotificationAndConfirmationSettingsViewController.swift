@@ -4,7 +4,7 @@ import MixinServices
 class NotificationAndConfirmationSettingsViewController: SettingsTableViewController {
     
     private lazy var messagePreviewRow = SettingsRow(title: R.string.localizable.setting_notification_message_preview(),
-                                                     accessory: .switch(showsMessagePreview))
+                                                     accessory: .switch(isOn: showsMessagePreview))
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: R.string.localizable.setting_notification_message_preview_description(), rows: [
@@ -50,7 +50,7 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
     }
     
     @objc func switchMessagePreview(_ notification: Notification) {
-        guard case let .switch(isOn) = messagePreviewRow.accessory else {
+        guard case let .switch(isOn, _) = messagePreviewRow.accessory else {
             return
         }
         AppGroupUserDefaults.User.showMessagePreviewInNotification = isOn

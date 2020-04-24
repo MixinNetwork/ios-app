@@ -183,6 +183,24 @@ extension SettingsDataSource: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
         let row = sections[indexPath.section].rows[indexPath.row]
         cell.row = row
+        
+        if #available(iOS 13.0, *) {
+            // No need for masking
+        } else {
+            let lastRowOfTheSection = sections[indexPath.section].rows.count - 1
+            let roundTop = indexPath.row == 0
+            let roundBottom = indexPath.row == lastRowOfTheSection
+            var maskedCorners: CACornerMask = []
+            if roundTop {
+                maskedCorners.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+            }
+            if roundBottom {
+                maskedCorners.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+            }
+            cell.layer.maskedCorners = maskedCorners
+            cell.layer.cornerRadius = (roundTop || roundBottom) ? 10 : 0
+        }
+        
         return cell
     }
     

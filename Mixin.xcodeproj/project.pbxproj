@@ -180,6 +180,7 @@
 		7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5F966A241424CD003A087B /* LocationInformationView.xib */; };
 		7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */; };
 		7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3F2101AD790008321F /* ScreenSize.swift */; };
+		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
 		7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
@@ -976,6 +977,7 @@
 		7B5F966A241424CD003A087B /* LocationInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInformationView.xib; sourceTree = "<group>"; };
 		7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B5FEE3F2101AD790008321F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
+		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
 		7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewModel.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
@@ -1835,6 +1837,7 @@
 		7B2E56AE244EA6A20073102C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */,
 				7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */,
 				7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */,
 				7BB78723245132570057B4ED /* SettingsHeaderView.swift */,
@@ -3887,6 +3890,7 @@
 				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
+				7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,

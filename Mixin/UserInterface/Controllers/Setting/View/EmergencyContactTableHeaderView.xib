@@ -17,16 +17,6 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="ic_emergency_contact" translatesAutoresizingMaskIntoConstraints="NO" id="uxZ-8P-Kkc">
                     <rect key="frame" x="153.5" y="50" width="68" height="90"/>
                 </imageView>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="79J-5o-dT0" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="254" width="375" height="10"/>
-                    <color key="backgroundColor" name="background_secondary"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="10" id="wh5-MS-Nrd"/>
-                    </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                    </userDefinedRuntimeAttributes>
-                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-He-fnU">
                     <rect key="frame" x="30" y="164" width="315" height="58"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
@@ -39,15 +29,12 @@
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="79J-5o-dT0" firstAttribute="top" secondItem="ZNA-He-fnU" secondAttribute="bottom" constant="32" id="9S5-it-6TE"/>
-                <constraint firstAttribute="trailing" secondItem="79J-5o-dT0" secondAttribute="trailing" id="J4E-Dx-8qX"/>
+                <constraint firstAttribute="bottom" secondItem="ZNA-He-fnU" secondAttribute="bottom" constant="42" id="IIe-1U-ElU"/>
                 <constraint firstItem="uxZ-8P-Kkc" firstAttribute="top" secondItem="AHj-ih-hBY" secondAttribute="top" constant="50" id="KuG-Yb-E7j"/>
-                <constraint firstItem="79J-5o-dT0" firstAttribute="leading" secondItem="AHj-ih-hBY" secondAttribute="leading" id="RBY-c6-L41"/>
                 <constraint firstAttribute="trailing" secondItem="ZNA-He-fnU" secondAttribute="trailing" priority="999" constant="30" id="af8-Dr-6Qn"/>
                 <constraint firstItem="uxZ-8P-Kkc" firstAttribute="centerX" secondItem="AHj-ih-hBY" secondAttribute="centerX" id="eTy-SV-nmP"/>
                 <constraint firstItem="ZNA-He-fnU" firstAttribute="leading" secondItem="AHj-ih-hBY" secondAttribute="leading" priority="999" constant="30" id="fHb-OQ-9jJ"/>
                 <constraint firstItem="ZNA-He-fnU" firstAttribute="top" secondItem="uxZ-8P-Kkc" secondAttribute="bottom" constant="24" id="gFN-zl-htG"/>
-                <constraint firstAttribute="bottom" secondItem="79J-5o-dT0" secondAttribute="bottom" id="kzd-vl-MHx"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="141" y="154"/>
@@ -57,9 +44,6 @@
         <image name="ic_emergency_contact" width="68" height="70"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_secondary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

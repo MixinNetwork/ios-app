@@ -181,6 +181,7 @@
 		7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */; };
 		7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3F2101AD790008321F /* ScreenSize.swift */; };
 		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
+		7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
 		7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
@@ -977,6 +978,7 @@
 		7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B5FEE3F2101AD790008321F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
+		7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopTableHeaderView.xib; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
 		7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewModel.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
@@ -1843,6 +1845,7 @@
 				7BB7872A24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib */,
 				7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */,
 				7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */,
+				7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3120,6 +3123,7 @@
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
+				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,

@@ -58,6 +58,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                                                                                     mediaType: AVMediaType.video,
                                                                                     position: .unspecified)
     private lazy var assetQrCodeScanningController = AssetQrCodeScanningController()
+    private lazy var notificationController = NotificationController(delegate: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -575,9 +576,6 @@ extension CameraViewController {
 extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard asQrCodeScanner else {
-            return
-        }
         guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject else {
             return
         }
@@ -588,7 +586,11 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
         detectedQrCodes.insert(string)
-        handleQrCodeDetection(string: string)
+        if asQrCodeScanner {
+            handleQrCodeDetection(string: string)
+        } else {
+            notificationController.presentQrCodeDetection(string)
+        }
     }
     
 }
@@ -601,6 +603,7 @@ extension CameraViewController: PhotoAssetPickerDelegate {
             assetQrCodeScanningController.load(asset: asset)
         } else {
             let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
+            vc.detectsQrCode = true
             navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -621,6 +624,20 @@ extension CameraViewController: AssetQrCodeScanningControllerDelegate {
         alert(R.string.localizable.qr_code_not_found(), message: nil) { (_) in
             controller.unload()
         }
+    }
+    
+}
+
+extension CameraViewController: NotificationControllerDelegate {
+    
+    func notificationController(_ controller: NotificationController, didSelectNotificationWith localObject: Any?) {
+        guard let string = localObject as? String else {
+            return
+        }
+        if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
+            return
+        }
+        RecognizeWindow.instance().presentWindow(text: string)
     }
     
 }

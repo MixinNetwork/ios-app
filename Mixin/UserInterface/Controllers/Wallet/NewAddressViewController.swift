@@ -245,7 +245,6 @@ extension NewAddressViewController: CameraViewControllerDelegate {
             textViewDidChange(memoTextView)
         }
         qrCodeScanningDestination = nil
-        navigationController?.popViewController(animated: true)
         return false
     }
     

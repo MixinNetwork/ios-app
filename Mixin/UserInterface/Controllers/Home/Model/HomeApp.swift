@@ -19,7 +19,7 @@ enum HomeApp {
     init?(id: String) {
         if let app = EmbeddedApp.all.first(where: { $0.id == id }) {
             self = .embedded(app)
-        } else if var user = UserDAO.shared.getUser(withAppId: id) {
+        } else if var user = UserDAO.shared.getFriendUser(withAppId: id) {
             user.app = AppDAO.shared.getApp(appId: id)
             self = .external(user)
         } else {

@@ -30,7 +30,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
         label.textColor = .accessoryText
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         candidateEmptyHintLabelIfLoaded = label
         return label
     }()
@@ -71,8 +71,8 @@ final class HomeAppsViewController: ResizablePopupViewController {
         candidateCollectionView.dragInteractionEnabled = true
         candidateCollectionView.dragDelegate = candidateAppModelController
         candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
-        candidateAppModelController.reloadData(completion: { [weak self] users in
-            self?.setCandidateEmptyHintHidden(!users.isEmpty)
+        candidateAppModelController.reloadData(completion: { [weak self] (apps) in
+            self?.setCandidateEmptyHintHidden(!apps.isEmpty)
         })
         
         let window = AppDelegate.current.mainWindow
@@ -146,7 +146,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
                 - titleBarHeightConstraint.constant
                 - pinnedWrapperHeightConstraint.constant
                 - candidateCollectionLayout.itemSize.height
-            candidateEmptyHintLabel.frame = CGRect(x: x, y: y, width: width, height: height)
+            candidateEmptyHintLabel.frame = CGRect(x: x, y: y, width: width, height: round(height / 3 * 2))
             if candidateEmptyHintLabel.superview == nil {
                 candidateCollectionView.addSubview(candidateEmptyHintLabel)
             }

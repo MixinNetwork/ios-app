@@ -71,8 +71,8 @@ final class HomeAppsViewController: ResizablePopupViewController {
         candidateCollectionView.dragInteractionEnabled = true
         candidateCollectionView.dragDelegate = candidateAppModelController
         candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
-        candidateAppModelController.reloadData(completion: { [weak self] (appUsers, candidateAppUsers) in
-            self?.setCandidateEmptyHintHidden(!appUsers.isEmpty)
+        candidateAppModelController.reloadData(completion: { [weak self] (apps) in
+            self?.setCandidateEmptyHintHidden(!apps.isEmpty)
         })
         
         let window = AppDelegate.current.mainWindow

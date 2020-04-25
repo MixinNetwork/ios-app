@@ -30,7 +30,7 @@ final class HomeAppsViewController: ResizablePopupViewController {
         label.textColor = .accessoryText
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         candidateEmptyHintLabelIfLoaded = label
         return label
     }()

@@ -65,7 +65,7 @@ public final class ConversationDAO {
     }
     
     public func getUnreadMessageCount() -> Int {
-        let sql = "SELECT ifnull(SUM(unseen_message_count),0) FROM conversations"
+        let sql = "SELECT ifnull(SUM(unseen_message_count),0) FROM conversations WHERE category IS NOT NULL"
         let value = MixinDatabase.shared.scalar(sql: sql)
         return Int(value.int64Value)
     }

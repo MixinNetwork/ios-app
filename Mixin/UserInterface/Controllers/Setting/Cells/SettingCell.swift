@@ -11,6 +11,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
         view.contentMode = .center
         view.setContentHuggingPriority(.required, for: .horizontal)
         view.setContentCompressionResistancePriority(.required, for: .horizontal)
+        view.tintColor = R.color.icon_tint()
         view.snp.makeConstraints { (make) in
             make.width.height.equalTo(24).priority(.almostRequired)
         }

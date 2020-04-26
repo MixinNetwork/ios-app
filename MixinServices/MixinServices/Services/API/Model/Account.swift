@@ -10,6 +10,12 @@ public enum AcceptConversationSource: String {
     case contacts = "CONTACTS"
 }
 
+public enum AcceptSearchSource: String {
+    case everybody = "EVERYBODY"
+    case contacts = "CONTACTS"
+    case nobody = "NOBODY"
+}
+
 public struct Account: Encodable {
     
     public let user_id: String
@@ -27,6 +33,7 @@ public struct Account: Encodable {
     public let created_at: String
     public let receive_message_source: String
     public let accept_conversation_source: String
+    public let accept_search_source: String
     public let has_pin: Bool
     public var has_emergency_contact: Bool
     public let pin_token: String
@@ -54,6 +61,7 @@ extension Account: Decodable {
         created_at = try container.decodeIfPresent(String.self, forKey: .created_at) ?? ""
         receive_message_source = try container.decodeIfPresent(String.self, forKey: .receive_message_source) ?? ""
         accept_conversation_source = try container.decodeIfPresent(String.self, forKey: .accept_conversation_source) ?? ""
+        accept_search_source = try container.decodeIfPresent(String.self, forKey: .accept_search_source) ?? ""
         has_pin = try container.decodeIfPresent(Bool.self, forKey: .has_pin) ?? false
         has_emergency_contact = try container.decodeIfPresent(Bool.self, forKey: .has_emergency_contact) ?? false
         code_url = try container.decodeIfPresent(String.self, forKey: .code_url) ?? ""

@@ -697,8 +697,10 @@
 "setting_storage_usage_clear" = "Clear %@ messages (%@)?";
 "setting_header_message_source" = "WHO CAN SEND ME MESSAGES";
 "setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
+"setting_header_search_source" = "Who can find me by my number";
 "setting_source_everybody" = "Everybody";
 "setting_source_contacts" = "My Contacts";
+"setting_source_nobody" = "Nobody";
 "setting_storage_photos" = "Photos";
 "setting_storage_videos" = "Videos";
 "setting_storage_audios" = "Audios";
@@ -739,6 +741,7 @@
 "setting_auto_download_wifi" = "Wi-Fi";
 "setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
 "setting_auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded";
+"setting_phone_number_title" = "Phone Number";
 "setting_contacts_title" = "Phone Contacts";
 "setting_contacts_delete" = "Delete Synced Contacts";
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";

@@ -287,6 +287,7 @@
 		7B9A18182428939A00187693 /* PageControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A18172428939A00187693 /* PageControlView.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */; };
+		7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */; };
 		7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */; };
 		7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */; };
 		7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */; };
@@ -1083,6 +1084,7 @@
 		7B9A18172428939A00187693 /* PageControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlView.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyTipsViewController.swift; sourceTree = "<group>"; };
+		7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberSettingViewController.swift; sourceTree = "<group>"; };
 		7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidBackgroundColoredView.swift; sourceTree = "<group>"; };
 		7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputAccessible.swift; sourceTree = "<group>"; };
 		7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeModernNetworkOperationButton.swift; sourceTree = "<group>"; };
@@ -2838,6 +2840,7 @@
 				7BB78729245149040057B4ED /* Emergency Contact */,
 				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
+				7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */,
 				DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
@@ -3993,6 +3996,7 @@
 				7B9A18182428939A00187693 /* PageControlView.swift in Sources */,
 				E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */,
 				7B333A8823406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift in Sources */,
+				7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,

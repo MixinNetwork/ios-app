@@ -701,8 +701,10 @@
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_header_message_source" = "谁可以给我发消息";
 "setting_header_conversation_source" = "谁可以加我入群";
+"setting_header_search_source" = "谁可以通过手机号找到我";
 "setting_source_everybody" = "任何人";
 "setting_source_contacts" = "我的联系人";
+"setting_source_nobody" = "禁止所有人";
 "setting_storage_photos" = "图片";
 "setting_storage_videos" = "视频";
 "setting_storage_audios" = "音频";
@@ -744,6 +746,7 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
 "setting_auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
+"setting_phone_number_title" = "手机号搜索";
 "setting_contacts_title" = "手机通讯录";
 "setting_contacts_delete" = "删除已同步的通讯录";
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";

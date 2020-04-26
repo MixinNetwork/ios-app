@@ -606,8 +606,10 @@
 "setting_storage_usage_clear" = "%@ 件のメッセージを消去しますか（%@）。";
 "setting_header_message_source" = "私にメッセージを送ることができる人";
 "setting_header_conversation_source" = "グループチャットに私を追加できるのは誰ですか";
+"setting_header_search_source" = "Who can find me by my number";
 "setting_source_everybody" = "みんな";
 "setting_source_contacts" = "私の連絡先";
+"setting_source_nobody" = "Nobody";
 "setting_storage_photos" = "写真";
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
@@ -642,6 +644,14 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
 "setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
+"setting_phone_number_title" = "Phone Number";
+"setting_contacts_title" = "Phone Contacts";
+"setting_contacts_delete" = "Delete Synced Contacts";
+"setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
+"setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
+"setting_contacts_upload" = "Upload Mobile Contacts";
+"setting_permissions" = "Permission list";
+"setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
 
 // Notifications

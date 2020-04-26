@@ -27,7 +27,7 @@ final class PermissionsViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(R.nib.permissionsTableViewCell)
         tableView.register(R.nib.permissionsActionCell)
-        tableView.register(SeparatorShadowFooterView.self,
+        tableView.register(SettingsFooterView.self,
                            forHeaderFooterViewReuseIdentifier: footerReuseId)
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
@@ -163,10 +163,7 @@ extension PermissionsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-        view.backgroundView?.backgroundColor = .background
-        view.contentView.backgroundColor = .background
-        view.shadowView.isHidden = true
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
         if section == 0 {
             let createDate = DateFormatter.dateFull.string(from: authorization.createdAt.toUTCDate())
             let accessedDate = DateFormatter.dateFull.string(from: authorization.accessedAt.toUTCDate())

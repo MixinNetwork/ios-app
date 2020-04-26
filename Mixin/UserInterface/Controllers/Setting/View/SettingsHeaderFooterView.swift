@@ -54,6 +54,7 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
             make.top.equalToSuperview().offset(Self.labelInsets.top)
             make.leading.equalToSuperview().offset(Self.labelInsets.left)
             make.trailing.equalToSuperview().offset(-Self.labelInsets.right)
+            make.bottom.equalToSuperview().offset(-Self.labelInsets.bottom).priority(.high)
         }
     }
     

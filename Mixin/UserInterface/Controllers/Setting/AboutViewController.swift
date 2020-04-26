@@ -32,17 +32,17 @@ class AboutViewController: SettingsTableViewController {
 extension AboutViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: indexPath.row > 0)
+        tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
-        case 1:
+        case 0:
             UIApplication.shared.openURL(url: "https://twitter.com/MixinMessenger")
-        case 2:
+        case 1:
             UIApplication.shared.openURL(url: "https://fb.com/MixinMessenger")
-        case 3:
+        case 2:
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com")
-        case 4:
+        case 3:
             UIApplication.shared.openURL(url: .terms)
-        case 5:
+        case 4:
             UIApplication.shared.openURL(url: .privacy)
         default:
             UIApplication.shared.openURL(url: "https://mixin.one")

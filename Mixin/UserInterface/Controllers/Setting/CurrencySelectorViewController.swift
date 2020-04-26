@@ -13,7 +13,6 @@ class CurrencySelectorViewController: PopupSearchableTableViewController {
     }()
     
     private var searchResults = [Currency]()
-    private lazy var hud = Hud()
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
@@ -45,13 +44,13 @@ extension CurrencySelectorViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.currency, for: indexPath)!
-        
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.currency, for: indexPath)!
         cell.render(currency: currency)
         
         let isSelected = currency.code == Currency.current.code
-        cell.checkmarkView.status = isSelected ? .selected : .hidden
+        cell.checkmarkImageView.isHidden = !isSelected
         
         return cell
     }
@@ -63,19 +62,19 @@ extension CurrencySelectorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
+        let hud = Hud()
         hud.show(style: .busy, text: "", on: self.view)
-
         AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
-                self?.hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.dismiss(animated: true, completion: nil)
             case let .failure(error):
-                self?.hud.set(style: .error, text: error.localizedDescription)
+                hud.set(style: .error, text: error.localizedDescription)
             }
-            self?.hud.scheduleAutoHidden()
+            hud.scheduleAutoHidden()
         })
     }
     

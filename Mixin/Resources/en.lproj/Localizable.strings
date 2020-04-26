@@ -667,7 +667,7 @@
 "database_upgrade_progress" = "Upgrading";
 
 // Setting
-"setting_title" = "Setting";
+"setting_title" = "Settings";
 "setting_notification" = "Notifications";
 "setting_notification_show" = "Show Notifications";
 "setting_notification_sound" = "Sound";

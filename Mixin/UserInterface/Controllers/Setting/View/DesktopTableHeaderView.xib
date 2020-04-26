@@ -15,12 +15,12 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="rnY-v7-lQJ">
-                    <rect key="frame" x="131" y="50" width="113" height="72"/>
+                    <rect key="frame" x="131" y="60" width="113" height="72"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="rnY-v7-lQJ" firstAttribute="top" secondItem="UcB-5h-J3Q" secondAttribute="top" constant="50" id="C2Q-4l-aBE"/>
+                <constraint firstItem="rnY-v7-lQJ" firstAttribute="top" secondItem="UcB-5h-J3Q" secondAttribute="top" constant="60" id="C2Q-4l-aBE"/>
                 <constraint firstItem="rnY-v7-lQJ" firstAttribute="centerX" secondItem="UcB-5h-J3Q" secondAttribute="centerX" id="EDT-DP-gbU"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

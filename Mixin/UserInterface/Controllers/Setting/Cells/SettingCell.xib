@@ -20,13 +20,6 @@
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="0aq-Nq-olt">
                         <rect key="frame" x="20" y="22.5" width="335" height="19.5"/>
                         <subviews>
-                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0TS-ea-k9o">
-                                <rect key="frame" x="0.0" y="9.5" width="0.0" height="0.0"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="0TS-ea-k9o" secondAttribute="height" priority="999" id="3ds-hb-Pxx"/>
-                                    <constraint firstAttribute="width" priority="999" constant="24" id="zRm-ZL-lh9"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3go-Gi-8u5">
                                 <rect key="frame" x="0.0" y="0.0" width="39.5" height="19.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -44,17 +37,16 @@
                         </subviews>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" name="background_secondary"/>
+                <color key="backgroundColor" name="background_cell"/>
                 <constraints>
                     <constraint firstItem="0aq-Nq-olt" firstAttribute="leading" secondItem="Nd6-CW-DKV" secondAttribute="leading" constant="20" id="JvL-jb-e4i"/>
                     <constraint firstItem="0aq-Nq-olt" firstAttribute="centerY" secondItem="Nd6-CW-DKV" secondAttribute="centerY" id="Nkm-rs-cvC"/>
                     <constraint firstAttribute="trailing" secondItem="0aq-Nq-olt" secondAttribute="trailing" constant="20" id="S4C-lR-gpy"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" name="background"/>
+            <color key="backgroundColor" name="background_cell"/>
             <connections>
                 <outlet property="contentStackView" destination="0aq-Nq-olt" id="q0O-bS-aHT"/>
-                <outlet property="iconImageView" destination="0TS-ea-k9o" id="NCz-ed-keC"/>
                 <outlet property="subtitleLabel" destination="QgP-lr-XGb" id="XQH-I5-z8b"/>
                 <outlet property="titleLabel" destination="3go-Gi-8u5" id="BOL-ng-zuF"/>
             </connections>
@@ -62,10 +54,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <namedColor name="background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_secondary">
+        <namedColor name="background_cell">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">

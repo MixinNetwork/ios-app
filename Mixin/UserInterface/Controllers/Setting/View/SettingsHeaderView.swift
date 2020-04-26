@@ -7,7 +7,7 @@ class SettingsHeaderView: SettingsHeaderFooterView {
         .font: UIFont.preferredFont(forTextStyle: .callout)
     ]
     
-    override class var labelInset: UIEdgeInsets {
+    override class var labelInsets: UIEdgeInsets {
         UIEdgeInsets(top: 20, left: 20, bottom: 11, right: 20)
     }
     

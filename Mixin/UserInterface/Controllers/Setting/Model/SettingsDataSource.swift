@@ -122,10 +122,16 @@ class SettingsDataSource: NSObject {
         guard let index = sections.firstIndex(of: section) else {
             return
         }
-        guard let view = tableView?.footerView(forSection: index) as? SettingsFooterView else {
-            return
+        cachedFooterSizes[index] = nil
+        if let tableView = tableView, let view = tableView.footerView(forSection: index) as? SettingsFooterView {
+            UIView.performWithoutAnimation {
+                tableView.beginUpdates()
+                view.text = section.footer
+                tableView.endUpdates()
+            }
+        } else if let footer = section.footer, !footer.isEmpty {
+            tableView?.reloadSections(IndexSet(integer: index), with: .automatic)
         }
-        view.text = section.footer
     }
     
     @objc func updateTitle(_ notification: Notification) {
@@ -224,17 +230,23 @@ extension SettingsDataSource: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if let size = cachedHeaderSizes[section], size.width == tableView.bounds.width {
+        let tableWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
+        if let size = cachedHeaderSizes[section], size.width == tableWidth {
             return size.height
         } else {
             if let header = sections[section].header, !header.isEmpty {
-                let layoutWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
-                let labelLayoutSize = CGSize(width: layoutWidth - SettingsHeaderView.labelInset.horizontal,
+                let labelLayoutWidth = tableWidth
+                    - tableView.layoutMargins.horizontal
+                    - SettingsHeaderView.labelInsets.horizontal
+                let labelLayoutSize = CGSize(width: labelLayoutWidth,
                                              height: UIView.layoutFittingExpandedSize.height)
-                let attributedText = NSAttributedString(string: header, attributes: SettingsHeaderView.attributes)
-                let labelSize = attributedText.boundingRect(with: labelLayoutSize, options: [], context: nil)
-                let height = SettingsHeaderView.labelInset.vertical + labelSize.height
-                let size = CGSize(width: layoutWidth, height: ceil(height))
+                let labelRect = (header as NSString)
+                    .boundingRect(with: labelLayoutSize,
+                                  options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                  attributes: SettingsHeaderView.attributes,
+                                  context: nil)
+                let height = SettingsHeaderView.labelInsets.vertical + labelRect.height
+                let size = CGSize(width: tableWidth, height: ceil(height))
                 cachedHeaderSizes[section] = size
                 return size.height
             } else {
@@ -248,18 +260,24 @@ extension SettingsDataSource: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if let size = cachedFooterSizes[section], size.width == tableView.bounds.width {
+        let tableWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
+        if let size = cachedFooterSizes[section], size.width == tableWidth {
             return size.height
         } else {
             if let footer = sections[section].footer, !footer.isEmpty {
-                let layoutWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
-                let labelLayoutSize = CGSize(width: layoutWidth - SettingsFooterView.labelInset.horizontal,
+                let labelLayoutWidth = tableWidth
+                    - tableView.layoutMargins.horizontal
+                    - SettingsFooterView.labelInsets.horizontal
+                let labelLayoutSize = CGSize(width: labelLayoutWidth,
                                              height: UIView.layoutFittingExpandedSize.height)
-                let attributedText = NSAttributedString(string: footer, attributes: SettingsFooterView.attributes)
-                let labelSize = attributedText.boundingRect(with: labelLayoutSize, options: [], context: nil)
-                let height = SettingsFooterView.labelInset.vertical + labelSize.height
-                let size = CGSize(width: layoutWidth, height: ceil(height))
-                cachedHeaderSizes[section] = size
+                let labelRect = (footer as NSString)
+                    .boundingRect(with: labelLayoutSize,
+                                  options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                  attributes: SettingsFooterView.attributes,
+                                  context: nil)
+                let height = SettingsFooterView.labelInsets.vertical + labelRect.height
+                let size = CGSize(width: tableWidth, height: ceil(height))
+                cachedFooterSizes[section] = size
                 return size.height
             } else {
                 if section == sections.count - 1 {

@@ -3,9 +3,20 @@ import UIKit
 final class SettingCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
+    
+    private(set) lazy var iconImageView: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .center
+        view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
+        view.snp.makeConstraints { (make) in
+            make.width.height.equalTo(24).priority(.almostRequired)
+        }
+        iconImageViewIfLoaded = view
+        return view
+    }()
     
     private(set) lazy var accessoryImageView: UIImageView = {
         let view = UIImageView()
@@ -34,6 +45,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
         return indicator
     }()
     
+    private(set) var iconImageViewIfLoaded: UIImageView?
     private(set) var accessoryImageViewIfLoaded: UIImageView?
     private(set) var accessorySwitchIfLoaded: UISwitch?
     private(set) var accessoryBusyIndicatorIfLoaded: ActivityIndicatorView?
@@ -45,9 +57,11 @@ final class SettingCell: ModernSelectedBackgroundCell {
             }
             if let icon = row.icon {
                 iconImageView.image = icon
-                iconImageView.isHidden = false
+                if iconImageView.superview == nil {
+                    contentStackView.insertArrangedSubview(iconImageView, at: 0)
+                }
             } else {
-                iconImageView.isHidden = true
+                iconImageViewIfLoaded?.removeFromSuperview()
             }
             titleLabel.text = row.title
             titleLabel.textColor = {
@@ -83,7 +97,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             accessoryImageView.isHidden = false
         case .checkmark:
             accessoryBusyIndicatorIfLoaded?.stopAnimating()
-            accessoryImageView.image = R.image.ic_checkmark()
+            accessoryImageView.image = R.image.setting.ic_checkmark()
             if accessoryImageView.superview == nil {
                 contentStackView.addArrangedSubview(accessoryImageView)
             }

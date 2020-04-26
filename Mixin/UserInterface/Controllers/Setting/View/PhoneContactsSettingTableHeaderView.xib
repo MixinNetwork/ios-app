@@ -14,11 +14,11 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="264"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="ic_mobile_contact" translatesAutoresizingMaskIntoConstraints="NO" id="bW7-D3-dd8">
-                    <rect key="frame" x="157" y="50" width="61" height="124.5"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="ic_mobile_contact" translatesAutoresizingMaskIntoConstraints="NO" id="bW7-D3-dd8">
+                    <rect key="frame" x="157" y="60" width="61" height="67"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Mixin syncs your address book to Mixin servers to help you connect with other Mixin users." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rHg-BI-Axe">
-                    <rect key="frame" x="30" y="198.5" width="315" height="33.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="Mixin syncs your address book to Mixin servers to help you connect with other Mixin users." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rHg-BI-Axe">
+                    <rect key="frame" x="30" y="151" width="315" height="83"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="text_accessory"/>
                     <nil key="highlightedColor"/>
@@ -32,10 +32,10 @@
             <constraints>
                 <constraint firstItem="rHg-BI-Axe" firstAttribute="top" secondItem="bW7-D3-dd8" secondAttribute="bottom" constant="24" id="0fx-95-qDm"/>
                 <constraint firstItem="bW7-D3-dd8" firstAttribute="centerX" secondItem="KFy-pf-c94" secondAttribute="centerX" id="3cA-eL-d9u"/>
-                <constraint firstAttribute="bottom" secondItem="rHg-BI-Axe" secondAttribute="bottom" constant="32" id="OQZ-79-RaW"/>
+                <constraint firstAttribute="bottom" secondItem="rHg-BI-Axe" secondAttribute="bottom" constant="30" id="OQZ-79-RaW"/>
                 <constraint firstAttribute="trailing" secondItem="rHg-BI-Axe" secondAttribute="trailing" constant="30" id="cce-RF-awy"/>
                 <constraint firstItem="rHg-BI-Axe" firstAttribute="leading" secondItem="KFy-pf-c94" secondAttribute="leading" constant="30" id="hlE-dE-o0O"/>
-                <constraint firstItem="bW7-D3-dd8" firstAttribute="top" secondItem="KFy-pf-c94" secondAttribute="top" constant="50" id="wPk-Ab-a01"/>
+                <constraint firstItem="bW7-D3-dd8" firstAttribute="top" secondItem="KFy-pf-c94" secondAttribute="top" constant="60" id="wPk-Ab-a01"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="139" y="154"/>

@@ -5,21 +5,20 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="dCh-3n-ufH">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="310"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" image="Setting/ic_backup" translatesAutoresizingMaskIntoConstraints="NO" id="6Vh-kv-893">
-                    <rect key="frame" x="143.5" y="50" width="88" height="58"/>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="Setting/ic_backup" translatesAutoresizingMaskIntoConstraints="NO" id="6Vh-kv-893">
+                    <rect key="frame" x="143.5" y="60" width="88" height="58"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vtu-ed-sja">
-                    <rect key="frame" x="30" y="148" width="315" height="132"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vtu-ed-sja">
+                    <rect key="frame" x="30" y="158" width="315" height="122"/>
                     <string key="text">Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="text_accessory"/>
@@ -33,7 +32,7 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="vtu-ed-sja" firstAttribute="leading" secondItem="dCh-3n-ufH" secondAttribute="leading" constant="30" id="Gl6-YN-S9p"/>
-                <constraint firstItem="6Vh-kv-893" firstAttribute="top" secondItem="dCh-3n-ufH" secondAttribute="top" constant="50" id="MwH-UB-8DF" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="6Vh-kv-893" firstAttribute="top" secondItem="dCh-3n-ufH" secondAttribute="top" constant="60" id="MwH-UB-8DF" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                             <real key="value" value="35"/>
@@ -59,13 +58,12 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
-                <constraint firstAttribute="bottom" secondItem="vtu-ed-sja" secondAttribute="bottom" constant="50" id="hsi-p8-rmD"/>
+                <constraint firstAttribute="bottom" secondItem="vtu-ed-sja" secondAttribute="bottom" constant="30" id="hsi-p8-rmD"/>
                 <constraint firstItem="6Vh-kv-893" firstAttribute="centerX" secondItem="dCh-3n-ufH" secondAttribute="centerX" id="pfg-TL-RgU"/>
                 <constraint firstAttribute="trailing" secondItem="vtu-ed-sja" secondAttribute="trailing" constant="30" id="vhJ-nm-wKP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="4Jh-6a-t5A"/>
-            <point key="canvasLocation" x="139" y="154"/>
+            <point key="canvasLocation" x="138.40579710144928" y="146.65178571428569"/>
         </view>
     </objects>
     <resources>
@@ -74,7 +72,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

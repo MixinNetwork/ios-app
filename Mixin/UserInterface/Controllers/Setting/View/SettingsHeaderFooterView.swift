@@ -2,7 +2,7 @@ import UIKit
 
 class SettingsHeaderFooterView: UITableViewHeaderFooterView {
     
-    class var labelInset: UIEdgeInsets {
+    class var labelInsets: UIEdgeInsets {
         .zero
     }
     
@@ -41,16 +41,6 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
         text = nil
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if text != nil {
-            label.frame = CGRect(x: Self.labelInset.left,
-                                 y: Self.labelInset.top,
-                                 width: bounds.width - Self.labelInset.horizontal,
-                                 height: bounds.height - Self.labelInset.vertical)
-        }
-    }
-    
     func prepare() {
         clipsToBounds = true
         let background = UIView(frame: bounds)
@@ -61,8 +51,9 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
         label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().offset(Self.labelInset.left)
-            make.top.equalToSuperview().offset(Self.labelInset.top)
+            make.top.equalToSuperview().offset(Self.labelInsets.top)
+            make.leading.equalToSuperview().offset(Self.labelInsets.left)
+            make.trailing.equalToSuperview().offset(-Self.labelInsets.right)
         }
     }
     

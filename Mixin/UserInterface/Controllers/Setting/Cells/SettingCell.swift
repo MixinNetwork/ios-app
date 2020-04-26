@@ -79,6 +79,15 @@ final class SettingCell: ModernSelectedBackgroundCell {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectedBackgroundView = {
+            let view = UIView()
+            view.backgroundColor = .secondaryBackground
+            return view
+        }()
+    }
+    
     func updateAccessory(_ accessory: SettingsRow.Accessory, animated: Bool) {
         if !animated {
             UIView.setAnimationsEnabled(false)

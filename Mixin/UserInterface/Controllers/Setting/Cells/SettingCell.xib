@@ -37,14 +37,14 @@
                         </subviews>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" name="background_cell"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="0aq-Nq-olt" firstAttribute="leading" secondItem="Nd6-CW-DKV" secondAttribute="leading" constant="20" id="JvL-jb-e4i"/>
                     <constraint firstItem="0aq-Nq-olt" firstAttribute="centerY" secondItem="Nd6-CW-DKV" secondAttribute="centerY" id="Nkm-rs-cvC"/>
                     <constraint firstAttribute="trailing" secondItem="0aq-Nq-olt" secondAttribute="trailing" constant="20" id="S4C-lR-gpy"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" name="background_cell"/>
+            <color key="backgroundColor" name="background_input"/>
             <connections>
                 <outlet property="contentStackView" destination="0aq-Nq-olt" id="q0O-bS-aHT"/>
                 <outlet property="subtitleLabel" destination="QgP-lr-XGb" id="XQH-I5-z8b"/>
@@ -54,7 +54,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <namedColor name="background_cell">
+        <namedColor name="background_input">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">

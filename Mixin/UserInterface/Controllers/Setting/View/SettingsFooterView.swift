@@ -2,13 +2,17 @@ import UIKit
 
 class SettingsFooterView: SettingsHeaderFooterView {
     
-    override func prepare() {
-        super.prepare()
-        label.backgroundColor = .clear
-        label.textColor = .accessoryText
-        label.numberOfLines = 0
-        label.font = .preferredFont(forTextStyle: .caption1)
-        label.adjustsFontForContentSizeCategory = true
+    static let attributes: [NSAttributedString.Key: Any] = [
+        .foregroundColor: UIColor.accessoryText,
+        .font: UIFont.preferredFont(forTextStyle: .caption1)
+    ]
+    
+    override class var labelInset: UIEdgeInsets {
+        UIEdgeInsets(top: 12, left: 20, bottom: 11, right: 20)
+    }
+    
+    override var textAttributes: [NSAttributedString.Key : Any] {
+        Self.attributes
     }
     
 }

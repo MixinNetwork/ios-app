@@ -2,6 +2,11 @@ import UIKit
 
 class SettingsDataSource: NSObject {
     
+    private enum ReuseId {
+        static let header = "header"
+        static let footer = "footer"
+    }
+    
     // This variable must be set before tableView is set
     // Or the delegate forwarding will be unavailable
     weak var tableViewDelegate: UITableViewDelegate?
@@ -12,18 +17,20 @@ class SettingsDataSource: NSObject {
                 return
             }
             tableView.register(R.nib.settingCell)
+            tableView.register(SettingsHeaderView.self,
+                               forHeaderFooterViewReuseIdentifier: ReuseId.header)
             tableView.register(SettingsFooterView.self,
-                               forHeaderFooterViewReuseIdentifier: footerReuseId)
+                               forHeaderFooterViewReuseIdentifier: ReuseId.footer)
             tableView.dataSource = self
             tableView.delegate = self
         }
     }
     
-    private let footerReuseId = "footer"
-    
     private(set) var sections: [SettingsSection]
     
     private var indexPaths = [SettingsRow: IndexPath]()
+    private var cachedHeaderSizes = [Int: CGSize]()
+    private var cachedFooterSizes = [Int: CGSize]()
     
     init(sections: [SettingsSection]) {
         self.sections = sections
@@ -216,14 +223,62 @@ extension SettingsDataSource: UITableViewDelegate {
         64
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if let size = cachedHeaderSizes[section], size.width == tableView.bounds.width {
+            return size.height
+        } else {
+            if let header = sections[section].header, !header.isEmpty {
+                let layoutWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
+                let labelLayoutSize = CGSize(width: layoutWidth - SettingsHeaderView.labelInset.horizontal,
+                                             height: UIView.layoutFittingExpandedSize.height)
+                let attributedText = NSAttributedString(string: header, attributes: SettingsHeaderView.attributes)
+                let labelSize = attributedText.boundingRect(with: labelLayoutSize, options: [], context: nil)
+                let height = SettingsHeaderView.labelInset.vertical + labelSize.height
+                let size = CGSize(width: layoutWidth, height: ceil(height))
+                cachedHeaderSizes[section] = size
+                return size.height
+            } else {
+                if section == 0 {
+                    return 10
+                } else {
+                    return 5
+                }
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if let size = cachedFooterSizes[section], size.width == tableView.bounds.width {
+            return size.height
+        } else {
+            if let footer = sections[section].footer, !footer.isEmpty {
+                let layoutWidth = tableView.bounds.width > 0 ? tableView.bounds.width : 375
+                let labelLayoutSize = CGSize(width: layoutWidth - SettingsFooterView.labelInset.horizontal,
+                                             height: UIView.layoutFittingExpandedSize.height)
+                let attributedText = NSAttributedString(string: footer, attributes: SettingsFooterView.attributes)
+                let labelSize = attributedText.boundingRect(with: labelLayoutSize, options: [], context: nil)
+                let height = SettingsFooterView.labelInset.vertical + labelSize.height
+                let size = CGSize(width: layoutWidth, height: ceil(height))
+                cachedHeaderSizes[section] = size
+                return size.height
+            } else {
+                if section == sections.count - 1 {
+                    return 0
+                } else {
+                    return 5
+                }
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! SettingsHeaderView
         view.text = sections[section].header
         return view
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SettingsFooterView
         view.text = sections[section].footer
         return view
     }

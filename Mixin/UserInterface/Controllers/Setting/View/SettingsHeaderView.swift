@@ -1,13 +1,18 @@
 import UIKit
 
-class SettingsHeaderView: SettingsFooterView {
+class SettingsHeaderView: SettingsHeaderFooterView {
     
-    override func prepare() {
-        super.prepare()
-        label.backgroundColor = .clear
-        label.textColor = .text
-        label.numberOfLines = 0
-        label.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+    static let attributes: [NSAttributedString.Key: Any] = [
+        .foregroundColor: UIColor.text,
+        .font: UIFont.preferredFont(forTextStyle: .callout)
+    ]
+    
+    override class var labelInset: UIEdgeInsets {
+        UIEdgeInsets(top: 20, left: 20, bottom: 11, right: 20)
+    }
+    
+    override var textAttributes: [NSAttributedString.Key : Any] {
+        Self.attributes
     }
     
 }

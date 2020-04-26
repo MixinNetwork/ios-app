@@ -2,7 +2,10 @@ import UIKit
 
 class SettingsHeaderFooterView: UITableViewHeaderFooterView {
     
-    let labelInset = UIEdgeInsets(top: 12, left: 20, bottom: 16, right: 20)
+    class var labelInset: UIEdgeInsets {
+        .zero
+    }
+    
     let label = UILabel()
     
     var text: String? {
@@ -10,24 +13,18 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
             label.text
         }
         set {
-            label.text = newValue
-            label.isHidden = newValue == nil
-            cachedSize = nil
+            if let text = newValue, !text.isEmpty {
+                let attributedText = NSAttributedString(string: text, attributes: textAttributes)
+                label.attributedText = attributedText
+            } else {
+                label.text = nil
+            }
         }
     }
     
-    var attributedText: NSAttributedString? {
-        get {
-            label.attributedText
-        }
-        set {
-            label.attributedText = newValue
-            label.isHidden = newValue == nil
-            cachedSize = nil
-        }
+    var textAttributes: [NSAttributedString.Key: Any] {
+        [:]
     }
-    
-    private var cachedSize: CGSize?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -47,28 +44,10 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         if text != nil {
-            label.frame = CGRect(x: labelInset.left,
-                                 y: labelInset.top,
-                                 width: bounds.width - labelInset.horizontal,
-                                 height: bounds.height - labelInset.vertical)
-        }
-    }
-    
-    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        if text == nil {
-            return CGSize(width: targetSize.width, height: 10)
-        } else {
-            let layoutWidth = targetSize.width > 0 ? targetSize.width : 375
-            let labelLayoutSize = CGSize(width: layoutWidth - labelInset.horizontal,
-                                         height: UIView.layoutFittingExpandedSize.height)
-            if let cachedSize = cachedSize, cachedSize.width == targetSize.width {
-                return cachedSize
-            } else {
-                let height = labelInset.vertical + label.sizeThatFits(labelLayoutSize).height
-                let size = CGSize(width: targetSize.width, height: ceil(height))
-                cachedSize = size
-                return size
-            }
+            label.frame = CGRect(x: Self.labelInset.left,
+                                 y: Self.labelInset.top,
+                                 width: bounds.width - Self.labelInset.horizontal,
+                                 height: bounds.height - Self.labelInset.vertical)
         }
     }
     
@@ -77,7 +56,14 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
         let background = UIView(frame: bounds)
         background.backgroundColor = .clear
         backgroundView = background
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
+        label.snp.makeConstraints { (make) in
+            make.leading.equalToSuperview().offset(Self.labelInset.left)
+            make.top.equalToSuperview().offset(Self.labelInset.top)
+        }
     }
     
 }

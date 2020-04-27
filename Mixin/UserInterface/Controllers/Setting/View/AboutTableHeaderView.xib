@@ -15,14 +15,17 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="r3P-PY-eM8">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="223"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="zij-hH-E3Y">
-                    <rect key="frame" x="0.0" y="34" width="375" height="80"/>
+                    <rect key="frame" x="147.5" y="60" width="80" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="yAv-8U-5hq"/>
+                    </constraints>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="t5G-pK-Sf3">
-                    <rect key="frame" x="0.0" y="130" width="375" height="88"/>
+                    <rect key="frame" x="0.0" y="144" width="375" height="49"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="Mixin Messenger" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qdl-ca-egz">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="21.5"/>
@@ -34,7 +37,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.9.2(164)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rQD-9B-2U1">
-                            <rect key="frame" x="0.0" y="29.5" width="375" height="58.5"/>
+                            <rect key="frame" x="0.0" y="29.5" width="375" height="19.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <color key="textColor" name="text_accessory"/>
                             <nil key="highlightedColor"/>
@@ -44,16 +47,14 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="t5G-pK-Sf3" firstAttribute="top" secondItem="zij-hH-E3Y" secondAttribute="bottom" constant="16" id="2FU-ni-VgR"/>
-                <constraint firstAttribute="bottom" secondItem="t5G-pK-Sf3" secondAttribute="bottom" id="DNf-38-WX1"/>
-                <constraint firstItem="zij-hH-E3Y" firstAttribute="leading" secondItem="r3P-PY-eM8" secondAttribute="leading" id="Qao-bG-rt6"/>
-                <constraint firstItem="zij-hH-E3Y" firstAttribute="top" secondItem="r3P-PY-eM8" secondAttribute="top" constant="34" id="cVe-nv-J1D"/>
-                <constraint firstAttribute="trailing" secondItem="zij-hH-E3Y" secondAttribute="trailing" id="dAL-G7-9F3"/>
+                <constraint firstItem="t5G-pK-Sf3" firstAttribute="top" secondItem="zij-hH-E3Y" secondAttribute="bottom" constant="24" id="2FU-ni-VgR"/>
+                <constraint firstItem="zij-hH-E3Y" firstAttribute="centerX" secondItem="r3P-PY-eM8" secondAttribute="centerX" id="QN6-Fi-n1d"/>
+                <constraint firstItem="zij-hH-E3Y" firstAttribute="top" secondItem="r3P-PY-eM8" secondAttribute="top" constant="60" id="cVe-nv-J1D"/>
                 <constraint firstItem="t5G-pK-Sf3" firstAttribute="leading" secondItem="r3P-PY-eM8" secondAttribute="leading" id="ps4-Gl-JLr"/>
                 <constraint firstAttribute="trailing" secondItem="t5G-pK-Sf3" secondAttribute="trailing" id="w2e-Ux-g8c"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="49" y="36"/>
+            <point key="canvasLocation" x="31" y="33"/>
         </view>
     </objects>
     <resources>

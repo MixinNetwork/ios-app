@@ -211,7 +211,6 @@ class ConversationViewController: UIViewController {
             conversationInputViewController.detectsMentionToken = false
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
-        view.layoutIfNeeded()
         dataSource.initData(completion: finishInitialLoading)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
@@ -1658,8 +1657,9 @@ extension ConversationViewController {
         if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
             tableView.setContentOffsetYSafely(newContentOffsetY)
         }
-        
-        view.layoutIfNeeded()
+        if view.window != nil {
+            view.layoutIfNeeded()
+        }
         if animated {
             UIView.commitAnimations()
         }

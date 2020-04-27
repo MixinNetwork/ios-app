@@ -93,7 +93,6 @@ class HomeViewController: UIViewController {
         dragDownIndicator.bounds.size = CGSize(width: 40, height: 40)
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
         tableView.addSubview(dragDownIndicator)
-        view.layoutIfNeeded()
         updateHomeApps()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
@@ -784,7 +783,9 @@ extension HomeViewController {
             }
             DispatchQueue.main.async {
                 self.isBulletinViewHidden = shouldHideBulletin
-                self.view.layoutIfNeeded()
+                if self.view.window != nil {
+                    self.view.layoutIfNeeded()
+                }
             }
         }
     }

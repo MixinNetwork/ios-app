@@ -26,6 +26,7 @@ target 'Mixin' do
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
+  pod 'Highlightr', :git => 'https://github.com/wuyuehyang/Highlightr.git', :branch => 'master'
   pod 'Texture', :git => 'https://github.com/TextureGroup/Texture.git', :branch => 'master'
   pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
   pod 'TexturedMaaku/SyntaxColors', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'

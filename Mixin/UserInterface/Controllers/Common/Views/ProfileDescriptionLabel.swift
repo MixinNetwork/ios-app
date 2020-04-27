@@ -149,24 +149,36 @@ extension ProfileDescriptionLabel {
         var lineSpacing = self.lineSpacing
         var paragraphSpacing = self.paragraphSpacing
         var lineHeight = self.font.lineHeight
-        let settings = [CTParagraphStyleSetting(spec: .alignment,
-                                                valueSize: MemoryLayout<CTTextAlignment>.size,
-                                                value: &textAlignment),
-                        CTParagraphStyleSetting(spec: .lineBreakMode,
-                                                valueSize: MemoryLayout<CTLineBreakMode>.size,
-                                                value: &lineBreakMode),
-                        CTParagraphStyleSetting(spec: .minimumLineSpacing,
-                                                valueSize: MemoryLayout<CGFloat>.size,
-                                                value: &lineSpacing),
-                        CTParagraphStyleSetting(spec: .maximumLineSpacing,
-                                                valueSize: MemoryLayout<CGFloat>.size,
-                                                value: &lineSpacing),
-                        CTParagraphStyleSetting(spec: .paragraphSpacing,
-                                                valueSize: MemoryLayout<CGFloat>.size,
-                                                value: &paragraphSpacing),
-                        CTParagraphStyleSetting(spec: .minimumLineHeight,
-                                                valueSize: MemoryLayout<CGFloat>.size,
-                                                value: &lineHeight)]
+        
+        let settings = withUnsafeBytes(of: &textAlignment) { (textAlignment) -> [CTParagraphStyleSetting] in
+            withUnsafeBytes(of: &lineBreakMode) { (lineBreakMode) -> [CTParagraphStyleSetting] in
+                withUnsafeBytes(of: &lineSpacing) { (lineSpacing) -> [CTParagraphStyleSetting] in
+                    withUnsafeBytes(of: &paragraphSpacing) { (paragraphSpacing) -> [CTParagraphStyleSetting] in
+                        withUnsafeBytes(of: &lineHeight) { (lineHeight) -> [CTParagraphStyleSetting] in
+                            [CTParagraphStyleSetting(spec: .alignment,
+                                                     valueSize: MemoryLayout<CTTextAlignment.RawValue>.size,
+                                                     value: textAlignment.baseAddress!),
+                             CTParagraphStyleSetting(spec: .lineBreakMode,
+                                                     valueSize: MemoryLayout<CTLineBreakMode.RawValue>.size,
+                                                     value: lineBreakMode.baseAddress!),
+                             CTParagraphStyleSetting(spec: .minimumLineSpacing,
+                                                     valueSize: MemoryLayout<CGFloat>.size,
+                                                     value: lineSpacing.baseAddress!),
+                             CTParagraphStyleSetting(spec: .maximumLineSpacing,
+                                                     valueSize: MemoryLayout<CGFloat>.size,
+                                                     value: lineSpacing.baseAddress!),
+                             CTParagraphStyleSetting(spec: .paragraphSpacing,
+                                                     valueSize: MemoryLayout<CGFloat>.size,
+                                                     value: paragraphSpacing.baseAddress!),
+                             CTParagraphStyleSetting(spec: .minimumLineHeight,
+                                                     valueSize: MemoryLayout<CGFloat>.size,
+                                                     value: lineHeight.baseAddress!)]
+                        }
+                    }
+                }
+            }
+        }
+        
         let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
         let attr: [NSAttributedString.Key: Any] = [
             .ctFont: ctFont,

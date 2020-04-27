@@ -46,7 +46,10 @@ class SharedMediaDataTableViewController: SharedMediaTableViewController {
 extension SharedMediaDataTableViewController: SharedMediaDataSourceDelegate {
     
     func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
-        let messages = MessageDAO.shared.getDataMessages(conversationId: conversationId, earlierThan: location?.message, count: count)
+        let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
+                                                     categoryIn: [.SIGNAL_DATA, .PLAIN_DATA],
+                                                     earlierThan: location?.message,
+                                                     count: count)
         return messages.map { DataMessageViewModel(message: $0) }
     }
     

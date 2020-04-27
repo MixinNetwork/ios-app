@@ -72,7 +72,10 @@ class SharedMediaAudioTableViewController: SharedMediaTableViewController {
 extension SharedMediaAudioTableViewController: SharedMediaDataSourceDelegate {
     
     func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
-        let messages = MessageDAO.shared.getAudioMessages(conversationId: conversationId, earlierThan: location?.message, count: count)
+        let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
+                                                     categoryIn: [.SIGNAL_AUDIO, .PLAIN_AUDIO],
+                                                     earlierThan: location?.message,
+                                                     count: count)
         return messages.map(SharedMediaAudio.init)
     }
     

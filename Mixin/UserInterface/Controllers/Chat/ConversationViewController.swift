@@ -74,7 +74,6 @@ class ConversationViewController: UIViewController {
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
-    private var isViewDidLoadInProgress = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
@@ -157,7 +156,6 @@ class ConversationViewController: UIViewController {
     
     // MARK: - Life cycle
     override func viewDidLoad() {
-        isViewDidLoadInProgress = true
         super.viewDidLoad()
         backgroundImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
@@ -222,7 +220,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        isViewDidLoadInProgress = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1660,7 +1657,7 @@ extension ConversationViewController {
         if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
             tableView.setContentOffsetYSafely(newContentOffsetY)
         }
-        if !isViewDidLoadInProgress {
+        if view.window != nil {
             view.layoutIfNeeded()
         }
         if animated {

@@ -783,7 +783,9 @@ extension HomeViewController {
             }
             DispatchQueue.main.async {
                 self.isBulletinViewHidden = shouldHideBulletin
-                self.view.layoutIfNeeded()
+                if self.view.window != nil {
+                    self.view.layoutIfNeeded()
+                }
             }
         }
     }

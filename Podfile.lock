@@ -218,6 +218,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Performance
   - GoogleWebRTC
+  - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit
@@ -256,7 +257,6 @@ SPEC REPOS:
     - GoogleWebRTC
     - GTMSessionFetcher
     - GzipSwift
-    - Highlightr
     - libcmark_gfm
     - Maaku
     - nanopb
@@ -279,6 +279,9 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  Highlightr:
+    :branch: master
+    :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
     :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
   MixinServices:
@@ -296,6 +299,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/MixinNetwork/wcdb.git
 
 CHECKOUT OPTIONS:
+  Highlightr:
+    :commit: 9b9fc465efecb7b3c039c8fedc66e4ae4f315ad9
+    :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
     :commit: 03bf83f6b5a6ef71419c0e93c222e16efdf6bb0b
     :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
@@ -306,7 +312,7 @@ CHECKOUT OPTIONS:
     :commit: 70f61e9d01eff930f3f8e2bf4146a1841821c79a
     :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
-    :commit: 85727e5df12b45aed48127cdcf58d301a653eda2
+    :commit: ebd29bef5d75a0c0aa1706580b87a833ea32e344
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
@@ -337,7 +343,7 @@ SPEC CHECKSUMS:
   GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
-  Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
+  Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
   libcmark_gfm: cbf2fe0fd3983202f00b40d4742d82cd173ff7c3
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
@@ -365,6 +371,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 631bef59d80c8e843558bfec918a945a43537506
+PODFILE CHECKSUM: 81d3862dc603a8dc5d1c6a68da28a7a2001df259
 
 COCOAPODS: 1.9.1

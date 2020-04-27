@@ -617,7 +617,6 @@
 		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
 		DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* PINLogViewController.swift */; };
 		DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19005233220290021CAF3 /* PINLogCell.swift */; };
-		DFB19008233220360021CAF3 /* PINLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB19007233220360021CAF3 /* PINLogCell.xib */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB6CE1E23C4805B00FB6615 /* KeychainExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */; };
@@ -1437,7 +1436,6 @@
 		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
 		DFB19001233219650021CAF3 /* PINLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogViewController.swift; sourceTree = "<group>"; };
 		DFB19005233220290021CAF3 /* PINLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogCell.swift; sourceTree = "<group>"; };
-		DFB19007233220360021CAF3 /* PINLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PINLogCell.xib; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainExtension.swift; sourceTree = "<group>"; };
@@ -2480,7 +2478,6 @@
 				7BCE296521AC132E00B1A507 /* SnapshotCell.xib */,
 				7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */,
 				7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */,
-				DFB19007233220360021CAF3 /* PINLogCell.xib */,
 				DFB19005233220290021CAF3 /* PINLogCell.swift */,
 			);
 			path = Cells;
@@ -3107,7 +3104,6 @@
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
-				DFB19008233220360021CAF3 /* PINLogCell.xib in Resources */,
 				7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,

@@ -1998,19 +1998,11 @@
 		7BE6C952245680690038645C /* ogg */ = {
 			isa = PBXGroup;
 			children = (
-				7BE6C954245680690038645C /* include */,
+				7BE6C955245680690038645C /* ogg.h */,
+				7BE6C956245680690038645C /* os_types.h */,
 				7BE6C953245680690038645C /* libogg.a */,
 			);
 			path = ogg;
-			sourceTree = "<group>";
-		};
-		7BE6C954245680690038645C /* include */ = {
-			isa = PBXGroup;
-			children = (
-				7BE6C955245680690038645C /* ogg.h */,
-				7BE6C956245680690038645C /* os_types.h */,
-			);
-			path = include;
 			sourceTree = "<group>";
 		};
 		7BE6C957245680690038645C /* opus */ = {
@@ -4321,6 +4313,64 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Mixin/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire/Alamofire.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bugsnag/Bugsnag.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DeviceGuru/DeviceGuru.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting/FirebaseABTesting.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID/FirebaseInstanceID.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig/FirebaseRemoteConfig.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GzipSwift/Gzip.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Highlightr/Highlightr.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Maaku/Maaku.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServices.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINCache/PINCache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINOperation/PINOperation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINRemoteImage/PINRemoteImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PhoneNumberKit/PhoneNumberKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/protobuf.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/R.swift.Library/Rswift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RSKImageCropper/RSKImageCropper.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SQLiteRepairKit/sqliterk.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SnapKit/SnapKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Texture/AsyncDisplayKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TexturedMaaku/TexturedMaaku.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDB.swift/WCDBSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYImage/YYImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Zip/Zip.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libcmark_gfm/libcmark_gfm.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalyticsInterop\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseCoreDiagnosticsInterop\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					"\"${PODS_TARGET_SRCROOT}/Sources/FBLPromises/include\"",
+					"$(PODS_ROOT)/libsignal-protocol-c/src",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519/ed25519",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/protobuf-c",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/**",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Mixin/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -4390,6 +4440,64 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Mixin/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire/Alamofire.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bugsnag/Bugsnag.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DeviceGuru/DeviceGuru.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting/FirebaseABTesting.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID/FirebaseInstanceID.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfig/FirebaseRemoteConfig.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GzipSwift/Gzip.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Highlightr/Highlightr.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Maaku/Maaku.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServices.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINCache/PINCache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINOperation/PINOperation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PINRemoteImage/PINRemoteImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PhoneNumberKit/PhoneNumberKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Protobuf/protobuf.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/R.swift.Library/Rswift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RSKImageCropper/RSKImageCropper.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SQLiteRepairKit/sqliterk.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SnapKit/SnapKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Texture/AsyncDisplayKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TexturedMaaku/TexturedMaaku.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDB.swift/WCDBSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYImage/YYImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Zip/Zip.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libcmark_gfm/libcmark_gfm.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseAnalyticsInterop\"",
+					"\"${PODS_ROOT}/Headers/Public/FirebaseCoreDiagnosticsInterop\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					"\"${PODS_TARGET_SRCROOT}/Sources/FBLPromises/include\"",
+					"$(PODS_ROOT)/libsignal-protocol-c/src",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519/ed25519",
+					"$(PODS_ROOT)/libsignal-protocol-c/src/protobuf-c",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Mixin/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

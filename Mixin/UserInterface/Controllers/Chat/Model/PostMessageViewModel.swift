@@ -46,3 +46,15 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     }
     
 }
+
+extension PostMessageViewModel: SharedMediaItem {
+    
+    var messageId: String {
+        message.messageId
+    }
+    
+    var createdAt: String {
+        message.createdAt
+    }
+    
+}

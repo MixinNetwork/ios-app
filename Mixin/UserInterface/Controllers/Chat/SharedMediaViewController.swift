@@ -14,6 +14,7 @@ class SharedMediaViewController: UIViewController {
     private lazy var mediaViewController = R.storyboard.chat.shared_media_media()!
     private lazy var audioViewController = SharedMediaAudioTableViewController()
     private lazy var dataViewController = SharedMediaDataTableViewController()
+    private lazy var postViewController = SharedMediaPostTableViewController()
     
     private var contentViewController: UIViewController?
     
@@ -22,6 +23,7 @@ class SharedMediaViewController: UIViewController {
         segmentedControl.itemTitles = [
             R.string.localizable.chat_media_category_media(),
             R.string.localizable.chat_media_category_audio(),
+            R.string.localizable.chat_media_category_post(),
             R.string.localizable.chat_media_category_file()
         ]
         load(child: mediaViewController)
@@ -33,6 +35,8 @@ class SharedMediaViewController: UIViewController {
             load(child: mediaViewController)
         case 1:
             load(child: audioViewController)
+        case 2:
+            load(child: postViewController)
         default:
             load(child: dataViewController)
         }

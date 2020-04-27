@@ -249,6 +249,9 @@
 		7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressViewController.swift */; };
 		7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */; };
 		7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */; };
+		7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */; };
+		7B8A6A742456E0EC00ADC9EB /* SharedMediaPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */; };
+		7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B8A6A732456E0EC00ADC9EB /* SharedMediaPostCell.xib */; };
 		7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB57D234DD18C00991ACB /* SharedMediaTableHeaderView.swift */; };
 		7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */; };
 		7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */; };
@@ -1049,6 +1052,9 @@
 		7B894AF2205BF8660065A1B8 /* AddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressViewController.swift; sourceTree = "<group>"; };
 		7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddressViewController.swift; sourceTree = "<group>"; };
 		7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLockView.swift; sourceTree = "<group>"; };
+		7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPostTableViewController.swift; sourceTree = "<group>"; };
+		7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPostCell.swift; sourceTree = "<group>"; };
+		7B8A6A732456E0EC00ADC9EB /* SharedMediaPostCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharedMediaPostCell.xib; sourceTree = "<group>"; };
 		7B8BB57D234DD18C00991ACB /* SharedMediaTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaTableHeaderView.swift; sourceTree = "<group>"; };
 		7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataSource.swift; sourceTree = "<group>"; };
 		7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudioTableViewController.swift; sourceTree = "<group>"; };
@@ -2172,6 +2178,7 @@
 				7B36920F233B4FC6007321A7 /* SharedMediaMediaViewController.swift */,
 				7BC28336234DCCF300005628 /* SharedMediaTableViewController.swift */,
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
+				7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */,
 				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
 				7B3FD4EB241965AA00B58006 /* LocationViewController.swift */,
 				7B36919E233A1962007321A7 /* LocationPickerViewController.swift */,
@@ -2859,6 +2866,8 @@
 				7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */,
 				7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */,
 				7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */,
+				7B8A6A732456E0EC00ADC9EB /* SharedMediaPostCell.xib */,
+				7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */,
 				7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */,
 				7B04142A240FA09F00BE8D73 /* LocationCell.swift */,
 				7BA1768D244ACE2E007D50FD /* PickerCell.swift */,
@@ -3233,6 +3242,7 @@
 				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
 				E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
+				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
@@ -3568,6 +3578,7 @@
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				7BB8E2D124529E910098B1E8 /* AppearanceSettingsViewController.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
+				7B8A6A742456E0EC00ADC9EB /* SharedMediaPostCell.swift in Sources */,
 				DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
@@ -3931,6 +3942,7 @@
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,
 				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
 				DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */,
+				7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,

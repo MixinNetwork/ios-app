@@ -20,7 +20,7 @@ class LocationInformationView: SolidBackgroundColoredView {
     }
     
     private func loadSubviews() {
-        backgroundColor = .background
+        backgroundColorIgnoringSystemSettings = .background
         let view = Bundle.main.loadNibNamed("LocationInformationView", owner: self, options: nil)!.first as! UIStackView
         layoutMargins = .zero
         view.translatesAutoresizingMaskIntoConstraints = false

@@ -56,7 +56,7 @@ extension PhoneNumberSettingViewController: UITableViewDelegate {
             newSource = .nobody
         }
         
-        guard newSource.rawValue != LoginManager.shared.account?.receive_message_source else {
+        guard newSource.rawValue != LoginManager.shared.account?.accept_search_source else {
             return
         }
         let indexBefore = self.currentSelectedRowIndex

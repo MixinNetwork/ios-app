@@ -412,6 +412,10 @@
 		7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */; };
 		7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */; };
 		7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */; };
+		7BE6C9672456806A0038645C /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE6C953245680690038645C /* libogg.a */; };
+		7BE6C9682456806A0038645C /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE6C95E245680690038645C /* libopus.a */; };
+		7BE6C9692456806A0038645C /* libopusfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE6C962245680690038645C /* libopusfile.a */; };
+		7BE6C96A2456806A0038645C /* libopusenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE6C966245680690038645C /* libopusenc.a */; };
 		7BE6C996242DF47E00A0F2AE /* MessageItem+MessageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6C995242DF47E00A0F2AE /* MessageItem+MessageAction.swift */; };
 		7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */; };
 		7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */; };
@@ -1195,6 +1199,19 @@
 		7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InConversationSearchViewController.swift; sourceTree = "<group>"; };
 		7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchConversationView.xib; sourceTree = "<group>"; };
 		7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAction.swift; sourceTree = "<group>"; };
+		7BE6C953245680690038645C /* libogg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libogg.a; sourceTree = "<group>"; };
+		7BE6C955245680690038645C /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
+		7BE6C956245680690038645C /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
+		7BE6C959245680690038645C /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
+		7BE6C95A245680690038645C /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
+		7BE6C95B245680690038645C /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
+		7BE6C95C245680690038645C /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
+		7BE6C95D245680690038645C /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
+		7BE6C95E245680690038645C /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
+		7BE6C961245680690038645C /* opusfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opusfile.h; sourceTree = "<group>"; };
+		7BE6C962245680690038645C /* libopusfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopusfile.a; sourceTree = "<group>"; };
+		7BE6C965245680690038645C /* opusenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opusenc.h; sourceTree = "<group>"; };
+		7BE6C966245680690038645C /* libopusenc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopusenc.a; sourceTree = "<group>"; };
 		7BE6C995242DF47E00A0F2AE /* MessageItem+MessageAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageItem+MessageAction.swift"; sourceTree = "<group>"; };
 		7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_separator_3.png; sourceTree = "<group>"; };
 		7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_separator_4.png; sourceTree = "<group>"; };
@@ -1544,9 +1561,13 @@
 			files = (
 				DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
+				7BE6C9692456806A0038645C /* libopusfile.a in Frameworks */,
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
+				7BE6C9672456806A0038645C /* libogg.a in Frameworks */,
 				DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */,
+				7BE6C96A2456806A0038645C /* libopusenc.a in Frameworks */,
+				7BE6C9682456806A0038645C /* libopus.a in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
@@ -1952,6 +1973,10 @@
 		7BC8502120CBA68700A57B83 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				7BE6C952245680690038645C /* ogg */,
+				7BE6C957245680690038645C /* opus */,
+				7BE6C963245680690038645C /* opusenc */,
+				7BE6C95F245680690038645C /* opusfile */,
 				7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */,
 				7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */,
 				7BC8502520CBA69900A57B83 /* MXNOggOpusWriter.h */,
@@ -1968,6 +1993,79 @@
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */,
 			);
 			path = Audio;
+			sourceTree = "<group>";
+		};
+		7BE6C952245680690038645C /* ogg */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C954245680690038645C /* include */,
+				7BE6C953245680690038645C /* libogg.a */,
+			);
+			path = ogg;
+			sourceTree = "<group>";
+		};
+		7BE6C954245680690038645C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C955245680690038645C /* ogg.h */,
+				7BE6C956245680690038645C /* os_types.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		7BE6C957245680690038645C /* opus */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C958245680690038645C /* include */,
+				7BE6C95E245680690038645C /* libopus.a */,
+			);
+			path = opus;
+			sourceTree = "<group>";
+		};
+		7BE6C958245680690038645C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C959245680690038645C /* opus.h */,
+				7BE6C95A245680690038645C /* opus_multistream.h */,
+				7BE6C95B245680690038645C /* opus_types.h */,
+				7BE6C95C245680690038645C /* opus_defines.h */,
+				7BE6C95D245680690038645C /* opus_projection.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		7BE6C95F245680690038645C /* opusfile */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C960245680690038645C /* include */,
+				7BE6C962245680690038645C /* libopusfile.a */,
+			);
+			path = opusfile;
+			sourceTree = "<group>";
+		};
+		7BE6C960245680690038645C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C961245680690038645C /* opusfile.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		7BE6C963245680690038645C /* opusenc */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C964245680690038645C /* include */,
+				7BE6C966245680690038645C /* libopusenc.a */,
+			);
+			path = opusenc;
+			sourceTree = "<group>";
+		};
+		7BE6C964245680690038645C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C965245680690038645C /* opusenc.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		7BF49DD420C3DED600A8510E /* ReCaptcha */ = {
@@ -4227,6 +4325,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/ogg",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opusfile",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opusenc",
 				);
 				MARKETING_VERSION = 0.24.1;
 				OTHER_CFLAGS = (
@@ -4293,6 +4395,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/ogg",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opusfile",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/opusenc",
 				);
 				MARKETING_VERSION = 0.24.1;
 				OTHER_CFLAGS = (

@@ -84,7 +84,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
         super.awakeFromNib()
         selectedBackgroundView = {
             let view = UIView()
-            view.backgroundColor = .secondaryBackground
+            view.backgroundColor = R.color.background_input_selected()
             return view
         }()
     }

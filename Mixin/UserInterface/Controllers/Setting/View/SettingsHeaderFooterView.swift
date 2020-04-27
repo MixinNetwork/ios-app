@@ -6,6 +6,19 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
         .zero
     }
     
+    class var textColor: UIColor {
+        .text
+    }
+    
+    class var textStyle: UIFont.TextStyle {
+        .caption1
+    }
+    
+    class var attributes: [NSAttributedString.Key: Any] {
+        [.foregroundColor: textColor,
+         .font: UIFont.preferredFont(forTextStyle: textStyle)]
+    }
+    
     let label = UILabel()
     
     var text: String? {
@@ -13,17 +26,8 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
             label.text
         }
         set {
-            if let text = newValue, !text.isEmpty {
-                let attributedText = NSAttributedString(string: text, attributes: textAttributes)
-                label.attributedText = attributedText
-            } else {
-                label.text = nil
-            }
+            label.text = newValue
         }
-    }
-    
-    var textAttributes: [NSAttributedString.Key: Any] {
-        [:]
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -48,6 +52,8 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
         backgroundView = background
         label.backgroundColor = .clear
         label.numberOfLines = 0
+        label.textColor = Self.textColor
+        label.font = .preferredFont(forTextStyle: Self.textStyle)
         label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in

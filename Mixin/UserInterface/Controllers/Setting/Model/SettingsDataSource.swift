@@ -54,6 +54,10 @@ class SettingsDataSource: NSObject {
                            selector: #selector(updateAccessory(_:)),
                            name: SettingsRow.accessoryDidChangeNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(removeHeaderFooterSizeCache),
+                           name: UIContentSizeCategory.didChangeNotification,
+                           object: nil)
     }
     
     override func responds(to aSelector: Selector!) -> Bool {
@@ -115,6 +119,21 @@ class SettingsDataSource: NSObject {
         reloadIndexPaths()
     }
     
+    private func reloadIndexPaths() {
+        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
+        for (sectionIndex, section) in sections.enumerated() {
+            for (rowIndex, row) in section.rows.enumerated() {
+                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+                indexPaths[row] = indexPath
+            }
+        }
+        self.indexPaths = indexPaths
+    }
+    
+}
+
+extension SettingsDataSource {
+    
     @objc func updateSectionFooter(_ notification: Notification) {
         guard let section = notification.object as? SettingsSection else {
             return
@@ -173,15 +192,9 @@ class SettingsDataSource: NSObject {
         cell.updateAccessory(row.accessory, animated: true)
     }
     
-    private func reloadIndexPaths() {
-        var indexPaths = [SettingsRow: IndexPath](minimumCapacity: sections.count)
-        for (sectionIndex, section) in sections.enumerated() {
-            for (rowIndex, row) in section.rows.enumerated() {
-                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
-                indexPaths[row] = indexPath
-            }
-        }
-        self.indexPaths = indexPaths
+    @objc func removeHeaderFooterSizeCache() {
+        cachedHeaderSizes.removeAll()
+        cachedFooterSizes.removeAll()
     }
     
 }

@@ -370,7 +370,6 @@
 		7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */; };
 		7BC8503320CBA69B00A57B83 /* MXNAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */; };
 		7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */; };
-		7BC850C020CBB3AE00A57B83 /* liboggopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC850BF20CBB3AD00A57B83 /* liboggopus.a */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
@@ -1154,15 +1153,6 @@
 		7BC8502C20CBA69A00A57B83 /* MXNAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioMetadata.h; sourceTree = "<group>"; };
 		7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioRecorder.m; sourceTree = "<group>"; };
 		7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusError.h; sourceTree = "<group>"; };
-		7BC850B720CBB3AD00A57B83 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
-		7BC850B820CBB3AD00A57B83 /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
-		7BC850B920CBB3AD00A57B83 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
-		7BC850BA20CBB3AD00A57B83 /* opusenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opusenc.h; sourceTree = "<group>"; };
-		7BC850BB20CBB3AD00A57B83 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
-		7BC850BC20CBB3AD00A57B83 /* opusfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opusfile.h; sourceTree = "<group>"; };
-		7BC850BD20CBB3AD00A57B83 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
-		7BC850BE20CBB3AD00A57B83 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
-		7BC850BF20CBB3AD00A57B83 /* liboggopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liboggopus.a; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -1558,7 +1548,6 @@
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
 				DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
-				7BC850C020CBB3AE00A57B83 /* liboggopus.a in Frameworks */,
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
 			);
@@ -1963,7 +1952,6 @@
 		7BC8502120CBA68700A57B83 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				7BC8503D20CBA6B500A57B83 /* liboggopus */,
 				7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */,
 				7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */,
 				7BC8502520CBA69900A57B83 /* MXNOggOpusWriter.h */,
@@ -1980,30 +1968,6 @@
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */,
 			);
 			path = Audio;
-			sourceTree = "<group>";
-		};
-		7BC8503D20CBA6B500A57B83 /* liboggopus */ = {
-			isa = PBXGroup;
-			children = (
-				7BC850B620CBB3AD00A57B83 /* include */,
-				7BC850BF20CBB3AD00A57B83 /* liboggopus.a */,
-			);
-			path = liboggopus;
-			sourceTree = "<group>";
-		};
-		7BC850B620CBB3AD00A57B83 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				7BC850B720CBB3AD00A57B83 /* opus.h */,
-				7BC850B820CBB3AD00A57B83 /* ogg.h */,
-				7BC850B920CBB3AD00A57B83 /* opus_multistream.h */,
-				7BC850BA20CBB3AD00A57B83 /* opusenc.h */,
-				7BC850BB20CBB3AD00A57B83 /* opus_types.h */,
-				7BC850BC20CBB3AD00A57B83 /* opusfile.h */,
-				7BC850BD20CBB3AD00A57B83 /* os_types.h */,
-				7BC850BE20CBB3AD00A57B83 /* opus_defines.h */,
-			);
-			path = include;
 			sourceTree = "<group>";
 		};
 		7BF49DD420C3DED600A8510E /* ReCaptcha */ = {
@@ -4263,7 +4227,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.24.1;
 				OTHER_CFLAGS = (
@@ -4330,7 +4293,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/liboggopus",
 				);
 				MARKETING_VERSION = 0.24.1;
 				OTHER_CFLAGS = (

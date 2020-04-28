@@ -349,20 +349,12 @@ public final class MessageDAO {
         return messages
     }
     
-    public func getDataMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = MessageDAO.sqlQueryFullDataMessages
-        if let location = location {
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            sql += " AND m.ROWID < \(rowId)"
-        }
-        sql += " ORDER BY m.created_at DESC LIMIT ?"
-        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, count])
-        return messages
-    }
-    
-    public func getAudioMessages(conversationId: String, earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
-        var sql = MessageDAO.sqlQueryFullAudioMessages
+    public func getMessages(conversationId: String, categoryIn categories: [MessageCategory], earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
+        let categories = categories.map({ $0.rawValue }).joined(separator: "', '")
+        var sql = """
+        \(Self.sqlQueryFullMessage)
+        WHERE m.conversation_id = ? AND m.category in ('\(categories)')
+        """
         if let location = location {
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location.messageId)

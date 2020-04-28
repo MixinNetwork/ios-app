@@ -266,10 +266,12 @@
 "chat_media_category_media" = "メディア";
 "chat_media_category_audio" = "オーディオ";
 "chat_media_category_link" = "リンク";
+"chat_media_category_post" = "文章";
 "chat_media_category_file" = "ファイル";
 "chat_shared_media_empty" = "メディアなし";
 "chat_shared_audio_empty" = "オーディオなし";
 "chat_shared_data_empty" = "ファイルなし";
+"chat_shared_post_empty" = "文章なし";
 "chat_invited_by_stranger" = "招待者は連絡先にありません";
 "chat_exit_group_and_report_inviter" = "グループを退会しても招待者を報告する";
 "chat_exit_group_and_report_inviter_confirmation" = "グループを退会しても招待者を報告しますか";

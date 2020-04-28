@@ -17,10 +17,11 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     }
     
     override var contentAttributedString: NSAttributedString {
+        let maxNumberOfLines = self.maxNumberOfLines ?? 10
         var lines = [String]()
         rawContent.enumerateLines { (line, stop) in
             lines.append(line)
-            if lines.count == 10 {
+            if lines.count == maxNumberOfLines {
                 stop = true
             }
         }
@@ -43,6 +44,18 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     
     override func linkRanges(from string: String) -> [Link.Range] {
         []
+    }
+    
+}
+
+extension PostMessageViewModel: SharedMediaItem {
+    
+    var messageId: String {
+        message.messageId
+    }
+    
+    var createdAt: String {
+        message.createdAt
     }
     
 }

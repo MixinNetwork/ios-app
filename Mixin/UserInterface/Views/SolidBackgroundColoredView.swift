@@ -4,16 +4,17 @@ class SolidBackgroundColoredView: UIView {
     
     override var backgroundColor: UIColor? {
         get {
-            return .background
+            backgroundColorIgnoringSystemSettings
         }
         set {
             
         }
     }
     
-    convenience init() {
-        self.init(frame: .zero)
-        super.backgroundColor = .background
+    var backgroundColorIgnoringSystemSettings: UIColor = .clear {
+        didSet {
+            super.backgroundColor = backgroundColorIgnoringSystemSettings
+        }
     }
     
 }

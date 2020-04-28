@@ -42,7 +42,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
     private var audioDeviceInput: AVCaptureDeviceInput?
-    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
@@ -59,6 +58,16 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                                                                                     position: .unspecified)
     private lazy var assetQrCodeScanningController = AssetQrCodeScanningController()
     private lazy var notificationController = NotificationController(delegate: self)
+    private lazy var focusIndicator: UIImageView = {
+        let view = UIImageView(image: R.image.ic_focus_indicator())
+        previewView.addSubview(view)
+        view.isHidden = true
+        return view
+    }()
+    
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer? {
+        previewView.layer as? AVCaptureVideoPreviewLayer
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +86,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             qrCodeScanningView.isHidden = false
             qrCodeToolbarView.isHidden = false
         }
+        let focusRecognizer = UITapGestureRecognizer(target: self, action: #selector(setFocus(_:)))
+        previewView.addGestureRecognizer(focusRecognizer)
+        NotificationCenter.default.addObserver(self, selector: #selector(hideFocusIndicator), name: .AVCaptureDeviceSubjectAreaDidChange, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -267,6 +279,54 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             displaySnapshotView(show: false)
         } else {
             navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc func setFocus(_ recognizer: UITapGestureRecognizer) {
+        let device = videoDeviceInput.device
+        guard device.isFocusPointOfInterestSupported else {
+            hideFocusIndicator()
+            return
+        }
+        guard recognizer.state == .ended else {
+            return
+        }
+        let location = recognizer.location(in: previewView)
+        guard let poi = videoPreviewLayer?.captureDevicePointConverted(fromLayerPoint: location) else {
+            return
+        }
+        do {
+            try device.lockForConfiguration()
+            device.focusPointOfInterest = poi
+            device.focusMode = .autoFocus
+            device.exposurePointOfInterest = poi
+            device.exposureMode = .continuousAutoExposure
+            device.isSubjectAreaChangeMonitoringEnabled = true
+            device.unlockForConfiguration()
+            focusIndicator.layer.removeAllAnimations()
+            focusIndicator.center = location
+            focusIndicator.transform = .identity
+            focusIndicator.alpha = 1
+            focusIndicator.isHidden = false
+            let fadeOutSelector = #selector(fadeOutFocusIndicator)
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: fadeOutSelector, object: nil)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.focusIndicator.transform = CGAffineTransform(scaleX: 0.56, y: 0.56)
+            }) { (_) in
+                self.perform(fadeOutSelector, with: nil, afterDelay: 1)
+            }
+        } catch {
+            // OK to ignore it
+        }
+    }
+    
+    @objc func hideFocusIndicator() {
+        focusIndicator.isHidden = true
+    }
+    
+    @objc func fadeOutFocusIndicator() {
+        UIView.animate(withDuration: 0.3) {
+            self.focusIndicator.alpha = 0.6
         }
     }
     

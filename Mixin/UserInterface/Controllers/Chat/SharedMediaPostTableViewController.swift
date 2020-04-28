@@ -3,7 +3,7 @@ import MixinServices
 
 class SharedMediaPostTableViewController: SharedMediaTableViewController {
     
-    typealias ItemType = PostMessageViewModel
+    typealias ItemType = SharedMediaPost
     
     override var conversationId: String! {
         didSet {
@@ -33,7 +33,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
                                                      categoryIn: [.SIGNAL_POST, .PLAIN_POST],
                                                      earlierThan: location?.message,
                                                      count: count)
-        let items = messages.map { PostMessageViewModel(message: $0) }
+        let items = messages.map { SharedMediaPost(message: $0) }
         let layoutWidth = performSynchronouslyOnMainThread {
             tableView.bounds.width
                 - SharedMediaPostCell.backgroundHorizontalMargin * 2
@@ -50,7 +50,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
         guard let msg = MessageDAO.shared.getFullMessage(messageId: messageId) else {
             return nil
         }
-        return PostMessageViewModel(message: msg)
+        return SharedMediaPost(message: msg)
     }
     
     func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {

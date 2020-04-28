@@ -24,7 +24,6 @@ class LoginConfirmWindow: BottomSheetView {
     func loginSuccessAction() {
         dismissView()
         showAutoHiddenHud(style: .notification, text: Localized.TOAST_LOGINED)
-        UIApplication.homeNavigationController?.popViewController(animated: true)
     }
 
 

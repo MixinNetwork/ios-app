@@ -104,7 +104,7 @@ class ContactViewController: UITableViewController {
 extension ContactViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let vc = SettingViewController.instance()
+        let vc = SettingsViewController.instance()
         navigationController?.pushViewController(vc, animated: true)
     }
     

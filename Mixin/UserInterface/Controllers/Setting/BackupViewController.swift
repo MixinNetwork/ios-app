@@ -2,111 +2,156 @@ import UIKit
 import WCDBSwift
 import MixinServices
 
-class BackupViewController: UITableViewController {
+class BackupViewController: SettingsTableViewController {
     
-    @IBOutlet weak var switchIncludeFiles: UISwitch!
-    @IBOutlet weak var switchIncludeVideos: UISwitch!
-    @IBOutlet weak var categoryLabel: UILabel!
-    @IBOutlet weak var backupIndicatorView: ActivityIndicatorView!
-    @IBOutlet weak var backupLabel: UILabel!
+    private let backupActionRow = SettingsRow(title: R.string.localizable.setting_backup_now())
+    private let backupFilesRow = SettingsRow(title: R.string.localizable.setting_backup_files(),
+                                             accessory: .switch(isOn: AppGroupUserDefaults.User.backupFiles))
+    private let backupVideosRow = SettingsRow(title: R.string.localizable.setting_backup_videos(),
+                                              accessory: .switch(isOn: AppGroupUserDefaults.User.backupVideos))
     
-    private let footerReuseId = "footer"
+    private lazy var dataSource = SettingsDataSource(sections: [
+        SettingsSection(rows: [backupActionRow]),
+        SettingsSection(footer: R.string.localizable.setting_backup_auto_tips(), rows: [
+            SettingsRow(title: R.string.localizable.setting_backup_auto(),
+                        subtitle: nil,
+                        accessory: .disclosure),
+            backupFilesRow,
+            backupVideosRow
+        ])
+    ])
     
-    private lazy var actionSectionFooterView = SeparatorShadowFooterView()
     private lazy var autoBackupFrequencyController: UIAlertController = {
         let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .daily
-            self?.updateUIOfBackupFrequency()
+            self?.updateAutoBackupSubtitle()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_WEEKLY, style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .weekly
-            self?.updateUIOfBackupFrequency()
+            self?.updateAutoBackupSubtitle()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_MONTHLY, style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .monthly
-            self?.updateUIOfBackupFrequency()
+            self?.updateAutoBackupSubtitle()
         }))
         controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_OFF, style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .off
-            self?.updateUIOfBackupFrequency()
+            self?.updateAutoBackupSubtitle()
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         return controller
     }()
     
-    private var timer: Timer?
+    private weak var timer: Timer?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
         timer?.invalidate()
-        timer = nil
     }
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.backup()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BACKUP_TITLE)
+        let vc = BackupViewController()
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_backup_title())
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
-        tableView.estimatedSectionFooterHeight = 10
-        tableView.sectionFooterHeight = UITableView.automaticDimension
-        updateTableViewContentInsetBottom()
-        switchIncludeFiles.isOn = AppGroupUserDefaults.User.backupFiles
-        switchIncludeVideos.isOn = AppGroupUserDefaults.User.backupVideos
-        updateUIOfBackupFrequency()
-        reloadActionSectionFooterLabel()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
+        tableView.tableHeaderView = R.nib.backupTableHeaderView(owner: nil)
+        updateAutoBackupSubtitle()
+        updateActionSectionFooter()
+        dataSource.tableViewDelegate = self
+        dataSource.tableView = tableView
+        
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(updateBackupFiles),
+                           name: SettingsRow.accessoryDidChangeNotification,
+                           object: backupFilesRow)
+        center.addObserver(self,
+                           selector: #selector(updateBackupVideos),
+                           name: SettingsRow.accessoryDidChangeNotification,
+                           object: backupVideosRow)
+        center.addObserver(self,
+                           selector: #selector(backupChanged),
+                           name: .BackupDidChange,
+                           object: nil)
+        
         if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
-            backingUI()
+            updateTableForBackingUp()
         } else if let backupDir = backupUrl, !backupDir.isStoredCloud {
             AppGroupUserDefaults.User.lastBackupDate = nil
             AppGroupUserDefaults.User.lastBackupSize = nil
         }
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewContentInsetBottom()
-    }
-    
     @objc func backupChanged() {
         timer?.invalidate()
-        timer = nil
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.reloadActionSectionFooterLabel()
-            self.backupIndicatorView.stopAnimating()
-            self.backupLabel.text = Localized.SETTING_BACKUP_NOW
-            self.switchIncludeFiles.isEnabled = true
-            self.switchIncludeVideos.isEnabled = true
-            self.tableView.reloadData()
+            self.updateActionSectionFooter()
+            self.backupActionRow.accessory = .none
+            self.backupActionRow.title = Localized.SETTING_BACKUP_NOW
+            if case let .switch(isOn, _) = self.backupFilesRow.accessory {
+                self.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
+            }
+            if case let .switch(isOn, _) = self.backupVideosRow.accessory {
+                self.backupVideosRow.accessory = .switch(isOn: isOn, isEnabled: true)
+            }
         }
     }
     
-    @IBAction func switchIncludeFiles(_ sender: Any) {
-        AppGroupUserDefaults.User.backupFiles = switchIncludeFiles.isOn
-    }
-
-    @IBAction func switchIncludeVideos(_ sender: Any) {
-        AppGroupUserDefaults.User.backupVideos = switchIncludeVideos.isOn
-    }
-
-    private func backingUI() {
-        backupIndicatorView.startAnimating()
-        backupLabel.text = BackupJobQueue.shared.isBackingUp ? R.string.localizable.setting_backing() : R.string.localizable.setting_restoring()
-        switchIncludeFiles.isEnabled = false
-        switchIncludeVideos.isEnabled = false
-        reloadActionSectionFooterLabel()
-        tableView.reloadData()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
-            self?.reloadActionSectionFooterLabel()
-        })
+    @objc func updateBackupFiles(_ notification: Notification) {
+        guard case let .switch(isOn, _) = backupFilesRow.accessory else {
+            return
+        }
+        AppGroupUserDefaults.User.backupFiles = isOn
     }
     
-    private func reloadActionSectionFooterLabel() {
+    @objc func updateBackupVideos(_ notification: Notification) {
+        guard case let .switch(isOn, _) = backupVideosRow.accessory else {
+            return
+        }
+        AppGroupUserDefaults.User.backupVideos = isOn
+    }
+    
+}
+
+extension BackupViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 0 && indexPath.row == 0 {
+            guard !BackupJobQueue.shared.isBackingUp else {
+                return
+            }
+            if BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: true)) {
+                updateTableForBackingUp()
+            }
+        } else if indexPath.section == 1 && indexPath.row == 0 {
+            present(autoBackupFrequencyController, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension BackupViewController {
+    
+    private func updateAutoBackupSubtitle() {
+        let indexPath = IndexPath(row: 0, section: 1)
+        let row = dataSource.row(at: indexPath)
+        switch AppGroupUserDefaults.User.autoBackup {
+        case .daily:
+            row.subtitle = Localized.SETTING_BACKUP_DAILY
+        case .weekly:
+            row.subtitle = Localized.SETTING_BACKUP_WEEKLY
+        case .monthly:
+            row.subtitle = Localized.SETTING_BACKUP_MONTHLY
+        case .off:
+            row.subtitle = Localized.SETTING_BACKUP_OFF
+        }
+    }
+    
+    private func updateActionSectionFooter() {
         let text: String?
         if let backupJob = BackupJobQueue.shared.backupJob {
             if backupJob.isBackingUp {
@@ -135,62 +180,26 @@ class BackupViewController: UITableViewController {
                 text = nil
             }
         }
-        actionSectionFooterView.text = text
+        dataSource.sections[0].footer = text
     }
     
-    private func updateTableViewContentInsetBottom() {
-        if view.safeAreaInsets.bottom < 10 {
-            tableView.contentInset.bottom = 10
+    private func updateTableForBackingUp() {
+        backupActionRow.accessory = .busy
+        if BackupJobQueue.shared.isBackingUp {
+            backupActionRow.title = R.string.localizable.setting_backing()
         } else {
-            tableView.contentInset.bottom = 0
+            backupActionRow.title = R.string.localizable.setting_restoring()
         }
-    }
-    
-    private func updateUIOfBackupFrequency() {
-        switch AppGroupUserDefaults.User.autoBackup {
-        case .daily:
-            categoryLabel.text = Localized.SETTING_BACKUP_DAILY
-        case .weekly:
-            categoryLabel.text = Localized.SETTING_BACKUP_WEEKLY
-        case .monthly:
-            categoryLabel.text = Localized.SETTING_BACKUP_MONTHLY
-        case .off:
-            categoryLabel.text = Localized.SETTING_BACKUP_OFF
+        if case let .switch(isOn, _) = backupFilesRow.accessory {
+            backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: false)
         }
-    }
-    
-}
-
-extension BackupViewController {
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-
-        if indexPath.section == 0 && indexPath.row == 0 {
-            guard !BackupJobQueue.shared.isBackingUp else {
-                return
-            }
-            if BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: true)) {
-                backingUI()
-            }
-        } else if indexPath.section == 1 && indexPath.row == 0 {
-            present(autoBackupFrequencyController, animated: true, completion: nil)
+        if case let .switch(isOn, _) = backupVideosRow.accessory {
+            backupVideosRow.accessory = .switch(isOn: isOn, isEnabled: false)
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-            return actionSectionFooterView
-        } else {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-            view.shadowView.hasLowerShadow = false
-            view.text = Localized.SETTING_BACKUP_AUTO_TIPS
-            return view
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        updateActionSectionFooter()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
+            self?.updateActionSectionFooter()
+        })
     }
     
 }

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class BlockUserViewController: UIViewController {
+class BlockedUsersViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -45,7 +45,7 @@ class BlockUserViewController: UIViewController {
     
 }
 
-extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
+extension BlockedUsersViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count

@@ -37,7 +37,7 @@ class MyFavoriteAppProfileMenuItemView: UIView, XibDesignable {
     
     private func updateButtonBackground() {
         button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
-        button.setBackgroundImage(UIColor.secondaryBackground.image, for: .highlighted)
+        button.setBackgroundImage(R.color.background_input_selected()!.image, for: .highlighted)
     }
     
 }

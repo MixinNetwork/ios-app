@@ -32,7 +32,7 @@ class CirclesViewController: UIViewController {
         action.backgroundColor = .theme
         return action
     }()
-    private lazy var editNameController = EditNameController(presentingViewController: self)
+    private lazy var editNameController = AlertEditorController(presentingViewController: self)
     
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles: [CircleItem] = []
@@ -74,7 +74,7 @@ class CirclesViewController: UIViewController {
     @IBAction func newCircleAction(_ sender: Any) {
         let addCircle = R.string.localizable.circle_action_add()
         let add = R.string.localizable.action_add()
-        editNameController.present(title: addCircle, actionTitle: add, currentName: nil) { (alert) in
+        editNameController.present(title: addCircle, actionTitle: add) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
             }
@@ -192,7 +192,7 @@ extension CirclesViewController {
         
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: editName, style: .default, handler: { (_) in
-            self.editNameController.present(title: editName, actionTitle: change, currentName: circle.name) { (alert) in
+            self.editNameController.present(title: editName, actionTitle: change, currentText: circle.name) { (alert) in
                 guard let name = alert.textFields?.first?.text else {
                     return
                 }

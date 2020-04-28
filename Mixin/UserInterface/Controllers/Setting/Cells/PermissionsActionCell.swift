@@ -1,6 +1,6 @@
 import UIKit
 
-class SingleTextTableViewCell: ModernSelectedBackgroundCell {
+class PermissionsActionCell: ModernSelectedBackgroundCell {
 
     @IBOutlet weak var contentLabel: UILabel!
     

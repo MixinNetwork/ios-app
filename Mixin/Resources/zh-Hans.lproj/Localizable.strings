@@ -97,13 +97,12 @@
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
-"screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
 "biometry_suggestion" = "建议使用%@支付";
 "clock_skew_title" = "系统时间异常";
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // PIN Logs
-"pin_log_verification" = "验证支付密码";
+"pin_log_verification" = "验证密码";
 "pin_log_raw_transfer" = "给主网地址转账";
 "pin_log_user_transfer" = "给用户或机器人转账";
 "pin_log_withdrawal" = "提现";
@@ -113,7 +112,7 @@
 "pin_log_delete_emergency" = "删除紧急联系人";
 "pin_log_read_emergency" = "查看紧急联系人";
 "pin_log_update_phone" = "修改手机号码";
-"pin_log_update_pin" = "修改支付密码";
+"pin_log_update_pin" = "修改密码";
 "pin_log_multisig_sign" = "签名多重签名交易";
 "pin_log_multisig_unlock" = "撤销多重签名交易";
 
@@ -405,13 +404,13 @@
 "wallet_already_had_the_asset" = "已拥有该资产";
 "wallet_transfer_out" = "转出";
 "wallet_symbol_other" = "其它";
-"wallet_password_verify_title" = "验证旧的支付密码";
+"wallet_password_verify_title" = "验证旧的密码";
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
-"wallet_change_password" = "修改支付密码";
-"wallet_pin_logs" = "支付密码错误日志";
+"wallet_change_password" = "修改密码";
+"wallet_pin_logs" = "密码错误日志";
 "wallet_pin_logs_empty" = "没有日志";
-"wallet_change_password_success" = "修改支付密码成功";
-"wallet_set_password_success" = "设置支付密码成功";
+"wallet_change_password_success" = "修改密码成功";
+"wallet_set_password_success" = "设置密码成功";
 "wallet_snapshot_transfer_from" = "转账来自";
 "wallet_snapshot_transfer_to" = "转账给";
 "wallet_caption_send" = "转出";
@@ -447,16 +446,16 @@
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
 "wallet_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "wallet_no_price" = "暂无价格";
-"wallet_pin_create_title" = "设置 6 位数字支付密码创建你的第一个数字钱包";
-"wallet_pin_confirm_title" = "确认 6 位数字支付密码并牢记它";
+"wallet_pin_create_title" = "设置 6 位数字密码创建你的第一个数字钱包";
+"wallet_pin_confirm_title" = "确认 6 位数字密码并牢记它";
 "wallet_pin_confirm_subtitle" = "如果忘记，你的钱包将无法找回。";
-"wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字支付密码";
-"wallet_pin_confirm_again_subtitle" = "很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
-"wallet_pin_more_confirm" = "这是最后一次确认支付密码，记住：支付密码丢失将永远无法找回！";
-"wallet_pin_title" = "设置支付密码";
-"wallet_pin_new_title" = "设置新的 6 位数字支付密码";
+"wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字密码";
+"wallet_pin_confirm_again_subtitle" = "很少看到第三次确认吧！所以请牢记，密码丢失是无法找回的。";
+"wallet_pin_more_confirm" = "这是最后一次确认密码，记住：密码丢失将永远无法找回！";
+"wallet_pin_title" = "设置密码";
+"wallet_pin_new_title" = "设置新的 6 位数字密码";
 "wallet_pin_inconsistency" = "密码不一致，请重新设置";
-"wallet_pin_too_simple" = "支付密码过于简单不安全";
+"wallet_pin_too_simple" = "密码过于简单不安全";
 "wallet_pin_verify_title" = "输入你的钱包密码";
 "wallet_pin_remember_description" = "定期输入钱包密码有助于记住该密码";
 "wallet_all_transactions_title" = "所有交易记录";
@@ -470,9 +469,9 @@
 "wallet_pin_pay_interval_minutes" = "%@ 分钟";
 "wallet_pin_pay_interval_hour" = "1 小时";
 "wallet_pin_pay_interval_hours" = "%@ 小时";
-"wallet_pin_pay_interval" = "支付密码使用间隔";
+"wallet_pin_pay_interval" = "密码使用间隔";
 "wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
-"wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
+"wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入密码的时间超过以上指定时间时，再次转账时仍然需要密码";
 "wallet_currency" = "货币";
 "withdrawal_amount_too_small" = "提现金额太少了";
 "withdrawal_minimum_amount" = "提现金额最小 %@ %@";
@@ -541,7 +540,7 @@
 "transfer_error_balance_insufficient" = "余额不足";
 "transfer_error_fee_insufficient" = "手续费不足";
 "transfer_error_amount_too_small" = "转账金额太小";
-"transfer_error_pin_incorrect" = "支付密码不正确";
+"transfer_error_pin_incorrect" = "密码不正确";
 "transfer_error_pin_incorrect_with_times" = "错误 20119: 密码不正确。你还有 %@ 次机会尝试，使用完需等待 24 小时后再尝试。";
 "transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_transfer_title" = "转账给%@";
@@ -659,9 +658,9 @@
 "emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
 "emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
 "emergency_tip_link" = "紧急联系人";
-"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
+"emergency_pin_protection_hint" = "紧急联系人经密码加密保护";
 "emergency_change_number_tip" = "立即更换手机号？";
-"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
+"emergency_tip_pin" = "注意：紧急联系人无法帮助找回密码";
 "enable_emergency_contact" = "启用紧急联系人";
 "emergency_confirm" = "确认设置 Mixin ID %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
 
@@ -701,8 +700,10 @@
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_header_message_source" = "谁可以给我发消息";
 "setting_header_conversation_source" = "谁可以加我入群";
+"setting_header_search_source" = "谁可以通过手机号找到我";
 "setting_source_everybody" = "任何人";
 "setting_source_contacts" = "我的联系人";
+"setting_source_nobody" = "禁止所有人";
 "setting_storage_photos" = "图片";
 "setting_storage_videos" = "视频";
 "setting_storage_audios" = "音频";
@@ -712,9 +713,11 @@
 "setting_change_emergency_contact_success" = "成功设置紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
+"setting_notification_message_preview_description" = "在推送通知中显示消息内容";
 "setting_notification_transfer" = "转账通知";
 "setting_notification_transfer_amount" = "转账金额（%@）";
 "setting_notification_transfer_summary" = "当收到不少于 %@ 转账时显示通知";
+"setting_transfer_large" = "大额转账确认";
 "setting_transfer_large_title" = "大额转账确认（%@）";
 "setting_transfer_large_summary" = "当转账金额大于或等于 %@ 时显示确认弹窗";
 "setting_backup_title" = "聊天记录备份";
@@ -742,6 +745,7 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
 "setting_auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
+"setting_phone_number_title" = "手机号搜索";
 "setting_contacts_title" = "手机通讯录";
 "setting_contacts_delete" = "删除已同步的通讯录";
 "setting_contacts_delete_confirm" = "确定删除已同步到 Mixin 服务器的通讯录？";
@@ -749,6 +753,8 @@
 "setting_contacts_upload" = "上传手机通讯录";
 "setting_permissions" = "授权列表";
 "setting_permissions_date" = "授权时间: %@, 上次访问: %@";
+"setting_appearance" = "显示";
+"setting_pin" = "密码";
 
 // Notifications
 "notification_reply" = "回复";

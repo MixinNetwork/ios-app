@@ -93,7 +93,6 @@
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
-"screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
 "biometry_suggestion" = " %@ が提案されています.";
 "clock_skew_title" = "システム時間は異常です";
 "clock_skew_tips" = "修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
@@ -606,8 +605,10 @@
 "setting_storage_usage_clear" = "%@ 件のメッセージを消去しますか（%@）。";
 "setting_header_message_source" = "私にメッセージを送ることができる人";
 "setting_header_conversation_source" = "グループチャットに私を追加できるのは誰ですか";
+"setting_header_search_source" = "Who can find me by my number";
 "setting_source_everybody" = "みんな";
 "setting_source_contacts" = "私の連絡先";
+"setting_source_nobody" = "Nobody";
 "setting_storage_photos" = "写真";
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
@@ -617,6 +618,13 @@
 "setting_change_emergency_contact_success" = "緊急連絡先を変更しました";
 "setting_logout" = "ログアウト";
 "setting_notification_message_preview" = "メッセージプレビュー";
+"setting_notification_message_preview_description" = "Preview message text inside new message notifications";
+"setting_notification_transfer" = "Transfer Notifications";
+"setting_notification_transfer_amount" = "Transfer Amount(%@)";
+"setting_notification_transfer_summary" = "Show notifications when receiving a transfer greater than or equal to %@.";
+"setting_transfer_large" = "Large Amount Confirmation";
+"setting_transfer_large_title" = "Large Amount Confirmation(%@)";
+"setting_transfer_large_summary" = "Show confirmation dialog when transfer greater than or equal to %@.";
 "setting_backup_title" = "チャットバックアップ";
 "setting_backup_now" = "今すぐバックアップ";
 "setting_backing" = "バックアップ中";
@@ -635,6 +643,16 @@
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
 "setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
+"setting_phone_number_title" = "Phone Number";
+"setting_contacts_title" = "Phone Contacts";
+"setting_contacts_delete" = "Delete Synced Contacts";
+"setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
+"setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
+"setting_contacts_upload" = "Upload Mobile Contacts";
+"setting_permissions" = "Permission list";
+"setting_permissions_date" = "Approved: %@, Last Accessed: %@";
+"setting_appearance" = "Appearance";
+"setting_pin" = "PIN";
 
 // Notifications
 "notification_reply" = "返信";

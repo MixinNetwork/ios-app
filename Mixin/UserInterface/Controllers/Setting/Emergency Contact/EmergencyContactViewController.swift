@@ -1,12 +1,30 @@
 import UIKit
 import MixinServices
 
-final class EmergencyContactViewController: UITableViewController {
+final class EmergencyContactViewController: SettingsTableViewController {
     
-    private let footerReuseId = "footer"
+    private let dataSource = SettingsDataSource(sections: [])
+    
+    private lazy var hasEmergencyContactSections = [
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.emergency_view(), titleStyle: .normal, accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.emergency_change(), titleStyle: .normal, accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.emergency_remove(), titleStyle: .destructive)
+        ])
+    ]
+    
+    private lazy var noEmergencyContactSections = [
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.enable_emergency_contact(), titleStyle: .highlighted, accessory: .disclosure)
+        ])
+    ]
     
     private var hasEmergencyContact: Bool {
-        return LoginManager.shared.account?.has_emergency_contact ?? false
+        LoginManager.shared.account?.has_emergency_contact ?? false
     }
     
     deinit {
@@ -14,59 +32,33 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.emergency_contact()!
+        let vc = EmergencyContactViewController()
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_emergency_contact())
         return container
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(R.nib.settingCell)
-        tableView.register(SeparatorShadowFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: footerReuseId)
-        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
+        reloadData()
+        tableView.tableHeaderView = R.nib.emergencyContactTableHeaderView(owner: nil)
+        dataSource.tableViewDelegate = self
+        dataSource.tableView = tableView
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: LoginManager.accountDidChangeNotification, object: nil)
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return hasEmergencyContact ? 3 : 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
+    @objc func reloadData() {
         if hasEmergencyContact {
-            switch indexPath.section {
-            case 0:
-                cell.titleLabel.text = R.string.localizable.emergency_view()
-                cell.accessoryImageView.isHidden = false
-                cell.titleLabel.textColor = .text
-            case 1:
-                cell.titleLabel.text = R.string.localizable.emergency_change()
-                cell.accessoryImageView.isHidden = false
-                cell.titleLabel.textColor = .text
-            default:
-                cell.titleLabel.text = R.string.localizable.emergency_remove()
-                cell.accessoryImageView.isHidden = true
-                cell.titleLabel.textColor = .walletRed
-            }
+            dataSource.reloadSections(hasEmergencyContactSections)
         } else {
-            cell.titleLabel.text = R.string.localizable.enable_emergency_contact()
-            cell.accessoryImageView.isHidden = true
-            cell.titleLabel.textColor = .theme
+            dataSource.reloadSections(noEmergencyContactSections)
         }
-        return cell
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-        view.shadowView.hasLowerShadow = false
-        return view
-    }
+}
+
+extension EmergencyContactViewController: UITableViewDelegate {
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if hasEmergencyContact {
             switch indexPath.section {
@@ -82,9 +74,21 @@ final class EmergencyContactViewController: UITableViewController {
         }
     }
     
-    @objc func accountDidChange(_ notification: Notification) {
-        tableView.reloadData()
+}
+
+extension EmergencyContactViewController: ContainerViewControllerDelegate {
+    
+    func barRightButtonTappedAction() {
+        UIApplication.shared.openURL(url: .emergencyContact)
     }
+    
+    func imageBarRightButton() -> UIImage? {
+        return R.image.ic_titlebar_help()
+    }
+    
+}
+
+extension EmergencyContactViewController {
     
     private func viewEmergencyContact() {
         let validator = ShowEmergencyContactValidationViewController()
@@ -131,18 +135,6 @@ final class EmergencyContactViewController: UITableViewController {
             }
         }
         present(vc, animated: true, completion: nil)
-    }
-    
-}
-
-extension EmergencyContactViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        UIApplication.shared.openURL(url: .emergencyContact)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_titlebar_help()
     }
     
 }

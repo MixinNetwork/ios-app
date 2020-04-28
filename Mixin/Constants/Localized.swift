@@ -465,26 +465,15 @@ public class Localized {
     }
 
     // Setting
-    public static let SETTING_TITLE = LocalizedString("setting_title", comment: "Setting")
-    public static let SETTING_NOTIFICATION = LocalizedString("setting_notification", comment: "Notifications")
-    public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
     public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")
     public static let SETTING_NO_AUTHORIZATIONS = LocalizedString("setting_no_authorizations", comment: "NO AUTHORIZATIONS")
-    public static let SETTING_PRIVACY_AND_SECURITY = LocalizedString("setting_privacy_and_security", comment: "Privacy and Security")
 
     public static let SETTING_NOTIFICATION_MESSAGE = LocalizedString("setting_notification_message", comment: "MESSAGE NOTIFICATIONS")
     public static let SETTING_NOTIFICATION_MESSAGE_SUMMARY = LocalizedString("setting_notification_message_summary", comment: "You can set custom notifications for specific users on their Contact page.")
     public static let SETTING_NOTIFICATION_GROUP = LocalizedString("setting_notification_group", comment: "GROUP NOTIFICATIONS")
     public static let SETTING_NOTIFICATION_GROUP_SUMMARY = LocalizedString("setting_notification_group_summary", comment: "You can set custom notifications for specific groups on their Group Info page.")
-    public static let SETTING_BLOCKED_USER_COUNT_SUFFIX = LocalizedString("setting_blocked_user_count_suffix", comment: " contacts")
-    public static let SETTING_BLOCKED_USER_COUNT_NONE = LocalizedString("setting_blocked_user_count_none", comment: "None")
-    public static let SETTING_ABOUT = LocalizedString("setting_about", comment: "About")
-    public static let SETTING_PRIVACY_AND_SECURITY_SUMMARY = LocalizedString("setting_privacy_and_security_summary", comment: "Change who can add you to conversation and groups.")
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
-    public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
-    public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
-    public static let SETTING_DESKTOP = LocalizedString("setting_desktop", comment: "Mixin Messenger Desktop")
     public static func SETTING_DESKTOP_LAST_ACTIVE(time: String) -> String {
         return String(format: LocalizedString("setting_desktop_last_active", comment: "Last active %@"), time)
     }
@@ -499,7 +488,6 @@ public class Localized {
         return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
     }
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
-    public static let SETTING_BACKUP_TITLE = LocalizedString("setting_backup_title", comment: "Chat Backup")
     public static let SETTING_BACKUP_AUTO = LocalizedString("setting_backup_auto", comment: "Auto Backup")
     public static let SETTING_BACKUP_NOW = LocalizedString("setting_backup_now", comment: "Back Up Now")
     public static let SETTING_BACKUP_DAILY = LocalizedString("setting_backup_daily", comment: "Daily")

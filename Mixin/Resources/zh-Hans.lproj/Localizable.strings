@@ -673,7 +673,7 @@
 
 // Setting
 "setting_title" = "设置";
-"setting_notification" = "通知";
+"setting_notification" = "通知和确认";
 "setting_notification_show" = "显示通知";
 "setting_notification_sound" = "提醒音";
 "setting_notification_message" = "信息通知";

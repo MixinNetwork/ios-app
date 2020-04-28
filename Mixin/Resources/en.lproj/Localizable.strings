@@ -669,7 +669,7 @@
 
 // Setting
 "setting_title" = "Settings";
-"setting_notification" = "Notifications";
+"setting_notification" = "Notification and Confirmation";
 "setting_notification_show" = "Show Notifications";
 "setting_notification_sound" = "Sound";
 "setting_notification_message" = "MESSAGE NOTIFICATIONS";

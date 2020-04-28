@@ -138,7 +138,7 @@ class MixinWebViewController: WebViewController {
             
             controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
                 let request = URLRequest(url: currentUrl,
-                                         cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                         cachePolicy: .reloadIgnoringLocalCacheData,
                                          timeoutInterval: 10)
                 self.webView.load(request)
             }))
@@ -151,7 +151,7 @@ class MixinWebViewController: WebViewController {
             }))
             controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
                 let request = URLRequest(url: currentUrl,
-                                         cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                         cachePolicy: .reloadIgnoringLocalCacheData,
                                          timeoutInterval: 10)
                 self.webView.load(request)
             }))

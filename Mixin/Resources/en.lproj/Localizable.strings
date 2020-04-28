@@ -97,7 +97,6 @@
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
-"screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
 "biometry_suggestion" = " %@ is suggested.";
 "clock_skew_title" = "System time is unusual";
 "clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
@@ -750,6 +749,7 @@
 "setting_permissions" = "Permission list";
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
+"setting_pin" = "PIN";
 
 // Notifications
 "notification_reply" = "Reply";

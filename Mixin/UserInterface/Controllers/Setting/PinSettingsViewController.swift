@@ -20,7 +20,7 @@ final class PinSettingsViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PinSettingsViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: "PIN")
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_pin())
         return container
     }
     

@@ -3,11 +3,11 @@ import UIKit
 class SettingsHeaderView: SettingsHeaderFooterView {
     
     override class var textColor: UIColor {
-        .text
+        .accessoryText
     }
-    
+
     override class var textStyle: UIFont.TextStyle {
-        .callout
+        .footnote
     }
     
     override class var labelInsets: UIEdgeInsets {

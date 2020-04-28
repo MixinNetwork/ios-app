@@ -5,7 +5,7 @@ final class PrivacyViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: "PIN", accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.setting_pin(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_emergency_contact(), accessory: .disclosure)
         ]),
         SettingsSection(footer: R.string.localizable.setting_privacy_and_security_summary(), rows: [

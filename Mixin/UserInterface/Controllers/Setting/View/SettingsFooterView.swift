@@ -7,7 +7,7 @@ class SettingsFooterView: SettingsHeaderFooterView {
     }
     
     override class var textStyle: UIFont.TextStyle {
-        .caption1
+        .footnote
     }
     
     override class var labelInsets: UIEdgeInsets {

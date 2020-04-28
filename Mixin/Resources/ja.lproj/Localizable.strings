@@ -93,7 +93,6 @@
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
-"screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
 "biometry_suggestion" = " %@ が提案されています.";
 "clock_skew_title" = "システム時間は異常です";
 "clock_skew_tips" = "修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
@@ -653,6 +652,7 @@
 "setting_permissions" = "Permission list";
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
+"setting_pin" = "PIN";
 
 // Notifications
 "notification_reply" = "返信";

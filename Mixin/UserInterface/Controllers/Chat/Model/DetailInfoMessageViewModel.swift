@@ -51,7 +51,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     private let fullnameVerticalInset: CGFloat = 6
-    private let minFullnameWidth: CGFloat = 44
+    private let minFullnameWidth: CGFloat = 16
     private let minEncryptedIconLeftMargin: CGFloat = 8
     private let statusHighlightTintColor = UIColor.theme
     

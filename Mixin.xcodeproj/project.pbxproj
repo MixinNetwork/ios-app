@@ -113,6 +113,7 @@
 		7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3887BD22E1AD74002B0864 /* HomeContainerViewController.swift */; };
 		7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936CE20C15BA00075A97A /* MixinKeys.swift */; };
 		7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */; };
+		7B396F0224597FD800C4B436 /* UserHandleWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */; };
 		7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */; };
 		7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */; };
 		7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4EB241965AA00B58006 /* LocationViewController.swift */; };
@@ -194,6 +195,8 @@
 		7B6C9D3524584E2F00130E36 /* SharedMediaPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */; };
 		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
+		7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */; };
+		7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */; };
 		7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */; };
 		7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B710DFB243637A5008F0D73 /* CirclesTableFooterView.swift */; };
 		7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B710DFD243637D9008F0D73 /* CirclesTableFooterView.xib */; };
@@ -918,6 +921,7 @@
 		7B3887BD22E1AD74002B0864 /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
 		7B3936CE20C15BA00075A97A /* MixinKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinKeys.swift; sourceTree = "<group>"; };
 		7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaViewController.swift; sourceTree = "<group>"; };
+		7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleWrapperView.swift; sourceTree = "<group>"; };
 		7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAnnouncementViewController.swift; sourceTree = "<group>"; };
 		7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderingModeSwitchableImageView.swift; sourceTree = "<group>"; };
 		7B3FD4EB241965AA00B58006 /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -999,6 +1003,8 @@
 		7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPost.swift; sourceTree = "<group>"; };
 		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
+		7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementBadgeContentView.swift; sourceTree = "<group>"; };
+		7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementBadgeContentView.xib; sourceTree = "<group>"; };
 		7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaCollectionHeaderView.swift; sourceTree = "<group>"; };
 		7B710DFB243637A5008F0D73 /* CirclesTableFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesTableFooterView.swift; sourceTree = "<group>"; };
 		7B710DFD243637D9008F0D73 /* CirclesTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CirclesTableFooterView.xib; sourceTree = "<group>"; };
@@ -2656,6 +2662,9 @@
 				7B4C6570242358D5003B78F9 /* LocationSearchNoResultView.swift */,
 				7B082D15242C9D5F00C5E163 /* MultipleSelectionActionView.xib */,
 				7B082D19242CACA000C5E163 /* MultipleSelectionActionView.swift */,
+				7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */,
+				7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */,
+				7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3173,6 +3182,7 @@
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
+				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
@@ -3837,6 +3847,7 @@
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
+				7B396F0224597FD800C4B436 /* UserHandleWrapperView.swift in Sources */,
 				E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
@@ -4075,6 +4086,7 @@
 				7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */,
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
+				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,

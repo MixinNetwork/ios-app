@@ -14,12 +14,14 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
-    @IBOutlet weak var announcementButton: UIButton!
+    @IBOutlet weak var userHandleWrapperView: UserHandleWrapperView!
+    @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
     @IBOutlet weak var mentionCountLabel: InsetLabel!
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
+    @IBOutlet weak var announcementBadgeView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var inputWrapperTopShadowView: TopShadowView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
@@ -32,6 +34,9 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var accessoryButtonsWrapperBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var announcementBadgeHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var announcementBadgeBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var showInputWrapperConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideInputWrapperConstraint: NSLayoutConstraint!
@@ -78,6 +83,7 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
+    private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
     
     private lazy var strangerHintView: StrangerHintView = {
         let view = R.nib.strangerHintView(owner: nil)!
@@ -155,6 +161,11 @@ class ConversationViewController: UIViewController {
     }
     
     // MARK: - Life cycle
+    deinit {
+        AppGroupUserDefaults.User.currentConversationId = nil
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundImageView.snp.makeConstraints { (make) in
@@ -188,7 +199,11 @@ class ConversationViewController: UIViewController {
         tableView.actionDelegate = self
         tableView.viewController = self
         let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-        announcementButton.isHidden = !hasUnreadAnnouncement
+        if hasUnreadAnnouncement {
+            updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+        } else {
+            updateAnnouncementBadge(announcement: nil)
+        }
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
         updateStrangerActionView()
@@ -282,11 +297,6 @@ class ConversationViewController: UIViewController {
         dataSource.reload(initialMessageId: messageId)
     }
     
-    deinit {
-        AppGroupUserDefaults.User.currentConversationId = nil
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
@@ -298,18 +308,6 @@ class ConversationViewController: UIViewController {
             let vc = UserProfileViewController(user: user)
             present(vc, animated: true, completion: nil)
         }
-    }
-    
-    @IBAction func announcementAction(_ sender: Any) {
-        guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
-            return
-        }
-        let vc = GroupProfileViewController(conversation: conversation,
-                                            numberOfParticipants: numberOfParticipants,
-                                            isMember: isMember)
-        present(vc, animated: true, completion: nil)
-        AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
-        announcementButton.isHidden = true
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -372,6 +370,22 @@ class ConversationViewController: UIViewController {
             controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
         }
+    }
+    
+    @IBAction func showAnnouncementAction(_ sender: Any) {
+        guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
+            return
+        }
+        let vc = GroupProfileViewController(conversation: conversation,
+                                            numberOfParticipants: numberOfParticipants,
+                                            isMember: isMember)
+        present(vc, animated: true, completion: nil)
+        dismissAnnouncementBadgeAction(sender)
+    }
+    
+    @IBAction func dismissAnnouncementBadgeAction(_ sender: Any) {
+        AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
+        updateAnnouncementBadge(announcement: nil)
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
@@ -677,7 +691,11 @@ class ConversationViewController: UIViewController {
             }
             dataSource?.conversation.announcement = conversation.announcement
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-            announcementButton.isHidden = !hasUnreadAnnouncement
+            if hasUnreadAnnouncement {
+                updateAnnouncementBadge(announcement: conversation.announcement)
+            } else {
+                updateAnnouncementBadge(announcement: nil)
+            }
             hideLoading()
         case .startedUpdateConversation:
             showLoading()
@@ -803,6 +821,21 @@ class ConversationViewController: UIViewController {
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
         inputWrapperHeightConstraint.constant = newHeight
         updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
+    }
+    
+    // Overlays are user handle, accessory buttons and announcement badge
+    func updateOverlays() {
+        let maxHeight = userHandleWrapperView.frame.height
+            - accessoryButtonsWrapperView.frame.height
+            - accessoryButtonsWrapperBottomConstraint.constant
+            - announcementBadgeView.frame.height
+        let height = userHandleWrapperView.bounds.height
+            - userHandleViewController.tableHeaderView.frame.height
+            + userHandleViewController.tableView.contentOffset.y
+        let handleHeight = min(maxHeight, height)
+        userHandleWrapperView.maskHeight = handleHeight
+        announcementBadgeBottomConstraint.constant = handleHeight
+        view.layoutIfNeeded()
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
@@ -1600,12 +1633,7 @@ extension ConversationViewController {
             return
         }
         addChild(userHandleViewController)
-        view.insertSubview(userHandleViewController.view, belowSubview: inputWrapperView)
-        userHandleViewController.view.snp.makeConstraints { (make) in
-            make.top.equalTo(navigationBarView.snp.bottom)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(inputWrapperView.snp.top)
-        }
+        userHandleWrapperView.addUserHandleView(userHandleViewController.view)
         userHandleViewController.didMove(toParent: self)
     }
     
@@ -1699,6 +1727,22 @@ extension ConversationViewController {
         }
         if animated {
             UIView.commitAnimations()
+        }
+    }
+    
+    // Announcement badge will be hidden if announcement passed in is nil or empty
+    private func updateAnnouncementBadge(announcement: String?) {
+        if let announcement = announcement, !announcement.isEmpty {
+            if announcementBadgeContentView.superview == nil {
+                announcementBadgeView.addSubview(announcementBadgeContentView)
+                announcementBadgeContentView.snp.makeEdgesEqualToSuperview()
+            }
+            announcementBadgeContentView.label.text = announcement
+            announcementBadgeContentView.ensureLayout()
+        } else {
+            for subview in announcementBadgeView.subviews {
+                subview.removeFromSuperview()
+            }
         }
     }
     

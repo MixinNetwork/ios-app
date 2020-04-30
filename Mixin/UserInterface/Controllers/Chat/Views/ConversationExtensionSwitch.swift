@@ -18,11 +18,17 @@ class ConversationExtensionSwitch: UIControl {
     }
     
     private let iconLayer = CAShapeLayer()
-    private let offColor = R.color.icon_fill()!.cgColor
-    private let onColor = R.color.theme()!.cgColor
     private let animationDuration: TimeInterval = 0.2
     
     private var _isOn = false
+    
+    private var onColor: CGColor {
+        R.color.theme()!.cgColor
+    }
+    
+    private var offColor: CGColor {
+        R.color.icon_fill()!.cgColor
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -63,6 +69,11 @@ class ConversationExtensionSwitch: UIControl {
     override func layoutSubviews() {
         super.layoutSubviews()
         iconLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateIconLayer()
     }
     
     @objc func tapAction(_ sender: UITapGestureRecognizer) {

@@ -3,6 +3,7 @@ import MixinServices
 
 class WithdrawalTipWindow: BottomSheetView {
 
+    @IBOutlet weak var iconView: AssetIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var changeButton: RoundedButton!
     @IBOutlet weak var continueButton: UIButton!
@@ -33,6 +34,7 @@ class WithdrawalTipWindow: BottomSheetView {
 
     func render(asset: AssetItem, completion: @escaping CompletionHandler) -> WithdrawalTipWindow {
         self.completion = completion
+        iconView.setIcon(asset: asset)
         titleLabel.text = Localized.WALLET_WITHDRAWAL_ASSET(assetName: asset.symbol)
         timer?.invalidate()
         timer = nil

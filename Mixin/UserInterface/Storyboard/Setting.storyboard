@@ -545,10 +545,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Swr-M8-nCZ">
-                                <rect key="frame" x="0.0" y="69.5" width="375" height="610.5"/>
+                                <rect key="frame" x="0.0" y="217.5" width="375" height="462.5"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency_contact" translatesAutoresizingMaskIntoConstraints="NO" id="mGo-Ey-I7z">
+                                        <rect key="frame" x="153.5" y="70" width="68" height="68"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Contact" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ug6-5I-fh2">
-                                        <rect key="frame" x="30" y="70" width="315" height="21.5"/>
+                                        <rect key="frame" x="30" y="162" width="315" height="21.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                         <color key="textColor" name="title"/>
                                         <nil key="highlightedColor"/>
@@ -558,7 +562,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1jz-c0-1oi">
-                                        <rect key="frame" x="30" y="107.5" width="315" height="94"/>
+                                        <rect key="frame" x="30" y="199.5" width="315" height="94"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0LO-fL-fXU">
                                                 <rect key="frame" x="2.5" y="0.0" width="310.5" height="50.5"/>
@@ -582,30 +586,17 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency" translatesAutoresizingMaskIntoConstraints="NO" id="mGo-Ey-I7z">
-                                        <rect key="frame" x="117.5" y="259.5" width="140" height="162"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
+                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="top" secondItem="mGo-Ey-I7z" secondAttribute="bottom" constant="24" id="2O5-hM-LXk"/>
                                     <constraint firstItem="mGo-Ey-I7z" firstAttribute="centerX" secondItem="Swr-M8-nCZ" secondAttribute="centerX" id="ERG-XE-BE0"/>
                                     <constraint firstAttribute="trailing" secondItem="Ug6-5I-fh2" secondAttribute="trailing" constant="30" id="TPP-HF-ir7"/>
                                     <constraint firstItem="1jz-c0-1oi" firstAttribute="top" secondItem="Ug6-5I-fh2" secondAttribute="bottom" constant="16" id="gIz-73-spU"/>
                                     <constraint firstAttribute="trailing" secondItem="1jz-c0-1oi" secondAttribute="trailing" constant="30" id="ii4-8E-eqm"/>
                                     <constraint firstItem="1jz-c0-1oi" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="jyq-Jz-Fvf"/>
                                     <constraint firstItem="Ug6-5I-fh2" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="sct-RZ-5Qe"/>
-                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="58" id="sfw-CY-tfJ" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                <real key="value" value="20"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                                <real key="value" value="30"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </constraint>
-                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="uaL-6X-E6A" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="zen-uN-OW6" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                                 <real key="value" value="20"/>
@@ -650,7 +641,12 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </constraint>
-                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="top" secondItem="mGo-Ey-I7z" secondAttribute="bottom" constant="76" id="L7I-Ys-QGX" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="leading" secondItem="2gO-e6-olN" secondAttribute="leading" id="You-IM-PiS"/>
+                            <constraint firstAttribute="trailing" secondItem="Swr-M8-nCZ" secondAttribute="trailing" id="YzS-nT-cvR"/>
+                            <constraint firstAttribute="bottom" secondItem="Swr-M8-nCZ" secondAttribute="bottom" constant="-13" id="agm-h2-GfF"/>
+                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="centerX" secondItem="jVc-6A-6FU" secondAttribute="centerX" id="fg7-zR-SFr"/>
+                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jVc-6A-6FU" secondAttribute="top" id="uuS-pY-hAF"/>
+                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="56" id="yVI-a5-eFg" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                         <real key="value" value="20"/>
@@ -660,11 +656,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </constraint>
-                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="leading" secondItem="2gO-e6-olN" secondAttribute="leading" id="You-IM-PiS"/>
-                            <constraint firstAttribute="trailing" secondItem="Swr-M8-nCZ" secondAttribute="trailing" id="YzS-nT-cvR"/>
-                            <constraint firstAttribute="bottom" secondItem="Swr-M8-nCZ" secondAttribute="bottom" constant="-13" id="agm-h2-GfF"/>
-                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="centerX" secondItem="jVc-6A-6FU" secondAttribute="centerX" id="fg7-zR-SFr"/>
-                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jVc-6A-6FU" secondAttribute="top" id="uuS-pY-hAF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="jVc-6A-6FU"/>
                     </view>
@@ -776,7 +767,7 @@
     </scenes>
     <resources>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
-        <image name="ic_emergency" width="140" height="162"/>
+        <image name="ic_emergency_contact" width="68" height="68"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

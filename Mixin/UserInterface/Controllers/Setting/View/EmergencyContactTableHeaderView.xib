@@ -15,10 +15,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="ic_emergency_contact" translatesAutoresizingMaskIntoConstraints="NO" id="uxZ-8P-Kkc">
-                    <rect key="frame" x="153.5" y="60" width="68" height="70"/>
+                    <rect key="frame" x="153.5" y="60" width="68" height="68"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-He-fnU">
-                    <rect key="frame" x="30" y="154" width="315" height="80"/>
+                    <rect key="frame" x="30" y="152" width="315" height="82"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                     <color key="textColor" name="text_accessory"/>
                     <nil key="highlightedColor"/>
@@ -41,12 +41,12 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_emergency_contact" width="68" height="70"/>
+        <image name="ic_emergency_contact" width="68" height="68"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

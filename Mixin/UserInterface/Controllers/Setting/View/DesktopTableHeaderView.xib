@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="rnY-v7-lQJ">
-                    <rect key="frame" x="131" y="60" width="113" height="72"/>
+                    <rect key="frame" x="121.5" y="60" width="132" height="76"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" name="background"/>
@@ -28,7 +28,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Setting/ic_desktop" width="113" height="72"/>
+        <image name="Setting/ic_desktop" width="132" height="76"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

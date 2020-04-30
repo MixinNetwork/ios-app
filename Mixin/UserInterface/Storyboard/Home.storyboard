@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -337,6 +337,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="DbF-VG-Rtb" secondAttribute="height" id="tod-VS-i2v"/>
                                                 </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <state key="normal" image="ic_title_search"/>
                                                 <connections>
                                                     <action selector="showSearchAction" destination="hQE-mj-dkd" eventType="touchUpInside" id="Vfm-8z-tYR"/>
@@ -347,6 +348,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="sgk-eO-xl5" secondAttribute="height" id="vpg-Rw-5UU"/>
                                                 </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <state key="normal" image="ic_title_contact"/>
                                                 <connections>
                                                     <action selector="contactsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="WPi-vz-bR7"/>
@@ -1536,8 +1538,8 @@ chat history from icloud</string>
         <image name="ic_restore" width="88" height="58"/>
         <image name="ic_title_add" width="16" height="16"/>
         <image name="ic_title_close" width="15" height="15"/>
-        <image name="ic_title_contact" width="23" height="19"/>
-        <image name="ic_title_search" width="19" height="19"/>
+        <image name="ic_title_contact" width="24" height="24"/>
+        <image name="ic_title_search" width="28.5" height="28"/>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1552,7 +1554,7 @@ chat history from icloud</string>
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

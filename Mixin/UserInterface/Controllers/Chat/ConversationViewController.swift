@@ -1146,6 +1146,21 @@ extension ConversationViewController: UITableViewDelegate {
         nil
     }
     
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        contextMenuConfigurationForRow(at: indexPath)
+    }
+    
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
 }
 
 // MARK: - DetailInfoMessageCellDelegate
@@ -1169,6 +1184,24 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
             return
         }
         openAction(action: appButtons[index].action, sendUserId: message.userId)
+    }
+    
+    @available(iOS 13.0, *)
+    func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration? {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return nil
+        }
+        return contextMenuConfigurationForRow(at: indexPath)
+    }
+    
+    @available(iOS 13.0, *)
+    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+    @available(iOS 13.0, *)
+    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
     }
     
 }
@@ -1968,6 +2001,76 @@ extension ConversationViewController {
             self.messageIdToFlashAfterAnimationFinished = flashingId
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
+    }
+    
+}
+
+// MARK: - Context menu configs
+@available(iOS 13.0, *)
+extension ConversationViewController {
+    
+    private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
+        guard !tableView.allowsMultipleSelection else {
+            return nil
+        }
+        guard conversationTableView(self.tableView, hasActionsforIndexPath: indexPath) else {
+            return nil
+        }
+        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
+            return nil
+        }
+        let actions = message.allowedActions.map { (action) -> UIAction in
+            UIAction(title: action.title) { (_) in
+                if action == .delete || action == .forward || action == .reply {
+                    // Wait until context menu animation finished
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        self.conversationTableView(self.tableView, didSelectAction: action, forIndexPath: indexPath)
+                    }
+                } else {
+                    self.conversationTableView(self.tableView, didSelectAction: action, forIndexPath: indexPath)
+                }
+            }
+        }
+        let identifier = indexPath as NSIndexPath
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
+            UIMenu(title: "", children: actions)
+        }
+    }
+    
+    private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let identifier = configuration.identifier as? NSIndexPath else {
+            return nil
+        }
+        let indexPath = identifier as IndexPath
+        guard let cell = tableView.cellForRow(at: indexPath) as? MessageCell, let viewModel = dataSource.viewModel(for: indexPath) else {
+            return nil
+        }
+        let param = UIPreviewParameters()
+        param.backgroundColor = .clear
+        
+        if let viewModel = viewModel as? StickerMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
+                                             cornerRadius: StickerMessageCell.contentCornerRadius)
+        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+                                             cornerRadius: AppButtonView.cornerRadius)
+        } else {
+            if viewModel.style.contains(.received) {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.leftWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.left(frame: viewModel.backgroundImageFrame)
+                }
+            } else {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.rightWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.right(frame: viewModel.backgroundImageFrame)
+                }
+            }
+        }
+        
+        return UITargetedPreview(view: cell, parameters: param)
     }
     
 }

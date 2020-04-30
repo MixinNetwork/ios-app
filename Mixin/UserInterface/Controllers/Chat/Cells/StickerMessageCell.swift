@@ -3,7 +3,9 @@ import YYImage
 import MixinServices
 
 class StickerMessageCell: DetailInfoMessageCell {
-
+    
+    static let contentCornerRadius: CGFloat = 6
+    
     let contentImageView = YYAnimatedImageView()
     
     lazy var selectedOverlapImageView: UIImageView = {
@@ -49,7 +51,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         messageContentView.addSubview(contentImageView)
         contentImageView.contentMode = .scaleAspectFill
         contentImageView.clipsToBounds = true
-        contentImageView.layer.cornerRadius = 6
+        contentImageView.layer.cornerRadius = Self.contentCornerRadius
         super.prepare()
         backgroundImageView.removeFromSuperview()
     }

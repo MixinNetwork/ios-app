@@ -18,7 +18,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
         
         frames = []
-        buttonGroupFrame = .zero
+        var buttonGroupFrame: CGRect? = nil
         
         let buttonLayoutWidth = width - margin.horizontal
         let buttonSizes: [CGSize] = message.appButtons?.map({
@@ -40,8 +40,14 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
             frames.append(frame)
             bottomRight = CGPoint(x: frame.maxX, y: frame.maxY)
             isFirstButton = false
+            if let current = buttonGroupFrame {
+                buttonGroupFrame = current.union(frame)
+            } else {
+                buttonGroupFrame = frame
+            }
         }
-        buttonGroupFrame = frames.reduce(.zero, { $0.union($1) })
+        self.buttonGroupFrame = buttonGroupFrame ?? .zero
+        
         if let lastFrame = frames.last {
             cellHeight = lastFrame.maxY + AppButtonView.buttonMargin.bottom + margin.bottom
             if style.contains(.bottomSeparator) {

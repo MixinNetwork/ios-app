@@ -1,14 +1,23 @@
 import UIKit
 
 protocol AppButtonGroupMessageCellDelegate: class {
+    
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int)
+    
+    @available(iOS 13.0, *)
+    func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration?
+    @available(iOS 13.0, *)
+    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
+    @available(iOS 13.0, *)
+    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
+    
 }
 
 class AppButtonGroupMessageCell: DetailInfoMessageCell {
     
     weak var appButtonDelegate: AppButtonGroupMessageCellDelegate?
     
-    private var buttonViews = [AppButtonView]()
+    private(set) var buttonViews = [AppButtonView]()
     
     override var contentFrame: CGRect {
         return (viewModel as? AppButtonGroupViewModel)?.buttonGroupFrame ?? .zero
@@ -28,6 +37,13 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
                 view.setTitle(content.label, colorHexString: content.color)
                 view.button.tag = i
                 view.button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+                if #available(iOS 13.0, *) {
+                    // According to disassembly result of UIKitCore from iOS 13.4.1
+                    // UITableView's context menu handler cancels any context menu interaction
+                    // on UIControl subclasses, therefore we have to handle it here
+                    let interaction = UIContextMenuInteraction(delegate: self)
+                    view.button.addInteraction(interaction)
+                }
                 buttonViews.append(view)
                 messageContentView.addSubview(view)
             }
@@ -45,6 +61,23 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
             return
         }
         appButtonDelegate?.appButtonGroupMessageCell(self, didSelectActionAt: sender.tag)
+    }
+    
+}
+
+@available(iOS 13.0, *)
+extension AppButtonGroupMessageCell: UIContextMenuInteractionDelegate {
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        appButtonDelegate?.contextMenuConfigurationForAppButtonGroupMessageCell(self)
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        appButtonDelegate?.previewForHighlightingContextMenuOfAppButtonGroupMessageCell(self, with: configuration)
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        appButtonDelegate?.previewForDismissingContextMenuOfAppButtonGroupMessageCell(self, with: configuration)
     }
     
 }

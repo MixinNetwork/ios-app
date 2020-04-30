@@ -86,7 +86,6 @@ class ConversationTableView: UITableView {
     private let animationDuration: TimeInterval = 0.3
     
     private var headerViewsAnimator: UIViewPropertyAnimator?
-    private var longPressRecognizer: UILongPressGestureRecognizer!
     private var bottomContentOffset: CGPoint {
         let y = contentSize.height + adjustedContentInset.bottom - frame.height
         return CGPoint(x: contentOffset.x, y: max(-contentInset.top, y))
@@ -286,18 +285,22 @@ class ConversationTableView: UITableView {
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
-        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-        longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
-        addGestureRecognizer(longPressRecognizer)
-        UIMenuController.shared.menuItems = [
-            UIMenuItem(title: Localized.CHAT_MESSAGE_ADD, action: #selector(addToStickersAction(_:))),
-            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
-            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
-            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
-            UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:))),
-            UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportAction(_:)))
-        ]
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+        if #available(iOS 13.0, *) {
+            // Leave it to context menu
+        } else {
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+            longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
+            addGestureRecognizer(longPressRecognizer)
+            UIMenuController.shared.menuItems = [
+                UIMenuItem(title: Localized.CHAT_MESSAGE_ADD, action: #selector(addToStickersAction(_:))),
+                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
+                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
+                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
+                UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:))),
+                UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportAction(_:)))
+            ]
+            NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+        }
     }
     
 }

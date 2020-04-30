@@ -325,6 +325,7 @@
 		7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */; };
 		7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */; };
 		7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BACA8D423602BF8007E3381 /* RecorderLongPressHintView.xib */; };
+		7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BACFED22459C47C0033A3CD /* BubblePath.swift */; };
 		7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */; };
 		7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3337216E1DF9006C0309 /* RTCSessionDescription+JSON.swift */; };
 		7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */; };
@@ -1126,6 +1127,7 @@
 		7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSearchResult.swift; sourceTree = "<group>"; };
 		7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverSearchResult.swift; sourceTree = "<group>"; };
 		7BACA8D423602BF8007E3381 /* RecorderLongPressHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecorderLongPressHintView.xib; sourceTree = "<group>"; };
+		7BACFED22459C47C0033A3CD /* BubblePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblePath.swift; sourceTree = "<group>"; };
 		7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadHintMessageCell.swift; sourceTree = "<group>"; };
 		7BAD3337216E1DF9006C0309 /* RTCSessionDescription+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RTCSessionDescription+JSON.swift"; sourceTree = "<group>"; };
 		7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RTCIceCandidate+JSON.swift"; sourceTree = "<group>"; };
@@ -1726,6 +1728,7 @@
 			children = (
 				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
 				7B31E565236181C9004F891A /* BubbleImageSet.swift */,
+				7BACFED22459C47C0033A3CD /* BubblePath.swift */,
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
@@ -3708,6 +3711,7 @@
 				7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */,
 				DFD1FBC522FD809700C570D4 /* PhoneContactsSettingViewController.swift in Sources */,
 				7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */,
+				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
 				ABE865BE23F2455800C0167D /* Scope.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,

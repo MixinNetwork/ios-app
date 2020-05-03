@@ -58,6 +58,9 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     deinit {
+        if dismissHomeAppsWindow {
+            UIApplication.homeViewController?.dismissAppsWindow()
+        }
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -426,13 +429,6 @@ extension UserProfileViewController {
         }
     }
 
-    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        super.dismiss(animated: flag, completion: completion)
-        if dismissHomeAppsWindow {
-            UIApplication.homeViewController?.dismissAppsWindow()
-        }
-    }
-    
     @objc func callPhone() {
         guard let phone = user.phone, !phone.isEmpty, let url = URL(string: "tel://" + phone) else {
             return

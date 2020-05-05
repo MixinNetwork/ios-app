@@ -76,9 +76,6 @@ class ProfileDescriptionLabel: CoreTextLabel {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard let previous = previousTraitCollection, previous.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory else {
-            return
-        }
         typeset()
     }
     

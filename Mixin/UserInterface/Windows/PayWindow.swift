@@ -128,7 +128,7 @@ class PayWindow: BottomSheetView {
             multisigView.isHidden = true
             let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
             let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
-            if fiatMoneyValue < threshold {
+            if threshold == 0 || fiatMoneyValue < threshold {
                 showTransferView(user: user, showError: showError, showBiometric: showBiometric)
             } else {
                 showBigAmountTips = true

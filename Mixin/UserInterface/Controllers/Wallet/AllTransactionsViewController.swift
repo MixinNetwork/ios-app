@@ -29,7 +29,7 @@ class AllTransactionsViewController: UITableViewController {
             weakSelf.tableView.reloadData()
             weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
                                           text: Localized.WALLET_NO_TRANSACTION,
-                                          photo: R.image.ic_no_data()!)
+                                          photo: R.image.emptyIndicator.ic_data()!)
         }
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()

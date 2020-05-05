@@ -57,7 +57,7 @@ class HiddenAssetViewController: UIViewController {
                 weakSelf.tableView.reloadData()
                 weakSelf.tableView.checkEmpty(dataCount: assets.count,
                                               text: Localized.WALLET_HIDE_ASSET_EMPTY,
-                                              photo: R.image.ic_empty_hidden_assets()!)
+                                              photo: R.image.emptyIndicator.ic_hidden_assets()!)
             }
         }
     }

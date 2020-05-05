@@ -82,7 +82,7 @@ extension AuthorizationsViewController {
         }
         tableView.checkEmpty(dataCount: authorizations.count,
                              text: Localized.SETTING_NO_AUTHORIZATIONS,
-                             photo: R.image.ic_no_authorization()!)
+                             photo: R.image.emptyIndicator.ic_authorization()!)
     }
     
 }

@@ -172,6 +172,10 @@ public final class ConversationDAO {
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
             try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
+            try db.update(table: Conversation.tableName,
+                on: [Conversation.Properties.unseenMessageCount],
+                with: [0],
+                where: Conversation.Properties.conversationId == conversationId)
         }
 
         ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))

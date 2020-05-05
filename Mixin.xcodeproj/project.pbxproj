@@ -1958,6 +1958,7 @@
 				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
 				E0FE4CCC237421CE009A14F6 /* Model */,
 				7B26D1CD219EEB5A00AE113A /* Views */,
+				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */,
 				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
@@ -2391,7 +2392,6 @@
 		DF5D9F1E1F9C779C0036D5FD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				DFD294301FA5D01900FADAAD /* Base */,
 				7BA4E091219D999500A2176D /* Common */,
 				DF2081B320060C4400B87DB0 /* Camera */,
 				DFD294331FA6BECE00FADAAD /* Contact */,
@@ -2786,14 +2786,6 @@
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		DFD294301FA5D01900FADAAD /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
-			);
-			path = Base;
 			sourceTree = "<group>";
 		};
 		DFD294331FA6BECE00FADAAD /* Contact */ = {

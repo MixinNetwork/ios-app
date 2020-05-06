@@ -42,7 +42,7 @@
                                 <constraint firstAttribute="width" constant="44" id="bPz-Hn-rxt"/>
                             </constraints>
                             <color key="tintColor" name="icon_tint"/>
-                            <state key="normal" image="ic_title_close"/>
+                            <state key="normal" image="ic_announcement_close"/>
                             <connections>
                                 <action selector="dismissAnnouncementBadgeAction:" destination="-1" eventType="touchUpInside" id="JpS-bZ-g17"/>
                             </connections>
@@ -91,7 +91,7 @@
     </objects>
     <resources>
         <image name="ic_announcement" width="25" height="20"/>
-        <image name="ic_title_close" width="15" height="15"/>
+        <image name="ic_announcement_close" width="12" height="12"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

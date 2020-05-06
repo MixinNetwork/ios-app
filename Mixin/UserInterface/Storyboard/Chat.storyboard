@@ -328,6 +328,7 @@
                             </view>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="syC-xp-0cA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Zve-bN-jsA" secondAttribute="bottom" constant="8" id="0Te-zN-D54"/>
                             <constraint firstAttribute="bottom" secondItem="v0e-5f-Xnl" secondAttribute="bottom" id="7AD-Ab-ka0"/>
                             <constraint firstItem="Zve-bN-jsA" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="8Ra-zT-gjT"/>
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="bottom" priority="250" id="BA9-8a-X0Z"/>
@@ -521,7 +522,7 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="320" y="3" width="44" height="44"/>
+                                        <rect key="frame" x="319" y="3" width="45" height="44"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                         <connections>

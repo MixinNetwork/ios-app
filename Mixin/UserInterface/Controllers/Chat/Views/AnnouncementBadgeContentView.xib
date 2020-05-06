@@ -24,17 +24,25 @@
                                 <constraint firstAttribute="height" constant="64" id="jmn-gX-zmK"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Z8-3o-jMf">
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cT-kJ-VZx">
                             <rect key="frame" x="57" y="16" width="303" height="39"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Luk-El-wOY">
-                            <rect key="frame" x="0.0" y="0.0" width="360" height="64"/>
-                            <connections>
-                                <action selector="showAnnouncementAction:" destination="-1" eventType="touchUpInside" id="XPk-Q1-btK"/>
-                            </connections>
-                        </button>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Z8-3o-jMf">
+                                    <rect key="frame" x="0.0" y="0.0" width="303" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="width" secondItem="5sJ-Vt-90X" secondAttribute="width" id="EZ4-HB-KoF"/>
+                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="trailing" secondItem="DcV-kL-xoP" secondAttribute="trailing" id="HzA-JU-tgC"/>
+                                <constraint firstItem="DcV-kL-xoP" firstAttribute="bottom" secondItem="7Z8-3o-jMf" secondAttribute="bottom" id="RqB-Gd-2jD"/>
+                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="top" secondItem="DcV-kL-xoP" secondAttribute="top" id="fBA-4h-CDH"/>
+                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="leading" secondItem="DcV-kL-xoP" secondAttribute="leading" id="q6v-gD-Cp0"/>
+                            </constraints>
+                            <viewLayoutGuide key="contentLayoutGuide" id="DcV-kL-xoP"/>
+                            <viewLayoutGuide key="frameLayoutGuide" id="5sJ-Vt-90X"/>
+                        </scrollView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4M-UK-LDG">
                             <rect key="frame" x="360" y="10" width="44" height="44"/>
                             <constraints>
@@ -50,19 +58,14 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="Luk-El-wOY" firstAttribute="leading" secondItem="F4h-ch-emd" secondAttribute="leading" id="B9X-zn-jL2"/>
+                        <constraint firstItem="1cT-kJ-VZx" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="16" id="4mC-Dg-GYa"/>
                         <constraint firstAttribute="trailing" secondItem="h4M-UK-LDG" secondAttribute="trailing" id="Guz-b2-eHf"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="64" id="KcX-Bk-ngJ"/>
                         <constraint firstItem="f2B-sv-z1U" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" id="N8m-Pm-8UH"/>
-                        <constraint firstAttribute="bottom" secondItem="Luk-El-wOY" secondAttribute="bottom" id="RAW-10-NaQ"/>
-                        <constraint firstItem="7Z8-3o-jMf" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="16" id="WAA-8J-enR"/>
                         <constraint firstItem="h4M-UK-LDG" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="10" id="XzF-nZ-u7d"/>
-                        <constraint firstItem="h4M-UK-LDG" firstAttribute="leading" secondItem="7Z8-3o-jMf" secondAttribute="trailing" id="ftN-x1-0EO"/>
+                        <constraint firstItem="1cT-kJ-VZx" firstAttribute="leading" secondItem="f2B-sv-z1U" secondAttribute="trailing" id="h1S-gR-MoW"/>
                         <constraint firstItem="f2B-sv-z1U" firstAttribute="leading" secondItem="F4h-ch-emd" secondAttribute="leading" id="hKi-0Y-Yx5"/>
-                        <constraint firstItem="Luk-El-wOY" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" id="ieY-r4-O3y"/>
-                        <constraint firstAttribute="bottom" secondItem="7Z8-3o-jMf" secondAttribute="bottom" constant="9" id="ohs-ej-l4s"/>
-                        <constraint firstItem="h4M-UK-LDG" firstAttribute="leading" secondItem="Luk-El-wOY" secondAttribute="trailing" id="pOt-od-NNy"/>
-                        <constraint firstItem="7Z8-3o-jMf" firstAttribute="leading" secondItem="f2B-sv-z1U" secondAttribute="trailing" id="u9B-gt-Udb"/>
+                        <constraint firstAttribute="bottom" secondItem="1cT-kJ-VZx" secondAttribute="bottom" constant="9" id="mgf-GF-wNg"/>
+                        <constraint firstItem="h4M-UK-LDG" firstAttribute="leading" secondItem="1cT-kJ-VZx" secondAttribute="trailing" id="zDY-G9-5ms"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -80,11 +83,14 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="backgroundBottomConstraint" destination="bDD-xh-aa4" id="uvq-0H-Ly4"/>
+                <outlet property="backgroundTopConstraint" destination="4JD-Hp-bQU" id="wKc-fU-oXC"/>
                 <outlet property="backgroundView" destination="F4h-ch-emd" id="smQ-Ub-iNO"/>
                 <outlet property="closeButton" destination="h4M-UK-LDG" id="CFH-uA-xpX"/>
                 <outlet property="label" destination="7Z8-3o-jMf" id="7G4-DO-elg"/>
-                <outlet property="labelTopConstraint" destination="WAA-8J-enR" id="g2e-lu-KPH"/>
-                <outlet property="viewButton" destination="Luk-El-wOY" id="2yo-Qx-Yu7"/>
+                <outlet property="scrollView" destination="1cT-kJ-VZx" id="aY0-CQ-eDg"/>
+                <outlet property="scrollViewBottomConstraint" destination="mgf-GF-wNg" id="jpv-gg-gH2"/>
+                <outlet property="scrollViewTopConstraint" destination="4mC-Dg-GYa" id="VKZ-c1-WP8"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
         </view>

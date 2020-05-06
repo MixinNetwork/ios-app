@@ -372,17 +372,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @IBAction func showAnnouncementAction(_ sender: Any) {
-        guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
-            return
-        }
-        let vc = GroupProfileViewController(conversation: conversation,
-                                            numberOfParticipants: numberOfParticipants,
-                                            isMember: isMember)
-        present(vc, animated: true, completion: nil)
-        dismissAnnouncementBadgeAction(sender)
-    }
-    
     @IBAction func dismissAnnouncementBadgeAction(_ sender: Any) {
         AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
         updateAnnouncementBadge(announcement: nil)
@@ -1738,7 +1727,7 @@ extension ConversationViewController {
                 announcementBadgeContentView.snp.makeEdgesEqualToSuperview()
             }
             announcementBadgeContentView.label.text = announcement
-            announcementBadgeContentView.ensureLayout()
+            announcementBadgeContentView.layoutAsCompressed()
         } else {
             for subview in announcementBadgeView.subviews {
                 subview.removeFromSuperview()

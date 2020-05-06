@@ -369,7 +369,7 @@ class UrlWindow {
         PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
-                if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) {
+                if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) ?? syncAsset(assetId: payment.asset.chainId, hud: hud) {
                     hud.hide()
                     let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset.iconUrl, chainName: chainAsset.name, chainSymbol: chainAsset.symbol)
                     let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""

@@ -24,7 +24,15 @@ public extension String {
             ?? NumberFormatter.decimal.number(from: self)?.doubleValue
             ?? 0
     }
-    
+
+    var intValue: Int? {
+        return Int(self) ?? NumberFormatter.decimal.number(from: self)?.intValue
+    }
+
+    var int64Value: Int64? {
+        return Int64(self) ?? NumberFormatter.decimal.number(from: self)?.int64Value
+    }
+
     var sqlEscaped: String {
         return replacingOccurrences(of: "/", with: "//")
             .replacingOccurrences(of: "%", with: "/%")

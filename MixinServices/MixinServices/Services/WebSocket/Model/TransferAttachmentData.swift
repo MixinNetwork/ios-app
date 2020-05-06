@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TransferAttachmentData: Codable {
+public struct TransferAttachmentData: Encodable {
     
     public var key: Data?
     public var digest: Data?
@@ -42,4 +42,41 @@ public struct TransferAttachmentData: Codable {
         self.waveform = waveform
     }
     
+}
+
+extension TransferAttachmentData: Decodable {
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        key = try container.decodeIfPresent(Data.self, forKey: .key)
+        digest = try container.decodeIfPresent(Data.self, forKey: .digest)
+        attachmentId = try container.decode(String.self, forKey: .attachmentId)
+        mimeType = try container.decodeIfPresent(String.self, forKey: .mimeType)
+        width = try Self.safeDecodeInt(container: container, key: .width)
+        height = try Self.safeDecodeInt(container: container, key: .height)
+        size = try container.decode(Int64.self, forKey: .size)
+        thumbnail = try container.decodeIfPresent(String.self, forKey: .thumbnail)
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        duration = try Self.safeDecodeInt64(container: container, key: .duration)
+        waveform = try container.decodeIfPresent(Data.self, forKey: .waveform)
+    }
+
+    private static func safeDecodeInt(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int? {
+        do {
+            return try container.decode(Int.self, forKey: key)
+        } catch {
+            Logger.write(error: error)
+        }
+        return try container.decode(String.self, forKey: key).intValue
+
+    }
+
+    private static func safeDecodeInt64(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int64? {
+        do {
+            return try container.decode(Int64.self, forKey: key)
+        } catch {
+            Logger.write(error: error)
+        }
+        return try container.decode(String.self, forKey: key).int64Value
+    }
 }

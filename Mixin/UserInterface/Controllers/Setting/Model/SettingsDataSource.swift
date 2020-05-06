@@ -23,6 +23,12 @@ class SettingsDataSource: NSObject {
                                forHeaderFooterViewReuseIdentifier: ReuseId.footer)
             tableView.dataSource = self
             tableView.delegate = self
+            
+            // UITableView is reloading automatically but not immediately after dataSource is set.
+            // Once a tableView update is committed with section number other than 1,
+            // an inconsistency will be triggered because tableView holds 1 section as default.
+            // Reload data here manually to avoid it.
+            tableView.reloadData()
         }
     }
     

@@ -121,7 +121,7 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return UIImage(named: "Wallet/ic_filter_large")
+        R.image.wallet.ic_filter_large()
     }
     
 }

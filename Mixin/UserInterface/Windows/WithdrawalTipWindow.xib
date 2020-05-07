@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuC-N5-Rgi">
-                    <rect key="frame" x="0.0" y="374" width="414" height="535"/>
+                    <rect key="frame" x="0.0" y="434" width="414" height="475"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eUF-TX-avq">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -31,7 +31,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="65Q-3F-reP">
-                            <rect key="frame" x="30" y="70" width="354" height="199"/>
+                            <rect key="frame" x="30" y="70" width="354" height="159"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMQ-Xy-5OF" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="145" y="0.0" width="64" height="64"/>
@@ -82,17 +82,10 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZL-uy-KDo">
-                                    <rect key="frame" x="57" y="159" width="240" height="40"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="MAG-Nu-cHg"/>
-                                    </constraints>
-                                </view>
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCZ-b5-DO0" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="109.5" y="345" width="195" height="42"/>
+                            <rect key="frame" x="109.5" y="285" width="195" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="0pe-Si-ppZ"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="3Ng-EL-Ic6"/>
@@ -109,7 +102,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-oD-oU5">
-                            <rect key="frame" x="151.5" y="417" width="111" height="41"/>
+                            <rect key="frame" x="151.5" y="357" width="111" height="41"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Continue">
@@ -130,7 +123,7 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="hCZ-b5-DO0" firstAttribute="top" secondItem="65Q-3F-reP" secondAttribute="bottom" constant="76" id="4ez-HI-OWm"/>
+                        <constraint firstItem="hCZ-b5-DO0" firstAttribute="top" secondItem="65Q-3F-reP" secondAttribute="bottom" constant="56" id="4ez-HI-OWm"/>
                         <constraint firstItem="hCZ-b5-DO0" firstAttribute="centerX" secondItem="fuC-N5-Rgi" secondAttribute="centerX" id="8FP-dx-iRY"/>
                         <constraint firstAttribute="trailing" secondItem="65Q-3F-reP" secondAttribute="trailing" constant="30" id="90Q-db-TVk"/>
                         <constraint firstItem="65Q-3F-reP" firstAttribute="leading" secondItem="fuC-N5-Rgi" secondAttribute="leading" constant="30" id="Kg5-3x-EyE"/>

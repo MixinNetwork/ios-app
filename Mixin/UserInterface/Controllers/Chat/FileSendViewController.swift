@@ -10,7 +10,7 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        container?.leftButton.tintColor = R.color.icon_tint()
         container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
         let config = WKWebViewConfiguration()
         config.mediaTypesRequiringUserActionForPlayback = .all

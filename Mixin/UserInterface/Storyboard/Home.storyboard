@@ -37,7 +37,7 @@
                                                             <constraint firstAttribute="width" constant="44" id="7Hp-cp-RgN"/>
                                                             <constraint firstAttribute="height" constant="44" id="EcH-Kp-ucn"/>
                                                         </constraints>
-                                                        <color key="tintColor" red="0.87058823529999996" green="0.8862745098" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <color key="tintColor" name="icon_tint"/>
                                                         <state key="normal" image="ic_title_close"/>
                                                         <connections>
                                                             <action selector="bulletinDismissAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="ePe-BJ-VJL"/>
@@ -1470,6 +1470,7 @@ chat history from icloud</string>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWy-fS-TG9">
                                                 <rect key="frame" x="319" y="0.0" width="56" height="44"/>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                 <state key="normal" image="ic_title_add"/>
                                                 <connections>
@@ -1551,10 +1552,10 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -112,10 +112,6 @@ extension ContactViewController: ContainerViewControllerDelegate {
         R.image.ic_title_settings()
     }
     
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.tintColor = R.color.icon_tint()!
-    }
-    
 }
 
 extension ContactViewController {

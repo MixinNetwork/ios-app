@@ -63,17 +63,26 @@ extension TransferAttachmentData: Decodable {
 
     private static func safeDecodeInt(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int? {
         do {
-            return try container.decode(Int.self, forKey: key)
+            return try container.decodeIfPresent(Int.self, forKey: key)
+        } catch {
+            Logger.write(error: error)
+        }
+        do {
+            return Int(try container.decode(Float.self, forKey: key))
         } catch {
             Logger.write(error: error)
         }
         return try container.decode(String.self, forKey: key).intValue
-
     }
 
     private static func safeDecodeInt64(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int64? {
         do {
-            return try container.decode(Int64.self, forKey: key)
+            return try container.decodeIfPresent(Int64.self, forKey: key)
+        } catch {
+            Logger.write(error: error)
+        }
+        do {
+            return Int64(try container.decode(Float.self, forKey: key))
         } catch {
             Logger.write(error: error)
         }

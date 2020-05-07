@@ -1316,7 +1316,7 @@
                                     <constraint firstAttribute="height" constant="44" id="XQc-sb-cFr"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_restore" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-OF-Y5G">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_backup" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-OF-Y5G">
                                 <rect key="frame" x="0.0" y="44" width="375" height="180"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="180" id="Az4-Ba-keh" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -1527,6 +1527,7 @@ chat history from icloud</string>
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
+        <image name="Setting/ic_backup" width="88" height="58"/>
         <image name="bg_home_bottom" width="375" height="120"/>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
@@ -1536,7 +1537,6 @@ chat history from icloud</string>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_home_app_add" width="36" height="36"/>
         <image name="ic_message_photo" width="14" height="12"/>
-        <image name="ic_restore" width="88" height="58"/>
         <image name="ic_title_add" width="16" height="16"/>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_title_contact" width="24" height="24"/>

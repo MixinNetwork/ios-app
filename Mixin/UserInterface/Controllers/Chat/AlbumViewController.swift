@@ -8,6 +8,7 @@ class AlbumViewController: UITableViewController {
     
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
+        container?.leftButton.tintColor = R.color.icon_tint()
         container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
     }
     

@@ -77,7 +77,7 @@ extension SharedMediaMediaViewController: SharedMediaDataSourceDelegate {
         collectionView.reloadData()
         collectionView.checkEmpty(dataCount: self.dataSource.numberOfSections,
                                   text: R.string.localizable.chat_shared_media_empty(),
-                                  photo: R.image.ic_shared_media()!)
+                                  photo: R.image.emptyIndicator.ic_shared_media()!)
     }
     
     func sharedMediaDataSource(_ dataSource: AnyObject, didUpdateItemAt indexPath: IndexPath) {

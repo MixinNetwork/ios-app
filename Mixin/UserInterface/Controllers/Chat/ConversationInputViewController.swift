@@ -276,7 +276,7 @@ class ConversationInputViewController: UIViewController {
             if height == .maximized {
                 setPreferredContentHeightAnimated(.regular)
             }
-            photosButton.isSelected = false
+            setPhotosButtonSelected(false)
             setRightAccessoryButton(stickersButton)
             loadCustomInputViewController(extensionViewController)
         } else {
@@ -289,7 +289,7 @@ class ConversationInputViewController: UIViewController {
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         setRightAccessoryButton(keyboardButton)
         extensionsSwitch.isOn = false
-        photosButton.isSelected = false
+        setPhotosButtonSelected(false)
         loadCustomInputViewController(stickersViewController)
     }
     
@@ -392,7 +392,7 @@ class ConversationInputViewController: UIViewController {
     
     func dismissCustomInput(minimize: Bool) {
         setRightAccessoryButton(stickersButton)
-        photosButton.isSelected = false
+        setPhotosButtonSelected(false)
         extensionsSwitch.isOn = false
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
@@ -773,6 +773,11 @@ extension ConversationInputViewController: UITextViewDelegate {
 // MARK: - Private works
 extension ConversationInputViewController {
     
+    private func setPhotosButtonSelected(_ selected: Bool) {
+        photosButton.isSelected = selected
+        photosButton.tintColor = selected ? R.color.theme() : R.color.icon_tint()
+    }
+    
     private func setPreferredContentHeight(_ height: CGFloat, animated: Bool) {
         preferredContentHeight = height
         conversationViewController.updateInputWrapper(for: height, animated: animated)
@@ -946,7 +951,7 @@ extension ConversationInputViewController {
     
     private func loadPhotoInput() {
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
-        photosButton.isSelected.toggle()
+        setPhotosButtonSelected(!photosButton.isSelected)
         extensionsSwitch.isOn = false
         setRightAccessoryButton(stickersButton)
         if photosButton.isSelected {

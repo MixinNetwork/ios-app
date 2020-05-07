@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -100,6 +100,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="57" id="9Bq-OZ-R0P"/>
                                                 </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <inset key="imageEdgeInsets" minX="7" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 <state key="normal" image="ic_title_back"/>
                                                 <connections>
@@ -443,6 +444,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yf8-Qi-YeA">
                                                 <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <state key="normal" image="Conversation/ic_sticker"/>
                                                 <connections>
                                                     <action selector="showStickersAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="T5c-4z-y9S"/>
@@ -450,6 +452,7 @@
                                             </button>
                                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5G0-uR-okU">
                                                 <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <state key="normal" image="Conversation/ic_keyboard"/>
                                                 <connections>
                                                     <action selector="showKeyboardAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="h4Q-3i-fvM"/>
@@ -476,6 +479,7 @@
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUM-vT-Npr">
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <inset key="contentEdgeInsets" minX="9" minY="0.0" maxX="11" maxY="0.0"/>
                                                 <state key="normal" image="Conversation/ic_app"/>
                                                 <connections>
@@ -485,9 +489,10 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mkF-v2-lFJ">
                                                 <rect key="frame" x="0.0" y="0.0" width="40" height="44"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" name="icon_tint"/>
                                                 <inset key="contentEdgeInsets" minX="11" minY="0.0" maxX="9" maxY="0.0"/>
-                                                <state key="normal" image="Conversation/ic_photo_off"/>
-                                                <state key="selected" image="Conversation/ic_photo_on"/>
+                                                <state key="normal" image="Conversation/ic_photo"/>
+                                                <state key="selected" image="Conversation/ic_photo"/>
                                                 <connections>
                                                     <action selector="showPhotosAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="qbM-JE-3dA"/>
                                                 </connections>
@@ -1283,9 +1288,10 @@
                                     </view>
                                 </subviews>
                             </stackView>
-                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_mic_off" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_mic" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
                                 <rect key="frame" x="325" y="0.0" width="50" height="50"/>
                                 <color key="backgroundColor" name="background"/>
+                                <color key="tintColor" name="icon_tint"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Zt0-eZ-yAA" secondAttribute="height" multiplier="1:1" id="lFO-uk-UsI"/>
@@ -1895,16 +1901,15 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Conversation/ic_app" width="26" height="26"/>
+        <image name="Conversation/ic_app" width="22" height="20"/>
         <image name="Conversation/ic_chat_bottom" width="44" height="44"/>
         <image name="Conversation/ic_jump_to_mention" width="38" height="38"/>
-        <image name="Conversation/ic_keyboard" width="26" height="26"/>
-        <image name="Conversation/ic_mic_off" width="26" height="26"/>
-        <image name="Conversation/ic_photo_off" width="20" height="20"/>
-        <image name="Conversation/ic_photo_on" width="20" height="20"/>
+        <image name="Conversation/ic_keyboard" width="24" height="18"/>
+        <image name="Conversation/ic_mic" width="14" height="20"/>
+        <image name="Conversation/ic_photo" width="20" height="20"/>
         <image name="Conversation/ic_recorder_lock_direction_left" width="6" height="10"/>
         <image name="Conversation/ic_send" width="24" height="24"/>
-        <image name="Conversation/ic_sticker" width="26" height="26"/>
+        <image name="Conversation/ic_sticker" width="22" height="22"/>
         <image name="bg_extension" width="60" height="60"/>
         <image name="ic_announcement" width="44" height="44"/>
         <image name="ic_camera_close" width="20" height="20"/>
@@ -1920,16 +1925,19 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="line">
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

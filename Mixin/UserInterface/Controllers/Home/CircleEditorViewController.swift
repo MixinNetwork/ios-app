@@ -49,7 +49,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
         if let container = parent as? ContainerViewController {
-            container.leftButton.tintColor = .text
+            container.leftButton.tintColor = R.color.icon_tint()
             container.leftButton.setImage(R.image.ic_title_close(), for: .normal)
             container.rightButton.isEnabled = true
         }

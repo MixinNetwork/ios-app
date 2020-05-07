@@ -109,7 +109,7 @@ extension ContactViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_title_settings")
+        R.image.ic_title_settings()
     }
     
 }

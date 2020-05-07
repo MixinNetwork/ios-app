@@ -74,7 +74,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
             isLocked = false
             lockView.progress = 0
             hideLongPressHint()
-            recordImageView.image = R.image.conversation.ic_mic_on()
+            recordImageView.tintColor = .theme
             startRecordingIfGranted()
             recordGestureBeganPoint = recordGestureRecognizer.location(in: view)
             slideToCancelContentView.alpha = 1
@@ -277,7 +277,7 @@ extension AudioInputViewController {
     }
     
     private func layoutForStopping() {
-        recordImageView.image = R.image.conversation.ic_mic_off()
+        recordImageView.tintColor = R.color.icon_tint()!
         if isLocked {
             slideToCancelView.alpha = 0
         } else {

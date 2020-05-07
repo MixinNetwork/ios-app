@@ -6,6 +6,7 @@ class VerifyPinNavigationController: LoneBackButtonNavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dismissButton.tintColor = R.color.icon_tint()
         dismissButton.setImage(R.image.ic_title_close(), for: .normal)
         dismissButton.addTarget(self, action: #selector(dismissAction(sender:)), for: .touchUpInside)
         view.addSubview(dismissButton)

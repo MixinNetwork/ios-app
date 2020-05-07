@@ -32,7 +32,9 @@ class BlockedUsersViewController: UIViewController {
                     return
                 }
                 weakSelf.tableView.reloadData()
-                weakSelf.tableView.checkEmpty(dataCount: users.count, text: Localized.SETTING_BLOCKED_EMPTY, photo: #imageLiteral(resourceName: "ic_empty_blocked_users"))
+                weakSelf.tableView.checkEmpty(dataCount: users.count,
+                                              text: Localized.SETTING_BLOCKED_EMPTY,
+                                              photo: R.image.emptyIndicator.ic_blocked_users()!)
             }
         }
     }

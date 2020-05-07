@@ -8,6 +8,7 @@ class LoneBackButtonNavigationController: UINavigationController {
         super.viewDidLoad()
         setNavigationBarHidden(true, animated: false)
         UIApplication.shared.keyWindow?.endEditing(true)
+        backButton.tintColor = R.color.icon_tint()
         backButton.setImage(R.image.ic_title_back(), for: .normal)
         backButton.addTarget(self, action: #selector(backAction(sender:)), for: .touchUpInside)
         backButton.alpha = 0

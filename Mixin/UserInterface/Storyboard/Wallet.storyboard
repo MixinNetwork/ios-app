@@ -680,13 +680,13 @@
                                 <rect key="frame" x="0.0" y="74" width="414" height="534"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="rt0-Mp-iwA">
-                                        <rect key="frame" x="166.66666666666666" y="231.66666666666669" width="81" height="125"/>
+                                        <rect key="frame" x="166.66666666666666" y="232.33333333333334" width="81" height="123.33333333333334"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_no_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
-                                                <rect key="frame" x="5.3333333333333428" y="0.0" width="70" height="81"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Empty Indicator/ic_search_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
+                                                <rect key="frame" x="5.6666666666666856" y="0.0" width="69.666666666666671" height="79.333333333333329"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO RESULT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6w-Mn-l1z">
-                                                <rect key="frame" x="0.0" y="107" width="81" height="18"/>
+                                                <rect key="frame" x="0.0" y="105.33333333333337" width="81" height="18"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <color key="textColor" name="text_accessory"/>
                                                 <nil key="highlightedColor"/>
@@ -2026,6 +2026,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="64" id="v99-c5-j94"/>
                                         </constraints>
+                                        <color key="tintColor" name="icon_tint"/>
                                         <state key="normal" image="ic_title_close"/>
                                         <connections>
                                             <action selector="backAction:" destination="La6-HZ-0b5" eventType="touchUpInside" id="Mdy-by-08R"/>
@@ -2109,6 +2110,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Empty Indicator/ic_search_result" width="69.666664123535156" height="79.333335876464844"/>
         <image name="Wallet/ic_add" width="10" height="10"/>
         <image name="Wallet/ic_filter" width="14" height="14"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
@@ -2117,7 +2119,6 @@
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_input_menu" width="11" height="6"/>
-        <image name="ic_no_result" width="70" height="81"/>
         <image name="ic_scan_address" width="18" height="18"/>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_transfer_exchange" width="14" height="13"/>
@@ -2125,16 +2126,19 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

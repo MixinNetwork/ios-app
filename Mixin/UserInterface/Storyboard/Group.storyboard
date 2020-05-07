@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -134,14 +134,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-AR-cnC" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="381" width="414" height="10"/>
+                                <rect key="frame" x="0.0" y="355" width="414" height="10"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="cvk-5R-XEx"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydE-1Y-cEF">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="381"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="355"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ao5-4a-lxR">
                                         <rect key="frame" x="30" y="48" width="354" height="170"/>
@@ -212,16 +212,17 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="6Um-Rd-otx">
-                                        <rect key="frame" x="55" y="254" width="304" height="83"/>
+                                        <rect key="frame" x="55" y="254" width="304" height="57"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="35t-9C-yJn">
-                                                <rect key="frame" x="0.0" y="0.0" width="68" height="83"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="68" height="57"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_share" translatesAutoresizingMaskIntoConstraints="NO" id="vB1-mZ-YkH">
-                                                        <rect key="frame" x="14" y="0.0" width="40" height="52"/>
+                                                        <rect key="frame" x="24" y="0.0" width="20" height="26"/>
+                                                        <color key="tintColor" name="icon_tint"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssC-lD-hqw">
-                                                        <rect key="frame" x="0.0" y="66" width="68" height="17"/>
+                                                        <rect key="frame" x="0.0" y="40" width="68" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" name="text_accessory"/>
                                                         <nil key="highlightedColor"/>
@@ -236,13 +237,14 @@
                                                 </connections>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="Rbf-4k-Jcb">
-                                                <rect key="frame" x="118" y="2" width="68" height="79"/>
+                                                <rect key="frame" x="118" y="1" width="68" height="55"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_copy" translatesAutoresizingMaskIntoConstraints="NO" id="nD5-DV-3E2">
-                                                        <rect key="frame" x="12" y="0.0" width="44" height="48"/>
+                                                        <rect key="frame" x="23" y="0.0" width="22" height="24"/>
+                                                        <color key="tintColor" name="icon_tint"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ4-1J-sHm">
-                                                        <rect key="frame" x="2" y="62" width="64" height="17"/>
+                                                        <rect key="frame" x="2" y="38" width="64" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" name="text_accessory"/>
                                                         <nil key="highlightedColor"/>
@@ -257,13 +259,14 @@
                                                 </connections>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="h8t-aP-sbO">
-                                                <rect key="frame" x="236" y="5" width="68" height="73"/>
+                                                <rect key="frame" x="236" y="2.5" width="68" height="52"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_code" translatesAutoresizingMaskIntoConstraints="NO" id="Chd-Df-gMM">
-                                                        <rect key="frame" x="12" y="0.0" width="44" height="42"/>
+                                                        <rect key="frame" x="23" y="0.0" width="22" height="21"/>
+                                                        <color key="tintColor" name="icon_tint"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r01-9g-vL3">
-                                                        <rect key="frame" x="5" y="56" width="58" height="17"/>
+                                                        <rect key="frame" x="5" y="35" width="58" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" name="text_accessory"/>
                                                         <nil key="highlightedColor"/>
@@ -338,13 +341,16 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -65,11 +65,11 @@ extension DepositViewController: ContainerViewControllerDelegate {
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true
     }
-
+    
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_titlebar_help")
+        R.image.ic_titlebar_help()
     }
-
+    
     func barRightButtonTappedAction() {
         UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
     }

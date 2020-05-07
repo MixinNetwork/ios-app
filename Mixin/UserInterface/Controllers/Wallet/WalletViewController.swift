@@ -49,7 +49,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         super.didMove(toParent: parent)
         if let leftButton = container?.leftButton {
             leftButton.setImage(R.image.ic_title_close(), for: .normal)
-            leftButton.tintColor = .title
+            leftButton.tintColor = R.color.icon_tint()
         }
     }
     

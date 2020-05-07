@@ -29,7 +29,7 @@ class AllTransactionsViewController: UITableViewController {
             weakSelf.tableView.reloadData()
             weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
                                           text: Localized.WALLET_NO_TRANSACTION,
-                                          photo: R.image.wallet.ic_no_transaction()!)
+                                          photo: R.image.emptyIndicator.ic_data()!)
         }
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()
@@ -121,7 +121,7 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return UIImage(named: "Wallet/ic_filter_large")
+        R.image.wallet.ic_filter_large()
     }
     
 }

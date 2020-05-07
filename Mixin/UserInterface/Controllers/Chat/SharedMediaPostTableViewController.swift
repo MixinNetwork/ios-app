@@ -57,7 +57,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
         tableView.reloadData()
         tableView.checkEmpty(dataCount: self.dataSource.numberOfSections,
                              text: R.string.localizable.chat_shared_post_empty(),
-                             photo: R.image.ic_shared_data()!)
+                             photo: R.image.emptyIndicator.ic_data()!)
     }
     
     func sharedMediaDataSource(_ dataSource: AnyObject, didUpdateItemAt indexPath: IndexPath) {

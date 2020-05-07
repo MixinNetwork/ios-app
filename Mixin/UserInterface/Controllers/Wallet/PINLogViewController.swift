@@ -47,7 +47,7 @@ class PINLogViewController: UIViewController {
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: self.logs.count,
                                           text: R.string.localizable.wallet_pin_logs_empty(),
-                                          photo: R.image.wallet.ic_no_transaction()!)
+                                          photo: R.image.emptyIndicator.ic_data()!)
                 self.view.layoutIfNeeded()
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

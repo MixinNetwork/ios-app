@@ -37,6 +37,7 @@
                                 <constraint firstItem="7Z8-3o-jMf" firstAttribute="width" secondItem="5sJ-Vt-90X" secondAttribute="width" id="EZ4-HB-KoF"/>
                                 <constraint firstItem="7Z8-3o-jMf" firstAttribute="trailing" secondItem="DcV-kL-xoP" secondAttribute="trailing" id="HzA-JU-tgC"/>
                                 <constraint firstItem="DcV-kL-xoP" firstAttribute="bottom" secondItem="7Z8-3o-jMf" secondAttribute="bottom" id="RqB-Gd-2jD"/>
+                                <constraint firstAttribute="height" priority="200" constant="39" id="bfq-0k-rCF"/>
                                 <constraint firstItem="7Z8-3o-jMf" firstAttribute="top" secondItem="DcV-kL-xoP" secondAttribute="top" id="fBA-4h-CDH"/>
                                 <constraint firstItem="7Z8-3o-jMf" firstAttribute="leading" secondItem="DcV-kL-xoP" secondAttribute="leading" id="q6v-gD-Cp0"/>
                             </constraints>
@@ -83,13 +84,12 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="backgroundBottomConstraint" destination="bDD-xh-aa4" id="uvq-0H-Ly4"/>
-                <outlet property="backgroundTopConstraint" destination="4JD-Hp-bQU" id="wKc-fU-oXC"/>
                 <outlet property="backgroundView" destination="F4h-ch-emd" id="smQ-Ub-iNO"/>
                 <outlet property="closeButton" destination="h4M-UK-LDG" id="CFH-uA-xpX"/>
                 <outlet property="label" destination="7Z8-3o-jMf" id="7G4-DO-elg"/>
                 <outlet property="scrollView" destination="1cT-kJ-VZx" id="aY0-CQ-eDg"/>
                 <outlet property="scrollViewBottomConstraint" destination="mgf-GF-wNg" id="jpv-gg-gH2"/>
+                <outlet property="scrollViewHeightConstraint" destination="bfq-0k-rCF" id="ARM-fS-VC4"/>
                 <outlet property="scrollViewTopConstraint" destination="4mC-Dg-GYa" id="VKZ-c1-WP8"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>

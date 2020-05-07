@@ -304,7 +304,7 @@
                                 <rect key="frame" x="0.0" y="617" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" priority="250" id="fNa-UK-4dk"/>
+                                    <constraint firstAttribute="height" priority="100" id="fNa-UK-4dk"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6MP-pq-xci">
@@ -350,7 +350,7 @@
                             <constraint firstItem="tke-V3-5nw" firstAttribute="trailing" secondItem="N4V-uq-LHc" secondAttribute="trailing" id="ggf-H8-vmJ"/>
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="iIH-3a-OFE" secondAttribute="bottom" id="h81-G5-2sf"/>
                             <constraint firstAttribute="trailing" secondItem="6MP-pq-xci" secondAttribute="trailing" id="lAw-xX-OEM"/>
-                            <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="AxI-2v-IFd" secondAttribute="bottom" id="lL1-Ex-KBa"/>
+                            <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="AxI-2v-IFd" secondAttribute="bottom" priority="500" id="lL1-Ex-KBa"/>
                             <constraint firstItem="N4V-uq-LHc" firstAttribute="trailing" secondItem="syC-xp-0cA" secondAttribute="trailing" constant="11" id="ryY-bD-bte"/>
                             <constraint firstAttribute="trailing" secondItem="v0e-5f-Xnl" secondAttribute="trailing" id="ufK-2L-8Df"/>
                             <constraint firstAttribute="trailing" secondItem="AxI-2v-IFd" secondAttribute="trailing" id="x5F-jR-qIL"/>
@@ -360,6 +360,7 @@
                     </view>
                     <connections>
                         <outlet property="accessoryButtonsWrapperBottomConstraint" destination="Lb1-1l-uNl" id="sO1-Ul-Qbx"/>
+                        <outlet property="accessoryButtonsWrapperTopConstraint" destination="0Te-zN-D54" id="ony-z9-PZI"/>
                         <outlet property="accessoryButtonsWrapperView" destination="syC-xp-0cA" id="8Sm-AZ-vw3"/>
                         <outlet property="announcementBadgeBottomConstraint" destination="lL1-Ex-KBa" id="9Aj-mk-5PV"/>
                         <outlet property="announcementBadgeHeightConstraint" destination="fNa-UK-4dk" id="3T6-Do-mP6"/>
@@ -522,7 +523,7 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="319" y="3" width="45" height="44"/>
+                                        <rect key="frame" x="320" y="3" width="44" height="44"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                         <connections>
@@ -1936,7 +1937,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

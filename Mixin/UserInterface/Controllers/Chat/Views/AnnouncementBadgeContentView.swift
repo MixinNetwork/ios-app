@@ -7,21 +7,11 @@ class AnnouncementBadgeContentView: UIView {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var closeButton: UIButton!
     
-    @IBOutlet weak var backgroundTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var backgroundBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
-    override var intrinsicContentSize: CGSize {
-        var backgroundHeight = scrollView.contentSize.height
-            + scrollViewTopConstraint.constant
-            + scrollViewBottomConstraint.constant
-        backgroundHeight = max(minBackgroundHeight, backgroundHeight)
-        let height = backgroundHeight
-            + backgroundTopConstraint.constant
-            + backgroundBottomConstraint.constant
-        return CGSize(width: super.intrinsicContentSize.width, height: height)
-    }
+    weak var minHeightConstraint: NSLayoutConstraint!
     
     var isExpandable: Bool {
         if let moreView = moreViewIfLoaded {
@@ -31,7 +21,6 @@ class AnnouncementBadgeContentView: UIView {
         }
     }
     
-    private let minBackgroundHeight: CGFloat = 64
     private let multilineLabelTopMargin: CGFloat = 16
     private let singleLineLabelTopMargin: CGFloat = 9
     
@@ -54,6 +43,8 @@ class AnnouncementBadgeContentView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        minHeightConstraint = heightAnchor.constraint(greaterThanOrEqualToConstant: 76)
+        minHeightConstraint.isActive = true
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.18
         layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -79,7 +70,7 @@ class AnnouncementBadgeContentView: UIView {
         label.numberOfLines = 0
         moreViewIfLoaded?.isHidden = true
         layoutIfNeeded()
-        invalidateIntrinsicContentSize()
+        scrollViewHeightConstraint.constant = scrollView.contentSize.height
     }
     
     func layoutAsCompressed() {
@@ -107,6 +98,7 @@ class AnnouncementBadgeContentView: UIView {
             moreViewIfLoaded?.isHidden = true
         }
         superview?.layoutIfNeeded()
+        scrollViewHeightConstraint.constant = scrollView.contentSize.height
         moreViewBottomConstraint?.constant = -(label.bounds.height - min(size.height, lineHeight * 2)) / 2
     }
     
@@ -122,7 +114,7 @@ extension AnnouncementBadgeContentView {
             self.closeButton = closeButton
             super.init()
         }
-
+        
         func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
             let location = gestureRecognizer.location(in: closeButton)
             return !closeButton.bounds.contains(location)

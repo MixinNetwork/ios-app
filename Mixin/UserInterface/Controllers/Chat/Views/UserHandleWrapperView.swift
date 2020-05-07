@@ -7,15 +7,16 @@ class UserHandleWrapperView: UIView {
             userHandleMaskView.frame.height
         }
         set {
-            let frame = CGRect(x: 0,
-                               y: bounds.height - newValue,
-                               width: bounds.width,
-                               height: newValue)
-            userHandleMaskView.frame = frame
+            layoutMaskView(height: newValue)
         }
     }
     
     private lazy var userHandleMaskView = UIView()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layoutMaskView(height: maskHeight)
+    }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if userHandleMaskView.frame.contains(point) {
@@ -35,6 +36,14 @@ class UserHandleWrapperView: UIView {
             userHandleMaskView.backgroundColor = .white
             mask = userHandleMaskView
         }
+    }
+    
+    private func layoutMaskView(height: CGFloat) {
+        let frame = CGRect(x: 0,
+                           y: bounds.height - height,
+                           width: bounds.width,
+                           height: height)
+        userHandleMaskView.frame = frame
     }
     
 }

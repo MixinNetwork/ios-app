@@ -34,6 +34,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var accessoryButtonsWrapperTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var accessoryButtonsWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementBadgeHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementBadgeBottomConstraint: NSLayoutConstraint!
@@ -146,6 +147,22 @@ class ConversationViewController: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.mentionWrapperView.alpha = wrapperAlpha
                 self.view.layoutIfNeeded()
+                self.updateOverlays()
+            }
+        }
+    }
+    
+    private var isUserHandleHidden = true {
+        didSet {
+            if isUserHandleHidden {
+                if userHandleViewController.isViewLoaded {
+                    userHandleViewController.view.isHidden = true
+                }
+                inputWrapperTopShadowView.alpha = 0
+            } else {
+                loadUserHandleAsChildIfNeeded()
+                userHandleViewController.view.isHidden = false
+                inputWrapperTopShadowView.alpha = 1
             }
         }
     }
@@ -814,22 +831,35 @@ class ConversationViewController: UIViewController {
     
     // Overlays are user handle, accessory buttons and announcement badge
     func updateOverlays() {
-        let maxHeight = userHandleWrapperView.frame.height
-            - accessoryButtonsWrapperView.frame.height
-            - accessoryButtonsWrapperBottomConstraint.constant
-            - announcementBadgeView.frame.height
-        let height = userHandleWrapperView.bounds.height
-            - userHandleViewController.tableHeaderView.frame.height
-            + userHandleViewController.tableView.contentOffset.y
-        let handleHeight = min(maxHeight, height)
+        let handleHeight: CGFloat
+        if isUserHandleHidden {
+            handleHeight = 0
+        } else {
+            var maxHeight = userHandleWrapperView.frame.height
+                - announcementBadgeContentView.minHeightConstraint.constant
+            let shouldCalculateAccessoryButtonsHeight = scrollToBottomWrapperView.alpha == 1
+                || mentionWrapperView.alpha == 1
+                || !announcementBadgeView.subviews.isEmpty
+            if shouldCalculateAccessoryButtonsHeight {
+                maxHeight -= accessoryButtonsWrapperView.frame.height
+                maxHeight -= accessoryButtonsWrapperBottomConstraint.constant
+                maxHeight -= accessoryButtonsWrapperTopConstraint.constant
+            }
+            let height = userHandleWrapperView.bounds.height
+                - userHandleViewController.tableHeaderView.frame.height
+                + userHandleViewController.tableView.contentOffset.y
+            handleHeight = min(maxHeight, height)
+        }
         userHandleWrapperView.maskHeight = handleHeight
-        announcementBadgeBottomConstraint.constant = handleHeight
-        view.layoutIfNeeded()
+        if announcementBadgeBottomConstraint.constant != handleHeight {
+            announcementBadgeBottomConstraint.constant = handleHeight
+            view.layoutIfNeeded()
+        }
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
         userHandleViewController.reload(with: keyword) { (hasContent) in
-            self.setUserHandleHidden(!hasContent)
+            self.isUserHandleHidden = !hasContent
         }
     }
     
@@ -1466,6 +1496,7 @@ extension ConversationViewController {
             scrollToBottomWrapperView.alpha = 1
             if animated {
                 view.layoutIfNeeded()
+                updateOverlays()
                 UIView.commitAnimations()
             }
         } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
@@ -1477,6 +1508,7 @@ extension ConversationViewController {
             scrollToBottomWrapperView.alpha = 0
             if animated {
                 view.layoutIfNeeded()
+                updateOverlays()
                 UIView.commitAnimations()
             }
             unreadBadgeValue = 0
@@ -1626,19 +1658,6 @@ extension ConversationViewController {
         userHandleViewController.didMove(toParent: self)
     }
     
-    private func setUserHandleHidden(_ hidden: Bool) {
-        if hidden {
-            if userHandleViewController.isViewLoaded {
-                userHandleViewController.view.isHidden = true
-            }
-            inputWrapperTopShadowView.alpha = 0
-        } else {
-            loadUserHandleAsChildIfNeeded()
-            userHandleViewController.view.isHidden = false
-            inputWrapperTopShadowView.alpha = 1
-        }
-    }
-    
     private func beginMultipleSelection(on indexPath: IndexPath, intent: MultipleSelectionIntent) {
         conversationInputViewController.textView.resignFirstResponder()
         conversationInputViewController.audioViewController.cancelIfRecording()
@@ -1713,6 +1732,7 @@ extension ConversationViewController {
         }
         if view.window != nil {
             view.layoutIfNeeded()
+            updateOverlays()
         }
         if animated {
             UIView.commitAnimations()
@@ -1768,7 +1788,7 @@ extension ConversationViewController {
                     if isGroup {
                         let keyword = self.conversationInputViewController.textView.inputingMentionToken
                         self.userHandleViewController.reload(with: keyword) { (hasContent) in
-                            self.setUserHandleHidden(!hasContent)
+                            self.isUserHandleHidden = !hasContent
                         }
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)

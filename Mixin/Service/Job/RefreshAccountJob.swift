@@ -11,7 +11,12 @@ class RefreshAccountJob: AsynchronousJob {
 		AccountAPI.shared.me { (result) in
 			switch result {
 			case let .success(account):
-				LoginManager.shared.setAccount(account)
+                DispatchQueue.global().async {
+                    guard !MixinService.isStopProcessMessages else {
+                        return
+                    }
+                    LoginManager.shared.setAccount(account)
+                }
 			case .failure:
 				break
 			}

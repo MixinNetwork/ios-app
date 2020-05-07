@@ -21,9 +21,13 @@ public class StickerAPI : BaseAPI {
     public func albums()  -> APIResult<[Album]> {
         return request(method: .get, url: url.albums)
     }
+
+    public func albums(completion: @escaping (APIResult<[Album]>) -> Void) {
+        request(method: .get, url: url.albums, completion: completion)
+    }
     
-    public func stickers(albumId: String) -> APIResult<[StickerResponse]> {
-        return request(method: .get, url: url.albums(id: albumId))
+    public func stickers(albumId: String, completion: @escaping (APIResult<[StickerResponse]>) -> Void) {
+        request(method: .get, url: url.albums(id: albumId), completion: completion)
     }
     
     public func addSticker(stickerBase64: String, completion: @escaping (APIResult<StickerResponse>) -> Void) {

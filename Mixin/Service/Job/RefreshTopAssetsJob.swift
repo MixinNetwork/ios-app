@@ -11,7 +11,12 @@ class RefreshTopAssetsJob: AsynchronousJob {
         AssetAPI.shared.topAssets { (result) in
             switch result {
             case let .success(assets):
-                TopAssetsDAO.shared.replaceAssets(assets)
+                DispatchQueue.global().async {
+                    guard !MixinService.isStopProcessMessages else {
+                        return
+                    }
+                    TopAssetsDAO.shared.replaceAssets(assets)
+                }
             case .failure:
                 break
             }

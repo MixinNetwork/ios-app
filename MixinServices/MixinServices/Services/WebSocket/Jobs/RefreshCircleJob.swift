@@ -16,7 +16,12 @@ class RefreshCircleJob: AsynchronousJob {
         CircleAPI.shared.circle(id: circleId, completion: { (result) in
             switch result {
             case let .success(circle):
-                CircleDAO.shared.insertOrReplace(circle: circle)
+                DispatchQueue.global().async {
+                    guard !MixinService.isStopProcessMessages else {
+                        return
+                    }
+                    CircleDAO.shared.insertOrReplace(circle: circle)
+                }
             case .failure:
                 break
             }

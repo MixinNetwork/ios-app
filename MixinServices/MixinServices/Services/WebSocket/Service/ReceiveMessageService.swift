@@ -204,6 +204,10 @@ public class ReceiveMessageService: MixinService {
         }
         ReceiveMessageService.shared.checkSession(data: data)
 
+        if MixinService.isStopProcessMessages {
+            return
+        }
+
         if MessageCategory.isLegal(category: data.category) {
             ReceiveMessageService.shared.processSystemMessage(data: data)
             ReceiveMessageService.shared.processPlainMessage(data: data)

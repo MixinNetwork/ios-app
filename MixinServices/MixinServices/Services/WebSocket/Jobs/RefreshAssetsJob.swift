@@ -1,9 +1,10 @@
 import Foundation
 import UIKit
 
-public class RefreshAssetsJob: BaseJob {
+public class RefreshAssetsJob: AsynchronousJob {
     
     private let assetId: String?
+    private var asset: Asset?
     
     public init(assetId: String? = nil) {
         self.assetId = assetId
@@ -13,46 +14,95 @@ public class RefreshAssetsJob: BaseJob {
         return "refresh-assets-\(assetId ?? "all")"
     }
     
-    override public func run() throws {
+    public override func execute() -> Bool {
         if let assetId = self.assetId {
-            switch AssetAPI.shared.asset(assetId: assetId) {
-            case let .success(asset):
-                AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-                switch AssetAPI.shared.pendingDeposits(assetId: assetId, destination: asset.destination, tag: asset.tag) {
-                case let .success(deposits):
-                    SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
+            AssetAPI.shared.asset(assetId: assetId) { (result) in
+                switch result {
+                case let .success(asset):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+                    }
+                    self.asset = asset
+                    self.updateFiats()
                 case let .failure(error):
                     reporter.report(error: error)
+                    self.finishJob()
                 }
-                updateSnapshots(assetId: assetId)
-            case let .failure(error):
-                throw error
             }
         } else {
-            switch AssetAPI.shared.assets() {
-            case let .success(assets):
-                AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-            case let .failure(error):
-                throw error
+            AssetAPI.shared.assets { (result) in
+                switch result {
+                case let .success(assets):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+                    }
+                    self.updateFiats()
+                case let .failure(error):
+                    reporter.report(error: error)
+                    self.finishJob()
+                }
             }
         }
-        switch AssetAPI.shared.fiats() {
-        case let .success(fiatMonies):
-            DispatchQueue.main.async {
-                Currency.updateRate(with: fiatMonies)
+        return true
+    }
+
+    private func updateFiats() {
+        AssetAPI.shared.fiats { (result) in
+            switch result {
+            case let .success(fiatMonies):
+                DispatchQueue.main.async {
+                    Currency.updateRate(with: fiatMonies)
+                }
+                if let asset = self.asset {
+                    self.updatePendingDeposits(asset: asset)
+                    return
+                }
+            case let .failure(error):
+                reporter.report(error: error)
             }
-        case let .failure(error):
-            reporter.report(error: error)
+            self.finishJob()
+        }
+    }
+
+    private func updatePendingDeposits(asset: Asset) {
+        AssetAPI.shared.pendingDeposits(assetId: asset.assetId, destination: asset.destination, tag: asset.tag) { (result) in
+            switch result {
+            case let .success(deposits):
+                DispatchQueue.global().async {
+                    guard !MixinService.isStopProcessMessages else {
+                        return
+                    }
+                    SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
+                }
+                self.updateSnapshots(assetId: asset.assetId)
+            case let .failure(error):
+                reporter.report(error: error)
+                self.finishJob()
+            }
         }
     }
     
     private func updateSnapshots(assetId: String) {
-        switch AssetAPI.shared.snapshots(limit: 200, assetId: assetId) {
-        case let .success(snapshots):
-            AppGroupUserDefaults.Wallet.assetTransactionsOffset[assetId] = snapshots.last?.createdAt
-            SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
-        case let .failure(error):
-            reporter.report(error: error)
+        AssetAPI.shared.snapshots(limit: 200, assetId: assetId) { (result) in
+            switch result {
+             case let .success(snapshots):
+                DispatchQueue.global().async {
+                    guard !MixinService.isStopProcessMessages else {
+                        return
+                    }
+                    AppGroupUserDefaults.Wallet.assetTransactionsOffset[assetId] = snapshots.last?.createdAt
+                    SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
+                }
+            case let .failure(error):
+                reporter.report(error: error)
+            }
+            self.finishJob()
         }
     }
     

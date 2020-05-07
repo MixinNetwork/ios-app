@@ -59,13 +59,17 @@ public final class AssetAPI: BaseAPI {
         assert(limit <= 500)
         return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId))
     }
+
+    public func snapshots(limit: Int, assetId: String, completion: @escaping (APIResult<[Snapshot]>) -> Void) {
+        request(method: .get, url: url.snapshots(limit: limit, offset: nil, assetId: assetId, opponentId: nil), completion: completion)
+    }
     
     public func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
     }
 
-    public func pendingDeposits(assetId: String, destination: String, tag: String) -> APIResult<[PendingDeposit]> {
-        return request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag))
+    public func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (APIResult<[PendingDeposit]>) -> Void) {
+        request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
     
     public func search(keyword: String) -> APIResult<[Asset]>  {
@@ -79,8 +83,8 @@ public final class AssetAPI: BaseAPI {
         request(method: .get, url: url.top, completion: completion)
     }
     
-    public func fiats() -> APIResult<[FiatMoney]> {
-        return request(method: .get, url: url.fiats)
+    public func fiats(completion: @escaping (APIResult<[FiatMoney]>) -> Void) {
+        request(method: .get, url: url.fiats, completion: completion)
     }
     
 }

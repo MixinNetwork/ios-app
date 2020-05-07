@@ -1,7 +1,7 @@
 import Foundation
 import SDWebImage
 
-public class RefreshStickerJob: BaseJob {
+public class RefreshStickerJob: AsynchronousJob {
     
     private let albumId: String?
     
@@ -15,43 +15,54 @@ public class RefreshStickerJob: BaseJob {
         }
         return "refresh-sticker-\(albumId)"
     }
-    
-    override public func run() throws {
+
+    public override func execute() -> Bool {
         if let albumId = self.albumId {
-            try RefreshStickerJob.cacheStickers(albumId: albumId)
+            StickerAPI.shared.stickers(albumId: albumId) { (result) in
+                switch result {
+                case let .success(stickers):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+
+                        StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                        let stickers = StickerDAO.shared.getStickers(albumId: albumId)
+                        StickerPrefetcher.prefetch(stickers: stickers)
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                self.finishJob()
+            }
         } else {
             let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
-            switch StickerAPI.shared.albums() {
-            case let .success(albums):
-                let icons = albums.compactMap({ URL(string: $0.iconUrl) })
-                StickerPrefetcher.persistent.prefetchURLs(icons)
-                for album in albums {
-                    guard stickerAlbums[album.albumId] != album.updatedAt else {
-                        continue
+            StickerAPI.shared.albums { (result) in
+                switch result {
+                case let .success(albums):
+                    let icons = albums.compactMap({ URL(string: $0.iconUrl) })
+                    StickerPrefetcher.persistent.prefetchURLs(icons)
+                    for album in albums {
+                        guard stickerAlbums[album.albumId] != album.updatedAt else {
+                            continue
+                        }
+                        DispatchQueue.global().async {
+                            guard !MixinService.isStopProcessMessages else {
+                                return
+                            }
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                            DispatchQueue.main.async {
+                                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: album.albumId))
+                            }
+                        }
                     }
-                    try RefreshStickerJob.cacheStickers(albumId: album.albumId)
-                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                case let .failure(error):
+                    reporter.report(error: error)
                 }
-                
-                if !AppGroupUserDefaults.Database.isStickersUpgraded {
-                    MessageDAO.shared.updateOldStickerMessages()
-                    AppGroupUserDefaults.Database.isStickersUpgraded = true
-                }
-            case let .failure(error):
-                throw error
+                self.finishJob()
             }
         }
-    }
-    
-    static func cacheStickers(albumId: String) throws {
-        switch StickerAPI.shared.stickers(albumId: albumId) {
-        case let .success(stickers):
-            StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-            let stickers = StickerDAO.shared.getStickers(albumId: albumId)
-            StickerPrefetcher.prefetch(stickers: stickers)
-        case let .failure(error):
-            throw error
-        }
+        return true
     }
     
 }

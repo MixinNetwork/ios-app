@@ -1148,7 +1148,11 @@ extension ConversationViewController: UITableViewDelegate {
     
     @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        contextMenuConfigurationForRow(at: indexPath)
+        if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
+            return nil
+        } else {
+            return contextMenuConfigurationForRow(at: indexPath)
+        }
     }
     
     @available(iOS 13.0, *)

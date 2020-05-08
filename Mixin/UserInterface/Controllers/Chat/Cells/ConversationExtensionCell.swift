@@ -10,6 +10,7 @@ class ConversationExtensionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.sd_cancelCurrentImageLoad()
+        avatarImageView.prepareForReuse()
     }
     
 }

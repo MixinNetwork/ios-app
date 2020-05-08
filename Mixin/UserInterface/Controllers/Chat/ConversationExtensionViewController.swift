@@ -71,12 +71,13 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
         if indexPath.row < fixedExtensions.count {
             let ext = fixedExtensions[indexPath.row]
             cell.imageView.image = ext.image
+            cell.imageView.contentMode = .center
             cell.label.text = ext.title
             cell.avatarImageView.isHidden = true
-            cell.backgroundImageView.isHidden = true
         } else {
             let appAndUser = apps[indexPath.row - fixedExtensions.count]
             let app = appAndUser.app
+            cell.imageView.contentMode = .scaleAspectFit
             cell.imageView.sd_setImage(with: URL(string: app.iconUrl))
             cell.label.text = app.name
             if let user = appAndUser.user {
@@ -85,7 +86,6 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
             } else {
                 cell.avatarImageView.isHidden = true
             }
-            cell.backgroundImageView.isHidden = false
         }
         return cell
     }

@@ -2026,7 +2026,7 @@ extension ConversationViewController {
                 }
                 if action == .delete || action == .forward || action == .reply {
                     // Wait until context menu animation finished
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.conversationTableView(self.tableView, didSelectAction: action, forIndexPath: indexPath)
                     }
                 } else {

@@ -97,11 +97,12 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             }
         }
 
-        let addBloack = { (stickerBase64: String) in
-            StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
+        let addBlock = { (data: Data) in
+            let base64 = data.base64EncodedString()
+            StickerAPI.shared.addSticker(stickerBase64: base64, completion: { [weak self] (result) in
                 switch result {
                 case let .success(sticker):
-                    StickerPrefetcher.persistent.prefetchURLs([URL(string: sticker.assetUrl)!])
+                    SDImageCache.persistentSticker.storeImageData(toDisk: data, forKey: sticker.assetUrl)
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
@@ -127,8 +128,8 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
-                    if let stickerBase64 = FileManager.default.contents(atPath: targetUrl.path)?.base64EncodedString() {
-                        addBloack(stickerBase64)
+                    if let data = FileManager.default.contents(atPath: targetUrl.path) {
+                        addBlock(data)
                     } else {
                         failedBlock()
                     }
@@ -139,8 +140,8 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 let filename = "\(UUID().uuidString.lowercased()).\(ExtensionName.jpeg)"
                 let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
                 let targetPhoto = image.scaledToSticker()
-                if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateSticker(targetUrl.path) {
-                    addBloack(stickerBase64)
+                if targetPhoto.saveToFile(path: targetUrl), let data = targetPhoto.jpegData(compressionQuality: jpegCompressionQuality), FileManager.default.validateSticker(targetUrl.path) {
+                    addBlock(data)
                 } else {
                     alertBlock()
                 }

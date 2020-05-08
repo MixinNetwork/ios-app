@@ -2021,6 +2021,9 @@ extension ConversationViewController {
         }
         let actions = message.allowedActions.map { (action) -> UIAction in
             UIAction(title: action.title, image: action.image) { (_) in
+                guard let indexPath = self.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
+                    return
+                }
                 if action == .delete || action == .forward || action == .reply {
                     // Wait until context menu animation finished
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
@@ -2031,18 +2034,18 @@ extension ConversationViewController {
                 }
             }
         }
-        let identifier = indexPath as NSIndexPath
+        let identifier = message.messageId as NSString
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
             UIMenu(title: "", children: actions)
         }
     }
     
     private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        guard let identifier = configuration.identifier as? NSIndexPath else {
+        guard let identifier = configuration.identifier as? NSString else {
             return nil
         }
-        let indexPath = identifier as IndexPath
-        guard let cell = tableView.cellForRow(at: indexPath) as? MessageCell, let viewModel = dataSource.viewModel(for: indexPath) else {
+        let messageId = identifier as String
+        guard let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, let viewModel = dataSource.viewModel(for: indexPath) else {
             return nil
         }
         let param = UIPreviewParameters()

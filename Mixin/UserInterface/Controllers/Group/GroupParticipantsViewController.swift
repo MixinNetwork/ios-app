@@ -6,7 +6,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     private var myRole = ""
     private var conversation: ConversationItem!
     
-    private lazy var responseHandler: (APIResult<ConversationResponse>) -> Void = { result in
+    private lazy var responseHandler: (BaseAPI.Result<ConversationResponse>) -> Void = { result in
         if case let .failure(error) = result {
             showAutoHiddenHud(style: .error, text: error.localizedDescription)
         }

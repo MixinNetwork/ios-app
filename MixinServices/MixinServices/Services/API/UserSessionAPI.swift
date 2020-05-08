@@ -15,15 +15,15 @@ open class UserSessionAPI: BaseAPI {
         static let sessionFetch = "sessions/fetch"
     }
 
-    public func fetchSessions(userIds: [String]) -> APIResult<[UserSession]> {
+    public func fetchSessions(userIds: [String]) -> BaseAPI.Result<[UserSession]> {
          return request(method: .post, url: url.sessionFetch, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
 
-    public func showUser(userId: String) -> APIResult<UserResponse> {
+    public func showUser(userId: String) -> BaseAPI.Result<UserResponse> {
         return request(method: .get, url: url.users(id: userId))
     }
 
-    public func showUsers(userIds: [String]) -> APIResult<[UserResponse]> {
+    public func showUsers(userIds: [String]) -> BaseAPI.Result<[UserResponse]> {
         return request(method: .post, url: url.users, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
     

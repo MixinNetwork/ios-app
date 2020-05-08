@@ -8,7 +8,7 @@ final class PhoneContactAPI: BaseAPI {
         static let contacts = "contacts"
     }
     
-    func upload(contacts: [PhoneContact], completion: ((APIResult<EmptyResponse>) -> Void)? = nil) {
+    func upload(contacts: [PhoneContact], completion: ((BaseAPI.Result<EmptyResponse>) -> Void)? = nil) {
         let parameters = contacts.map({ ["phone": $0.phoneNumber, "full_name": $0.fullName] }).toParameters()
         request(method: .post, url: url.contacts, parameters: parameters, encoding: JSONArrayEncoding()) { (result) in
             completion?(result)

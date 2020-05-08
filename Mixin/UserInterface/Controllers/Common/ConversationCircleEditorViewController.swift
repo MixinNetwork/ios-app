@@ -104,7 +104,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     }
     
     private func addThisConversationIntoCircle(circleId: String, hud: Hud) {
-        let completion = { [weak self] (result: APIResult<[CircleConversation]>) in
+        let completion = { [weak self] (result: BaseAPI.Result<[CircleConversation]>) in
             switch result {
             case .success(let objects):
                 DispatchQueue.global().async {
@@ -214,7 +214,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         let conversationId = self.conversationId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        let completion: (APIResult<[CircleConversation]>) -> Void
+        let completion: (BaseAPI.Result<[CircleConversation]>) -> Void
         let requests: [ConversationCircleRequest]
         
         if indexPath.section == 0 {

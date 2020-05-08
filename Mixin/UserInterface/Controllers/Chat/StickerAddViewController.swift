@@ -48,10 +48,9 @@ class StickerAddViewController: UIViewController {
     private func requestAssetImage(asset: PHAsset) {
         let requestOptions = PHImageRequestOptions()
         requestOptions.version = .current
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .fastFormat
+        requestOptions.deliveryMode = .opportunistic
         requestOptions.isNetworkAccessAllowed = true
-        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
+        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self] (image, _) in
             self?.stickerImageView.image = image
         })
     }

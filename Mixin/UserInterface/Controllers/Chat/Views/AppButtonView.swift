@@ -2,12 +2,11 @@ import UIKit
 
 class AppButtonView: UIView {
     
+    static let cornerRadius: CGFloat = 8
     static let buttonMargin = MessageViewModel.Margin(leading: 5, trailing: 5, top: 1, bottom: 3)
     static let titleMargin = MessageViewModel.Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
     
     let button = AppButton()
-    
-    private let cornerRadius: CGFloat = 8
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,8 +37,8 @@ class AppButtonView: UIView {
                               width: bounds.width - Self.buttonMargin.horizontal,
                               height: bounds.height - Self.buttonMargin.vertical)
         layer.shadowPath = CGPath(roundedRect: button.frame,
-                                  cornerWidth: cornerRadius,
-                                  cornerHeight: cornerRadius,
+                                  cornerWidth: Self.cornerRadius,
+                                  cornerHeight: Self.cornerRadius,
                                   transform: nil)
     }
     
@@ -55,8 +54,7 @@ class AppButtonView: UIView {
             label.adjustsFontForContentSizeCategory = true
             label.lineBreakMode = .byCharWrapping
         }
-        button.backgroundColor = R.color.chat_button_background()
-        button.layer.cornerRadius = cornerRadius
+        button.layer.cornerRadius = Self.cornerRadius
         button.clipsToBounds = true
         button.contentEdgeInsets = UIEdgeInsets(top: AppButtonView.titleMargin.top,
                                                 left: AppButtonView.titleMargin.leading,

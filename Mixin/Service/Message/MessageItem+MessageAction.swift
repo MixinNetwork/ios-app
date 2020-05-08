@@ -2,8 +2,8 @@ import MixinServices
 
 extension MessageItem {
     
-    var allowedActions: Set<MessageAction> {
-        var actions = Set<MessageAction>()
+    var allowedActions: [MessageAction] {
+        var actions = [MessageAction]()
         if status == MessageStatus.FAILED.rawValue || category.hasPrefix("WEBRTC_") {
             actions = [.delete]
         } else if category.hasSuffix("_TEXT") || category.hasSuffix("_POST") {
@@ -38,7 +38,7 @@ extension MessageItem {
             actions = []
         }
         if ConversationViewController.allowReportSingleMessage {
-            actions.insert(.report)
+            actions.append(.report)
         }
         return actions
     }

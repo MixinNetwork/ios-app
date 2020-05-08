@@ -2020,7 +2020,7 @@ extension ConversationViewController {
             return nil
         }
         let actions = message.allowedActions.map { (action) -> UIAction in
-            UIAction(title: action.title) { (_) in
+            UIAction(title: action.title, image: action.image) { (_) in
                 if action == .delete || action == .forward || action == .reply {
                     // Wait until context menu animation finished
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {

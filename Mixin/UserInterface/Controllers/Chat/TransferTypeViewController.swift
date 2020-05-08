@@ -57,11 +57,7 @@ extension TransferTypeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.transfer_type, for: indexPath)!
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
-        if asset.assetId == self.asset?.assetId {
-            cell.checkmarkView.status = .selected
-        } else {
-            cell.checkmarkView.status = .hidden
-        }
+        cell.checkmarkView.isHidden = !(asset.assetId == self.asset?.assetId)
         cell.render(asset: asset)
         return cell
     }

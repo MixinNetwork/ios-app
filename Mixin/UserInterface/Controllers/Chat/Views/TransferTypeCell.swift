@@ -3,10 +3,10 @@ import MixinServices
 
 class TransferTypeCell: UITableViewCell {
     
-    @IBOutlet weak var checkmarkView: CheckmarkView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
+    @IBOutlet weak var checkmarkView: UIImageView!
     
     override func prepareForReuse() {
         super.prepareForReuse()

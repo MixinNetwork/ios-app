@@ -23,7 +23,6 @@ class CrashlyticalReporter: Reporter {
             Crashlytics.crashlytics().setUserID(account.user_id)
             Crashlytics.crashlytics().setCustomValue(account.full_name, forKey: "FullName")
             Crashlytics.crashlytics().setCustomValue(account.identity_number, forKey: "IdentityNumber")
-            Crashlytics.crashlytics().setCustomValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
     }
     

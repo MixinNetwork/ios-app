@@ -24,26 +24,16 @@
                                 <constraint firstAttribute="height" constant="64" id="jmn-gX-zmK"/>
                             </constraints>
                         </imageView>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cT-kJ-VZx">
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIA-2q-nCS">
                             <rect key="frame" x="57" y="16" width="303" height="39"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Z8-3o-jMf">
-                                    <rect key="frame" x="0.0" y="0.0" width="303" height="17"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
+                            <color key="backgroundColor" name="background"/>
                             <constraints>
-                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="width" secondItem="5sJ-Vt-90X" secondAttribute="width" id="EZ4-HB-KoF"/>
-                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="trailing" secondItem="DcV-kL-xoP" secondAttribute="trailing" id="HzA-JU-tgC"/>
-                                <constraint firstItem="DcV-kL-xoP" firstAttribute="bottom" secondItem="7Z8-3o-jMf" secondAttribute="bottom" id="RqB-Gd-2jD"/>
-                                <constraint firstAttribute="height" priority="200" constant="39" id="bfq-0k-rCF"/>
-                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="top" secondItem="DcV-kL-xoP" secondAttribute="top" id="fBA-4h-CDH"/>
-                                <constraint firstItem="7Z8-3o-jMf" firstAttribute="leading" secondItem="DcV-kL-xoP" secondAttribute="leading" id="q6v-gD-Cp0"/>
+                                <constraint firstAttribute="height" priority="200" constant="39" id="QK1-Le-EWa"/>
                             </constraints>
-                            <viewLayoutGuide key="contentLayoutGuide" id="DcV-kL-xoP"/>
-                            <viewLayoutGuide key="frameLayoutGuide" id="5sJ-Vt-90X"/>
-                        </scrollView>
+                            <color key="textColor" name="text"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4M-UK-LDG">
                             <rect key="frame" x="360" y="10" width="44" height="44"/>
                             <constraints>
@@ -59,14 +49,14 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="1cT-kJ-VZx" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="16" id="4mC-Dg-GYa"/>
+                        <constraint firstItem="mIA-2q-nCS" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="16" id="2rv-8h-cPt"/>
                         <constraint firstAttribute="trailing" secondItem="h4M-UK-LDG" secondAttribute="trailing" id="Guz-b2-eHf"/>
+                        <constraint firstAttribute="bottom" secondItem="mIA-2q-nCS" secondAttribute="bottom" constant="9" id="M6K-GL-vOB"/>
                         <constraint firstItem="f2B-sv-z1U" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" id="N8m-Pm-8UH"/>
                         <constraint firstItem="h4M-UK-LDG" firstAttribute="top" secondItem="F4h-ch-emd" secondAttribute="top" constant="10" id="XzF-nZ-u7d"/>
-                        <constraint firstItem="1cT-kJ-VZx" firstAttribute="leading" secondItem="f2B-sv-z1U" secondAttribute="trailing" id="h1S-gR-MoW"/>
+                        <constraint firstItem="h4M-UK-LDG" firstAttribute="leading" secondItem="mIA-2q-nCS" secondAttribute="trailing" id="gR0-Ze-2TY"/>
                         <constraint firstItem="f2B-sv-z1U" firstAttribute="leading" secondItem="F4h-ch-emd" secondAttribute="leading" id="hKi-0Y-Yx5"/>
-                        <constraint firstAttribute="bottom" secondItem="1cT-kJ-VZx" secondAttribute="bottom" constant="9" id="mgf-GF-wNg"/>
-                        <constraint firstItem="h4M-UK-LDG" firstAttribute="leading" secondItem="1cT-kJ-VZx" secondAttribute="trailing" id="zDY-G9-5ms"/>
+                        <constraint firstItem="mIA-2q-nCS" firstAttribute="leading" secondItem="f2B-sv-z1U" secondAttribute="trailing" id="uin-8J-s2e"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -86,11 +76,10 @@
             <connections>
                 <outlet property="backgroundView" destination="F4h-ch-emd" id="smQ-Ub-iNO"/>
                 <outlet property="closeButton" destination="h4M-UK-LDG" id="CFH-uA-xpX"/>
-                <outlet property="label" destination="7Z8-3o-jMf" id="7G4-DO-elg"/>
-                <outlet property="scrollView" destination="1cT-kJ-VZx" id="aY0-CQ-eDg"/>
-                <outlet property="scrollViewBottomConstraint" destination="mgf-GF-wNg" id="jpv-gg-gH2"/>
-                <outlet property="scrollViewHeightConstraint" destination="bfq-0k-rCF" id="ARM-fS-VC4"/>
-                <outlet property="scrollViewTopConstraint" destination="4mC-Dg-GYa" id="VKZ-c1-WP8"/>
+                <outlet property="textView" destination="mIA-2q-nCS" id="ld2-ud-gX8"/>
+                <outlet property="textViewBottomConstraint" destination="M6K-GL-vOB" id="JwO-UG-tI3"/>
+                <outlet property="textViewHeightConstraint" destination="QK1-Le-EWa" id="79i-Kn-rlr"/>
+                <outlet property="textViewTopConstraint" destination="2rv-8h-cPt" id="kGr-Vc-fxd"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
         </view>
@@ -103,6 +92,9 @@
         </namedColor>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

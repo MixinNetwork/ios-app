@@ -1746,7 +1746,7 @@ extension ConversationViewController {
                 announcementBadgeView.addSubview(announcementBadgeContentView)
                 announcementBadgeContentView.snp.makeEdgesEqualToSuperview()
             }
-            announcementBadgeContentView.label.text = announcement
+            announcementBadgeContentView.textView.text = announcement
             announcementBadgeContentView.layoutAsCompressed()
         } else {
             for subview in announcementBadgeView.subviews {

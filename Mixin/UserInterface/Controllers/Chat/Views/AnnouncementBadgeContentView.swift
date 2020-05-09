@@ -3,13 +3,12 @@ import UIKit
 class AnnouncementBadgeContentView: UIView {
     
     @IBOutlet weak var backgroundView: UIView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var closeButton: UIButton!
     
-    @IBOutlet weak var scrollViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewBottomConstraint: NSLayoutConstraint!
     
     weak var minHeightConstraint: NSLayoutConstraint!
     
@@ -28,21 +27,36 @@ class AnnouncementBadgeContentView: UIView {
     
     private lazy var moreView: MoreView = {
         let view = MoreView()
-        insertSubview(view, aboveSubview: label)
+        view.label.font = scaledFont
+        view.label.adjustsFontForContentSizeCategory = true
+        insertSubview(view, aboveSubview: textView)
         view.snp.makeConstraints { (make) in
-            make.trailing.equalTo(label)
+            make.trailing.equalTo(textView)
         }
-        moreViewBottomConstraint = view.bottomAnchor.constraint(equalTo: label.bottomAnchor)
-        moreViewBottomConstraint!.isActive = true
+        let bottomConstraint = view.bottomAnchor.constraint(equalTo: textView.bottomAnchor)
+        let leadingConstraint = view.leadingAnchor.constraint(equalTo: textView.leadingAnchor)
+        leadingConstraint.priority = .defaultLow
+        NSLayoutConstraint.activate([bottomConstraint, leadingConstraint])
+        moreViewBottomConstraint = bottomConstraint
+        moreViewLeadingConstraint = leadingConstraint
         moreViewIfLoaded = view
         return view
     }()
     
     private weak var moreViewIfLoaded: MoreView?
     private weak var moreViewBottomConstraint: NSLayoutConstraint?
+    private weak var moreViewLeadingConstraint: NSLayoutConstraint?
+    
+    private var scaledFont: UIFont {
+        UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        textView.font = scaledFont
+        textView.adjustsFontForContentSizeCategory = true
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
         minHeightConstraint = heightAnchor.constraint(greaterThanOrEqualToConstant: 76)
         minHeightConstraint.isActive = true
         layer.shadowColor = UIColor.black.cgColor
@@ -67,39 +81,54 @@ class AnnouncementBadgeContentView: UIView {
         guard isExpandable else {
             return
         }
-        label.numberOfLines = 0
+        textView.textContainer.maximumNumberOfLines = 0
+        textView.isScrollEnabled = true
         moreViewIfLoaded?.isHidden = true
-        layoutIfNeeded()
-        scrollViewHeightConstraint.constant = scrollView.contentSize.height
+        textView.invalidateIntrinsicContentSize()
+        textViewHeightConstraint.constant = textView.contentSize.height
+        textView.setContentOffset(.zero, animated: false)
     }
     
     func layoutAsCompressed() {
         layoutIfNeeded()
-        label.numberOfLines = 2
-        guard let text = label.text, !text.isEmpty else {
-            scrollViewTopConstraint.constant = singleLineLabelTopMargin
-            return
-        }
-        let fittingSize = CGSize(width: label.frame.width,
-                                 height: UIView.layoutFittingExpandedSize.height)
-        let size = (text as NSString).boundingRect(with: fittingSize,
-                                                   options: .usesLineFragmentOrigin,
-                                                   attributes: [.font: label.font!],
-                                                   context: nil)
-        let lineHeight = label.font.lineHeight
-        if size.height - lineHeight > 1 {
-            scrollViewTopConstraint.constant = multilineLabelTopMargin
+        textView.textContainer.maximumNumberOfLines = 2
+        textView.isScrollEnabled = false
+        
+        // Returns maximum number count of 3 on multilines
+        let (numberOfLines, lastVisibleLineRect) = { () -> (Int, CGRect) in
+            var numberOfLines = 0
+            var glyphIndex = 0
+            var lineRange = NSRange()
+            var lastVisibleLineRect = CGRect.zero
+            while glyphIndex < textView.layoutManager.numberOfGlyphs {
+                let rect = textView.layoutManager.lineFragmentUsedRect(forGlyphAt: glyphIndex, effectiveRange: &lineRange)
+                glyphIndex = NSMaxRange(lineRange)
+                numberOfLines += 1
+                if numberOfLines > 2 {
+                    return (numberOfLines, lastVisibleLineRect)
+                } else {
+                    lastVisibleLineRect = rect
+                }
+            }
+            return (numberOfLines, lastVisibleLineRect)
+        }()
+        
+        if numberOfLines > 1 {
+            textViewTopConstraint.constant = multilineLabelTopMargin
         } else {
-            scrollViewTopConstraint.constant = singleLineLabelTopMargin
+            textViewTopConstraint.constant = singleLineLabelTopMargin
         }
-        if size.height - lineHeight * 2 > 1 {
+        if numberOfLines > 2 {
             moreView.isHidden = false
         } else {
             moreViewIfLoaded?.isHidden = true
         }
+        
+        let contentHeight = ceil(scaledFont.lineHeight * CGFloat(min(2, numberOfLines)))
+        textViewHeightConstraint.constant = contentHeight
         superview?.layoutIfNeeded()
-        scrollViewHeightConstraint.constant = scrollView.contentSize.height
-        moreViewBottomConstraint?.constant = -(label.bounds.height - min(size.height, lineHeight * 2)) / 2
+        moreViewBottomConstraint?.constant = -(textView.frame.height - contentHeight)
+        moreViewLeadingConstraint?.constant = round(lastVisibleLineRect.width)
     }
     
 }
@@ -124,11 +153,12 @@ extension AnnouncementBadgeContentView {
     
     private final class MoreView: UIView {
         
+        let label = UILabel()
+        
         private let gradientWidth: CGFloat = 40
         private let spacing: CGFloat = 10
         private let gradientLayer = CAGradientLayer()
         private let spacingLayer = CALayer()
-        private let label = UILabel()
         
         required init?(coder: NSCoder) {
             super.init(coder: coder)
@@ -168,7 +198,6 @@ extension AnnouncementBadgeContentView {
         private func prepare() {
             backgroundColor = .clear
             label.backgroundColor = .background
-            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             label.textColor = .theme
             label.text = R.string.localizable.action_more()
             addSubview(label)

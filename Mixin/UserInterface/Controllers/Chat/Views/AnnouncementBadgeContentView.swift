@@ -22,7 +22,7 @@ class AnnouncementBadgeContentView: UIView {
     }
     
     private let multilineLabelTopMargin: CGFloat = 16
-    private let singleLineLabelTopMargin: CGFloat = 9
+    private let singleLineLabelTopMargin: CGFloat = 24
     
     private lazy var tapCoordinator = TapCoordinator(closeButton: closeButton)
     

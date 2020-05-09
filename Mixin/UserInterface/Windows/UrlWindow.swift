@@ -161,6 +161,14 @@ class UrlWindow {
             guard let snapshot = snapshotItem, let assetItem = syncAsset(assetId: snapshot.assetId, hud: hud) else {
                 return
             }
+
+            if snapshot.type == SnapshotType.transfer.rawValue, let opponentId = snapshot.opponentId {
+                if !UserDAO.shared.isExist(userId: opponentId) {
+                    if case let .success(response) = UserAPI.shared.showUser(userId: opponentId) {
+                        UserDAO.shared.updateUsers(users: [response])
+                    }
+                }
+            }
             
             DispatchQueue.main.async {
                 hud.hide()

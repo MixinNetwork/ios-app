@@ -80,6 +80,7 @@ class ConversationViewController: UIViewController {
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
+    private var isShowingKeyboard = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
@@ -252,6 +253,8 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -697,7 +700,8 @@ class ConversationViewController: UIViewController {
             }
             dataSource?.conversation.announcement = conversation.announcement
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-            if hasUnreadAnnouncement {
+            let canShowAnnouncement = ScreenSize.current > .inch4 || !isShowingKeyboard
+            if hasUnreadAnnouncement && canShowAnnouncement {
                 updateAnnouncementBadge(announcement: conversation.announcement)
             } else {
                 updateAnnouncementBadge(announcement: nil)
@@ -819,6 +823,21 @@ class ConversationViewController: UIViewController {
         }, completion: { _ in
             self.multipleSelectionActionView.removeFromSuperview()
         })
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        isShowingKeyboard = true
+        if ScreenSize.current <= .inch4 {
+            updateAnnouncementBadge(announcement: nil)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        isShowingKeyboard = false
+        let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+        if ScreenSize.current <= .inch4 && hasUnreadAnnouncement {
+            updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+        }
     }
     
     // MARK: - Interface

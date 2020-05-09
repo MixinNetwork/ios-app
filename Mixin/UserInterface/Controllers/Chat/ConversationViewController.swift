@@ -860,6 +860,7 @@ class ConversationViewController: UIViewController {
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
         userHandleViewController.reload(with: keyword) { (hasContent) in
             self.isUserHandleHidden = !hasContent
+            self.updateOverlays()
         }
     }
     
@@ -1789,6 +1790,7 @@ extension ConversationViewController {
                         let keyword = self.conversationInputViewController.textView.inputingMentionToken
                         self.userHandleViewController.reload(with: keyword) { (hasContent) in
                             self.isUserHandleHidden = !hasContent
+                            self.updateOverlays()
                         }
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)

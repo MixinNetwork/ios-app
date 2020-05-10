@@ -2,6 +2,9 @@ import UIKit
 
 final class UserHandleTableHeaderView: UIView {
     
+    static let decorationHeight: CGFloat = 7
+    static let shadowHeight: CGFloat = 10
+    
     private let shadowView = TopShadowView()
     private let decorationView = UIView()
     
@@ -24,12 +27,12 @@ final class UserHandleTableHeaderView: UIView {
         addSubview(decorationView)
         decorationView.snp.makeConstraints { (make) in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(7)
+            make.height.equalTo(Self.decorationHeight)
         }
         shadowView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(decorationView.snp.top)
-            make.height.equalTo(10)
+            make.height.equalTo(Self.shadowHeight)
         }
     }
     

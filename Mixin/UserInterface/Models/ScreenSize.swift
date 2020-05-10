@@ -31,12 +31,24 @@ enum ScreenSize: Int {
         }
     }()
     
+}
+
+extension ScreenSize: Comparable {
+    
+    static func <(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+    
     static func <=(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
-        return lhs.rawValue <= rhs.rawValue
+        lhs.rawValue <= rhs.rawValue
     }
     
     static func >=(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
-        return lhs.rawValue >= rhs.rawValue
+        lhs.rawValue >= rhs.rawValue
+    }
+    
+    static func >(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+        lhs.rawValue > rhs.rawValue
     }
     
 }

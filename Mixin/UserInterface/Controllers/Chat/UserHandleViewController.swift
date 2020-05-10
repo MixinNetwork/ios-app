@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class UserHandleViewController: UITableViewController, ConversationAccessible {
+class UserHandleViewController: UITableViewController {
     
     private struct SearchResult {
         let user: UserItem
@@ -18,17 +18,18 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         }
     }
     
-    private var searchResults = [SearchResult]()
-    private var keyword: String?
-    private var onScrollingAnimationEnd: (() -> ())?
-    
-    private lazy var tableHeaderView: UIView = {
+    private(set) lazy var tableHeaderView: UserHandleTableHeaderView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 100)
         let view = UserHandleTableHeaderView(frame: frame)
         view.backgroundColor = .clear
         view.clipsToBounds = true
         return view
     }()
+    
+    private var searchResults = [SearchResult]()
+    private var keyword: String?
+    private var onScrollingAnimationEnd: (() -> ())?
+    private var conversationViewController: ConversationViewController?
     
     private lazy var tableFooterView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 7)
@@ -54,12 +55,18 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let contentHeight = min(CGFloat(searchResults.count), 3.5) * tableView.rowHeight + 7
+        let contentHeight = min(CGFloat(searchResults.count), 3.5) * tableView.rowHeight
+            + UserHandleTableHeaderView.decorationHeight
         let tableHeaderHeight = tableView.frame.height - contentHeight
         if tableHeaderView.frame.height != tableHeaderHeight {
             tableHeaderView.frame.size.height = tableHeaderHeight
             tableView.tableHeaderView = tableHeaderView
         }
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        conversationViewController = parent as? ConversationViewController
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,6 +86,10 @@ class UserHandleViewController: UITableViewController, ConversationAccessible {
         tableView.deselectRow(at: indexPath, animated: true)
         let result = searchResults[indexPath.row]
         conversationViewController?.inputUserHandle(with: result.user)
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        conversationViewController?.updateOverlays()
     }
     
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {

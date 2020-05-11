@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -90,12 +90,18 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_receive_money" translatesAutoresizingMaskIntoConstraints="NO" id="jnQ-SR-zkf">
+                                                    <rect key="frame" x="26.5" y="24.5" width="13.5" height="15.5"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="YDq-Kp-w0e" secondAttribute="bottom" id="10O-K9-yQw"/>
                                                 <constraint firstAttribute="trailing" secondItem="YDq-Kp-w0e" secondAttribute="trailing" id="359-cf-3hd"/>
                                                 <constraint firstAttribute="trailing" secondItem="WBQ-eC-0nx" secondAttribute="trailing" id="4pC-gW-AJr"/>
+                                                <constraint firstAttribute="bottom" secondItem="jnQ-SR-zkf" secondAttribute="bottom" id="N6L-sn-Ut1"/>
+                                                <constraint firstAttribute="trailing" secondItem="jnQ-SR-zkf" secondAttribute="trailing" id="WCw-GT-CVY"/>
                                                 <constraint firstAttribute="bottom" secondItem="WBQ-eC-0nx" secondAttribute="bottom" id="WRX-ym-t0n"/>
                                                 <constraint firstItem="YDq-Kp-w0e" firstAttribute="leading" secondItem="30P-SD-AZS" secondAttribute="leading" id="X4J-sS-bdA"/>
                                                 <constraint firstItem="WBQ-eC-0nx" firstAttribute="top" secondItem="30P-SD-AZS" secondAttribute="top" id="hMY-MX-wTg"/>
@@ -185,6 +191,7 @@
                 <outlet property="popupView" destination="15C-zD-brT" id="btt-wM-EO5"/>
                 <outlet property="qrcodeImageView" destination="BRz-EH-3Ps" id="fKJ-tJ-WcX"/>
                 <outlet property="qrcodeView" destination="HEa-0m-NKp" id="ZR8-J5-3aH"/>
+                <outlet property="receiveMoneyImageView" destination="jnQ-SR-zkf" id="ayq-Ag-kDb"/>
                 <outlet property="titleLabel" destination="xxq-LQ-MPB" id="qAn-1H-lOt"/>
             </connections>
             <point key="canvasLocation" x="24.800000000000001" y="51.724137931034484"/>
@@ -192,6 +199,7 @@
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_receive_money" width="13.5" height="15.5"/>
         <image name="ic_save_qrcode" width="22" height="23"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

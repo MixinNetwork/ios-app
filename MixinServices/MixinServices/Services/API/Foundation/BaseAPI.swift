@@ -102,13 +102,7 @@ open class BaseAPI {
 }
 
 extension BaseAPI {
-
-    private static let synchronousSession: Alamofire.Session = {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 8
-        return Alamofire.Session(configuration: configuration)
-    }()
-
+    
     @discardableResult
     public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> BaseAPI.Result<T> {
         return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)

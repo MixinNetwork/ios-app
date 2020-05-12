@@ -7,8 +7,6 @@ open class BaseAPI {
     
     public typealias Result<Response: Decodable> = Swift.Result<Response, APIError>
     
-    public static let jsonEncoding = JSONEncoding()
-
     public init() {
 
     }
@@ -25,7 +23,7 @@ open class BaseAPI {
         return session
     }()
 
-    private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> DataRequest {
+    private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
         do {
             return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
@@ -35,7 +33,7 @@ open class BaseAPI {
     }
 
     @discardableResult
-    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (BaseAPI.Result<ResultType>) -> Void) -> Request? {
+    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (BaseAPI.Result<ResultType>) -> Void) -> Request? {
         if checkLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -111,11 +109,11 @@ extension BaseAPI {
     }()
 
     @discardableResult
-    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> BaseAPI.Result<T> {
+    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> BaseAPI.Result<T> {
         return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
     }
 
-    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, retry: Bool = false) -> BaseAPI.Result<T> {
+    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> BaseAPI.Result<T> {
         var result: BaseAPI.Result<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
         let requestTime = Date()

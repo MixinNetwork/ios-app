@@ -1,3 +1,4 @@
+import Alamofire
 import MixinServices
 
 final class WithdrawalAPI: BaseAPI {
@@ -48,7 +49,7 @@ final class WithdrawalAPI: BaseAPI {
         }
     }
     
-    func delete(addressId: String, pin: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func delete(addressId: String, pin: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.delete(addressId: addressId), parameters: ["PIN": encryptedPin], completion: completion)
         }

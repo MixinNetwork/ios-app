@@ -97,7 +97,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.preferences, parameters: preferenceRequest.toParameters(), encoding: EncodableParameterEncoding<UserPreferenceRequest>(), completion: completion)
     }
 
-    func verify(pin: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func verify(pin: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], completion: completion)
         }
@@ -128,7 +128,7 @@ final class AccountAPI: BaseAPI {
 		request(method: .get, url: url.pinLogs(offset: offset, limit: limit), completion: completion)
     }
 
-    func logoutSession(sessionId: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func logoutSession(sessionId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     

@@ -31,7 +31,7 @@ class GiphySearchViewController: UIViewController {
     
     private weak var lastGiphyRequest: DataRequest?
     
-    private lazy var reloadHandler = { [weak self] (result: Result<[GiphyImage]>) in
+    private lazy var reloadHandler = { [weak self] (result: Result<[GiphyImage], Error>) in
         guard let weakSelf = self, case let .success(images) = result else {
             return
         }
@@ -42,7 +42,7 @@ class GiphySearchViewController: UIViewController {
         }
     }
     
-    private lazy var loadMoreHandler = { [weak self] (result: Result<[GiphyImage]>) in
+    private lazy var loadMoreHandler = { [weak self] (result: Result<[GiphyImage], Error>) in
         guard let weakSelf = self, case let .success(images) = result else {
             return
         }

@@ -15,20 +15,21 @@ open class BaseAPI {
         let data: ResultType?
         let error: APIError?
     }
-    private static let sharedSessionManager: SessionManager = {
+    private static let session: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        let session = Alamofire.SessionManager(configuration: configuration)
-        session.adapter = AccessTokenAdapter()
+        let tokenInterceptor = AccessTokenInterceptor()
+        let session = Alamofire.Session(configuration: configuration,
+                                        interceptor: tokenInterceptor)
         return session
     }()
 
     private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
         do {
-            return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
+            return BaseAPI.session.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
             reporter.report(error: error)
-            return BaseAPI.sharedSessionManager.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return BaseAPI.session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
@@ -102,10 +103,10 @@ open class BaseAPI {
 
 extension BaseAPI {
 
-    private static let sharedSynchronousSessionManager: SessionManager = {
+    private static let synchronousSession: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 8
-        return Alamofire.SessionManager(configuration: configuration)
+        return Alamofire.Session(configuration: configuration)
     }()
 
     @discardableResult

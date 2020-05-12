@@ -110,7 +110,7 @@ final class UserAPI: UserSessionAPI {
         request(method: .post, url: url.setFavorite(appId: id), completion: completion)
     }
 
-    func unfavoriteApp(id: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func unfavoriteApp(id: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.unfavorite(appId: id), completion: completion)
     }
 }

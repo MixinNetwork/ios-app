@@ -1,3 +1,4 @@
+import Alamofire
 import MixinServices
 
 final class AuthorizeAPI: BaseAPI {
@@ -14,7 +15,7 @@ final class AuthorizeAPI: BaseAPI {
         request(method: .get, url: url.authorizations, completion: completion)
     }
     
-    func cancel(clientId: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func cancel(clientId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         let param = ["client_id": clientId]
         request(method: .post, url: url.cancel, parameters: param, completion: completion)
     }

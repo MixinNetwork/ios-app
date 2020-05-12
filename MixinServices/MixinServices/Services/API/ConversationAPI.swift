@@ -45,7 +45,7 @@ public class ConversationAPI : BaseAPI {
         return request(method: .get, url: url.conversations(id: conversationId))
     }
     
-    public func exitConversation(conversationId: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    public func exitConversation(conversationId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.exit(id: conversationId), completion: completion)
     }
     

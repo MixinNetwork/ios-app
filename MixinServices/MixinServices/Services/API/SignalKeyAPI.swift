@@ -10,7 +10,7 @@ public class SignalKeyAPI : BaseAPI {
         static let signalKeyCount = "signal/keys/count"
     }
     
-    public func pushSignalKeys(key: SignalKeyRequest) -> BaseAPI.Result<EmptyResponse> {
+    public func pushSignalKeys(key: SignalKeyRequest) -> BaseAPI.Result<Empty> {
         return request(method: .post, url: url.signal, parameters: key.toParameters(), encoding: EncodableParameterEncoding<SignalKeyRequest>())
     }
     

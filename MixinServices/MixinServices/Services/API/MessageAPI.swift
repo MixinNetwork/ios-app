@@ -21,7 +21,7 @@ public class MessageAPI: BaseAPI {
         static let acknowledgements = "acknowledgements"
     }
     
-    public func acknowledgements(ackMessages: [AckMessage]) -> BaseAPI.Result<EmptyResponse> {
+    public func acknowledgements(ackMessages: [AckMessage]) -> BaseAPI.Result<Empty> {
         let parameters = ackMessages.map({ ["message_id": $0.messageId, "status": $0.status] }).toParameters()
         return request(method: .post, url: url.acknowledgements, parameters: parameters, encoding: JSONArrayEncoding())
     }

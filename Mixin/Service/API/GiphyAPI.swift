@@ -3,7 +3,7 @@ import Alamofire
 
 enum GiphyAPI {
     
-    typealias Completion = (Alamofire.Result<[GiphyImage]>) -> Void
+    typealias Completion = (Result<[GiphyImage], Error>) -> Void
     
     private static var apiKey = MixinKeys.giphy
     private static var language: String {
@@ -24,7 +24,7 @@ enum GiphyAPI {
         }
         let url = URL(string: "https://api.giphy.com/v1/gifs/trending?offset=\(offset)&limit=\(limit)&rating=r&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
-        return request(url).responseJSON(completionHandler: handler)
+        return AF.request(url).responseJSON(completionHandler: handler)
     }
     
     static func search(keyword: String, offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
@@ -38,10 +38,10 @@ enum GiphyAPI {
         }
         let url = URL(string: "https://api.giphy.com/v1/gifs/search?q=\(encodedKeyword)&offset=\(offset)&limit=\(limit)&rating=r&lang=\(language)&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
-        return request(url).responseJSON(completionHandler: handler)
+        return AF.request(url).responseJSON(completionHandler: handler)
     }
     
-    static func handler(completion: @escaping Completion) -> (DataResponse<Any>) -> Void {
+    static func handler(completion: @escaping Completion) -> (AFDataResponse<Any>) -> Void {
         return { (response) in
             switch response.result {
             case .success(let json):

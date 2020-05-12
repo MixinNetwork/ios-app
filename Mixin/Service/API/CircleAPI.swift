@@ -1,4 +1,5 @@
 import UIKit
+import Alamofire
 import MixinServices
 
 final class CircleAPI: BaseAPI {
@@ -64,7 +65,7 @@ final class CircleAPI: BaseAPI {
         request(method: .post, url: Url.updateCircleForUser(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func delete(id: String, completion: @escaping (BaseAPI.Result<EmptyResponse>) -> Void) {
+    func delete(id: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: Url.delete(id: id), completion: completion)
     }
     

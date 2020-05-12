@@ -377,14 +377,20 @@ class UrlWindow {
         PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
             switch result {
             case let .success(payment):
-                if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) ?? syncAsset(assetId: payment.asset.chainId, hud: hud) {
-                    hud.hide()
-                    let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset.iconUrl, chainName: chainAsset.name, chainSymbol: chainAsset.symbol)
-                    let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
-                    PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
-                } else {
-                    hud.set(style: .error, text: R.string.localizable.asset_not_found())
-                    hud.scheduleAutoHidden()
+                DispatchQueue.global().async {
+                    if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) ?? syncAsset(assetId: payment.asset.chainId, hud: hud) {
+                        DispatchQueue.main.async {
+                            hud.hide()
+                            let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset.iconUrl, chainName: chainAsset.name, chainSymbol: chainAsset.symbol)
+                            let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+                            PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                            hud.scheduleAutoHidden()
+                        }
+                    }
                 }
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)

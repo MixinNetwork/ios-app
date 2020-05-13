@@ -1,28 +1,28 @@
 import Foundation
 import WCDBSwift
 
-internal struct Job: BaseCodable {
+public struct Job: BaseCodable {
     
-    static let tableName: String = "jobs"
+    public static let tableName: String = "jobs"
     
-    var orderId: Int?
-    let jobId: String
-    let priority: Int
-    let action: String
-    let category: String
+    public var orderId: Int?
+    public let jobId: String
+    public let priority: Int
+    public let action: String
+    public let category: String
     
-    let userId: String?
-    let blazeMessage: Data?
-    let conversationId: String?
-    let resendMessageId: String?
-    var messageId: String?
-    var status: String?
-    var sessionId: String?
+    public let userId: String?
+    public let blazeMessage: Data?
+    public let conversationId: String?
+    public let resendMessageId: String?
+    public var messageId: String?
+    public var status: String?
+    public var sessionId: String?
 
-    var isAutoIncrement = true
+    public var isAutoIncrement = true
     
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Job
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Job
         case orderId
         case jobId = "job_id"
         case priority
@@ -36,13 +36,13 @@ internal struct Job: BaseCodable {
         case status
         case sessionId = "session_id"
 
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
                 orderId: ColumnConstraintBinding(isPrimary: true, isAutoIncrement: true)
             ]
         }
-        static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
+        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
                 "_index_id": IndexBinding(isUnique: true, indexesBy: jobId),
                 "_next_indexs": IndexBinding(indexesBy: [category, priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
@@ -65,6 +65,9 @@ internal struct Job: BaseCodable {
         case .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
             self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
+        case .PENDING_WEBRTC:
+            self.category = JobCategory.Task.rawValue
+            self.priority = JobPriority.SEND_MESSAGE.rawValue
         default:
             self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -86,6 +89,16 @@ internal struct Job: BaseCodable {
 
 
 extension Job {
+    
+    public var blazeMessageData: BlazeMessageData? {
+        guard let string = toBlazeMessage().data else {
+            return nil
+        }
+        guard let data = string.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(BlazeMessageData.self, from: data)
+    }
     
     func toBlazeMessage() -> BlazeMessage {
         return try! JSONDecoder.default.decode(BlazeMessage.self, from: blazeMessage!)
@@ -174,6 +187,8 @@ public enum JobAction: String {
 
     case RECOVER_ATTACHMENT
     case UPLOAD_ATTACHMENT
+    
+    case PENDING_WEBRTC
 }
 
 public enum JobCategory: String {

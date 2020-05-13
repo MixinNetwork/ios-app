@@ -21,7 +21,7 @@ public final class JobDAO {
         return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
 
-    internal func nextBatchJobs(category: JobCategory, action: JobAction, limit: Limit) -> [Job] {
+    public func nextBatchJobs(category: JobCategory, action: JobAction, limit: Limit?) -> [Job] {
         return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
     }
 

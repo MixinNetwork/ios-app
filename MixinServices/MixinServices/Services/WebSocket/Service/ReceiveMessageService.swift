@@ -255,6 +255,31 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+        if isAppExtension {
+            if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue, let user = UserDAO.shared.getUser(userId: data.userId) {
+                let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: user.userId)
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: conversationId,
+                                                      userId: user.userId,
+                                                      category: .WEBRTC_AUDIO_CANCEL,
+                                                      mediaDuration: 0,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            } else {
+                let blazeMessage = BlazeMessage(data: data,
+                                                action: BlazeMessageAction.createCall.rawValue,
+                                                fromPush: true)
+                let job = Job(jobId: UUID().uuidString,
+                              action: .PENDING_WEBRTC,
+                              userId: data.userId,
+                              conversationId: data.conversationId,
+                              resendMessageId: nil,
+                              sessionId: data.sessionId,
+                              blazeMessage: blazeMessage)
+                MixinDatabase.shared.insertOrReplace(objects: [job])
+            }
+            return
+        }
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
                 if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {

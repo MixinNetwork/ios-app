@@ -28,6 +28,7 @@ class JobService {
                 AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
                 JobService.shared.restoreUploadJobs()
             }
+            JobService.shared.recoverPendingWebRTCJobs()
             JobService.shared.recoverMediaJobs()
         }
     }
@@ -69,6 +70,18 @@ class JobService {
                 return
             }
             JobService.shared.recoverMediaJobs()
+        }
+    }
+    
+    private func recoverPendingWebRTCJobs() {
+        let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
+        for job in jobs {
+            defer {
+                JobDAO.shared.removeJob(jobId: job.jobId)
+            }
+            if let data = job.blazeMessageData {
+                CallManager.shared.handleIncomingBlazeMessageData(data)
+            }
         }
     }
 

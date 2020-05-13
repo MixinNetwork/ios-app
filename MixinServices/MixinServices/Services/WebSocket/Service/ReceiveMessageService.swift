@@ -256,11 +256,10 @@ public class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
         if isAppExtension {
-            if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue, let user = UserDAO.shared.getUser(userId: data.userId) {
-                let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: user.userId)
+            if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
                 let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                      conversationId: conversationId,
-                                                      userId: user.userId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
                                                       category: .WEBRTC_AUDIO_CANCEL,
                                                       mediaDuration: 0,
                                                       status: .DELIVERED)

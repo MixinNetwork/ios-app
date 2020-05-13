@@ -124,8 +124,12 @@ extension WebRTCClient {
     
     private var sharedConfig: RTCConfiguration {
         let config = RTCConfiguration()
-        config.iceServers = RTCIceServer.sharedServers
+        config.tcpCandidatePolicy = .enabled
+        config.iceTransportPolicy = .relay
+        config.bundlePolicy = .maxBundle
+        config.rtcpMuxPolicy = .require
         config.sdpSemantics = .unifiedPlan
+        config.iceServers = RTCIceServer.sharedServers
         config.continualGatheringPolicy = .gatherContinually
         return config
     }

@@ -76,12 +76,8 @@ class JobService {
     private func recoverPendingWebRTCJobs() {
         let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
         for job in jobs {
-            defer {
-                JobDAO.shared.removeJob(jobId: job.jobId)
-            }
-            if let data = job.blazeMessageData {
-                CallManager.shared.handleIncomingBlazeMessageData(data)
-            }
+            CallManager.shared.handleIncomingBlazeMessageData(job.toBlazeMessageData())
+            JobDAO.shared.removeJob(jobId: job.jobId)
         }
     }
 

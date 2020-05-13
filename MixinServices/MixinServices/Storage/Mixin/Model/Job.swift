@@ -13,6 +13,7 @@ public struct Job: BaseCodable {
     
     public let userId: String?
     public let blazeMessage: Data?
+    public let blazeMessageData: Data?
     public let conversationId: String?
     public let resendMessageId: String?
     public var messageId: String?
@@ -27,6 +28,7 @@ public struct Job: BaseCodable {
         case jobId = "job_id"
         case priority
         case blazeMessage = "blaze_message"
+        case blazeMessageData = "blaze_message_data"
         case action
         case category
         case conversationId = "conversation_id"
@@ -65,9 +67,6 @@ public struct Job: BaseCodable {
         case .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
             self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
-        case .PENDING_WEBRTC:
-            self.category = JobCategory.Task.rawValue
-            self.priority = JobPriority.SEND_MESSAGE.rawValue
         default:
             self.category = JobCategory.WebSocket.rawValue
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -81,29 +80,22 @@ public struct Job: BaseCodable {
         } else {
             self.blazeMessage = nil
         }
+        self.blazeMessageData = nil
         self.messageId = nil
         self.status = nil
         self.sessionId = sessionId
     }
 }
 
-
 extension Job {
-    
-    public var blazeMessageData: BlazeMessageData? {
-        guard let string = toBlazeMessage().data else {
-            return nil
-        }
-        guard let data = string.data(using: .utf8) else {
-            return nil
-        }
-        return try? JSONDecoder.default.decode(BlazeMessageData.self, from: data)
-    }
     
     func toBlazeMessage() -> BlazeMessage {
         return try! JSONDecoder.default.decode(BlazeMessage.self, from: blazeMessage!)
     }
-    
+
+    public func toBlazeMessageData() -> BlazeMessageData {
+        return try! JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessageData!)
+    }
 }
 
 extension Job {
@@ -131,6 +123,21 @@ extension Job {
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
+
+    init(pengdingWebRTCMessage data: BlazeMessageData) {
+        self.jobId = UUID().uuidString.lowercased()
+        self.priority = JobPriority.SEND_MESSAGE.rawValue
+        self.action = JobAction.PENDING_WEBRTC.rawValue
+        self.userId = data.userId
+        self.conversationId = data.conversationId
+        self.resendMessageId = nil
+        self.blazeMessage = nil
+        self.blazeMessageData = try! JSONEncoder.default.encode(data)
+        self.messageId = data.messageId
+        self.status = nil
+        self.sessionId = nil
+        self.category = JobCategory.Task.rawValue
+    }
     
     init(sessionRead conversationId: String, messageId: String, status: String = MessageStatus.READ.rawValue) {
         self.jobId = UUID().uuidString.lowercased()
@@ -140,6 +147,7 @@ extension Job {
         self.conversationId = conversationId
         self.resendMessageId = nil
         self.blazeMessage = nil
+        self.blazeMessageData = nil
         self.messageId = messageId
         self.status = status
         self.sessionId = nil
@@ -154,6 +162,7 @@ extension Job {
         self.conversationId = nil
         self.resendMessageId = nil
         self.blazeMessage = nil
+        self.blazeMessageData = nil
         self.messageId = messageId
         self.status = nil
         self.sessionId = nil

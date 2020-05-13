@@ -265,17 +265,7 @@ public class ReceiveMessageService: MixinService {
                                                       status: .DELIVERED)
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             } else {
-                let blazeMessage = BlazeMessage(data: data,
-                                                action: BlazeMessageAction.createCall.rawValue,
-                                                fromPush: true)
-                let job = Job(jobId: UUID().uuidString,
-                              action: .PENDING_WEBRTC,
-                              userId: data.userId,
-                              conversationId: data.conversationId,
-                              resendMessageId: nil,
-                              sessionId: data.sessionId,
-                              blazeMessage: blazeMessage)
-                MixinDatabase.shared.insertOrReplace(objects: [job])
+                MixinDatabase.shared.insertOrReplace(objects: [Job(pengdingWebRTCMessage: data)])
             }
             return
         }

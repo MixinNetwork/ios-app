@@ -130,7 +130,7 @@ extension WebRTCClient {
         config.rtcpMuxPolicy = .require
         config.sdpSemantics = .unifiedPlan
         config.iceServers = RTCIceServer.sharedServers
-        config.continualGatheringPolicy = .gatherContinually
+        config.continualGatheringPolicy = .gatherOnce
         return config
     }
     

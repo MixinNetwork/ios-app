@@ -7,23 +7,20 @@ extension RTCIceServer {
     static var sharedServers: [RTCIceServer] {
         return loadIceServer()
     }
-    
-    private static let semaphore = DispatchSemaphore(value: 0)
-    private static let iceServerLoadingTimeoutInterval = DispatchTimeInterval.seconds(3)
-    
+        
     private static func loadIceServer() -> [RTCIceServer] {
-        var output = [TurnServer]()
-        CallAPI.shared.turn { (result) in
-            switch result {
-            case .success(let servers):
-                output = servers
-            case .failure(let error):
-                reporter.report(error: error)
+        repeat {
+            switch CallAPI.shared.turn() {
+            case let .success(servers):
+                return servers.map({ RTCIceServer(urlStrings: [$0.url], username: $0.username, credential: $0.credential) })
+            case let .failure(error):
+                Logger.write(error: error)
+                repeat {
+                    Thread.sleep(forTimeInterval: 2)
+                } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !NetworkManager.shared.isReachable
             }
-            semaphore.signal()
-        }
-        _ = semaphore.wait(timeout: .now() + iceServerLoadingTimeoutInterval)
-        return output.map({ RTCIceServer(urlStrings: [$0.url], username: $0.username, credential: $0.credential) })
+        } while LoginManager.shared.isLoggedIn
+        return []
     }
     
 }

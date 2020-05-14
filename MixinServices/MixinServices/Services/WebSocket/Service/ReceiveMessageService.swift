@@ -54,7 +54,6 @@ public class ReceiveMessageService: MixinService {
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
-            assert(MixinService.callMessageCoordinator != nil)
             guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                 return
             }

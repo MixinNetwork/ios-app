@@ -345,9 +345,6 @@ extension CallManager {
 extension CallManager: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        guard call != nil else {
-            return
-        }
         sendCandidates([candidate])
     }
     

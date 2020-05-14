@@ -4,6 +4,7 @@ import MixinServices
 class JobService {
 
     static let shared = JobService()
+    private let callDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.call")
 
     private var isFirstRestore = true
 
@@ -28,6 +29,7 @@ class JobService {
                 AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
                 JobService.shared.restoreUploadJobs()
             }
+            JobService.shared.recoverPendingWebRTCJobs()
             JobService.shared.recoverMediaJobs()
         }
     }
@@ -69,6 +71,16 @@ class JobService {
                 return
             }
             JobService.shared.recoverMediaJobs()
+        }
+    }
+    
+    public func recoverPendingWebRTCJobs() {
+        callDispatchQueue.async {
+            let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
+            for job in jobs {
+                CallManager.shared.handleIncomingBlazeMessageData(job.toBlazeMessageData())
+                JobDAO.shared.removeJob(jobId: job.jobId)
+            }
         }
     }
 

@@ -33,7 +33,6 @@ final class NotificationService: UNNotificationServiceExtension {
         initBugsnag()
         _ = DarwinNotificationManager.shared
         _ = NetworkManager.shared
-        MixinService.callMessageCoordinator = CallManager.shared
         ReceiveMessageService.shared.processReceiveMessage(messageId: messageId, conversationId: conversationId, extensionTimeWillExpire: { [weak self]() -> Bool in
             return self?.isExpired ?? true
         }) { [weak self](messageItem) in

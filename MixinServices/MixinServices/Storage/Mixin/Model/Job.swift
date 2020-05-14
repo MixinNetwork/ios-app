@@ -1,32 +1,34 @@
 import Foundation
 import WCDBSwift
 
-internal struct Job: BaseCodable {
+public struct Job: BaseCodable {
     
-    static let tableName: String = "jobs"
+    public static let tableName: String = "jobs"
     
-    var orderId: Int?
-    let jobId: String
-    let priority: Int
-    let action: String
-    let category: String
+    public var orderId: Int?
+    public let jobId: String
+    public let priority: Int
+    public let action: String
+    public let category: String
     
-    let userId: String?
-    let blazeMessage: Data?
-    let conversationId: String?
-    let resendMessageId: String?
-    var messageId: String?
-    var status: String?
-    var sessionId: String?
+    public let userId: String?
+    public let blazeMessage: Data?
+    public let blazeMessageData: Data?
+    public let conversationId: String?
+    public let resendMessageId: String?
+    public var messageId: String?
+    public var status: String?
+    public var sessionId: String?
 
-    var isAutoIncrement = true
+    public var isAutoIncrement = true
     
-    enum CodingKeys: String, CodingTableKey {
-        typealias Root = Job
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Job
         case orderId
         case jobId = "job_id"
         case priority
         case blazeMessage = "blaze_message"
+        case blazeMessageData = "blaze_message_data"
         case action
         case category
         case conversationId = "conversation_id"
@@ -36,13 +38,13 @@ internal struct Job: BaseCodable {
         case status
         case sessionId = "session_id"
 
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
             return [
                 orderId: ColumnConstraintBinding(isPrimary: true, isAutoIncrement: true)
             ]
         }
-        static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
+        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
                 "_index_id": IndexBinding(isUnique: true, indexesBy: jobId),
                 "_next_indexs": IndexBinding(indexesBy: [category, priority.asIndex(orderBy: .descending), orderId.asIndex(orderBy: .ascending)]),
@@ -78,19 +80,22 @@ internal struct Job: BaseCodable {
         } else {
             self.blazeMessage = nil
         }
+        self.blazeMessageData = nil
         self.messageId = nil
         self.status = nil
         self.sessionId = sessionId
     }
 }
 
-
 extension Job {
     
     func toBlazeMessage() -> BlazeMessage {
         return try! JSONDecoder.default.decode(BlazeMessage.self, from: blazeMessage!)
     }
-    
+
+    public func toBlazeMessageData() -> BlazeMessageData {
+        return try! JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessageData!)
+    }
 }
 
 extension Job {
@@ -118,6 +123,21 @@ extension Job {
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
+
+    init(pengdingWebRTCMessage data: BlazeMessageData) {
+        self.jobId = UUID().uuidString.lowercased()
+        self.priority = JobPriority.SEND_MESSAGE.rawValue
+        self.action = JobAction.PENDING_WEBRTC.rawValue
+        self.userId = data.userId
+        self.conversationId = data.conversationId
+        self.resendMessageId = nil
+        self.blazeMessage = nil
+        self.blazeMessageData = try! JSONEncoder.default.encode(data)
+        self.messageId = data.messageId
+        self.status = nil
+        self.sessionId = nil
+        self.category = JobCategory.Task.rawValue
+    }
     
     init(sessionRead conversationId: String, messageId: String, status: String = MessageStatus.READ.rawValue) {
         self.jobId = UUID().uuidString.lowercased()
@@ -127,6 +147,7 @@ extension Job {
         self.conversationId = conversationId
         self.resendMessageId = nil
         self.blazeMessage = nil
+        self.blazeMessageData = nil
         self.messageId = messageId
         self.status = status
         self.sessionId = nil
@@ -141,6 +162,7 @@ extension Job {
         self.conversationId = nil
         self.resendMessageId = nil
         self.blazeMessage = nil
+        self.blazeMessageData = nil
         self.messageId = messageId
         self.status = nil
         self.sessionId = nil
@@ -174,6 +196,8 @@ public enum JobAction: String {
 
     case RECOVER_ATTACHMENT
     case UPLOAD_ATTACHMENT
+    
+    case PENDING_WEBRTC
 }
 
 public enum JobCategory: String {

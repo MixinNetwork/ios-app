@@ -54,7 +54,6 @@ public class ReceiveMessageService: MixinService {
 
     func receiveMessage(blazeMessage: BlazeMessage) {
         receiveDispatchQueue.async {
-            assert(MixinService.callMessageCoordinator != nil)
             guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                 return
             }
@@ -255,6 +254,20 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+        if isAppExtension {
+            if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: .WEBRTC_AUDIO_CANCEL,
+                                                      mediaDuration: 0,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            } else {
+                MixinDatabase.shared.insertOrReplace(objects: [Job(pengdingWebRTCMessage: data)])
+            }
+            return
+        }
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
                 if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {

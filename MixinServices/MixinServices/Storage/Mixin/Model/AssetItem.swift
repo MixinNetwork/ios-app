@@ -147,5 +147,7 @@ extension AssetItem {
                                       confirmations: 100,
                                       assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
                                       chainName: "Ether", chainSymbol: "ETH", reserve: "0")
+
+    public static let bitcoinAssetId = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     
 }

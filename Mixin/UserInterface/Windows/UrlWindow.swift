@@ -45,6 +45,58 @@ class UrlWindow {
         }
     }
 
+    class func checkDonate(url: String) -> Bool {
+        guard url.lowercased().hasPrefix("bitcoin:"), let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
+            return false
+        }
+        guard let amount = items.first(where: { $0.name == "amount" })?.value, amount.isNumeric else {
+            return false
+        }
+        guard let userId = items.first(where: { $0.name == "user" })?.value, UUID(uuidString: userId) != nil else {
+            return false
+        }
+
+        let traceId = items.first(where: { $0.name == "trace" })?.value.uuidString ?? UUID().uuidString.lowercased()
+        var memo = items.first(where: { $0.name == "memo" })?.value
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
+
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            var userItem = UserDAO.shared.getUser(userId: userId)
+            if userItem == nil {
+                switch UserAPI.shared.showUser(userId: userId) {
+                case let .success(response):
+                    userItem = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if error.code == 404 {
+                            showAutoHiddenHud(style: .error, text: R.string.localizable.contact_search_not_found())
+                        } else {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                    return
+                }
+            }
+
+            guard let user = userItem, let asset = syncAsset(assetId: AssetItem.bitcoinAssetId, hud: hud) else {
+                return
+            }
+
+            hud.safeHide()
+
+            DispatchQueue.main.async {
+                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: false), amount: amount, memo: memo ?? "", fiatMoneyAmount: nil, textfield: nil).presentPopupControllerAnimated()
+            }
+            
+        }
+        return true
+    }
+
     class func checkApp(url: URL, userId: String) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
             return false

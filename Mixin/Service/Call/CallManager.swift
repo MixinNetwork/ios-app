@@ -269,6 +269,7 @@ extension CallManager {
         AudioManager.shared.pause()
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
+        SendMessageService.shared.sendAckMessage(messageId: data.messageId, status: .READ)
         if reportIncomingCallToInterface {
             var isNotificationAuthorized = false
             let semaphore = DispatchSemaphore(value: 0)

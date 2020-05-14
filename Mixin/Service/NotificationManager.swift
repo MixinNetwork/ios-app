@@ -46,10 +46,17 @@ class NotificationManager: NSObject {
 extension NotificationManager: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        guard notification.request.identifier != UIApplication.currentConversationId() else {
+        let userInfo = notification.request.content.userInfo
+        if let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String, !conversationId.isEmpty, conversationId == UIApplication.currentConversationId() {
             completionHandler([])
             return
         }
+        let messageId = notification.request.identifier
+        if messageId == CallManager.shared.messageId {
+            completionHandler([])
+            return
+        }
+
         completionHandler([.alert, .sound])
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             center.removeNotifications(withIdentifiers: [notification.request.identifier])

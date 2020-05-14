@@ -19,6 +19,10 @@ class CallManager {
         view.manager = self
         return view
     }
+
+    var messageId: String? {
+        call?.uuidString
+    }
     
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?

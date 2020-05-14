@@ -78,7 +78,7 @@ class JobService {
         callDispatchQueue.async {
             let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
             for job in jobs {
-                CallManager.shared.handleIncomingBlazeMessageData(job.toBlazeMessageData())
+                CallManager.shared.handleRecoveredWebRTCJob(job)
                 JobDAO.shared.removeJob(jobId: job.jobId)
             }
         }

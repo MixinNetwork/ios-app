@@ -2,6 +2,7 @@ import UIKit
 import Foundation
 import LocalAuthentication
 import AudioToolbox
+import Alamofire
 import MixinServices
 
 class PayWindow: BottomSheetView {
@@ -581,7 +582,7 @@ extension PayWindow: PinFieldDelegate {
         payLabel.isHidden = true
         loadingView.startAnimating()
 
-        let completion = { [weak self](result: APIResult<Snapshot>) in
+        let completion = { [weak self](result: BaseAPI.Result<Snapshot>) in
             guard let weakSelf = self else {
                 return
             }
@@ -640,7 +641,7 @@ extension PayWindow: PinFieldDelegate {
                 WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
             }
         case let .multisig(multisig, _, _):
-            let multisigCompletion = { [weak self](result: APIResult<EmptyResponse>) in
+            let multisigCompletion = { [weak self](result: BaseAPI.Result<Empty>) in
                 guard let weakSelf = self else {
                     return
                 }

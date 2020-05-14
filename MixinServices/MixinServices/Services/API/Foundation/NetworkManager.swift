@@ -8,10 +8,9 @@ public class NetworkManager {
     private let reachabilityManager = Alamofire.NetworkReachabilityManager()
 
     private init() {
-        reachabilityManager?.listener = { _ in
-            NotificationCenter.default.postOnMain(name: .NetworkDidChange)
-        }
-        reachabilityManager?.startListening()
+        reachabilityManager?.startListening(onQueue: .main, onUpdatePerforming: { (_) in
+            NotificationCenter.default.post(name: .NetworkDidChange, object: nil)
+        })
     }
     
     public var isReachable: Bool {

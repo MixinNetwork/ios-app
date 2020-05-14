@@ -6,8 +6,8 @@ import UIKit
 
 class MixinRequest {
 
-    fileprivate static let headersAuthroizationKey = "Authorization"
-    private static let baseHeaders: HTTPHeaders = [
+    internal static let headersAuthroizationKey = "Authorization"
+    private static let baseHeaders: [String: String] = [
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
         "Mixin-Device-Id": Keychain.shared.getDeviceId(),
@@ -23,7 +23,7 @@ class MixinRequest {
         self.request = try encoding.encode(request, with: parameters)
     }
 
-    static func getHeaders(request: URLRequest) -> HTTPHeaders {
+    static func getHeaders(request: URLRequest) -> [String: String] {
         var headers = MixinRequest.baseHeaders
         if let signedToken = MixinRequest.getAuthenticationToken(request: request) {
             headers[MixinRequest.headersAuthroizationKey] = signedToken
@@ -70,7 +70,7 @@ class MixinRequest {
         return try? Jwt.signedToken(claims: claims, privateKey: key)
     }
 
-    fileprivate static func getAuthenticationToken(request: URLRequest) -> String? {
+    internal static func getAuthenticationToken(request: URLRequest) -> String? {
         guard let account = LoginManager.shared.account, let token = AppGroupUserDefaults.Account.sessionSecret, !token.isEmpty else {
             return nil
         }
@@ -86,16 +86,4 @@ extension MixinRequest: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         return request
     }
-}
-
-class AccessTokenAdapter: RequestAdapter {
-
-    func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
-        var urlRequest = urlRequest
-        if let signedToken = MixinRequest.getAuthenticationToken(request: urlRequest) {
-            urlRequest.setValue(signedToken, forHTTPHeaderField: MixinRequest.headersAuthroizationKey)
-        }
-        return urlRequest
-    }
-
 }

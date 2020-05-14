@@ -40,50 +40,50 @@ public final class AssetAPI: BaseAPI {
         static let fiats = "fiats"
     }
 
-    public func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
+    public func assets(completion: @escaping (BaseAPI.Result<[Asset]>) -> Void) {
         request(method: .get, url: url.assets, completion: completion)
     }
 
-    public func assets() -> APIResult<[Asset]> {
+    public func assets() -> BaseAPI.Result<[Asset]> {
         return request(method: .get, url: url.assets)
     }
 
-    public func asset(assetId: String, completion: @escaping (APIResult<Asset>) -> Void) {
+    public func asset(assetId: String, completion: @escaping (BaseAPI.Result<Asset>) -> Void) {
         request(method: .get, url: url.assets(assetId: assetId), completion: completion)
     }
 
-    public func asset(assetId: String) -> APIResult<Asset> {
+    public func asset(assetId: String) -> BaseAPI.Result<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
-    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> APIResult<[Snapshot]> {
+    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> BaseAPI.Result<[Snapshot]> {
         assert(limit <= 500)
         return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId))
     }
 
-    public func snapshots(limit: Int, assetId: String, completion: @escaping (APIResult<[Snapshot]>) -> Void) {
+    public func snapshots(limit: Int, assetId: String, completion: @escaping (BaseAPI.Result<[Snapshot]>) -> Void) {
         request(method: .get, url: url.snapshots(limit: limit, offset: nil, assetId: assetId, opponentId: nil), completion: completion)
     }
     
-    public func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
+    public func fee(assetId: String, completion: @escaping (BaseAPI.Result<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
     }
 
-    public func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (APIResult<[PendingDeposit]>) -> Void) {
+    public func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (BaseAPI.Result<[PendingDeposit]>) -> Void) {
         request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
     
-    public func search(keyword: String) -> APIResult<[Asset]>  {
+    public func search(keyword: String) -> BaseAPI.Result<[Asset]>  {
         guard let url = url.search(keyword: keyword) else {
             return .success([])
         }
         return request(method: .get, url: url)
     }
     
-    public func topAssets(completion: @escaping (APIResult<[Asset]>) -> Void) {
+    public func topAssets(completion: @escaping (BaseAPI.Result<[Asset]>) -> Void) {
         request(method: .get, url: url.top, completion: completion)
     }
     
-    public func fiats(completion: @escaping (APIResult<[FiatMoney]>) -> Void) {
+    public func fiats(completion: @escaping (BaseAPI.Result<[FiatMoney]>) -> Void) {
         request(method: .get, url: url.fiats, completion: completion)
     }
     

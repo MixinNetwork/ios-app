@@ -108,7 +108,7 @@ class WebViewController: UIViewController {
             guard error == nil, let urlString = urlString as? String else {
                 return
             }
-            self.imageRequest = Alamofire.request(urlString).responseData(completionHandler: { [weak self] (response) in
+            self.imageRequest = AF.request(urlString).responseData(completionHandler: { [weak self] (response) in
                 guard recognizer.state == .began || recognizer.state == .changed else {
                     return
                 }

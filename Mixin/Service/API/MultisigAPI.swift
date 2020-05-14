@@ -1,3 +1,4 @@
+import Alamofire
 import MixinServices
 
 final class MultisigAPI: BaseAPI {
@@ -16,17 +17,17 @@ final class MultisigAPI: BaseAPI {
         }
     }
     
-    func cancel(requestId: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func cancel(requestId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.cancel(id: requestId), completion: completion)
     }
     
-    func sign(requestId: String, pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func sign(requestId: String, pin: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.sign(id: requestId), parameters: ["pin": encryptedPin], completion: completion)
         }
     }
     
-    func unlock(requestId: String, pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func unlock(requestId: String, pin: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.unlock(id: requestId), parameters: ["pin": encryptedPin], completion: completion)
         }

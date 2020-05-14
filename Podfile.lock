@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.9.1)
+  - Alamofire (5.1.0)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Bugsnag (5.23.0)
   - DeviceGuru (6.0.3)
@@ -319,7 +319,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/MixinNetwork/wcdb.git
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Bugsnag: 1f33ee5b55bc4b131a30e0fe6db714da9c6609f6
   DeviceGuru: 5c377d56350f05590eeb7908a53088bd86cd8cdc

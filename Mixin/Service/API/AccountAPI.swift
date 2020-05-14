@@ -34,12 +34,12 @@ final class AccountAPI: BaseAPI {
         static let sessions = "sessions/fetch"
     }
 
-    func me(completion: @escaping (APIResult<Account>) -> Void) {
+    func me(completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         request(method: .get, url: url.me, completion: completion)
     }
 
     @discardableResult
-    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) -> Request? {
+    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (BaseAPI.Result<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,
                      "purpose": purpose.rawValue]
         if let token = reCaptchaToken {
@@ -51,11 +51,11 @@ final class AccountAPI: BaseAPI {
         return request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
     }
     
-    func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
+    func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
     }
     
-    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
+    func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         let pin = accountRequest.pin!
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             var parameters = accountRequest
@@ -64,7 +64,7 @@ final class AccountAPI: BaseAPI {
         }
     }
     
-    func update(fullName: String? = nil, biography: String? = nil, avatarBase64: String? = nil, completion: @escaping (APIResult<Account>) -> Void) {
+    func update(fullName: String? = nil, biography: String? = nil, avatarBase64: String? = nil, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         guard fullName != nil || avatarBase64 != nil || biography != nil else {
             assertionFailure("nothing to update")
             return
@@ -84,26 +84,26 @@ final class AccountAPI: BaseAPI {
 
     func updateSession(deviceToken: String? = nil, voipToken: String? = nil, deviceCheckToken: String? = nil) {
         let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken ?? "", device_check_token: deviceCheckToken ?? "")
-        request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: APIResult<Account>) in
+        request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: BaseAPI.Result<Account>) in
 
         }
     }
 
-    func getSessions(userIds: [String], completion: @escaping (APIResult<[UserSession]>) -> Void) {
+    func getSessions(userIds: [String], completion: @escaping (BaseAPI.Result<[UserSession]>) -> Void) {
         request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (APIResult<Account>) -> Void) {
+    func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         request(method: .post, url: url.preferences, parameters: preferenceRequest.toParameters(), encoding: EncodableParameterEncoding<UserPreferenceRequest>(), completion: completion)
     }
 
-    func verify(pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func verify(pin: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], completion: completion)
         }
     }
     
-    func updatePin(old: String?, new: String, completion: @escaping (APIResult<Account>) -> Void) {
+    func updatePin(old: String?, new: String, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
         guard let pinToken = AppGroupUserDefaults.Account.pinToken else {
             completion(.failure(APIError(status: 200, code: 400, description: MixinServices.Localized.TOAST_OPERATION_FAILED)))
             return
@@ -124,11 +124,11 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
 
-    func pinLogs(offset: String? = nil, limit: Int? = nil, completion: @escaping (APIResult<[PINLogResponse]>) -> Void) {
+    func pinLogs(offset: String? = nil, limit: Int? = nil, completion: @escaping (BaseAPI.Result<[PINLogResponse]>) -> Void) {
 		request(method: .get, url: url.pinLogs(offset: offset, limit: limit), completion: completion)
     }
 
-    func logoutSession(sessionId: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func logoutSession(sessionId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     

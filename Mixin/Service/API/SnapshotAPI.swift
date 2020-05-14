@@ -12,11 +12,11 @@ final class SnapshotAPI: BaseAPI {
     }
     static let shared = SnapshotAPI()
 
-    func snapshot(snapshotId: String) -> APIResult<Snapshot> {
+    func snapshot(snapshotId: String) -> BaseAPI.Result<Snapshot> {
         return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
     }
 
-    func snapshot(traceId: String) -> APIResult<Snapshot> {
+    func snapshot(traceId: String) -> BaseAPI.Result<Snapshot> {
         return request(method: .get, url: url.snapshot(traceId: traceId))
     }
 

@@ -3,51 +3,38 @@ import Alamofire
 import Goutils
 import UIKit
 
-public enum APIResult<ResultType: Decodable> {
-    case success(ResultType)
-    case failure(APIError)
-
-    public var isSuccess: Bool {
-        switch self {
-        case .success:
-            return true
-        case .failure:
-            return false
-        }
-    }
-}
-
 open class BaseAPI {
     
-    public static let jsonEncoding = JSONEncoding()
-
+    public typealias Result<Response: Decodable> = Swift.Result<Response, APIError>
+    
     public init() {
-        
+
     }
     
     private struct ResponseObject<ResultType: Decodable>: Decodable {
         let data: ResultType?
         let error: APIError?
     }
-    private static let sharedSessionManager: SessionManager = {
+    private static let session: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        let session = Alamofire.SessionManager(configuration: configuration)
-        session.adapter = AccessTokenAdapter()
+        let tokenInterceptor = AccessTokenInterceptor()
+        let session = Alamofire.Session(configuration: configuration,
+                                        interceptor: tokenInterceptor)
         return session
     }()
 
-    private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> DataRequest {
+    private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
         do {
-            return BaseAPI.sharedSessionManager.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
+            return BaseAPI.session.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
             reporter.report(error: error)
-            return BaseAPI.sharedSessionManager.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return BaseAPI.session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
     @discardableResult
-    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
+    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (BaseAPI.Result<ResultType>) -> Void) -> Request? {
         if checkLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -115,20 +102,14 @@ open class BaseAPI {
 }
 
 extension BaseAPI {
-
-    private static let sharedSynchronousSessionManager: SessionManager = {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 8
-        return Alamofire.SessionManager(configuration: configuration)
-    }()
-
+    
     @discardableResult
-    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
+    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> BaseAPI.Result<T> {
         return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
     }
 
-    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, retry: Bool = false) -> APIResult<T> {
-        var result: APIResult<T> = .failure(APIError.createTimeoutError())
+    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> BaseAPI.Result<T> {
+        var result: BaseAPI.Result<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
         let requestTime = Date()
         let rootURLString = MixinServer.httpUrl
@@ -175,7 +156,7 @@ extension BaseAPI {
             }
         }
 
-        if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
+        if case let .failure(error) = result, error.code == 401 {
             if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
                 if clientTime - requestTime.timeIntervalSince1970 > 60 {

@@ -21,17 +21,17 @@ final class PaymentAPI: BaseAPI {
     }
     static let shared = PaymentAPI()
 
-    func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
+    func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (BaseAPI.Result<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
 
-    func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
+    func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (BaseAPI.Result<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "address_id": addressId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
 
-    func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+    func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (BaseAPI.Result<Snapshot>) -> Void) {
         var transactionRequest = transactionRequest
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             transactionRequest.pin = encryptedPin
@@ -39,7 +39,7 @@ final class PaymentAPI: BaseAPI {
         }
     }
 
-    func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
+    func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (BaseAPI.Result<Snapshot>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
             self?.request(method: .post, url: url.transfers, parameters: param, completion: completion)

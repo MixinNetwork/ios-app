@@ -39,7 +39,7 @@ class ImageUploadJob: AttachmentUploadJob {
         
         var success = false
         let sema = DispatchSemaphore(value: 0)
-        Alamofire.download(url, to: { (_, _) in
+        AF.download(url, to: { (_, _) in
             (fileUrl, [.removePreviousFile, .createIntermediateDirectories])
         }).response(completionHandler: { (response) in
             success = response.error == nil

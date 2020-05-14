@@ -29,7 +29,7 @@ class RefreshSnapshotsJob: BaseJob {
     }
     
     override func run() throws {
-        let result: APIResult<[Snapshot]>
+        let result: BaseAPI.Result<[Snapshot]>
         switch category {
         case .all:
             result = AssetAPI.shared.snapshots(limit: limit)

@@ -243,7 +243,7 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func processBadMessage(data: BlazeMessageData) {
-        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         BlazeMessageDAO.shared.delete(data: data)
     }
     

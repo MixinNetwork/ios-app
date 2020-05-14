@@ -168,12 +168,21 @@ extension CallManager: CallMessageCoordinator {
         call != nil
     }
     
+    func handleRecoveredWebRTCJob(_ job: Job) {
+        let data = job.toBlazeMessageData()
+        handleIncomingBlazeMessageData(data, requestNotification: false)
+    }
+    
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
+        handleIncomingBlazeMessageData(data, requestNotification: true)
+    }
+    
+    private func handleIncomingBlazeMessageData(_ data: BlazeMessageData, requestNotification: Bool) {
         queue.async {
             switch data.category {
             case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
                 do {
-                    try self.checkPreconditionsAndHandleIncomingCallIfPossible(data: data)
+                    try self.checkPreconditionsAndHandleIncomingCallIfPossible(data: data, requestNotification: requestNotification)
                 } catch CallError.busy {
                     CallManager.insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_BUSY)
                 } catch CallError.microphonePermissionDenied {
@@ -220,13 +229,13 @@ extension CallManager {
         SendMessageService.shared.sendWebRTCMessage(message: messageToSend, recipientId: data.getSenderId())
     }
     
-    private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData) throws {
+    private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData, requestNotification: Bool) throws {
         guard lineIsIdle else {
             throw CallError.busy
         }
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
-            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true, requestNotification: requestNotification)
             AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
                 if !granted {
                     self.completeCurrentCall(isUserInitiated: true)
@@ -234,17 +243,17 @@ extension CallManager {
                 }
             }
         case .denied:
-            try handleIncomingCall(data: data, reportIncomingCallToInterface: false)
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: false, requestNotification: requestNotification)
             self.completeCurrentCall(isUserInitiated: false)
             self.alertNoMicrophonePermission()
         case .granted:
-            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true, requestNotification: requestNotification)
         @unknown default:
-            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true, requestNotification: requestNotification)
         }
     }
     
-    private func handleIncomingCall(data: BlazeMessageData, reportIncomingCallToInterface: Bool) throws {
+    private func handleIncomingCall(data: BlazeMessageData, reportIncomingCallToInterface: Bool, requestNotification: Bool) throws {
         guard lineIsIdle else {
             throw CallError.busy
         }
@@ -260,6 +269,7 @@ extension CallManager {
         AudioManager.shared.pause()
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
+        SendMessageService.shared.sendAckMessage(messageId: data.messageId, status: .READ)
         if reportIncomingCallToInterface {
             var isNotificationAuthorized = false
             let semaphore = DispatchSemaphore(value: 0)
@@ -277,7 +287,9 @@ extension CallManager {
                     vibrator.startVibrating()
                     playRingtone(usesSpeaker: true)
                 } else if isNotificationAuthorized {
-                    NotificationManager.shared.requestCallNotification(messageId: data.messageId, callerName: user.fullName)
+                    if requestNotification {
+                        NotificationManager.shared.requestCallNotification(messageId: data.messageId, callerName: user.fullName)
+                    }
                     vibrator.startVibrating()
                     playRingtone(usesSpeaker: true)
                 }

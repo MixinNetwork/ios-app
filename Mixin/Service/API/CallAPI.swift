@@ -11,5 +11,9 @@ final class CallAPI: BaseAPI {
     func turn(completion: @escaping (BaseAPI.Result<[TurnServer]>) -> Void) {
         request(method: .get, url: url.turn, completion: completion)
     }
+
+    func turn() -> BaseAPI.Result<[TurnServer]> {
+        return request(method: .get, url: url.turn)
+    }
     
 }

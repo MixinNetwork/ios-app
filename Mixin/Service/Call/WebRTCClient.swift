@@ -98,14 +98,13 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        if newState == .connected {
-            delegate?.webRTCClientDidConnected(self)
-            RTCAudioSession.sharedInstance().isAudioEnabled = true
-        } else if newState == .failed {
-            delegate?.webRTCClientDidFailed(self)
-        }
     }
-    
+
+    func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
+        delegate?.webRTCClientDidConnected(self)
+        RTCAudioSession.sharedInstance().isAudioEnabled = true
+    }
+
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         
     }

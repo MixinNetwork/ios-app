@@ -241,6 +241,9 @@ extension CallManager {
         guard lineIsIdle else {
             throw CallError.busy
         }
+        guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
+            return
+        }
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
             try handleIncomingCall(data: data, reportIncomingCallToInterface: true, requestNotification: requestNotification)

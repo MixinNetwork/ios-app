@@ -269,7 +269,8 @@ public class ReceiveMessageService: MixinService {
                                                       status: .DELIVERED)
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             } else {
-                MixinDatabase.shared.insertOrReplace(objects: [Job(pengdingWebRTCMessage: data)])
+                let job = Job(pengdingWebRTCMessage: data)
+                MixinDatabase.shared.insertOrReplace(objects: [job])
             }
             return
         }

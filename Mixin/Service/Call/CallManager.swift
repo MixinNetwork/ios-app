@@ -26,6 +26,7 @@ class CallManager {
     
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
+    private var pendingCandidates = [String: [RTCIceCandidate]]() // Key is call id
     private var lineIsIdle: Bool {
         return call == nil && CallManager.callObserver.calls.isEmpty
     }
@@ -157,6 +158,9 @@ class CallManager {
                             SendMessageService.shared.sendMessage(message: msg,
                                                                   ownerUser: call.opponentUser,
                                                                   isGroupMessage: false)
+                            if let candidates = self.pendingCandidates.removeValue(forKey: call.uuidString) {
+                                candidates.forEach(self.rtcClient.add(remoteCandidate:))
+                            }
                         }
                     })
                 }
@@ -174,7 +178,18 @@ extension CallManager: CallMessageCoordinator {
     
     func handleRecoveredWebRTCJob(_ job: Job) {
         let data = job.toBlazeMessageData()
-        handleIncomingBlazeMessageData(data, requestNotification: false)
+        let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
+        if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue && isTimedOut {
+            let msg = Message.createWebRTCMessage(messageId: data.messageId,
+                                                  conversationId: data.conversationId,
+                                                  userId: data.userId,
+                                                  category: .WEBRTC_AUDIO_CANCEL,
+                                                  mediaDuration: 0,
+                                                  status: .DELIVERED)
+            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+        } else if !MessageDAO.shared.isExist(messageId: data.messageId) {
+            handleIncomingBlazeMessageData(data, requestNotification: false)
+        }
     }
     
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
@@ -331,13 +346,17 @@ extension CallManager {
     }
     
     private func handleIncomingIceCandidateIfNeeded(data: BlazeMessageData) {
-        guard let call = call, data.quoteMessageId == call.uuidString else {
-            return
-        }
         guard let candidatesString = data.data.base64Decoded() else {
             return
         }
-        [RTCIceCandidate](jsonString: candidatesString).forEach(rtcClient.add)
+        let newCandidates = [RTCIceCandidate](jsonString: candidatesString)
+        if let call = call, data.quoteMessageId == call.uuidString, rtcClient.canAddRemoteCandidate {
+            newCandidates.forEach(rtcClient.add(remoteCandidate:))
+        } else {
+            var candidates = pendingCandidates[data.quoteMessageId] ?? []
+            candidates.append(contentsOf: newCandidates)
+            pendingCandidates[data.quoteMessageId] = candidates
+        }
     }
     
 }
@@ -345,9 +364,6 @@ extension CallManager {
 extension CallManager: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        guard call != nil else {
-            return
-        }
         sendCandidates([candidate])
     }
     
@@ -507,6 +523,7 @@ extension CallManager {
         rtcClient.close()
         call = nil
         pendingRemoteSdp = nil
+        pendingCandidates = [:]
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()

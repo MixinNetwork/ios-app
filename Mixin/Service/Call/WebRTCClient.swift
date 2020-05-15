@@ -11,6 +11,10 @@ class WebRTCClient: NSObject {
     
     weak var delegate: WebRTCClientDelegate?
     
+    var canAddRemoteCandidate: Bool {
+        peerConnection != nil
+    }
+    
     private let audioId = "audio0"
     private let streamId = "stream0"
     private let factory = RTCPeerConnectionFactory(encoderFactory: RTCDefaultVideoEncoderFactory(),
@@ -94,14 +98,13 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        if newState == .connected {
-            delegate?.webRTCClientDidConnected(self)
-            RTCAudioSession.sharedInstance().isAudioEnabled = true
-        } else if newState == .failed {
-            delegate?.webRTCClientDidFailed(self)
-        }
     }
-    
+
+    func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
+        delegate?.webRTCClientDidConnected(self)
+        RTCAudioSession.sharedInstance().isAudioEnabled = true
+    }
+
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         
     }

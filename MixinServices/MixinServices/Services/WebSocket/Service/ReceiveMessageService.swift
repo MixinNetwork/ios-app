@@ -259,7 +259,6 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
-        let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
         if isAppExtension {
             if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
                 let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
@@ -269,7 +268,7 @@ public class ReceiveMessageService: MixinService {
                                                       mediaDuration: 0,
                                                       status: .DELIVERED)
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-            } else if data.category != MessageCategory.WEBRTC_AUDIO_OFFER.rawValue || !isTimedOut {
+            } else {
                 let job = Job(pengdingWebRTCMessage: data)
                 MixinDatabase.shared.insertOrReplace(objects: [job])
             }
@@ -277,7 +276,7 @@ public class ReceiveMessageService: MixinService {
         }
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-                if isTimedOut {
+                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
                     let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
                 } else {

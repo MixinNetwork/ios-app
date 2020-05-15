@@ -187,7 +187,7 @@ extension CallManager: CallMessageCoordinator {
                                                   mediaDuration: 0,
                                                   status: .DELIVERED)
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-        } else {
+        } else if !MessageDAO.shared.isExist(messageId: data.messageId) {
             handleIncomingBlazeMessageData(data, requestNotification: false)
         }
     }
@@ -251,9 +251,6 @@ extension CallManager {
     private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData, requestNotification: Bool) throws {
         guard lineIsIdle else {
             throw CallError.busy
-        }
-        guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
-            return
         }
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:

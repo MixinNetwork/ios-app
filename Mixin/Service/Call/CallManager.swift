@@ -26,6 +26,7 @@ class CallManager {
     
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
+    private var pendingCandidates = [String: [RTCIceCandidate]]() // Key is call id
     private var lineIsIdle: Bool {
         return call == nil && CallManager.callObserver.calls.isEmpty
     }
@@ -157,6 +158,9 @@ class CallManager {
                             SendMessageService.shared.sendMessage(message: msg,
                                                                   ownerUser: call.opponentUser,
                                                                   isGroupMessage: false)
+                            if let candidates = self.pendingCandidates.removeValue(forKey: call.uuidString) {
+                                candidates.forEach(self.rtcClient.add(remoteCandidate:))
+                            }
                         }
                     })
                 }
@@ -331,13 +335,17 @@ extension CallManager {
     }
     
     private func handleIncomingIceCandidateIfNeeded(data: BlazeMessageData) {
-        guard let call = call, data.quoteMessageId == call.uuidString else {
-            return
-        }
         guard let candidatesString = data.data.base64Decoded() else {
             return
         }
-        [RTCIceCandidate](jsonString: candidatesString).forEach(rtcClient.add)
+        let newCandidates = [RTCIceCandidate](jsonString: candidatesString)
+        if let call = call, data.quoteMessageId == call.uuidString, rtcClient.canAddRemoteCandidate {
+            newCandidates.forEach(rtcClient.add(remoteCandidate:))
+        } else {
+            var candidates = pendingCandidates[data.quoteMessageId] ?? []
+            candidates.append(contentsOf: newCandidates)
+            pendingCandidates[data.quoteMessageId] = candidates
+        }
     }
     
 }
@@ -504,6 +512,7 @@ extension CallManager {
         rtcClient.close()
         call = nil
         pendingRemoteSdp = nil
+        pendingCandidates = [:]
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()

@@ -11,6 +11,10 @@ class WebRTCClient: NSObject {
     
     weak var delegate: WebRTCClientDelegate?
     
+    var canAddRemoteCandidate: Bool {
+        peerConnection != nil
+    }
+    
     private let audioId = "audio0"
     private let streamId = "stream0"
     private let factory = RTCPeerConnectionFactory(encoderFactory: RTCDefaultVideoEncoderFactory(),

@@ -187,7 +187,10 @@ extension CallManager: CallMessageCoordinator {
                                                   mediaDuration: 0,
                                                   status: .DELIVERED)
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-        } else if !MessageDAO.shared.isExist(messageId: data.messageId) {
+        } else {
+            if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue && MessageDAO.shared.isExist(messageId: data.messageId) {
+                return
+            }
             handleIncomingBlazeMessageData(data, requestNotification: false)
         }
     }

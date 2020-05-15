@@ -84,6 +84,11 @@ public class ReceiveMessageService: MixinService {
     public func processReceiveMessage(messageId: String, conversationId: String?, extensionTimeWillExpire: @escaping () -> Bool, callback: @escaping (MessageItem?) -> Void) {
         let startDate = Date()
         processOperationQueue.addOperation {
+            if MessageHistoryDAO.shared.isExist(messageId: messageId) {
+                callback(nil)
+                return
+            }
+
             repeat {
                 if -startDate.timeIntervalSinceNow >= 15 || AppGroupUserDefaults.isRunningInMainApp || extensionTimeWillExpire() {
                     if let conversationId = conversationId {

@@ -178,7 +178,18 @@ extension CallManager: CallMessageCoordinator {
     
     func handleRecoveredWebRTCJob(_ job: Job) {
         let data = job.toBlazeMessageData()
-        handleIncomingBlazeMessageData(data, requestNotification: false)
+        let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
+        if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue && isTimedOut {
+            let msg = Message.createWebRTCMessage(messageId: data.messageId,
+                                                  conversationId: data.conversationId,
+                                                  userId: data.userId,
+                                                  category: .WEBRTC_AUDIO_CANCEL,
+                                                  mediaDuration: 0,
+                                                  status: .DELIVERED)
+            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+        } else {
+            handleIncomingBlazeMessageData(data, requestNotification: false)
+        }
     }
     
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {

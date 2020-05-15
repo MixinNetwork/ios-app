@@ -23,6 +23,7 @@ target 'Mixin' do
   pod 'SnapKit'
   pod 'PhoneNumberKit'
   pod 'RSKImageCropper'
+  pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
   pod 'Highlightr', :git => 'https://github.com/wuyuehyang/Highlightr.git', :branch => 'master'

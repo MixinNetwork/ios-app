@@ -102,7 +102,7 @@ class CallManager {
                 self.view.style = .disconnecting
             }
             let category: MessageCategory
-            if self.rtcClient.iceConnectionState == .connected {
+            if [.connected, .completed].contains(self.rtcClient.iceConnectionState) {
                 category = .WEBRTC_AUDIO_END
             } else if call.isOutgoing {
                 category = .WEBRTC_AUDIO_CANCEL

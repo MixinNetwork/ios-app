@@ -36,13 +36,14 @@ class HomeNavigationController: UINavigationController {
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
         self.delegate = self
-        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed {
-            WebSocketService.shared.connect(firstConnect: true)
-            if LoginManager.shared.isLoggedIn {
-                reporter.registerUserInformation()
-            }
+        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed && LoginManager.shared.isLoggedIn {
+            reporter.registerUserInformation()
             checkDevice()
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            Logger.write(log: "HomeNavigationController...viewDidLoad...applicationState:\(UIApplication.shared.applicationStateString)")
+            if UIApplication.shared.applicationState == .active {
+                WebSocketService.shared.connect(firstConnect: true)
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            }
         }
     }
     

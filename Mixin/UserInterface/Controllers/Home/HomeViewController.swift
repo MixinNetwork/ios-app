@@ -109,11 +109,13 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
         Logger.write(log: "HomeViewController...viewDidLoad...applicationState:\(UIApplication.shared.applicationStateString)")
-        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
-        ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())
-        if AppGroupUserDefaults.User.hasRecoverMedia {
-            ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
+        if UIApplication.shared.applicationState == .active {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+            ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())
+            if AppGroupUserDefaults.User.hasRecoverMedia {
+                ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
+            }
         }
     }
     

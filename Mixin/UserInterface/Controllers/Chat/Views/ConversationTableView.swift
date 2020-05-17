@@ -87,8 +87,10 @@ class ConversationTableView: UITableView {
     
     private var headerViewsAnimator: UIViewPropertyAnimator?
     private var bottomContentOffset: CGPoint {
-        let y = contentSize.height + adjustedContentInset.bottom - frame.height
-        return CGPoint(x: contentOffset.x, y: max(-contentInset.top, y))
+        let y = contentSize.height
+            + adjustedContentInset.bottom
+            - AppDelegate.current.mainWindow.bounds.height
+        return CGPoint(x: 0, y: max(-contentInset.top, y))
     }
     
     required init?(coder aDecoder: NSCoder) {

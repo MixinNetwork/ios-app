@@ -178,7 +178,6 @@ public class Localized {
     public static func CHAT_DECRYPTION_FAILED_HINT(username: String) -> String {
         return String(format: LocalizedString("chat_decryption_failed_hint", comment: "Waiting for %@ to get online and establish an encrypted session. "), username)
     }
-    public static let CHAT_DECRYPTION_FAILED_LINK = LocalizedString("chat_decryption_failed_link", comment: "learn more.")
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
     public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")

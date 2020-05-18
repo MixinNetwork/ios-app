@@ -232,7 +232,7 @@
 "chat_forward_contacts" = "連絡先";
 "chat_forward_apps" = "アプリ";
 "chat_decryption_failed_hint" = "Waiting for %@ to get online and establish an encrypted session. ";
-"chat_decryption_failed_link" = "もっと詳しく知る。";
+"chat_sentence_learn_more" = "もっと詳しく知る。";
 "chat_send_photo_failed" = "写真を送信できませんでした";
 "chat_send_file_failed" = "ファイルを送信できませんでした";
 "chat_send_video_failed" = "動画を送信できませんでした";

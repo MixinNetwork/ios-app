@@ -255,7 +255,7 @@
 "chat_forward_contacts" = "联系人";
 "chat_forward_apps" = "机器人";
 "chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
-"chat_decryption_failed_link" = "了解更多。";
+"chat_sentence_learn_more" = "了解更多。";
 "chat_send_photo_failed" = "发送图片失败，请稍后重试";
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_send_video_failed" = "发送视频失败，请稍后重试";

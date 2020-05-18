@@ -29,7 +29,6 @@ public class Localized {
     public static let ACTION_SHARE_TO = LocalizedString("action_share_to", comment: "Share To")
     public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
     public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
-    public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")
     public static let ACTION_DELETE_ME = LocalizedString("action_delete_me", comment: "Delete for Me")
     public static let ACTION_DELETE_EVERYONE = LocalizedString("action_delete_everyone", comment: "Delete for Everyone")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
@@ -480,9 +479,6 @@ public class Localized {
     public static let SETTING_DESKTOP_DESKTOP_ON = LocalizedString("setting_desktop_desktop_on", comment: "You have your desktop logged in")
     public static let SETTING_DESKTOP_LOG_OUT = LocalizedString("setting_desktop_log_out", comment: "Log out from desktop")
     public static let SETTING_AUTHORIZATIONS = LocalizedString("setting_authorizations", comment: "Authorizations")
-    public static func SETTING_DEAUTHORIZE_CONFIRMATION(name: String) -> String {
-        return String(format: LocalizedString("setting_deauthorize_confirmation", comment: "Deauthorize %@?"), name)
-    }
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
     public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
         return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)

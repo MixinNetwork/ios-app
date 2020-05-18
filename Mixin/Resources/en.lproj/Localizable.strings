@@ -38,7 +38,7 @@
 "action_share_to" = "Share To";
 "action_copy" = "Copy";
 "action_authorize" = "Authorize";
-"action_deauthorize" = "Deauthorize";
+"action_revoke" = "Revoke access";
 "action_delete_me" = "Delete for Me";
 "action_delete_everyone" = "Delete for Everyone";
 "action_learn_more" = "Learn More";
@@ -693,7 +693,7 @@
 "setting_desktop_log_out" = "Log out from desktop";
 "setting_authorizations" = "Authorizations";
 "setting_no_authorizations" = "NO AUTHORIZATIONS";
-"setting_deauthorize_confirmation" = "Deauthorize %@?";
+"setting_revoke_confirmation" = "Revoke access %@?";
 "setting_storage_usage" = "Storage Usage";
 "setting_storage_usage_clear" = "Clear %@ messages (%@)?";
 "setting_header_message_source" = "WHO CAN SEND ME MESSAGES";
@@ -748,7 +748,7 @@
 "setting_contacts_delete_confirm" = "This will remove your contacts from the Mixin servers.";
 "setting_contacts_tips" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "setting_contacts_upload" = "Upload Mobile Contacts";
-"setting_permissions" = "Permission list";
+"setting_permissions" = "Permissions";
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
 "setting_pin" = "PIN";

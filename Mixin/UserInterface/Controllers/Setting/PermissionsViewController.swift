@@ -54,7 +54,7 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func removeAuthozationAction() {
-        let alert = UIAlertController(title: Localized.SETTING_DEAUTHORIZE_CONFIRMATION(name: authorization.app.name), message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(authorization.app.name), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
             AuthorizeAPI.shared.cancel(clientId: self.authorization.app.appId) { [weak self](result) in
@@ -127,7 +127,7 @@ extension PermissionsViewController: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permissions_action, for: indexPath)!
-            cell.contentLabel.text = R.string.localizable.action_deauthorize()
+            cell.contentLabel.text = R.string.localizable.action_revoke()
             cell.contentLabel.textColor = R.color.red()
             roundCornersIfNeeded(cell: cell)
             return cell

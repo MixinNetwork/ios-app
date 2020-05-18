@@ -38,7 +38,7 @@
 "action_skip" = "跳过";
 "action_copy" = "复制";
 "action_authorize" = "授权";
-"action_deauthorize" = "取消授权";
+"action_revoke" = "取消授权";
 "action_delete_me" = "删除";
 "action_delete_everyone" = "撤回";
 "action_learn_more" = "了解更多";
@@ -697,7 +697,7 @@
 "setting_desktop_log_out" = "从桌面版退出";
 "setting_authorizations" = "授权";
 "setting_no_authorizations" = "没有授权";
-"setting_deauthorize_confirmation" = "取消 %@ 授权？";
+"setting_revoke_confirmation" = "取消 %@ 授权？";
 "setting_storage_usage" = "存储空间";
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_header_message_source" = "谁可以给我发消息";

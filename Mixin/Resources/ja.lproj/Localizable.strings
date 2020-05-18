@@ -37,7 +37,7 @@
 "action_skip" = "スキップ";
 "action_copy" = "コピー";
 "action_authorize" = "認証";
-"action_deauthorize" = "認証解除";
+"action_revoke" = "認証解除";
 "action_delete_me" = "自分用に削除";
 "action_delete_everyone" = "全員分を削除";
 "action_learn_more" = "もっと知りたい";
@@ -602,7 +602,7 @@
 "setting_conversation" = "会話";
 "setting_authorizations" = "承認";
 "setting_no_authorizations" = "承認はありません";
-"setting_deauthorize_confirmation" = " %@ の認証を解除しますか？";
+"setting_revoke_confirmation" = " %@ の認証を解除しますか？";
 "setting_storage_usage" = "ストレージ使用量";
 "setting_storage_usage_clear" = "%@ 件のメッセージを消去しますか（%@）。";
 "setting_header_message_source" = "私にメッセージを送ることができる人";

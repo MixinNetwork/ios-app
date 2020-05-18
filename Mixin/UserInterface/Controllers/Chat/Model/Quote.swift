@@ -16,6 +16,17 @@ struct Quote {
         case thumbnail(UIImage)
     }
     
+    static let notFound = Quote(
+        messageId: "one.mixin.messenger.not-found",
+        category: .recalled,
+        title: "",
+        tintColor: .theme,
+        icon: R.image.ic_recalled_message_prefix_received(),
+        subtitle: R.string.localizable.chat_message_deleted(),
+        image: nil
+    )
+    
+    let messageId: String
     let category: Category
     let title: String
     let tintColor: UIColor
@@ -23,11 +34,18 @@ struct Quote {
     let subtitle: String
     let image: Image?
     
-    init?(quoteContent: Data) {
-        guard let message = try? JSONDecoder.default.decode(MessageItem.self, from: quoteContent) else {
-            assertionFailure("Quote content decoding failed")
-            return nil
-        }
+    init(messageId: String, category: Quote.Category, title: String, tintColor: UIColor, icon: UIImage?, subtitle: String, image: Quote.Image?) {
+        self.messageId = messageId
+        self.category = category
+        self.title = title
+        self.tintColor = tintColor
+        self.icon = icon
+        self.subtitle = subtitle
+        self.image = image
+    }
+    
+    init(quotedMessage message: MessageItem) {
+        messageId = message.messageId
         title = message.userFullName
         tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
@@ -66,6 +84,14 @@ struct Quote {
             }
             self.image = image
         }
+    }
+    
+}
+
+extension Quote: Equatable {
+    
+    static func == (lhs: Quote, rhs: Quote) -> Bool {
+        lhs.messageId == rhs.messageId
     }
     
 }

@@ -42,13 +42,17 @@ class QuotedMessageViewModel {
         let maxTitleWidth = width - quoteImageWidth
         let maxSubtitleWidth = width - paddedQuoteIconWidth - quoteImageWidth - Self.subtitleRightMargin
         
-        let titleHeight = MessageFontSet.quoteTitle.scaled.lineHeight
-        var titleWidth = (quote.title as NSString)
-            .size(withAttributes: [.font: MessageFontSet.quoteTitle.scaled])
-            .width
-        titleWidth = ceil(titleWidth)
-        titleWidth = min(maxTitleWidth, titleWidth)
-        titleSize = CGSize(width: titleWidth, height: titleHeight)
+        if quote == .notFound {
+            titleSize = .zero
+        } else {
+            let titleHeight = MessageFontSet.quoteTitle.scaled.lineHeight
+            var titleWidth = (quote.title as NSString)
+                .size(withAttributes: [.font: MessageFontSet.quoteTitle.scaled])
+                .width
+            titleWidth = ceil(titleWidth)
+            titleWidth = min(maxTitleWidth, titleWidth)
+            titleSize = ceil(CGSize(width: titleWidth, height: titleHeight))
+        }
         
         let subtitleFittingSize = CGSize(width: maxSubtitleWidth, height: UIView.layoutFittingExpandedSize.height)
         subtitleSize = (quote.subtitle as NSString)
@@ -62,10 +66,19 @@ class QuotedMessageViewModel {
         subtitleHeight = max(ceil(subtitleFont.lineHeight), subtitleHeight)
         subtitleSize = ceil(CGSize(width: subtitleSize.width, height: subtitleHeight))
         
-        let contentWidth = max(titleWidth + quoteImageWidth, paddedQuoteIconWidth + subtitleSize.width + quoteImageWidth)
-            + Self.contentMargin.horizontal
-        let titlesHeight = Self.contentMargin.vertical + titleHeight + Self.subtitleTopMargin + subtitleHeight
-        let contentHeight = max(Self.imageSize.height, ceil(titlesHeight))
+        var contentWidth = max(titleSize.width + quoteImageWidth,
+                               paddedQuoteIconWidth + subtitleSize.width + quoteImageWidth)
+        contentWidth += Self.contentMargin.horizontal
+        
+        var titlesHeight = Self.contentMargin.vertical + subtitleSize.height
+        if titleSize.height > 0 {
+            titlesHeight += (Self.subtitleTopMargin + titleSize.height)
+        }
+        
+        var contentHeight = titlesHeight
+        if quote.image != nil {
+            contentHeight = max(contentHeight, Self.imageSize.height)
+        }
         contentSize = CGSize(width: contentWidth, height: contentHeight)
     }
     
@@ -76,8 +89,11 @@ class QuotedMessageViewModel {
                                   y: backgroundFrame.origin.y + Self.contentMargin.top)
         titleFrame = CGRect(origin: titleOrigin, size: titleSize)
         
-        let iconOrigin = CGPoint(x: titleFrame.origin.x,
-                                 y: round(titleFrame.maxY + Self.subtitleTopMargin + (subtitleFont.lineHeight - Self.iconSize.height) / 2))
+        var iconOrigin = CGPoint(x: titleFrame.origin.x,
+                                 y: round(titleFrame.maxY + (subtitleFont.lineHeight - Self.iconSize.height) / 2))
+        if titleSize.height > 0 {
+            iconOrigin.y += Self.subtitleTopMargin
+        }
         if quote.icon == nil {
             iconFrame = CGRect(origin: iconOrigin, size: .zero)
         } else {
@@ -85,9 +101,12 @@ class QuotedMessageViewModel {
         }
         
         subtitleFrame = CGRect(x: titleFrame.origin.x + paddedQuoteIconWidth,
-                               y: titleFrame.maxY + Self.subtitleTopMargin,
+                               y: titleFrame.maxY,
                                width: subtitleSize.width,
                                height: subtitleSize.height)
+        if titleSize.height > 0 {
+            subtitleFrame.origin.y += Self.subtitleTopMargin
+        }
         
         if let image = quote.image {
             let imageOrigin = CGPoint(x: backgroundFrame.maxX - Self.imageSize.width,

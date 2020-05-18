@@ -1363,7 +1363,7 @@ chat history from icloud</string>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                         <state key="normal" title="Restore">
-                                            <color key="titleColor" name="theme"/>
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore"/>
@@ -1388,6 +1388,7 @@ chat history from icloud</string>
                             <constraint firstItem="UlL-mJ-MXf" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="20" id="39b-VU-Bdr"/>
                             <constraint firstItem="pVY-uP-Bar" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="36" id="5YI-1J-cu6"/>
                             <constraint firstItem="sUs-aI-gzW" firstAttribute="top" secondItem="VtA-NB-BK7" secondAttribute="top" id="6vF-tQ-Lf9"/>
+                            <constraint firstItem="UlL-mJ-MXf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pVY-uP-Bar" secondAttribute="bottom" constant="20" id="T7w-kw-2OU"/>
                             <constraint firstAttribute="trailing" secondItem="sUs-aI-gzW" secondAttribute="trailing" id="VZb-Cw-mO1"/>
                             <constraint firstItem="pVY-uP-Bar" firstAttribute="top" secondItem="ccd-OF-Y5G" secondAttribute="bottom" id="XaV-tY-NB8"/>
                             <constraint firstItem="ccd-OF-Y5G" firstAttribute="top" secondItem="sUs-aI-gzW" secondAttribute="bottom" id="akd-3j-GVF"/>
@@ -1395,7 +1396,16 @@ chat history from icloud</string>
                             <constraint firstAttribute="trailing" secondItem="pVY-uP-Bar" secondAttribute="trailing" constant="36" id="g2G-aW-r5T"/>
                             <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
                             <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" constant="140" id="sSb-oW-edw"/>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" priority="250" constant="140" id="sSb-oW-edw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VtA-NB-BK7"/>
                     </view>
@@ -1555,7 +1565,7 @@ chat history from icloud</string>
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -156,7 +156,8 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         self.pickerContentOffset = contentOffset
-        navigationController?.pushViewController(StickerAddViewController.instance(asset: asset), animated: true)
+        let vc = StickerAddViewController.instance(source: .asset(asset))
+        navigationController?.pushViewController(vc, animated: true)
     }
 
 }

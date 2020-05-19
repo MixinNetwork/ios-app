@@ -9,23 +9,37 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     private var downloadedContentLength: Double = 0
     
     internal var fileName: String {
-        var pathExtension: String?
-
-        if message.category.hasSuffix("_VIDEO") {
-            pathExtension = ExtensionName.mp4.withDot
-        } else if message.category.hasSuffix("_IMAGE") {
-            pathExtension = ExtensionName.jpeg.withDot
-        } else if message.category.hasSuffix("_AUDIO") {
-            pathExtension = ExtensionName.ogg.withDot
-        } else {
-            pathExtension = message.name?.pathExtension()?.lowercased()
-            if pathExtension == nil {
-                if let mimeType = message.mediaMimeType?.lowercased(), let ext = FileManager.default.pathExtension(mimeType: mimeType)?.lowercased() {
-                    pathExtension = ".\(ext)"
-                }
+        
+        var originalPathExtension: String? {
+            message.name?.pathExtension()?.lowercased()
+        }
+        
+        var mimeInferredPathExtension: String? {
+            if let mimeType = message.mediaMimeType?.lowercased() {
+                return FileManager.default.pathExtension(mimeType: mimeType)?.lowercased()
+            } else {
+                return nil
             }
         }
-        return "\(message.messageId)\(pathExtension ?? "")"
+        
+        let extensionName: String?
+        if message.category.hasSuffix("_VIDEO") {
+            extensionName = ExtensionName.mp4.rawValue
+        } else if message.category.hasSuffix("_IMAGE") {
+            extensionName = mimeInferredPathExtension
+                ?? originalPathExtension
+                ?? ExtensionName.jpeg.rawValue
+        } else if message.category.hasSuffix("_AUDIO") {
+            extensionName = ExtensionName.ogg.rawValue
+        } else {
+            extensionName = originalPathExtension ?? mimeInferredPathExtension
+        }
+        
+        var filename = message.messageId
+        if let name = extensionName {
+            filename += ".\(name)"
+        }
+        return filename
     }
     
     internal var fileUrl: URL {

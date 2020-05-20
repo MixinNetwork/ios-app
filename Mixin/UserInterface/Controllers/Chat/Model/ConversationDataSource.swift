@@ -44,7 +44,7 @@ class ConversationDataSource {
         }
     }
     private(set) var dates = [String]()
-    private(set) var loadedMessageIds = Set<String>()
+    private(set) var loadedMessageIds = SafeSet<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
     
@@ -136,7 +136,7 @@ class ConversationDataSource {
             didLoadEarliestMessage = messages.count < numberOfMessagesOnReloading
             firstUnreadMessageId = nil
         }
-        loadedMessageIds = Set(messages.map({ $0.messageId }))
+        loadedMessageIds = SafeSet<String>(messages.map({ $0.messageId }))
         if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
             let firstUnreadMessge = messages[firstUnreadIndex]
             let hint = MessageItem(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)

@@ -154,14 +154,12 @@ extension StickerAddViewController {
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
             return false
         }
-        guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any] else {
-            return false
-        }
+        let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
         let size: CGSize
-        if let width = properties[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties[kCGImagePropertyPixelHeight] as? NSNumber {
+        if let width = properties?[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties?[kCGImagePropertyPixelHeight] as? NSNumber {
             size = CGSize(width: width.doubleValue, height: height.doubleValue)
         } else {
-            size = UIImage(data: data)?.size ?? .zero
+            size = YYImage(data: data)?.size ?? .zero
         }
         return min(size.width, size.height) >= 64
             && max(size.width, size.height) <= 512

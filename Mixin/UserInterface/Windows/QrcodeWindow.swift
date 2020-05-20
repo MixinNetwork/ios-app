@@ -9,6 +9,7 @@ class QrcodeWindow: BottomSheetView {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var receiveMoneyImageView: UIImageView!
     
     @IBOutlet weak var qrcodeView: UIView!
     
@@ -24,6 +25,7 @@ class QrcodeWindow: BottomSheetView {
                qrcodeForegroundColor: .black)
         avatarImageView.isHidden = false
         assetIconView.isHidden = true
+        receiveMoneyImageView.isHidden = true
         avatarImageView.setGroupImage(conversation: conversation)
     }
     
@@ -34,6 +36,7 @@ class QrcodeWindow: BottomSheetView {
                qrcodeForegroundColor: .systemTint)
         avatarImageView.isHidden = false
         assetIconView.isHidden = true
+        receiveMoneyImageView.isHidden = true
         avatarImageView.setImage(with: account)
         isShowingMyQrCode = true
     }
@@ -45,6 +48,7 @@ class QrcodeWindow: BottomSheetView {
                qrcodeForegroundColor: .black)
         avatarImageView.isHidden = false
         assetIconView.isHidden = true
+        receiveMoneyImageView.isHidden = false
         avatarImageView.setImage(with: account)
     }
     
@@ -55,6 +59,7 @@ class QrcodeWindow: BottomSheetView {
                qrcodeForegroundColor: .black)
         avatarImageView.isHidden = true
         assetIconView.isHidden = false
+        receiveMoneyImageView.isHidden = true
         assetIconView.setIcon(asset: asset)
     }
     

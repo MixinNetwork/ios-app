@@ -32,8 +32,8 @@ extension Date {
 
     func timeDayAgo() -> String {
         let now = Date()
-        let nowDateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: now)
-        let dateComponents = Calendar.current.dateComponents([.day, .year, .weekOfYear], from: self)
+        let nowDateComponents = Calendar.current.dateComponents([.day, .month, .year, .weekOfYear], from: now)
+        let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .weekOfYear], from: self)
 
         if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
             return R.string.localizable.chat_time_today()

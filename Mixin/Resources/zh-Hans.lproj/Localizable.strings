@@ -102,20 +102,30 @@
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // PIN Logs
-"pin_log_verification" = "验证密码";
-"pin_log_raw_transfer" = "给主网地址转账";
-"pin_log_user_transfer" = "给用户或机器人转账";
-"pin_log_withdrawal" = "提现";
-"pin_log_add_address" = "添加地址";
-"pin_log_delete_address" = "删除地址";
-"pin_log_add_emergency" = "添加紧急联系人";
-"pin_log_delete_emergency" = "删除紧急联系人";
-"pin_log_read_emergency" = "查看紧急联系人";
-"pin_log_update_phone" = "修改手机号码";
-"pin_log_update_pin" = "修改密码";
-"pin_log_multisig_sign" = "签名多重签名交易";
-"pin_log_multisig_unlock" = "撤销多重签名交易";
-
+"log_category_pin_incorrect" = "密码错误";
+"log_category_login" = "登录";
+"log_category_emergency" = "紧急联系人";
+"log_category_pin_change" = "修改密码";
+"log_category_phone_change" = "修改手机号";
+"log_pin_verification" = "验证密码";
+"log_pin_raw_transfer" = "给主网地址转账";
+"log_pin_user_transfer" = "给用户或机器人转账";
+"log_pin_withdrawal" = "提现";
+"log_pin_add_address" = "添加地址";
+"log_pin_delete_address" = "删除地址";
+"log_pin_add_emergency" = "添加紧急联系人";
+"log_pin_delete_emergency" = "删除紧急联系人";
+"log_pin_read_emergency" = "查看紧急联系人";
+"log_pin_update_phone" = "修改手机号码";
+"log_pin_update_pin" = "修改密码";
+"log_pin_multisig_sign" = "签名多重签名交易";
+"log_pin_multisig_unlock" = "撤销多重签名交易";
+"log_pin_modification" = "你的密码已修改";
+"log_phone_modification" = "你的手机号已变更";
+"log_emergency_modification" = "你的紧急联系人已修改";
+"log_login_phone" = "通过手机号登录";
+"log_login_emergency" = "通过紧急联系人登录";
+"log_login_desktop" = "你的桌面端已登录";
 
 // Login
 "navigation_title_select_country" = "选择一个国家或地区";

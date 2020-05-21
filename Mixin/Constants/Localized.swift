@@ -247,7 +247,6 @@ public class Localized {
     public static let GROUP_ROLE_ADMIN = LocalizedString("group_role_admin", comment: "Admin")
     public static let GROUP_PARTICIPANT_MENU_INFO = LocalizedString("group_participant_menu_info", comment: "Info")
     public static let GROUP_PARTICIPANT_MENU_SEND = LocalizedString("group_participant_menu_send", comment: "Send Message")
-    public static let GROUP_PARTICIPANT_MENU_ADMIN = LocalizedString("group_participant_menu_admin", comment: "Make Group Admin")
     public static let GROUP_PARTICIPANT_MENU_REMOVE = LocalizedString("group_participant_menu_remove", comment: "Remove from Group")
     public static let GROUP_JOIN_FAIL_TITLE = LocalizedString("group_join_fail_title", comment: "Couldn't Join Group")
     public static let GROUP_JOIN_FAIL_SUMMARY = LocalizedString("group_join_fail_summary", comment: "This invite link doesn't match any Mixin groups.")

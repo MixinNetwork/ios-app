@@ -1065,10 +1065,10 @@ extension ReceiveMessageService {
             checkUser(userId: userId, tryAgain: true)
             operSuccess = ConversationDAO.shared.updateConversationOwnerId(conversationId: data.conversationId, ownerId: userId)
         case SystemConversationAction.ROLE.rawValue:
-            guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser, let role = sysMessage.role else {
+            guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
                 return
             }
-            operSuccess = ParticipantDAO.shared.updateParticipantRole(message: message, conversationId: data.conversationId, participantId: participantId, role: role, source: data.source)
+            operSuccess = ParticipantDAO.shared.updateParticipantRole(message: message, conversationId: data.conversationId, participantId: participantId, role: sysMessage.role ?? "", source: data.source)
             return
         case SystemConversationAction.UPDATE.rawValue:
             if let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser {

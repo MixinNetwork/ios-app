@@ -67,6 +67,11 @@ public class ConversationAPI : BaseAPI {
         let parameters = [["user_id": userId, "role": ParticipantRole.ADMIN.rawValue]].toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ROLE), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
+
+    public func dismissAdminParticipant(conversationId: String, userId: String, completion: @escaping (BaseAPI.Result<ConversationResponse>) -> Void) {
+        let parameters = [["user_id": userId, "role": ""]].toParameters()
+        request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ROLE), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
+    }
     
     public func updateGroupName(conversationId: String, name: String, completion: @escaping (BaseAPI.Result<ConversationResponse>) -> Void) {
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: name, category: nil, participants: nil, duration: nil, announcement: nil)

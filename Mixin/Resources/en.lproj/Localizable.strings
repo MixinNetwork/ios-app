@@ -378,6 +378,7 @@
 "group_participant_menu_info" = "Info";
 "group_participant_menu_send" = "Send Message";
 "group_participant_menu_admin" = "Make Group Admin";
+"group_participant_menu_dismiss_admin" = "Dismiss as Admin";
 "group_participant_menu_remove" = "Remove from Group";
 "group_invite_hint" = "Anyone with Mixin can follow this link to join this group. Only share it with people you trust.";
 "group_join_fail_title" = "Couldn't Join Group";

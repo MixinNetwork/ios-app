@@ -381,6 +381,7 @@
 "group_participant_menu_info" = "信息";
 "group_participant_menu_send" = "发送消息";
 "group_participant_menu_admin" = "设为管理员";
+"group_participant_menu_dismiss_admin" = "撤销管理员";
 "group_participant_menu_remove" = "从群组中移除";
 "group_invite_hint" = "Mixin 使用者可使用此链接加入这个群组，请只跟你信任的人分享链接。";
 "group_join_fail_title" = "无法加入群组";

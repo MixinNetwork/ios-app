@@ -46,13 +46,19 @@ class UrlWindow {
     }
 
     class func checkDonate(url: String) -> Bool {
-        guard url.lowercased().hasPrefix("bitcoin:"), let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
+        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:"].contains(where: url.lowercased().hasPrefix) else {
+            return false
+        }
+        guard let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
             return false
         }
         guard let amount = items.first(where: { $0.name == "amount" })?.value, amount.isNumeric else {
             return false
         }
         guard let userId = items.first(where: { $0.name == "user" })?.value, UUID(uuidString: userId) != nil else {
+            return false
+        }
+        guard let assetId = items.first(where: { $0.name == "asset" })?.value, UUID(uuidString: assetId) != nil else {
             return false
         }
 
@@ -83,7 +89,7 @@ class UrlWindow {
                 }
             }
 
-            guard let user = userItem, let asset = syncAsset(assetId: AssetItem.bitcoinAssetId, hud: hud) else {
+            guard let user = userItem, let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
 

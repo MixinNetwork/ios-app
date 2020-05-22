@@ -123,12 +123,7 @@ extension PinSettingsViewController: UITableViewDelegate {
                 present(alert, animated: true, completion: nil)
             }
         } else if indexPath.row == 0 {
-            let vc: UIViewController
-            if LoginManager.shared.account?.has_pin ?? false {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
-            }
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

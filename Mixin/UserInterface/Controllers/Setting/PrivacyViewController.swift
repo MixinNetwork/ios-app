@@ -24,10 +24,6 @@ final class PrivacyViewController: SettingsTableViewController {
         ])
     ])
     
-    private var accountHasPin: Bool {
-        LoginManager.shared.account?.has_pin ?? false
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -73,14 +69,14 @@ extension PrivacyViewController: UITableViewDelegate {
         let vc: UIViewController
         switch indexPath.section {
         case 0:
-            if indexPath.row == 0 {
-                vc = PinSettingsViewController.instance()
-            } else {
-                if accountHasPin {
-                    vc = EmergencyContactViewController.instance()
+            if LoginManager.shared.account?.has_pin ?? false {
+                if indexPath.row == 0 {
+                    vc = PinSettingsViewController.instance()
                 } else {
-                    vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+                    vc = EmergencyContactViewController.instance()
                 }
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
             }
         case 1:
             if indexPath.row == 0 {

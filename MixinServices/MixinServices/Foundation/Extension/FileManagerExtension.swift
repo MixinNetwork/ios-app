@@ -27,14 +27,6 @@ public extension FileManager {
         // 0x89 => image/png
         return c == 0x89 || c == 0xFF
     }
-
-    func imageSize(_ path: String) -> CGSize {
-        let imageFileURL = URL(fileURLWithPath: path)
-        guard let imageSource = CGImageSourceCreateWithURL(imageFileURL as CFURL, nil), let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any], let width = properties[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {
-            return UIImage(contentsOfFile: path)?.size ?? CGSize.zero
-        }
-        return CGSize(width: width.intValue, height: height.intValue)
-    }
     
     func createNobackupDirectory(_ directory: URL) -> Bool {
         guard !FileManager.default.fileExists(atPath: directory.path) else {

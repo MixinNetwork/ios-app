@@ -18,6 +18,9 @@ final class PrivacyViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
         ])
     ])
     
@@ -91,8 +94,10 @@ extension PrivacyViewController: UITableViewDelegate {
             } else {
                 vc = PhoneContactsSettingViewController.instance()
             }
-        default:
+        case 3:
             vc = AuthorizationsViewController.instance()
+        default:
+            vc = LogViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

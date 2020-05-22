@@ -626,7 +626,7 @@
 		DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */; };
 		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
 		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
-		DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* PINLogViewController.swift */; };
+		DFB19002233219650021CAF3 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* LogViewController.swift */; };
 		DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19005233220290021CAF3 /* PINLogCell.swift */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
@@ -1456,7 +1456,7 @@
 		DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementView.xib; sourceTree = "<group>"; };
 		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
-		DFB19001233219650021CAF3 /* PINLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogViewController.swift; sourceTree = "<group>"; };
+		DFB19001233219650021CAF3 /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		DFB19005233220290021CAF3 /* PINLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogCell.swift; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
@@ -2712,7 +2712,6 @@
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
-				DFB19001233219650021CAF3 /* PINLogViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -2901,6 +2900,7 @@
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
+				DFB19001233219650021CAF3 /* LogViewController.swift */,
 				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
 				7BB78729245149040057B4ED /* Emergency Contact */,
 				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
@@ -3829,7 +3829,7 @@
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
-				DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */,
+				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
 				DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,

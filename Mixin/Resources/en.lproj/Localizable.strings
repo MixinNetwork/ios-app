@@ -416,8 +416,6 @@
 "wallet_password_verify_title" = "Old PIN";
 "wallet_password_too_many_requests" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
 "wallet_change_password" = "Change PIN";
-"wallet_pin_logs" = "PIN Incorrect Logs";
-"wallet_pin_logs_empty" = "No logs";
 "wallet_change_password_success" = "Change PIN successfully";
 "wallet_set_password_success" = "Set PIN successfully";
 "wallet_snapshot_transfer_from" = "From";
@@ -693,6 +691,8 @@
 "setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
 "setting_blocked_user_count_none" = "None";
+"setting_logs" = "Logs";
+"setting_logs_empty" = "No logs";
 "setting_about" = "About";
 "setting_blocked" = "Blocked Users";
 "setting_blocked_empty" = "No blocked users";

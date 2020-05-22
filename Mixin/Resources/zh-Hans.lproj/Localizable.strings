@@ -419,8 +419,6 @@
 "wallet_password_verify_title" = "验证旧的密码";
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
 "wallet_change_password" = "修改密码";
-"wallet_pin_logs" = "密码错误日志";
-"wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改密码成功";
 "wallet_set_password_success" = "设置密码成功";
 "wallet_snapshot_transfer_from" = "转账来自";
@@ -693,6 +691,8 @@
 "setting_privacy_and_security" = "隐私和安全";
 "setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
+"setting_logs" = "日志";
+"setting_logs_empty" = "没有日志";
 "setting_data_and_storage" = "数据和存储";
 "setting_blocked_user_count_suffix" = " 联系人";
 "setting_blocked_user_count_none" = "无";

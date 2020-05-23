@@ -224,6 +224,7 @@
 "chat_message_call_duration" = "継続時間 %@";
 "chat_message_recalled" = "このメッセージは削除されました";
 "chat_message_recalled_by_me" = "あなたがこのメッセージを削除しました。";
+"chat_message_not_found" = "Message not found";
 "chat_cell_title_encryption" = "この会話へのメッセージはエンドツーエンドで暗号化されています。詳細についてはクリックしてください";
 "chat_cell_title_unknown_category" = "このタイプのメッセージはサポートされていません。Mixinを最新バージョンにアップグレードしてください。";
 "chat_forward_title" = "転送";
@@ -231,7 +232,7 @@
 "chat_forward_contacts" = "連絡先";
 "chat_forward_apps" = "アプリ";
 "chat_decryption_failed_hint" = "Waiting for %@ to get online and establish an encrypted session. ";
-"chat_decryption_failed_link" = "もっと詳しく知る。";
+"chat_sentence_learn_more" = "もっと詳しく知る。";
 "chat_send_photo_failed" = "写真を送信できませんでした";
 "chat_send_file_failed" = "ファイルを送信できませんでした";
 "chat_send_video_failed" = "動画を送信できませんでした";

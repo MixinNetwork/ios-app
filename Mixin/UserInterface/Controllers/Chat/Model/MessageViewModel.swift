@@ -61,9 +61,19 @@ class MessageViewModel: CustomDebugStringConvertible {
         self.message = message
         self.isEncrypted = message.category.hasPrefix("SIGNAL_")
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
-
         thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage, width: message.mediaWidth, height: message.mediaHeight)
-        if Self.supportsQuoting, let quoteContent = message.quoteContent, let quote = Quote(quoteContent: quoteContent) {
+        
+        var quoteIfExist: Quote? = nil
+        if Self.supportsQuoting, let id = message.quoteMessageId, !id.isEmpty {
+            if let quoteContent = message.quoteContent {
+                if let message = try? JSONDecoder.default.decode(MessageItem.self, from: quoteContent) {
+                    quoteIfExist = Quote(quotedMessage: message)
+                }
+            } else {
+                quoteIfExist = .notFound
+            }
+        }
+        if let quote = quoteIfExist {
             quotedMessageViewModel = QuotedMessageViewModel(quote: quote)
         } else {
             quotedMessageViewModel = nil

@@ -52,6 +52,10 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
             messageTypeImageView.isHidden = true
             contentLabel.text = Localized.CHAT_DECRYPTION_FAILED_HINT(username: item.senderFullName)
+        } else if item.messageStatus == MessageStatus.UNKNOWN.rawValue {
+            messageStatusImageView.isHidden = true
+            messageTypeImageView.isHidden = true
+            contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
         } else {
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
@@ -141,7 +145,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
                 } else {
-                    contentLabel.text = ""
+                    contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
                 }
             }
         }

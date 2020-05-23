@@ -905,6 +905,8 @@ extension ConversationDataSource {
         let viewModel: MessageViewModel
         if message.status == MessageStatus.FAILED.rawValue {
             viewModel = DecryptionFailedMessageViewModel(message: message)
+        } else if message.status == MessageStatus.UNKNOWN.rawValue {
+            viewModel = UnknownMessageViewModel(message: message)
         } else {
             if message.category.hasSuffix("_TEXT") {
                 viewModel = TextMessageViewModel(message: message)

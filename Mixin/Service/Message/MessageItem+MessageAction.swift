@@ -4,7 +4,7 @@ extension MessageItem {
     
     var allowedActions: [MessageAction] {
         var actions = [MessageAction]()
-        if status == MessageStatus.FAILED.rawValue || category.hasPrefix("WEBRTC_") {
+        if status == MessageStatus.FAILED.rawValue || status == MessageStatus.UNKNOWN.rawValue || category.hasPrefix("WEBRTC_") {
             actions = [.delete]
         } else if category.hasSuffix("_TEXT") || category.hasSuffix("_POST") {
             actions = [.reply, .forward, .copy, .delete]

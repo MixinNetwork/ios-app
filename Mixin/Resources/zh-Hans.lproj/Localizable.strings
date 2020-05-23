@@ -548,6 +548,7 @@
 "transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_transfer_title" = "转账给%@";
 "pay_withdrawal_title" = "提现到%@";
+"pay_withdrawal_memo" = "数量 %@ %@\n手续费 %@ %@";
 "transfer_by_pin" = "通过密码支付";
 "transfer_use_face" = "使用面容支付";
 "transfer_use_touch" = "使用指纹支付";

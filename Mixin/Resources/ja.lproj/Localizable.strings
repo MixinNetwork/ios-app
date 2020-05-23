@@ -488,6 +488,7 @@
 "transfer_paid" = "この支払いリンクは既に他のユーザーに使われました。重複支払いはできません。";
 "pay_transfer_title" = " %@ に振込";
 "pay_withdrawal_title" = " %@ に送金";
+"pay_withdrawal_memo" = "Amount %@ %@\nFee %@ %@";
 "transfer_by_pin" = "PINで支払う";
 "transfer_use_face" = "Face Payを使います";
 "transfer_use_touch" = "Touch Payを使います";

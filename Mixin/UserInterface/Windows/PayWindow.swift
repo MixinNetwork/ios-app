@@ -10,7 +10,7 @@ class PayWindow: BottomSheetView {
     enum PinAction {
         case payment(payment: PaymentCodeResponse, receivers: [UserResponse])
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
-        case withdraw(trackId: String, address: Address, fromWeb: Bool)
+        case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserResponse], receivers: [UserResponse])
     }
 
@@ -111,14 +111,14 @@ class PayWindow: BottomSheetView {
         self.pinAction = action
         self.textfield = textfield
 
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
+        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
+        let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
         if let fiatMoneyAmount = fiatMoneyAmount {
-            amountLabel.text = fiatMoneyAmount
+            amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
             amountExchangeLabel.text = amountToken
         } else {
             amountLabel.text = amountToken
-            let value = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+            amountExchangeLabel.text = amountExchange
         }
 
         let showError = !(error?.isEmpty ?? true)
@@ -152,10 +152,18 @@ class PayWindow: BottomSheetView {
                     }
                 }
             }
-        case let .withdraw(_, address, _):
+        case let .withdraw(_, address, chainAsset, _):
             nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
             mixinIDLabel.text = address.fullAddress
             multisigView.isHidden = true
+            let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
+            let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: asset.priceUsd)
+            if let fiatMoneyAmount = fiatMoneyAmount {
+                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
+            } else {
+                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
+            }
+
             if !showError {
                 payLabel.text = R.string.localizable.withdraw_by_pin()
                 if showBiometric {
@@ -593,7 +601,7 @@ extension PayWindow: PinFieldDelegate {
                 case .transfer, .payment:
                     AppGroupUserDefaults.User.hasPerformedTransfer = true
                     AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
-                case let .withdraw(_,address,_):
+                case let .withdraw(_,address,_,_):
                     AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 default:
@@ -619,7 +627,7 @@ extension PayWindow: PinFieldDelegate {
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
             PaymentAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
-        case let .withdraw(trackId, address, fromWeb):
+        case let .withdraw(trackId, address, _, fromWeb):
             if fromWeb {
                 PaymentAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
                     guard let weakSelf = self else {
@@ -693,7 +701,7 @@ extension PayWindow: PinFieldDelegate {
                     viewControllers.append(ConversationViewController.instance(ownerUser: user))
                 }
                 navigation.setViewControllers(viewControllers, animated: true)
-            case let .withdraw(_, _, fromWeb):
+            case let .withdraw(_, _, _, fromWeb):
                 guard !fromWeb else {
                     return
                 }

@@ -377,6 +377,9 @@ class UrlWindow {
             guard let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
+            guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
+                return
+            }
             var address = AddressDAO.shared.getAddress(addressId: addressId)
             if address == nil {
                 switch WithdrawalAPI.shared.address(addressId: addressId) {
@@ -403,7 +406,7 @@ class UrlWindow {
             }
 
             DispatchQueue.main.async {
-                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, chainAsset: chainAsset, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
 

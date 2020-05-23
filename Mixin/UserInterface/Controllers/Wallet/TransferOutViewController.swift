@@ -37,6 +37,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var asset: AssetItem?
     private var targetUser: UserItem?
     private var targetAddress: Address?
+    private var chainAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     private var newAddressTips = false
@@ -182,7 +183,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         var amount = amountTextField.text?.trim() ?? ""
         var fiatMoneyAmount: String? = nil
         if !isInputAssetAmount {
-            fiatMoneyAmount = amount + " " + Currency.current.code
+            fiatMoneyAmount = amount
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
             formatter.usesGroupingSeparator = false
@@ -206,6 +207,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
                 return
             }
+            guard let chainAsset = self.chainAsset ?? AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                return
+            }
             guard !hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
                 newAddressTips = true
                 WithdrawalTipWindow.instance().render(asset: asset) { [weak self](isContinue: Bool) in
@@ -213,7 +217,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                         return
                     }
                     if isContinue {
-                        payWindow.render(asset: asset, action: .withdraw(trackId: weakSelf.tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                        payWindow.render(asset: asset, action: .withdraw(trackId: weakSelf.tranceId, address: address, chainAsset: chainAsset, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
                     } else {
                         weakSelf.amountTextField.becomeFirstResponder()
                     }
@@ -221,7 +225,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 return
             }
 
-            payWindow.render(asset: asset, action: .withdraw(trackId: tranceId, address: address, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
+            payWindow.render(asset: asset, action: .withdraw(trackId: tranceId, address: address, chainAsset: chainAsset, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
         }
     }
     
@@ -330,7 +334,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self?.displayFeeHint(loading: false)
                 return
             }
-            
+            self?.chainAsset = chainAsset
             let feeRepresentation = address.fee + " " + chainAsset.symbol
             var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
             var ranges = [(hint as NSString).range(of: feeRepresentation)]

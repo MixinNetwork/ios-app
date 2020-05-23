@@ -544,6 +544,7 @@
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_transfer_title" = "Transfer to %@";
 "pay_withdrawal_title" = "Withdraw to %@";
+"pay_withdrawal_memo" = "Amount %@ %@\nFee %@ %@";
 "transfer_by_pin" = "Pay with PIN";
 "transfer_use_face" = "Use Face Pay";
 "transfer_use_touch" = "Use Touch Pay";

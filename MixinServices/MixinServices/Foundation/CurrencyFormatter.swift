@@ -48,7 +48,15 @@ public struct CurrencyFormatter {
         }
         return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
-    
+
+    public static func localizedPrice(price: String, priceUsd: String) -> String {
+        guard let value = CurrencyFormatter.localizedString(from: price.doubleValue * priceUsd.doubleValue * Currency.current.rate, format: .fiatMoney, sign: .never) else {
+            return price
+        }
+        
+        return "≈ " + Currency.current.symbol + value
+    }
+
     public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         let decimal = Decimal(number)
         return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)

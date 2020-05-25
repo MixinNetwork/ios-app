@@ -264,6 +264,9 @@ extension CallService {
             guard let (call, offer) = self.pendingOffers.removeValue(forKey: uuid) else {
                 return
             }
+            DispatchQueue.main.sync {
+                self.showCallingInterface(user: call.opponentUser, style: .connecting)
+            }
             self.call = call // TODO: Fail other pending calls
             self.ringtonePlayer?.stop()
             self.rtcClient.set(remoteSdp: offer) { (error) in
@@ -292,9 +295,6 @@ extension CallService {
                                                                   isGroupMessage: false)
                             if let candidates = self.pendingCandidates[uuid] {
                                 candidates.forEach(self.rtcClient.add(remoteCandidate:))
-                            }
-                            DispatchQueue.main.sync {
-                                self.showCallingInterface(user: call.opponentUser, style: .connecting)
                             }
                             completion?(true)
                         }

@@ -321,8 +321,21 @@ public class ReceiveMessageService: MixinService {
             return
         }
         let message = Message.createMessage(appMessage: data)
-        if data.category == MessageCategory.APP_CARD.rawValue, let appCardData = Data(base64Encoded: data.data), let appCard = try? JSONDecoder.default.decode(AppCardData.self, from: appCardData), let updatedAt = appCard.updatedAt, let appId = appCard.appId {
-            syncApp(appId: appId, updatedAt: updatedAt)
+        if data.category == MessageCategory.APP_CARD.rawValue {
+            guard let appCardData = Data(base64Encoded: data.data), let appCard = try? JSONDecoder.default.decode(AppCardData.self, from: appCardData) else {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+                processUnknownMessage(data: data)
+                return
+            }
+            if let updatedAt = appCard.updatedAt, let appId = appCard.appId {
+                syncApp(appId: appId, updatedAt: updatedAt)
+            }
+        } else if data.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+            guard let appButtonData = Data(base64Encoded: data.data), let _ = try? JSONDecoder.default.decode([AppButtonData].self, from: appButtonData) else {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+                processUnknownMessage(data: data)
+                return
+            }
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)

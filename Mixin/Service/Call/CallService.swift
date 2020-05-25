@@ -4,6 +4,8 @@ import MixinServices
 
 class CallService {
     
+    static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
+    
     typealias PendingOffer = (call: Call, sdp: RTCSessionDescription)
     
     static let shared = CallService()
@@ -16,10 +18,10 @@ class CallService {
     
     var isMuted = false {
         didSet {
-            guard rtcClient.iceConnectionState == .connected else {
-                return
+            NotificationCenter.default.postOnMain(name: Self.mutenessDidChangeNotification)
+            if let audioTrack = rtcClient.audioTrack {
+                audioTrack.isEnabled = !isMuted
             }
-            rtcClient.isMuted = isMuted
         }
     }
     

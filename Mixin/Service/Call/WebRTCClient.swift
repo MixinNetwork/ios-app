@@ -11,26 +11,21 @@ class WebRTCClient: NSObject {
     
     weak var delegate: WebRTCClientDelegate?
     
-    var canAddRemoteCandidate: Bool {
-        peerConnection != nil
-    }
-    
     private let audioId = "audio0"
     private let streamId = "stream0"
     private let factory = RTCPeerConnectionFactory(encoderFactory: RTCDefaultVideoEncoderFactory(),
                                                    decoderFactory: RTCDefaultVideoDecoderFactory())
     
+    private(set) var audioTrack: RTCAudioTrack?
+    
     private var peerConnection: RTCPeerConnection?
-    private var audioTrack: RTCAudioTrack?
+    
+    var canAddRemoteCandidate: Bool {
+        peerConnection != nil
+    }
     
     var iceConnectionState: RTCIceConnectionState {
         return peerConnection?.iceConnectionState ?? .closed
-    }
-    
-    var isMuted = false {
-        didSet {
-            audioTrack?.isEnabled = !isMuted
-        }
     }
     
     func offer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {

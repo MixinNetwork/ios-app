@@ -34,9 +34,17 @@ class CallViewController: UIViewController {
         .lightContent
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(callServiceMutenessDidChange),
+                                               name: CallService.mutenessDidChangeNotification,
+                                               object: nil)
     }
     
     func disableConnectionDurationTimer() {
@@ -66,6 +74,10 @@ class CallViewController: UIViewController {
     @IBAction func setSpeakerAction(_ sender: Any) {
         speakerButton.isSelected = !speakerButton.isSelected
         service.usesSpeaker = speakerButton.isSelected
+    }
+    
+    @objc func callServiceMutenessDidChange() {
+        muteButton.isSelected = service.isMuted
     }
     
 }

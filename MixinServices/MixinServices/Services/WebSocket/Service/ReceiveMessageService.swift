@@ -217,6 +217,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processPlainMessage(data: data)
             ReceiveMessageService.shared.processSignalMessage(data: data)
             ReceiveMessageService.shared.processAppButton(data: data)
+            ReceiveMessageService.shared.processAppCard(data: data)
             ReceiveMessageService.shared.processWebRTCMessage(data: data)
             ReceiveMessageService.shared.processRecallMessage(data: data)
         } else {
@@ -317,28 +318,36 @@ public class ReceiveMessageService: MixinService {
     }
     
     private func processAppButton(data: BlazeMessageData) {
-        guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue || data.category == MessageCategory.APP_CARD.rawValue else {
+        guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue else {
             return
         }
-        let message = Message.createMessage(appMessage: data)
-        if data.category == MessageCategory.APP_CARD.rawValue {
-            guard let appCardData = Data(base64Encoded: data.data), let appCard = try? JSONDecoder.default.decode(AppCardData.self, from: appCardData) else {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
-                processUnknownMessage(data: data)
-                return
-            }
-            if let updatedAt = appCard.updatedAt, let appId = appCard.appId {
-                syncApp(appId: appId, updatedAt: updatedAt)
-            }
-        } else if data.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-            guard let appButtonData = Data(base64Encoded: data.data), let _ = try? JSONDecoder.default.decode([AppButtonData].self, from: appButtonData) else {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
-                processUnknownMessage(data: data)
-                return
-            }
+        guard let appButtonData = Data(base64Encoded: data.data), let _ = try? JSONDecoder.default.decode([AppButtonData].self, from: appButtonData) else {
+            processUnknownMessage(data: data)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            return
         }
+
+        let message = Message.createMessage(appMessage: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+    }
+
+    private func processAppCard(data: BlazeMessageData) {
+        guard data.category == MessageCategory.APP_CARD.rawValue else {
+            return
+        }
+        guard let appCardData = Data(base64Encoded: data.data), let appCard = try? JSONDecoder.default.decode(AppCardData.self, from: appCardData) else {
+            processUnknownMessage(data: data)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            return
+        }
+
+        if let updatedAt = appCard.updatedAt, let appId = appCard.appId {
+            syncApp(appId: appId, updatedAt: updatedAt)
+        }
+        let message = Message.createMessage(appMessage: data)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
 
     private func syncApp(appId: String, updatedAt: String) {

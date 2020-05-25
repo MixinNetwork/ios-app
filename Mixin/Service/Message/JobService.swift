@@ -28,7 +28,7 @@ class JobService {
                 AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
                 JobService.shared.restoreUploadJobs()
             }
-            CallManager.shared.handlePendingWebRTCJobs()
+            CallService.shared.handlePendingWebRTCJobs()
             JobService.shared.recoverMediaJobs()
         }
     }

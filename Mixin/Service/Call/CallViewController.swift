@@ -18,7 +18,7 @@ class CallViewController: UIViewController {
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     
-    weak var manager: CallManager!
+    weak var service: CallService!
     
     var style = Style.disconnecting {
         didSet {
@@ -51,21 +51,21 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
-        manager.requestEndCall()
+        service.requestEndCall()
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        manager.requestAnswerCall()
+        service.requestAnswerCall()
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
         muteButton.isSelected = !muteButton.isSelected
-        manager.isMuted = muteButton.isSelected
+        service.isMuted = muteButton.isSelected
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
         speakerButton.isSelected = !speakerButton.isSelected
-        manager.usesSpeaker = speakerButton.isSelected
+        service.usesSpeaker = speakerButton.isSelected
     }
     
 }
@@ -96,7 +96,7 @@ extension CallViewController {
     }
     
     @objc private func updateStatusLabelWithCallingDuration() {
-        if style == .connected, let timeIntervalSinceNow = manager.call?.connectedDate?.timeIntervalSinceNow {
+        if style == .connected, let timeIntervalSinceNow = service.call?.connectedDate?.timeIntervalSinceNow {
             let duration = abs(timeIntervalSinceNow)
             statusLabel.text = mediaDurationFormatter.string(from: duration)
         } else {

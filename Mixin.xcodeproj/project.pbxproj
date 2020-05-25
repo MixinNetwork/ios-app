@@ -29,7 +29,7 @@
 		7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B082D15242C9D5F00C5E163 /* MultipleSelectionActionView.xib */; };
 		7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */; };
 		7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B082D19242CACA000C5E163 /* MultipleSelectionActionView.swift */; };
-		7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B08CD2B2178700C00FB8CCF /* CallManager.swift */; };
+		7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B08CD2B2178700C00FB8CCF /* CallService.swift */; };
 		7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09664520E0B018007DC179 /* PhotoAssetPickerNavigationController.swift */; };
 		7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E5571FD1264C002E45D3 /* TextMessageLabel.swift */; };
 		7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */; };
@@ -844,7 +844,7 @@
 		7B082D15242C9D5F00C5E163 /* MultipleSelectionActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultipleSelectionActionView.xib; sourceTree = "<group>"; };
 		7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSelectionIntent.swift; sourceTree = "<group>"; };
 		7B082D19242CACA000C5E163 /* MultipleSelectionActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSelectionActionView.swift; sourceTree = "<group>"; };
-		7B08CD2B2178700C00FB8CCF /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
+		7B08CD2B2178700C00FB8CCF /* CallService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallService.swift; sourceTree = "<group>"; };
 		7B09664520E0B018007DC179 /* PhotoAssetPickerNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAssetPickerNavigationController.swift; sourceTree = "<group>"; };
 		7B09E5571FD1264C002E45D3 /* TextMessageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageLabel.swift; sourceTree = "<group>"; };
 		7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -2060,7 +2060,7 @@
 				7BEED88F246D0C3D00387EAE /* CallInterface.swift */,
 				7BEED891246D0C6C00387EAE /* NativeCallInterface.swift */,
 				7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */,
-				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
+				7B08CD2B2178700C00FB8CCF /* CallService.swift */,
 				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
@@ -3824,7 +3824,7 @@
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
-				7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */,
+				7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */,
 				7BC28337234DCCF300005628 /* SharedMediaTableViewController.swift in Sources */,
 				7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */,
 				DFC0ECFC23BB610C0091E7AC /* PhoneContactAPI.swift in Sources */,

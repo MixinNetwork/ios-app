@@ -2,11 +2,11 @@ import Foundation
 import WebRTC
 import MixinServices
 
-class CallManager {
+class CallService {
     
     typealias PendingOffer = (call: Call, sdp: RTCSessionDescription)
     
-    static let shared = CallManager()
+    static let shared = CallService()
     static let usesCallKit = true
     
     let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "call", withExtension: "caf")!)
@@ -74,7 +74,7 @@ class CallManager {
         let animated = self.window != nil
         
         let viewController = self.viewController ?? CallViewController()
-        viewController.manager = self
+        viewController.service = self
         viewController.loadViewIfNeeded()
         viewController.reload(user: user)
         self.viewController = viewController
@@ -107,7 +107,7 @@ class CallManager {
 }
 
 // MARK: - Interface
-extension CallManager {
+extension CallService {
     
     func handlePendingWebRTCJobs() {
         queue.async {
@@ -196,7 +196,7 @@ extension CallManager {
 }
 
 // MARK: - Callback
-extension CallManager {
+extension CallService {
     
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
@@ -371,7 +371,7 @@ extension CallManager {
     
 }
 
-extension CallManager: CallMessageCoordinator {
+extension CallService: CallMessageCoordinator {
     
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool {
         let onlySendIfThereIsAnActiveCall = [.WEBRTC_AUDIO_OFFER, .WEBRTC_AUDIO_ANSWER, .WEBRTC_ICE_CANDIDATE].contains(category)
@@ -394,7 +394,7 @@ extension CallManager: CallMessageCoordinator {
 }
 
 // MARK: - Blaze message data handlers
-extension CallManager {
+extension CallService {
     
     private func handleOffer(data: BlazeMessageData) {
         
@@ -517,7 +517,7 @@ extension CallManager {
     
 }
 
-extension CallManager: WebRTCClientDelegate {
+extension CallService: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
         guard let call = call, let content = [candidate].jsonString else {
@@ -560,7 +560,7 @@ extension CallManager: WebRTCClientDelegate {
     
 }
 
-extension CallManager {
+extension CallService {
     
     @objc private func unansweredTimeout() {
         guard let call = call, !call.hasReceivedRemoteAnswer else {

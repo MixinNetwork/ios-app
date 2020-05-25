@@ -6,12 +6,12 @@ class NativeCallInterface: NSObject {
     private let provider: CXProvider
     private let callController = CXCallController()
     
-    private unowned var manager: CallManager!
+    private unowned var service: CallService!
     
     private var pendingAnswerAction: CXAnswerCallAction?
     
-    required init(manager: CallManager) {
-        self.manager = manager
+    required init(manager: CallService) {
+        self.service = manager
         let config = CXProviderConfiguration(localizedName: Bundle.main.displayName)
         config.ringtoneSound = "call.caf"
         config.iconTemplateImageData = R.image.call.ic_mixin()?.pngData()
@@ -92,7 +92,7 @@ extension NativeCallInterface: CXProviderDelegate {
     
     func providerDidReset(_ provider: CXProvider) {
         pendingAnswerAction = nil
-        manager.clean()
+        service.clean()
     }
     
     func providerDidBegin(_ provider: CXProvider) {
@@ -101,17 +101,17 @@ extension NativeCallInterface: CXProviderDelegate {
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         if let handle = CallHandle(cxHandle: action.handle) {
-            manager.startCall(uuid: action.callUUID, handle: handle) { (success) in
+            service.startCall(uuid: action.callUUID, handle: handle) { (success) in
                 success ? action.fulfill() : action.fail()
             }
         } else {
-            manager.alert(error: .invalidHandle)
+            service.alert(error: .invalidHandle)
             action.fail()
         }
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        manager.answerCall(uuid: action.callUUID) { (success) in
+        service.answerCall(uuid: action.callUUID) { (success) in
             if success {
                 self.pendingAnswerAction = action
             } else {
@@ -121,12 +121,12 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        manager.endCall(uuid: action.callUUID)
+        service.endCall(uuid: action.callUUID)
         action.fulfill()
     }
     
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
-        manager.isMuted = action.isMuted
+        service.isMuted = action.isMuted
         action.fulfill()
     }
     
@@ -135,8 +135,8 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        if let call = manager.call, call.isOutgoing {
-            manager.ringtonePlayer?.play()
+        if let call = service.call, call.isOutgoing {
+            service.ringtonePlayer?.play()
         }
     }
     

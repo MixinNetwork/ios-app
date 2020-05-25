@@ -101,7 +101,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                                                       isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
             }
         } else if let aps = userInfo["aps"] as? [String: AnyHashable?], let alert = aps["alert"] as? [String: AnyHashable?], let key = alert["loc-key"] as? String, key == "alert_key_contact_audio_call_message" {
-            JobService.shared.recoverPendingWebRTCJobs()
+            CallManager.shared.handlePendingWebRTCJobs()
         } else {
             DispatchQueue.global().async {
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {

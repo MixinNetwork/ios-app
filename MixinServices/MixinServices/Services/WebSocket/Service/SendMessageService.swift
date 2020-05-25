@@ -548,13 +548,16 @@ extension SendMessageService {
     }
 
     private func sendCallMessage(blazeMessage: BlazeMessage) throws {
-        let onlySendWhenThereIsAnActiveCall = blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
-            || blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue
-            || blazeMessage.params?.category == MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue
-        guard MixinService.callMessageCoordinator.hasActiveCall || !onlySendWhenThereIsAnActiveCall else {
+        guard let params = blazeMessage.params else {
             return
         }
-        guard let conversationId = blazeMessage.params?.conversationId else {
+        guard let categoryString = params.category, let category = MessageCategory(rawValue: categoryString) else {
+            return
+        }
+        guard MixinService.callMessageCoordinator.shouldSendRtcBlazeMessage(with: category) else {
+            return
+        }
+        guard let conversationId = params.conversationId else {
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {

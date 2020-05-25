@@ -4,7 +4,7 @@ import SDWebImage
 import MixinServices
 
 public protocol CallMessageCoordinator: class {
-    var hasActiveCall: Bool { get }
+    func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
 }
 
@@ -12,13 +12,6 @@ public class ReceiveMessageService: MixinService {
     
     public static let shared = ReceiveMessageService()
     public static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")
-    public static let completeCallCategories: [MessageCategory] = [
-        .WEBRTC_AUDIO_END,
-        .WEBRTC_AUDIO_BUSY,
-        .WEBRTC_AUDIO_CANCEL,
-        .WEBRTC_AUDIO_FAILED,
-        .WEBRTC_AUDIO_DECLINE
-    ]
 
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
@@ -298,7 +291,7 @@ public class ReceiveMessageService: MixinService {
                     } else {
                         listPendingCandidates[data.quoteMessageId]!.append(data)
                     }
-                } else if Self.completeCallCategories.contains(category) {
+                } else if MessageCategory.endCallCategories.contains(category) {
                     workItem.cancel()
                     listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
                     listPendingCandidates.removeValue(forKey: data.quoteMessageId)

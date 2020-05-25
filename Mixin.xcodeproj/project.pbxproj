@@ -367,6 +367,7 @@
 		7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB8417B2230C63000FB88B9 /* ConversationAccessible.swift */; };
 		7BB8E2D124529E910098B1E8 /* AppearanceSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */; };
 		7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */; };
+		7BBA2814246D10DE00787E61 /* MixinCallInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */; };
 		7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBAE9D9244ADB3800CC8670 /* AssetQrCodeScanningController.swift */; };
 		7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
@@ -409,6 +410,7 @@
 		7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344082334CE12005C26E3 /* UserHandleCell.swift */; };
 		7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B5F20BEA03200D06E5C /* WaveformView.swift */; };
 		7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */; };
+		7BD40331247823B90027B039 /* CallHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD40330247823B90027B039 /* CallHandle.swift */; };
 		7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A889233228D900DD4E9A /* WebViewController.swift */; };
 		7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */; };
 		7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BD639C92282B17B00B7B3A6 /* PeerView.xib */; };
@@ -430,6 +432,7 @@
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
 		7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
+		7BE0E6572475062D00DCC0D3 /* Vibrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0E6562475062D00DCC0D3 /* Vibrator.swift */; };
 		7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5505823573AC00074DB4A /* FontExtension.swift */; };
 		7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */; };
 		7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */; };
@@ -457,6 +460,8 @@
 		7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */; };
 		7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */; };
 		7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */; };
+		7BEED890246D0C3D00387EAE /* CallInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED88F246D0C3D00387EAE /* CallInterface.swift */; };
+		7BEED892246D0C6C00387EAE /* NativeCallInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEED891246D0C6C00387EAE /* NativeCallInterface.swift */; };
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
@@ -1173,6 +1178,7 @@
 		7BB8417B2230C63000FB88B9 /* ConversationAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationAccessible.swift; sourceTree = "<group>"; };
 		7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsViewController.swift; sourceTree = "<group>"; };
 		7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
+		7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinCallInterface.swift; sourceTree = "<group>"; };
 		7BBAE9D9244ADB3800CC8670 /* AssetQrCodeScanningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetQrCodeScanningController.swift; sourceTree = "<group>"; };
 		7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupTableHeaderView.xib; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
@@ -1220,6 +1226,7 @@
 		7BD344082334CE12005C26E3 /* UserHandleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleCell.swift; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
+		7BD40330247823B90027B039 /* CallHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallHandle.swift; sourceTree = "<group>"; };
 		7BD5A889233228D900DD4E9A /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewController.swift; sourceTree = "<group>"; };
 		7BD639C92282B17B00B7B3A6 /* PeerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerView.xib; sourceTree = "<group>"; };
@@ -1241,6 +1248,7 @@
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleTableHeaderView.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
+		7BE0E6562475062D00DCC0D3 /* Vibrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibrator.swift; sourceTree = "<group>"; };
 		7BE5505823573AC00074DB4A /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
 		7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InConversationSearchViewController.swift; sourceTree = "<group>"; };
 		7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchConversationView.xib; sourceTree = "<group>"; };
@@ -1277,6 +1285,8 @@
 		7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRow.swift; sourceTree = "<group>"; };
 		7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		7BEED88F246D0C3D00387EAE /* CallInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallInterface.swift; sourceTree = "<group>"; };
+		7BEED891246D0C6C00387EAE /* NativeCallInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeCallInterface.swift; sourceTree = "<group>"; };
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
@@ -2042,9 +2052,14 @@
 				7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */,
 				7BAD3337216E1DF9006C0309 /* RTCSessionDescription+JSON.swift */,
 				7BD97DD62179DDD600FAE490 /* IceServer.swift */,
+				7BE0E6562475062D00DCC0D3 /* Vibrator.swift */,
 				7BD97DD42179DD3400FAE490 /* WebRTCClient.swift */,
 				7BF7837A2179D1AF00BECB4B /* Call.swift */,
+				7BD40330247823B90027B039 /* CallHandle.swift */,
 				E07E38A023A772CC0005A538 /* CallError.swift */,
+				7BEED88F246D0C3D00387EAE /* CallInterface.swift */,
+				7BEED891246D0C6C00387EAE /* NativeCallInterface.swift */,
+				7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */,
 				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
 				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
@@ -3584,6 +3599,7 @@
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
+				7BE0E6572475062D00DCC0D3 /* Vibrator.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
@@ -3708,6 +3724,7 @@
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
+				7BEED890246D0C3D00387EAE /* CallInterface.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
 				DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */,
@@ -3956,6 +3973,7 @@
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,
 				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
+				7BBA2814246D10DE00787E61 /* MixinCallInterface.swift in Sources */,
 				DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */,
 				7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
@@ -4117,6 +4135,7 @@
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */,
+				7BD40331247823B90027B039 /* CallHandle.swift in Sources */,
 				DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
@@ -4156,6 +4175,7 @@
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */,
+				7BEED892246D0C6C00387EAE /* NativeCallInterface.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,

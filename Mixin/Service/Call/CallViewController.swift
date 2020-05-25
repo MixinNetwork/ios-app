@@ -20,7 +20,7 @@ class CallViewController: UIViewController {
     
     weak var manager: CallManager!
     
-    var style = Style.calling {
+    var style = Style.disconnecting {
         didSet {
             layout(for: style)
         }
@@ -28,10 +28,7 @@ class CallViewController: UIViewController {
     
     private let animationDuration: TimeInterval = 0.3
     
-    private var timer: Timer?
-    private var isOutgoing: Bool {
-        return manager.call?.isOutgoing ?? true
-    }
+    private weak var timer: Timer?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -54,11 +51,11 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
-        manager.completeCurrentCall(isUserInitiated: true)
+        manager.requestEndCall()
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        manager.acceptCurrentCall()
+        manager.requestAnswerCall()
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
@@ -76,7 +73,8 @@ class CallViewController: UIViewController {
 extension CallViewController {
     
     enum Style {
-        case calling
+        case incoming
+        case outgoing
         case connecting
         case connected
         case disconnecting
@@ -84,8 +82,10 @@ extension CallViewController {
     
     private var localizedStatus: String? {
         switch style {
-        case .calling:
-            return isOutgoing ? Localized.CALL_STATUS_CALLING : Localized.CALL_STATUS_BEING_CALLING
+        case .incoming:
+            return Localized.CALL_STATUS_BEING_CALLING
+        case .outgoing:
+            return Localized.CALL_STATUS_CALLING
         case .connecting:
             return Localized.CALL_STATUS_CONNECTING
         case .connected:
@@ -111,10 +111,15 @@ extension CallViewController {
             statusLabel.text = localizedStatus
         }
         switch style {
-        case .calling:
-            hangUpTitleLabel.text = isOutgoing ? Localized.CALL_FUNC_HANGUP : Localized.CALL_FUNC_DECLINE
+        case .incoming:
+            hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
-            setAcceptButtonHidden(isOutgoing)
+            setAcceptButtonHidden(false)
+            setConnectionButtonsEnabled(true)
+        case .outgoing:
+            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
+            setFunctionSwitchesHidden(true)
+            setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP

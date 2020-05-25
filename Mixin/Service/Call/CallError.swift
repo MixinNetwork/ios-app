@@ -1,6 +1,7 @@
 import Foundation
 
 enum CallError: Error {
+    
     case busy
     case invalidUUID(uuid: String)
     case invalidSdp(sdp: String?)
@@ -14,4 +15,20 @@ enum CallError: Error {
     case clientFailure
     case sdpConstruction(Error?)
     case sdpSerialization(Error?)
+    
+    case invalidHandle
+    
+    var alertContent: String? {
+        switch self {
+        case .busy:
+            return Localized.CALL_HINT_ON_ANOTHER_CALL
+        case .networkFailure:
+            return Localized.CALL_NO_NETWORK
+        case .microphonePermissionDenied:
+            return Localized.CALL_NO_MICROPHONE_PERMISSION
+        default:
+            return nil
+        }
+    }
+    
 }

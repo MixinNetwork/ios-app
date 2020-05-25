@@ -275,6 +275,14 @@ public enum MessageCategory: String {
         .SIGNAL_DATA, .PLAIN_DATA
     ]
     
+    public static let endCallCategories: [MessageCategory] = [
+        .WEBRTC_AUDIO_END,
+        .WEBRTC_AUDIO_BUSY,
+        .WEBRTC_AUDIO_CANCEL,
+        .WEBRTC_AUDIO_FAILED,
+        .WEBRTC_AUDIO_DECLINE
+    ]
+    
 }
 
 public enum MessageStatus: String, Codable {

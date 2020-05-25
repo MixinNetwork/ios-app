@@ -922,7 +922,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: ownerUser)
+        CallManager.shared.requestStartCall(opponentUser: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {

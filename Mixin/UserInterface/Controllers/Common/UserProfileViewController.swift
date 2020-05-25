@@ -425,7 +425,7 @@ extension UserProfileViewController {
     @objc func callWithMixin() {
         let user = self.user!
         dismiss(animated: true) {
-            CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: user)
+            CallManager.shared.requestStartCall(opponentUser: user)
         }
     }
 

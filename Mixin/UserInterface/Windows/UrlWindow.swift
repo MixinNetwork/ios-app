@@ -55,7 +55,7 @@ class UrlWindow {
         guard let amount = items.first(where: { $0.name == "amount" })?.value, amount.isNumeric else {
             return false
         }
-        guard let userId = items.first(where: { $0.name == "user" })?.value, UUID(uuidString: userId) != nil else {
+        guard let recipientId = items.first(where: { $0.name == "recipient" })?.value, UUID(uuidString: recipientId) != nil else {
             return false
         }
         guard let assetId = items.first(where: { $0.name == "asset" })?.value, UUID(uuidString: assetId) != nil else {
@@ -71,9 +71,9 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            var userItem = UserDAO.shared.getUser(userId: userId)
+            var userItem = UserDAO.shared.getUser(userId: recipientId)
             if userItem == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
+                switch UserAPI.shared.showUser(userId: recipientId) {
                 case let .success(response):
                     userItem = UserItem.createUser(from: response)
                     UserDAO.shared.updateUsers(users: [response])

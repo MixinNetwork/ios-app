@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation.AVFAudio
 import MixinServices
 
 class CallViewController: UIViewController {
@@ -44,6 +45,10 @@ class CallViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(callServiceMutenessDidChange),
                                                name: CallService.mutenessDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(audioSessionRouteChange(_:)),
+                                               name: AVAudioSession.routeChangeNotification,
                                                object: nil)
     }
     
@@ -113,6 +118,15 @@ extension CallViewController {
             statusLabel.text = mediaDurationFormatter.string(from: duration)
         } else {
             statusLabel.text = nil
+        }
+    }
+    
+    @objc private func audioSessionRouteChange(_ notification: Notification) {
+        DispatchQueue.main.async {
+            let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
+                .outputs.map(\.portType)
+                .contains(.builtInSpeaker)
+            self.speakerButton.isSelected = routeContainsSpeaker
         }
     }
     

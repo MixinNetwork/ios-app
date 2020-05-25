@@ -31,7 +31,8 @@ class CallService {
                 return
             }
             queue.async {
-                try? AVAudioSession.sharedInstance().overrideOutputAudioPort(self.port)
+                let port: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
+                try? AVAudioSession.sharedInstance().overrideOutputAudioPort(port)
             }
         }
     }
@@ -57,19 +58,10 @@ class CallService {
         }
     }
     
-    private var port: AVAudioSession.PortOverride {
-        usesSpeaker ? .speaker : .none
-    }
-    
     init() {
         RTCAudioSession.sharedInstance().useManualAudio = true
         rtcClient.delegate = self
         ringtonePlayer?.numberOfLoops = -1
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChange(_:)), name: AVAudioSession.routeChangeNotification, object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     func showCallingInterface(user: UserItem, style: CallViewController.Style) {
@@ -551,6 +543,17 @@ extension CallService: WebRTCClientDelegate {
             DispatchQueue.main.sync {
                 self.viewController?.style = .connected
             }
+            
+            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+            let session = RTCAudioSession.sharedInstance()
+            session.lockForConfiguration()
+            do {
+                try session.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .allowBluetooth)
+                try session.setMode(AVAudioSession.Mode.default.rawValue)
+            } catch {
+                reporter.report(error: error)
+            }
+            session.unlockForConfiguration()
         }
     }
     
@@ -582,13 +585,6 @@ extension CallService {
             self.call = nil
             self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
         }
-    }
-    
-    @objc private func audioSessionRouteChange(_ notification: Notification) {
-        guard call != nil else {
-            return
-        }
-        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(port)
     }
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {

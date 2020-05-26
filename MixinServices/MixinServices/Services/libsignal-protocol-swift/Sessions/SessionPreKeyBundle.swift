@@ -24,7 +24,7 @@ public struct SessionPreKeyBundle {
     let preKeyId: UInt32
 
     /// The pre key public data
-    let preKey: Data
+    let preKey: Data?
 
     /// The signed pre key id
     let signedPreKeyId: UInt32
@@ -52,7 +52,7 @@ public struct SessionPreKeyBundle {
     public init(registrationId: UInt32,
                 deviceId: Int32,
                 preKeyId: UInt32,
-                preKey: Data,
+                preKey: Data?,
                 signedPreKeyId: UInt32,
                 signedPreKey: Data,
                 signature: Data,
@@ -71,8 +71,12 @@ public struct SessionPreKeyBundle {
     func pointer() throws -> OpaquePointer {
 
         // Convert pre key
-        let preKeyPtr = try preKey.publicKeyPointer()
-        defer { signal_type_unref(preKeyPtr) }
+        let preKeyPtr = try preKey?.publicKeyPointer()
+        defer {
+            if preKeyPtr != nil {
+                signal_type_unref(preKeyPtr)
+            }
+        }
 
         // Convert signed pre key
         let signedPreKeyPtr = try signedPreKey.publicKeyPointer()

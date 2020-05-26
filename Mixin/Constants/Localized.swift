@@ -493,9 +493,6 @@ public class Localized {
     public static func SETTING_BACKUP_LAST(time: String, size: String) -> String {
         return String(format: LocalizedString("setting_backup_last", comment: "Last backup at %@, total size %@"), time, size)
     }
-    public static func SETTING_BACKUP_PROGRESS(progress: String) -> String {
-        return String(format: LocalizedString("setting_backup_progress", comment: "Uploading %@"), progress)
-    }
     public static func SETTING_RESTORE_PROGRESS(progress: String) -> String {
         return String(format: LocalizedString("setting_restore_progress", comment: "Restoring %@"), progress)
     }

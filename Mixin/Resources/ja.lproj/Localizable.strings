@@ -102,19 +102,30 @@
 "clock_skew_tips" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 
 // PIN Logs
-"pin_log_verification" = "認証";
-"pin_log_raw_transfer" = "Mixinのアドレスへ送金する";
-"pin_log_user_transfer" = "ユーザーまたはボットに送金する";
-"pin_log_withdrawal" = "出金";
-"pin_log_add_address" = "アドレスを追加";
-"pin_log_delete_address" = "アドレスを削除";
-"pin_log_add_emergency" = "緊急連絡先を追加";
-"pin_log_delete_emergency" = "緊急連絡先を削除";
-"pin_log_read_emergency" = "緊急連絡先を確認する";
-"pin_log_update_phone" = "電話番号を変更する";
-"pin_log_update_pin" = "PINを変更する";
-"pin_log_multisig_sign" = "マルチシグトランザクション";
-"pin_log_multisig_unlock" = "マルチシグトランザクションを取り消す";
+"log_category_pin_incorrect" = "PIN incorrect";
+"log_category_login" = "Sign in";
+"log_category_emergency" = "Emergency contact";
+"log_category_pin_change" = "PIN change";
+"log_category_phone_change" = "Phone number change";
+"log_pin_verification" = "認証";
+"log_pin_raw_transfer" = "Mixinのアドレスへ送金する";
+"log_pin_user_transfer" = "ユーザーまたはボットに送金する";
+"log_pin_withdrawal" = "出金";
+"log_pin_add_address" = "アドレスを追加";
+"log_pin_delete_address" = "アドレスを削除";
+"log_pin_add_emergency" = "緊急連絡先を追加";
+"log_pin_delete_emergency" = "緊急連絡先を削除";
+"log_pin_read_emergency" = "緊急連絡先を確認する";
+"log_pin_update_phone" = "電話番号を変更する";
+"log_pin_update_pin" = "PINを変更する";
+"log_pin_multisig_sign" = "マルチシグトランザクション";
+"log_pin_multisig_unlock" = "マルチシグトランザクションを取り消す";
+"log_pin_modification" = "Your PIN has been changed";
+"log_emergency_modification" = "Your emergency contact has been changed";
+"log_phone_modification" = "Your phone number has been changed";
+"log_login_phone" = "Sign in with phone number";
+"log_login_emergency" = "Sign in with emergency contact";
+"log_login_desktop" = "Your desktop is already logged in";
 
 // Login
 "navigation_title_select_country" = "国と地域を選択する";
@@ -179,7 +190,7 @@
 "contact_qr_code_save" = "画像を保存する";
 
 "button_title_search" = "検索";
-"placeholder_Mixin_id_or_phone" = "Mixin ID, 電話番号";
+"placeholder_mixin_id_or_phone" = "Mixin ID, 電話番号";
 "placeholder_new_name" = "新しい名前";
 "navigation_title_add_people" = "追加する";
 
@@ -246,6 +257,7 @@
 "chat_message_call_duration" = "通話時間 %@";
 "chat_message_recalled" = "このメッセージは削除されました";
 "chat_message_recalled_by_me" = "メッセージを削除しました";
+"chat_message_not_found" = "Message not found";
 "chat_cell_title_encryption" = "この会話のメッセージはエンドツーエンドで暗号化されています。クリックして詳細を見る";
 "chat_cell_title_unknown_category" = "このメッセージはサポートされていません。アプリを最新版にアップデートしてください。";
 "chat_forward_title" = "転送";
@@ -378,6 +390,7 @@
 "group_participant_menu_info" = "詳細";
 "group_participant_menu_send" = "メッセージを送信";
 "group_participant_menu_admin" = "グループ管理者を設定する";
+"group_participant_menu_dismiss_admin" = "Dismiss as Admin";
 "group_participant_menu_remove" = "グループから退会させる";
 "group_invite_hint" = "Mixinユーザーはこのリンクからグループに参加できます。 知り合い以外と共有しないでください。";
 "group_join_fail_title" = "グループに参加できません";
@@ -541,6 +554,7 @@
 "transfer_paid" = "このリンクを使ってすでに支払いが行われているため別のリンクから支払いをしてください";
 "pay_transfer_title" = "%@へ送金";
 "pay_withdrawal_title" = "%@へ出金";
+"pay_withdrawal_memo" = "Amount %@ %@\nFee %@ %@";
 "transfer_by_pin" = "PINを使って支払う";
 "transfer_use_face" = "Face IDで支払う";
 "transfer_use_touch" = "Touch IDで支払う";
@@ -693,7 +707,7 @@
 "setting_desktop_log_out" = "デスクトップ版からログアウト";
 "setting_authorizations" = "許可";
 "setting_no_authorizations" = "許可されていません";
-"setting_deauthorize_confirmation" = "許可を解除しますか?";
+"setting_revoke_confirmation" = "許可を解除しますか?";
 "setting_storage_usage" = "ストレージ使用";
 "setting_storage_usage_clear" = "%@のメッセージをクリアしますか (%@)?";
 "setting_header_message_source" = "メッセージの送信が可能な相手";

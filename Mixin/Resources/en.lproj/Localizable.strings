@@ -101,7 +101,7 @@
 "clock_skew_title" = "System time is unusual";
 "clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
 
-// PIN Logs
+// Logs
 "log_category_pin_incorrect" = "PIN incorrect";
 "log_category_login" = "Sign in";
 "log_category_emergency" = "Emergency contact";

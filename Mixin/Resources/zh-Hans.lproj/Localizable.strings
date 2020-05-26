@@ -315,8 +315,6 @@
 "chat_app_reception_title" = "点击按钮使用机器人";
 "chat_app_reception_button_home" = "打开主页";
 "chat_app_reception_button_hi" = "打招呼";
-"chat_app_card_suspicious_link" = "可疑链接";
-"chat_app_card_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
 "chat_location_send_current" = "发送当前位置";
 "chat_location_accuracy" = "精确到 %@";
 "chat_location_send_user_picked" = "发送这个位置";
@@ -754,7 +752,6 @@
 "setting_backup_preparing_progress" = "备份中...(%@)";
 "setting_backup_uploading" = "上传中...";
 "setting_backup_uploading_progress" = "上传中: %@ / %@ (%@)";
-"setting_backup_progress" = "正在备份 %@";
 "setting_restore_progress" = "正在恢复 %@";
 "setting_auto_download_never" = "关闭";
 "setting_auto_download_wifi" = "WLAN";

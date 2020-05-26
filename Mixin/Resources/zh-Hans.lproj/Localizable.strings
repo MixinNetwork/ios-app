@@ -120,12 +120,12 @@
 "log_pin_update_pin" = "修改密码";
 "log_pin_multisig_sign" = "签名多重签名交易";
 "log_pin_multisig_unlock" = "撤销多重签名交易";
-"log_pin_modification" = "你的密码已修改";
-"log_phone_modification" = "你的手机号已变更";
-"log_emergency_modification" = "你的紧急联系人已修改";
+"log_pin_modification" = "修改密码";
+"log_phone_modification" = "更换手机号";
+"log_emergency_modification" = "修改紧急联系人";
 "log_login_phone" = "通过手机号登录";
 "log_login_emergency" = "通过紧急联系人登录";
-"log_login_desktop" = "你的桌面端已登录";
+"log_login_desktop" = "登录桌面端";
 
 // Login
 "navigation_title_select_country" = "选择一个国家或地区";

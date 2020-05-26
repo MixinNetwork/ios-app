@@ -38,7 +38,7 @@
 "action_share_to" = "共有する";
 "action_copy" = "コピー";
 "action_authorize" = "許可する";
-"action_deauthorize" = "許可しない";
+"action_revoke" = "許可しない";
 "action_delete_me" = "あなたを削除";
 "action_delete_everyone" = "全員を削除";
 "action_learn_more" = "もっとみる";
@@ -253,7 +253,7 @@
 "chat_forward_contacts" = "連絡先";
 "chat_forward_apps" = "ボット";
 "chat_decryption_failed_hint" = "%@が参加し暗号化セッションが開始するまで待機しています...";
-"chat_decryption_failed_link" = "もっと詳しく";
+"chat_sentence_learn_more" = "もっと詳しく";
 "chat_send_photo_failed" = "画像を送信できませんでした";
 "chat_send_file_failed" = "ファイルを送信できませんでした";
 "chat_send_video_failed" = "動画を送信できませんでした";
@@ -405,8 +405,6 @@
 "wallet_password_verify_title" = "変更前のPIN";
 "wallet_password_too_many_requests" = "入力回数が5回に達したため24時間後にもう一度試してください";
 "wallet_change_password" = "PINを変更";
-"wallet_pin_logs" = "PINが間違っています";
-"wallet_pin_logs_empty" = "ログがありません";
 "wallet_change_password_success" = "PINが変更されました";
 "wallet_set_password_success" = "PINが設定されました";
 "wallet_snapshot_transfer_from" = "From";
@@ -686,6 +684,8 @@
 "setting_blocked" = "ブロック中のユーザー";
 "setting_blocked_empty" = "ブロックしているユーザーはいません";
 "setting_blocked_summary" = "ブロックされたユーザーはあなたを追加したりチャットに招待することができません";
+"setting_logs" = "ログ";
+"setting_logs_empty" = "ログがありません";
 "setting_conversation" = "会話";
 "setting_desktop" = "Mixinメッセンジャーデスクトップ版";
 "setting_desktop_last_active" = "最後のアクティビティー %@";

@@ -188,7 +188,6 @@ extension ShareRecipientViewController {
 
         let supportedTextUTIs = [kUTTypePlainText as String,
                                  kUTTypeText as String]
-        let supportedImageUTI = kUTTypeImage as String
         let supportedPostUTIs = [kUTTypeSourceCode as String,
                                  kUTTypeScript as String,
                                  "dyn.age80s52"]    //golang
@@ -266,10 +265,27 @@ extension ShareRecipientViewController {
                             }
                             weakSelf.sharePostMessage(url: url, conversation: conversation)
                         } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
-                            guard let url = item as? URL else {
+                            var imageData: Data?
+                            let inUTI = typeIdentifier as CFString
+
+                            if let url = item as? URL {
+                                guard let image = UIImage(contentsOfFile: url.path) else {
+                                    return
+                                }
+                                if UTTypeConformsTo(inUTI, kUTTypeGIF) {
+                                    imageData = try? Data(contentsOf: url)
+                                } else {
+                                    imageData = image.scaleForUpload().jpegData(compressionQuality: 0.75)
+                                }
+                            } else if let image = item as? UIImage {
+                                imageData = image.scaleForUpload().jpegData(compressionQuality: 0.75)
+                            }
+
+                            guard let data = imageData else {
                                 return
                             }
-                            weakSelf.sharePhotoMessage(url: url, conversation: conversation, typeIdentifier: typeIdentifier as CFString)
+
+                            weakSelf.sharePhotoMessage(imageData: data, conversation: conversation, typeIdentifier: inUTI)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             guard let content = item as? String else {
                                 return
@@ -318,27 +334,20 @@ extension ShareRecipientViewController {
         sendMessage(message: message, conversation: conversation)
     }
 
-    private func sharePhotoMessage(url: URL, conversation: RecipientSearchItem, typeIdentifier: CFString) {
-        guard let image = UIImage(contentsOfFile: url.path) else {
-            return
-        }
-
+    private func sharePhotoMessage(imageData: Data, conversation: RecipientSearchItem, typeIdentifier: CFString) {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_IMAGE : .PLAIN_IMAGE
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         let extensionName: String
-        let imageData: Data?
 
         if UTTypeConformsTo(typeIdentifier, kUTTypeGIF) {
             extensionName = ExtensionName.gif.rawValue
-            imageData = try? Data(contentsOf: url)
             message.mediaMimeType = "image/gif"
         } else {
             extensionName = ExtensionName.jpeg.rawValue
-            imageData = image.scaleForUpload().jpegData(compressionQuality: 0.75)
             message.mediaMimeType = "image/jpeg"
         }
 
-        guard let data = imageData, let targetImage = UIImage(data: data) else {
+        guard let targetImage = UIImage(data: imageData) else {
             return
         }
 
@@ -347,7 +356,7 @@ extension ShareRecipientViewController {
         message.thumbImage = targetImage.base64Thumbnail()
 
         do {
-            try data.write(to: url)
+            try imageData.write(to: url)
         } catch {
             reporter.report(error: error)
             return

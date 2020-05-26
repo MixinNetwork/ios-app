@@ -90,17 +90,17 @@ class LogViewController: UIViewController {
             return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_sign())
         case "MULTISIG_UNLOCK":
             return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_unlock())
-        case "PIN_MODIFICATION":
+        case "ACTIVITY_PIN_MODIFICATION":
             return (R.string.localizable.log_category_pin_change(), R.string.localizable.log_pin_modification())
-        case "EMERGENCY_CONTACT_MODIFICATION":
+        case "ACTIVITY_EMERGENCY_CONTACT_MODIFICATION":
             return (R.string.localizable.log_category_emergency(), R.string.localizable.log_emergency_modification())
-        case "PHONE_MODIFICATION":
+        case "ACTIVITY_PHONE_MODIFICATION":
             return (R.string.localizable.log_category_phone_change(), R.string.localizable.log_phone_modification())
-        case "LOGIN_BY_PHONE":
+        case "ACTIVITY_LOGIN_BY_PHONE":
             return (R.string.localizable.log_category_login(), R.string.localizable.log_login_phone())
-        case "LOGIN_BY_EMERGENCY_CONTACT":
+        case "ACTIVITY_LOGIN_BY_EMERGENCY_CONTACT":
             return (R.string.localizable.log_category_login(), R.string.localizable.log_login_emergency())
-        case "LOGIN_DESKTOP":
+        case "ACTIVITY_LOGIN_FROM_DESKTOP":
             return (R.string.localizable.log_category_login(), R.string.localizable.log_login_desktop())
         default:
             return (code, code)

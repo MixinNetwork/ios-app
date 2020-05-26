@@ -102,20 +102,30 @@
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // PIN Logs
-"pin_log_verification" = "验证密码";
-"pin_log_raw_transfer" = "给主网地址转账";
-"pin_log_user_transfer" = "给用户或机器人转账";
-"pin_log_withdrawal" = "提现";
-"pin_log_add_address" = "添加地址";
-"pin_log_delete_address" = "删除地址";
-"pin_log_add_emergency" = "添加紧急联系人";
-"pin_log_delete_emergency" = "删除紧急联系人";
-"pin_log_read_emergency" = "查看紧急联系人";
-"pin_log_update_phone" = "修改手机号码";
-"pin_log_update_pin" = "修改密码";
-"pin_log_multisig_sign" = "签名多重签名交易";
-"pin_log_multisig_unlock" = "撤销多重签名交易";
-
+"log_category_pin_incorrect" = "密码错误";
+"log_category_login" = "登录";
+"log_category_emergency" = "紧急联系人";
+"log_category_pin_change" = "修改密码";
+"log_category_phone_change" = "修改手机号";
+"log_pin_verification" = "验证密码";
+"log_pin_raw_transfer" = "给主网地址转账";
+"log_pin_user_transfer" = "给用户或机器人转账";
+"log_pin_withdrawal" = "提现";
+"log_pin_add_address" = "添加地址";
+"log_pin_delete_address" = "删除地址";
+"log_pin_add_emergency" = "添加紧急联系人";
+"log_pin_delete_emergency" = "删除紧急联系人";
+"log_pin_read_emergency" = "查看紧急联系人";
+"log_pin_update_phone" = "修改手机号码";
+"log_pin_update_pin" = "修改密码";
+"log_pin_multisig_sign" = "签名多重签名交易";
+"log_pin_multisig_unlock" = "撤销多重签名交易";
+"log_pin_modification" = "修改密码";
+"log_phone_modification" = "更换手机号";
+"log_emergency_modification" = "修改紧急联系人";
+"log_login_phone" = "通过手机号登录";
+"log_login_emergency" = "通过紧急联系人登录";
+"log_login_desktop" = "登录桌面端";
 
 // Login
 "navigation_title_select_country" = "选择一个国家或地区";
@@ -411,8 +421,6 @@
 "wallet_password_verify_title" = "验证旧的密码";
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
 "wallet_change_password" = "修改密码";
-"wallet_pin_logs" = "密码错误日志";
-"wallet_pin_logs_empty" = "没有日志";
 "wallet_change_password_success" = "修改密码成功";
 "wallet_set_password_success" = "设置密码成功";
 "wallet_snapshot_transfer_from" = "转账来自";
@@ -686,6 +694,8 @@
 "setting_privacy_and_security" = "隐私和安全";
 "setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
+"setting_logs" = "日志";
+"setting_logs_empty" = "没有日志";
 "setting_data_and_storage" = "数据和存储";
 "setting_blocked_user_count_suffix" = " 联系人";
 "setting_blocked_user_count_none" = "无";

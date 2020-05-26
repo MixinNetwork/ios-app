@@ -626,7 +626,7 @@
 		DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */; };
 		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
 		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
-		DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* PINLogViewController.swift */; };
+		DFB19002233219650021CAF3 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* LogViewController.swift */; };
 		DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19005233220290021CAF3 /* PINLogCell.swift */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
@@ -649,7 +649,6 @@
 		DFC0ECE223BB60DE0091E7AC /* EmergencyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */; };
 		DFC0ECE323BB60DE0091E7AC /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */; };
 		DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */; };
-		DFC0ECE523BB60DE0091E7AC /* PINLogResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */; };
 		DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */; };
 		DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */; };
 		DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */; };
@@ -673,6 +672,7 @@
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
+		DFCFA858247656CC00581312 /* LogResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCFA857247656CC00581312 /* LogResponse.swift */; };
 		DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */; };
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
 		DFD1FBC522FD809700C570D4 /* PhoneContactsSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */; };
@@ -1456,7 +1456,7 @@
 		DFB18FFB2330E71E0021CAF3 /* AnnouncementView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementView.xib; sourceTree = "<group>"; };
 		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
-		DFB19001233219650021CAF3 /* PINLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogViewController.swift; sourceTree = "<group>"; };
+		DFB19001233219650021CAF3 /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		DFB19005233220290021CAF3 /* PINLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogCell.swift; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
@@ -1479,7 +1479,6 @@
 		DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmergencyResponse.swift; sourceTree = "<group>"; };
 		DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationResponse.swift; sourceTree = "<group>"; };
-		DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINLogResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
@@ -1503,6 +1502,7 @@
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
+		DFCFA857247656CC00581312 /* LogResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogResponse.swift; sourceTree = "<group>"; };
 		DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentUploadJob.swift; sourceTree = "<group>"; };
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
 		DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactsSettingViewController.swift; sourceTree = "<group>"; };
@@ -2712,7 +2712,6 @@
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
-				DFB19001233219650021CAF3 /* PINLogViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -2779,7 +2778,7 @@
 				DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */,
 				DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */,
 				DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */,
-				DFC0ECDB23BB60DD0091E7AC /* PINLogResponse.swift */,
+				DFCFA857247656CC00581312 /* LogResponse.swift */,
 				DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */,
 				DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */,
 				DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */,
@@ -2901,6 +2900,7 @@
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
+				DFB19001233219650021CAF3 /* LogViewController.swift */,
 				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
 				7BB78729245149040057B4ED /* Emergency Contact */,
 				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
@@ -3602,7 +3602,6 @@
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */,
-				DFC0ECE523BB60DE0091E7AC /* PINLogResponse.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
@@ -3830,7 +3829,7 @@
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
-				DFB19002233219650021CAF3 /* PINLogViewController.swift in Sources */,
+				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
 				DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
@@ -3861,6 +3860,7 @@
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
 				7B33000C223A8CB900A1016E /* LoneBackButtonNavigationController.swift in Sources */,
 				7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */,
+				DFCFA858247656CC00581312 /* LogResponse.swift in Sources */,
 				7B09E55E1FD15BAA002E45D3 /* TransferMessageViewModel.swift in Sources */,
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,

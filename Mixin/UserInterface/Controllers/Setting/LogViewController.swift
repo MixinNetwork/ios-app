@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class PINLogViewController: UIViewController {
+class LogViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
@@ -10,13 +10,13 @@ class PINLogViewController: UIViewController {
     @IBOutlet weak var hideActivityIndicatorConstraint: NSLayoutConstraint!
     
     private let loadNextPageThreshold = 20
-    private var logs = [PINLogResponse]()
+    private var logs = [LogResponse]()
     private var isLoading = false
     private var isPageEnded = false
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.wallet.pin_logs()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.wallet_pin_logs())
+        let vc = R.storyboard.wallet.logs()!
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_logs())
         return container
     }
     
@@ -33,7 +33,7 @@ class PINLogViewController: UIViewController {
             return
         }
         isLoading = true
-        AccountAPI.shared.pinLogs(offset: logs.last?.createdAt) { [weak self](result) in
+        AccountAPI.shared.logs(offset: logs.last?.createdAt) { [weak self](result) in
             guard let self = self else {
                 return
             }
@@ -46,7 +46,7 @@ class PINLogViewController: UIViewController {
                 self.logs += logs
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: self.logs.count,
-                                          text: R.string.localizable.wallet_pin_logs_empty(),
+                                          text: R.string.localizable.setting_logs_empty(),
                                           photo: R.image.emptyIndicator.ic_data()!)
                 self.view.layoutIfNeeded()
             case let .failure(error):
@@ -62,42 +62,54 @@ class PINLogViewController: UIViewController {
         }
     }
     
-    private func getDescription(by code: String) -> String {
+    private func getDescription(by code: String) -> (String, String) {
         switch code {
         case "VERIFICATION":
-            return R.string.localizable.pin_log_verification()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_verification())
         case "RAW_TRANSFER":
-            return R.string.localizable.pin_log_raw_transfer()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_raw_transfer())
         case "USER_TRANSFER":
-            return R.string.localizable.pin_log_user_transfer()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_user_transfer())
         case "WITHDRAWAL":
-            return R.string.localizable.pin_log_withdrawal()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_withdrawal())
         case "ADD_ADDRESS":
-            return R.string.localizable.pin_log_add_address()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_add_address())
         case "DELETE_ADDRESS":
-            return R.string.localizable.pin_log_delete_address()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_delete_address())
         case "ADD_EMERGENCY":
-            return R.string.localizable.pin_log_add_emergency()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_add_emergency())
         case "DELETE_EMERGENCY":
-            return R.string.localizable.pin_log_delete_emergency()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_delete_emergency())
         case "READ_EMERGENCY":
-            return R.string.localizable.pin_log_read_emergency()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_read_emergency())
         case "UPDATE_PHONE":
-            return R.string.localizable.pin_log_update_phone()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_update_phone())
         case "UPDATE_PIN":
-            return R.string.localizable.pin_log_update_pin()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_update_pin())
         case "MULTISIG_SIGN":
-            return R.string.localizable.pin_log_multisig_sign()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_sign())
         case "MULTISIG_UNLOCK":
-            return R.string.localizable.pin_log_multisig_unlock()
+            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_unlock())
+        case "ACTIVITY_PIN_MODIFICATION":
+            return (R.string.localizable.log_category_pin_change(), R.string.localizable.log_pin_modification())
+        case "ACTIVITY_EMERGENCY_CONTACT_MODIFICATION":
+            return (R.string.localizable.log_category_emergency(), R.string.localizable.log_emergency_modification())
+        case "ACTIVITY_PHONE_MODIFICATION":
+            return (R.string.localizable.log_category_phone_change(), R.string.localizable.log_phone_modification())
+        case "ACTIVITY_LOGIN_BY_PHONE":
+            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_phone())
+        case "ACTIVITY_LOGIN_BY_EMERGENCY_CONTACT":
+            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_emergency())
+        case "ACTIVITY_LOGIN_FROM_DESKTOP":
+            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_desktop())
         default:
-            return code
+            return (code, code)
         }
     }
     
 }
 
-extension PINLogViewController: UITableViewDataSource {
+extension LogViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -110,7 +122,7 @@ extension PINLogViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.pin_logs, for: indexPath)!
         let log = logs[indexPath.row]
-        cell.titleLabel.text = getDescription(by: log.code)
+        (cell.titleLabel.text, cell.descLabel.text) = getDescription(by: log.code)
         cell.ipLabel.text = log.ipAddress
         cell.timeLabel.text = log.createdAt.toUTCDate().logDatetime()
         return cell
@@ -118,7 +130,7 @@ extension PINLogViewController: UITableViewDataSource {
     
 }
 
-extension PINLogViewController: UITableViewDelegate {
+extension LogViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard logs.count - indexPath.row < loadNextPageThreshold, !isPageEnded else {

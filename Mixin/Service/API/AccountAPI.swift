@@ -20,13 +20,16 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
-		static func pinLogs(offset: String? = nil, limit: Int? = nil) -> String {
-            var url = "pin_logs"
+		static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil) -> String {
+            var url = "logs"
             if let offset = offset {
                 url += "?offset=\(offset)"
             }
+            if let category = category {
+                url += (url.contains("?") ? "&" : "?") + "category=\(category)"
+            }
             if let limit = limit {
-                url += url.contains("?") ? "&limit=\(limit)" : "?limit=\(limit)"
+                url += (url.contains("?") ? "&" : "?") + "limit=\(limit)"
             }
             return url
         }
@@ -124,8 +127,8 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
 
-    func pinLogs(offset: String? = nil, limit: Int? = nil, completion: @escaping (BaseAPI.Result<[PINLogResponse]>) -> Void) {
-		request(method: .get, url: url.pinLogs(offset: offset, limit: limit), completion: completion)
+    func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (BaseAPI.Result<[LogResponse]>) -> Void) {
+        request(method: .get, url: url.logs(offset: offset, category: category, limit: limit), completion: completion)
     }
 
     func logoutSession(sessionId: String, completion: @escaping (BaseAPI.Result<Empty>) -> Void) {

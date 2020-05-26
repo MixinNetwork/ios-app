@@ -6,8 +6,7 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let pinIntervals: [Double] = [60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24]
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.wallet_pin_logs(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure)
         ])
     ])
     
@@ -123,13 +122,8 @@ extension PinSettingsViewController: UITableViewDelegate {
                 alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
                 present(alert, animated: true, completion: nil)
             }
-        } else {
-            let vc: UIViewController
-            if indexPath.row == 0 {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
-            } else {
-                vc = PINLogViewController.instance()
-            }
+        } else if indexPath.row == 0 {
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

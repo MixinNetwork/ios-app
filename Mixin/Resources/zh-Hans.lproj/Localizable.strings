@@ -257,6 +257,7 @@
 "chat_message_call_duration" = "通话时长 %@";
 "chat_message_recalled" = "此消息已撤回";
 "chat_message_recalled_by_me" = "你撤回了一条消息";
+"chat_message_not_found" = "找不到该消息";
 "chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
 "chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
 "chat_forward_title" = "转发";
@@ -264,7 +265,7 @@
 "chat_forward_contacts" = "联系人";
 "chat_forward_apps" = "机器人";
 "chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
-"chat_decryption_failed_link" = "了解更多。";
+"chat_sentence_learn_more" = "了解更多。";
 "chat_send_photo_failed" = "发送图片失败，请稍后重试";
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_send_video_failed" = "发送视频失败，请稍后重试";
@@ -391,6 +392,7 @@
 "group_participant_menu_info" = "信息";
 "group_participant_menu_send" = "发送消息";
 "group_participant_menu_admin" = "设为管理员";
+"group_participant_menu_dismiss_admin" = "撤销管理员";
 "group_participant_menu_remove" = "从群组中移除";
 "group_invite_hint" = "Mixin 使用者可使用此链接加入这个群组，请只跟你信任的人分享链接。";
 "group_join_fail_title" = "无法加入群组";
@@ -555,6 +557,7 @@
 "transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_transfer_title" = "转账给%@";
 "pay_withdrawal_title" = "提现到%@";
+"pay_withdrawal_memo" = "数量 %@ %@\n手续费 %@ %@";
 "transfer_by_pin" = "通过密码支付";
 "transfer_use_face" = "使用面容支付";
 "transfer_use_touch" = "使用指纹支付";

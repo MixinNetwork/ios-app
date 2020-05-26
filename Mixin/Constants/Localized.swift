@@ -178,7 +178,6 @@ public class Localized {
     public static func CHAT_DECRYPTION_FAILED_HINT(username: String) -> String {
         return String(format: LocalizedString("chat_decryption_failed_hint", comment: "Waiting for %@ to get online and establish an encrypted session. "), username)
     }
-    public static let CHAT_DECRYPTION_FAILED_LINK = LocalizedString("chat_decryption_failed_link", comment: "learn more.")
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
     public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
@@ -247,7 +246,6 @@ public class Localized {
     public static let GROUP_ROLE_ADMIN = LocalizedString("group_role_admin", comment: "Admin")
     public static let GROUP_PARTICIPANT_MENU_INFO = LocalizedString("group_participant_menu_info", comment: "Info")
     public static let GROUP_PARTICIPANT_MENU_SEND = LocalizedString("group_participant_menu_send", comment: "Send Message")
-    public static let GROUP_PARTICIPANT_MENU_ADMIN = LocalizedString("group_participant_menu_admin", comment: "Make Group Admin")
     public static let GROUP_PARTICIPANT_MENU_REMOVE = LocalizedString("group_participant_menu_remove", comment: "Remove from Group")
     public static let GROUP_JOIN_FAIL_TITLE = LocalizedString("group_join_fail_title", comment: "Couldn't Join Group")
     public static let GROUP_JOIN_FAIL_SUMMARY = LocalizedString("group_join_fail_summary", comment: "This invite link doesn't match any Mixin groups.")

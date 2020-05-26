@@ -8,6 +8,7 @@ extension URL {
     static let privacy = URL(string: "https://mixin.one/pages/privacy")!
     static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!
     static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
+    static let unknownCategory = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360043776071")!
     
     func getKeyVals() -> Dictionary<String, String>? {
         var results = [String: String]()

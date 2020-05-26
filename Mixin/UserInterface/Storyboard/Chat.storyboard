@@ -1062,7 +1062,7 @@
                         <viewLayoutGuide key="safeArea" id="4KM-0w-wtB"/>
                     </view>
                     <connections>
-                        <outlet property="stickerImageView" destination="QN5-aJ-aoA" id="rQJ-SU-r9T"/>
+                        <outlet property="previewImageView" destination="QN5-aJ-aoA" id="rQJ-SU-r9T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PBM-aj-DFX" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -465,7 +465,7 @@ public final class MessageDAO {
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
         
-        if ["_TEXT", "_POST", "_LOCATION"].contains(where: category.hasSuffix(_:)) {
+        if status == MessageStatus.UNKNOWN.rawValue || ["_TEXT", "_POST", "_LOCATION"].contains(where: category.hasSuffix(_:)) {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteContent, MixinDatabase.NullValue()))

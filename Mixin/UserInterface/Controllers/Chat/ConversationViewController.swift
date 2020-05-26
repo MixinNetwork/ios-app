@@ -1081,7 +1081,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                     }
                 })
             } else {
-                navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
+                let vc = StickerAddViewController.instance(source: .message(message))
+                navigationController?.pushViewController(vc, animated: true)
             }
         case .report:
             report(conversationId: conversationId, shareFile: false, message: message)

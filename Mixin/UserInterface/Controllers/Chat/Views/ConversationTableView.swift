@@ -169,6 +169,8 @@ class ConversationTableView: UITableView {
     func dequeueReusableCell(withMessage message: MessageItem, for indexPath: IndexPath) -> UITableViewCell {
         if message.status == MessageStatus.FAILED.rawValue {
             return dequeueReusableCell(withReuseId: .text, for: indexPath)
+        } else if message.status == MessageStatus.UNKNOWN.rawValue {
+            return dequeueReusableCell(withReuseId: .unknown, for: indexPath)
         } else {
             return dequeueReusableCell(withReuseId: ReuseId(category: message.category), for: indexPath)
         }

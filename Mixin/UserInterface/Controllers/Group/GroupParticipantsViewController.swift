@@ -70,10 +70,16 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
             self.sendMessage(to: user)
         }))
         
-        if myRole == ParticipantRole.OWNER.rawValue && user.role.isEmpty {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { (action) in
-                self.makeAdmin(userId: user.userId)
-            }))
+        if myRole == ParticipantRole.OWNER.rawValue {
+            if user.role.isEmpty {
+                alc.addAction(UIAlertAction(title: R.string.localizable.group_participant_menu_admin(), style: .default, handler: { (action) in
+                    self.makeAdmin(userId: user.userId)
+                }))
+            } else {
+                alc.addAction(UIAlertAction(title: R.string.localizable.group_participant_menu_dismiss_admin(), style: .default, handler: { (action) in
+                    self.dismissAdmin(userId: user.userId)
+                }))
+            }
         }
         if !myRole.isEmpty {
             alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { (action) in
@@ -190,6 +196,13 @@ extension GroupParticipantsViewController {
     private func makeAdmin(userId: String) {
         cell(for: userId)?.startLoading()
         ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId,
+                                                userId: userId,
+                                                completion: responseHandler)
+    }
+
+    private func dismissAdmin(userId: String) {
+        cell(for: userId)?.startLoading()
+        ConversationAPI.shared.dismissAdminParticipant(conversationId: conversation.conversationId,
                                                 userId: userId,
                                                 completion: responseHandler)
     }

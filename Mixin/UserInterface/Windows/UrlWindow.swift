@@ -46,13 +46,19 @@ class UrlWindow {
     }
 
     class func checkDonate(url: String) -> Bool {
-        guard url.lowercased().hasPrefix("bitcoin:"), let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
+        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:"].contains(where: url.lowercased().hasPrefix) else {
+            return false
+        }
+        guard let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
             return false
         }
         guard let amount = items.first(where: { $0.name == "amount" })?.value, amount.isNumeric else {
             return false
         }
-        guard let userId = items.first(where: { $0.name == "user" })?.value, UUID(uuidString: userId) != nil else {
+        guard let recipientId = items.first(where: { $0.name == "recipient" })?.value, UUID(uuidString: recipientId) != nil else {
+            return false
+        }
+        guard let assetId = items.first(where: { $0.name == "asset" })?.value, UUID(uuidString: assetId) != nil else {
             return false
         }
 
@@ -65,9 +71,9 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            var userItem = UserDAO.shared.getUser(userId: userId)
+            var userItem = UserDAO.shared.getUser(userId: recipientId)
             if userItem == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
+                switch UserAPI.shared.showUser(userId: recipientId) {
                 case let .success(response):
                     userItem = UserItem.createUser(from: response)
                     UserDAO.shared.updateUsers(users: [response])
@@ -83,7 +89,7 @@ class UrlWindow {
                 }
             }
 
-            guard let user = userItem, let asset = syncAsset(assetId: AssetItem.bitcoinAssetId, hud: hud) else {
+            guard let user = userItem, let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
 
@@ -371,6 +377,9 @@ class UrlWindow {
             guard let asset = syncAsset(assetId: assetId, hud: hud) else {
                 return
             }
+            guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
+                return
+            }
             var address = AddressDAO.shared.getAddress(addressId: addressId)
             if address == nil {
                 switch WithdrawalAPI.shared.address(addressId: addressId) {
@@ -397,7 +406,7 @@ class UrlWindow {
             }
 
             DispatchQueue.main.async {
-                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, chainAsset: chainAsset, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
 

@@ -17,7 +17,7 @@ public struct SignalKeyRequest: Codable {
 public struct OneTimePreKey: Codable {
     
     public let key_id: UInt32
-    public let pub_key: String
+    public let pub_key: String?
     
     public init(keyId: UInt32, preKey: SessionPreKey) {
         key_id = keyId

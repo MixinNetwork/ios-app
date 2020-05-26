@@ -21,8 +21,11 @@ struct SignalKey: Codable {
 
 
 extension SignalKey {
-    func getPreKeyPublic() -> Data {
-        return Data(base64Encoded: preKey.pub_key)!
+    func getPreKeyPublic() -> Data? {
+        guard let key = preKey.pub_key else {
+            return nil
+        }
+        return Data(base64Encoded: key)
     }
 
     func getIdentityPublic() -> Data {

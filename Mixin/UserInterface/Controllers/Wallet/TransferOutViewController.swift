@@ -393,6 +393,29 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
 }
 
+extension TransferOutViewController: ContainerViewControllerDelegate {
+
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return true
+    }
+
+    func barRightButtonTappedAction() {
+        switch opponent! {
+        case let .contact(user):
+            let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
+            navigationController?.pushViewController(vc, animated: true)
+        case let .address(address):
+            let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    func imageBarRightButton() -> UIImage? {
+        R.image.ic_title_transaction()
+    }
+
+}
+
 extension TransferOutViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

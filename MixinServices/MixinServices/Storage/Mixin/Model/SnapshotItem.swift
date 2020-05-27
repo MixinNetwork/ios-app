@@ -46,7 +46,27 @@ public struct SnapshotItem: TableCodable {
         
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
     }
-    
+
+    public init(snapshot: Snapshot) {
+        self.snapshotId = snapshot.snapshotId
+        self.type = snapshot.type
+        self.assetId = snapshot.assetId
+        self.amount = snapshot.amount
+        self.transactionHash = snapshot.transactionHash
+        self.sender = snapshot.sender
+        self.opponentId = snapshot.opponentId
+        self.memo = snapshot.memo
+        self.receiver = snapshot.receiver
+        self.confirmations = snapshot.confirmations
+        self.traceId = snapshot.traceId
+        self.createdAt = snapshot.createdAt
+
+        self.assetSymbol = nil
+        self.opponentUserId = nil
+        self.opponentUserFullName = nil
+        self.opponentUserAvatarUrl = nil
+        self.opponentUserIdentityNumber = nil
+    }
 }
 
 extension SnapshotItem {

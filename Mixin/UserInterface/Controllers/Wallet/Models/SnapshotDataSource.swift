@@ -27,7 +27,12 @@ class SnapshotDataSource {
     init(category: Category) {
         self.category = category
         queue.maxConcurrentOperationCount = 1
-        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
+        if case .address = category {
+            didLoadEarliestRemoteSnapshot = true
+            didLoadEarliestLocalSnapshot = true
+        } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
+        }
     }
     
     deinit {
@@ -35,6 +40,9 @@ class SnapshotDataSource {
     }
     
     func reloadFromLocal() {
+        if case .address = category {
+            return
+        }
         queue.cancelAllOperations()
         isLoading = true
         let category = self.category
@@ -44,6 +52,8 @@ class SnapshotDataSource {
         op.addExecutionBlock { [unowned op, weak self] in
             let items: [SnapshotItem]
             switch category {
+            case .address:
+                items = []
             case .user(let id):
                 items = SnapshotDAO.shared.getSnapshots(opponentId: id, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .asset(let id):
@@ -84,8 +94,37 @@ class SnapshotDataSource {
             job = RefreshSnapshotsJob(category: .asset(id: id))
         case .all:
             job = RefreshSnapshotsJob(category: .all)
+        case .address:
+            loadAddressSnapshots()
+            return
         }
         ConcurrentJobQueue.shared.addJob(job: job)
+    }
+
+    func loadAddressSnapshots() {
+        guard case let .address(asset, destination, tag) = category else {
+            return
+        }
+
+        AssetAPI.shared.snapshots(limit: 300, assetId: asset, destination: destination, tag: tag) { [weak self](result) in
+            guard let weakSelf = self else {
+                return
+            }
+            switch result {
+            case let .success(snapshots):
+                let items = snapshots.compactMap(SnapshotItem.init)
+                let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: weakSelf.sort, filter: weakSelf.filter)
+                let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
+                weakSelf.rawItems = items
+                weakSelf.indexMap = indexMap
+                weakSelf.numberOfFilteredItems = filteredItemsCount
+                weakSelf.titles = titles
+                weakSelf.snapshots = snapshots
+                weakSelf.onReload?()
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        }
     }
     
     func loadMoreIfPossible() {
@@ -112,6 +151,8 @@ class SnapshotDataSource {
                 newItems = SnapshotDAO.shared.getSnapshots(assetId: id, below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .all:
                 newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+            case .address:
+                newItems = []
             }
             SnapshotDataSource.refreshUserIfNeeded(newItems)
             let items = oldItems + newItems
@@ -184,6 +225,8 @@ class SnapshotDataSource {
             job = LoadMoreSnapshotsJob(category: .asset(id: id))
         case .all:
             job = LoadMoreSnapshotsJob(category: .all)
+        case .address:
+            return
         }
         let didAddJob = ConcurrentJobQueue.shared.addJob(job: job)
         if didAddJob {
@@ -196,6 +239,7 @@ class SnapshotDataSource {
 extension SnapshotDataSource {
     
     enum Category {
+        case address(asset: String, destination: String, tag: String)
         case user(id: String)
         case asset(id: String)
         case all

@@ -57,7 +57,7 @@ class ContainerViewController: UIViewController {
     @IBOutlet weak var rightButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightButtonWidthConstraint: NSLayoutConstraint!
 
-    private weak var delegate: ContainerViewControllerDelegate?
+    weak var delegate: ContainerViewControllerDelegate?
     private(set) var viewController: UIViewController!
     private var controllerTitle = ""
 

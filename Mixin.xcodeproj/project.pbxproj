@@ -591,6 +591,7 @@
 		DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768562200647CC0055F3FF /* BouncingButton.swift */; };
 		DF768569200687010055F3FF /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768568200687010055F3FF /* PreviewView.swift */; };
 		DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */; };
+		DF7FAA85247D332F00B0164A /* AddressTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7FAA84247D332F00B0164A /* AddressTransactionsViewController.swift */; };
 		DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */; };
 		DF846CD923694A2E00AA1197 /* MultisigUsersWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */; };
 		DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */; };
@@ -1419,6 +1420,7 @@
 		DF768562200647CC0055F3FF /* BouncingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingButton.swift; sourceTree = "<group>"; };
 		DF768568200687010055F3FF /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		DF7FAA84247D332F00B0164A /* AddressTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressTransactionsViewController.swift; sourceTree = "<group>"; };
 		DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryExtension.swift; sourceTree = "<group>"; };
 		DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigUsersWindow.swift; sourceTree = "<group>"; };
 		DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultisigUsersWindow.xib; sourceTree = "<group>"; };
@@ -2711,6 +2713,7 @@
 				DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
+				DF7FAA84247D332F00B0164A /* AddressTransactionsViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 			);
 			path = Wallet;
@@ -3688,6 +3691,7 @@
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
 				DF0A09752444AD7600378B4F /* BlurHashDecode.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
+				DF7FAA85247D332F00B0164A /* AddressTransactionsViewController.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,

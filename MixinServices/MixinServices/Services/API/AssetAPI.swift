@@ -15,7 +15,7 @@ public final class AssetAPI: BaseAPI {
             return "assets/\(assetId)/fee"
         }
 
-        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> String {
+        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil, destination: String? = nil, tag: String? = nil) -> String {
             var url = "snapshots?limit=\(limit)"
             if let offset = offset {
                 url += "&offset=\(offset)"
@@ -25,6 +25,12 @@ public final class AssetAPI: BaseAPI {
             }
             if let opponentId = opponentId {
                 url += "&opponent=\(opponentId)"
+            }
+            if let destination = destination {
+                url += "&destination=\(destination)"
+                if let tag = tag, !tag.isEmpty {
+                    url += "&tag=\(tag)"
+                }
             }
             return url
         }
@@ -55,9 +61,13 @@ public final class AssetAPI: BaseAPI {
     public func asset(assetId: String) -> BaseAPI.Result<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
-    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil) -> BaseAPI.Result<[Snapshot]> {
+    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil, destination: String? = nil, tag: String? = nil) -> BaseAPI.Result<[Snapshot]> {
         assert(limit <= 500)
-        return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId))
+        return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId, destination: destination, tag: tag))
+    }
+
+    public func snapshots(limit: Int, assetId: String, destination: String, tag: String, completion: @escaping (BaseAPI.Result<[Snapshot]>) -> Void) {
+        request(method: .get, url: url.snapshots(limit: limit, assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
 
     public func snapshots(limit: Int, assetId: String, completion: @escaping (BaseAPI.Result<[Snapshot]>) -> Void) {

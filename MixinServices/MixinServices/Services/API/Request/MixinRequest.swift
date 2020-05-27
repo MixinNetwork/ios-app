@@ -11,7 +11,7 @@ class MixinRequest {
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
         "Mixin-Device-Id": Keychain.shared.getDeviceId(),
-        "User-Agent": "Mixin/\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
+        "User-Agent": "Mixin/\(Bundle.main.shortVersion) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     ]
 
     private(set) var request: URLRequest!

@@ -27,7 +27,7 @@ struct AccountRequest: Codable {
     init(code: String?, registrationId: Int?, pin: String?, sessionSecret: String?) {
         self.code = code
         self.registrationId = registrationId
-        self.appVersion = Bundle.main.shortVersion + "(" + Bundle.main.bundleVersion + ")"
+        self.appVersion = Bundle.main.shortVersion
         self.purpose = pin == nil ? VerificationPurpose.session.rawValue : VerificationPurpose.phone.rawValue
         self.pin = pin
         self.sessionSecret = sessionSecret

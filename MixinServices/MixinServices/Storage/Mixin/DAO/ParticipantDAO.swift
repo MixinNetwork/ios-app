@@ -100,7 +100,9 @@ public final class ParticipantDAO {
     public func updateParticipantRole(message: Message, conversationId: String, participantId: String, role: String, source: String) -> Bool {
         return MixinDatabase.shared.transaction { (db) in
             try db.update(table: Participant.tableName, on: [Participant.Properties.role], with: [role], where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == participantId)
-            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
+            if !role.isEmpty {
+                try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
+            }
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }
     }

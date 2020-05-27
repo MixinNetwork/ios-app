@@ -81,7 +81,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
                 }))
             }
         }
-        if !myRole.isEmpty {
+        if myRole == ParticipantRole.OWNER.rawValue || (user.role.isEmpty && !myRole.isEmpty) {
             alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { (action) in
                 self.remove(userId: user.userId)
             }))

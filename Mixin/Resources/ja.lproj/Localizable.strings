@@ -343,6 +343,7 @@
 "call_func_speaker" = "スピーカー";
 "call_no_microphone_permission" = "設定をタップしてシステム設定に進みマイクの使用を許可してください。";
 "call_no_network" = "現在通話ができません。 インターネットの接続を確認しもう一度お試しください。";
+"call_user_not_found" = "User not found";
 
 // Sticker
 "sticker_manager_title" = "スタンプ";

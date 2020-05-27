@@ -128,17 +128,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         pendingShortcutItem = nil
     }
-
-    private func cancelBackgroundTask() {
-        stopTaskTime?.invalidate()
-        stopTaskTime = nil
-        backgroundTime?.invalidate()
-        backgroundTime = nil
-        if backgroundTaskID != .invalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-            backgroundTaskID = .invalid
-        }
-    }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
         
@@ -221,7 +210,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
-
+    
+    func cancelBackgroundTask() {
+        stopTaskTime?.invalidate()
+        stopTaskTime = nil
+        backgroundTime?.invalidate()
+        backgroundTime = nil
+        if backgroundTaskID != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+            backgroundTaskID = .invalid
+        }
+    }
+    
     private func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)

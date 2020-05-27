@@ -197,15 +197,12 @@ public class Localized {
     public static let CHAT_RESTORE_SUBTITLE = LocalizedString("chat_restore_subtitle", comment: "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.")
     
     // Call
-    public static let CALL_HINT_ON_ANOTHER_CALL = LocalizedString("call_hint_on_another_call", comment: "You are already on another call. Try after it was ended.")
     public static let CALL_STATUS_CALLING = LocalizedString("call_status_calling", comment: "Calling...")
     public static let CALL_STATUS_BEING_CALLING = LocalizedString("call_status_being_calling", comment: "Calling...")
     public static let CALL_STATUS_CONNECTING = LocalizedString("call_status_connecting", comment: "Connecting")
     public static let CALL_STATUS_DISCONNECTING = LocalizedString("call_status_disconnecting", comment: "Disconnecting")
     public static let CALL_FUNC_HANGUP = LocalizedString("call_func_hangup", comment: "Hang Up")
     public static let CALL_FUNC_DECLINE = LocalizedString("call_func_decline", comment: "Decline")
-    public static let CALL_NO_MICROPHONE_PERMISSION = LocalizedString("call_no_microphone_permission", comment: "To make voice calls, Mixin needs access to your microphone. Please tap Setting to open system settings.")
-    public static let CALL_NO_NETWORK = LocalizedString("call_no_network", comment: "Call service unavailable. Make sure your phone has an internet connection and try again.")
     
     // Sticker
     public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")

@@ -13,7 +13,7 @@ class MixinCallInterface {
     private unowned var service: CallService!
     
     private var isLineIdle: Bool {
-        service.call == nil && callObserver.calls.isEmpty
+        service.activeCall == nil && callObserver.calls.isEmpty
     }
     
     required init(manager: CallService) {
@@ -21,9 +21,10 @@ class MixinCallInterface {
     }
     
     private func requestRecordPermission(completion: @escaping (Bool) -> Void) {
-        switch AVAudioSession.sharedInstance().recordPermission {
+        let session = AVAudioSession.sharedInstance()
+        switch session.recordPermission {
         case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
+            session.requestRecordPermission { (granted) in
                 completion(granted)
             }
         case .denied:
@@ -52,7 +53,7 @@ extension MixinCallInterface: CallInterface {
             if granted {
                 self.service.startCall(uuid: uuid, handle: handle, completion: { (success) in
                     if success {
-                        self.service.ringtonePlayer?.play()
+                        self.service.ringtonePlayer.play(ringtone: .outgoing)
                     }
                 })
                 completion(nil)
@@ -76,7 +77,7 @@ extension MixinCallInterface: CallInterface {
         completion(nil)
     }
     
-    func reportNewIncomingCall(uuid: UUID, handle: CallHandle, localizedCallerName: String, completion: @escaping CallInterfaceCompletion) {
+    func reportNewIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
         guard isLineIdle else {
             completion(CallError.busy)
             return
@@ -86,19 +87,17 @@ extension MixinCallInterface: CallInterface {
                 completion(CallError.microphonePermissionDenied)
                 return
             }
-            if self.pendingIncomingUuid == nil, let call = self.service.pendingOffers[uuid]?.call {
+            if self.pendingIncomingUuid == nil {
                 let user = call.opponentUser
                 DispatchQueue.main.sync {
                     if UIApplication.shared.applicationState == .active {
-                        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-                        try? AVAudioSession.sharedInstance().setCategory(.playback)
-                        self.service.ringtonePlayer?.play()
+                        self.service.ringtonePlayer.play(ringtone: .incoming)
                     } else {
                         NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: user.fullName)
                     }
                     self.service.showCallingInterface(user: user, style: .incoming)
                 }
-                self.pendingIncomingUuid = uuid
+                self.pendingIncomingUuid = call.uuid
                 completion(nil)
             } else {
                 completion(CallError.busy)

@@ -13,7 +13,7 @@ class NativeCallInterface: NSObject {
     required init(manager: CallService) {
         self.service = manager
         let config = CXProviderConfiguration(localizedName: Bundle.main.displayName)
-        config.ringtoneSound = "call.caf"
+        config.ringtoneSound = R.file.callCaf.fullName
         config.iconTemplateImageData = R.image.call.ic_mixin()?.pngData()
         config.maximumCallGroups = 1
         config.maximumCallsPerCallGroup = 1
@@ -27,6 +27,28 @@ class NativeCallInterface: NSObject {
     @available(*, unavailable)
     override init() {
         fatalError()
+    }
+    
+    func reportImmediateFailureCall() {
+        let uuid = UUID()
+        let update = CXCallUpdate()
+        update.remoteHandle = CXHandle(type: .generic, value: "")
+        update.localizedCallerName = ""
+        provider.reportNewIncomingCall(with: uuid, update: update, completion: { error in })
+        provider.reportCall(with: uuid, endedAt: nil, reason: .failed)
+    }
+    
+    func reportNewIncomingCall(uuid: UUID, userId: String, username: String, completion: @escaping CallInterfaceCompletion) {
+        pendingAnswerAction = nil
+        let update = CXCallUpdate()
+        update.remoteHandle = CXHandle(type: .generic, value: userId)
+        update.localizedCallerName = username
+        update.supportsHolding = false
+        update.supportsGrouping = false
+        update.supportsUngrouping = false
+        update.supportsDTMF = false
+        update.hasVideo = false
+        provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
     }
     
 }
@@ -50,19 +72,11 @@ extension NativeCallInterface: CallInterface {
         callController.requestTransaction(with: action, completion: completion)
     }
     
-    func reportNewIncomingCall(uuid: UUID, handle: CallHandle, localizedCallerName: String, completion: @escaping CallInterfaceCompletion) {
-        pendingAnswerAction = nil
-        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-        try? AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .voiceChat)
-        let update = CXCallUpdate()
-        update.remoteHandle = handle.cxHandle
-        update.localizedCallerName = localizedCallerName
-        update.supportsHolding = false
-        update.supportsGrouping = false
-        update.supportsUngrouping = false
-        update.supportsDTMF = false
-        update.hasVideo = false
-        provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
+    func reportNewIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
+        reportNewIncomingCall(uuid: call.uuid,
+                              userId: call.opponentUser.userId,
+                              username: call.opponentUser.fullName,
+                              completion: completion)
     }
     
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason) {
@@ -135,8 +149,8 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        if let call = service.call, call.isOutgoing {
-            service.ringtonePlayer?.play()
+        if let call = service.activeCall, call.isOutgoing {
+            service.ringtonePlayer.play(ringtone: .outgoing)
         }
     }
     

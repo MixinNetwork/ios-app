@@ -41,7 +41,8 @@ class CallViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
+        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
+                            adjustForContentSize: true)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(callServiceMutenessDidChange),
                                                name: CallService.mutenessDidChangeNotification,
@@ -81,10 +82,6 @@ class CallViewController: UIViewController {
         service.usesSpeaker = speakerButton.isSelected
     }
     
-    @objc func callServiceMutenessDidChange() {
-        muteButton.isSelected = service.isMuted
-    }
-    
 }
 
 extension CallViewController {
@@ -113,12 +110,16 @@ extension CallViewController {
     }
     
     @objc private func updateStatusLabelWithCallingDuration() {
-        if style == .connected, let timeIntervalSinceNow = service.call?.connectedDate?.timeIntervalSinceNow {
+        if style == .connected, let timeIntervalSinceNow = service.activeCall?.connectedDate?.timeIntervalSinceNow {
             let duration = abs(timeIntervalSinceNow)
             statusLabel.text = mediaDurationFormatter.string(from: duration)
         } else {
             statusLabel.text = nil
         }
+    }
+    
+    @objc private func callServiceMutenessDidChange() {
+        muteButton.isSelected = service.isMuted
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
@@ -194,7 +195,6 @@ extension CallViewController {
     
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
-        timer = nil
         if enabled {
             let timer = Timer(timeInterval: 1,
                               target: self,

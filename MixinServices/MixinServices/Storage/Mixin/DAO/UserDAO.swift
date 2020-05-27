@@ -11,6 +11,7 @@ public final class UserDAO {
     """
     
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
+    private static let sqlQueryUserByPhone = "\(sqlQueryColumns) WHERE u.phone = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
@@ -41,6 +42,10 @@ public final class UserDAO {
     
     public func getUser(userId: String) -> UserItem? {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserById, values: [userId]).first
+    }
+    
+    public func getUser(phoneNumber: String) -> UserItem? {
+        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByPhone, values: [phoneNumber]).first
     }
     
     public func getUser(identityNumber: String) -> UserItem? {

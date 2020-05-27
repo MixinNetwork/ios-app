@@ -125,6 +125,7 @@ class HomeViewController: UIViewController {
             fetchConversations()
         }
         checkServerStatus()
+        CallService.shared.registerForPushKitNotificationsIfAvailable()
     }
     
     override func viewDidAppear(_ animated: Bool) {

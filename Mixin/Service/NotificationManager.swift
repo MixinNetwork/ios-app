@@ -51,7 +51,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             completionHandler([])
             return
         }
-        if notification.request.identifier == CallService.shared.call?.uuidString {
+        if notification.request.identifier == CallService.shared.activeCall?.uuidString {
             completionHandler([])
             return
         }

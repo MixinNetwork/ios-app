@@ -18,16 +18,18 @@ enum CallError: Error {
     
     case invalidHandle
     
-    var alertContent: String? {
+    var alertContent: String {
         switch self {
         case .busy:
-            return Localized.CALL_HINT_ON_ANOTHER_CALL
+            return R.string.localizable.call_hint_on_another_call()
         case .networkFailure:
-            return Localized.CALL_NO_NETWORK
+            return R.string.localizable.call_no_network()
         case .microphonePermissionDenied:
-            return Localized.CALL_NO_MICROPHONE_PERMISSION
+            return R.string.localizable.call_no_microphone_permission()
+        case .invalidHandle:
+            return R.string.localizable.call_user_not_found()
         default:
-            return nil
+            return R.string.localizable.chat_message_call_failed()
         }
     }
     

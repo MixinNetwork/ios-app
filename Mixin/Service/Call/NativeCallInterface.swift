@@ -19,6 +19,7 @@ class NativeCallInterface: NSObject {
         config.maximumCallsPerCallGroup = 1
         config.supportsVideo = false
         config.supportedHandleTypes = [.generic]
+        config.includesCallsInRecents = false
         self.provider = CXProvider(configuration: config)
         super.init()
         provider.setDelegate(self, queue: nil)

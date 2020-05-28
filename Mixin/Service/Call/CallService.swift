@@ -254,8 +254,8 @@ extension CallService {
                 switch handle {
                 case .userId(let userId):
                     return UserDAO.shared.getUser(userId: userId)
-                case .phoneNumber(let number):
-                    return UserDAO.shared.getUser(phoneNumber: number)
+                case .phoneNumber:
+                    return nil
                 }
             }()
             guard let opponentUser = user else {

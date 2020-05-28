@@ -102,6 +102,7 @@ class CallService: NSObject {
     
     func registerForPushKitNotificationsIfAvailable() {
         guard Self.isCallKitAvailable else {
+            AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
             return
         }
         pushRegistry.desiredPushTypes = [.voIP]
@@ -146,6 +147,13 @@ extension CallService: PKPushRegistryDelegate {
         nativeCallInterface.reportNewIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
             completion()
         }
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
+        guard type == .voIP, pushRegistry.pushToken(for: .voIP) == nil else {
+            return
+        }
+        AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
     }
     
 }

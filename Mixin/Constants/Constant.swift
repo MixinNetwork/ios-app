@@ -37,3 +37,5 @@ var backupUrl: URL? {
 }
 
 let backupDatabaseName = "mixin.db"
+
+let voipTokenRemove = "REMOVE"

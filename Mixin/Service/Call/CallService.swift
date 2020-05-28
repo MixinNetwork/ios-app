@@ -144,8 +144,12 @@ extension CallService: PKPushRegistryDelegate {
         AppDelegate.current.cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
-        nativeCallInterface.reportNewIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
-            completion()
+        if Self.isCallKitAvailable {
+            nativeCallInterface.reportNewIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
+                completion()
+            }
+        } else {
+            nativeCallInterface.reportImmediateFailureCall()
         }
     }
     

@@ -150,7 +150,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        if let call = service.activeCall, call.isOutgoing {
+        if let call = service.activeCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
             service.ringtonePlayer.play(ringtone: .outgoing)
         }
     }

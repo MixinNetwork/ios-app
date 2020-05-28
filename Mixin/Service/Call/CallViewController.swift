@@ -123,10 +123,10 @@ extension CallViewController {
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
+        let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
+            .outputs.map(\.portType)
+            .contains(.builtInSpeaker)
         DispatchQueue.main.async {
-            let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
-                .outputs.map(\.portType)
-                .contains(.builtInSpeaker)
             self.speakerButton.isSelected = routeContainsSpeaker
         }
     }
@@ -145,13 +145,13 @@ extension CallViewController {
             setConnectionButtonsEnabled(true)
         case .outgoing:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
-            setFunctionSwitchesHidden(true)
+            setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
-                self.setFunctionSwitchesHidden(true)
+                self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
                 self.setConnectionButtonsEnabled(true)
                 self.view.layoutIfNeeded()
@@ -161,6 +161,7 @@ extension CallViewController {
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
+                self.setConnectionButtonsEnabled(true)
                 self.view.layoutIfNeeded()
             }
             setConnectionDurationTimerEnabled(true)

@@ -51,11 +51,7 @@ extension MixinCallInterface: CallInterface {
         }
         requestRecordPermission { (granted) in
             if granted {
-                self.service.startCall(uuid: uuid, handle: handle, completion: { (success) in
-                    if success {
-                        self.service.ringtonePlayer.play(ringtone: .outgoing)
-                    }
-                })
+                self.service.startCall(uuid: uuid, handle: handle, completion: nil)
                 completion(nil)
             } else {
                 completion(CallError.microphonePermissionDenied)

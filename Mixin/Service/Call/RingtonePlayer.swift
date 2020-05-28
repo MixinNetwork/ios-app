@@ -9,15 +9,21 @@ class RingtonePlayer {
     }
     
     private lazy var incomingPlayer: AVAudioPlayer? = {
-        let player = try? AVAudioPlayer(contentsOf: R.file.callCaf()!)
-        player?.numberOfLoops = -1
+        guard let player = try? AVAudioPlayer(contentsOf: R.file.callCaf()!) else {
+            return nil
+        }
+        player.numberOfLoops = -1
+        player.volume = 1
         incomingPlayerIfLoaded = player
         return player
     }()
     
     private lazy var outgoingPlayer: AVAudioPlayer? = {
-        let player = try? AVAudioPlayer(contentsOf: R.file.ringtone_outgoingCaf()!)
-        player?.numberOfLoops = -1
+        guard let player = try? AVAudioPlayer(contentsOf: R.file.ringtone_outgoingCaf()!) else {
+            return nil
+        }
+        player.numberOfLoops = -1
+        player.volume = 1
         outgoingPlayerIfLoaded = player
         return player
     }()

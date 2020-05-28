@@ -30,16 +30,7 @@ class CallService: NSObject {
     
     var usesSpeaker = false {
         didSet {
-            guard rtcClient.iceConnectionState == .connected else {
-                return
-            }
-            let port = self.audioPort
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                let session = RTCAudioSession.sharedInstance()
-                session.lockForConfiguration()
-                try? session.overrideOutputAudioPort(port)
-                session.unlockForConfiguration()
-            }
+            updateAudioSessionConfiguration()
         }
     }
     
@@ -64,10 +55,6 @@ class CallService: NSObject {
     
     private var callInterface: CallInterface {
         Self.isCallKitAvailable ? nativeCallInterface : mixinCallInterface
-    }
-    
-    private var audioPort: AVAudioSession.PortOverride {
-        usesSpeaker ? .speaker : .none
     }
     
     override init() {
@@ -430,6 +417,7 @@ extension CallService {
     
 }
 
+// MARK: - CallMessageCoordinator
 extension CallService: CallMessageCoordinator {
     
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool {
@@ -530,6 +518,7 @@ extension CallService {
             return
         }
         if let call = activeCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+            call.hasReceivedRemoteAnswer = true
             unansweredTimer?.invalidate()
             callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             ringtonePlayer.stop()
@@ -586,6 +575,7 @@ extension CallService {
     
 }
 
+// MARK: - WebRTCClientDelegate
 extension CallService: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
@@ -619,19 +609,7 @@ extension CallService: WebRTCClientDelegate {
                 self.viewController?.style = .connected
             }
         }
-        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-            let session = RTCAudioSession.sharedInstance()
-            session.lockForConfiguration()
-            do {
-                try session.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .allowBluetooth)
-                try session.setMode(AVAudioSession.Mode.voiceChat.rawValue)
-                try session.overrideOutputAudioPort(self.audioPort)
-            } catch {
-                reporter.report(error: error)
-            }
-            session.unlockForConfiguration()
-        }
+        updateAudioSessionConfiguration()
     }
     
     func webRTCClientDidFailed(_ client: WebRTCClient) {
@@ -642,6 +620,7 @@ extension CallService: WebRTCClientDelegate {
     
 }
 
+// MARK: - Private works
 extension CallService {
     
     @objc private func unansweredTimeout() {
@@ -684,6 +663,43 @@ extension CallService {
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
         clean()
         reporter.report(error: error)
+    }
+    
+    private func updateAudioSessionConfiguration() {
+        let session = RTCAudioSession.sharedInstance()
+        let category = AVAudioSession.Category.playAndRecord.rawValue
+        
+        // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+        // DO NOT use the mode of voiceChat, or the speaker button in system
+        // calling interface will soon becomes off after turning on
+        let mode = AVAudioSession.Mode.default.rawValue
+        
+        let audioPort: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
+        let options: AVAudioSession.CategoryOptions = {
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
+            if self.usesSpeaker {
+                options.insert(.defaultToSpeaker)
+            }
+            return options
+        }()
+        
+        let config = RTCAudioSessionConfiguration()
+        config.category = category
+        config.categoryOptions = options
+        config.mode = mode
+        RTCAudioSessionConfiguration.setWebRTC(config)
+        
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            session.lockForConfiguration()
+            do {
+                try session.setCategory(category, with: options)
+                try session.setMode(mode)
+                try session.overrideOutputAudioPort(audioPort)
+            } catch {
+                reporter.report(error: error)
+            }
+            session.unlockForConfiguration()
+        }
     }
     
 }

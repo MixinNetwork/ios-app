@@ -94,8 +94,8 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
         if newState == .connected {
-            delegate?.webRTCClientDidConnected(self)
             RTCAudioSession.sharedInstance().isAudioEnabled = true
+            delegate?.webRTCClientDidConnected(self)
         } else if newState == .closed {
             // TODO
         }

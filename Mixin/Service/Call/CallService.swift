@@ -604,7 +604,7 @@ extension CallService: WebRTCClientDelegate {
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
         queue.async {
-            guard let call = self.activeCall else {
+            guard let call = self.activeCall, call.connectedDate == nil else {
                 return
             }
             let date = Date()

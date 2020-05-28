@@ -33,9 +33,12 @@ class CallService: NSObject {
             guard rtcClient.iceConnectionState == .connected else {
                 return
             }
-            queue.async {
-                let port: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
-                try? AVAudioSession.sharedInstance().overrideOutputAudioPort(port)
+            let port = self.audioPort
+            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                let session = RTCAudioSession.sharedInstance()
+                session.lockForConfiguration()
+                try? session.overrideOutputAudioPort(port)
+                session.unlockForConfiguration()
             }
         }
     }
@@ -61,6 +64,10 @@ class CallService: NSObject {
     
     private var callInterface: CallInterface {
         Self.isCallKitAvailable ? nativeCallInterface : mixinCallInterface
+    }
+    
+    private var audioPort: AVAudioSession.PortOverride {
+        usesSpeaker ? .speaker : .none
     }
     
     override init() {
@@ -611,13 +618,15 @@ extension CallService: WebRTCClientDelegate {
             DispatchQueue.main.sync {
                 self.viewController?.style = .connected
             }
-            
+        }
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
             // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
             let session = RTCAudioSession.sharedInstance()
             session.lockForConfiguration()
             do {
                 try session.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .allowBluetooth)
-                try session.setMode(AVAudioSession.Mode.default.rawValue)
+                try session.setMode(AVAudioSession.Mode.voiceChat.rawValue)
+                try session.overrideOutputAudioPort(self.audioPort)
             } catch {
                 reporter.report(error: error)
             }

@@ -8,9 +8,10 @@ class MixinCallInterface {
     
     private let callObserver = CXCallObserver()
     
-    private var pendingIncomingUuid: UUID?
-    
+    private lazy var vibrator = Vibrator()
     private unowned var service: CallService!
+    
+    private var pendingIncomingUuid: UUID?
     
     private var isLineIdle: Bool {
         service.activeCall == nil && callObserver.calls.isEmpty
@@ -59,7 +60,13 @@ extension MixinCallInterface: CallInterface {
         }
     }
     
+    func requestAnswerCall(uuid: UUID) {
+        vibrator.stop()
+        service.answerCall(uuid: uuid, completion: nil)
+    }
+    
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
+        vibrator.stop()
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }
@@ -91,6 +98,7 @@ extension MixinCallInterface: CallInterface {
                     } else {
                         NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: user.fullName)
                     }
+                    self.vibrator.start()
                     self.service.showCallingInterface(user: user, style: .incoming)
                 }
                 self.pendingIncomingUuid = call.uuid
@@ -102,6 +110,7 @@ extension MixinCallInterface: CallInterface {
     }
     
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason) {
+        vibrator.stop()
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }

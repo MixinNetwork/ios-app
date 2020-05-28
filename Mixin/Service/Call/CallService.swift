@@ -38,7 +38,6 @@ class CallService: NSObject {
     
     private lazy var pushRegistry = PKPushRegistry(queue: .main)
     private lazy var rtcClient = WebRTCClient()
-    private lazy var vibrator = Vibrator()
     private lazy var nativeCallInterface = NativeCallInterface(manager: self)
     private lazy var mixinCallInterface = MixinCallInterface(manager: self)
     
@@ -206,7 +205,7 @@ extension CallService {
         guard let uuid = pendingOffers.first?.key else {
             return
         }
-        answerCall(uuid: uuid, completion: nil)
+        callInterface.requestAnswerCall(uuid: uuid)
     }
     
     func requestSetMute(_ muted: Bool) {
@@ -410,7 +409,6 @@ extension CallService {
         ringtonePlayer.stop()
         unansweredTimer?.invalidate()
         performSynchronouslyOnMainThread {
-            vibrator.stop()
             dismissCallingInterface()
         }
     }

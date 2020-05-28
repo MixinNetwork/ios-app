@@ -62,6 +62,10 @@ extension NativeCallInterface: CallInterface {
         callController.requestTransaction(with: action, completion: completion)
     }
     
+    func requestAnswerCall(uuid: UUID) {
+        service.answerCall(uuid: uuid, completion: nil)
+    }
+    
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
         pendingAnswerAction = nil
         let action = CXEndCallAction(call: uuid)

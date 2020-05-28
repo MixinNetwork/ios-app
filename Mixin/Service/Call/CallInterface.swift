@@ -6,6 +6,7 @@ typealias CallInterfaceCompletion = (Error?) -> Void
 protocol CallInterface {
     
     func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion)
+    func requestAnswerCall(uuid: UUID)
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion)
     func requestSetMute(uuid: UUID, muted: Bool, completion: @escaping CallInterfaceCompletion)
     func reportNewIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion)

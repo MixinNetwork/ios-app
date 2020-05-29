@@ -513,6 +513,12 @@ extension CallService {
         } catch CallError.microphonePermissionDenied {
             declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
             alert(error: .microphonePermissionDenied)
+            DispatchQueue.main.sync {
+                guard UIApplication.shared.applicationState != .active else {
+                    return
+                }
+                NotificationManager.shared.requestDeclinedCallNotification(messageId: data.messageId)
+            }
         } catch {
             declineOffer(data: data, category: .WEBRTC_AUDIO_FAILED)
         }

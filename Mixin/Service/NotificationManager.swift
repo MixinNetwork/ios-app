@@ -40,6 +40,17 @@ class NotificationManager: NSObject {
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
+    func requestDeclinedCallNotification(messageId: String) {
+        let content = UNMutableNotificationContent()
+        content.title = R.string.localizable.call_declined_lack_microphone_permission()
+        content.sound = .mixin
+        content.categoryIdentifier = NotificationCategoryIdentifier.call
+        let request = UNNotificationRequest(identifier: messageId,
+                                            content: content,
+                                            trigger: nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
 }
 
 // MARK: - UNUserNotificationCenterDelegate

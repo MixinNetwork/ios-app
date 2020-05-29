@@ -51,11 +51,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             completionHandler([])
             return
         }
-        if notification.request.identifier == CallService.shared.activeCall?.uuidString {
+        if let uuid = UUID(uuidString: notification.request.identifier), CallService.shared.handledUUIDs.contains(uuid) {
             completionHandler([])
             return
         }
-
         completionHandler([.alert, .sound])
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             center.removeNotifications(withIdentifiers: [notification.request.identifier])

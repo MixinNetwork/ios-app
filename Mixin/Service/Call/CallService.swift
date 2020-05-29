@@ -23,6 +23,7 @@ class CallService: NSObject {
     private(set) lazy var ringtonePlayer = RingtonePlayer()
     
     private(set) var activeCall: Call?
+    private(set) var handledUUIDs = Set<UUID>() // Read and write from main queue
     
     var isMuted = false {
         didSet {
@@ -477,6 +478,9 @@ extension CallService {
         do {
             guard let uuid = UUID(uuidString: data.messageId) else {
                 throw CallError.invalidUUID(uuid: data.messageId)
+            }
+            DispatchQueue.main.async {
+                self.handledUUIDs.insert(uuid)
             }
             guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
                 throw CallError.invalidSdp(sdp: data.data)

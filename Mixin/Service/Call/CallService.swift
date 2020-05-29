@@ -10,9 +10,14 @@ class CallService: NSObject {
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
     
+    private static let recordPermissionWasUndetermined = AVAudioSession.sharedInstance().recordPermission == .undetermined
+    
     static var isCallKitAvailable: Bool {
         let isMainlandChina = false
-        return !isMainlandChina && AVAudioSession.sharedInstance().recordPermission == .granted
+        // Prevent call interface from switching during App session
+        let isRecordPermissionGranted = !recordPermissionWasUndetermined
+            && AVAudioSession.sharedInstance().recordPermission == .granted
+        return !isMainlandChina && isRecordPermissionGranted
     }
     
     private(set) lazy var ringtonePlayer = RingtonePlayer()

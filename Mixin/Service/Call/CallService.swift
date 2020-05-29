@@ -144,7 +144,7 @@ extension CallService: PKPushRegistryDelegate {
         AppDelegate.current.cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
-        if Self.isCallKitAvailable {
+        if Self.isCallKitAvailable && !MessageDAO.shared.isExist(messageId: messageId) {
             nativeCallInterface.reportNewIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
                 completion()
             }

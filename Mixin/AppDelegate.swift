@@ -37,6 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
         Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        if UIApplication.shared.applicationState == .background {
+            beginBackgroundTaskReceivingMessages(caller: "didFinishLaunchingWithOptions", completionHandler: nil)
+        }
         return true
     }
     
@@ -176,35 +179,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
-
-        let startDate = Date()
-        cancelBackgroundTask()
-        MixinService.isStopProcessMessages = false
-        WebSocketService.shared.connectIfNeeded()
-
-        requestTimeout = 3
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] didReceiveRemoteNotification...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler(.newData)
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler(.newData)
-        }
-        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            guard UIApplication.shared.applicationState != .active else {
-                return
-            }
-            MixinService.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
-        }
+        beginBackgroundTaskReceivingMessages(caller: "didReceiveRemoteNotification", completionHandler: completionHandler)
     }
     
 }
@@ -339,6 +314,41 @@ extension AppDelegate {
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
     }
+    
+    private func beginBackgroundTaskReceivingMessages(caller: String, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
+        let startDate = Date()
+        cancelBackgroundTask()
+        MixinService.isStopProcessMessages = false
+        WebSocketService.shared.connectIfNeeded()
+
+        requestTimeout = 3
+        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            Logger.write(log: "[AppDelegate] \(caller)...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
+            if UIApplication.shared.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
+            self.cancelBackgroundTask()
+            completionHandler?(.newData)
+        })
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
+            self.cancelBackgroundTask()
+            completionHandler?(.newData)
+        }
+        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
+            guard UIApplication.shared.applicationState != .active else {
+                return
+            }
+            MixinService.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
+        }
+    }
+    
+}
+
+extension AppDelegate {
     
     private func pushCameraViewController() {
         guard let navigationController = UIApplication.homeNavigationController else {

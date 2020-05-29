@@ -156,6 +156,7 @@ extension CallService: PKPushRegistryDelegate {
             }
         } else {
             nativeCallInterface.reportImmediateFailureCall()
+            completion()
         }
     }
     

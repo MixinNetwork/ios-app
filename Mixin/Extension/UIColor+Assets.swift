@@ -11,9 +11,7 @@ extension UIColor {
     static let title = R.color.title()!
     static let text = R.color.text()!
     static let theme = R.color.theme()!
-
-    static let chatUnreadMute = R.color.chat_unread_mute()!
-    static let chatUnreadMuteBackground = R.color.chat_unread_mute_background()!
+    
     static let accessoryText = R.color.text_accessory()!
     static let highlightedText = R.color.theme()!
     static let shadow = R.color.table_shadow()!

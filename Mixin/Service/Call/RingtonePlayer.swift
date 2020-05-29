@@ -34,13 +34,18 @@ class RingtonePlayer {
     func play(ringtone: Ringtone) {
         stop()
         let session = AVAudioSession.sharedInstance()
+        let player: AVAudioPlayer?
         switch ringtone {
         case .incoming:
             try? session.setCategory(.playback, mode: .default, options: [])
-            incomingPlayer?.play()
+            player = incomingPlayer
         case .outgoing:
             try? session.setCategory(.playAndRecord, mode: .voiceChat, options: [])
-            outgoingPlayer?.play()
+            player = outgoingPlayer
+        }
+        if let player = player {
+            player.currentTime = 0
+            player.play()
         }
     }
     

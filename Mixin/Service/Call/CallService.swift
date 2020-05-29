@@ -678,13 +678,6 @@ extension CallService {
     private func updateAudioSessionConfiguration() {
         let session = RTCAudioSession.sharedInstance()
         let category = AVAudioSession.Category.playAndRecord.rawValue
-        
-        // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-        // DO NOT use the mode of voiceChat, or the speaker button in system
-        // calling interface will soon becomes off after turning on
-        let mode = AVAudioSession.Mode.default.rawValue
-        
-        let audioPort: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
         let options: AVAudioSession.CategoryOptions = {
             var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
             if self.usesSpeaker {
@@ -692,6 +685,13 @@ extension CallService {
             }
             return options
         }()
+        
+        // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+        // DO NOT use the mode of voiceChat, or the speaker button in system
+        // calling interface will soon becomes off after turning on
+        let mode = AVAudioSession.Mode.default.rawValue
+        
+        let audioPort: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
         
         let config = RTCAudioSessionConfiguration()
         config.category = category

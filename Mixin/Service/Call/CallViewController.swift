@@ -127,7 +127,17 @@ extension CallViewController {
             .outputs.map(\.portType)
             .contains(.builtInSpeaker)
         DispatchQueue.main.async {
-            self.speakerButton.isSelected = routeContainsSpeaker
+            if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsSpeaker) {
+                // The audio route changes for mysterious reason on iOS 13, It says category changes
+                // but I have intercept every category change request only to find AVAudioSessionCategoryPlayAndRecord
+                // with AVAudioSessionCategoryOptionDefaultToSpeaker is properly passed into AVAudioSession.
+                // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
+                // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
+                self.service.usesSpeaker = self.service.usesSpeaker
+                self.speakerButton.isSelected = self.service.usesSpeaker
+            } else {
+                self.speakerButton.isSelected = routeContainsSpeaker
+            }
         }
     }
     

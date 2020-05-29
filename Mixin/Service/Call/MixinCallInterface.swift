@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import UserNotifications
 import CallKit
+import WebRTC
 import MixinServices
 
 class MixinCallInterface {
@@ -52,7 +53,15 @@ extension MixinCallInterface: CallInterface {
         }
         requestRecordPermission { (granted) in
             if granted {
-                self.service.startCall(uuid: uuid, handle: handle, completion: nil)
+                self.service.startCall(uuid: uuid, handle: handle, completion: { success in
+                    guard success else {
+                        return
+                    }
+                    RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                        try? RTCAudioSession.sharedInstance().setActive(true)
+                        self.service.ringtonePlayer.play(ringtone: .outgoing)
+                    }
+                })
                 completion(nil)
             } else {
                 completion(CallError.microphonePermissionDenied)

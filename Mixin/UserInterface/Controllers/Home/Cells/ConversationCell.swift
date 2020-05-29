@@ -160,6 +160,13 @@ class ConversationCell: ModernSelectedBackgroundCell {
             muteImageView.isHidden = !item.isMuted
         }
         if hasUnreadMessage {
+            if item.isMuted {
+                unreadLabel.textColor = .chatUnreadMute
+                unreadLabel.backgroundColor = .textAccessory
+            } else {
+                unreadLabel.textColor = .white
+                unreadLabel.backgroundColor = .theme
+            }
             unreadLabel.isHidden = false
             unreadLabel.text = "\(item.unseenMessageCount)"
         } else {

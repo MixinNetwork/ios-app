@@ -10,7 +10,10 @@ extension UIColor {
     static let mixinRed = R.color.red()!
     static let title = R.color.title()!
     static let text = R.color.text()!
+    static let textAccessory = R.color.text_accessory()!
     static let theme = R.color.theme()!
+
+    static let chatUnreadMute = R.color.chat_unread_mute()!
     
     static let accessoryText = R.color.text_accessory()!
     static let highlightedText = R.color.theme()!

@@ -280,16 +280,20 @@ class HomeViewController: UIViewController {
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
-        guard WebSocketService.shared.isConnected, view?.isVisibleInScreen ?? false else {
-            return
-        }
         guard let progress = notification.object as? Int else {
             return
         }
+
         if progress >= 100 {
-            titleButton.setTitle(topLeftTitle, for: .normal)
-            connectingView.stopAnimating()
-        } else {
+            if WebSocketService.shared.isRealConnected {
+                titleButton.setTitle(topLeftTitle, for: .normal)
+                connectingView.stopAnimating()
+            } else {
+                titleButton.setTitle(R.string.localizable.dialog_progress_connect(), for: .normal)
+                connectingView.startAnimating()
+                WebSocketService.shared.connectIfNeeded()
+            }
+        } else if WebSocketService.shared.isRealConnected {
             let title = Localized.CONNECTION_HINT_PROGRESS(progress)
             titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()

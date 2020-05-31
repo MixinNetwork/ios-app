@@ -34,14 +34,14 @@ public final class ConversationDAO {
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
     FROM conversations c
-    INNER JOIN (SELECT conversation_id, sum(media_size) as mediaSize FROM messages WHERE ifnull(media_size,'') != '' GROUP BY conversation_id) m
+    INNER JOIN (SELECT conversation_id, sum(media_size) as mediaSize FROM messages WHERE media_status = 'DONE' GROUP BY conversation_id) m
         ON m.conversation_id = c.conversation_id
     INNER JOIN users u ON u.user_id = c.owner_id
     ORDER BY m.mediaSize DESC
     """
     private static let sqlQueryConversationStorageUsage = """
     SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
-    WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
+    WHERE conversation_id = ? AND media_status = 'DONE' GROUP BY category
     """
     private static let sqlUnreadMessageCountWithoutMuted = """
     SELECT ifnull(SUM(unseen_message_count),0) FROM (

@@ -477,6 +477,7 @@
 		7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */; };
 		7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */; };
 		7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */; };
+		7BF205702484BCB2004C0819 /* ProfileMenuItemLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF2056F2484BCB2004C0819 /* ProfileMenuItemLabel.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
 		7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */; };
@@ -1306,6 +1307,7 @@
 		7BF19C1F241D40FA00B192D5 /* LocationSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationSearchView.xib; sourceTree = "<group>"; };
 		7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPickedLocation.swift; sourceTree = "<group>"; };
 		7BF19C23241E0EA200B192D5 /* PinAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinAnnotationView.swift; sourceTree = "<group>"; };
+		7BF2056F2484BCB2004C0819 /* ProfileMenuItemLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItemLabel.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
 		7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadJob.swift; sourceTree = "<group>"; };
@@ -1838,6 +1840,7 @@
 				E09C5EBF23703FEE0095F729 /* ProfileShortcutView.swift */,
 				E05D992823911D55009F9E8D /* ProfileFavoriteAppsView.xib */,
 				E05D992A23911D64009F9E8D /* ProfileFavoriteAppsView.swift */,
+				7BF2056F2484BCB2004C0819 /* ProfileMenuItemLabel.swift */,
 				E0BEB85C236C1C49001FE534 /* ProfileMenuItemView.xib */,
 				E0BEB777236B0DF8001FE534 /* ProfileMenuItemView.swift */,
 				7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */,
@@ -4118,6 +4121,7 @@
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				7BFCB8A8241CF1B800E7BC43 /* LocationExtensions.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
+				7BF205702484BCB2004C0819 /* ProfileMenuItemLabel.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,

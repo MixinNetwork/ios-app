@@ -4,7 +4,7 @@ class ProfileMenuItemView: UIView, XibDesignable {
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var button: UIButton!
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var label: ProfileMenuItemLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
     weak var target: NSObject?
@@ -19,7 +19,7 @@ class ProfileMenuItemView: UIView, XibDesignable {
                 return
             }
             label.text = item.title
-            label.textColor = item.style.contains(.destructive) ? .mixinRed : .text
+            label.ibOverridingTextColor = item.style.contains(.destructive) ? .mixinRed : .text
             subtitleLabel.text = item.subtitle
         }
     }

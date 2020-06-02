@@ -130,7 +130,6 @@ extension MixinCallInterface: CallInterface {
             pendingIncomingUuid = nil
         }
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [uuid.uuidString])
-        DispatchQueue.main.sync(execute: service.dismissCallingInterface)
     }
     
     func reportOutgoingCallStartedConnecting(uuid: UUID) {

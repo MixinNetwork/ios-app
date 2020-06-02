@@ -134,7 +134,7 @@ extension NativeCallInterface: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         pendingAnswerAction?.fail()
         pendingAnswerAction = nil
-        service.clean()
+        service.closeAll()
     }
     
     func providerDidBegin(_ provider: CXProvider) {

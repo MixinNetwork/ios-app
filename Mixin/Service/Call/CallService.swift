@@ -376,12 +376,9 @@ extension CallService {
         
         queue.async {
             if let call = self.activeCall, call.uuid == uuid {
-                self.unansweredTimer?.invalidate()
                 DispatchQueue.main.sync {
                     self.viewController?.style = .disconnecting
                 }
-                self.ringtonePlayer.stop()
-                self.rtcClient.close()
                 let category: MessageCategory
                 if call.connectedDate != nil {
                     category = .WEBRTC_AUDIO_END
@@ -391,37 +388,46 @@ extension CallService {
                     category = .WEBRTC_AUDIO_DECLINE
                 }
                 sendEndMessage(call: call, category: category)
-                self.activeCall = nil
-                self.isMuted = false
-                self.usesSpeaker = false
-                DispatchQueue.main.sync(execute: self.dismissCallingInterface)
-            } else if let call = self.pendingCalls.removeValue(forKey: uuid) {
+            } else if let call = self.pendingCalls[uuid] {
                 sendEndMessage(call: call, category: .WEBRTC_AUDIO_DECLINE)
-                if self.pendingCalls.isEmpty && self.activeCall == nil {
-                    self.ringtonePlayer.stop()
-                    DispatchQueue.main.sync(execute: self.dismissCallingInterface)
-                }
-                self.pendingSDPs.removeValue(forKey: uuid)
-            } else {
-                DispatchQueue.main.sync(execute: self.dismissCallingInterface)
-                self.usesSpeaker = false
-                self.isMuted = false
             }
-            self.pendingCandidates[uuid] = nil
+            self.close(uuid: uuid)
         }
     }
     
-    func clean() {
-        rtcClient.close()
+    func closeAll() {
         activeCall = nil
+        rtcClient.close()
+        unansweredTimer?.invalidate()
         pendingCalls = [:]
         pendingSDPs = [:]
-        isMuted = false
-        usesSpeaker = false
+        pendingCandidates = [:]
         ringtonePlayer.stop()
-        unansweredTimer?.invalidate()
         performSynchronouslyOnMainThread {
             dismissCallingInterface()
+        }
+        isMuted = false
+        usesSpeaker = false
+    }
+    
+    func close(uuid: UUID) {
+        if let call = activeCall, call.uuid == uuid {
+            activeCall = nil
+            rtcClient.close()
+            if call.isOutgoing {
+                unansweredTimer?.invalidate()
+            }
+        }
+        pendingCalls.removeValue(forKey: uuid)
+        pendingSDPs.removeValue(forKey: uuid)
+        pendingCandidates.removeValue(forKey: uuid)
+        if pendingCalls.isEmpty && activeCall == nil {
+            ringtonePlayer.stop()
+            performSynchronouslyOnMainThread {
+                dismissCallingInterface()
+            }
+            isMuted = false
+            usesSpeaker = false
         }
     }
     
@@ -464,9 +470,7 @@ extension CallService {
             let reply = Message.createWebRTCMessage(quote: data, category: category, status: .SENDING)
             SendMessageService.shared.sendWebRTCMessage(message: reply, recipientId: data.getSenderId())
             if let uuid = UUID(uuidString: data.messageId) {
-                pendingCalls.removeValue(forKey: uuid)
-                pendingSDPs.removeValue(forKey: uuid)
-                pendingCandidates.removeValue(forKey: uuid)
+                close(uuid: uuid)
             }
         }
         
@@ -534,9 +538,9 @@ extension CallService {
             return
         }
         if let call = activeCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+            callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             call.hasReceivedRemoteAnswer = true
             unansweredTimer?.invalidate()
-            callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             ringtonePlayer.stop()
             DispatchQueue.main.sync {
                 viewController?.style = .connecting
@@ -552,24 +556,14 @@ extension CallService {
                 }
             }
         } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
-            
-            func insertMessageAndReport(call: Call) {
-                insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
-                callInterface.reportCall(uuid: call.uuid, endedByReason: .remoteEnded)
-            }
-            
-            if let call = activeCall, call.uuid == uuid {
+            if let call = activeCall ?? pendingCalls[uuid], call.uuid == uuid {
                 DispatchQueue.main.sync {
                     viewController?.style = .disconnecting
                 }
-                insertMessageAndReport(call: call)
-                clean()
-            } else if let call = pendingCalls.removeValue(forKey: uuid) {
-                ringtonePlayer.stop()
-                insertMessageAndReport(call: call)
-                pendingSDPs.removeValue(forKey: uuid)
-                pendingCandidates.removeValue(forKey: uuid)
+                insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             }
+            callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
+            close(uuid: uuid)
         }
     }
     
@@ -709,7 +703,7 @@ extension CallService {
                                                         category: .WEBRTC_AUDIO_FAILED,
                                                         status: .DELIVERED)
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
-        clean()
+        close(uuid: call.uuid)
         reporter.report(error: error)
     }
     

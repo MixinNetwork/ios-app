@@ -42,8 +42,8 @@ class CallService: NSObject {
     
     private lazy var pushRegistry = PKPushRegistry(queue: queue)
     private lazy var rtcClient = WebRTCClient()
-    private lazy var nativeCallInterface = NativeCallInterface(manager: self)
-    private lazy var mixinCallInterface = MixinCallInterface(manager: self)
+    private lazy var nativeCallInterface = NativeCallInterface(service: self)
+    private lazy var mixinCallInterface = MixinCallInterface(service: self)
     
     private var window: CallWindow?
     private var viewController: CallViewController?

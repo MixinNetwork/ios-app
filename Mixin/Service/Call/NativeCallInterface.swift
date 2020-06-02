@@ -6,13 +6,13 @@ class NativeCallInterface: NSObject {
     private let provider: CXProvider
     private let callController = CXCallController()
     
-    private unowned var service: CallService!
+    private unowned let service: CallService
     
     private var pendingAnswerAction: CXAnswerCallAction?
     private var unansweredIncomingCallUUIDs = Set<UUID>()
     
-    required init(manager: CallService) {
-        self.service = manager
+    required init(service: CallService) {
+        self.service = service
         let config = CXProviderConfiguration(localizedName: Bundle.main.displayName)
         config.ringtoneSound = R.file.callCaf.fullName
         config.iconTemplateImageData = R.image.call.ic_mixin()?.pngData()

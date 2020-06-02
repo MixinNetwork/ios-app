@@ -9,8 +9,9 @@ class MixinCallInterface {
     
     private let callObserver = CXCallObserver()
     
+    private unowned let service: CallService
+    
     private lazy var vibrator = Vibrator()
-    private unowned var service: CallService!
     
     private var pendingIncomingUuid: UUID?
     
@@ -18,8 +19,8 @@ class MixinCallInterface {
         service.activeCall == nil && callObserver.calls.isEmpty
     }
     
-    required init(manager: CallService) {
-        self.service = manager
+    required init(service: CallService) {
+        self.service = service
     }
     
     private func requestRecordPermission(completion: @escaping (Bool) -> Void) {

@@ -89,7 +89,7 @@ extension MixinCallInterface: CallInterface {
         completion(nil)
     }
     
-    func reportNewIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
+    func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
         guard isLineIdle else {
             completion(CallError.busy)
             return
@@ -100,15 +100,21 @@ extension MixinCallInterface: CallInterface {
                 return
             }
             if self.pendingIncomingUuid == nil {
-                let user = call.opponentUser
                 DispatchQueue.main.sync {
                     if UIApplication.shared.applicationState == .active {
                         self.service.ringtonePlayer.play(ringtone: .incoming)
                     } else {
-                        NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: user.fullName)
+                        NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
                     }
                     self.vibrator.start()
-                    self.service.showCallingInterface(user: user, style: .incoming)
+                    if let user = call.opponentUser {
+                        self.service.showCallingInterface(user: user,
+                                                          style: .incoming)
+                    } else {
+                        self.service.showCallingInterface(userId: call.opponentUserId,
+                                                          username: call.opponentUsername,
+                                                          style: .incoming)
+                    }
                 }
                 self.pendingIncomingUuid = call.uuid
                 completion(nil)

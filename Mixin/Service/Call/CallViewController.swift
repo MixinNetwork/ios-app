@@ -57,11 +57,20 @@ class CallViewController: UIViewController {
         setConnectionDurationTimerEnabled(false)
     }
     
+    func reload(userId: String, username: String) {
+        nameLabel.text = username
+        avatarImageView.prepareForReuse()
+        avatarImageView.setImage(userId: userId, name: username)
+        muteButton.isSelected = service.isMuted
+        speakerButton.isSelected = service.usesSpeaker
+    }
+    
     func reload(user: UserItem) {
-        avatarImageView.setImage(with: user)
         nameLabel.text = user.fullName
-        muteButton.isSelected = false
-        speakerButton.isSelected = false
+        avatarImageView.prepareForReuse()
+        avatarImageView.setImage(with: user)
+        muteButton.isSelected = service.isMuted
+        speakerButton.isSelected = service.usesSpeaker
     }
     
     @IBAction func hangUpAction(_ sender: Any) {

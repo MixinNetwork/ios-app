@@ -9,6 +9,7 @@ class NativeCallInterface: NSObject {
     private unowned var service: CallService!
     
     private var pendingAnswerAction: CXAnswerCallAction?
+    private var unansweredIncomingCallUUIDs = Set<UUID>()
     
     required init(manager: CallService) {
         self.service = manager
@@ -39,8 +40,7 @@ class NativeCallInterface: NSObject {
         provider.reportCall(with: uuid, endedAt: nil, reason: .failed)
     }
     
-    func reportNewIncomingCall(uuid: UUID, userId: String, username: String, completion: @escaping CallInterfaceCompletion) {
-        pendingAnswerAction = nil
+    func reportIncomingCall(uuid: UUID, userId: String, username: String, completion: @escaping CallInterfaceCompletion) {
         let update = CXCallUpdate()
         update.remoteHandle = CXHandle(type: .generic, value: userId)
         update.localizedCallerName = username
@@ -49,7 +49,22 @@ class NativeCallInterface: NSObject {
         update.supportsUngrouping = false
         update.supportsDTMF = false
         update.hasVideo = false
-        provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
+        if unansweredIncomingCallUUIDs.contains(uuid) {
+            provider.reportCall(with: uuid, updated: update)
+            completion(nil)
+            if let action = pendingAnswerAction, uuid == action.callUUID, service.hasPendingSDP(for: uuid) {
+                unansweredIncomingCallUUIDs.remove(uuid)
+                service.answerCall(uuid: action.callUUID) { (success) in
+                    if !success {
+                        action.fail()
+                        self.pendingAnswerAction = nil
+                    }
+                }
+            }
+        } else {
+            unansweredIncomingCallUUIDs.insert(uuid)
+            provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
+        }
     }
     
 }
@@ -57,17 +72,20 @@ class NativeCallInterface: NSObject {
 extension NativeCallInterface: CallInterface {
     
     func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion) {
-        pendingAnswerAction = nil
         let action = CXStartCallAction(call: uuid, handle: handle.cxHandle)
         callController.requestTransaction(with: action, completion: completion)
     }
     
     func requestAnswerCall(uuid: UUID) {
-        service.answerCall(uuid: uuid, completion: nil)
+        assertionFailure("This is not expected to happen")
     }
     
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
-        pendingAnswerAction = nil
+        if let action = pendingAnswerAction, uuid == action.callUUID {
+            action.fail()
+            pendingAnswerAction = nil
+        }
+        unansweredIncomingCallUUIDs.remove(uuid)
         let action = CXEndCallAction(call: uuid)
         callController.requestTransaction(with: action, completion: completion)
     }
@@ -77,15 +95,19 @@ extension NativeCallInterface: CallInterface {
         callController.requestTransaction(with: action, completion: completion)
     }
     
-    func reportNewIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
-        reportNewIncomingCall(uuid: call.uuid,
-                              userId: call.opponentUser.userId,
-                              username: call.opponentUser.fullName,
-                              completion: completion)
+    func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
+        reportIncomingCall(uuid: call.uuid,
+                           userId: call.opponentUserId,
+                           username: call.opponentUsername,
+                           completion: completion)
     }
     
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason) {
-        pendingAnswerAction = nil
+        if let action = pendingAnswerAction, uuid == action.callUUID {
+            action.fail()
+            pendingAnswerAction = nil
+        }
+        unansweredIncomingCallUUIDs.remove(uuid)
         provider.reportCall(with: uuid, endedAt: nil, reason: reason)
     }
     
@@ -110,6 +132,7 @@ extension NativeCallInterface: CallInterface {
 extension NativeCallInterface: CXProviderDelegate {
     
     func providerDidReset(_ provider: CXProvider) {
+        pendingAnswerAction?.fail()
         pendingAnswerAction = nil
         service.clean()
     }
@@ -130,12 +153,17 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        service.answerCall(uuid: action.callUUID) { (success) in
-            if success {
-                self.pendingAnswerAction = action
-            } else {
-                action.fail()
+        if service.hasPendingSDP(for: action.callUUID) {
+            unansweredIncomingCallUUIDs.remove(action.callUUID)
+            service.answerCall(uuid: action.callUUID) { (success) in
+                if success {
+                    self.pendingAnswerAction = action
+                } else {
+                    action.fail()
+                }
             }
+        } else {
+            pendingAnswerAction = action
         }
     }
     

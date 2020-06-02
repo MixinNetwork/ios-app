@@ -582,10 +582,9 @@ extension CallService {
         }
     }
     
-    private func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory?) {
+    private func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
         let duration = abs(timeIntervalSinceNow * millisecondsPerSecond)
-        let category = category ?? .WEBRTC_AUDIO_FAILED
         let shouldMarkMessageRead = call.isOutgoing
             || category == .WEBRTC_AUDIO_END
             || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)

@@ -380,7 +380,7 @@ extension AppDelegate {
         if let lastVC = (navigationController.viewControllers.last as? ContainerViewController)?.viewController, lastVC is WalletViewController {
             return
         }
-        navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+        WalletViewController.presentWallet()
     }
     
     private func showMyQrCode() {

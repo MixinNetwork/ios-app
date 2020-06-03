@@ -24,6 +24,36 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     class func instance() -> UIViewController {
         return ContainerViewController.instance(viewController: R.storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
     }
+
+    class func presentWallet() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+
+        if account.has_pin {
+            let shouldValidatePin: Bool
+            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
+                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            } else {
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                shouldValidatePin = true
+            }
+
+            if shouldValidatePin {
+                let validator = PinValidationViewController(onSuccess: { (_) in
+                    navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+                })
+                UIApplication.homeViewController?.present(validator, animated: true, completion: nil)
+            } else {
+                navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+            }
+        } else {
+            navigationController.pushViewController(withBackRoot: WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet))
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

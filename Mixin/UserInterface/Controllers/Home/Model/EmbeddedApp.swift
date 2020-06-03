@@ -7,7 +7,7 @@ final class EmbeddedApp {
                                     icon: R.image.ic_home_app_wallet()!,
                                     categoryIcon: R.image.ic_app_category_wallet()!,
                                     name: R.string.localizable.wallet_title()) {
-                                        UIApplication.homeViewController?.showWallet()
+                                        WalletViewController.presentWallet()
     }
     
     static let scan = EmbeddedApp(id: App.scanAppId,

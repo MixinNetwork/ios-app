@@ -111,6 +111,11 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                                                       isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
             }
         } else if let aps = userInfo["aps"] as? [String: AnyHashable?], let alert = aps["alert"] as? [String: AnyHashable?], let key = alert["loc-key"] as? String, key == "alert_key_contact_audio_call_message" {
+            if !WebSocketService.shared.isConnected {
+                AppDelegate.current.cancelBackgroundTask()
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+            }
             CallService.shared.handlePendingWebRTCJobs()
         } else {
             DispatchQueue.global().async {

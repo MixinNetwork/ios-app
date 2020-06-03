@@ -17,10 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var mainWindow = UIWindow(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
-    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-    private var backgroundTime: Timer?
-    private var stopTaskTime: Timer?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         MixinService.callMessageCoordinator = CallService.shared
@@ -38,7 +35,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         addObservers()
         Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         if UIApplication.shared.applicationState == .background {
-            beginBackgroundTaskReceivingMessages(caller: "didFinishLaunchingWithOptions", completionHandler: nil)
+            MixinService.isStopProcessMessages = false
+            WebSocketService.shared.connectIfNeeded()
+            BackgroundMessagingService.shared.begin(caller: "didFinishLaunchingWithOptions",
+                                                    stopsRegarlessApplicationState: false,
+                                                    completionHandler: nil)
         }
         return true
     }
@@ -57,27 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
-
-        let startDate = Date()
-        requestTimeout = 3
-        cancelBackgroundTask()
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-        }
-        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            MixinService.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
-        }
+        BackgroundMessagingService.shared.begin(caller: "applicationDidEnterBackground",
+                                                stopsRegarlessApplicationState: true,
+                                                completionHandler: nil)
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -93,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         requestTimeout = 5
-        cancelBackgroundTask()
+        BackgroundMessagingService.shared.stop()
         MixinService.isStopProcessMessages = false
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
             DispatchQueue.global().async {
@@ -179,23 +162,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
-        beginBackgroundTaskReceivingMessages(caller: "didReceiveRemoteNotification", completionHandler: completionHandler)
+        MixinService.isStopProcessMessages = false
+        WebSocketService.shared.connectIfNeeded()
+        BackgroundMessagingService.shared.begin(caller: "didReceiveRemoteNotification",
+                                                stopsRegarlessApplicationState: false,
+                                                completionHandler: completionHandler)
     }
     
 }
 
 extension AppDelegate {
-    
-    func cancelBackgroundTask() {
-        stopTaskTime?.invalidate()
-        stopTaskTime = nil
-        backgroundTime?.invalidate()
-        backgroundTime = nil
-        if backgroundTaskID != .invalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-            backgroundTaskID = .invalid
-        }
-    }
     
     private func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
@@ -313,37 +289,6 @@ extension AppDelegate {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
-    }
-    
-    private func beginBackgroundTaskReceivingMessages(caller: String, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        let startDate = Date()
-        cancelBackgroundTask()
-        MixinService.isStopProcessMessages = false
-        WebSocketService.shared.connectIfNeeded()
-
-        requestTimeout = 3
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] \(caller)...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler?(.newData)
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler?(.newData)
-        }
-        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            guard UIApplication.shared.applicationState != .active else {
-                return
-            }
-            MixinService.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
-        }
     }
     
 }

@@ -8,6 +8,7 @@ enum CallError: Error {
     case missingUser(userId: String)
     case networkFailure
     case microphonePermissionDenied
+    case inconsistentCallStarted
     
     case setRemoteSdp(Error)
     case answerConstruction(Error?)

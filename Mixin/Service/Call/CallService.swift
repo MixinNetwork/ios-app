@@ -180,6 +180,9 @@ extension CallService {
     
     func requestStartCall(opponentUser: UserItem) {
         let uuid = UUID()
+        queue.async {
+            self.activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
+        }
         callInterface.requestStartCall(uuid: uuid, handle: .userId(opponentUser.userId)) { (error) in
             if let error = error as? CallError {
                 self.alert(error: error)
@@ -240,16 +243,18 @@ extension CallService {
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
         queue.async {
-            let user: UserItem? = {
-                switch handle {
-                case .userId(let userId):
-                    return UserDAO.shared.getUser(userId: userId)
-                case .phoneNumber:
-                    return nil
-                }
-            }()
-            guard let opponentUser = user else {
+            guard case let .userId(opponentUserId) = handle else {
                 self.alert(error: .invalidHandle)
+                completion?(false)
+                return
+            }
+            guard let call = self.activeCall, call.opponentUserId == opponentUserId else {
+                self.alert(error: .inconsistentCallStarted)
+                completion?(false)
+                return
+            }
+            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: opponentUserId) else {
+                self.alert(error: .missingUser(userId: opponentUserId))
                 completion?(false)
                 return
             }
@@ -261,8 +266,6 @@ extension CallService {
             DispatchQueue.main.sync {
                 self.showCallingInterface(user: opponentUser, style: .outgoing)
             }
-            let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-            self.activeCall = call
             
             let timer = Timer(timeInterval: callTimeoutInterval,
                               target: self,

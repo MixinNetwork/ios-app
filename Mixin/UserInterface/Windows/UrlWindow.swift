@@ -11,7 +11,7 @@ class UrlWindow {
             case let .codes(code):
                 return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
             case .pay:
-                return checkPayUrl(url: url)
+                return checkPayUrl(query: url.getKeyVals())
             case .withdrawal:
                 return checkWithdrawal(url: url)
             case .address:
@@ -45,70 +45,12 @@ class UrlWindow {
         }
     }
 
-    class func checkDonate(url: String) -> Bool {
-        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:"].contains(where: url.lowercased().hasPrefix) else {
-            return false
-        }
-        guard let components = URLComponents(string: url.lowercased()), let items = components.queryItems else {
-            return false
-        }
-        guard let amount = items.first(where: { $0.name == "amount" })?.value, amount.isNumeric else {
-            return false
-        }
-        guard let recipientId = items.first(where: { $0.name == "recipient" })?.value, UUID(uuidString: recipientId) != nil else {
-            return false
-        }
-        guard let assetId = items.first(where: { $0.name == "asset" })?.value, UUID(uuidString: assetId) != nil else {
-            return false
-        }
-
-        let traceId = items.first(where: { $0.name == "trace" })?.value.uuidString ?? UUID().uuidString.lowercased()
-        var memo = items.first(where: { $0.name == "memo" })?.value
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async {
-            var userItem = UserDAO.shared.getUser(userId: recipientId)
-            if userItem == nil {
-                switch UserAPI.shared.showUser(userId: recipientId) {
-                case let .success(response):
-                    userItem = UserItem.createUser(from: response)
-                    UserDAO.shared.updateUsers(users: [response])
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: R.string.localizable.contact_search_not_found())
-                        } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        }
-                    }
-                    return
-                }
-            }
-
-            guard let user = userItem, let asset = syncAsset(assetId: assetId, hud: hud) else {
-                return
-            }
-
-            hud.safeHide()
-
-            DispatchQueue.main.async {
-                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: false), amount: amount, memo: memo ?? "", fiatMoneyAmount: nil, textfield: nil).presentPopupControllerAnimated()
-            }
-            
-        }
-        return true
-    }
-
     class func checkApp(url: URL, userId: String) -> Bool {
         guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
             return false
         }
 
-        let isOpenApp = url.getKeyVals()?["action"] == "open"
+        let isOpenApp = url.getKeyVals()["action"] == "open"
 
         DispatchQueue.global().async {
             var appItem = AppDAO.shared.getApp(ofUserId: userId)
@@ -168,7 +110,7 @@ class UrlWindow {
 
     class func checkSnapshot(url: URL) -> Bool {
         let snapshotId: String? = (url.pathComponents.count > 1 ? url.pathComponents[1] : nil).uuidString
-        let traceId: String? = url.getKeyVals()?["trace"].uuidString
+        let traceId: String? = url.getKeyVals()["trace"].uuidString
 
         guard !snapshotId.isNilOrEmpty || !traceId.isNilOrEmpty else {
             return false
@@ -357,9 +299,7 @@ class UrlWindow {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let query = url.getKeyVals() else {
-            return false
-        }
+        let query = url.getKeyVals()
         guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
             return false
         }
@@ -413,21 +353,29 @@ class UrlWindow {
         return true
     }
 
-    class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
+    class func checkPayUrl(url: String) -> Bool {
+        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:"].contains(where: url.lowercased().hasPrefix) else {
+            return false
+        }
+        guard let components = URLComponents(string: url.lowercased()) else {
+            return false
+        }
+        return checkPayUrl(query: components.getKeyVals())
+    }
+
+    class func checkPayUrl(query: [String: String]) -> Bool {
         guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let query = url.getKeyVals() else {
+        guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
             return false
         }
-        guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"] else {
-            return false
-        }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !amount.isEmpty else {
+        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isNumeric else {
             return false
         }
 
+        let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()
         var memo = query["memo"]
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo
@@ -466,9 +414,7 @@ class UrlWindow {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let query = url.getKeyVals() else {
-            return false
-        }
+        let query = url.getKeyVals()
         guard let assetId = query["asset"], !assetId.isEmpty, UUID(uuidString: assetId) != nil else {
             return false
         }
@@ -552,9 +498,7 @@ class UrlWindow {
     }
 
     class func checkSendUrl(url: URL) -> Bool {
-        guard let query = url.getKeyVals() else {
-            return false
-        }
+        let query = url.getKeyVals()
         guard let text = query["text"], !text.isEmpty else {
             return false
         }

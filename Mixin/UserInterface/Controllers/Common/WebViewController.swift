@@ -182,10 +182,13 @@ class WebViewController: UIViewController {
                 }
                 controller.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
-                        
-                    } else {
-                        RecognizeWindow.instance().presentWindow(text: string)
+                        return
                     }
+                    if UrlWindow.checkPayUrl(url: string) {
+                        return
+                    }
+
+                    RecognizeWindow.instance().presentWindow(text: string)
                 }))
                 break
             }

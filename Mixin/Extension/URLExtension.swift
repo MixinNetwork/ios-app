@@ -10,14 +10,8 @@ extension URL {
     static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
     static let unknownCategory = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360043776071")!
     
-    func getKeyVals() -> Dictionary<String, String>? {
-        var results = [String: String]()
-        if let components = URLComponents(url: self, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
-            for item in queryItems {
-                results.updateValue(item.value ?? "", forKey: item.name)
-            }
-        }
-        return results
+    func getKeyVals() -> [String: String] {
+        return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]
     }
 
     var fileExists: Bool {
@@ -61,4 +55,18 @@ extension URL {
 
         return String(mimeUTI.takeUnretainedValue())
     }
+}
+
+extension URLComponents {
+
+    func getKeyVals() -> [String: String] {
+        var results = [String: String]()
+        if let items = queryItems {
+            for item in items {
+                results.updateValue(item.value ?? "", forKey: item.name)
+            }
+        }
+        return results
+    }
+
 }

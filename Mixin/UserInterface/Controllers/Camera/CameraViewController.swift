@@ -624,7 +624,7 @@ extension CameraViewController {
             if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
                 return
             }
-            if UrlWindow.checkDonate(url: string) {
+            if UrlWindow.checkPayUrl(url: string) {
                 return
             }
             if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
@@ -697,7 +697,7 @@ extension CameraViewController: NotificationControllerDelegate {
         guard let string = localObject as? String else {
             return
         }
-        if UrlWindow.checkDonate(url: string) {
+        if UrlWindow.checkPayUrl(url: string) {
             return
         }
         if let url = URL(string: string), UrlWindow.checkUrl(url: url) {

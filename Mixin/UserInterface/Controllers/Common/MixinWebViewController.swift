@@ -173,7 +173,7 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        if UrlWindow.checkUrl(url: url, fromWeb: true) {
+        if UrlWindow.checkUrl(url: url, fromWeb: true) || UrlWindow.checkPayUrl(url: url.absoluteString) {
             decisionHandler(.cancel)
             return
         } else if "file" == url.scheme {

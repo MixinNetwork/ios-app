@@ -363,6 +363,23 @@ extension CallService {
     func endCall(uuid: UUID) {
         
         func sendEndMessage(call: Call, category: MessageCategory) {
+            DispatchQueue.main.sync {
+                var identifier: UIBackgroundTaskIdentifier = .invalid
+                var cancelBackgroundTask: DispatchWorkItem!
+                cancelBackgroundTask = DispatchWorkItem {
+                    if identifier != .invalid {
+                        UIApplication.shared.endBackgroundTask(identifier)
+                    }
+                    if let task = cancelBackgroundTask {
+                        task.cancel()
+                    }
+                }
+                identifier = UIApplication.shared.beginBackgroundTask {
+                    cancelBackgroundTask.perform()
+                }
+                let deadline: DispatchTime = .now() + UIApplication.shared.backgroundTimeRemaining - 1
+                DispatchQueue.main.asyncAfter(deadline: deadline, execute: cancelBackgroundTask)
+            }
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: category,
                                                   status: .SENDING,

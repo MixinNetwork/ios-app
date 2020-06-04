@@ -134,9 +134,7 @@ extension CallService: PKPushRegistryDelegate {
             return
         }
         DispatchQueue.main.async {
-            BackgroundMessagingService.shared.begin(caller: "didReceiveIncomingPushWith",
-                                                    stopsRegarlessApplicationState: false,
-                                                    completionHandler: nil)
+            self.beginAutoCancellingBackgroundTaskIfNotActive()
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
@@ -395,14 +393,7 @@ extension CallService {
     func endCall(uuid: UUID) {
         
         func sendEndMessage(call: Call, category: MessageCategory) {
-            DispatchQueue.main.sync {
-                guard UIApplication.shared.applicationState != .active else {
-                    return
-                }
-                BackgroundMessagingService.shared.begin(caller: "CallService.endCall.sendEndMessage",
-                                                        stopsRegarlessApplicationState: false,
-                                                        completionHandler: nil)
-            }
+            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: category,
                                                   status: .SENDING,
@@ -540,14 +531,7 @@ extension CallService {
         }
         
         do {
-            DispatchQueue.main.sync {
-                guard UIApplication.shared.applicationState != .active else {
-                    return
-                }
-                BackgroundMessagingService.shared.begin(caller: "CallService.handleOffer",
-                                                        stopsRegarlessApplicationState: false,
-                                                        completionHandler: nil)
-            }
+            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             guard let uuid = UUID(uuidString: data.messageId) else {
                 throw CallError.invalidUUID(uuid: data.messageId)
             }
@@ -811,6 +795,27 @@ extension CallService {
             }
             session.unlockForConfiguration()
         }
+    }
+    
+    private func beginAutoCancellingBackgroundTaskIfNotActive() {
+        guard UIApplication.shared.applicationState != .active else {
+            return
+        }
+        var identifier: UIBackgroundTaskIdentifier = .invalid
+        var cancelBackgroundTask: DispatchWorkItem!
+        cancelBackgroundTask = DispatchWorkItem {
+            if identifier != .invalid {
+                UIApplication.shared.endBackgroundTask(identifier)
+            }
+            if let task = cancelBackgroundTask {
+                task.cancel()
+            }
+        }
+        identifier = UIApplication.shared.beginBackgroundTask {
+            cancelBackgroundTask.perform()
+        }
+        let duration = max(10, min(29, UIApplication.shared.backgroundTimeRemaining - 1))
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
     }
     
 }

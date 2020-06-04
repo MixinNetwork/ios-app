@@ -15,10 +15,6 @@ class MixinCallInterface {
     
     private var pendingIncomingUuid: UUID?
     
-    private var isLineIdle: Bool {
-        service.activeCall == nil && callObserver.calls.isEmpty
-    }
-    
     required init(service: CallService) {
         self.service = service
     }
@@ -31,6 +27,12 @@ extension MixinCallInterface: CallInterface {
         guard WebSocketService.shared.isConnected else {
             completion(CallError.networkFailure)
             return
+        }
+        let isLineIdle: Bool
+        if let call = service.activeCall {
+            isLineIdle = call.uuid == uuid
+        } else {
+            isLineIdle = callObserver.calls.isEmpty
         }
         guard isLineIdle else {
             completion(CallError.busy)
@@ -69,7 +71,7 @@ extension MixinCallInterface: CallInterface {
     }
     
     func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
-        guard isLineIdle else {
+        guard service.activeCall == nil && callObserver.calls.isEmpty else {
             completion(CallError.busy)
             return
         }

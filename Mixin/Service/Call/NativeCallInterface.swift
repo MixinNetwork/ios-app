@@ -23,7 +23,7 @@ class NativeCallInterface: NSObject {
         config.includesCallsInRecents = false
         self.provider = CXProvider(configuration: config)
         super.init()
-        provider.setDelegate(self, queue: nil)
+        provider.setDelegate(self, queue: service.queue)
     }
     
     @available(*, unavailable)

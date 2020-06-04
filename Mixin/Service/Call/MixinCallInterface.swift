@@ -23,22 +23,6 @@ class MixinCallInterface {
         self.service = service
     }
     
-    private func requestRecordPermission(completion: @escaping (Bool) -> Void) {
-        let session = AVAudioSession.sharedInstance()
-        switch session.recordPermission {
-        case .undetermined:
-            session.requestRecordPermission { (granted) in
-                completion(granted)
-            }
-        case .denied:
-            completion(false)
-        case .granted:
-            completion(true)
-        @unknown default:
-            completion(false)
-        }
-    }
-    
 }
 
 extension MixinCallInterface: CallInterface {
@@ -52,22 +36,16 @@ extension MixinCallInterface: CallInterface {
             completion(CallError.busy)
             return
         }
-        requestRecordPermission { (granted) in
-            if granted {
-                self.service.startCall(uuid: uuid, handle: handle, completion: { success in
-                    guard success else {
-                        return
-                    }
-                    RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                        try? RTCAudioSession.sharedInstance().setActive(true)
-                        self.service.ringtonePlayer.play(ringtone: .outgoing)
-                    }
-                })
-                completion(nil)
-            } else {
-                completion(CallError.microphonePermissionDenied)
+        self.service.startCall(uuid: uuid, handle: handle, completion: { success in
+            guard success else {
+                return
             }
-        }
+            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                try? RTCAudioSession.sharedInstance().setActive(true)
+                self.service.ringtonePlayer.play(ringtone: .outgoing)
+            }
+        })
+        completion(nil)
     }
     
     func requestAnswerCall(uuid: UUID) {
@@ -95,32 +73,34 @@ extension MixinCallInterface: CallInterface {
             completion(CallError.busy)
             return
         }
-        requestRecordPermission { (granted) in
-            guard granted else {
-                completion(CallError.microphonePermissionDenied)
-                return
-            }
-            if self.pendingIncomingUuid == nil {
-                DispatchQueue.main.sync {
-                    if UIApplication.shared.applicationState == .active {
-                        self.service.ringtonePlayer.play(ringtone: .incoming)
-                    } else {
-                        NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
-                    }
-                    self.vibrator.start()
-                    if let user = call.opponentUser {
-                        self.service.showCallingInterface(user: user,
-                                                          style: .incoming)
-                    } else {
-                        self.service.showCallingInterface(userId: call.opponentUserId,
-                                                          username: call.opponentUsername,
-                                                          style: .incoming)
-                    }
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            self.service.queue.async {
+                guard isGranted else {
+                    completion(CallError.microphonePermissionDenied)
+                    return
                 }
-                self.pendingIncomingUuid = call.uuid
-                completion(nil)
-            } else {
-                completion(CallError.busy)
+                if self.pendingIncomingUuid == nil {
+                    DispatchQueue.main.sync {
+                        if UIApplication.shared.applicationState == .active {
+                            self.service.ringtonePlayer.play(ringtone: .incoming)
+                        } else {
+                            NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
+                        }
+                        self.vibrator.start()
+                        if let user = call.opponentUser {
+                            self.service.showCallingInterface(user: user,
+                                                              style: .incoming)
+                        } else {
+                            self.service.showCallingInterface(userId: call.opponentUserId,
+                                                              username: call.opponentUsername,
+                                                              style: .incoming)
+                        }
+                    }
+                    self.pendingIncomingUuid = call.uuid
+                    completion(nil)
+                } else {
+                    completion(CallError.busy)
+                }
             }
         }
     }

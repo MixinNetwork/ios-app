@@ -8,20 +8,11 @@ class CallService: NSObject {
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
     
-    private static let recordPermissionWasUndetermined = AVAudioSession.sharedInstance().recordPermission == .undetermined
-    
-    static var isCallKitAvailable: Bool {
-        let isMainlandChina = false
-        // Prevent call interface from switching during App session
-        let isRecordPermissionGranted = !recordPermissionWasUndetermined
-            && AVAudioSession.sharedInstance().recordPermission == .granted
-        return !isMainlandChina && isRecordPermissionGranted
+    private static var isMainlandChina: Bool {
+        false
     }
     
-    private(set) lazy var ringtonePlayer = RingtonePlayer()
-    
-    private(set) var activeCall: Call?
-    private(set) var handledUUIDs = Set<UUID>() // Read and write from main queue
+    let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
     
     var isMuted = false {
         didSet {
@@ -38,13 +29,19 @@ class CallService: NSObject {
         }
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
+    private(set) lazy var ringtonePlayer = RingtonePlayer()
     
-    private lazy var pushRegistry = PKPushRegistry(queue: queue)
+    private(set) var activeCall: Call?
+    private(set) var handledUUIDs = Set<UUID>() // Access from main queue
+    
+    private let queueSpecificKey = DispatchSpecificKey<Void>()
+    
     private lazy var rtcClient = WebRTCClient()
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
     private lazy var mixinCallInterface = MixinCallInterface(service: self)
     
+    private var usesCallKit = false // Access from CallService.queue
+    private var pushRegistry: PKPushRegistry?
     private var window: CallWindow?
     private var viewController: CallViewController?
     private var pendingCalls = [UUID: Call]()
@@ -53,13 +50,16 @@ class CallService: NSObject {
     
     private weak var unansweredTimer: Timer?
     
+    // Access from CallService.queue
     private var callInterface: CallInterface {
-        Self.isCallKitAvailable ? nativeCallInterface : mixinCallInterface
+        usesCallKit ? nativeCallInterface : mixinCallInterface
     }
     
     override init() {
         super.init()
+        queue.setSpecific(key: queueSpecificKey, value: ())
         rtcClient.delegate = self
+        updateCallKitAvailability()
     }
     
     func showCallingInterface(userId: String, username: String, style: CallViewController.Style) {
@@ -82,14 +82,21 @@ class CallService: NSObject {
     }
     
     func registerForPushKitNotificationsIfAvailable() {
-        guard Self.isCallKitAvailable else {
-            AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
-            return
-        }
-        pushRegistry.desiredPushTypes = [.voIP]
-        pushRegistry.delegate = self
-        if let token = pushRegistry.pushToken(for: .voIP)?.toHexString() {
-            AccountAPI.shared.updateSession(voipToken: token)
+        dispatch {
+            guard self.pushRegistry == nil else {
+                return
+            }
+            guard self.usesCallKit else {
+                AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
+                return
+            }
+            let registry = PKPushRegistry(queue: self.queue)
+            registry.desiredPushTypes = [.voIP]
+            registry.delegate = self
+            if let token = registry.pushToken(for: .voIP)?.toHexString() {
+                AccountAPI.shared.updateSession(voipToken: token)
+            }
+            self.pushRegistry = registry
         }
     }
     
@@ -133,7 +140,7 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if Self.isCallKitAvailable && !MessageDAO.shared.isExist(messageId: messageId) {
+        if usesCallKit && !MessageDAO.shared.isExist(messageId: messageId) {
             let call = Call(uuid: uuid, opponentUserId: userId, opponentUsername: username, isOutgoing: false)
             pendingCalls[uuid] = call
             nativeCallInterface.reportIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
@@ -146,7 +153,7 @@ extension CallService: PKPushRegistryDelegate {
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
-        guard type == .voIP, pushRegistry.pushToken(for: .voIP) == nil else {
+        guard type == .voIP, registry.pushToken(for: .voIP) == nil else {
             return
         }
         AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
@@ -158,7 +165,7 @@ extension CallService: PKPushRegistryDelegate {
 extension CallService {
     
     func handlePendingWebRTCJobs() {
-        queue.async {
+        dispatch {
             let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
             for job in jobs {
                 let data = job.toBlazeMessageData()
@@ -181,47 +188,67 @@ extension CallService {
     }
     
     func requestStartCall(opponentUser: UserItem) {
-        let uuid = UUID()
-        queue.async {
-            self.activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-        }
-        callInterface.requestStartCall(uuid: uuid, handle: .userId(opponentUser.userId)) { (error) in
-            if let error = error as? CallError {
-                self.alert(error: error)
-            } else if let error = error {
-                reporter.report(error: error)
-                showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
+        
+        func performRequest() {
+            updateCallKitAvailability()
+            registerForPushKitNotificationsIfAvailable()
+            let uuid = UUID()
+            activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
+            callInterface.requestStartCall(uuid: uuid, handle: .userId(opponentUser.userId)) { (error) in
+                if let error = error as? CallError {
+                    self.alert(error: error)
+                } else if let error = error {
+                    reporter.report(error: error)
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
+                }
             }
         }
+        
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            if isGranted {
+                self.dispatch(performRequest)
+            } else {
+                DispatchQueue.main.async {
+                    self.alert(error: .microphonePermissionDenied)
+                }
+            }
+        }
+        
     }
     
     func requestEndCall() {
-        guard let uuid = activeCall?.uuid ?? pendingCalls.first?.key else {
-            return
-        }
-        callInterface.requestEndCall(uuid: uuid) { (error) in
-            if let error = error {
-                // Don't think we would get error here
-                reporter.report(error: error)
-                self.endCall(uuid: uuid)
+        dispatch {
+            guard let uuid = self.activeCall?.uuid ?? self.pendingCalls.first?.key else {
+                return
+            }
+            self.callInterface.requestEndCall(uuid: uuid) { (error) in
+                if let error = error {
+                    // Don't think we would get error here
+                    reporter.report(error: error)
+                    self.endCall(uuid: uuid)
+                }
             }
         }
     }
     
     func requestAnswerCall() {
-        guard let uuid = pendingCalls.first?.key else {
-            return
+        dispatch {
+            guard let uuid = self.pendingCalls.first?.key else {
+                return
+            }
+            self.callInterface.requestAnswerCall(uuid: uuid)
         }
-        callInterface.requestAnswerCall(uuid: uuid)
     }
     
     func requestSetMute(_ muted: Bool) {
-        guard let uuid = activeCall?.uuid else {
-            return
-        }
-        callInterface.requestSetMute(uuid: uuid, muted: muted) { (error) in
-            if let error = error {
-                reporter.report(error: error)
+        dispatch {
+            guard let uuid = self.activeCall?.uuid else {
+                return
+            }
+            self.callInterface.requestSetMute(uuid: uuid, muted: muted) { (error) in
+                if let error = error {
+                    reporter.report(error: error)
+                }
             }
         }
     }
@@ -244,7 +271,7 @@ extension CallService {
     
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
-        queue.async {
+        dispatch {
             guard case let .userId(opponentUserId) = handle else {
                 self.alert(error: .invalidHandle)
                 completion?(false)
@@ -279,7 +306,7 @@ extension CallService {
             
             self.rtcClient.offer { (sdp, error) in
                 guard let sdp = sdp else {
-                    self.queue.async {
+                    self.dispatch {
                         self.failCurrentCall(sendFailedMessageToRemote: false,
                                              error: .sdpConstruction(error))
                         completion?(false)
@@ -287,7 +314,7 @@ extension CallService {
                     return
                 }
                 guard let content = sdp.jsonString else {
-                    self.queue.async {
+                    self.dispatch {
                         self.failCurrentCall(sendFailedMessageToRemote: false,
                                              error: .sdpSerialization(error))
                         completion?(false)
@@ -308,7 +335,7 @@ extension CallService {
     }
     
     func answerCall(uuid: UUID, completion: ((Bool) -> Void)?) {
-        queue.async {
+        dispatch {
             guard let call = self.pendingCalls[uuid], let sdp = self.pendingSDPs[uuid] else {
                 return
             }
@@ -332,14 +359,14 @@ extension CallService {
             self.ringtonePlayer.stop()
             self.rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
-                    self.queue.async {
+                    self.dispatch {
                         self.failCurrentCall(sendFailedMessageToRemote: true,
                                              error: .setRemoteSdp(error))
                         completion?(false)
                     }
                 } else {
                     self.rtcClient.answer(completion: { (answer, error) in
-                        self.queue.async {
+                        self.dispatch {
                             guard let answer = answer, let content = answer.jsonString else {
                                 self.failCurrentCall(sendFailedMessageToRemote: true,
                                                      error: .answerConstruction(error))
@@ -387,7 +414,7 @@ extension CallService {
                                        category: category)
         }
         
-        queue.async {
+        dispatch {
             if let call = self.activeCall, call.uuid == uuid {
                 DispatchQueue.main.sync {
                     self.viewController?.style = .disconnecting
@@ -421,6 +448,8 @@ extension CallService {
         }
         isMuted = false
         usesSpeaker = false
+        updateCallKitAvailability()
+        registerForPushKitNotificationsIfAvailable()
     }
     
     func close(uuid: UUID) {
@@ -441,6 +470,8 @@ extension CallService {
             }
             isMuted = false
             usesSpeaker = false
+            updateCallKitAvailability()
+            registerForPushKitNotificationsIfAvailable()
         }
     }
     
@@ -455,7 +486,7 @@ extension CallService: CallMessageCoordinator {
     }
     
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
-        queue.async {
+        dispatch {
             switch data.category {
             case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
                 self.handleOffer(data: data)
@@ -477,13 +508,34 @@ extension CallService {
             return
         }
         
-        func declineOffer(data: BlazeMessageData, category: MessageCategory) {
-            let offer = Message.createWebRTCMessage(data: data, category: category, status: .DELIVERED)
-            MessageDAO.shared.insertMessage(message: offer, messageSource: "")
-            let reply = Message.createWebRTCMessage(quote: data, category: category, status: .SENDING)
-            SendMessageService.shared.sendWebRTCMessage(message: reply, recipientId: data.getSenderId())
-            if let uuid = UUID(uuidString: data.messageId) {
-                close(uuid: uuid)
+        func handle(error: Error) {
+            
+            func declineOffer(data: BlazeMessageData, category: MessageCategory) {
+                let offer = Message.createWebRTCMessage(data: data, category: category, status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: offer, messageSource: "")
+                let reply = Message.createWebRTCMessage(quote: data, category: category, status: .SENDING)
+                SendMessageService.shared.sendWebRTCMessage(message: reply, recipientId: data.getSenderId())
+                if let uuid = UUID(uuidString: data.messageId) {
+                    close(uuid: uuid)
+                }
+            }
+            
+            dispatch {
+                switch error {
+                case CallError.busy:
+                    declineOffer(data: data, category: .WEBRTC_AUDIO_BUSY)
+                case CallError.microphonePermissionDenied:
+                    declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
+                    DispatchQueue.main.sync {
+                        self.alert(error: .microphonePermissionDenied)
+                        guard UIApplication.shared.applicationState != .active else {
+                            return
+                        }
+                        NotificationManager.shared.requestDeclinedCallNotification(messageId: data.messageId)
+                    }
+                default:
+                    declineOffer(data: data, category: .WEBRTC_AUDIO_FAILED)
+                }
             }
         }
         
@@ -513,30 +565,13 @@ extension CallService {
             pendingCalls[uuid] = call
             pendingSDPs[uuid] = sdp
             
-            var reportingError: Error?
-            let semaphore = DispatchSemaphore(value: 0)
             callInterface.reportIncomingCall(call) { (error) in
-                reportingError = error
-                semaphore.signal()
-            }
-            semaphore.wait()
-            
-            if let error = reportingError {
-                throw error
-            }
-        } catch CallError.busy {
-            declineOffer(data: data, category: .WEBRTC_AUDIO_BUSY)
-        } catch CallError.microphonePermissionDenied {
-            declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
-            alert(error: .microphonePermissionDenied)
-            DispatchQueue.main.sync {
-                guard UIApplication.shared.applicationState != .active else {
-                    return
+                if let error = error {
+                    handle(error: error)
                 }
-                NotificationManager.shared.requestDeclinedCallNotification(messageId: data.messageId)
             }
         } catch {
-            declineOffer(data: data, category: .WEBRTC_AUDIO_FAILED)
+            handle(error: error)
         }
     }
     
@@ -568,7 +603,7 @@ extension CallService {
             }
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
-                    self.queue.async {
+                    self.dispatch {
                         self.failCurrentCall(sendFailedMessageToRemote: true,
                                              error: .setRemoteAnswer(error))
                         self.callInterface.reportCall(uuid: uuid,
@@ -624,7 +659,7 @@ extension CallService: WebRTCClientDelegate {
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
-        queue.async {
+        dispatch {
             guard let call = self.activeCall, call.connectedDate == nil else {
                 return
             }
@@ -644,7 +679,7 @@ extension CallService: WebRTCClientDelegate {
     }
     
     func webRTCClientDidFailed(_ client: WebRTCClient) {
-        queue.async {
+        dispatch {
             self.failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
         }
     }
@@ -661,7 +696,7 @@ extension CallService {
         dismissCallingInterface()
         rtcClient.close()
         isMuted = false
-        queue.async {
+        dispatch {
             self.ringtonePlayer.stop()
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: .WEBRTC_AUDIO_CANCEL,
@@ -672,6 +707,19 @@ extension CallService {
             self.activeCall = nil
             self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
         }
+    }
+    
+    private func dispatch(_ closure: @escaping () -> Void) {
+        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
+            queue.async(execute: closure)
+        } else {
+            closure()
+        }
+    }
+    
+    private func updateCallKitAvailability() {
+        usesCallKit = !Self.isMainlandChina
+            && AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
     private func showCallingInterface(style: CallViewController.Style, userRenderer renderUser: (CallViewController) -> Void) {

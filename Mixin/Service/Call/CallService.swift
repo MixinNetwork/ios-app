@@ -7,11 +7,7 @@ class CallService: NSObject {
     
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
-    
-    private static var isMainlandChina: Bool {
-        false
-    }
-    
+
     let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
     
     var isMuted = false {
@@ -702,8 +698,7 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = !Self.isMainlandChina
-            && AVAudioSession.sharedInstance().recordPermission == .granted
+        usesCallKit = AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
     private func showCallingInterface(style: CallViewController.Style, userRenderer renderUser: (CallViewController) -> Void) {

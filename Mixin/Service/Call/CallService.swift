@@ -495,7 +495,7 @@ extension CallService {
             return
         }
         
-        func handle(error: Error) {
+        func handle(error: Error, username: String?) {
             
             func declineOffer(data: BlazeMessageData, category: MessageCategory) {
                 let offer = Message.createWebRTCMessage(data: data, category: category, status: .DELIVERED)
@@ -515,10 +515,9 @@ extension CallService {
                     declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
                     DispatchQueue.main.sync {
                         self.alert(error: .microphonePermissionDenied)
-                        guard UIApplication.shared.applicationState != .active else {
-                            return
+                        if UIApplication.shared.applicationState != .active {
+                            NotificationManager.shared.requestDeclinedCallNotification(username: username, messageId: data.messageId)
                         }
-                        NotificationManager.shared.requestDeclinedCallNotification(messageId: data.messageId)
                     }
                 default:
                     declineOffer(data: data, category: .WEBRTC_AUDIO_FAILED)
@@ -528,17 +527,20 @@ extension CallService {
         
         do {
             DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
+            guard let user = UserDAO.shared.getUser(userId: data.userId) else {
+                handle(error: CallError.missingUser(userId: data.userId), username: nil)
+                return
+            }
             guard let uuid = UUID(uuidString: data.messageId) else {
-                throw CallError.invalidUUID(uuid: data.messageId)
+                handle(error: CallError.invalidUUID(uuid: data.messageId), username: user.fullName)
+                return
             }
             DispatchQueue.main.async {
                 self.handledUUIDs.insert(uuid)
             }
             guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
-                throw CallError.invalidSdp(sdp: data.data)
-            }
-            guard let user = UserDAO.shared.getUser(userId: data.userId) else {
-                throw CallError.missingUser(userId: data.userId)
+                handle(error: CallError.invalidSdp(sdp: data.data), username: user.fullName)
+                return
             }
             AudioManager.shared.pause()
             let call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
@@ -547,11 +549,9 @@ extension CallService {
             
             callInterface.reportIncomingCall(call) { (error) in
                 if let error = error {
-                    handle(error: error)
+                    handle(error: error, username: user.fullName)
                 }
             }
-        } catch {
-            handle(error: error)
         }
     }
     

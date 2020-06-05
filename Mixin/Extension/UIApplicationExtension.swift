@@ -6,7 +6,7 @@ import MixinServices
 extension UIApplication {
     
     static var homeContainerViewController: HomeContainerViewController? {
-        return UIApplication.shared.keyWindow?.rootViewController as? HomeContainerViewController
+        return AppDelegate.current.mainWindow.rootViewController as? HomeContainerViewController
     }
     
     static var homeNavigationController: HomeNavigationController? {

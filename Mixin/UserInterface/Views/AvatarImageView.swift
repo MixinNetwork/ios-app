@@ -105,6 +105,7 @@ class AvatarImageView: UIView {
     
     func setImage(userId: String, name: String) {
         let index = userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
+        imageView.image = nil
         imageView.backgroundColorIgnoringSystemSettings = UIColor.avatarBackgroundColors[index]
         if let firstLetter = name.first {
             titleLabel.text = String([firstLetter]).uppercased()

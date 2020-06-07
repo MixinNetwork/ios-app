@@ -14,7 +14,7 @@ enum StatusBarHeight {
     static let inCall: CGFloat = 40
 }
 
-let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
+let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://(itunes|apps)\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
 
 let qrCodeDetector: CIDetector? = {
     let context = CIContext()

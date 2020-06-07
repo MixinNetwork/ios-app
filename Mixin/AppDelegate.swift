@@ -17,13 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var mainWindow = UIWindow(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
-    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-    private var backgroundTime: Timer?
-    private var stopTaskTime: Timer?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-        MixinService.callMessageCoordinator = CallManager.shared
+        MixinService.callMessageCoordinator = CallService.shared
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
         updateSharedImageCacheConfig()
@@ -36,7 +33,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))...\(UIApplication.shared.applicationStateString)")
+        if UIApplication.shared.applicationState == .background {
+            MixinService.isStopProcessMessages = false
+            WebSocketService.shared.connectIfNeeded()
+            BackgroundMessagingService.shared.begin(caller: "didFinishLaunchingWithOptions",
+                                                    stopsRegarlessApplicationState: false,
+                                                    completionHandler: nil)
+        }
         return true
     }
     
@@ -54,27 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
-
-        let startDate = Date()
-        requestTimeout = 3
-        cancelBackgroundTask()
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] applicationDidEnterBackground...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-        }
-        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            MixinService.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
-        }
+        BackgroundMessagingService.shared.begin(caller: "applicationDidEnterBackground",
+                                                stopsRegarlessApplicationState: true,
+                                                completionHandler: nil)
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -90,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         requestTimeout = 5
-        cancelBackgroundTask()
+        BackgroundMessagingService.shared.stop()
         MixinService.isStopProcessMessages = false
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
             DispatchQueue.global().async {
@@ -127,17 +113,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         pendingShortcutItem = nil
-    }
-
-    private func cancelBackgroundTask() {
-        stopTaskTime?.invalidate()
-        stopTaskTime = nil
-        backgroundTime?.invalidate()
-        backgroundTime = nil
-        if backgroundTaskID != .invalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-            backgroundTaskID = .invalid
-        }
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -187,41 +162,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
-
-        let startDate = Date()
-        cancelBackgroundTask()
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
-
-        requestTimeout = 3
-        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] didReceiveRemoteNotification...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if UIApplication.shared.applicationState != .active {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler(.newData)
-        })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
-            AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.cancelBackgroundTask()
-            completionHandler(.newData)
-        }
-        self.stopTaskTime = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            guard UIApplication.shared.applicationState != .active else {
-                return
-            }
-            MixinService.isStopProcessMessages = true
-            WebSocketService.shared.disconnect()
-        }
+        BackgroundMessagingService.shared.begin(caller: "didReceiveRemoteNotification",
+                                                stopsRegarlessApplicationState: false,
+                                                completionHandler: completionHandler)
     }
     
 }
 
 extension AppDelegate {
-
+    
     private func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateApplicationIconBadgeNumber), name: MixinService.messageReadStatusDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cleanForLogout), name: LoginManager.didLogoutNotification, object: nil)
@@ -339,6 +290,10 @@ extension AppDelegate {
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
     }
+    
+}
+
+extension AppDelegate {
     
     private func pushCameraViewController() {
         guard let navigationController = UIApplication.homeNavigationController else {

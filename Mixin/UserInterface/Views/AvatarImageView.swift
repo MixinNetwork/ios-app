@@ -99,13 +99,17 @@ class AvatarImageView: UIView {
             let placeholder = placeholder ? R.image.ic_place_holder() : nil
             imageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
-            let index = userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
-            imageView.backgroundColorIgnoringSystemSettings = UIColor.avatarBackgroundColors[index]
-            if let firstLetter = name.first {
-                titleLabel.text = String([firstLetter]).uppercased()
-            } else {
-                titleLabel.text = nil
-            }
+            setImage(userId: userId, name: name)
+        }
+    }
+    
+    func setImage(userId: String, name: String) {
+        let index = userId.positiveHashCode() % UIColor.avatarBackgroundColors.count
+        imageView.backgroundColorIgnoringSystemSettings = UIColor.avatarBackgroundColors[index]
+        if let firstLetter = name.first {
+            titleLabel.text = String([firstLetter]).uppercased()
+        } else {
+            titleLabel.text = nil
         }
     }
     

@@ -40,6 +40,18 @@ class NotificationManager: NSObject {
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
+    func requestDeclinedCallNotification(username: String?, messageId: String) {
+        let content = UNMutableNotificationContent()
+        content.title = username ?? ""
+        content.body = R.string.localizable.call_declined_lack_microphone_permission()
+        content.sound = .mixin
+        content.categoryIdentifier = NotificationCategoryIdentifier.call
+        let request = UNNotificationRequest(identifier: messageId,
+                                            content: content,
+                                            trigger: nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
 }
 
 // MARK: - UNUserNotificationCenterDelegate
@@ -51,12 +63,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             completionHandler([])
             return
         }
-        let messageId = notification.request.identifier
-        if messageId == CallManager.shared.messageId {
+        if let uuid = UUID(uuidString: notification.request.identifier), CallService.shared.handledUUIDs.contains(uuid) {
             completionHandler([])
             return
         }
-
         completionHandler([.alert, .sound])
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             center.removeNotifications(withIdentifiers: [notification.request.identifier])
@@ -102,7 +112,12 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                                                       isGroupMessage: conversationCategory == ConversationCategory.GROUP.rawValue)
             }
         } else if let aps = userInfo["aps"] as? [String: AnyHashable?], let alert = aps["alert"] as? [String: AnyHashable?], let key = alert["loc-key"] as? String, key == "alert_key_contact_audio_call_message" {
-            JobService.shared.recoverPendingWebRTCJobs()
+            if !WebSocketService.shared.isConnected {
+                BackgroundMessagingService.shared.stop()
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+            }
+            CallService.shared.handlePendingWebRTCJobs()
         } else {
             DispatchQueue.global().async {
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {

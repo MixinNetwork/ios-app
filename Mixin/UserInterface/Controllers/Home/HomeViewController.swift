@@ -107,7 +107,10 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: NotificationManager.shared.registerForRemoteNotificationsIfAuthorized)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
+            CallService.shared.registerForPushKitNotificationsIfAvailable()
+        }
         Logger.write(log: "HomeViewController...viewDidLoad...applicationState:\(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState == .active {
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())

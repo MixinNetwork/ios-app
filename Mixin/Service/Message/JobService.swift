@@ -4,8 +4,7 @@ import MixinServices
 class JobService {
 
     static let shared = JobService()
-    private let callDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.call")
-
+    
     private var isFirstRestore = true
 
     private static var canBatchProcessMessages: Bool {
@@ -29,7 +28,7 @@ class JobService {
                 AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
                 JobService.shared.restoreUploadJobs()
             }
-            JobService.shared.recoverPendingWebRTCJobs()
+            CallService.shared.handlePendingWebRTCJobs()
             JobService.shared.recoverMediaJobs()
         }
     }
@@ -74,16 +73,6 @@ class JobService {
         }
     }
     
-    public func recoverPendingWebRTCJobs() {
-        callDispatchQueue.async {
-            let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
-            for job in jobs {
-                CallManager.shared.handleRecoveredWebRTCJob(job)
-                JobDAO.shared.removeJob(jobId: job.jobId)
-            }
-        }
-    }
-
     private func recoverMediaJobs() {
         guard NetworkManager.shared.isReachableOnWiFi else {
             return

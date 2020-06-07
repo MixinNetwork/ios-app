@@ -343,6 +343,8 @@
 "call_func_speaker" = "Speaker";
 "call_no_microphone_permission" = "To make voice calls, Mixin needs access to your microphone. Please tap Setting to open system settings.";
 "call_no_network" = "Call service unavailable. Make sure your phone has an internet connection and try again.";
+"call_user_not_found" = "User not found";
+"call_declined_lack_microphone_permission" = "Voice call has been declined";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

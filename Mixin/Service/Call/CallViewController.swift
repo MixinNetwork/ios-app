@@ -1,7 +1,8 @@
 import UIKit
+import AVFoundation.AVFAudio
 import MixinServices
 
-class CallView: UIVisualEffectView {
+class CallViewController: UIViewController {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -18,9 +19,9 @@ class CallView: UIVisualEffectView {
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     
-    weak var manager: CallManager!
+    weak var service: CallService!
     
-    var style = Style.calling {
+    var style = Style.disconnecting {
         didSet {
             layout(for: style)
         }
@@ -28,64 +29,75 @@ class CallView: UIVisualEffectView {
     
     private let animationDuration: TimeInterval = 0.3
     
-    private var timer: Timer?
-    private var isOutgoing: Bool {
-        return manager.call?.isOutgoing ?? true
+    private weak var timer: Timer?
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        loadSubviews()
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
-    override init(effect: UIVisualEffect?) {
-        super.init(effect: effect)
-        loadSubviews()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
+                            adjustForContentSize: true)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(callServiceMutenessDidChange),
+                                               name: CallService.mutenessDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(audioSessionRouteChange(_:)),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
     
-    func show() {
-        let window = AppDelegate.current.mainWindow
-        window.endEditing(true)
-        frame = window.bounds
-        window.addSubview(self)
-    }
-    
-    func dismiss() {
+    func disableConnectionDurationTimer() {
         setConnectionDurationTimerEnabled(false)
-        removeFromSuperview()
+    }
+    
+    func reload(userId: String, username: String) {
+        nameLabel.text = username
+        avatarImageView.prepareForReuse()
+        avatarImageView.setImage(userId: userId, name: username)
+        muteButton.isSelected = service.isMuted
+        speakerButton.isSelected = service.usesSpeaker
     }
     
     func reload(user: UserItem) {
-        avatarImageView.setImage(with: user)
         nameLabel.text = user.fullName
-        muteButton.isSelected = false
-        speakerButton.isSelected = false
+        avatarImageView.prepareForReuse()
+        avatarImageView.setImage(with: user)
+        muteButton.isSelected = service.isMuted
+        speakerButton.isSelected = service.usesSpeaker
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
-        manager.completeCurrentCall(isUserInitiated: true)
+        service.requestEndCall()
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        manager.acceptCurrentCall()
+        service.requestAnswerCall()
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
         muteButton.isSelected = !muteButton.isSelected
-        manager.isMuted = muteButton.isSelected
+        service.isMuted = muteButton.isSelected
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
         speakerButton.isSelected = !speakerButton.isSelected
-        manager.usesSpeaker = speakerButton.isSelected
+        service.usesSpeaker = speakerButton.isSelected
     }
     
 }
 
-extension CallView {
+extension CallViewController {
     
     enum Style {
-        case calling
+        case incoming
+        case outgoing
         case connecting
         case connected
         case disconnecting
@@ -93,8 +105,10 @@ extension CallView {
     
     private var localizedStatus: String? {
         switch style {
-        case .calling:
-            return isOutgoing ? Localized.CALL_STATUS_CALLING : Localized.CALL_STATUS_BEING_CALLING
+        case .incoming:
+            return Localized.CALL_STATUS_BEING_CALLING
+        case .outgoing:
+            return Localized.CALL_STATUS_CALLING
         case .connecting:
             return Localized.CALL_STATUS_CONNECTING
         case .connected:
@@ -105,7 +119,7 @@ extension CallView {
     }
     
     @objc private func updateStatusLabelWithCallingDuration() {
-        if style == .connected, let timeIntervalSinceNow = manager.call?.connectedDate?.timeIntervalSinceNow {
+        if style == .connected, let timeIntervalSinceNow = service.activeCall?.connectedDate?.timeIntervalSinceNow {
             let duration = abs(timeIntervalSinceNow)
             statusLabel.text = mediaDurationFormatter.string(from: duration)
         } else {
@@ -113,14 +127,27 @@ extension CallView {
         }
     }
     
-    private func loadSubviews() {
-        layoutMargins = .zero
-        let nibName = String(describing: type(of: self))
-        if let xibView = Bundle.main.loadNibNamed(nibName, owner: self, options: nil)?.first as? UIView {
-            xibView.frame = bounds
-            contentView.addSubview(xibView)
+    @objc private func callServiceMutenessDidChange() {
+        muteButton.isSelected = service.isMuted
+    }
+    
+    @objc private func audioSessionRouteChange(_ notification: Notification) {
+        let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
+            .outputs.map(\.portType)
+            .contains(.builtInSpeaker)
+        DispatchQueue.main.async {
+            if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsSpeaker) {
+                // The audio route changes for mysterious reason on iOS 13, It says category changes
+                // but I have intercept every category change request only to find AVAudioSessionCategoryPlayAndRecord
+                // with AVAudioSessionCategoryOptionDefaultToSpeaker is properly passed into AVAudioSession.
+                // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
+                // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
+                self.service.usesSpeaker = self.service.usesSpeaker
+                self.speakerButton.isSelected = self.service.usesSpeaker
+            } else {
+                self.speakerButton.isSelected = routeContainsSpeaker
+            }
         }
-        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular), adjustForContentSize: true)
     }
     
     private func layout(for style: Style) {
@@ -130,30 +157,34 @@ extension CallView {
             statusLabel.text = localizedStatus
         }
         switch style {
-        case .calling:
-            hangUpTitleLabel.text = isOutgoing ? Localized.CALL_FUNC_HANGUP : Localized.CALL_FUNC_DECLINE
+        case .incoming:
+            hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
-            setAcceptButtonHidden(isOutgoing)
+            setAcceptButtonHidden(false)
+            setConnectionButtonsEnabled(true)
+        case .outgoing:
+            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
+            setFunctionSwitchesHidden(false)
+            setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
-                self.setFunctionSwitchesHidden(true)
+                self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
                 self.setConnectionButtonsEnabled(true)
-                self.layoutIfNeeded()
+                self.view.layoutIfNeeded()
             }
         case .connected:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
-                self.layoutIfNeeded()
+                self.setConnectionButtonsEnabled(true)
+                self.view.layoutIfNeeded()
             }
             setConnectionDurationTimerEnabled(true)
         case .disconnecting:
-            timer?.invalidate()
-            timer = nil
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
             setConnectionDurationTimerEnabled(false)
@@ -184,7 +215,6 @@ extension CallView {
     
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
-        timer = nil
         if enabled {
             let timer = Timer(timeInterval: 1,
                               target: self,

@@ -31,6 +31,7 @@ class CallService: NSObject {
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()
+    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     
     private lazy var rtcClient = WebRTCClient()
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
@@ -43,6 +44,7 @@ class CallService: NSObject {
     private var pendingCalls = [UUID: Call]()
     private var pendingSDPs = [UUID: RTCSessionDescription]()
     private var pendingCandidates = [UUID: [RTCIceCandidate]]()
+    private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
     
     private weak var unansweredTimer: Timer?
     
@@ -473,7 +475,12 @@ extension CallService: CallMessageCoordinator {
     }
     
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
-        dispatch {
+        
+        func hasCall(uuid: UUID) -> Bool {
+            activeCall?.uuid == uuid || pendingCalls[uuid] != nil
+        }
+        
+        func handle(data: BlazeMessageData) {
             switch data.category {
             case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
                 self.handleOffer(data: data)
@@ -483,6 +490,40 @@ extension CallService: CallMessageCoordinator {
                 self.handleCallStatusChange(data: data)
             }
         }
+        
+        dispatch {
+            if data.source != BlazeMessageAction.listPendingMessages.rawValue {
+                handle(data: data)
+            } else {
+                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+                if isOffer, let uuid = UUID(uuidString: data.messageId), !hasCall(uuid: uuid) {
+                    if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
+                        let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                        MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                    } else {
+                        let workItem = DispatchWorkItem(block: {
+                            handle(data: data)
+                            self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                        })
+                        self.listPendingCallWorkItems[uuid] = workItem
+                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: workItem)
+                    }
+                } else if !isOffer, let uuid = UUID(uuidString: data.quoteMessageId), let workItem = self.listPendingCallWorkItems[uuid], !hasCall(uuid: uuid), let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
+                    workItem.cancel()
+                    self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                    self.pendingCandidates.removeValue(forKey: uuid)
+                    let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                          conversationId: data.conversationId,
+                                                          userId: data.userId,
+                                                          category: category,
+                                                          status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                } else {
+                    handle(data: data)
+                }
+            }
+        }
+        
     }
     
 }

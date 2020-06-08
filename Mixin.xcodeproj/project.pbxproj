@@ -314,6 +314,7 @@
 		7BA1768E244ACE2E007D50FD /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1768D244ACE2E007D50FD /* PickerCell.swift */; };
 		7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8AA221ED35200DBFCE2 /* Hud.swift */; };
 		7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */; };
+		7BA21082248E1C30003FBC25 /* CallMessageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */; };
 		7BA398C9242B514200DB5154 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */; };
 		7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA398CC242B539900DB5154 /* UIColor+Assets.swift */; };
 		7BA398CE242B54A100DB5154 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
@@ -1130,6 +1131,7 @@
 		7BA1768D244ACE2E007D50FD /* PickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCell.swift; sourceTree = "<group>"; };
 		7BA1F8AA221ED35200DBFCE2 /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
 		7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
+		7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMessageSaver.swift; sourceTree = "<group>"; };
 		7BA398CC242B539900DB5154 /* UIColor+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Assets.swift"; sourceTree = "<group>"; };
 		7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
@@ -3031,6 +3033,7 @@
 			children = (
 				E00A69ED23BB234C00984FF3 /* MixinNotificationService.entitlements */,
 				E090B9F923B3957E0088355B /* NotificationService.swift */,
+				7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */,
 				DF68CD71244EC1970059A678 /* Mixin-Keys.plist */,
 				DF2EAEB523EF0646005E5A4F /* Localizable.strings */,
 				E090B9FB23B3957E0088355B /* Info.plist */,
@@ -4242,6 +4245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */,
+				7BA21082248E1C30003FBC25 /* CallMessageSaver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

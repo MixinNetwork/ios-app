@@ -124,7 +124,7 @@ extension Job {
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
 
-    init(pengdingWebRTCMessage data: BlazeMessageData) {
+    public init(pendingWebRTCMessage data: BlazeMessageData) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_MESSAGE.rawValue
         self.action = JobAction.PENDING_WEBRTC.rawValue

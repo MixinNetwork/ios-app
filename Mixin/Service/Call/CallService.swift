@@ -638,6 +638,15 @@ extension CallService {
                     viewController?.style = .disconnecting
                 }
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
+            } else {
+                // When a call is pushed via APN User Notifications and gets cancelled before app is launched
+                // This routine may execute when app is launched manually, sometimes before pending WebRTC jobs are awake
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: category,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             }
             callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
             close(uuid: uuid)

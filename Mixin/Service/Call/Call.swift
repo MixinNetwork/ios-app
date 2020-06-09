@@ -32,3 +32,15 @@ class Call {
     }
     
 }
+
+extension Call: Encodable, CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        if let data = try? JSONEncoder.default.encode(self), let json = String(data: data, encoding: .utf8) {
+            return json
+        } else {
+            return "(Call: malformed)"
+        }
+    }
+    
+}

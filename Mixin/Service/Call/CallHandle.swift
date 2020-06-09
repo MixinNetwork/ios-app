@@ -35,3 +35,11 @@ class CallHandle {
     }
     
 }
+
+extension CallHandle: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        "CallHandle: <id: \(id), name: \(name)>"
+    }
+    
+}

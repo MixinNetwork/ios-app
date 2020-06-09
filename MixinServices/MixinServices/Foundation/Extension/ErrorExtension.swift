@@ -6,8 +6,4 @@ public extension Error {
         return (self as NSError).code
     }
     
-    var localizedDescription: String {
-        return (self as NSError).localizedDescription
-    }
-    
 }

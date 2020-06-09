@@ -113,7 +113,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             }
         } else if let aps = userInfo["aps"] as? [String: AnyHashable?], let alert = aps["alert"] as? [String: AnyHashable?], let key = alert["loc-key"] as? String, key == "alert_key_contact_audio_call_message" {
             if !WebSocketService.shared.isConnected {
-                BackgroundMessagingService.shared.stop()
+                BackgroundMessagingService.shared.end()
                 MixinService.isStopProcessMessages = false
                 WebSocketService.shared.connectIfNeeded()
             }

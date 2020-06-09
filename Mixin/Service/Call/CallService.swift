@@ -25,9 +25,15 @@ class CallService: NSObject {
         }
     }
     
+    var hasActiveOrPendingCall: Bool {
+        queue.sync {
+            activeCall != nil || !pendingCalls.isEmpty
+        }
+    }
+    
     private(set) lazy var ringtonePlayer = RingtonePlayer()
     
-    private(set) var activeCall: Call?
+    private(set) var activeCall: Call? // Access from CallService.queue
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()

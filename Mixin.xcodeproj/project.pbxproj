@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		272084962490C269000EE939 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272084952490C269000EE939 /* WebRTC.framework */; };
 		273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 273A5E0B1F95EA4500AE802F /* Contacts.framework */; };
 		274264A920011C79000A8808 /* mixin.caf in Resources */ = {isa = PBXBuildFile; fileRef = 274264A820011BB0000A8808 /* mixin.caf */; };
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
@@ -817,6 +818,7 @@
 
 /* Begin PBXFileReference section */
 		23987C4F141F7C6E533A683D /* Pods_Mixin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mixin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		272084952490C269000EE939 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebRTC.framework; sourceTree = "<group>"; };
 		273A5E0B1F95EA4500AE802F /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		274264A820011BB0000A8808 /* mixin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin.caf; sourceTree = "<group>"; };
 		277FF6FF1F909A1200DBB2EB /* Mixin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mixin.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1634,6 +1636,7 @@
 				7BE6C9682456806A0038645C /* libopus.a in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
+				272084962490C269000EE939 /* WebRTC.framework in Frameworks */,
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1660,6 +1663,7 @@
 		275339881F975D9800DD4C26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				272084952490C269000EE939 /* WebRTC.framework */,
 				DF0A09712444AD7600378B4F /* BlurHash */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,
 			);

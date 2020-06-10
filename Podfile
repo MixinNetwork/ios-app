@@ -6,7 +6,7 @@ platform :ios, '11.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 def mixin_services
-  pod 'libsignal-protocol-c', :git => 'https://github.com/wuyuehyang/libsignal-protocol-c.git'
+  pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
   pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
   pod 'SwiftyMarkdown', :git => 'https://github.com/wuyuehyang/SwiftyMarkdown.git'
   pod 'MixinServices', :path => './MixinServices'

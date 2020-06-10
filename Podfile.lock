@@ -218,7 +218,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Performance
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
-  - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
+  - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit
   - R.swift
@@ -283,7 +283,7 @@ EXTERNAL SOURCES:
     :branch: master
     :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
-    :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
+    :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   MixinServices:
     :path: "./MixinServices"
   SwiftyMarkdown:
@@ -303,8 +303,8 @@ CHECKOUT OPTIONS:
     :commit: 9b9fc465efecb7b3c039c8fedc66e4ae4f315ad9
     :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
-    :commit: 03bf83f6b5a6ef71419c0e93c222e16efdf6bb0b
-    :git: https://github.com/wuyuehyang/libsignal-protocol-c.git
+    :commit: 1f83b6fc6d151e8c525b2296feb87e5555d9d611
+    :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   SwiftyMarkdown:
     :commit: 805ebcc950d9b9be4dd95544aa48ba9a3d2f9d18
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
@@ -371,6 +371,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 0621d4baf00bd5502355e1fab92cbbdf5e660716
+PODFILE CHECKSUM: 12542e97012eb77a03ed9cfcdf46a5d5f3780ae2
 
 COCOAPODS: 1.9.3

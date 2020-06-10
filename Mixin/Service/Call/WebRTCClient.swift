@@ -1,10 +1,12 @@
 import Foundation
 import WebRTC
+import MixinServices
 
 protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidFailed(_ client: WebRTCClient)
+    func getSenderPublicKey(userId: String, sessionId: String) -> Data?
 }
 
 class WebRTCClient: NSObject {
@@ -35,8 +37,8 @@ class WebRTCClient: NSObject {
         super.init()
     }
     
-    func offer(completion: @escaping (Result<String, CallError>) -> Void) {
-        makePeerConnectionIfNeeded()
+    func offer(key: Data? = nil, completion: @escaping (Result<String, CallError>) -> Void) {
+        makePeerConnectionIfNeeded(key: key)
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.offer(for: constraints) { (sdp, error) in
             if let sdp = sdp, let json = sdp.jsonString {
@@ -132,6 +134,22 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
     }
 
+    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
+        for m in mediaStreams {
+            let userSession = m.streamId.components(separatedBy:"~")
+            guard userSession.count == 2 else {
+                continue
+            }
+            guard userSession[0] != myUserId else {
+                continue
+            }
+            let frameKey = self.delegate?.getSenderPublicKey(userId: userSession[0], sessionId: userSession[1])
+            if let frameKey = frameKey {
+                rtpReceiver.setFrameDecryptorKey(frameKey)
+            }
+        }
+    }
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         
     }
@@ -163,10 +181,11 @@ extension WebRTCClient {
         config.sdpSemantics = .unifiedPlan
         config.iceServers = RTCIceServer.sharedServers
         config.continualGatheringPolicy = .gatherOnce
+        config.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: true)
         return config
     }
     
-    private func makePeerConnectionIfNeeded() {
+    private func makePeerConnectionIfNeeded(key: Data? = nil) {
         guard self.peerConnection == nil else {
             return
         }
@@ -180,7 +199,10 @@ extension WebRTCClient {
             let audioSource = factory.audioSource(with: audioConstraints)
             return factory.audioTrack(with: audioSource, trackId: audioId)
         }()
-        peerConnection.add(audioTrack, streamIds: [streamId])
+        let rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
+        if let key = key {
+          rtpSender.setFrameEncryptorKey(key)
+        }
         peerConnection.delegate = self
         self.peerConnection = peerConnection
         self.audioTrack = audioTrack

@@ -31,6 +31,16 @@ public class SignalProtocol {
         return AppGroupUserDefaults.Signal.registrationId
     }
 
+    public func getSenderKeyPublic(groupId: String, userId: String, sessionId: String? = nil) -> Data? {
+        let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId)))
+        let builder = GroupSessionBuilder(in: store)
+        do {
+            return try builder.getSenderPublic(for: senderKeyName)
+        } catch {
+            return nil
+        }
+    }
+
     func clearSenderKey(groupId: String, senderId: String) {
         let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
         store.senderKeyStore!.removeSenderKey(senderKeyName: senderKeyName)

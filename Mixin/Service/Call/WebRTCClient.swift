@@ -105,8 +105,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
+//        transceiver.receiver.setFrameDecryptorKey(<#T##key: Data##Data#>)
     }
-
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         
     }
@@ -136,6 +137,7 @@ extension WebRTCClient {
         config.sdpSemantics = .unifiedPlan
         config.iceServers = RTCIceServer.sharedServers
         config.continualGatheringPolicy = .gatherOnce
+        config.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: true)
         return config
     }
     
@@ -153,7 +155,8 @@ extension WebRTCClient {
             let audioSource = factory.audioSource(with: audioConstraints)
             return factory.audioTrack(with: audioSource, trackId: audioId)
         }()
-        peerConnection.add(audioTrack, streamIds: [streamId])
+        let rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
+//        rtpSender.setFrameEncryptorKey(<#T##key: Data##Data#>)
         peerConnection.delegate = self
         self.peerConnection = peerConnection
         self.audioTrack = audioTrack

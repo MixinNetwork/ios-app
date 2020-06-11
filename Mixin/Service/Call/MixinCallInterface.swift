@@ -100,11 +100,11 @@ extension MixinCallInterface: CallInterface {
                         }
                         if let user = call.opponentUser {
                             self.service.showCallingInterface(user: user,
-                                                              style: .incoming)
+                                                              status: .incoming)
                         } else {
                             self.service.showCallingInterface(userId: call.opponentUserId,
                                                               username: call.opponentUsername,
-                                                              style: .incoming)
+                                                              status: .incoming)
                         }
                     }
                     self.pendingIncomingUuid = call.uuid

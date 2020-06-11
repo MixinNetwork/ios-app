@@ -16,23 +16,23 @@ class CallViewController: UIViewController {
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
     
+    @IBOutlet weak var topSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     
     weak var service: CallService!
-    
-    var style = Style.disconnecting {
-        didSet {
-            layout(for: style)
-        }
-    }
     
     private let animationDuration: TimeInterval = 0.3
     
     private weak var timer: Timer?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
+        if service.isMinimized {
+            return AppDelegate.current.mainWindow.rootViewController?.preferredStatusBarStyle ?? .default
+        } else {
+            return .lightContent
+        }
     }
     
     deinit {
@@ -43,14 +43,26 @@ class CallViewController: UIViewController {
         super.viewDidLoad()
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
                             adjustForContentSize: true)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(callServiceMutenessDidChange),
-                                               name: CallService.mutenessDidChangeNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(audioSessionRouteChange(_:)),
-                                               name: AVAudioSession.routeChangeNotification,
-                                               object: nil)
+        
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(callServiceMutenessDidChange),
+                           name: CallService.mutenessDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(audioSessionRouteChange(_:)),
+                           name: AVAudioSession.routeChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateViews(_:)),
+                           name: Call.statusDidChangeNotification,
+                           object: nil)
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        topSafeAreaPlaceholderHeightConstraint.constant = max(topSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.top)
+        bottomSafeAreaPlaceholderHeightConstraint.constant = max(bottomSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.bottom)
     }
     
     func disableConnectionDurationTimer() {
@@ -91,41 +103,13 @@ class CallViewController: UIViewController {
         service.usesSpeaker = speakerButton.isSelected
     }
     
+    @IBAction func minimizeAction(_ sender: Any) {
+        service.setInterfaceMinimized(!service.isMinimized, animated: true)
+    }
+    
 }
 
 extension CallViewController {
-    
-    enum Style {
-        case incoming
-        case outgoing
-        case connecting
-        case connected
-        case disconnecting
-    }
-    
-    private var localizedStatus: String? {
-        switch style {
-        case .incoming:
-            return Localized.CALL_STATUS_BEING_CALLING
-        case .outgoing:
-            return Localized.CALL_STATUS_CALLING
-        case .connecting:
-            return Localized.CALL_STATUS_CONNECTING
-        case .connected:
-            return nil
-        case .disconnecting:
-            return Localized.CALL_STATUS_DISCONNECTING
-        }
-    }
-    
-    @objc private func updateStatusLabelWithCallingDuration() {
-        if style == .connected, let timeIntervalSinceNow = service.activeCall?.connectedDate?.timeIntervalSinceNow {
-            let duration = abs(timeIntervalSinceNow)
-            statusLabel.text = mediaDurationFormatter.string(from: duration)
-        } else {
-            statusLabel.text = nil
-        }
-    }
     
     @objc private func callServiceMutenessDidChange() {
         muteButton.isSelected = service.isMuted
@@ -150,13 +134,16 @@ extension CallViewController {
         }
     }
     
-    private func layout(for style: Style) {
-        if style == .connected {
-            statusLabel.text = mediaDurationFormatter.string(from: 0)
-        } else {
-            statusLabel.text = localizedStatus
+    @objc private func updateViews(_ notification: Notification) {
+        guard let status = notification.userInfo?[Call.newCallStatusUserInfoKey] as? Call.Status else {
+            return
         }
-        switch style {
+        if status == .connected {
+            statusLabel.text = CallService.shared.connectionDuration
+        } else {
+            statusLabel.text = status.localizedDescription
+        }
+        switch status {
         case .incoming:
             hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
@@ -191,6 +178,10 @@ extension CallViewController {
         }
     }
     
+}
+
+extension CallViewController {
+    
     private func setAcceptButtonHidden(_ hidden: Bool) {
         acceptStackView.alpha = hidden ? 0 : 1
         if hidden {
@@ -216,11 +207,9 @@ extension CallViewController {
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
         if enabled {
-            let timer = Timer(timeInterval: 1,
-                              target: self,
-                              selector: #selector(updateStatusLabelWithCallingDuration),
-                              userInfo: nil,
-                              repeats: true)
+            let timer = Timer(timeInterval: 1, repeats: true) { (_) in
+                self.statusLabel.text = CallService.shared.connectionDuration
+            }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer
         }

@@ -197,10 +197,6 @@ public class Localized {
     public static let CHAT_RESTORE_SUBTITLE = LocalizedString("chat_restore_subtitle", comment: "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.")
     
     // Call
-    public static let CALL_STATUS_CALLING = LocalizedString("call_status_calling", comment: "Calling...")
-    public static let CALL_STATUS_BEING_CALLING = LocalizedString("call_status_being_calling", comment: "Calling...")
-    public static let CALL_STATUS_CONNECTING = LocalizedString("call_status_connecting", comment: "Connecting")
-    public static let CALL_STATUS_DISCONNECTING = LocalizedString("call_status_disconnecting", comment: "Disconnecting")
     public static let CALL_FUNC_HANGUP = LocalizedString("call_func_hangup", comment: "Hang Up")
     public static let CALL_FUNC_DECLINE = LocalizedString("call_func_decline", comment: "Decline")
     

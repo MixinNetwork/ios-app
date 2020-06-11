@@ -333,10 +333,12 @@
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
-"call_status_calling" = "Calling...";
-"call_status_being_calling" = "Incoming voice call";
+"call_status_outgoing" = "Calling...";
+"call_status_incoming" = "Incoming voice call";
 "call_status_connecting" = "Connecting";
 "call_status_disconnecting" = "Disconnecting";
+"call_status_waiting" = "Waiting";
+"call_status_done" = "Done";
 "call_func_hangup" = "Hang Up";
 "call_func_decline" = "Decline";
 "call_func_accept" = "Accept";

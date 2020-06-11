@@ -7,7 +7,7 @@ class CallService: NSObject {
     
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
-
+    
     let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
     
     var isMuted = false {
@@ -31,10 +31,19 @@ class CallService: NSObject {
         }
     }
     
+    var connectionDuration: String? {
+        guard let connectedDate = activeCall?.connectedDate else {
+            return nil
+        }
+        let duration = abs(connectedDate.timeIntervalSinceNow)
+        return mediaDurationFormatter.string(from: duration)
+    }
+    
     private(set) lazy var ringtonePlayer = RingtonePlayer()
     
     private(set) var activeCall: Call? // Access from CallService.queue
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
+    private(set) var isMinimized = false
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
@@ -66,20 +75,23 @@ class CallService: NSObject {
         updateCallKitAvailability()
     }
     
-    func showCallingInterface(userId: String, username: String, style: CallViewController.Style) {
-        showCallingInterface(style: style) { (viewController) in
+    func showCallingInterface(userId: String, username: String, status: Call.Status) {
+        showCallingInterface(status: status) { (viewController) in
             viewController.reload(userId: userId, username: username)
         }
     }
     
-    func showCallingInterface(user: UserItem, style: CallViewController.Style) {
-        showCallingInterface(style: style) { (viewController) in
+    func showCallingInterface(user: UserItem, status: Call.Status) {
+        showCallingInterface(status: status) { (viewController) in
             viewController.reload(user: user)
         }
     }
     
     func dismissCallingInterface() {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
+        if let container = UIApplication.homeContainerViewController {
+            container.minimizedCallViewControllerIfLoaded?.view.alpha = 0
+        }
         viewController?.disableConnectionDurationTimer()
         viewController = nil
         window = nil
@@ -106,6 +118,45 @@ class CallService: NSObject {
     
     func hasPendingSDP(for uuid: UUID) -> Bool {
         pendingSDPs[uuid] != nil
+    }
+    
+    func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
+        guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
+            return
+        }
+        guard let max = self.viewController else {
+            return
+        }
+        guard let callWindow = self.window else {
+            return
+        }
+        
+        self.isMinimized = minimized
+        let duration: TimeInterval = 0.3
+        if minimized {
+            min.view.alpha = 0
+            min.placeViewToTopRight()
+            let scaleX = min.contentView.frame.width / max.view.frame.width
+            let scaleY = min.contentView.frame.height / max.view.frame.height
+            UIView.animate(withDuration: duration, animations: {
+                min.view.alpha = 1
+                max.view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+                max.view.center = min.view.center
+                max.view.alpha = 0
+                max.setNeedsStatusBarAppearanceUpdate()
+            }) { (_) in
+                AppDelegate.current.mainWindow.makeKeyAndVisible()
+            }
+        } else {
+            callWindow.makeKeyAndVisible()
+            UIView.animate(withDuration: duration, animations: {
+                min.view.alpha = 0
+                max.view.transform = .identity
+                max.view.center = CGPoint(x: callWindow.bounds.midX, y: callWindow.bounds.midY)
+                max.view.alpha = 1
+                max.setNeedsStatusBarAppearanceUpdate()
+            })
+        }
     }
     
 }
@@ -192,6 +243,10 @@ extension CallService {
     func requestStartCall(opponentUser: UserItem) {
         
         func performRequest() {
+            guard activeCall == nil else {
+                alert(error: .busy)
+                return
+            }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             let uuid = UUID()
@@ -291,7 +346,7 @@ extension CallService {
                 return
             }
             DispatchQueue.main.sync {
-                self.showCallingInterface(user: opponentUser, style: .outgoing)
+                self.showCallingInterface(user: opponentUser, status: .outgoing)
             }
             
             let timer = Timer(timeInterval: callTimeoutInterval,
@@ -343,11 +398,11 @@ extension CallService {
             DispatchQueue.main.sync {
                 if let opponentUser = call.opponentUser {
                     self.showCallingInterface(user: opponentUser,
-                                              style: .connecting)
+                                              status: .connecting)
                 } else {
                     self.showCallingInterface(userId: call.opponentUserId,
                                               username: call.opponentUsername,
-                                              style: .connecting)
+                                              status: .connecting)
                 }
             }
             self.activeCall = call
@@ -407,9 +462,7 @@ extension CallService {
         
         dispatch {
             if let call = self.activeCall, call.uuid == uuid {
-                DispatchQueue.main.sync {
-                    self.viewController?.style = .disconnecting
-                }
+                call.status = .disconnecting
                 let category: MessageCategory
                 if call.connectedDate != nil {
                     category = .WEBRTC_AUDIO_END
@@ -621,9 +674,7 @@ extension CallService {
             call.hasReceivedRemoteAnswer = true
             unansweredTimer?.invalidate()
             ringtonePlayer.stop()
-            DispatchQueue.main.sync {
-                viewController?.style = .connecting
-            }
+            call.status = .connecting
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
                     self.dispatch {
@@ -636,9 +687,7 @@ extension CallService {
             }
         } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
             if let call = activeCall ?? pendingCalls[uuid], call.uuid == uuid {
-                DispatchQueue.main.sync {
-                    viewController?.style = .disconnecting
-                }
+                call.status = .disconnecting
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             } else {
                 // When a call is pushed via APN User Notifications and gets cancelled before app is launched
@@ -703,9 +752,7 @@ extension CallService: WebRTCClientDelegate {
                 self.callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
             }
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            DispatchQueue.main.sync {
-                self.viewController?.style = .connected
-            }
+            call.status = .connected
         }
         updateAudioSessionConfiguration()
     }
@@ -753,7 +800,7 @@ extension CallService {
         usesCallKit = AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
-    private func showCallingInterface(style: CallViewController.Style, userRenderer renderUser: (CallViewController) -> Void) {
+    private func showCallingInterface(status: Call.Status, userRenderer renderUser: (CallViewController) -> Void) {
         
         func makeViewController() -> CallViewController {
             let viewController = CallViewController()
@@ -775,7 +822,7 @@ extension CallService {
         UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
         
         let updateInterface = {
-            viewController.style = style
+            self.activeCall?.status = status
             viewController.view.layoutIfNeeded()
         }
         if animated {

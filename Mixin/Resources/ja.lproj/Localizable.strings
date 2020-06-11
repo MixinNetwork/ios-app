@@ -333,10 +333,12 @@
 
 // Call
 "call_hint_on_another_call" = "現在別の通話をしています。終了してから始めてください。";
-"call_status_calling" = "通話中...";
-"call_status_being_calling" = "通話をかけています";
+"call_status_outgoing" = "通話中...";
+"call_status_incoming" = "通話をかけています";
 "call_status_connecting" = "接続中";
 "call_status_disconnecting" = "切断";
+"call_status_waiting" = "Waiting";
+"call_status_done" = "Done";
 "call_func_hangup" = "切る";
 "call_func_decline" = "拒否";
 "call_func_accept" = "承諾";

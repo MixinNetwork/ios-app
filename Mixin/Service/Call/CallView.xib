@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="acceptButton" destination="dFe-fP-bsd" id="nwu-e8-G1b"/>
                 <outlet property="acceptStackView" destination="CLO-8P-tgo" id="mb4-Rv-i9R"/>
                 <outlet property="avatarImageView" destination="wAa-Ej-6fx" id="58k-Ut-kGQ"/>
+                <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
                 <outlet property="hangUpButton" destination="8Eu-3w-9KA" id="NC4-ap-7B4"/>
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
@@ -23,6 +24,7 @@
                 <outlet property="speakerButton" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
                 <outlet property="statusLabel" destination="NCO-o8-q8h" id="dVO-1b-9MK"/>
+                <outlet property="topSafeAreaPlaceholderHeightConstraint" destination="zsV-2R-gz5" id="4Yv-vt-eTb"/>
                 <outlet property="view" destination="bL8-4H-NX8" id="h0m-as-x2y"/>
             </connections>
         </placeholder>
@@ -37,8 +39,26 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGO-cU-Jif">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mNy-8K-X6S" userLabel="Top Safe Area Placeholder">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="zsV-2R-gz5"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c10-IX-mVV">
+                                <rect key="frame" x="10" y="23" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="0Nh-kk-5dU"/>
+                                    <constraint firstAttribute="width" secondItem="c10-IX-mVV" secondAttribute="height" id="VfN-MZ-2Cr"/>
+                                </constraints>
+                                <state key="normal" image="Call/ic_minimize"/>
+                                <connections>
+                                    <action selector="minimizeAction:" destination="-1" eventType="touchUpInside" id="Dq8-Le-S9c"/>
+                                </connections>
+                            </button>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wAa-Ej-6fx" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="122.5" y="60" width="130" height="130"/>
+                                <rect key="frame" x="122.5" y="80" width="130" height="130"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="130" id="lKd-Qy-car"/>
                                     <constraint firstAttribute="width" secondItem="wAa-Ej-6fx" secondAttribute="height" id="vyD-I0-U1m"/>
@@ -53,7 +73,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
-                                <rect key="frame" x="20" y="209" width="335" height="33.5"/>
+                                <rect key="frame" x="20" y="229" width="335" height="33.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -197,20 +217,35 @@
                                     <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" id="zpq-vh-a5v"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-yl-N8J" userLabel="Bottom Safe Area Placeholder">
+                                <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" id="R0S-lp-55q"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="qGL-yl-N8J" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="0sZ-fs-VnN"/>
+                            <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="24S-vw-Uku"/>
                             <constraint firstItem="K4y-9l-7FO" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="77b-lV-q84"/>
+                            <constraint firstItem="mNy-8K-X6S" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="Guz-Ik-vmb"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="NCO-o8-q8h" secondAttribute="trailing" id="TRc-3d-ucg"/>
                             <constraint firstItem="wAa-Ej-6fx" firstAttribute="centerX" secondItem="6Bg-67-Oum" secondAttribute="centerX" id="XLc-8J-CxI"/>
+                            <constraint firstItem="c10-IX-mVV" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="10" id="Zfy-I1-hTz"/>
                             <constraint firstItem="NCO-o8-q8h" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="aFX-IT-6SY"/>
+                            <constraint firstItem="mNy-8K-X6S" firstAttribute="top" secondItem="DGO-cU-Jif" secondAttribute="top" id="aZ3-kp-IfS"/>
+                            <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
+                            <constraint firstItem="wAa-Ej-6fx" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="60" id="dzk-me-xne"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
                             <constraint firstItem="K4y-9l-7FO" firstAttribute="top" secondItem="wAa-Ej-6fx" secondAttribute="bottom" constant="19" id="inY-fi-ChL"/>
-                            <constraint firstItem="wAa-Ej-6fx" firstAttribute="top" secondItem="6Bg-67-Oum" secondAttribute="top" constant="60" id="jGN-ki-eGu"/>
+                            <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="K4y-9l-7FO" secondAttribute="trailing" constant="20" id="pZv-ij-8SE"/>
-                            <constraint firstItem="6Bg-67-Oum" firstAttribute="bottom" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="seJ-CN-muM"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
+                            <constraint firstAttribute="bottom" secondItem="qGL-yl-N8J" secondAttribute="bottom" id="vtu-FQ-KW2"/>
+                            <constraint firstItem="c10-IX-mVV" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="zfZ-FC-p7R"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Bg-67-Oum"/>
                     </view>
@@ -223,12 +258,13 @@
                 </constraints>
             </view>
             <blurEffect style="dark"/>
-            <point key="canvasLocation" x="-425" y="-268"/>
+            <point key="canvasLocation" x="-426.39999999999998" y="-268.51574212893553"/>
         </visualEffectView>
     </objects>
     <resources>
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
+        <image name="Call/ic_minimize" width="24" height="24"/>
         <image name="Call/ic_mute_off" width="74" height="74"/>
         <image name="Call/ic_mute_on" width="74" height="74"/>
         <image name="Call/ic_speaker_off" width="74" height="74"/>

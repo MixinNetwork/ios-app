@@ -15,6 +15,16 @@ class HomeContainerViewController: UIViewController {
         return controller
     }()
     
+    lazy var minimizedCallViewController: MinimizedCallViewController = {
+        let controller = MinimizedCallViewController()
+        addChild(controller)
+        view.addSubview(controller.view)
+        controller.didMove(toParent: self)
+        controller.placeViewToTopRight()
+        minimizedCallViewControllerIfLoaded = controller
+        return controller
+    }()
+    
     override var childForStatusBarHidden: UIViewController? {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
@@ -28,6 +38,8 @@ class HomeContainerViewController: UIViewController {
     }
     
     private(set) var isShowingGallery = false
+    
+    private(set) weak var minimizedCallViewControllerIfLoaded: MinimizedCallViewController?
     
     private var navigationInteractiveGestureWasEnabled = true
     

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MinimizedCallViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="Icf-vi-CBF" id="N9H-H6-0uU"/>
+                <outlet property="statusLabel" destination="odt-x1-Qfc" id="kid-HG-SwO"/>
+                <outlet property="view" destination="iN0-l3-epB" id="RYy-wp-yLu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Icf-vi-CBF" userLabel="Content View">
+                    <rect key="frame" x="10" y="10" width="60" height="60"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Call/ic_minimized_call" translatesAutoresizingMaskIntoConstraints="NO" id="qVd-tv-LcG">
+                            <rect key="frame" x="20" y="14" width="20" height="20"/>
+                            <color key="tintColor" name="green"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="odt-x1-Qfc">
+                            <rect key="frame" x="8" y="37" width="44" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="minimized_call_duration"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QR0-wq-5SN">
+                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                            <connections>
+                                <action selector="maximizeAction:" destination="-1" eventType="touchUpInside" id="byk-c0-sam"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="minimized_call_background"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="odt-x1-Qfc" secondAttribute="bottom" constant="6" id="1Oj-Si-SZ9"/>
+                        <constraint firstAttribute="height" constant="60" id="HOZ-7o-g4i"/>
+                        <constraint firstItem="qVd-tv-LcG" firstAttribute="top" secondItem="Icf-vi-CBF" secondAttribute="top" constant="14" id="Ifu-up-CIv"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Mb6-tD-uSK"/>
+                        <constraint firstAttribute="bottom" secondItem="QR0-wq-5SN" secondAttribute="bottom" id="Ucs-rR-N74"/>
+                        <constraint firstAttribute="trailing" secondItem="odt-x1-Qfc" secondAttribute="trailing" constant="8" id="fca-wK-38i"/>
+                        <constraint firstItem="qVd-tv-LcG" firstAttribute="centerX" secondItem="Icf-vi-CBF" secondAttribute="centerX" id="gpN-iq-tnK"/>
+                        <constraint firstItem="odt-x1-Qfc" firstAttribute="leading" secondItem="Icf-vi-CBF" secondAttribute="leading" constant="8" id="oIJ-wF-QPh"/>
+                        <constraint firstAttribute="trailing" secondItem="QR0-wq-5SN" secondAttribute="trailing" id="qaW-sp-6tl"/>
+                        <constraint firstItem="QR0-wq-5SN" firstAttribute="top" secondItem="Icf-vi-CBF" secondAttribute="top" id="slz-8t-cVJ"/>
+                        <constraint firstItem="QR0-wq-5SN" firstAttribute="leading" secondItem="Icf-vi-CBF" secondAttribute="leading" id="wEE-oP-7b4"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Asi-cg-odr" appends="YES" id="Lzt-3f-JIT"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="Icf-vi-CBF" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="6KD-Oc-kcc"/>
+                <constraint firstItem="Icf-vi-CBF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="HaV-IV-wuL"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="139" y="125"/>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="Asi-cg-odr">
+            <connections>
+                <action selector="panAction:" destination="-1" id="GVW-OZ-Q5J"/>
+            </connections>
+        </panGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="Call/ic_minimized_call" width="20" height="20"/>
+        <namedColor name="green">
+            <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="minimized_call_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="minimized_call_duration">
+            <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

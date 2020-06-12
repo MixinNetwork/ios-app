@@ -18,11 +18,11 @@
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
                 <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
-                <outlet property="muteButton" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
+                <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
-                <outlet property="speakerButton" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
+                <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="statusLabel" destination="NCO-o8-q8h" id="dVO-1b-9MK"/>
                 <outlet property="topSafeAreaPlaceholderHeightConstraint" destination="zsV-2R-gz5" id="4Yv-vt-eTb"/>
                 <outlet property="view" destination="bL8-4H-NX8" id="h0m-as-x2y"/>
@@ -88,19 +88,19 @@
                                 <rect key="frame" x="30" y="463" width="315" height="204"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="TQI-9I-kWd" userLabel="HangUp Stack View">
-                                        <rect key="frame" x="0.0" y="51.5" width="74" height="101.5"/>
+                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Eu-3w-9KA">
-                                                <rect key="frame" x="0.0" y="0.0" width="74" height="74"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="backgroundColor" red="1" green="0.3921568627" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="74" id="HlB-nO-7gA"/>
-                                                    <constraint firstAttribute="height" constant="74" id="nVe-Xx-mAJ"/>
+                                                    <constraint firstAttribute="width" constant="64" id="HlB-nO-7gA"/>
+                                                    <constraint firstAttribute="width" secondItem="8Eu-3w-9KA" secondAttribute="height" id="POh-Hh-eQp"/>
                                                 </constraints>
                                                 <state key="normal" image="Call/ic_drop"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="37"/>
+                                                        <integer key="value" value="32"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -108,7 +108,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="decline" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rlO-vX-Glj">
-                                                <rect key="frame" x="0.0" y="87" width="74" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -116,19 +116,19 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo">
-                                        <rect key="frame" x="241" y="51.5" width="74" height="101.5"/>
+                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
-                                                <rect key="frame" x="0.0" y="0.0" width="74" height="74"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="backgroundColor" red="0.0" green="0.84705882349999995" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="74" id="GA2-28-9aj"/>
-                                                    <constraint firstAttribute="width" constant="74" id="rjD-3V-ccn"/>
+                                                    <constraint firstAttribute="width" secondItem="dFe-fP-bsd" secondAttribute="height" id="6jJ-WA-KgB"/>
+                                                    <constraint firstAttribute="width" constant="64" id="rjD-3V-ccn"/>
                                                 </constraints>
                                                 <state key="normal" image="Call/ic_call"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="37"/>
+                                                        <integer key="value" value="32"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -136,7 +136,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="accept" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oVs-zO-xAl">
-                                                <rect key="frame" x="0.0" y="87" width="74" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -147,24 +147,26 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-TX-CRZ" userLabel="Mute Stack View">
-                                        <rect key="frame" x="0.0" y="51.5" width="74" height="101.5"/>
+                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh">
-                                                <rect key="frame" x="0.0" y="0.0" width="74" height="74"/>
+                                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" image="Call/ic_mute_off"/>
-                                                <state key="selected" image="Call/ic_mute_on"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="TLo-dV-Hyh" secondAttribute="height" id="DGm-IE-fhj"/>
+                                                    <constraint firstAttribute="width" constant="64" id="XDC-b2-5XI"/>
+                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="37"/>
+                                                        <integer key="value" value="32"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="setMuteAction:" destination="-1" eventType="touchUpInside" id="OST-v3-nmF"/>
+                                                    <action selector="setMuteAction:" destination="-1" eventType="valueChanged" id="hNd-m8-hSf"/>
                                                 </connections>
-                                            </button>
+                                            </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mute" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v04-5z-zV5">
-                                                <rect key="frame" x="0.0" y="87" width="74" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -175,24 +177,26 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-j4-HiN" userLabel="Speaker Stack View">
-                                        <rect key="frame" x="241" y="51.5" width="74" height="101.5"/>
+                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D">
-                                                <rect key="frame" x="0.0" y="0.0" width="74" height="74"/>
+                                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" image="Call/ic_speaker_off"/>
-                                                <state key="selected" image="Call/ic_speaker_on"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="64" id="O4u-9c-yHN"/>
+                                                    <constraint firstAttribute="width" secondItem="taT-k8-v1D" secondAttribute="height" id="zKb-dp-iDc"/>
+                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="37"/>
+                                                        <integer key="value" value="32"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="setSpeakerAction:" destination="-1" eventType="touchUpInside" id="faJ-H1-ooy"/>
+                                                    <action selector="setSpeakerAction:" destination="-1" eventType="valueChanged" id="RW5-qO-zVy"/>
                                                 </connections>
-                                            </button>
+                                            </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="speaker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGX-Fl-Bb9">
-                                                <rect key="frame" x="0.0" y="87" width="74" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -265,9 +269,5 @@
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
         <image name="Call/ic_minimize" width="24" height="24"/>
-        <image name="Call/ic_mute_off" width="74" height="74"/>
-        <image name="Call/ic_mute_on" width="74" height="74"/>
-        <image name="Call/ic_speaker_off" width="74" height="74"/>
-        <image name="Call/ic_speaker_on" width="74" height="74"/>
     </resources>
 </document>

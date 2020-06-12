@@ -125,6 +125,7 @@
 		7B45A51C2189F28E0008F894 /* ringtone_outgoing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
+		7B4AD8D924925F2F00E999B7 /* CallIconPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */; };
 		7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */; };
 		7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */; };
 		7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */; };
@@ -285,9 +286,10 @@
 		7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */; };
 		7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95534222438ECD00CE95E6 /* TopRoundedView.swift */; };
 		7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95860E2369599800F1F6E1 /* ProfileViewController.swift */; };
-		7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */; };
 		7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */; };
 		7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9650AF24879B9000DE86B9 /* MinimizedCallView.xib */; };
+		7B9650B224879EB100DE86B9 /* CallSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9650B124879EB100DE86B9 /* CallSwitch.swift */; };
+		7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */; };
 		7B97124C247EBF9800F5CBE6 /* RingtonePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97124B247EBF9800F5CBE6 /* RingtonePlayer.swift */; };
 		7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */; };
 		7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */; };
@@ -946,6 +948,7 @@
 		7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ringtone_outgoing.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
+		7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallIconPath.swift; sourceTree = "<group>"; };
 		7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizablePopupViewController.swift; sourceTree = "<group>"; };
 		7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsViewController.swift; sourceTree = "<group>"; };
 		7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateHomeAppsModelController.swift; sourceTree = "<group>"; };
@@ -1105,9 +1108,10 @@
 		7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinValidationPresentationController.swift; sourceTree = "<group>"; };
 		7B95534222438ECD00CE95E6 /* TopRoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRoundedView.swift; sourceTree = "<group>"; };
 		7B95860E2369599800F1F6E1 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMessagingService.swift; sourceTree = "<group>"; };
 		7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedCallViewController.swift; sourceTree = "<group>"; };
 		7B9650AF24879B9000DE86B9 /* MinimizedCallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedCallView.xib; sourceTree = "<group>"; };
+		7B9650B124879EB100DE86B9 /* CallSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSwitch.swift; sourceTree = "<group>"; };
+		7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMessagingService.swift; sourceTree = "<group>"; };
 		7B97124B247EBF9800F5CBE6 /* RingtonePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtonePlayer.swift; sourceTree = "<group>"; };
 		7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2079,6 +2083,8 @@
 				7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */,
 				7B08CD2B2178700C00FB8CCF /* CallService.swift */,
 				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
+				7B9650B124879EB100DE86B9 /* CallSwitch.swift */,
+				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 			);
@@ -3828,6 +3834,7 @@
 				7BC1466D230D12680060FE19 /* CurrencySelectorViewController.swift in Sources */,
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
 				7B402F88214692C300383687 /* BubbleLayer.swift in Sources */,
+				7B9650B224879EB100DE86B9 /* CallSwitch.swift in Sources */,
 				7B5E9B4A243740C4000AE24E /* ConversationCircleEditorFooterView.swift in Sources */,
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
@@ -4234,6 +4241,7 @@
 				7B8BB58A234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift in Sources */,
 				7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */,
 				7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */,
+				7B4AD8D924925F2F00E999B7 /* CallIconPath.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

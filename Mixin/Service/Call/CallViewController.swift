@@ -7,8 +7,8 @@ class CallViewController: UIViewController {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var muteButton: UIButton!
-    @IBOutlet weak var speakerButton: UIButton!
+    @IBOutlet weak var muteSwitch: CallSwitch!
+    @IBOutlet weak var speakerSwitch: CallSwitch!
     @IBOutlet weak var hangUpButton: UIButton!
     @IBOutlet weak var hangUpTitleLabel: UILabel!
     @IBOutlet weak var acceptStackView: UIStackView!
@@ -41,6 +41,8 @@ class CallViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        muteSwitch.iconPath = CallIconPath.mute
+        speakerSwitch.iconPath = CallIconPath.speaker
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
                             adjustForContentSize: true)
         
@@ -61,8 +63,10 @@ class CallViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        topSafeAreaPlaceholderHeightConstraint.constant = max(topSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.top)
-        bottomSafeAreaPlaceholderHeightConstraint.constant = max(bottomSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.bottom)
+        let topHeight = max(topSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.top)
+        topSafeAreaPlaceholderHeightConstraint.constant = topHeight
+        let bottomHeight = max(bottomSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.bottom)
+        bottomSafeAreaPlaceholderHeightConstraint.constant = bottomHeight
     }
     
     func disableConnectionDurationTimer() {
@@ -73,16 +77,16 @@ class CallViewController: UIViewController {
         nameLabel.text = username
         avatarImageView.prepareForReuse()
         avatarImageView.setImage(userId: userId, name: username)
-        muteButton.isSelected = service.isMuted
-        speakerButton.isSelected = service.usesSpeaker
+        muteSwitch.isOn = service.isMuted
+        speakerSwitch.isOn = service.usesSpeaker
     }
     
     func reload(user: UserItem) {
         nameLabel.text = user.fullName
         avatarImageView.prepareForReuse()
         avatarImageView.setImage(with: user)
-        muteButton.isSelected = service.isMuted
-        speakerButton.isSelected = service.usesSpeaker
+        muteSwitch.isOn = service.isMuted
+        speakerSwitch.isOn = service.usesSpeaker
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
@@ -94,13 +98,11 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        muteButton.isSelected = !muteButton.isSelected
-        service.isMuted = muteButton.isSelected
+        service.isMuted = muteSwitch.isOn
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
-        speakerButton.isSelected = !speakerButton.isSelected
-        service.usesSpeaker = speakerButton.isSelected
+        service.usesSpeaker = speakerSwitch.isOn
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
@@ -112,7 +114,7 @@ class CallViewController: UIViewController {
 extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
-        muteButton.isSelected = service.isMuted
+        muteSwitch.isOn = service.isMuted
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
@@ -127,9 +129,9 @@ extension CallViewController {
                 // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
                 // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
                 self.service.usesSpeaker = self.service.usesSpeaker
-                self.speakerButton.isSelected = self.service.usesSpeaker
+                self.speakerSwitch.isOn = self.service.usesSpeaker
             } else {
-                self.speakerButton.isSelected = routeContainsSpeaker
+                self.speakerSwitch.isOn = routeContainsSpeaker
             }
         }
     }

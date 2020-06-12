@@ -196,7 +196,8 @@ extension CallService {
             registerForPushKitNotificationsIfAvailable()
             let uuid = UUID()
             activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-            callInterface.requestStartCall(uuid: uuid, handle: .userId(opponentUser.userId)) { (error) in
+            let handle = CallHandle(id: opponentUser.userId, name: opponentUser.fullName)
+            callInterface.requestStartCall(uuid: uuid, handle: handle) { (error) in
                 if let error = error as? CallError {
                     self.alert(error: error)
                 } else if let error = error {
@@ -274,18 +275,13 @@ extension CallService {
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
         dispatch {
-            guard case let .userId(opponentUserId) = handle else {
-                self.alert(error: .invalidHandle)
-                completion?(false)
-                return
-            }
-            guard let call = self.activeCall, call.opponentUserId == opponentUserId else {
+            guard let call = self.activeCall, call.opponentUserId == handle.id else {
                 self.alert(error: .inconsistentCallStarted)
                 completion?(false)
                 return
             }
-            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: opponentUserId) else {
-                self.alert(error: .missingUser(userId: opponentUserId))
+            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: handle.id) else {
+                self.alert(error: .missingUser(userId: handle.id))
                 completion?(false)
                 return
             }

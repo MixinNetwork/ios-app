@@ -73,7 +73,19 @@ extension NativeCallInterface: CallInterface {
     
     func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion) {
         let action = CXStartCallAction(call: uuid, handle: handle.cxHandle)
-        callController.requestTransaction(with: action, completion: completion)
+        callController.requestTransaction(with: action) { (error) in
+            if error == nil {
+                let update = CXCallUpdate()
+                update.localizedCallerName = handle.name
+                update.supportsHolding = false
+                update.supportsGrouping = false
+                update.supportsUngrouping = false
+                update.supportsDTMF = false
+                update.hasVideo = false
+                self.provider.reportCall(with: uuid, updated: update)
+            }
+            completion(error)
+        }
     }
     
     func requestAnswerCall(uuid: UUID) {
@@ -142,13 +154,13 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        if let handle = CallHandle(cxHandle: action.handle) {
-            service.startCall(uuid: action.callUUID, handle: handle) { (success) in
-                success ? action.fulfill() : action.fail()
-            }
-        } else {
+        guard let handle = CallHandle(cxHandle: action.handle) else {
             service.alert(error: .invalidHandle)
             action.fail()
+            return
+        }
+        service.startCall(uuid: action.callUUID, handle: handle) { (success) in
+            success ? action.fulfill() : action.fail()
         }
     }
     

@@ -81,8 +81,10 @@ class ConversationViewController: UIViewController {
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
     private var isShowingKeyboard = false
+    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
+    
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
@@ -107,6 +109,18 @@ class ConversationViewController: UIViewController {
         let view = R.nib.invitationHintView(owner: nil)!
         view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
         return view
+    }()
+    
+    private lazy var groupCallIndicatorView: GroupCallIndicatorView = {
+        let indicator = R.nib.groupCallIndicatorView(owner: self)!
+        view.addSubview(indicator)
+        indicator.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview()
+        }
+        groupCallIndicatorCenterYConstraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
+        groupCallIndicatorCenterYConstraint.constant = groupCallIndicatorCenterYLimitation.min
+        groupCallIndicatorCenterYConstraint.isActive = true
+        return indicator
     }()
     
     private lazy var cancelSelectionButton: UIButton = {
@@ -172,6 +186,12 @@ class ConversationViewController: UIViewController {
         return AppDelegate.current.mainWindow.frame.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
+    }
+    
+    private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
+        let min = navigationBarView.frame.maxY + 30
+        let max = inputWrapperView.frame.minY - 30
+        return (min, max)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -407,6 +427,23 @@ class ConversationViewController: UIViewController {
             AppGroupUserDefaults.User.closeScamAnnouncementDate[user.userId] = Date()
         }
         updateAnnouncementBadge(announcement: nil)
+    }
+    
+    @IBAction func groupCallIndicatorPanAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.setTranslation(.zero, in: nil)
+        case .changed:
+            groupCallIndicatorCenterYConstraint.constant += recognizer.translation(in: nil).y
+            recognizer.setTranslation(.zero, in: nil)
+        case .ended:
+            let (minY, maxY) = groupCallIndicatorCenterYLimitation
+            let y = max(minY, min(maxY, groupCallIndicatorView.center.y))
+            groupCallIndicatorCenterYConstraint.constant = y
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: view.layoutIfNeeded, completion: nil)
+        default:
+            break
+        }
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {

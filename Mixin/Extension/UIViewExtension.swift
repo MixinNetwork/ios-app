@@ -5,15 +5,7 @@ extension UIView {
     var isVisibleInScreen: Bool {
         return self.window == UIApplication.currentActivity()?.view.window
     }
-
-    func roundCorners(cornerRadius: CGFloat, byRoundingCorners: UIRectCorner = [.topLeft, .topRight]) {
-        let maskPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: byRoundingCorners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = self.bounds
-        maskLayer.path = maskPath.cgPath
-        self.layer.mask = maskLayer
-    }
-
+    
     func animationSwapImage(newImage: UIImage) {
         UIView.animate(withDuration: 0.15, animations: {
             self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)

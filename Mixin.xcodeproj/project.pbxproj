@@ -511,6 +511,8 @@
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
 		7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */; };
 		7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */; };
+		7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */; };
+		7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD375524936763006D758F /* GroupCallIndicatorView.swift */; };
 		7BFDB73920DA41E3005673CC /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDB73820DA41E3005673CC /* Quote.swift */; };
 		7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */; };
 		7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47DC228432A600FC4379 /* PeerInfoView.xib */; };
@@ -1345,6 +1347,8 @@
 		7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSelectorViewController.swift; sourceTree = "<group>"; };
 		7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferReceiverViewController.swift; sourceTree = "<group>"; };
 		7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewController.swift; sourceTree = "<group>"; };
+		7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupCallIndicatorView.xib; sourceTree = "<group>"; };
+		7BFD375524936763006D758F /* GroupCallIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallIndicatorView.swift; sourceTree = "<group>"; };
 		7BFDB73820DA41E3005673CC /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItemPeerViewController.swift; sourceTree = "<group>"; };
 		7BFE47DC228432A600FC4379 /* PeerInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerInfoView.xib; sourceTree = "<group>"; };
@@ -2708,6 +2712,8 @@
 				7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */,
 				7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */,
 				7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */,
+				7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */,
+				7BFD375524936763006D758F /* GroupCallIndicatorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3284,6 +3290,7 @@
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,
+				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
@@ -4171,6 +4178,7 @@
 				DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */,
 				7BD40331247823B90027B039 /* CallHandle.swift in Sources */,
 				DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */,
+				7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,

@@ -281,6 +281,7 @@
 "chat_menu_transfer" = "Transfer";
 "chat_menu_contact" = "Contact";
 "chat_menu_call" = "Call";
+"chat_menu_group_call" = "Group Call";
 "chat_menu_developer" = "Developer";
 "chat_menu_location" = "Location";
 "chat_photo_save" = "Save to Camera Roll";

@@ -283,6 +283,7 @@
 "chat_menu_call" = "通話";
 "chat_menu_developer" = "開発者";
 "chat_menu_location" = "位置情報";
+"chat_menu_group_call" = "Group Call";
 "chat_photo_save" = "カメラロールに保存する";
 "chat_file_expired" = "期限切れ";
 "chat_voice_record_cancel" = "スライドしてキャンセルする";

@@ -43,4 +43,9 @@ class SelectedPeerCell: UICollectionViewCell {
         nameLabel.text = receiver.name
     }
     
+    func render(item: UserItem) {
+        imageView.setImage(with: item)
+        nameLabel.text = item.fullName
+    }
+    
 }

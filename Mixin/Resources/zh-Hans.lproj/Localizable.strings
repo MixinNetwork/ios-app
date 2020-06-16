@@ -283,6 +283,7 @@
 "chat_menu_location" = "位置";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
+"chat_menu_group_call" = "群组通话";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";

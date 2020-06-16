@@ -129,13 +129,10 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     
     func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
         centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
-        let work = {
-            self.view.layoutIfNeeded()
-        }
         if animated {
-            UIView.animate(withDuration: 0.3, animations: work)
+            UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
         } else {
-            UIView.performWithoutAnimation(work)
+            UIView.performWithoutAnimation(view.layoutIfNeeded)
         }
     }
     

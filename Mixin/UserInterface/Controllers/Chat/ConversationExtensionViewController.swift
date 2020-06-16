@@ -62,8 +62,7 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
 extension ConversationExtensionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // TODO: use separated sections for these
-        return fixedExtensions.count + apps.count
+        fixedExtensions.count + apps.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -111,6 +110,11 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             case .call:
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.callOwnerUserIfPresent()
+            case .groupCall:
+                if let id = dataSource?.conversationId {
+                    let picker = GroupCallMemberPickerViewController(conversationId: id)
+                    conversationViewController?.present(picker, animated: true, completion: nil)
+                }
             case .location:
                 conversationViewController?.showLocationPicker()
             }
@@ -139,6 +143,7 @@ extension ConversationExtensionViewController {
         case transfer
         case contact
         case call
+        case groupCall
         case location
         
         var image: UIImage? {
@@ -151,7 +156,7 @@ extension ConversationExtensionViewController {
                 return R.image.conversation.ic_extension_transfer()
             case .contact:
                 return R.image.conversation.ic_extension_contact()
-            case .call:
+            case .call, .groupCall:
                 return R.image.conversation.ic_extension_call()
             case .location:
                 return R.image.conversation.ic_extension_location()
@@ -161,22 +166,24 @@ extension ConversationExtensionViewController {
         var title: String {
             switch self {
             case .camera:
-                return Localized.CHAT_MENU_CAMERA
+                return R.string.localizable.chat_menu_camera()
             case .file:
-                return Localized.CHAT_MENU_FILE
+                return R.string.localizable.chat_menu_file()
             case .transfer:
-                return Localized.CHAT_MENU_TRANSFER
+                return R.string.localizable.chat_menu_transfer()
             case .contact:
-                return Localized.CHAT_MENU_CONTACT
+                return R.string.localizable.chat_menu_contact()
             case .call:
-                return Localized.CHAT_MENU_CALL
+                return R.string.localizable.chat_menu_call()
+            case .groupCall:
+                return R.string.localizable.chat_menu_group_call()
             case .location:
                 return R.string.localizable.chat_menu_location()
             }
         }
         
         var dismissPanelAfterSent: Bool {
-            return self == .transfer || self == .call
+            [.transfer, .call, .groupCall].contains(self)
         }
         
     }

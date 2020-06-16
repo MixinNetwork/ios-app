@@ -387,6 +387,7 @@ extension CallService {
             self.pendingCalls.removeValue(forKey: uuid)
             self.pendingSDPs.removeValue(forKey: uuid)
             
+            self.activeCall = call
             DispatchQueue.main.sync {
                 if let opponentUser = call.opponentUser {
                     self.showCallingInterface(user: opponentUser,
@@ -397,7 +398,7 @@ extension CallService {
                                               status: .connecting)
                 }
             }
-            self.activeCall = call
+            
             for uuid in self.pendingCalls.keys {
                 self.endCall(uuid: uuid)
             }

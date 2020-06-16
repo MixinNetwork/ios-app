@@ -357,32 +357,24 @@ extension CallService {
             RunLoop.main.add(timer, forMode: .default)
             self.unansweredTimer = timer
             
-            self.rtcClient.offer { (sdp, error) in
-                guard let sdp = sdp else {
+            self.rtcClient.offer { result in
+                switch result {
+                case .success(let sdpJson):
+                    let msg = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                          conversationId: call.conversationId,
+                                                          category: .WEBRTC_AUDIO_OFFER,
+                                                          content: sdpJson,
+                                                          status: .SENDING)
+                    SendMessageService.shared.sendMessage(message: msg,
+                                                          ownerUser: opponentUser,
+                                                          isGroupMessage: false)
+                    completion?(true)
+                case .failure(let error):
                     self.dispatch {
-                        self.failCurrentCall(sendFailedMessageToRemote: false,
-                                             error: .sdpConstruction(error))
+                        self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
                         completion?(false)
                     }
-                    return
                 }
-                guard let content = sdp.jsonString else {
-                    self.dispatch {
-                        self.failCurrentCall(sendFailedMessageToRemote: false,
-                                             error: .sdpSerialization(error))
-                        completion?(false)
-                    }
-                    return
-                }
-                let msg = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                      conversationId: call.conversationId,
-                                                      category: .WEBRTC_AUDIO_OFFER,
-                                                      content: content,
-                                                      status: .SENDING)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: opponentUser,
-                                                      isGroupMessage: false)
-                completion?(true)
             }
         }
     }
@@ -418,26 +410,27 @@ extension CallService {
                         completion?(false)
                     }
                 } else {
-                    self.rtcClient.answer(completion: { (answer, error) in
+                    self.rtcClient.answer(completion: { result in
                         self.dispatch {
-                            guard let answer = answer, let content = answer.jsonString else {
+                            switch result {
+                            case .success(let sdpJson):
+                                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                                      category: .WEBRTC_AUDIO_ANSWER,
+                                                                      content: sdpJson,
+                                                                      status: .SENDING,
+                                                                      quoteMessageId: call.uuidString)
+                                SendMessageService.shared.sendMessage(message: msg,
+                                                                      ownerUser: call.opponentUser,
+                                                                      isGroupMessage: false)
+                                if let candidates = self.pendingCandidates.removeValue(forKey: uuid) {
+                                    candidates.forEach(self.rtcClient.add(remoteCandidate:))
+                                }
+                                completion?(true)
+                            case .failure(let error):
                                 self.failCurrentCall(sendFailedMessageToRemote: true,
-                                                     error: .answerConstruction(error))
+                                                     error: error)
                                 completion?(false)
-                                return
                             }
-                            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                                  category: .WEBRTC_AUDIO_ANSWER,
-                                                                  content: content,
-                                                                  status: .SENDING,
-                                                                  quoteMessageId: call.uuidString)
-                            SendMessageService.shared.sendMessage(message: msg,
-                                                                  ownerUser: call.opponentUser,
-                                                                  isGroupMessage: false)
-                            if let candidates = self.pendingCandidates.removeValue(forKey: uuid) {
-                                candidates.forEach(self.rtcClient.add(remoteCandidate:))
-                            }
-                            completion?(true)
                         }
                     })
                 }

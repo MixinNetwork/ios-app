@@ -14,8 +14,7 @@ enum CallError: Error {
     case answerConstruction(Error?)
     case setRemoteAnswer(Error)
     case clientFailure
-    case sdpConstruction(Error?)
-    case sdpSerialization(Error?)
+    case offerConstruction(Error?)
     
     case invalidHandle
     

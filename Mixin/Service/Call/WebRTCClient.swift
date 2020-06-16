@@ -28,30 +28,30 @@ class WebRTCClient: NSObject {
         return peerConnection?.iceConnectionState ?? .closed
     }
     
-    func offer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
+    func offer(completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded()
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.offer(for: constraints) { (sdp, error) in
-            if let sdp = sdp {
+            if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(sdp, nil)
+                    completion(.success(json))
                 })
             } else {
-                completion(nil, error)
+                completion(.failure(.offerConstruction(error)))
             }
         }
     }
     
-    func answer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
+    func answer(completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded()
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.answer(for: constraints) { (sdp, error) in
-            if let sdp = sdp {
+            if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(sdp, nil)
+                    completion(.success(json))
                 })
             } else {
-                completion(nil, error)
+                completion(.failure(.answerConstruction(error)))
             }
         }
     }

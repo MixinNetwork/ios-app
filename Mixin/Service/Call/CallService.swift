@@ -194,7 +194,7 @@ extension CallService: PKPushRegistryDelegate {
             WebSocketService.shared.connectIfNeeded()
         }
         if usesCallKit && !MessageDAO.shared.isExist(messageId: messageId) {
-            let call = Call(uuid: uuid, opponentUserId: userId, opponentUsername: username, isOutgoing: false)
+            let call = Call(uuid: uuid, remoteUserId: userId, remoteUsername: username, isOutgoing: false)
             pendingCalls[uuid] = call
             nativeCallInterface.reportIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
                 completion()
@@ -240,7 +240,7 @@ extension CallService {
         }
     }
     
-    func requestStartCall(opponentUser: UserItem) {
+    func requestStartCall(remoteUser: UserItem) {
         
         func performRequest() {
             guard activeCall == nil else {
@@ -250,8 +250,8 @@ extension CallService {
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             let uuid = UUID()
-            activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-            let handle = CallHandle(id: opponentUser.userId, name: opponentUser.fullName)
+            activeCall = Call(uuid: uuid, remoteUser: remoteUser, isOutgoing: true)
+            let handle = CallHandle(id: remoteUser.userId, name: remoteUser.fullName)
             callInterface.requestStartCall(uuid: uuid, handle: handle) { (error) in
                 if let error = error as? CallError {
                     self.alert(error: error)
@@ -330,12 +330,12 @@ extension CallService {
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
         dispatch {
-            guard let call = self.activeCall, call.opponentUserId == handle.id else {
+            guard let call = self.activeCall, call.remoteUserId == handle.id else {
                 self.alert(error: .inconsistentCallStarted)
                 completion?(false)
                 return
             }
-            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: handle.id) else {
+            guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: handle.id) else {
                 self.alert(error: .missingUser(userId: handle.id))
                 completion?(false)
                 return
@@ -346,7 +346,7 @@ extension CallService {
                 return
             }
             DispatchQueue.main.sync {
-                self.showCallingInterface(user: opponentUser, status: .outgoing)
+                self.showCallingInterface(user: remoteUser, status: .outgoing)
             }
             
             let timer = Timer(timeInterval: callTimeoutInterval,
@@ -366,7 +366,7 @@ extension CallService {
                                                           content: sdpJson,
                                                           status: .SENDING)
                     SendMessageService.shared.sendMessage(message: msg,
-                                                          ownerUser: opponentUser,
+                                                          ownerUser: remoteUser,
                                                           isGroupMessage: false)
                     completion?(true)
                 case .failure(let error):
@@ -389,12 +389,12 @@ extension CallService {
             
             self.activeCall = call
             DispatchQueue.main.sync {
-                if let opponentUser = call.opponentUser {
-                    self.showCallingInterface(user: opponentUser,
+                if let remoteUser = call.remoteUser {
+                    self.showCallingInterface(user: remoteUser,
                                               status: .connecting)
                 } else {
-                    self.showCallingInterface(userId: call.opponentUserId,
-                                              username: call.opponentUsername,
+                    self.showCallingInterface(userId: call.remoteUserId,
+                                              username: call.remoteUsername,
                                               status: .connecting)
                 }
             }
@@ -421,7 +421,7 @@ extension CallService {
                                                                       status: .SENDING,
                                                                       quoteMessageId: call.uuidString)
                                 SendMessageService.shared.sendMessage(message: msg,
-                                                                      ownerUser: call.opponentUser,
+                                                                      ownerUser: call.remoteUser,
                                                                       isGroupMessage: false)
                                 if let candidates = self.pendingCandidates.removeValue(forKey: uuid) {
                                     candidates.forEach(self.rtcClient.add(remoteCandidate:))
@@ -448,7 +448,7 @@ extension CallService {
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
             SendMessageService.shared.sendWebRTCMessage(message: msg,
-                                                        recipientId: call.opponentUserId)
+                                                        recipientId: call.remoteUserId)
             insertCallCompletedMessage(call: call,
                                        isUserInitiated: true,
                                        category: category)
@@ -633,7 +633,7 @@ extension CallService {
                 return
             }
             AudioManager.shared.pause()
-            let call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
+            let call = Call(uuid: uuid, remoteUser: user, isOutgoing: false)
             pendingCalls[uuid] = call
             pendingSDPs[uuid] = sdp
             
@@ -705,9 +705,10 @@ extension CallService {
             || category == .WEBRTC_AUDIO_END
             || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)
         let status: MessageStatus = shouldMarkMessageRead ? .READ : .DELIVERED
+        let userId = call.isOutgoing ? myUserId : call.remoteUserId
         let msg = Message.createWebRTCMessage(messageId: call.uuidString,
                                               conversationId: call.conversationId,
-                                              userId: call.raisedByUserId,
+                                              userId: userId,
                                               category: category,
                                               mediaDuration: Int64(duration),
                                               status: status)
@@ -729,7 +730,7 @@ extension CallService: WebRTCClientDelegate {
                                               status: .SENDING,
                                               quoteMessageId: call.uuidString)
         SendMessageService.shared.sendMessage(message: msg,
-                                              ownerUser: call.opponentUser,
+                                              ownerUser: call.remoteUser,
                                               isGroupMessage: false)
     }
     
@@ -775,7 +776,7 @@ extension CallService {
                                                   category: .WEBRTC_AUDIO_CANCEL,
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.opponentUserId)
+            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
             self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
             self.activeCall = nil
             self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
@@ -836,7 +837,7 @@ extension CallService {
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
             SendMessageService.shared.sendMessage(message: msg,
-                                                  ownerUser: call.opponentUser,
+                                                  ownerUser: call.remoteUser,
                                                   isGroupMessage: false)
         }
         let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,

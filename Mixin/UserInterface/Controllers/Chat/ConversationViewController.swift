@@ -981,7 +981,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallService.shared.requestStartCall(opponentUser: ownerUser)
+        CallService.shared.requestStartCall(remoteUser: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {

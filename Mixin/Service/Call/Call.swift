@@ -7,8 +7,8 @@ class Call {
     static let newCallStatusUserInfoKey = "call_stat"
     
     let uuid: UUID // Message ID of offer message
-    let opponentUserId: String
-    let opponentUsername: String
+    let remoteUserId: String
+    let remoteUsername: String
     let isOutgoing: Bool
     
     var status: Status = .connecting {
@@ -21,27 +21,26 @@ class Call {
         }
     }
     
-    var opponentUser: UserItem?
+    var remoteUser: UserItem?
     var connectedDate: Date?
     var hasReceivedRemoteAnswer = false
     
     private(set) lazy var uuidString = uuid.uuidString.lowercased()
-    private(set) lazy var conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: opponentUserId)
-    private(set) lazy var raisedByUserId = isOutgoing ? myUserId : opponentUserId
+    private(set) lazy var conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: remoteUserId)
     
-    init(uuid: UUID, opponentUserId: String, opponentUsername: String, isOutgoing: Bool) {
+    init(uuid: UUID, remoteUserId: String, remoteUsername: String, isOutgoing: Bool) {
         self.uuid = uuid
-        self.opponentUserId = opponentUserId
-        self.opponentUsername = opponentUsername
+        self.remoteUserId = remoteUserId
+        self.remoteUsername = remoteUsername
         self.isOutgoing = isOutgoing
     }
     
-    convenience init(uuid: UUID, opponentUser: UserItem, isOutgoing: Bool) {
+    convenience init(uuid: UUID, remoteUser: UserItem, isOutgoing: Bool) {
         self.init(uuid: uuid,
-                  opponentUserId: opponentUser.userId,
-                  opponentUsername: opponentUser.fullName,
+                  remoteUserId: remoteUser.userId,
+                  remoteUsername: remoteUser.fullName,
                   isOutgoing: isOutgoing)
-        self.opponentUser = opponentUser
+        self.remoteUser = remoteUser
     }
     
 }

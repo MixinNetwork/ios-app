@@ -87,7 +87,7 @@ extension MixinCallInterface: CallInterface {
                             self.service.ringtonePlayer.play(ringtone: .incoming)
                             self.vibrator.start()
                         } else {
-                            NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
+                            NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.remoteUsername)
                             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
                                 var authorizedStatus: [UNAuthorizationStatus] = [.authorized]
                                 if #available(iOS 12.0, *) {
@@ -98,12 +98,12 @@ extension MixinCallInterface: CallInterface {
                                 }
                             }
                         }
-                        if let user = call.opponentUser {
+                        if let user = call.remoteUser {
                             self.service.showCallingInterface(user: user,
                                                               status: .incoming)
                         } else {
-                            self.service.showCallingInterface(userId: call.opponentUserId,
-                                                              username: call.opponentUsername,
+                            self.service.showCallingInterface(userId: call.remoteUserId,
+                                                              username: call.remoteUsername,
                                                               status: .incoming)
                         }
                     }

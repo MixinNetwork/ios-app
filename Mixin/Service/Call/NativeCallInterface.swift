@@ -109,8 +109,8 @@ extension NativeCallInterface: CallInterface {
     
     func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
         reportIncomingCall(uuid: call.uuid,
-                           userId: call.opponentUserId,
-                           username: call.opponentUsername,
+                           userId: call.remoteUserId,
+                           username: call.remoteUsername,
                            completion: completion)
     }
     

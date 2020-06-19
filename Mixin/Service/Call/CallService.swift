@@ -25,12 +25,19 @@ class CallService: NSObject {
         }
     }
     
+    var hasActiveOrPendingCall: Bool {
+        queue.sync {
+            activeCall != nil || !pendingCalls.isEmpty
+        }
+    }
+    
     private(set) lazy var ringtonePlayer = RingtonePlayer()
     
-    private(set) var activeCall: Call?
+    private(set) var activeCall: Call? // Access from CallService.queue
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()
+    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     
     private lazy var rtcClient = WebRTCClient()
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
@@ -43,6 +50,7 @@ class CallService: NSObject {
     private var pendingCalls = [UUID: Call]()
     private var pendingSDPs = [UUID: RTCSessionDescription]()
     private var pendingCandidates = [UUID: [RTCIceCandidate]]()
+    private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
     
     private weak var unansweredTimer: Timer?
     
@@ -188,7 +196,8 @@ extension CallService {
             registerForPushKitNotificationsIfAvailable()
             let uuid = UUID()
             activeCall = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-            callInterface.requestStartCall(uuid: uuid, handle: .userId(opponentUser.userId)) { (error) in
+            let handle = CallHandle(id: opponentUser.userId, name: opponentUser.fullName)
+            callInterface.requestStartCall(uuid: uuid, handle: handle) { (error) in
                 if let error = error as? CallError {
                     self.alert(error: error)
                 } else if let error = error {
@@ -266,18 +275,13 @@ extension CallService {
     func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
         dispatch {
-            guard case let .userId(opponentUserId) = handle else {
-                self.alert(error: .invalidHandle)
-                completion?(false)
-                return
-            }
-            guard let call = self.activeCall, call.opponentUserId == opponentUserId else {
+            guard let call = self.activeCall, call.opponentUserId == handle.id else {
                 self.alert(error: .inconsistentCallStarted)
                 completion?(false)
                 return
             }
-            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: opponentUserId) else {
-                self.alert(error: .missingUser(userId: opponentUserId))
+            guard let opponentUser = call.opponentUser ?? UserDAO.shared.getUser(userId: handle.id) else {
+                self.alert(error: .missingUser(userId: handle.id))
                 completion?(false)
                 return
             }
@@ -473,7 +477,12 @@ extension CallService: CallMessageCoordinator {
     }
     
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
-        dispatch {
+        
+        func hasCall(uuid: UUID) -> Bool {
+            activeCall?.uuid == uuid || pendingCalls[uuid] != nil
+        }
+        
+        func handle(data: BlazeMessageData) {
             switch data.category {
             case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
                 self.handleOffer(data: data)
@@ -483,6 +492,40 @@ extension CallService: CallMessageCoordinator {
                 self.handleCallStatusChange(data: data)
             }
         }
+        
+        dispatch {
+            if data.source != BlazeMessageAction.listPendingMessages.rawValue {
+                handle(data: data)
+            } else {
+                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+                if isOffer, let uuid = UUID(uuidString: data.messageId), !hasCall(uuid: uuid) {
+                    if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
+                        let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                        MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                    } else {
+                        let workItem = DispatchWorkItem(block: {
+                            handle(data: data)
+                            self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                        })
+                        self.listPendingCallWorkItems[uuid] = workItem
+                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: workItem)
+                    }
+                } else if !isOffer, let uuid = UUID(uuidString: data.quoteMessageId), let workItem = self.listPendingCallWorkItems[uuid], !hasCall(uuid: uuid), let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
+                    workItem.cancel()
+                    self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                    self.pendingCandidates.removeValue(forKey: uuid)
+                    let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                          conversationId: data.conversationId,
+                                                          userId: data.userId,
+                                                          category: category,
+                                                          status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                } else {
+                    handle(data: data)
+                }
+            }
+        }
+        
     }
     
 }
@@ -597,6 +640,15 @@ extension CallService {
                     viewController?.style = .disconnecting
                 }
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
+            } else {
+                // When a call is pushed via APN User Notifications and gets cancelled before app is launched
+                // This routine may execute when app is launched manually, sometimes before pending WebRTC jobs are awake
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: category,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             }
             callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
             close(uuid: uuid)

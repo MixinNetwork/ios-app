@@ -10,7 +10,7 @@ class BackgroundMessagingService {
     private weak var backgroundTimer: Timer?
     private weak var stopTaskTimer: Timer?
     
-    func stop() {
+    func end() {
         stopTaskTimer?.invalidate()
         backgroundTimer?.invalidate()
         if taskIdentifier != .invalid {
@@ -19,28 +19,31 @@ class BackgroundMessagingService {
         }
     }
     
-    func begin(caller: String, stopsRegarlessApplicationState: Bool, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
+    func begin(caller: String, stopsRegardlessApplicationState: Bool, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         let startDate = Date()
         let application = UIApplication.shared
-        stop()
+        end()
         requestTimeout = 3
         taskIdentifier = application.beginBackgroundTask(expirationHandler: {
             Logger.write(log: "[AppDelegate] \(caller)...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
-            if application.applicationState != .active {
+            if application.applicationState != .active && !CallService.shared.hasActiveOrPendingCall {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }
             AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.stop()
+            self.end()
             completionHandler?(.newData)
         })
         backgroundTimer = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
             AppGroupUserDefaults.isRunningInMainApp = ReceiveMessageService.shared.processing
-            self.stop()
+            self.end()
             completionHandler?(.newData)
         }
         stopTaskTimer = Timer.scheduledTimer(withTimeInterval: 18, repeats: false) { (time) in
-            guard stopsRegarlessApplicationState || application.applicationState != .active else {
+            guard stopsRegardlessApplicationState || application.applicationState != .active else {
+                return
+            }
+            guard !CallService.shared.hasActiveOrPendingCall else {
                 return
             }
             MixinService.isStopProcessMessages = true

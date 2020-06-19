@@ -15,9 +15,6 @@ public class ReceiveMessageService: MixinService {
 
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
-    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
-    private var listPendingCallWorkItems = [String: DispatchWorkItem]()
-    private var listPendingCandidates = [String: [BlazeMessageData]]()
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
@@ -252,62 +249,7 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
-        if isAppExtension {
-            if data.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
-                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                      conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: .WEBRTC_AUDIO_CANCEL,
-                                                      mediaDuration: 0,
-                                                      status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-            } else {
-                let job = Job(pengdingWebRTCMessage: data)
-                MixinDatabase.shared.insertOrReplace(objects: [job])
-            }
-            return
-        }
-        if data.source == BlazeMessageAction.listPendingMessages.rawValue {
-            if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
-                    let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
-                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
-                } else {
-                    let workItem = DispatchWorkItem(block: {
-                        let handler = MixinService.callMessageCoordinator.handleIncomingBlazeMessageData
-                        handler(data)
-                        self.listPendingCallWorkItems.removeValue(forKey: data.messageId)
-                        self.listPendingCandidates[data.messageId]?.forEach(handler)
-                        self.listPendingCandidates = [:]
-                    })
-                    listPendingCallWorkItems[data.messageId] = workItem
-                    DispatchQueue.global().asyncAfter(deadline: .now() + listPendingCallDelay, execute: workItem)
-                }
-            } else if let workItem = listPendingCallWorkItems[data.quoteMessageId] {
-                let category = MessageCategory(rawValue: data.category) ?? .WEBRTC_AUDIO_FAILED
-                if category == .WEBRTC_ICE_CANDIDATE {
-                    if listPendingCandidates[data.quoteMessageId] == nil {
-                        listPendingCandidates[data.quoteMessageId] = [data]
-                    } else {
-                        listPendingCandidates[data.quoteMessageId]!.append(data)
-                    }
-                } else if MessageCategory.endCallCategories.contains(category) {
-                    workItem.cancel()
-                    listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
-                    listPendingCandidates.removeValue(forKey: data.quoteMessageId)
-                    let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                          conversationId: data.conversationId,
-                                                          userId: data.userId,
-                                                          category: category,
-                                                          status: .DELIVERED)
-                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
-                }
-            } else {
-                MixinService.callMessageCoordinator.handleIncomingBlazeMessageData(data)
-            }
-        } else {
-            MixinService.callMessageCoordinator.handleIncomingBlazeMessageData(data)
-        }
+        Self.callMessageCoordinator.handleIncomingBlazeMessageData(data)
     }
     
     private func processAppButton(data: BlazeMessageData) {

@@ -90,6 +90,15 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: sql)
     }
     
+    public func getFullname(userId: String) -> String? {
+        let values = MixinDatabase.shared.getStringValues(column: User.Properties.fullName.asColumnResult(),
+                                                          tableName: User.tableName,
+                                                          condition: User.Properties.userId == userId,
+                                                          orderBy: nil,
+                                                          limit: 1)
+        return values.first
+    }
+    
     public func appFriends(notIn ids: [String]) -> [User] {
         let condition = User.Properties.relationship == Relationship.FRIEND.rawValue
             && User.Properties.appId.isNotNull()

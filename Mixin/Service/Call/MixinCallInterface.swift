@@ -85,10 +85,19 @@ extension MixinCallInterface: CallInterface {
                     DispatchQueue.main.sync {
                         if UIApplication.shared.applicationState == .active {
                             self.service.ringtonePlayer.play(ringtone: .incoming)
+                            self.vibrator.start()
                         } else {
                             NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
+                            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                                var authorizedStatus: [UNAuthorizationStatus] = [.authorized]
+                                if #available(iOS 12.0, *) {
+                                    authorizedStatus.append(.provisional)
+                                }
+                                if authorizedStatus.contains(settings.authorizationStatus) {
+                                    self.vibrator.start()
+                                }
+                            }
                         }
-                        self.vibrator.start()
                         if let user = call.opponentUser {
                             self.service.showCallingInterface(user: user,
                                                               style: .incoming)

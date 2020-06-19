@@ -1,27 +1,32 @@
 import Foundation
 import CallKit
+import MixinServices
 
-enum CallHandle {
+class CallHandle {
     
-    case phoneNumber(String)
-    case userId(String)
+    let id: String
+    let name: String
     
-    var cxHandle: CXHandle {
-        switch self {
-        case .phoneNumber(let number):
-            return CXHandle(type: .phoneNumber, value: number)
-        case .userId(let userId):
-            return CXHandle(type: .generic, value: userId)
-        }
+    private(set) lazy var cxHandle = CXHandle(type: .generic, value: id)
+    
+    init(id: String, name: String) {
+        self.id = id
+        self.name = name
     }
     
-    init?(cxHandle: CXHandle) {
+    convenience init(user: UserItem) {
+        self.init(id: user.userId, name: user.fullName)
+    }
+    
+    convenience init?(cxHandle: CXHandle) {
         switch cxHandle.type {
         case .generic:
-            self = .userId(cxHandle.value)
-        case .phoneNumber:
-            self = .phoneNumber(cxHandle.value)
-        case .emailAddress:
+            let userId = cxHandle.value
+            guard let name = UserDAO.shared.getFullname(userId: userId) else {
+                return nil
+            }
+            self.init(id: userId, name: name)
+        case .phoneNumber, .emailAddress:
             // This is not expected to happen according to current CXProviderConfiguration
             return nil
         @unknown default:

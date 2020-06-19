@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
             BackgroundMessagingService.shared.begin(caller: "didFinishLaunchingWithOptions",
-                                                    stopsRegarlessApplicationState: false,
+                                                    stopsRegardlessApplicationState: false,
                                                     completionHandler: nil)
         }
         return true
@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         BackgroundMessagingService.shared.begin(caller: "applicationDidEnterBackground",
-                                                stopsRegarlessApplicationState: true,
+                                                stopsRegardlessApplicationState: true,
                                                 completionHandler: nil)
     }
     
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         requestTimeout = 5
-        BackgroundMessagingService.shared.stop()
+        BackgroundMessagingService.shared.end()
         MixinService.isStopProcessMessages = false
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
             DispatchQueue.global().async {
@@ -165,7 +165,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.isStopProcessMessages = false
         WebSocketService.shared.connectIfNeeded()
         BackgroundMessagingService.shared.begin(caller: "didReceiveRemoteNotification",
-                                                stopsRegarlessApplicationState: false,
+                                                stopsRegardlessApplicationState: false,
                                                 completionHandler: completionHandler)
     }
     

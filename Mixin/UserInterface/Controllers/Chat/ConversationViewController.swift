@@ -2124,7 +2124,7 @@ extension ConversationViewController {
             return nil
         }
         let messageId = identifier as String
-        guard let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, let viewModel = dataSource.viewModel(for: indexPath) else {
+        guard let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.window != nil, let viewModel = dataSource.viewModel(for: indexPath) else {
             return nil
         }
         let param = UIPreviewParameters()

@@ -23,6 +23,11 @@ struct BlazeMessageParam: Codable {
     
     var mentions: [String]? = nil
     
+    var trackId: String? = nil
+    var jsep: String? = nil
+    var recipientIds: [String]? = nil
+    var candidate: String? = nil
+    
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case recipientId = "recipient_id"
@@ -41,7 +46,13 @@ struct BlazeMessageParam: Codable {
 
         case representativeId = "representative_id"
         case conversationChecksum = "conversation_checksum"
+        
+        case trackId = "track_id"
+        case jsep
+        case recipientIds = "recipient_ids"
+        case candidate
     }
+    
 }
 
 extension BlazeMessageParam {
@@ -103,6 +114,13 @@ extension BlazeMessageParam {
 
         self.representativeId = representativeId
         self.conversationChecksum = checksum
+    }
+    
+    init(conversationId: String, category: MessageCategory, trackId: String?, jsep: String?) {
+        self.conversationId = conversationId
+        self.category = category.rawValue
+        self.trackId = trackId
+        self.jsep = jsep
     }
     
 }

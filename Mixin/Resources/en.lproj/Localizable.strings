@@ -349,6 +349,11 @@
 "call_no_network" = "Call service unavailable. Make sure your phone has an internet connection and try again.";
 "call_user_not_found" = "User not found";
 "call_declined_lack_microphone_permission" = "Voice call has been declined";
+"group_call_published" = "%@ has started a group call";
+"group_call_ended" = "The call ended";
+"group_call_declined_lack_microphone_permission" = "Group call has been declined";
+"group_call" = "Group Call";
+"group_call_tap_to_join" = "Tap to join";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

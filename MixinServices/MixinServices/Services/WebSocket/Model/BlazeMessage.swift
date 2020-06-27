@@ -11,9 +11,13 @@ struct BlazeMessage: Encodable {
     var fromPush: Bool? = nil
     
     func isReceiveMessageAction() -> Bool {
-        return action == BlazeMessageAction.createMessage.rawValue
-            || action == BlazeMessageAction.createCall.rawValue
-            || action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue
+        let actions: [BlazeMessageAction] = [
+            .createMessage,
+            .createCall,
+            .createKraken,
+            .acknowledgeMessageReceipt
+        ]
+        return actions.map(\.rawValue).contains(action)
     }
     
 }
@@ -30,6 +34,8 @@ public enum BlazeMessageAction: String {
     case consumeSignalKeys = "CONSUME_SIGNAL_KEYS"
     case consumeSessionSignalKeys = "CONSUME_SESSION_SIGNAL_KEYS"
     case syncSignalKeys = "SYNC_SIGNAL_KEYS"
+    case listKrakenPeers = "LIST_KRAKEN_PEERS"
+    case createKraken = "CREATE_KRAKEN"
 }
 
 extension BlazeMessage {
@@ -96,6 +102,18 @@ extension BlazeMessage {
         return try? JSONDecoder.default.decode([SignalKey].self, from: data)
     }
     
+    func toKrakenPeers() -> [KrakenPeer]? {
+        guard let data = self.data?.data(using: .utf8) else {
+            return nil
+        }
+        do {
+            return try JSONDecoder.default.decode([KrakenPeer].self, from: data)
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    
 }
 
 extension BlazeMessage: Decodable {
@@ -108,7 +126,7 @@ extension BlazeMessage: Decodable {
         switch action {
         case BlazeMessageAction.listPendingMessages.rawValue:
             data = nil
-        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue:
+        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue, BlazeMessageAction.createKraken.rawValue:
             let messageData = try container.decodeIfPresent(BlazeMessageData.self, forKey: .data)
             data = messageData != nil ? String(data: try JSONEncoder.default.encode(messageData), encoding: .utf8) : nil
         case BlazeMessageAction.countSignalKeys.rawValue:
@@ -117,6 +135,13 @@ extension BlazeMessage: Decodable {
         case BlazeMessageAction.consumeSignalKeys.rawValue, BlazeMessageAction.consumeSessionSignalKeys.rawValue:
             let keys = try container.decodeIfPresent([SignalKey].self, forKey: .data)
             data = keys != nil ? String(data: try JSONEncoder.default.encode(keys), encoding: .utf8) : nil
+        case BlazeMessageAction.listKrakenPeers.rawValue:
+            enum PeersCodingKeys: String, CodingKey {
+                case peers
+            }
+            let peersContainer = try container.nestedContainer(keyedBy: PeersCodingKeys.self, forKey: .data)
+            let peers = try peersContainer.decodeIfPresent([KrakenPeer].self, forKey: .peers)
+            data = peers != nil ? String(data: try JSONEncoder.default.encode(peers), encoding: .utf8) : nil
         default:
             data = nil
         }

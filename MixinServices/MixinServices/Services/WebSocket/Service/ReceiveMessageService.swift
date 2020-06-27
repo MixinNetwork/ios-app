@@ -56,7 +56,7 @@ public class ReceiveMessageService: MixinService {
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 AppGroupUserDefaults.Crypto.Offset.status = blazeMessageData.updatedAt.toUTCDate().nanosecond()
-            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
+            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue || blazeMessage.action == BlazeMessageAction.createKraken.rawValue {
                 if blazeMessageData.userId == myUserId && blazeMessageData.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 } else {
@@ -208,7 +208,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processSignalMessage(data: data)
             ReceiveMessageService.shared.processAppButton(data: data)
             ReceiveMessageService.shared.processAppCard(data: data)
-            ReceiveMessageService.shared.processWebRTCMessage(data: data)
+            ReceiveMessageService.shared.processCallMessage(data: data)
             ReceiveMessageService.shared.processRecallMessage(data: data)
         } else {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
@@ -242,8 +242,8 @@ public class ReceiveMessageService: MixinService {
         BlazeMessageDAO.shared.delete(data: data)
     }
     
-    private func processWebRTCMessage(data: BlazeMessageData) {
-        guard data.category.hasPrefix("WEBRTC_") else {
+    private func processCallMessage(data: BlazeMessageData) {
+        guard data.category.hasPrefix("WEBRTC_") || data.category.hasPrefix("KRAKEN_") else {
             return
         }
         _ = syncUser(userId: data.getSenderId())

@@ -1,6 +1,34 @@
 import UIKit
+import MixinServices
 
 class GroupCallMemberPickerViewController: ResizablePopupViewController {
+    
+    typealias OnConfirmation = ([UserItem]) -> Void
+    
+    enum Appearance {
+        case startNewCall
+        case appendToExistedCall
+    }
+    
+    var onConfirmation: OnConfirmation?
+    
+    var fixedSelections: [UserItem] {
+        get {
+            contentViewController.fixedSelections
+        }
+        set {
+            contentViewController.fixedSelections = newValue
+        }
+    }
+    
+    var appearance: Appearance {
+        get {
+            contentViewController.appearance
+        }
+        set {
+            contentViewController.appearance = newValue
+        }
+    }
     
     private let contentViewController: GroupCallMemberPickerContentViewController
     
@@ -10,11 +38,12 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
         contentViewController.tableView
     }
     
-    init(conversationId: String) {
-        self.contentViewController = GroupCallMemberPickerContentViewController(conversationId: conversationId)
+    init(conversation: ConversationItem) {
+        self.contentViewController = GroupCallMemberPickerContentViewController(conversation: conversation)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
+        loadViewIfNeeded()
     }
     
     required init?(coder: NSCoder) {

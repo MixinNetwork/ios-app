@@ -18,9 +18,13 @@
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
                 <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
+                <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
+                <outlet property="multipleUserCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
+                <outlet property="multipleUserCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
+                <outlet property="singleUserStackView" destination="eJy-52-qsF" id="LEU-g5-McS"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
                 <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="statusLabel" destination="NCO-o8-q8h" id="dVO-1b-9MK"/>
@@ -57,27 +61,57 @@
                                     <action selector="minimizeAction:" destination="-1" eventType="touchUpInside" id="Dq8-Le-S9c"/>
                                 </connections>
                             </button>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wAa-Ej-6fx" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="122.5" y="80" width="130" height="130"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPG-77-gPe">
+                                <rect key="frame" x="321" y="23" width="44" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="130" id="lKd-Qy-car"/>
-                                    <constraint firstAttribute="width" secondItem="wAa-Ej-6fx" secondAttribute="height" id="vyD-I0-U1m"/>
+                                    <constraint firstAttribute="width" secondItem="CPG-77-gPe" secondAttribute="height" id="6Cx-mZ-Y79"/>
+                                    <constraint firstAttribute="width" constant="44" id="bRw-DG-BbT"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
-                                        <real key="value" value="60"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="65"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
-                                <rect key="frame" x="20" y="229" width="335" height="33.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="ic_title_add"/>
+                                <connections>
+                                    <action selector="addMemberAction:" destination="-1" eventType="touchUpInside" id="Bem-zU-iww"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="eJy-52-qsF">
+                                <rect key="frame" x="20" y="80" width="335" height="182.5"/>
+                                <subviews>
+                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wAa-Ej-6fx" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="102.5" y="0.0" width="130" height="130"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="130" id="lKd-Qy-car"/>
+                                            <constraint firstAttribute="width" secondItem="wAa-Ej-6fx" secondAttribute="height" id="vyD-I0-U1m"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                <real key="value" value="60"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="65"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
+                                        <rect key="frame" x="94" y="149" width="147" height="33.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8">
+                                <rect key="frame" x="0.0" y="269.5" width="375" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="gei-GT-lU9"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
                                 <rect key="frame" x="0.0" y="446.5" width="375" height="16.5"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
@@ -233,20 +267,23 @@
                         <constraints>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="0sZ-fs-VnN"/>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="24S-vw-Uku"/>
-                            <constraint firstItem="K4y-9l-7FO" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="77b-lV-q84"/>
+                            <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
+                            <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
+                            <constraint firstItem="eJy-52-qsF" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="60" id="GBH-BC-P5I"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="Guz-Ik-vmb"/>
+                            <constraint firstItem="eJy-52-qsF" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="LQ4-Qy-n6Z"/>
+                            <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="wM3-bs-IJ8" secondAttribute="trailing" id="OfW-H5-rqz"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="NCO-o8-q8h" secondAttribute="trailing" id="TRc-3d-ucg"/>
-                            <constraint firstItem="wAa-Ej-6fx" firstAttribute="centerX" secondItem="6Bg-67-Oum" secondAttribute="centerX" id="XLc-8J-CxI"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="10" id="Zfy-I1-hTz"/>
                             <constraint firstItem="NCO-o8-q8h" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="aFX-IT-6SY"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="top" secondItem="DGO-cU-Jif" secondAttribute="top" id="aZ3-kp-IfS"/>
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
-                            <constraint firstItem="wAa-Ej-6fx" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="60" id="dzk-me-xne"/>
+                            <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="6Bg-67-Oum" secondAttribute="centerY" id="d85-gn-zET"/>
+                            <constraint firstItem="wM3-bs-IJ8" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="eDy-dK-qK2"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
-                            <constraint firstItem="K4y-9l-7FO" firstAttribute="top" secondItem="wAa-Ej-6fx" secondAttribute="bottom" constant="19" id="inY-fi-ChL"/>
                             <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
-                            <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="K4y-9l-7FO" secondAttribute="trailing" constant="20" id="pZv-ij-8SE"/>
+                            <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="CPG-77-gPe" secondAttribute="trailing" constant="10" id="sl4-BQ-LNn"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
                             <constraint firstAttribute="bottom" secondItem="qGL-yl-N8J" secondAttribute="bottom" id="vtu-FQ-KW2"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="zfZ-FC-p7R"/>
@@ -269,5 +306,6 @@
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
         <image name="Call/ic_minimize" width="24" height="24"/>
+        <image name="ic_title_add" width="16" height="16"/>
     </resources>
 </document>

@@ -11,6 +11,8 @@ class WebRTCClient: NSObject {
     
     weak var delegate: WebRTCClientDelegate?
     
+    private unowned let queue: DispatchQueue
+    
     private let audioId = "audio0"
     private let streamId = "stream0"
     private let factory = RTCPeerConnectionFactory(encoderFactory: RTCDefaultVideoEncoderFactory(),
@@ -28,16 +30,25 @@ class WebRTCClient: NSObject {
         return peerConnection?.iceConnectionState ?? .closed
     }
     
+    init(delegateQueue: DispatchQueue) {
+        self.queue = delegateQueue
+        super.init()
+    }
+    
     func offer(completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded()
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.offer(for: constraints) { (sdp, error) in
             if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(.success(json))
+                    self.queue.async {
+                        completion(.success(json))
+                    }
                 })
             } else {
-                completion(.failure(.offerConstruction(error)))
+                self.queue.async {
+                    completion(.failure(.offerConstruction(error)))
+                }
             }
         }
     }
@@ -48,17 +59,25 @@ class WebRTCClient: NSObject {
         peerConnection?.answer(for: constraints) { (sdp, error) in
             if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(.success(json))
+                    self.queue.async {
+                        completion(.success(json))
+                    }
                 })
             } else {
-                completion(.failure(.answerConstruction(error)))
+                self.queue.async {
+                    completion(.failure(.answerConstruction(error)))
+                }
             }
         }
     }
     
     func set(remoteSdp: RTCSessionDescription, completion: @escaping (Error?) -> Void) {
         makePeerConnectionIfNeeded()
-        peerConnection?.setRemoteDescription(remoteSdp, completionHandler: completion)
+        peerConnection?.setRemoteDescription(remoteSdp, completionHandler: { error in
+            self.queue.async {
+                completion(error)
+            }
+        })
     }
     
     func add(remoteCandidate: RTCIceCandidate) {
@@ -66,7 +85,9 @@ class WebRTCClient: NSObject {
     }
     
     func close() {
-        RTCAudioSession.sharedInstance().isAudioEnabled = false
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            RTCAudioSession.sharedInstance().isAudioEnabled = false
+        }
         peerConnection?.close()
         peerConnection = nil
         audioTrack = nil
@@ -94,16 +115,20 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
         if newState == .connected {
-            RTCAudioSession.sharedInstance().isAudioEnabled = true
-            delegate?.webRTCClientDidConnected(self)
+            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                RTCAudioSession.sharedInstance().isAudioEnabled = true
+            }
+            queue.async {
+                self.delegate?.webRTCClientDidConnected(self)
+            }
         } else if newState == .closed {
             // TODO
         }
     }
-
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
     }
-
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
     }
 
@@ -112,7 +137,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        delegate?.webRTCClient(self, didGenerateLocalCandidate: candidate)
+        queue.async {
+            self.delegate?.webRTCClient(self, didGenerateLocalCandidate: candidate)
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {

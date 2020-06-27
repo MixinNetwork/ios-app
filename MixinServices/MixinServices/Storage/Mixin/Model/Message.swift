@@ -206,13 +206,35 @@ extension Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
     }
     
+    public static func createKrakenStatusMessage(category: MessageCategory, conversationId: String, userId: String) -> Message {
+        createMessage(messageId: UUID().uuidString.lowercased(),
+                      conversationId: conversationId,
+                      userId: userId,
+                      category: category.rawValue,
+                      content: "",
+                      mediaMimeType: nil,
+                      mediaSize: nil,
+                      mediaDuration: nil,
+                      mediaWidth: nil,
+                      mediaHeight: nil,
+                      mediaKey: nil,
+                      mediaDigest: nil,
+                      mediaStatus: nil,
+                      mediaWaveform: nil,
+                      thumbImage: nil,
+                      status: MessageStatus.READ.rawValue,
+                      name: nil,
+                      quoteMessageId: nil,
+                      createdAt: Date().toUTCString())
+    }
+    
     public static func createMessage(message: MessageItem) -> Message {
         return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, mediaLocalIdentifier: message.mediaLocalIdentifier, thumbImage: message.thumbImage, thumbUrl: message.thumbUrl, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: message.sharedUserId, quoteMessageId: message.quoteMessageId, quoteContent: message.quoteContent, createdAt: message.createdAt)
     }
     
 }
 
-public enum MessageCategory: String {
+public enum MessageCategory: String, Decodable {
     
     case SIGNAL_KEY
     case SIGNAL_TEXT
@@ -252,6 +274,14 @@ public enum MessageCategory: String {
     case WEBRTC_AUDIO_END
     case WEBRTC_ICE_CANDIDATE
     case MESSAGE_RECALL
+    case KRAKEN_INVITE
+    case KRAKEN_PUBLISH
+    case KRAKEN_SUBSCRIBE
+    case KRAKEN_ANSWER
+    case KRAKEN_TRICKLE
+    case KRAKEN_END
+    case KRAKEN_CANCEL
+    case KRAKEN_DECLINE
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN

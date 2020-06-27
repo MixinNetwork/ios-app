@@ -111,8 +111,12 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.callOwnerUserIfPresent()
             case .groupCall:
-                if let id = dataSource?.conversationId {
-                    let picker = GroupCallMemberPickerViewController(conversationId: id)
+                if let conversation = dataSource?.conversation {
+                    let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                    picker.appearance = .startNewCall
+                    picker.onConfirmation = { (users) in
+                        CallService.shared.requestStartGroupCall(conversation: conversation, invitingUsers: users)
+                    }
                     conversationViewController?.present(picker, animated: true, completion: nil)
                 }
             case .location:

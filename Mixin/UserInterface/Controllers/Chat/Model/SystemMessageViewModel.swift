@@ -17,12 +17,18 @@ class SystemMessageViewModel: MessageViewModel {
     let text: String
     
     override init(message: MessageItem) {
-        text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
-                                                         userId: message.userId,
-                                                         userFullName: message.userFullName,
-                                                         participantId: message.participantUserId,
-                                                         participantFullName: message.participantFullName,
-                                                         content: message.content)
+        if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue {
+            text = R.string.localizable.group_call_published(message.userFullName)
+        } else if message.category == MessageCategory.KRAKEN_END.rawValue {
+            text = R.string.localizable.group_call_ended()
+        } else {
+            text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
+                                                             userId: message.userId,
+                                                             userFullName: message.userFullName,
+                                                             participantId: message.participantUserId,
+                                                             participantFullName: message.participantFullName,
+                                                             content: message.content)
+        }
         super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()
     }

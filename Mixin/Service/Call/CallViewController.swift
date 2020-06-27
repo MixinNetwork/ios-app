@@ -4,6 +4,10 @@ import MixinServices
 
 class CallViewController: UIViewController {
     
+    @IBOutlet weak var inviteButton: UIButton!
+    @IBOutlet weak var singleUserStackView: UIStackView!
+    @IBOutlet weak var multipleUserCollectionView: UICollectionView!
+    @IBOutlet weak var multipleUserCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
@@ -21,11 +25,14 @@ class CallViewController: UIViewController {
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     
-    weak var service: CallService!
+    private unowned let service: CallService
     
-    private let animationDuration: TimeInterval = 0.3
-    
+    private weak var call: Call?
     private weak var timer: Timer?
+    
+    private var statusObservation: NSKeyValueObservation?
+    private var groupCallMembers = [UserItem]()
+    private var connectedGroupCallMemberUserIds = Set<String>()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isMinimized {
@@ -33,6 +40,16 @@ class CallViewController: UIViewController {
         } else {
             return .lightContent
         }
+    }
+    
+    init(service: CallService) {
+        self.service = service
+        let nib = R.nib.callView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     deinit {
@@ -45,7 +62,8 @@ class CallViewController: UIViewController {
         speakerSwitch.iconPath = CallIconPath.speaker
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
                             adjustForContentSize: true)
-        
+        multipleUserCollectionView.register(R.nib.groupCallMemberCell)
+        multipleUserCollectionView.dataSource = self
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(callServiceMutenessDidChange),
@@ -54,10 +72,6 @@ class CallViewController: UIViewController {
         center.addObserver(self,
                            selector: #selector(audioSessionRouteChange(_:)),
                            name: AVAudioSession.routeChangeNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(updateViews(_:)),
-                           name: Call.statusDidChangeNotification,
                            object: nil)
     }
     
@@ -69,24 +83,73 @@ class CallViewController: UIViewController {
         bottomSafeAreaPlaceholderHeightConstraint.constant = bottomHeight
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        guard let call = call as? GroupCall else {
+            return
+        }
+        if call.members.count <= 9 {
+            let itemLength: CGFloat = 76
+            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            let totalSpacing = view.bounds.width - itemLength * 3
+            let interitemSpacing = floor(totalSpacing / 6)
+            let sectionInset = interitemSpacing * 2
+            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+        } else {
+            let itemLength: CGFloat = 64
+            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            let totalSpacing = view.bounds.width - itemLength * 4
+            let interitemSpacing = floor(totalSpacing / 6)
+            let sectionInset = floor(interitemSpacing / 2 * 3)
+            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+        }
+    }
+    
     func disableConnectionDurationTimer() {
         setConnectionDurationTimerEnabled(false)
     }
     
-    func reload(userId: String, username: String) {
-        nameLabel.text = username
+    func reloadAndObserve(call: Call?) {
+        if let call = self.call as? GroupCall, call.membersObserver === self {
+            call.membersObserver = nil
+        }
+        self.call = call
+        
+        statusObservation?.invalidate()
+        statusObservation = call?.observe(\.status) { [weak self] (call, _) in
+            performSynchronouslyOnMainThread {
+                self?.updateViews(status: call.status)
+            }
+        }
+        
         avatarImageView.prepareForReuse()
-        avatarImageView.setImage(userId: userId, name: username)
+        if let call = call as? PeerToPeerCall {
+            inviteButton.isHidden = true
+            singleUserStackView.isHidden = false
+            multipleUserCollectionView.isHidden = true
+            if let user = call.remoteUser {
+                nameLabel.text = user.fullName
+                avatarImageView.setImage(with: user)
+            } else {
+                nameLabel.text = call.remoteUsername
+                avatarImageView.setImage(userId: call.remoteUserId,
+                                         name: call.remoteUsername)
+            }
+            updateViews(status: call.status)
+        } else if let call = call as? GroupCall {
+            inviteButton.isHidden = false
+            singleUserStackView.isHidden = true
+            multipleUserCollectionView.isHidden = false
+            updateViews(status: call.status)
+            groupCallMembers = call.members
+            connectedGroupCallMemberUserIds = call.connectedMemberUserIds
+            call.membersObserver = self
+        }
         muteSwitch.isOn = service.isMuted
         speakerSwitch.isOn = service.usesSpeaker
-    }
-    
-    func reload(user: UserItem) {
-        nameLabel.text = user.fullName
-        avatarImageView.prepareForReuse()
-        avatarImageView.setImage(with: user)
-        muteSwitch.isOn = service.isMuted
-        speakerSwitch.isOn = service.usesSpeaker
+        multipleUserCollectionView.reloadData()
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
@@ -107,6 +170,87 @@ class CallViewController: UIViewController {
     
     @IBAction func minimizeAction(_ sender: Any) {
         service.setInterfaceMinimized(!service.isMinimized, animated: true)
+    }
+    
+    @IBAction func addMemberAction(_ sender: Any) {
+        guard let call = self.call as? GroupCall else {
+            return
+        }
+        let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
+        picker.appearance = .appendToExistedCall
+        picker.fixedSelections = call.members
+        picker.onConfirmation = { users in
+            guard !users.isEmpty else {
+                return
+            }
+            let ids = users.map(\.userId)
+            CallService.shared.inviteUsers(with: ids, toJoinGroupCall: call)
+        }
+        present(picker, animated: true, completion: nil)
+    }
+    
+}
+
+extension CallViewController: GroupCallMemberObserver {
+    
+    func groupCall(_ call: GroupCall, didAppendMember member: UserItem) {
+        let isConnected = call.connectedMemberUserIds.contains(member.userId)
+        DispatchQueue.main.async {
+            if isConnected {
+                self.connectedGroupCallMemberUserIds.insert(member.userId)
+            } else {
+                self.connectedGroupCallMemberUserIds.remove(member.userId)
+            }
+            let indexPath = IndexPath(item: self.groupCallMembers.count, section: 0)
+            self.groupCallMembers.append(member)
+            self.multipleUserCollectionView.insertItems(at: [indexPath])
+        }
+    }
+    
+    func groupCall(_ call: GroupCall, didRemoveMemberAt index: Int) {
+        DispatchQueue.main.async {
+            self.groupCallMembers.remove(at: index)
+            let indexPath = IndexPath(item: index, section: 0)
+            self.multipleUserCollectionView.deleteItems(at: [indexPath])
+        }
+    }
+    
+    func groupCall(_ call: GroupCall, didUpdateMemberAt index: Int) {
+        let member = call.members[index]
+        let isConnected = call.connectedMemberUserIds.contains(member.userId)
+        DispatchQueue.main.async {
+            if isConnected {
+                self.connectedGroupCallMemberUserIds.insert(member.userId)
+            } else {
+                self.connectedGroupCallMemberUserIds.remove(member.userId)
+            }
+            let indexPath = IndexPath(item: index, section: 0)
+            self.multipleUserCollectionView.reloadItems(at: [indexPath])
+        }
+    }
+    
+    func groupCallDidReplaceAllMembers(_ call: GroupCall) {
+        DispatchQueue.main.async {
+            self.connectedGroupCallMemberUserIds = Set(call.members.map(\.userId))
+            self.groupCallMembers = call.members
+            self.multipleUserCollectionView.reloadData()
+        }
+    }
+    
+}
+
+extension CallViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        groupCallMembers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
+        let member = groupCallMembers[indexPath.row]
+        cell.avatarImageView.setImage(with: member)
+        cell.connectingView.isHidden = connectedGroupCallMemberUserIds.contains(member.userId)
+        return cell
     }
     
 }
@@ -136,10 +280,8 @@ extension CallViewController {
         }
     }
     
-    @objc private func updateViews(_ notification: Notification) {
-        guard let status = notification.userInfo?[Call.newCallStatusUserInfoKey] as? Call.Status else {
-            return
-        }
+    private func updateViews(status: Call.Status) {
+        let animationDuration: TimeInterval = 0.3
         if status == .connected {
             statusLabel.text = CallService.shared.connectionDuration
         } else {

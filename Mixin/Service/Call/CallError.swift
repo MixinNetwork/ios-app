@@ -16,7 +16,7 @@ enum CallError: Error {
     case clientFailure
     case offerConstruction(Error?)
     
-    case invalidHandle
+    case invalidKrakenResponse
     
     var alertContent: String {
         switch self {
@@ -26,8 +26,6 @@ enum CallError: Error {
             return R.string.localizable.call_no_network()
         case .microphonePermissionDenied:
             return R.string.localizable.call_no_microphone_permission()
-        case .invalidHandle:
-            return R.string.localizable.call_user_not_found()
         default:
             return R.string.localizable.chat_message_call_failed()
         }

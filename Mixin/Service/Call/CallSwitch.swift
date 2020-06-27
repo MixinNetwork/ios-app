@@ -15,7 +15,6 @@ class CallSwitch: UIControl {
     }
     
     private let offView = UIVisualEffectView(effect: UIVibrancyEffect(blurEffect: .darkBlur))
-    private let offContentView = UIView()
     private let offIconLayer = CAShapeLayer()
     private let onLayer = CAShapeLayer()
     
@@ -32,9 +31,7 @@ class CallSwitch: UIControl {
     override func layoutSubviews() {
         super.layoutSubviews()
         offView.layer.cornerRadius = bounds.width / 2
-        offContentView.frame = offView.contentView.bounds
-        offIconLayer.position = CGPoint(x: offContentView.bounds.midX,
-                                        y: offContentView.bounds.midY)
+        offIconLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         if let path = iconPath {
             updateOnLayerPath(iconPath: path)
         }
@@ -57,6 +54,7 @@ class CallSwitch: UIControl {
     
     private func updateOpacity(isOn: Bool) {
         offView.isHidden = isOn
+        offIconLayer.isHidden = isOn
         onLayer.opacity = isOn ? 1 : 0
     }
     
@@ -74,10 +72,9 @@ class CallSwitch: UIControl {
     private func prepare() {
         offIconLayer.backgroundColor = UIColor.clear.cgColor
         offIconLayer.fillColor = UIColor.white.cgColor
-        offContentView.layer.addSublayer(offIconLayer)
+        layer.addSublayer(offIconLayer)
         
-        offContentView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
-        offView.contentView.addSubview(offContentView)
+        offView.contentView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         
         offView.clipsToBounds = true
         addSubview(offView)

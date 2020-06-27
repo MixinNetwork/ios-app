@@ -4,7 +4,7 @@ import AVFoundation
 class NativeCallInterface: NSObject {
     
     private let provider: CXProvider
-    private let callController = CXCallController()
+    private let callController: CXCallController
     
     private unowned let service: CallService
     
@@ -22,6 +22,7 @@ class NativeCallInterface: NSObject {
         config.supportedHandleTypes = [.generic]
         config.includesCallsInRecents = false
         self.provider = CXProvider(configuration: config)
+        self.callController = CXCallController(queue: service.queue)
         super.init()
         provider.setDelegate(self, queue: service.queue)
     }
@@ -40,10 +41,10 @@ class NativeCallInterface: NSObject {
         provider.reportCall(with: uuid, endedAt: nil, reason: .failed)
     }
     
-    func reportIncomingCall(uuid: UUID, userId: String, username: String, completion: @escaping CallInterfaceCompletion) {
+    func reportIncomingCall(uuid: UUID, handleId: String, localizedName: String, completion: @escaping CallInterfaceCompletion) {
         let update = CXCallUpdate()
-        update.remoteHandle = CXHandle(type: .generic, value: userId)
-        update.localizedCallerName = username
+        update.remoteHandle = CXHandle(type: .generic, value: handleId)
+        update.localizedCallerName = localizedName
         update.supportsHolding = false
         update.supportsGrouping = false
         update.supportsUngrouping = false
@@ -71,12 +72,12 @@ class NativeCallInterface: NSObject {
 
 extension NativeCallInterface: CallInterface {
     
-    func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion) {
-        let action = CXStartCallAction(call: uuid, handle: handle.cxHandle)
+    func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion) {
+        let action = CXStartCallAction(call: uuid, handle: handle)
         callController.requestTransaction(with: action) { (error) in
-            if error == nil {
+            if error == nil, let call = self.service.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
                 let update = CXCallUpdate()
-                update.localizedCallerName = handle.name
+                update.localizedCallerName = call.remoteUsername
                 update.supportsHolding = false
                 update.supportsGrouping = false
                 update.supportsUngrouping = false
@@ -108,10 +109,17 @@ extension NativeCallInterface: CallInterface {
     }
     
     func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
+        if let call = call as? PeerToPeerCall {
         reportIncomingCall(uuid: call.uuid,
-                           userId: call.remoteUserId,
-                           username: call.remoteUsername,
+                           handleId: call.remoteUserId,
+                           localizedName: call.remoteUsername,
                            completion: completion)
+        } else if let call = call as? GroupCall {
+            reportIncomingCall(uuid: call.uuid,
+                               handleId: call.conversationId,
+                               localizedName: call.conversationName,
+                               completion: completion)
+        }
     }
     
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason) {
@@ -154,12 +162,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        guard let handle = CallHandle(cxHandle: action.handle) else {
-            service.alert(error: .invalidHandle)
-            action.fail()
-            return
-        }
-        service.startCall(uuid: action.callUUID, handle: handle) { (success) in
+        service.startCall(uuid: action.callUUID, handle: action.handle) { (success) in
             success ? action.fulfill() : action.fail()
         }
     }
@@ -194,7 +197,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        if let call = service.activeCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
+        if let call = service.activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
             service.ringtonePlayer.play(ringtone: .outgoing)
         }
     }

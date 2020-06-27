@@ -7,15 +7,36 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         true
     }
     
-    private let conversationId: String
-    private let callButtonSize = CGSize(width: 50, height: 50)
+    let cancelButton = UIButton(type: .system)
+    let confirmButton = UIButton(type: .system)
     
-    private lazy var callButton = UIButton()
+    var fixedSelections = [UserItem]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    var appearance: GroupCallMemberPickerViewController.Appearance = .startNewCall {
+        didSet {
+            let image: UIImage?
+            if appearance == .startNewCall {
+                image = R.image.call.ic_minimized_call()
+                setCollectionViewHidden(true, animated: false)
+            } else {
+                image = R.image.ic_checkmark()
+                setCollectionViewHidden(false, animated: false)
+            }
+            confirmButton.setImage(image, for: .normal)
+        }
+    }
+    
+    private let conversation: ConversationItem
+    private let callButtonSize = CGSize(width: 50, height: 50)
     
     private var selections = [UserItem]()
     
-    init(conversationId: String) {
-        self.conversationId = conversationId
+    init(conversation: ConversationItem) {
+        self.conversation = conversation
         let nib = R.nib.peerView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -26,23 +47,36 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.allowsMultipleSelection = true
-        collectionView.dataSource = self
-        callButton.backgroundColor = R.color.background_selection()
-        callButton.setImage(R.image.call.ic_minimized_call(), for: .normal)
-        callButton.tintColor = .theme
-        callButton.layer.cornerRadius = callButtonSize.width / 2
-        callButton.clipsToBounds = true
-        callButton.addTarget(self, action: #selector(makeCall), for: .touchUpInside)
-        centerWrapperView.addSubview(callButton)
-        callButton.snp.makeConstraints { (make) in
+        
+        searchBoxTrailingConstraint.isActive = false
+        cancelButton.setTitle(R.string.localizable.dialog_button_cancel(), for: .normal)
+        cancelButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+        cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        cancelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        view.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { (make) in
+            make.centerY.equalTo(searchBoxView)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(searchBoxView.snp.trailing)
+        }
+        
+        confirmButton.backgroundColor = R.color.background_selection()
+        confirmButton.tintColor = .theme
+        confirmButton.layer.cornerRadius = callButtonSize.width / 2
+        confirmButton.clipsToBounds = true
+        confirmButton.addTarget(self, action: #selector(confirm), for: .touchUpInside)
+        centerWrapperView.addSubview(confirmButton)
+        confirmButton.snp.makeConstraints { (make) in
             make.size.equalTo(callButtonSize)
             make.trailing.equalToSuperview().offset(-20)
             make.top.equalToSuperview().offset(7)
         }
+        
         collectionView.snp.updateConstraints { (make) in
             make.trailing.equalToSuperview().offset(-78)
         }
+        tableView.allowsMultipleSelection = true
+        collectionView.dataSource = self
     }
     
     override func initData() {
@@ -76,10 +110,28 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         }
     }
     
+    override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
+        super.configure(cell: cell, at: indexPath)
+        let user = userItem(at: indexPath)
+        // TODO: Improve speed with Set?
+        if fixedSelections.contains(where: { $0.userId == user.userId }) {
+            cell.checkmarkView.status = .forceSelected
+        }
+    }
+    
     // MARK: - UITableViewDelegate
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let item = userItem(at: indexPath)
+        if fixedSelections.contains(where: { $0.userId == item.userId }) {
+            return nil
+        } else {
+            return indexPath
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = userItem(at: indexPath)
-        let indexPath = IndexPath(item: selections.count, section: 0)
+        let indexPath = IndexPath(item: fixedSelections.count + selections.count, section: 0)
         selections.append(item)
         collectionView.insertItems(at: [indexPath])
         collectionView.scrollToItem(at: indexPath, at: .right, animated: true)
@@ -90,14 +142,23 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         let item = userItem(at: indexPath)
         if let index = selections.firstIndex(where: { $0.userId == item.userId }) {
             selections.remove(at: index)
-            let indexPath = IndexPath(item: index, section: 0)
+            let indexPath = IndexPath(item: fixedSelections.count + index, section: 0)
             collectionView.deleteItems(at: [indexPath])
-            setCollectionViewHidden(selections.isEmpty, animated: true)
+            if appearance == .startNewCall {
+                setCollectionViewHidden(selections.isEmpty, animated: true)
+            }
         }
     }
     
-    @objc func makeCall() {
-        
+    @objc func confirm() {
+        if let parent = parent as? GroupCallMemberPickerViewController {
+            parent.onConfirmation?(selections)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func cancelAction() {
+        dismiss(animated: true, completion: nil)
     }
     
     private func userItem(at indexPath: IndexPath) -> UserItem {
@@ -113,13 +174,20 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
 extension GroupCallMemberPickerContentViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        selections.count
+        fixedSelections.count + selections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.selected_peer, for: indexPath)!
-        let item = selections[indexPath.row]
-        cell.render(item: item)
+        if indexPath.row < fixedSelections.count {
+            let item = fixedSelections[indexPath.item]
+            cell.render(item: item)
+            cell.removeButton.isHidden = true
+        } else {
+            let item = selections[indexPath.item - fixedSelections.count]
+            cell.render(item: item)
+            cell.removeButton.isHidden = false
+        }
         cell.nameLabel.isHidden = true
         cell.delegate = self
         return cell
@@ -133,16 +201,16 @@ extension GroupCallMemberPickerContentViewController: SelectedPeerCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-        let deselected = selections[indexPath.row]
+        let deselected = selections[indexPath.item - fixedSelections.count]
         if isSearching {
             if let item = searchResults.firstIndex(where: { $0.user.userId == deselected.userId }) {
-                let indexPath = IndexPath(item: item, section: 0)
+                let indexPath = IndexPath(row: item, section: 0)
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView(tableView, didDeselectRowAt: indexPath)
             }
         } else {
             if let item = models.firstIndex(where: { $0.userId == deselected.userId }) {
-                let indexPath = IndexPath(item: item, section: 0)
+                let indexPath = IndexPath(row: item, section: 0)
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView(tableView, didDeselectRowAt: indexPath)
             }
@@ -161,16 +229,18 @@ extension GroupCallMemberPickerContentViewController {
         
         init(viewController: GroupCallMemberPickerContentViewController) {
             self.viewController = viewController
-            self.conversationId = viewController.conversationId
+            self.conversationId = viewController.conversation.conversationId
         }
         
         override func main() {
             guard !isCancelled else {
                 return
             }
+            let fixedUserIds = Set(viewController?.fixedSelections.map(\.userId) ?? [])
             let participants = ParticipantDAO.shared
                 .getParticipants(conversationId: conversationId)
                 .filter { !$0.isBot && $0.relationship != Relationship.ME.rawValue }
+                .filter { !fixedUserIds.contains($0.userId) }
             DispatchQueue.main.sync {
                 guard !isCancelled, let viewController = viewController else {
                     return

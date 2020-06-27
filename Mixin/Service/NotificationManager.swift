@@ -28,13 +28,13 @@ class NotificationManager: NSObject {
         }
     }
     
-    func requestCallNotification(messageId: String, callerName: String) {
+    func requestCallNotification(id: String, name: String) {
         let content = UNMutableNotificationContent()
-        content.title = callerName
+        content.title = name
         content.body = MixinServices.Localized.ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE
         content.sound = .call
         content.categoryIdentifier = NotificationCategoryIdentifier.call
-        let request = UNNotificationRequest(identifier: messageId,
+        let request = UNNotificationRequest(identifier: id,
                                             content: content,
                                             trigger: nil)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -44,6 +44,18 @@ class NotificationManager: NSObject {
         let content = UNMutableNotificationContent()
         content.title = username ?? ""
         content.body = R.string.localizable.call_declined_lack_microphone_permission()
+        content.sound = .mixin
+        content.categoryIdentifier = NotificationCategoryIdentifier.call
+        let request = UNNotificationRequest(identifier: messageId,
+                                            content: content,
+                                            trigger: nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
+    func requestDeclinedGroupCallNotification(conversation: ConversationItem, messageId: String) {
+        let content = UNMutableNotificationContent()
+        content.title = conversation.getConversationName()
+        content.body = R.string.localizable.group_call_declined_lack_microphone_permission()
         content.sound = .mixin
         content.categoryIdentifier = NotificationCategoryIdentifier.call
         let request = UNNotificationRequest(identifier: messageId,

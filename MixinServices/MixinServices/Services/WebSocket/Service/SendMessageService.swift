@@ -61,6 +61,29 @@ public class SendMessageService: MixinService {
         SendMessageService.shared.processMessages()
     }
     
+    @discardableResult
+    public func send(krakenRequest request: KrakenRequest) -> BlazeMessageData? {
+        if let response = deliverKeys(blazeMessage: request.blazeMessage) {
+            return response.toBlazeMessageData()
+        } else {
+            return nil
+        }
+    }
+    
+    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer]? {
+        var param = BlazeMessageParam()
+        param.messageId = UUID().uuidString.lowercased()
+        param.conversationId = id
+        param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
+        param.category = "KRAKEN_LIST"
+        let message = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
+        if let response = deliverKeys(blazeMessage: message) {
+            return response.toKrakenPeers()
+        } else {
+            return nil
+        }
+    }
+    
     func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
         MixinDatabase.shared.insertOrReplace(objects: [job])

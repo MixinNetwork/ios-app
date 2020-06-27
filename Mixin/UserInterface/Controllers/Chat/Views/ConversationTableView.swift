@@ -358,7 +358,7 @@ extension ConversationTableView {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {
                 self = .unreadHint
-            } else if category == MessageCategory.EXT_ENCRYPTION.rawValue || category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
+            } else if category == MessageCategory.EXT_ENCRYPTION.rawValue || category == MessageCategory.SYSTEM_CONVERSATION.rawValue || category == MessageCategory.KRAKEN_PUBLISH.rawValue || category == MessageCategory.KRAKEN_END.rawValue {
                 self = .system
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 self = .appButtonGroup

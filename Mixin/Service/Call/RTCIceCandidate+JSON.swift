@@ -9,6 +9,32 @@ fileprivate enum CodingKeys: String {
 
 extension RTCIceCandidate {
     
+    var jsonString: String? {
+        var json: [String : Any] = [
+            CodingKeys.sdp.rawValue: sdp,
+            CodingKeys.sdpMLineIndex.rawValue: sdpMLineIndex
+        ]
+        if let sdpMid = sdpMid {
+            json[CodingKeys.sdpMid.rawValue] = sdpMid
+        }
+        if let data = try? JSONSerialization.data(withJSONObject: json, options: []) {
+            return String(data: data, encoding: .utf8)
+        } else {
+            return nil
+        }
+    }
+    
+    convenience init?(jsonString: String) {
+        guard let data = jsonString.data(using: .utf8), let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+            return nil
+        }
+        guard let sdp = json[CodingKeys.sdp.rawValue] as? String, let sdpMLineIndex = json[CodingKeys.sdpMLineIndex.rawValue] as? Int32 else {
+            return nil
+        }
+        let sdpMid = json[CodingKeys.sdpMid.rawValue] as? String
+        self.init(sdp: sdp, sdpMLineIndex: sdpMLineIndex, sdpMid: sdpMid)
+    }
+    
     fileprivate var jsonDict: [String: Any] {
         var dict: [String : Any] = [CodingKeys.sdp.rawValue: sdp,
                                     CodingKeys.sdpMLineIndex.rawValue: sdpMLineIndex]

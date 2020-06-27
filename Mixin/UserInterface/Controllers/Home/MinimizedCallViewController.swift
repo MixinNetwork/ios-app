@@ -1,11 +1,28 @@
 import UIKit
+import MixinServices
 
 class MinimizedCallViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var statusLabel: UILabel!
     
+    weak var call: Call? {
+        didSet {
+            callStatusObservation?.invalidate()
+            if let call = call {
+                callStatusObservation = call.observe(\.status, changeHandler: { [weak self] (call, _) in
+                    performSynchronouslyOnMainThread {
+                        self?.updateLabel(status: call.status)
+                    }
+                })
+            }
+            updateLabel(status: call?.status)
+        }
+    }
+    
     private weak var timer: Timer?
+    
+    private var callStatusObservation: NSKeyValueObservation?
     
     private var centerRestriction: CGRect {
         let superview = parent?.view ?? AppDelegate.current.mainWindow
@@ -26,10 +43,6 @@ class MinimizedCallViewController: UIViewController {
         updateLabel(status: CallService.shared.activeCall?.status)
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.18
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateViews(_:)),
-                                               name: Call.statusDidChangeNotification,
-                                               object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -56,13 +69,6 @@ class MinimizedCallViewController: UIViewController {
     
     @IBAction func maximizeAction(_ sender: Any) {
         CallService.shared.setInterfaceMinimized(false, animated: true)
-    }
-    
-    @objc private func updateViews(_ notification: Notification) {
-        guard let status = notification.userInfo?[Call.newCallStatusUserInfoKey] as? Call.Status else {
-            return
-        }
-        updateLabel(status: status)
     }
     
     func placeViewToTopRight() {

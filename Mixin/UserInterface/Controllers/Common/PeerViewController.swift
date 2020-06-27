@@ -11,6 +11,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var centerWrapperView: UIView!
     
+    @IBOutlet weak var searchBoxTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var centerWrapperViewHeightConstraint: NSLayoutConstraint!
     
     let queue = OperationQueue()

@@ -945,6 +945,8 @@ extension ConversationDataSource {
                 viewModel.cellHeight = 38
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 viewModel = EncryptionHintViewModel(message: message)
+            } else if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue || message.category == MessageCategory.KRAKEN_END.rawValue {
+                viewModel = SystemMessageViewModel(message: message)
             } else {
                 viewModel = UnknownMessageViewModel(message: message)
             }

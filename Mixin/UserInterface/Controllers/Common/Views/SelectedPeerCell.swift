@@ -8,6 +8,7 @@ protocol SelectedPeerCellDelegate: class {
 class SelectedPeerCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: AvatarImageView!
+    @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
     
     weak var delegate: SelectedPeerCellDelegate?

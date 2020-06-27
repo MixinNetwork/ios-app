@@ -1,14 +1,17 @@
 import Foundation
 import PushKit
+import CallKit
 import WebRTC
 import MixinServices
 
 class CallService: NSObject {
     
     static let shared = CallService()
-    static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.call-service.muteness-did-change")
+    static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
+    static let didReceivePublishingWithoutActiveGroupCall = Notification.Name("one.mixin.messenger.CallService.DidReceivePublishingWithoutActiveGroupCall")
+    static let conversationIdUserInfoKey = "conv_id"
     
-    let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
+    let queue = DispatchQueue(label: "one.mixin.messenger.CallService")
     
     var isMuted = false {
         didSet {
@@ -25,9 +28,9 @@ class CallService: NSObject {
         }
     }
     
-    var hasActiveOrPendingCall: Bool {
+    var hasCall: Bool {
         queue.sync {
-            activeCall != nil || !pendingCalls.isEmpty
+            activeCall != nil || !pendingAnswerCalls.isEmpty
         }
     }
     
@@ -48,18 +51,23 @@ class CallService: NSObject {
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     
-    private lazy var rtcClient = WebRTCClient()
+    private lazy var rtcClient = WebRTCClient(delegateQueue: queue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
     private lazy var mixinCallInterface = MixinCallInterface(service: self)
     
     private var usesCallKit = false // Access from CallService.queue
     private var pushRegistry: PKPushRegistry?
-    private var window: CallWindow?
-    private var viewController: CallViewController?
-    private var pendingCalls = [UUID: Call]()
+    
+    private var pendingAnswerCalls = [UUID: Call]()
     private var pendingSDPs = [UUID: RTCSessionDescription]()
     private var pendingCandidates = [UUID: [RTCIceCandidate]]()
+    private var pendingTrickles = [UUID: [String]]() // Key is Call's UUID, Value is array of candidate string
     private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
+    private var inGroupCallUserIds = [String: [String]]() // Key is conversation ID, value is set of user IDs
+    private var krakenListPollingTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
+    
+    private var window: CallWindow?
+    private var viewController: CallViewController?
     
     private weak var unansweredTimer: Timer?
     
@@ -73,18 +81,6 @@ class CallService: NSObject {
         queue.setSpecific(key: queueSpecificKey, value: ())
         rtcClient.delegate = self
         updateCallKitAvailability()
-    }
-    
-    func showCallingInterface(userId: String, username: String, status: Call.Status) {
-        showCallingInterface(status: status) { (viewController) in
-            viewController.reload(userId: userId, username: username)
-        }
-    }
-    
-    func showCallingInterface(user: UserItem, status: Call.Status) {
-        showCallingInterface(status: status) { (viewController) in
-            viewController.reload(user: user)
-        }
     }
     
     func dismissCallingInterface() {
@@ -120,20 +116,47 @@ class CallService: NSObject {
         pendingSDPs[uuid] != nil
     }
     
+    func showCallingInterface(call: Call) {
+        
+        func makeViewController() -> CallViewController {
+            let viewController = CallViewController(service: self)
+            viewController.loadViewIfNeeded()
+            self.viewController = viewController
+            return viewController
+        }
+        
+        let animated = self.window != nil
+        
+        let viewController = self.viewController ?? makeViewController()
+        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds, root: viewController)
+        window.makeKeyAndVisible()
+        self.window = window
+        
+        UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
+        
+        let updateInterface = {
+            viewController.reloadAndObserve(call: call)
+            viewController.view.layoutIfNeeded()
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: updateInterface)
+        } else {
+            UIView.performWithoutAnimation(updateInterface)
+        }
+    }
+    
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
         }
-        guard let max = self.viewController else {
-            return
-        }
-        guard let callWindow = self.window else {
+        guard let max = self.viewController, let callWindow = self.window else {
             return
         }
         
         self.isMinimized = minimized
         let duration: TimeInterval = 0.3
         if minimized {
+            min.call = activeCall
             min.view.alpha = 0
             min.placeViewToTopRight()
             let scaleX = min.contentView.frame.width / max.view.frame.width
@@ -155,7 +178,98 @@ class CallService: NSObject {
                 max.view.center = CGPoint(x: callWindow.bounds.midX, y: callWindow.bounds.midY)
                 max.view.alpha = 1
                 max.setNeedsStatusBarAppearanceUpdate()
-            })
+            }) { (_) in
+                min.call = nil
+            }
+        }
+    }
+    
+    func handlePendingWebRTCJobs() {
+        queue.async {
+            let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
+            for job in jobs {
+                let data = job.toBlazeMessageData()
+                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+                let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
+                if isOffer && isTimedOut {
+                    let msg = Message.createWebRTCMessage(messageId: data.messageId,
+                                                          conversationId: data.conversationId,
+                                                          userId: data.userId,
+                                                          category: .WEBRTC_AUDIO_CANCEL,
+                                                          mediaDuration: 0,
+                                                          status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+                } else if !isOffer || !MessageDAO.shared.isExist(messageId: data.messageId) {
+                    self.handleIncomingBlazeMessageData(data)
+                }
+                JobDAO.shared.removeJob(jobId: job.jobId)
+            }
+        }
+    }
+    
+    func updateInGroupCallUserIds(forConversationWith id: String) {
+        guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
+            return
+        }
+        inGroupCallUserIds[id] = peers.map(\.userId)
+    }
+    
+    func inviteUsers(with ids: [String], toJoinGroupCall call: GroupCall) {
+        guard let trackId = call.trackId else {
+            assertionFailure()
+            return
+        }
+        dispatch {
+            let invitation = KrakenRequest(conversationId: call.conversationId,
+                                           trackId: trackId,
+                                           action: .invite(recipients: ids))
+            SendMessageService.shared.send(krakenRequest: invitation)
+        }
+    }
+    
+    func requestGroupCallExistence(forConversationWith id: String, completion: @escaping (Bool) -> Void) {
+        queue.async {
+            let isGroupCallMemberEmpty = self.inGroupCallUserIds[id]?.isEmpty ?? true
+            DispatchQueue.main.async {
+                completion(!isGroupCallMemberEmpty)
+            }
+        }
+    }
+    
+    func beginPollingKrakenList(forConversationWith id: String) {
+        endPollingKrakenList(forConversationWith: id)
+        let timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: { [weak self] (_) in
+            guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
+                return
+            }
+            guard let self = self else {
+                return
+            }
+            self.queue.async {
+                self.inGroupCallUserIds[id] = peers.map(\.userId)
+            }
+        })
+        krakenListPollingTimers.setObject(timer, forKey: id as NSString)
+    }
+    
+    func endPollingKrakenList(forConversationWith id: String) {
+        guard let timer = krakenListPollingTimers.object(forKey: id as NSString) else {
+            return
+        }
+        timer.invalidate()
+    }
+    
+    func alert(error: CallError) {
+        let content = error.alertContent
+        DispatchQueue.main.async {
+            guard let controller = UIApplication.shared.keyWindow?.rootViewController else {
+                return
+            }
+            if case .microphonePermissionDenied = error {
+                controller.alertSettings(content)
+            } else {
+                controller.alert(content)
+            }
         }
     }
     
@@ -194,9 +308,9 @@ extension CallService: PKPushRegistryDelegate {
             WebSocketService.shared.connectIfNeeded()
         }
         if usesCallKit && !MessageDAO.shared.isExist(messageId: messageId) {
-            let call = Call(uuid: uuid, remoteUserId: userId, remoteUsername: username, isOutgoing: false)
-            pendingCalls[uuid] = call
-            nativeCallInterface.reportIncomingCall(uuid: uuid, userId: userId, username: username) { (error) in
+            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
+            pendingAnswerCalls[uuid] = call
+            nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: userId, localizedName: username) { (error) in
                 completion()
             }
         } else {
@@ -217,66 +331,16 @@ extension CallService: PKPushRegistryDelegate {
 // MARK: - Interface
 extension CallService {
     
-    func handlePendingWebRTCJobs() {
-        dispatch {
-            let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
-            for job in jobs {
-                let data = job.toBlazeMessageData()
-                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
-                let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
-                if isOffer && isTimedOut {
-                    let msg = Message.createWebRTCMessage(messageId: data.messageId,
-                                                          conversationId: data.conversationId,
-                                                          userId: data.userId,
-                                                          category: .WEBRTC_AUDIO_CANCEL,
-                                                          mediaDuration: 0,
-                                                          status: .DELIVERED)
-                    MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-                } else if !isOffer || !MessageDAO.shared.isExist(messageId: data.messageId) {
-                    self.handleIncomingBlazeMessageData(data)
-                }
-                JobDAO.shared.removeJob(jobId: job.jobId)
-            }
-        }
-    }
-    
     func requestStartCall(remoteUser: UserItem) {
-        
-        func performRequest() {
-            guard activeCall == nil else {
-                alert(error: .busy)
-                return
-            }
-            updateCallKitAvailability()
-            registerForPushKitNotificationsIfAvailable()
-            let uuid = UUID()
-            activeCall = Call(uuid: uuid, remoteUser: remoteUser, isOutgoing: true)
-            let handle = CallHandle(id: remoteUser.userId, name: remoteUser.fullName)
-            callInterface.requestStartCall(uuid: uuid, handle: handle) { (error) in
-                if let error = error as? CallError {
-                    self.alert(error: error)
-                } else if let error = error {
-                    reporter.report(error: error)
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
-                }
-            }
-        }
-        
-        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
-            if isGranted {
-                self.dispatch(performRequest)
-            } else {
-                DispatchQueue.main.async {
-                    self.alert(error: .microphonePermissionDenied)
-                }
-            }
-        }
-        
+        let handle = CXHandle(type: .generic, value: remoteUser.userId)
+        requestStartCall(handle: handle, playOutgoingRingtone: true, makeCall: { uuid in
+            PeerToPeerCall(uuid: uuid, isOutgoing: true, remoteUser: remoteUser)
+        })
     }
     
     func requestEndCall() {
         dispatch {
-            guard let uuid = self.activeCall?.uuid ?? self.pendingCalls.first?.key else {
+            guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
                 return
             }
             self.callInterface.requestEndCall(uuid: uuid) { (error) in
@@ -291,7 +355,7 @@ extension CallService {
     
     func requestAnswerCall() {
         dispatch {
-            guard let uuid = self.pendingCalls.first?.key else {
+            guard let uuid = self.pendingAnswerCalls.first?.key else {
                 return
             }
             self.callInterface.requestAnswerCall(uuid: uuid)
@@ -311,15 +375,22 @@ extension CallService {
         }
     }
     
-    func alert(error: CallError) {
-        let content = error.alertContent
-        DispatchQueue.main.async {
-            if case .microphonePermissionDenied = error {
-                AppDelegate.current.mainWindow.rootViewController?.alertSettings(content)
-            } else {
-                AppDelegate.current.mainWindow.rootViewController?.alert(content)
-            }
-        }
+    func requestStartGroupCall(conversation: ConversationItem, invitingUsers: [UserItem]) {
+        let handle = CXHandle(type: .generic, value: conversation.conversationId)
+        requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
+            let call = GroupCall(uuid: uuid,
+                                 isOutgoing: true,
+                                 conversation: conversation)
+            call.invitingUsers = invitingUsers
+            return call
+        })
+    }
+    
+    func requestJoin(groupCall: GroupCall, conversation: ConversationItem) {
+        let handle = CXHandle(type: .generic, value: conversation.conversationId)
+        requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { _ in
+            groupCall
+        })
     }
     
 }
@@ -327,147 +398,82 @@ extension CallService {
 // MARK: - Callback
 extension CallService {
     
-    func startCall(uuid: UUID, handle: CallHandle, completion: ((Bool) -> Void)?) {
+    func startCall(uuid: UUID, handle: CXHandle, completion: ((Bool) -> Void)?) {
         AudioManager.shared.pause()
         dispatch {
-            guard let call = self.activeCall, call.remoteUserId == handle.id else {
-                self.alert(error: .inconsistentCallStarted)
-                completion?(false)
-                return
-            }
-            guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: handle.id) else {
-                self.alert(error: .missingUser(userId: handle.id))
-                completion?(false)
-                return
-            }
             guard WebSocketService.shared.isConnected else {
                 self.alert(error: .networkFailure)
                 completion?(false)
                 return
             }
-            DispatchQueue.main.sync {
-                self.showCallingInterface(user: remoteUser, status: .outgoing)
-            }
-            
-            let timer = Timer(timeInterval: callTimeoutInterval,
-                              target: self,
-                              selector: #selector(self.unansweredTimeout),
-                              userInfo: nil,
-                              repeats: false)
-            RunLoop.main.add(timer, forMode: .default)
-            self.unansweredTimer = timer
-            
-            self.rtcClient.offer { result in
-                switch result {
-                case .success(let sdpJson):
-                    let msg = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                          conversationId: call.conversationId,
-                                                          category: .WEBRTC_AUDIO_OFFER,
-                                                          content: sdpJson,
-                                                          status: .SENDING)
-                    SendMessageService.shared.sendMessage(message: msg,
-                                                          ownerUser: remoteUser,
-                                                          isGroupMessage: false)
-                    completion?(true)
-                case .failure(let error):
-                    self.dispatch {
-                        self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
-                        completion?(false)
-                    }
-                }
+            if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
+                self.startPeerToPeerCall(call, completion: completion)
+            } else if let call = self.activeCall as? GroupCall, call.uuid == uuid {
+                self.startGroupCall(call, completion: completion)
+            } else {
+                self.alert(error: .inconsistentCallStarted)
+                completion?(false)
             }
         }
     }
     
     func answerCall(uuid: UUID, completion: ((Bool) -> Void)?) {
         dispatch {
-            guard let call = self.pendingCalls[uuid], let sdp = self.pendingSDPs[uuid] else {
-                return
-            }
-            self.pendingCalls.removeValue(forKey: uuid)
-            self.pendingSDPs.removeValue(forKey: uuid)
-            
-            self.activeCall = call
-            DispatchQueue.main.sync {
-                if let remoteUser = call.remoteUser {
-                    self.showCallingInterface(user: remoteUser,
-                                              status: .connecting)
-                } else {
-                    self.showCallingInterface(userId: call.remoteUserId,
-                                              username: call.remoteUsername,
-                                              status: .connecting)
-                }
-            }
-            
-            for uuid in self.pendingCalls.keys {
-                self.endCall(uuid: uuid)
-            }
-            self.ringtonePlayer.stop()
-            self.rtcClient.set(remoteSdp: sdp) { (error) in
-                if let error = error {
-                    self.dispatch {
-                        self.failCurrentCall(sendFailedMessageToRemote: true,
-                                             error: .setRemoteSdp(error))
-                        completion?(false)
+            if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, let sdp = self.pendingSDPs[uuid] {
+                self.pendingAnswerCalls.removeValue(forKey: uuid)
+                self.pendingSDPs.removeValue(forKey: uuid)
+                self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
+            } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall {
+                self.pendingAnswerCalls.removeValue(forKey: uuid)
+                if let conversation = ConversationDAO.shared.getConversation(conversationId: call.conversationId) {
+                    self.ringtonePlayer.stop()
+                    call.status = .incoming
+                    DispatchQueue.main.sync {
+                        self.showCallingInterface(call: call)
                     }
-                } else {
-                    self.rtcClient.answer(completion: { result in
-                        self.dispatch {
-                            switch result {
-                            case .success(let sdpJson):
-                                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                                      category: .WEBRTC_AUDIO_ANSWER,
-                                                                      content: sdpJson,
-                                                                      status: .SENDING,
-                                                                      quoteMessageId: call.uuidString)
-                                SendMessageService.shared.sendMessage(message: msg,
-                                                                      ownerUser: call.remoteUser,
-                                                                      isGroupMessage: false)
-                                if let candidates = self.pendingCandidates.removeValue(forKey: uuid) {
-                                    candidates.forEach(self.rtcClient.add(remoteCandidate:))
-                                }
-                                completion?(true)
-                            case .failure(let error):
-                                self.failCurrentCall(sendFailedMessageToRemote: true,
-                                                     error: error)
-                                completion?(false)
-                            }
-                        }
-                    })
+                    self.requestJoin(groupCall: call, conversation: conversation)
                 }
             }
         }
     }
     
     func endCall(uuid: UUID) {
-        
-        func sendEndMessage(call: Call, category: MessageCategory) {
-            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
-            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                  category: category,
-                                                  status: .SENDING,
-                                                  quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendWebRTCMessage(message: msg,
-                                                        recipientId: call.remoteUserId)
-            insertCallCompletedMessage(call: call,
-                                       isUserInitiated: true,
-                                       category: category)
-        }
-        
         dispatch {
-            if let call = self.activeCall, call.uuid == uuid {
+            DispatchQueue.main.sync(execute: self.beginAutoCancellingBackgroundTaskIfNotActive)
+            if let call = (self.pendingAnswerCalls[uuid] ?? self.activeCall), call.uuid == uuid {
+                let callStatusWasIncoming = call.status == .incoming
                 call.status = .disconnecting
-                let category: MessageCategory
-                if call.connectedDate != nil {
-                    category = .WEBRTC_AUDIO_END
-                } else if call.isOutgoing {
-                    category = .WEBRTC_AUDIO_CANCEL
-                } else {
-                    category = .WEBRTC_AUDIO_DECLINE
+                if let call = call as? PeerToPeerCall {
+                    let category: MessageCategory
+                    if call.connectedDate != nil {
+                        category = .WEBRTC_AUDIO_END
+                    } else if call.isOutgoing {
+                        category = .WEBRTC_AUDIO_CANCEL
+                    } else {
+                        category = .WEBRTC_AUDIO_DECLINE
+                    }
+                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                          category: category,
+                                                          status: .SENDING,
+                                                          quoteMessageId: call.uuidString)
+                    SendMessageService.shared.sendWebRTCMessage(message: msg,
+                                                                recipientId: call.remoteUserId)
+                    self.insertCallCompletedMessage(call: call,
+                                                    isUserInitiated: true,
+                                                    category: category)
+                } else if let call = call as? GroupCall {
+                    if callStatusWasIncoming, let inviterUserId = call.inviterUserId {
+                        let declining = KrakenRequest(conversationId: call.conversationId,
+                                                      trackId: nil,
+                                                      action: .decline(recipientId: inviterUserId))
+                        SendMessageService.shared.send(krakenRequest: declining)
+                    } else {
+                        let end = KrakenRequest(conversationId: call.conversationId,
+                                                trackId: nil,
+                                                action: .end)
+                        SendMessageService.shared.send(krakenRequest: end)
+                    }
                 }
-                sendEndMessage(call: call, category: category)
-            } else if let call = self.pendingCalls[uuid] {
-                sendEndMessage(call: call, category: .WEBRTC_AUDIO_DECLINE)
             }
             self.close(uuid: uuid)
         }
@@ -477,7 +483,7 @@ extension CallService {
         activeCall = nil
         rtcClient.close()
         unansweredTimer?.invalidate()
-        pendingCalls = [:]
+        pendingAnswerCalls = [:]
         pendingSDPs = [:]
         pendingCandidates = [:]
         ringtonePlayer.stop()
@@ -498,10 +504,10 @@ extension CallService {
                 unansweredTimer?.invalidate()
             }
         }
-        pendingCalls.removeValue(forKey: uuid)
+        pendingAnswerCalls.removeValue(forKey: uuid)
         pendingSDPs.removeValue(forKey: uuid)
         pendingCandidates.removeValue(forKey: uuid)
-        if pendingCalls.isEmpty && activeCall == nil {
+        if pendingAnswerCalls.isEmpty && activeCall == nil {
             ringtonePlayer.stop()
             performSynchronouslyOnMainThread {
                 dismissCallingInterface()
@@ -526,15 +532,23 @@ extension CallService: CallMessageCoordinator {
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
         
         func hasCall(uuid: UUID) -> Bool {
-            activeCall?.uuid == uuid || pendingCalls[uuid] != nil
+            activeCall?.uuid == uuid || pendingAnswerCalls[uuid] != nil
         }
         
         func handle(data: BlazeMessageData) {
-            switch data.category {
-            case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
+            switch MessageCategory(rawValue: data.category) {
+            case .WEBRTC_AUDIO_OFFER:
                 self.handleOffer(data: data)
-            case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
+            case .WEBRTC_ICE_CANDIDATE:
                 self.handleIceCandidate(data: data)
+            case .KRAKEN_PUBLISH:
+                self.handlePublishing(data: data)
+            case .KRAKEN_INVITE:
+                self.handleInvitation(data: data)
+            case .KRAKEN_END:
+                self.handleKrakenEnd(data: data)
+            case .KRAKEN_DECLINE:
+                self.handleKrakenDecline(data: data)
             default:
                 self.handleCallStatusChange(data: data)
             }
@@ -577,7 +591,7 @@ extension CallService: CallMessageCoordinator {
     
 }
 
-// MARK: - Blaze message data handlers
+// MARK: - BlazeMessageData handlers
 extension CallService {
     
     private func handleOffer(data: BlazeMessageData) {
@@ -633,8 +647,8 @@ extension CallService {
                 return
             }
             AudioManager.shared.pause()
-            let call = Call(uuid: uuid, remoteUser: user, isOutgoing: false)
-            pendingCalls[uuid] = call
+            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
+            pendingAnswerCalls[uuid] = call
             pendingSDPs[uuid] = sdp
             
             callInterface.reportIncomingCall(call) { (error) in
@@ -663,7 +677,7 @@ extension CallService {
         guard let uuid = UUID(uuidString: data.quoteMessageId) else {
             return
         }
-        if let call = activeCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+        if let call = activeCall as? PeerToPeerCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
             callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             call.hasReceivedRemoteAnswer = true
             unansweredTimer?.invalidate()
@@ -671,16 +685,14 @@ extension CallService {
             call.status = .connecting
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
-                    self.dispatch {
-                        self.failCurrentCall(sendFailedMessageToRemote: true,
-                                             error: .setRemoteAnswer(error))
-                        self.callInterface.reportCall(uuid: uuid,
-                                                      endedByReason: .failed)
-                    }
+                    self.failCurrentCall(sendFailedMessageToRemote: true,
+                                         error: .setRemoteAnswer(error))
+                    self.callInterface.reportCall(uuid: uuid,
+                                                  endedByReason: .failed)
                 }
             }
         } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
-            if let call = activeCall ?? pendingCalls[uuid], call.uuid == uuid {
+            if let call = (activeCall ?? pendingAnswerCalls[uuid]) as? PeerToPeerCall, call.uuid == uuid {
                 call.status = .disconnecting
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             } else {
@@ -698,7 +710,7 @@ extension CallService {
         }
     }
     
-    private func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory) {
+    private func insertCallCompletedMessage(call: PeerToPeerCall, isUserInitiated: Bool, category: MessageCategory) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
         let duration = abs(timeIntervalSinceNow * millisecondsPerSecond)
         let shouldMarkMessageRead = call.isOutgoing
@@ -717,25 +729,143 @@ extension CallService {
     
 }
 
+extension CallService {
+    
+    private func handlePublishing(data: BlazeMessageData) {
+        let publishingUserId = data.userId
+        updateInGroupCallUserIds(forConversationWith: data.conversationId)
+        if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
+            if let userIds = inGroupCallUserIds[data.conversationId], !userIds.isEmpty {
+                let members = userIds.compactMap(UserDAO.shared.getUser(userId:))
+                call.replaceMembers(withConnectedMembers: members)
+            }
+            if let user = UserDAO.shared.getUser(userId: publishingUserId) {
+                call.appendMember(user, isConnected: false)
+            }
+            if let trackId = call.trackId {
+                let subscribing = KrakenRequest(conversationId: call.conversationId,
+                                                trackId: trackId,
+                                                action: .subscribe)
+                if let responseDataString = SendMessageService.shared.send(krakenRequest: subscribing)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) {
+                    rtcClient.set(remoteSdp: sdp) { (error) in
+                        func endCall(error: Error) {
+                            self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+                            self.alert(error: .setRemoteAnswer(error))
+                            let end = KrakenRequest(conversationId: call.conversationId,
+                                                    trackId: data.trackId,
+                                                    action: .end)
+                            SendMessageService.shared.send(krakenRequest: end)
+                            self.close(uuid: call.uuid)
+                        }
+                        if let error = error {
+                            endCall(error: error)
+                        } else {
+                            self.rtcClient.answer { (result) in
+                                switch result {
+                                case .success(let sdpJson):
+                                    let answer = KrakenRequest(conversationId: call.conversationId,
+                                                               trackId: trackId,
+                                                               action: .answer(sdp: sdpJson))
+                                    SendMessageService.shared.send(krakenRequest: answer)
+                                    call.updateMember(with: publishingUserId, isConnected: true)
+                                case .failure(let error):
+                                    endCall(error: error)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            NotificationCenter.default.postOnMain(name: Self.didReceivePublishingWithoutActiveGroupCall,
+                                                  object: self,
+                                                  userInfo: [Self.conversationIdUserInfoKey: data.conversationId])
+        }
+    }
+    
+    private func handleInvitation(data: BlazeMessageData) {
+        do {
+            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
+            AudioManager.shared.pause()
+            guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
+                return
+            }
+            updateInGroupCallUserIds(forConversationWith: data.conversationId)
+            let uuid = UUID()
+            let call = GroupCall(uuid: uuid,
+                                 isOutgoing: false,
+                                 conversation: conversation)
+            call.inviterUserId = data.userId
+            if let userIds = inGroupCallUserIds[data.conversationId], !userIds.isEmpty {
+                let members = userIds.compactMap(UserDAO.shared.getUser(userId:))
+                call.replaceMembers(withConnectedMembers: members)
+            }
+            pendingAnswerCalls[uuid] = call
+            callInterface.reportIncomingCall(call) { (error) in
+                guard let error = error else {
+                    return
+                }
+                let publishing = Message.createKrakenStatusMessage(category: .KRAKEN_PUBLISH,
+                                                                   conversationId: data.conversationId,
+                                                                   userId: data.userId)
+                MessageDAO.shared.insertMessage(message: publishing, messageSource: "")
+                let declining = KrakenRequest(conversationId: data.conversationId,
+                                              trackId: nil,
+                                              action: .decline(recipientId: data.userId))
+                SendMessageService.shared.send(krakenRequest: declining)
+                self.close(uuid: uuid)
+                reporter.report(error: error)
+            }
+        }
+    }
+    
+    private func handleKrakenEnd(data: BlazeMessageData) {
+        inGroupCallUserIds[data.conversationId]?.removeAll(where: { $0 == data.userId })
+        if let call = activeCall as? GroupCall {
+            call.removeMember(with: data.userId)
+        }
+    }
+    
+    private func handleKrakenDecline(data: BlazeMessageData) {
+        guard let call = activeCall as? GroupCall else {
+            return
+        }
+        call.removeMember(with: data.userId)
+    }
+    
+}
+
 // MARK: - WebRTCClientDelegate
 extension CallService: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        guard let call = activeCall, let content = [candidate].jsonString else {
-            return
+        queue.async {
+            if let call = self.activeCall as? PeerToPeerCall, let content = [candidate].jsonString {
+                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                      category: .WEBRTC_ICE_CANDIDATE,
+                                                      content: content,
+                                                      status: .SENDING,
+                                                      quoteMessageId: call.uuidString)
+                SendMessageService.shared.sendMessage(message: msg,
+                                                      ownerUser: call.remoteUser,
+                                                      isGroupMessage: false)
+            } else if let call = self.activeCall as? GroupCall, let json = candidate.jsonString?.base64Encoded() {
+                if let trackId = call.trackId {
+                    let request = KrakenRequest(conversationId: call.conversationId,
+                                                trackId: trackId,
+                                                action: .trickle(candidate: json))
+                    SendMessageService.shared.send(krakenRequest: request)
+                } else {
+                    var trickles = self.pendingTrickles[call.uuid] ?? []
+                    trickles.append(json)
+                    self.pendingTrickles[call.uuid] = trickles
+                }
+            }
         }
-        let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                              category: .WEBRTC_ICE_CANDIDATE,
-                                              content: content,
-                                              status: .SENDING,
-                                              quoteMessageId: call.uuidString)
-        SendMessageService.shared.sendMessage(message: msg,
-                                              ownerUser: call.remoteUser,
-                                              isGroupMessage: false)
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
-        dispatch {
+        queue.async {
             guard let call = self.activeCall, call.connectedDate == nil else {
                 return
             }
@@ -764,22 +894,21 @@ extension CallService: WebRTCClientDelegate {
 extension CallService {
     
     @objc private func unansweredTimeout() {
-        guard let call = activeCall, call.isOutgoing, !call.hasReceivedRemoteAnswer else {
-            return
-        }
-        dismissCallingInterface()
-        rtcClient.close()
-        isMuted = false
-        dispatch {
-            self.ringtonePlayer.stop()
-            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                  category: .WEBRTC_AUDIO_CANCEL,
-                                                  status: .SENDING,
-                                                  quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
-            self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
-            self.activeCall = nil
-            self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
+        if let call = activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
+            dismissCallingInterface()
+            rtcClient.close()
+            isMuted = false
+            dispatch {
+                self.ringtonePlayer.stop()
+                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                      category: .WEBRTC_AUDIO_CANCEL,
+                                                      status: .SENDING,
+                                                      quoteMessageId: call.uuidString)
+                SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
+                self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
+                self.activeCall = nil
+                self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
+            }
         }
     }
     
@@ -792,60 +921,39 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = AVAudioSession.sharedInstance().recordPermission == .granted
-    }
-    
-    private func showCallingInterface(status: Call.Status, userRenderer renderUser: (CallViewController) -> Void) {
-        
-        func makeViewController() -> CallViewController {
-            let viewController = CallViewController()
-            viewController.service = self
-            viewController.loadViewIfNeeded()
-            self.viewController = viewController
-            return viewController
-        }
-        
-        let animated = self.window != nil
-        
-        let viewController = self.viewController ?? makeViewController()
-        renderUser(viewController)
-        
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds, root: viewController)
-        window.makeKeyAndVisible()
-        self.window = window
-        
-        UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
-        
-        let updateInterface = {
-            self.activeCall?.status = status
-            viewController.view.layoutIfNeeded()
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: updateInterface)
-        } else {
-            UIView.performWithoutAnimation(updateInterface)
-        }
+        usesCallKit = false
     }
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
-        guard let call = activeCall else {
-            return
-        }
-        if sendFailedMessageToRemote {
-            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                  category: .WEBRTC_AUDIO_FAILED,
-                                                  status: .SENDING,
-                                                  quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendMessage(message: msg,
-                                                  ownerUser: call.remoteUser,
-                                                  isGroupMessage: false)
-        }
-        let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
+        if let call = activeCall as? PeerToPeerCall {
+            if sendFailedMessageToRemote {
+                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                      category: .WEBRTC_AUDIO_FAILED,
+                                                      status: .SENDING,
+                                                      quoteMessageId: call.uuidString)
+                SendMessageService.shared.sendMessage(message: msg,
+                                                      ownerUser: call.remoteUser,
+                                                      isGroupMessage: false)
+            }
+            let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                            conversationId: call.conversationId,
+                                                            category: .WEBRTC_AUDIO_FAILED,
+                                                            status: .DELIVERED)
+            MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
+            close(uuid: call.uuid)
+        } else if let call = activeCall as? GroupCall {
+            if sendFailedMessageToRemote {
+                let request = KrakenRequest(conversationId: call.conversationId,
+                                            trackId: call.trackId,
+                                            action: .end)
+                SendMessageService.shared.send(krakenRequest: request)
+            }
+            let msg = Message.createKrakenStatusMessage(category: .KRAKEN_END,
                                                         conversationId: call.conversationId,
-                                                        category: .WEBRTC_AUDIO_FAILED,
-                                                        status: .DELIVERED)
-        MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
-        close(uuid: call.uuid)
+                                                        userId: "")
+            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            close(uuid: call.uuid)
+        }
         reporter.report(error: error)
     }
     
@@ -905,6 +1013,178 @@ extension CallService {
         }
         let duration = max(10, min(29, UIApplication.shared.backgroundTimeRemaining - 1))
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
+    }
+    
+    private func requestStartCall(handle: CXHandle, playOutgoingRingtone: Bool, makeCall: @escaping (UUID) -> Call) {
+        
+        func performRequest() {
+            guard activeCall == nil else {
+                alert(error: .busy)
+                return
+            }
+            updateCallKitAvailability()
+            registerForPushKitNotificationsIfAvailable()
+            let uuid = UUID()
+            let call = makeCall(uuid)
+            activeCall = call
+            callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
+                if let error = error as? CallError {
+                    self.alert(error: error)
+                } else if let error = error {
+                    reporter.report(error: error)
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
+                }
+            }
+        }
+        
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            if isGranted {
+                self.dispatch(performRequest)
+            } else {
+                DispatchQueue.main.async {
+                    self.alert(error: .microphonePermissionDenied)
+                }
+            }
+        }
+        
+    }
+    
+    private func answer(peerToPeerCall call: PeerToPeerCall, sdp: RTCSessionDescription, completion: ((Bool) -> Void)?) {
+        self.activeCall = call
+        call.status = .connecting
+        DispatchQueue.main.sync {
+            self.showCallingInterface(call: call)
+        }
+        
+        for uuid in self.pendingAnswerCalls.keys {
+            self.endCall(uuid: uuid)
+        }
+        self.ringtonePlayer.stop()
+        self.rtcClient.set(remoteSdp: sdp) { (error) in
+            if let error = error {
+                self.failCurrentCall(sendFailedMessageToRemote: true,
+                                     error: .setRemoteSdp(error))
+                completion?(false)
+            } else {
+                self.rtcClient.answer(completion: { result in
+                    switch result {
+                    case .success(let sdpJson):
+                        let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                              category: .WEBRTC_AUDIO_ANSWER,
+                                                              content: sdpJson,
+                                                              status: .SENDING,
+                                                              quoteMessageId: call.uuidString)
+                        SendMessageService.shared.sendMessage(message: msg,
+                                                              ownerUser: call.remoteUser,
+                                                              isGroupMessage: false)
+                        if let candidates = self.pendingCandidates.removeValue(forKey: call.uuid) {
+                            candidates.forEach(self.rtcClient.add(remoteCandidate:))
+                        }
+                        completion?(true)
+                    case .failure(let error):
+                        self.failCurrentCall(sendFailedMessageToRemote: true,
+                                             error: error)
+                        completion?(false)
+                    }
+                })
+            }
+        }
+    }
+    
+    private func startPeerToPeerCall(_ call: PeerToPeerCall, completion: ((Bool) -> Void)?) {
+        guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: call.remoteUserId) else {
+            self.alert(error: .missingUser(userId: call.remoteUserId))
+            completion?(false)
+            return
+        }
+        call.remoteUser = remoteUser
+        call.status = .outgoing
+        DispatchQueue.main.sync {
+            self.showCallingInterface(call: call)
+        }
+        
+        let timer = Timer(timeInterval: callTimeoutInterval,
+                          target: self,
+                          selector: #selector(self.unansweredTimeout),
+                          userInfo: nil,
+                          repeats: false)
+        RunLoop.main.add(timer, forMode: .default)
+        self.unansweredTimer = timer
+        
+        self.rtcClient.offer { result in
+            switch result {
+            case .success(let sdpJson):
+                let msg = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                      conversationId: call.conversationId,
+                                                      category: .WEBRTC_AUDIO_OFFER,
+                                                      content: sdpJson,
+                                                      status: .SENDING)
+                SendMessageService.shared.sendMessage(message: msg,
+                                                      ownerUser: remoteUser,
+                                                      isGroupMessage: false)
+                completion?(true)
+            case .failure(let error):
+                self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
+                completion?(false)
+            }
+        }
+    }
+    
+    private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
+        call.status = call.isOutgoing ? .outgoing : .incoming
+        DispatchQueue.main.sync {
+            self.showCallingInterface(call: call)
+        }
+        rtcClient.offer { result in
+            switch result {
+            case .failure(let error):
+                self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
+                completion?(false)
+            case .success(let sdp):
+                let request = KrakenRequest(conversationId: call.conversationId,
+                                            trackId: nil,
+                                            action: .publish(sdp: sdp))
+                guard let responseDataString = SendMessageService.shared.send(krakenRequest: request)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
+                    self.alert(error: .invalidKrakenResponse)
+                    completion?(false)
+                    return
+                }
+                self.callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
+                call.trackId = data.trackId
+                let msg = Message.createKrakenStatusMessage(category: .KRAKEN_PUBLISH,
+                                                            conversationId: call.conversationId,
+                                                            userId: myUserId)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+                self.rtcClient.set(remoteSdp: sdp) { (error) in
+                    if let error = error {
+                        self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+                        self.alert(error: .setRemoteAnswer(error))
+                        let end = KrakenRequest(conversationId: call.conversationId,
+                                                trackId: data.trackId,
+                                                action: .end)
+                        SendMessageService.shared.send(krakenRequest: end)
+                        completion?(false)
+                        self.close(uuid: call.uuid)
+                    } else {
+                        let subscribing = KrakenRequest(conversationId: call.conversationId,
+                                                        trackId: data.trackId,
+                                                        action: .subscribe)
+                        SendMessageService.shared.send(krakenRequest: subscribing)
+                        self.pendingTrickles.removeValue(forKey: call.uuid)?.forEach({ (candidate) in
+                            let trickle = KrakenRequest(conversationId: call.conversationId,
+                                                        trackId: data.trackId,
+                                                        action: .trickle(candidate: candidate))
+                            SendMessageService.shared.send(krakenRequest: trickle)
+                        })
+                        let invitationRecipients = call.members.map(\.userId).filter({ $0 != myUserId })
+                        if !invitationRecipients.isEmpty {
+                            self.inviteUsers(with: invitationRecipients, toJoinGroupCall: call)
+                        }
+                    }
+                }
+                completion?(true)
+            }
+        }
     }
     
 }

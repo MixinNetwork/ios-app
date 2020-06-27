@@ -349,6 +349,11 @@
 "call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 "call_user_not_found" = "找不到用户";
 "call_declined_lack_microphone_permission" = "已拒绝通话";
+"group_call_published" = "%@ 开始了群通话";
+"group_call_ended" = "群通话已结束";
+"group_call_declined_lack_microphone_permission" = "已拒绝通话";
+"group_call" = "群通话";
+"group_call_tap_to_join" = "点击加入";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

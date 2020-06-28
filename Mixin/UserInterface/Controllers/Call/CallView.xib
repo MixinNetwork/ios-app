@@ -21,8 +21,8 @@
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="multipleUserCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="multipleUserCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
-                <outlet property="multipleUserCollectionViewLeadingConstraint" destination="eDy-dK-qK2" id="ZWF-Ru-4R2"/>
-                <outlet property="multipleUserCollectionViewTrailingConstraint" destination="OfW-H5-rqz" id="40j-jD-xVg"/>
+                <outlet property="multipleUserCollectionViewLeadingConstraint" destination="H1k-Lg-1To" id="6uR-ix-cww"/>
+                <outlet property="multipleUserCollectionViewTrailingConstraint" destination="XVI-sG-LCq" id="1w6-X7-PSA"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
@@ -101,31 +101,33 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8">
-                                <rect key="frame" x="0.0" y="269.5" width="375" height="128"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t3e-bg-GeY" userLabel="Group Call Members Wrapper">
+                                <rect key="frame" x="0.0" y="87" width="375" height="376"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8" customClass="GroupCallMembersCollectionView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="124" width="375" height="128"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf" customClass="RDHCollectionViewGridLayout">
+                                            <size key="itemSize" width="128" height="128"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="sectionsStartOnNewLine" value="NO"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
+                                                    <real key="value" value="24"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </collectionViewFlowLayout>
+                                    </collectionView>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="gei-GT-lU9"/>
+                                    <constraint firstItem="wM3-bs-IJ8" firstAttribute="leading" secondItem="t3e-bg-GeY" secondAttribute="leading" id="H1k-Lg-1To"/>
+                                    <constraint firstAttribute="trailing" secondItem="wM3-bs-IJ8" secondAttribute="trailing" id="XVI-sG-LCq"/>
+                                    <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="t3e-bg-GeY" secondAttribute="centerY" id="xOe-fq-bRD"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf" customClass="RDHCollectionViewGridLayout">
-                                    <size key="itemSize" width="128" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="sectionsStartOnNewLine" value="NO"/>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
-                                            <real key="value" value="10"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </collectionViewFlowLayout>
-                            </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
-                                <rect key="frame" x="0.0" y="446.5" width="375" height="16.5"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGR-fd-qeK">
                                 <rect key="frame" x="30" y="463" width="315" height="204"/>
                                 <subviews>
@@ -263,6 +265,12 @@
                                     <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" id="zpq-vh-a5v"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
+                                <rect key="frame" x="0.0" y="446.5" width="375" height="16.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-yl-N8J" userLabel="Bottom Safe Area Placeholder">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -275,22 +283,23 @@
                         <constraints>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="0sZ-fs-VnN"/>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="24S-vw-Uku"/>
+                            <constraint firstAttribute="trailing" secondItem="t3e-bg-GeY" secondAttribute="trailing" id="2qO-Pr-lPb"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
+                            <constraint firstItem="t3e-bg-GeY" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="FlA-ya-AFs"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="60" id="GBH-BC-P5I"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="Guz-Ik-vmb"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="LQ4-Qy-n6Z"/>
-                            <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="wM3-bs-IJ8" secondAttribute="trailing" id="OfW-H5-rqz"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="NCO-o8-q8h" secondAttribute="trailing" id="TRc-3d-ucg"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="10" id="Zfy-I1-hTz"/>
+                            <constraint firstItem="t3e-bg-GeY" firstAttribute="top" secondItem="CPG-77-gPe" secondAttribute="bottom" constant="20" id="aEe-II-OmB"/>
                             <constraint firstItem="NCO-o8-q8h" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="aFX-IT-6SY"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="top" secondItem="DGO-cU-Jif" secondAttribute="top" id="aZ3-kp-IfS"/>
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
-                            <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="6Bg-67-Oum" secondAttribute="centerY" id="d85-gn-zET"/>
-                            <constraint firstItem="wM3-bs-IJ8" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="eDy-dK-qK2"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
                             <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
+                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" id="pMt-Kq-ARA"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="CPG-77-gPe" secondAttribute="trailing" constant="10" id="sl4-BQ-LNn"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
                             <constraint firstAttribute="bottom" secondItem="qGL-yl-N8J" secondAttribute="bottom" id="vtu-FQ-KW2"/>

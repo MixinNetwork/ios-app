@@ -24,8 +24,8 @@ class GroupCallMemberCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
-        connectingView.layer.cornerRadius = connectingView.bounds.width / 2
+        avatarImageView.layer.cornerRadius = bounds.width / 2
+        connectingView.layer.cornerRadius = bounds.width / 2
         dotLayers[0].position = CGPoint(x: bounds.midX - dotSpacing - dotLength,
                                         y: bounds.midY)
         dotLayers[1].position = CGPoint(x: bounds.midX,

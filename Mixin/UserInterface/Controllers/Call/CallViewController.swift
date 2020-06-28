@@ -7,7 +7,7 @@ class CallViewController: UIViewController {
     
     @IBOutlet weak var inviteButton: UIButton!
     @IBOutlet weak var singleUserStackView: UIStackView!
-    @IBOutlet weak var multipleUserCollectionView: UICollectionView!
+    @IBOutlet weak var multipleUserCollectionView: GroupCallMembersCollectionView!
     @IBOutlet weak var multipleUserCollectionLayout: RDHCollectionViewGridLayout!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!

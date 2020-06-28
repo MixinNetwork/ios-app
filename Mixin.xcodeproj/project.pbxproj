@@ -199,6 +199,7 @@
 		7B6C9D3524584E2F00130E36 /* SharedMediaPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */; };
 		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
+		7B70D1A524A924DE0034B704 /* GroupCallMembersCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B70D1A424A924DE0034B704 /* GroupCallMembersCollectionView.swift */; };
 		7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */; };
 		7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */; };
 		7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */; };
@@ -1030,6 +1031,7 @@
 		7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPost.swift; sourceTree = "<group>"; };
 		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
+		7B70D1A424A924DE0034B704 /* GroupCallMembersCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMembersCollectionView.swift; sourceTree = "<group>"; };
 		7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementBadgeContentView.swift; sourceTree = "<group>"; };
 		7B70D8522457F4F800E01239 /* AnnouncementBadgeContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnouncementBadgeContentView.xib; sourceTree = "<group>"; };
 		7B710BE4233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaCollectionHeaderView.swift; sourceTree = "<group>"; };
@@ -1962,6 +1964,7 @@
 				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
 				7B9650B124879EB100DE86B9 /* CallSwitch.swift */,
 				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
+				7B70D1A424A924DE0034B704 /* GroupCallMembersCollectionView.swift */,
 				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
 				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
 				7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */,
@@ -3513,7 +3516,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3533,7 +3536,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3892,6 +3895,7 @@
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
+				7B70D1A524A924DE0034B704 /* GroupCallMembersCollectionView.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */,

@@ -21,6 +21,8 @@
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="multipleUserCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="multipleUserCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
+                <outlet property="multipleUserCollectionViewLeadingConstraint" destination="eDy-dK-qK2" id="ZWF-Ru-4R2"/>
+                <outlet property="multipleUserCollectionViewTrailingConstraint" destination="OfW-H5-rqz" id="40j-jD-xVg"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
@@ -105,11 +107,17 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="gei-GT-lU9"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf" customClass="RDHCollectionViewGridLayout">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="sectionsStartOnNewLine" value="NO"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
+                                            <real key="value" value="10"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
                                 </collectionViewFlowLayout>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">

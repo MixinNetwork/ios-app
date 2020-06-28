@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation.AVFAudio
+import RDHCollectionViewGridLayout
 import MixinServices
 
 class CallViewController: UIViewController {
@@ -7,7 +8,7 @@ class CallViewController: UIViewController {
     @IBOutlet weak var inviteButton: UIButton!
     @IBOutlet weak var singleUserStackView: UIStackView!
     @IBOutlet weak var multipleUserCollectionView: UICollectionView!
-    @IBOutlet weak var multipleUserCollectionLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var multipleUserCollectionLayout: RDHCollectionViewGridLayout!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
@@ -21,6 +22,8 @@ class CallViewController: UIViewController {
     @IBOutlet weak var speakerStackView: UIStackView!
     
     @IBOutlet weak var topSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var multipleUserCollectionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var multipleUserCollectionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -88,22 +91,28 @@ class CallViewController: UIViewController {
         guard let call = call as? GroupCall else {
             return
         }
-        if call.members.count <= 9 {
+        if call.membersDataSource.allMembers.count <= 9 {
             let itemLength: CGFloat = 76
-            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
-            let totalSpacing = view.bounds.width - itemLength * 3
+            let itemCount: UInt = 3
+            multipleUserCollectionLayout.lineSize = itemLength
+            multipleUserCollectionLayout.lineItemCount = itemCount
+            let totalSpacing = view.bounds.width - itemLength * CGFloat(itemCount)
             let interitemSpacing = floor(totalSpacing / 6)
+            multipleUserCollectionLayout.itemSpacing = interitemSpacing
             let sectionInset = interitemSpacing * 2
-            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+            multipleUserCollectionViewLeadingConstraint.constant = sectionInset
+            multipleUserCollectionViewTrailingConstraint.constant = sectionInset
         } else {
             let itemLength: CGFloat = 64
-            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
-            let totalSpacing = view.bounds.width - itemLength * 4
+            let itemCount: UInt = 4
+            multipleUserCollectionLayout.lineSize = itemLength
+            multipleUserCollectionLayout.lineItemCount = itemCount
+            let totalSpacing = view.bounds.width - itemLength * CGFloat(itemCount)
             let interitemSpacing = floor(totalSpacing / 6)
+            multipleUserCollectionLayout.itemSpacing = interitemSpacing
             let sectionInset = floor(interitemSpacing / 2 * 3)
-            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+            multipleUserCollectionViewLeadingConstraint.constant = sectionInset
+            multipleUserCollectionViewTrailingConstraint.constant = sectionInset
         }
     }
     
@@ -112,9 +121,6 @@ class CallViewController: UIViewController {
     }
     
     func reloadAndObserve(call: Call?) {
-        if let call = self.call as? GroupCall, call.membersObserver === self {
-            call.membersObserver = nil
-        }
         self.call = call
         
         statusObservation?.invalidate()
@@ -143,13 +149,10 @@ class CallViewController: UIViewController {
             singleUserStackView.isHidden = true
             multipleUserCollectionView.isHidden = false
             updateViews(status: call.status)
-            groupCallMembers = call.members
-            connectedGroupCallMemberUserIds = call.connectedMemberUserIds
-            call.membersObserver = self
+            call.membersDataSource.collectionView = multipleUserCollectionView
         }
         muteSwitch.isOn = service.isMuted
         speakerSwitch.isOn = service.usesSpeaker
-        multipleUserCollectionView.reloadData()
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
@@ -178,63 +181,14 @@ class CallViewController: UIViewController {
         }
         let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
         picker.appearance = .appendToExistedCall
-        picker.fixedSelections = call.members
+        picker.fixedSelections = call.membersDataSource.allMembers
         picker.onConfirmation = { users in
             guard !users.isEmpty else {
                 return
             }
-            let ids = users.map(\.userId)
-            CallService.shared.inviteUsers(with: ids, toJoinGroupCall: call)
+            call.invite(users: users)
         }
         present(picker, animated: true, completion: nil)
-    }
-    
-}
-
-extension CallViewController: GroupCallMemberObserver {
-    
-    func groupCall(_ call: GroupCall, didAppendMember member: UserItem) {
-        let isConnected = call.connectedMemberUserIds.contains(member.userId)
-        DispatchQueue.main.async {
-            if isConnected {
-                self.connectedGroupCallMemberUserIds.insert(member.userId)
-            } else {
-                self.connectedGroupCallMemberUserIds.remove(member.userId)
-            }
-            let indexPath = IndexPath(item: self.groupCallMembers.count, section: 0)
-            self.groupCallMembers.append(member)
-            self.multipleUserCollectionView.insertItems(at: [indexPath])
-        }
-    }
-    
-    func groupCall(_ call: GroupCall, didRemoveMemberAt index: Int) {
-        DispatchQueue.main.async {
-            self.groupCallMembers.remove(at: index)
-            let indexPath = IndexPath(item: index, section: 0)
-            self.multipleUserCollectionView.deleteItems(at: [indexPath])
-        }
-    }
-    
-    func groupCall(_ call: GroupCall, didUpdateMemberAt index: Int) {
-        let member = call.members[index]
-        let isConnected = call.connectedMemberUserIds.contains(member.userId)
-        DispatchQueue.main.async {
-            if isConnected {
-                self.connectedGroupCallMemberUserIds.insert(member.userId)
-            } else {
-                self.connectedGroupCallMemberUserIds.remove(member.userId)
-            }
-            let indexPath = IndexPath(item: index, section: 0)
-            self.multipleUserCollectionView.reloadItems(at: [indexPath])
-        }
-    }
-    
-    func groupCallDidReplaceAllMembers(_ call: GroupCall) {
-        DispatchQueue.main.async {
-            self.connectedGroupCallMemberUserIds = Set(call.members.map(\.userId))
-            self.groupCallMembers = call.members
-            self.multipleUserCollectionView.reloadData()
-        }
     }
     
 }

@@ -195,6 +195,7 @@
 		7B66AC072428D72000869DBD /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66AC062428D72000869DBD /* PostViewController.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
 		7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */; };
+		7B6B07E824A88B7A001781F3 /* GroupCallMemberDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */; };
 		7B6C9D3524584E2F00130E36 /* SharedMediaPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */; };
 		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
@@ -1025,6 +1026,7 @@
 		7B66AC062428D72000869DBD /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
 		7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverViewController.swift; sourceTree = "<group>"; };
+		7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberDataSource.swift; sourceTree = "<group>"; };
 		7B6C9D3424584E2F00130E36 /* SharedMediaPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPost.swift; sourceTree = "<group>"; };
 		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
@@ -1962,6 +1964,7 @@
 				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
 				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
 				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
+				7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 			);
@@ -3510,7 +3513,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinShare/R.generated.swift,
+				"$SRCROOT/MixinShare/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3530,7 +3533,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3561,6 +3564,7 @@
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
+				"${BUILT_PRODUCTS_DIR}/RDHCollectionViewGridLayout/RDHCollectionViewGridLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework",
@@ -3598,6 +3602,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RDHCollectionViewGridLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageYYPlugin.framework",
@@ -4209,6 +4214,7 @@
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
+				7B6B07E824A88B7A001781F3 /* GroupCallMemberDataSource.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,

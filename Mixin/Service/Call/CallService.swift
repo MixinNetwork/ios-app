@@ -214,19 +214,6 @@ class CallService: NSObject {
         inGroupCallUserIds[id] = peers.map(\.userId)
     }
     
-    func inviteUsers(with ids: [String], toJoinGroupCall call: GroupCall) {
-        guard let trackId = call.trackId else {
-            assertionFailure()
-            return
-        }
-        dispatch {
-            let invitation = KrakenRequest(conversationId: call.conversationId,
-                                           trackId: trackId,
-                                           action: .invite(recipients: ids))
-            SendMessageService.shared.send(krakenRequest: invitation)
-        }
-    }
-    
     func requestGroupCallExistence(forConversationWith id: String, completion: @escaping (Bool) -> Void) {
         queue.async {
             let isGroupCallMemberEmpty = self.inGroupCallUserIds[id]?.isEmpty ?? true
@@ -378,10 +365,19 @@ extension CallService {
     func requestStartGroupCall(conversation: ConversationItem, invitingUsers: [UserItem]) {
         let handle = CXHandle(type: .generic, value: conversation.conversationId)
         requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
+            let connectedMembers: [UserItem]
+            if let account = LoginManager.shared.account {
+                let user = UserItem.createUser(from: account)
+                connectedMembers = [user]
+            } else {
+                connectedMembers = []
+            }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: true,
-                                 conversation: conversation)
-            call.invitingUsers = invitingUsers
+                                 conversation: conversation,
+                                 connectedMembers: connectedMembers,
+                                 connectingMembers: [],
+                                 invitingMembers: invitingUsers)
             return call
         })
     }
@@ -549,6 +545,8 @@ extension CallService: CallMessageCoordinator {
                 self.handleKrakenEnd(data: data)
             case .KRAKEN_DECLINE:
                 self.handleKrakenDecline(data: data)
+            case .KRAKEN_CANCEL:
+                self.handleKrakenCancel(data: data)
             default:
                 self.handleCallStatusChange(data: data)
             }
@@ -735,13 +733,7 @@ extension CallService {
         let publishingUserId = data.userId
         updateInGroupCallUserIds(forConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
-            if let userIds = inGroupCallUserIds[data.conversationId], !userIds.isEmpty {
-                let members = userIds.compactMap(UserDAO.shared.getUser(userId:))
-                call.replaceMembers(withConnectedMembers: members)
-            }
-            if let user = UserDAO.shared.getUser(userId: publishingUserId) {
-                call.appendMember(user, isConnected: false)
-            }
+            call.reportMemberWithIdStartedConnecting(data.userId)
             if let trackId = call.trackId {
                 let subscribing = KrakenRequest(conversationId: call.conversationId,
                                                 trackId: trackId,
@@ -767,7 +759,7 @@ extension CallService {
                                                                trackId: trackId,
                                                                action: .answer(sdp: sdpJson))
                                     SendMessageService.shared.send(krakenRequest: answer)
-                                    call.updateMember(with: publishingUserId, isConnected: true)
+                                    call.reportMemberWithIdDidConnected(publishingUserId)
                                 case .failure(let error):
                                     endCall(error: error)
                                 }
@@ -787,19 +779,35 @@ extension CallService {
         do {
             DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             AudioManager.shared.pause()
+            guard let uuid = UUID(uuidString: data.conversationId) else {
+                return
+            }
             guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
                 return
             }
             updateInGroupCallUserIds(forConversationWith: data.conversationId)
-            let uuid = UUID()
+            let connectedMembers: [UserItem] = {
+                if let userIds = inGroupCallUserIds[data.conversationId] {
+                    return userIds.compactMap(UserDAO.shared.getUser(userId:))
+                } else {
+                    return []
+                }
+            }()
+            let connectingMembers: [UserItem]
+
+            if let account = LoginManager.shared.account {
+                let user = UserItem.createUser(from: account)
+                connectingMembers = [user]
+            } else {
+                connectingMembers = []
+            }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
-                                 conversation: conversation)
+                                 conversation: conversation,
+                                 connectedMembers: connectedMembers,
+                                 connectingMembers: connectingMembers,
+                                 invitingMembers: [])
             call.inviterUserId = data.userId
-            if let userIds = inGroupCallUserIds[data.conversationId], !userIds.isEmpty {
-                let members = userIds.compactMap(UserDAO.shared.getUser(userId:))
-                call.replaceMembers(withConnectedMembers: members)
-            }
             pendingAnswerCalls[uuid] = call
             callInterface.reportIncomingCall(call) { (error) in
                 guard let error = error else {
@@ -822,7 +830,7 @@ extension CallService {
     private func handleKrakenEnd(data: BlazeMessageData) {
         inGroupCallUserIds[data.conversationId]?.removeAll(where: { $0 == data.userId })
         if let call = activeCall as? GroupCall {
-            call.removeMember(with: data.userId)
+            call.reportMemberWithIdDidDisconnected(data.userId)
         }
     }
     
@@ -830,7 +838,22 @@ extension CallService {
         guard let call = activeCall as? GroupCall else {
             return
         }
-        call.removeMember(with: data.userId)
+        call.reportMemberWithIdDidDisconnected(data.userId)
+    }
+    
+    private func handleKrakenCancel(data: BlazeMessageData) {
+        guard let uuid = UUID(uuidString: data.conversationId) else {
+            return
+        }
+        guard let call = activeCall ?? pendingAnswerCalls.removeValue(forKey: uuid) else {
+            return
+        }
+        guard call.uuid == uuid, call.status == .incoming else {
+            return
+        }
+        call.status = .disconnecting
+        callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
+        close(uuid: uuid)
     }
     
 }
@@ -1176,10 +1199,8 @@ extension CallService {
                                                         action: .trickle(candidate: candidate))
                             SendMessageService.shared.send(krakenRequest: trickle)
                         })
-                        let invitationRecipients = call.members.map(\.userId).filter({ $0 != myUserId })
-                        if !invitationRecipients.isEmpty {
-                            self.inviteUsers(with: invitationRecipients, toJoinGroupCall: call)
-                        }
+                        call.reportMemberWithIdDidConnected(myUserId)
+                        call.invitePendingUsers()
                     }
                 }
                 completion?(true)

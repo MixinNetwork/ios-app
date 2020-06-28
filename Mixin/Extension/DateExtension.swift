@@ -52,3 +52,9 @@ extension Date {
         return DateFormatter.dayDate.string(from: self)
     }
 }
+
+extension TimeInterval {
+    
+    static let oneDay: TimeInterval = 24 * 60 * 60
+    
+}

@@ -20,6 +20,8 @@ public struct UserItem: BaseCodable {
     public var role: String = ""
     public var appCreatorId: String? = nil
     
+    public var isScam: Bool = false
+    
     public enum CodingKeys: String, CodingTableKey {
         
         public typealias Root = UserItem
@@ -39,7 +41,7 @@ public struct UserItem: BaseCodable {
         case createdAt = "created_at"
         case appCreatorId
         case role
-        
+        case isScam = "is_scam"
     }
     
     public var isMuted: Bool {

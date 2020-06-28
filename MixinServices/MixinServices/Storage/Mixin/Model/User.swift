@@ -16,6 +16,7 @@ public struct User: BaseCodable {
     public var appId: String? = nil
     public let createdAt: String?
     public let relationship: String
+    public var isScam: Bool = false
     
     public var app: App? = nil
     
@@ -32,6 +33,7 @@ public struct User: BaseCodable {
         case appId = "app_id"
         case relationship
         case createdAt = "created_at"
+        case isScam = "is_scam"
         
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
         public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

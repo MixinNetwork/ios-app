@@ -323,6 +323,7 @@
 "chat_location_distance" = "距離: %@";
 "chat_location_search_no_result" = "%@ の検索結果はありません。別の検索を行ってください";
 "chat_number_of_selection" = "%@が選択されました";
+"chat_warning_scam" = "Warning: Many users reported this account as a scam. Please be careful, especially if it asks you for money";
 
 // Web
 "web_suspicious_link" = "不審なリンクです";

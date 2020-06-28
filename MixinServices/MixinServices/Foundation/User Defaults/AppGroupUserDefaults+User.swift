@@ -27,6 +27,7 @@ extension AppGroupUserDefaults {
             case currentConversationId = "current_conversation_id"
             case reloadConversation = "reload_conversation"
             case hasUnreadAnnouncement = "has_unread_announcement"
+            case closeScamAnnouncementDate = "close_scam_announcement_date"
             case recentlyUsedAppIds = "recently_used_app_ids"
             
             case autoUploadsContacts = "auto_uploads_contacts"
@@ -108,6 +109,10 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.hasUnreadAnnouncement, defaultValue: [:])
         public static var hasUnreadAnnouncement: [String: Bool]
+        
+        // Key is user ID
+        @Default(namespace: .user, key: Key.closeScamAnnouncementDate, defaultValue: [:])
+        public static var closeScamAnnouncementDate: [String: Date]
         
         @Default(namespace: .user, key: Key.recentlyUsedAppIds, defaultValue: [])
         public private(set) static var recentlyUsedAppIds: [String]

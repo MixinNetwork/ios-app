@@ -1954,6 +1954,20 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		7B66F66A24A86F3D007D6709 /* Call */ = {
+			isa = PBXGroup;
+			children = (
+				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
+				7B9650B124879EB100DE86B9 /* CallSwitch.swift */,
+				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
+				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
+				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
+				7B7E7143217D87860052C7DD /* CallView.xib */,
+				7B7E7145217D89790052C7DD /* CallViewController.swift */,
+			);
+			path = Call;
+			sourceTree = "<group>";
+		};
 		7B72651A209C5F8300F234BE /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -2097,13 +2111,6 @@
 				7BEED891246D0C6C00387EAE /* NativeCallInterface.swift */,
 				7BBA2813246D10DE00787E61 /* MixinCallInterface.swift */,
 				7B08CD2B2178700C00FB8CCF /* CallService.swift */,
-				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
-				7B9650B124879EB100DE86B9 /* CallSwitch.swift */,
-				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
-				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
-				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
-				7B7E7143217D87860052C7DD /* CallView.xib */,
-				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -2471,6 +2478,7 @@
 				DFE356B61FB4992900E0E3A8 /* Setting */,
 				DFA5B58F1FB03E6300549728 /* Wallet */,
 				7BF49DD420C3DED600A8510E /* ReCaptcha */,
+				7B66F66A24A86F3D007D6709 /* Call */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

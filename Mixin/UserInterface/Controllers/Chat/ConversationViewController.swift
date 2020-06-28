@@ -519,7 +519,8 @@ class ConversationViewController: UIViewController {
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
-                        hud.hide()
+                        hud.set(style: .notification, text: R.string.localizable.profile_report_success())
+                        hud.scheduleAutoHidden()
                         UIApplication.homeNavigationController?.backToHome()
                     }
                 case let .failure(error):

@@ -501,7 +501,6 @@ extension UserProfileViewController {
     
     @objc func reportUser() {
         let userId = user.userId
-        let conversationId = self.conversationId
         let alert = UIAlertController(title: R.string.localizable.profile_report_hint(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (_) in
@@ -511,15 +510,10 @@ extension UserProfileViewController {
                 switch UserAPI.shared.reportUser(userId: userId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
-                        hud.hide()
-                        self.dismiss(animated: true) {
-                            guard UIApplication.currentConversationId() == conversationId else {
-                                return
-                            }
-                            UIApplication.homeNavigationController?.backToHome()
-                        }
+                        hud.set(style: .notification, text: R.string.localizable.profile_report_success())
+                        hud.scheduleAutoHidden()
+                        self.dismiss(animated: true, completion: nil)
                     }
                 case let .failure(error):
                     DispatchQueue.main.async {

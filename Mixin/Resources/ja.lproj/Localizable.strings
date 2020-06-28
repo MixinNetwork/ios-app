@@ -652,7 +652,8 @@
 "profile_clear_contact_chat_hint" = "\"%@\"のチャットをクリアしますか?";
 "profile_clear_group_chat_hint" = "\"%@\"のグループチャットをクリアしますか?";
 "profile_block_hint" = "あなたにブロックされた相手は電話をかけたりメッセージを送ることができなくなります";
-"profile_report_hint" = "報告してブロックしますか? この会話も同時に削除されます";
+"profile_report_hint" = "報告してブロックしますか";
+"profile_report_success" = "User is reported";
 "profile_join_in" = "%@に参加";
 "profile_my_shared_apps" = "連携しているアプリ";
 "profile_share_app_hint" = "アプリを共有するには連絡先に追加してください";

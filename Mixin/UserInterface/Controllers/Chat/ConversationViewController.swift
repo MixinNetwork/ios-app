@@ -961,9 +961,6 @@ class ConversationViewController: UIViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        if let appUser = ownerUser {
-            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appUser.userId]))
-        }
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
         MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)

@@ -6,43 +6,38 @@ class BackupJob: AsynchronousJob {
 
     static let sharedId = "backup"
 
-    private var waitingUploadFiles = SafeDictionary<String, Int64>()
-    private var uploadingFiles = SafeDictionary<String, Upload>()
-    private var uploadedSize: Int64 = 0
-    private var lastUpdateTime = Date()
-    private var timer: Timer?
-    private var isContinueBackup: Bool {
-        return !isCancelled && NetworkManager.shared.isReachableOnWiFi
-    }
-    private var fileCount = 0
-    private var preparedFileCount = 0
-
     private let processQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
     private let immediatelyBackup: Bool
+
+    private var waitingUploadFiles = SafeDictionary<String, Upload>()
+    private var uploadingFiles = SafeDictionary<String, Upload>()
     private var query = NSMetadataQuery()
+    private var uploadedSize: Int64 = 0
+    private var lastUpdateTime = Date()
+    private var fileCount = 0
+    private var preparedFileCount = 0
+    private var needBackupDatabase = false
+    private var isWaitingWifi = false
 
     private(set) var totalFileSize: Int64 = 0
+    var totalUploadedSize: Int64 {
+        uploadedSize + self.uploadingFiles.values.map { $0.uploadSize }.reduce(0, +)
+    }
 
-    var backupProgress: ((Float64, Int64, Int64) -> Void)?
+    var prepareProgress: Float64 {
+        preparedFileCount == fileCount ? 1 : Float64(preparedFileCount) / Float64(fileCount)
+    }
 
     init(immediatelyBackup: Bool = false) {
         self.immediatelyBackup = immediatelyBackup
         super.init()
     }
 
-    deinit {
-        print("===BackupJob...deinit...")
-    }
-
     override func finishJob() {
-        DispatchQueue.main.sync {
-            query.stop()
-        }
-        timer?.invalidate()
-        timer = nil
+        stopQuery()
         NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.postOnMain(name: .BackupDidChange)
         super.finishJob()
-        print("===BackupJob...finishJob...")
     }
 
     override func getJobId() -> String {
@@ -76,14 +71,23 @@ class BackupJob: AsynchronousJob {
             }
         }
 
+        AppGroupUserDefaults.Account.hasUnfinishedBackup = true
+
+        guard NetworkManager.shared.isReachableOnWiFi else {
+            return false
+        }
+
         fileCount = 0
         preparedFileCount = 0
         totalFileSize = 0
         uploadedSize = 0
-        waitingUploadFiles = SafeDictionary<String, Int64>()
+        waitingUploadFiles = SafeDictionary<String, Upload>()
         uploadingFiles = SafeDictionary<String, Upload>()
+        needBackupDatabase = !(AppGroupUserDefaults.Account.hasUnfinishedBackup && AppGroupUserDefaults.Account.hasFinishedDatabaseBackup)
+        if needBackupDatabase {
+            AppGroupUserDefaults.Account.hasFinishedDatabaseBackup = false
+        }
 
-        AppGroupUserDefaults.Account.hasUnfinishedBackup = true
         var localPaths = Set<String>()
         var cloudPaths = Set<String>()
         let startTime = Date()
@@ -123,136 +127,188 @@ class BackupJob: AsynchronousJob {
             return false
         }
 
-        guard isContinueBackup else {
-            return false
-        }
-
         fileCount = localPaths.count
-        startQuery()
-
         for filename in localPaths {
             let localURL = AttachmentContainer.url.appendingPathComponent(filename)
+            let cloudURL = backupUrl.appendingPathComponent(filename)
             let fileSize = FileManager.default.fileSize(localURL.path)
-            waitingUploadFiles[filename] = fileSize
+            let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
+
+            if cloudExists && FileManager.default.fileSize(cloudURL.path) == fileSize {
+                uploadedSize += fileSize
+            } else {
+                waitingUploadFiles[localURL.lastPathComponent] = Upload(from: localURL, destination: cloudURL, fileSize: fileSize, isDatabase: false, percent: 0)
+            }
             totalFileSize += fileSize
             preparedFileCount += 1
         }
         preparedFileCount = localPaths.count
 
-        print("=====spent time:\(-startTime.timeIntervalSinceNow)s...totalFileSize:\(totalFileSize.sizeRepresentation())...fileCount:\(fileCount)")
-
-        guard isContinueBackup else {
+        if isCancelled {
             return false
         }
 
-        let databaseFileSize = getDatabaseFileSize()
-        let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
-        if !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize {
-            totalFileSize += databaseFileSize
-            let upload = Upload(from: AppGroupContainer.mixinDatabaseUrl, destination: databaseCloudURL, fileSize: databaseFileSize, percent: 0)
-            uploadingFiles[backupDatabaseName] = upload
-            copyToCloud(upload: upload, isDatabase: true)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .NetworkDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(queryUpdateChanged), name: .NSMetadataQueryDidUpdate, object: nil)
+        startQuery()
 
+        backupDatabase()
         processQueue.async {
-            self.uploadNextFiles()
+            self.backupNextFiles()
         }
         return true
     }
 
-    private func uploadNextFiles() {
+    private func backupDatabase() {
         guard let backupUrl = backupUrl else {
+            return
+        }
+
+        let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
+        if !needBackupDatabase || AppGroupUserDefaults.Account.hasFinishedDatabaseBackup {
+            let databaseFileSize = FileManager.default.fileSize(databaseCloudURL.path)
+            uploadedSize += databaseFileSize
+            totalFileSize += databaseFileSize
+            return
+        }
+
+        compressDatabase()
+        let databaseFileSize = FileManager.default.fileSize(AppGroupContainer.mixinDatabaseUrl.path)
+        if !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize {
+            let upload = Upload(from: AppGroupContainer.mixinDatabaseUrl, destination: databaseCloudURL, fileSize: databaseFileSize, isDatabase: true, percent: 0)
+            uploadingFiles[backupDatabaseName] = upload
+            copyToCloud(upload: upload, isDatabase: true)
+        } else {
+            uploadedSize += databaseFileSize
+            AppGroupUserDefaults.Account.hasFinishedDatabaseBackup = true
+        }
+        totalFileSize += databaseFileSize
+    }
+
+    private func backupNextFiles() {
+        guard uploadedSize < totalFileSize else {
+            backupFinished()
+            return
+        }
+        guard NetworkManager.shared.isReachableOnWiFi else {
+            isWaitingWifi = true
             return
         }
 
         let files = waitingUploadFiles.keys
         for filename in files {
-            guard let fileSize = waitingUploadFiles[filename] else {
+            guard let upload = waitingUploadFiles[filename] else {
                 continue
             }
 
-            let localURL = AttachmentContainer.url.appendingPathComponent(filename)
-            let cloudURL = backupUrl.appendingPathComponent(filename)
-            let isUploaded = cloudURL.isUploaded
-
-            if isUploaded {
+            if upload.destination.isUploaded {
                 waitingUploadFiles.removeValue(forKey: filename)
-                uploadedSize += fileSize
+                uploadedSize += upload.fileSize
             } else {
-                let upload = Upload(from: localURL, destination: cloudURL, fileSize: fileSize, percent: 0)
                 uploadingFiles[filename] = upload
                 copyToCloud(upload: upload)
-                return
+                if uploadingFiles.count >= 10 {
+                    return
+                }
             }
+        }
+
+        if uploadedSize >= totalFileSize {
+            backupFinished()
         }
     }
 
     func checkUploadStatus() {
-        print("...isContinueBackup:\(isContinueBackup)...lastUpdateTime:\(-lastUpdateTime.timeIntervalSinceNow)...uploadedSize:\(uploadedSize)...monitorQueue:\(totalFileSize.sizeRepresentation())")
-
-        guard isContinueBackup else {
+        guard NetworkManager.shared.isReachableOnWiFi else {
+            isWaitingWifi = true
             return
         }
-        guard -lastUpdateTime.timeIntervalSinceNow > 5 else {
+        guard prepareProgress >= 1 else {
+            return
+        }
+        guard uploadingFiles.count == 0 || -lastUpdateTime.timeIntervalSinceNow > Double(15) else {
             return
         }
 
         self.lastUpdateTime = Date()
-        print("===checkUploadStatus...2....")
-        startQuery(restart: true)
 
-        uploadingFiles.removeAll()
-        processQueue.async {
-            self.uploadNextFiles()
+        if uploadedSize >= totalFileSize {
+            backupFinished()
+        } else {
+            stopQuery()
+            startQuery()
+            processQueue.async {
+                let files = self.uploadingFiles.keys
+                for filename in files {
+                    if let upload = self.uploadingFiles[filename], upload.destination.isUploaded {
+                        self.waitingUploadFiles.removeValue(forKey: filename)
+                        self.uploadingFiles.removeValue(forKey: filename)
+                        self.uploadedSize += upload.fileSize
+                    }
+                }
+                self.backupNextFiles()
+            }
         }
     }
 
-    private func startQuery(restart: Bool = false) {
+    private func startQuery() {
         guard let backupUrl = backupUrl else {
             return
         }
-        if restart {
-            NotificationCenter.default.removeObserver(self)
-            DispatchQueue.main.sync {
-                self.query.stop()
-                self.timer?.invalidate()
-                self.query = NSMetadataQuery()
-            }
-        }
-        NotificationCenter.default.addObserver(self, selector: #selector(queryUpdateChanged), name: .NSMetadataQueryDidUpdate, object: query)
+
+        let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
         query.valueListAttributes = [ NSMetadataUbiquitousItemPercentUploadedKey,
                                       NSMetadataUbiquitousItemIsUploadingKey,
                                       NSMetadataUbiquitousItemUploadingErrorKey,
                                       NSMetadataUbiquitousItemIsUploadedKey]
         query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
-        DispatchQueue.main.sync {
-            self.query.start()
-            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.calculateUploadProgress), userInfo: nil, repeats: true)
+        self.query = query
+        DispatchQueue.main.async {
+            _ = query.start()
         }
     }
 
-    @objc func calculateUploadProgress() {
-        let uploadedSize = self.uploadedSize + self.uploadingFiles.values.map { $0.uploadSize }.reduce(0, +)
-        let prepareProgress: Float64 = preparedFileCount == fileCount ? 100 : Float64(preparedFileCount) / Float64(fileCount)
+    private func stopQuery() {
+        let query = self.query
+        DispatchQueue.main.async {
+            query.stop()
+        }
+    }
 
-        backupProgress?(prepareProgress, uploadedSize, totalFileSize)
+    private func backupFinished() {
+        guard uploadedSize >= totalFileSize else {
+            return
+        }
+        guard AppGroupUserDefaults.Account.hasUnfinishedBackup else {
+            return
+        }
 
-        print("===prepareProgress:\(NumberFormatter.simplePercentage.stringFormat(value: prepareProgress))")
+        stopQuery()
+        removeOldFiles()
+        AppGroupUserDefaults.User.lastBackupDate = Date()
+        AppGroupUserDefaults.User.lastBackupSize = totalFileSize
+        AppGroupUserDefaults.Account.hasUnfinishedBackup = false
+        AppGroupUserDefaults.Account.hasFinishedDatabaseBackup = false
 
-        if uploadedSize >= totalFileSize {
-            self.timer?.invalidate()
-            DispatchQueue.main.sync {
-                self.query.stop()
-            }
-            finishJob()
+        finishJob()
+    }
+
+    @objc private func networkChanged() {
+        guard NetworkManager.shared.isReachableOnWiFi else {
+            return
+        }
+        guard isWaitingWifi else {
+            return
+        }
+        isWaitingWifi = false
+
+        processQueue.async {
+            self.backupNextFiles()
         }
     }
 
     @objc func queryUpdateChanged(notification: Notification) {
-        guard (notification.object as? NSMetadataQuery) == query else {
-            return
-        }
         guard let metadataItems = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem]) else {
             return
         }
@@ -261,18 +317,22 @@ class BackupJob: AsynchronousJob {
             self.lastUpdateTime = Date()
 
             for metadataItem in metadataItems {
-                let url = metadataItem.value(forAttribute: NSMetadataItemURLKey) as? URL
+                let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
                 let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.floatValue ?? 0
                 let isUploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
 
-                guard let filename = url?.lastDirAndFilename, var upload = self.uploadingFiles[filename] else {
+                guard let filename = name, var upload = self.uploadingFiles[filename] else {
                     continue
                 }
 
                 if isUploaded {
+                    if upload.isDatabase {
+                        AppGroupUserDefaults.Account.hasFinishedDatabaseBackup = true
+                    }
                     self.waitingUploadFiles.removeValue(forKey: filename)
+                    self.uploadingFiles.removeValue(forKey: filename)
                     self.uploadedSize += upload.fileSize
-                    self.uploadNextFiles()
+                    self.backupNextFiles()
                 } else {
                     upload.percent = percent
                     self.uploadingFiles[filename] = upload
@@ -283,10 +343,9 @@ class BackupJob: AsynchronousJob {
 
     private func copyToCloud(upload: Upload, isDatabase: Bool = false) {
         let tmpFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        let filename = upload.from.lastDirAndFilename
+        let filename = upload.from.lastPathComponent
         uploadingFiles[filename] = upload
         do {
-
             try FileManager.default.copyItem(at: upload.from, to: tmpFile)
             if FileManager.default.fileExists(atPath: upload.destination.path) {
                 try FileManager.default.removeItem(at: upload.destination)
@@ -301,23 +360,26 @@ class BackupJob: AsynchronousJob {
         }
     }
 
-    private func getDatabaseFileSize() -> Int64 {
+    private func compressDatabase() {
         try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
         if -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
             AppGroupUserDefaults.Database.vacuumDate = Date()
             try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
         }
-        return FileManager.default.fileSize(AppGroupContainer.mixinDatabaseUrl.path)
     }
 
-    private func removeOldFiles(backupDir: URL) {
+    private func removeOldFiles() {
+        guard let backupUrl = backupUrl else {
+            return
+        }
+
         let files = ["mixin.backup.db",
                      "mixin.photos.zip",
                      "mixin.audios.zip"]
 
         let baseDir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         for file in files {
-            let cloudURL = backupDir.appendingPathComponent(file)
+            let cloudURL = backupUrl.appendingPathComponent(file)
             if cloudURL.isStoredCloud {
                 try? FileManager.default.removeItem(at: cloudURL)
             }
@@ -335,19 +397,11 @@ class BackupJob: AsynchronousJob {
         let from: URL
         let destination: URL
         let fileSize: Int64
+        let isDatabase: Bool
         var percent: Float
 
         var uploadSize: Int64 {
             Int64(Float(fileSize) * percent / 100)
         }
     }
-}
-
-fileprivate extension URL {
-
-    var lastDirAndFilename: String {
-        let count = pathComponents.count
-        return count > 2 ? "\(pathComponents[count-2])/\(pathComponents[count-1])" : lastPathComponent
-    }
-
 }

@@ -43,8 +43,11 @@ class BackupViewController: SettingsTableViewController {
         return controller
     }()
 
+    private weak var timer: Timer?
+
     deinit {
         NotificationCenter.default.removeObserver(self)
+        timer?.invalidate()
     }
     
     class func instance() -> UIViewController {
@@ -69,6 +72,10 @@ class BackupViewController: SettingsTableViewController {
                            selector: #selector(updateBackupVideos),
                            name: SettingsRow.accessoryDidChangeNotification,
                            object: backupVideosRow)
+        center.addObserver(self,
+                           selector: #selector(backupChanged),
+                           name: .BackupDidChange,
+                           object: nil)
         
         if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {
             updateTableForBackingUp()
@@ -79,6 +86,21 @@ class BackupViewController: SettingsTableViewController {
 
         if BackupJobQueue.shared.isBackingUp {
             BackupJobQueue.shared.backupJob?.checkUploadStatus()
+        }
+    }
+
+    @objc func backupChanged() {
+        timer?.invalidate()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.updateActionSectionFooter()
+            self.backupActionRow.accessory = .none
+            self.backupActionRow.title = Localized.SETTING_BACKUP_NOW
+            if case let .switch(isOn, _) = self.backupFilesRow.accessory {
+                self.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
+            }
+            if case let .switch(isOn, _) = self.backupVideosRow.accessory {
+                self.backupVideosRow.accessory = .switch(isOn: isOn, isEnabled: true)
+            }
         }
     }
     
@@ -135,7 +157,22 @@ extension BackupViewController {
     
     private func updateActionSectionFooter() {
         let text: String?
-        if let restoreJob = BackupJobQueue.shared.restoreJob {
+        if let backupJob = BackupJobQueue.shared.backupJob {
+            let prepareProgress = backupJob.prepareProgress
+            let uploadedSize = backupJob.totalUploadedSize
+            if prepareProgress == 0 {
+                text = R.string.localizable.setting_backup_preparing()
+            } else if prepareProgress < 1 {
+                let progress = NumberFormatter.simplePercentage.stringFormat(value: prepareProgress)
+                text = R.string.localizable.setting_backup_preparing_progress(progress)
+            } else if uploadedSize == 0 {
+                text = R.string.localizable.setting_backup_uploading()
+            } else {
+                let totalFileSize = backupJob.totalFileSize
+                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
+                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
+            }
+        } else if let restoreJob = BackupJobQueue.shared.restoreJob {
             let number = NSNumber(value: restoreJob.progress)
             let percentage = NumberFormatter.simplePercentage.string(from: number)
             text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
@@ -163,34 +200,9 @@ extension BackupViewController {
             backupVideosRow.accessory = .switch(isOn: isOn, isEnabled: false)
         }
         updateActionSectionFooter()
-
-        BackupJobQueue.shared.backupJob?.backupProgress = { [weak self](copyProgress, uploadedSize, totalFileSize) in
-            guard let weakself = self else {
-                return
-            }
-            var text: String?
-            if copyProgress == 0 {
-                text = R.string.localizable.setting_backup_preparing()
-            } else if copyProgress < 100 {
-                text = R.string.localizable.setting_backup_preparing_progress(NumberFormatter.simplePercentage.stringFormat(value: copyProgress))
-            } else if uploadedSize == 0 {
-                text = R.string.localizable.setting_backup_uploading()
-            } else if uploadedSize >= totalFileSize {
-                weakself.updateActionSectionFooter()
-                weakself.backupActionRow.accessory = .none
-                weakself.backupActionRow.title = Localized.SETTING_BACKUP_NOW
-                if case let .switch(isOn, _) = weakself.backupFilesRow.accessory {
-                    weakself.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
-                }
-                if case let .switch(isOn, _) = weakself.backupVideosRow.accessory {
-                    weakself.backupVideosRow.accessory = .switch(isOn: isOn, isEnabled: true)
-                }
-            } else {
-                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
-                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
-            }
-            weakself.dataSource.sections[0].footer = text
-        }
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
+            self?.updateActionSectionFooter()
+        })
     }
     
 }

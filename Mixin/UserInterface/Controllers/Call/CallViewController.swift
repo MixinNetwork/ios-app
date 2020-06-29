@@ -5,6 +5,7 @@ import MixinServices
 
 class CallViewController: UIViewController {
     
+    @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var inviteButton: UIButton!
     @IBOutlet weak var singleUserStackView: UIStackView!
     @IBOutlet weak var multipleUserCollectionView: GroupCallMembersCollectionView!
@@ -14,10 +15,12 @@ class CallViewController: UIViewController {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var muteSwitch: CallSwitch!
     @IBOutlet weak var speakerSwitch: CallSwitch!
+    @IBOutlet weak var hangUpStackView: UIStackView!
     @IBOutlet weak var hangUpButton: UIButton!
     @IBOutlet weak var hangUpTitleLabel: UILabel!
     @IBOutlet weak var acceptStackView: UIStackView!
     @IBOutlet weak var acceptButton: UIButton!
+    @IBOutlet weak var acceptTitleLabel: UILabel!
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
     
@@ -26,6 +29,8 @@ class CallViewController: UIViewController {
     @IBOutlet weak var multipleUserCollectionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private unowned let service: CallService
@@ -66,7 +71,6 @@ class CallViewController: UIViewController {
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
                             adjustForContentSize: true)
         multipleUserCollectionView.register(R.nib.groupCallMemberCell)
-        multipleUserCollectionView.dataSource = self
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(callServiceMutenessDidChange),
@@ -88,10 +92,14 @@ class CallViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard let call = call as? GroupCall else {
+        guard let dataSource = multipleUserCollectionView.dataSource else {
             return
         }
-        if call.membersDataSource.allMembers.count <= 9 {
+        let sectionsCount = dataSource.numberOfSections?(in: multipleUserCollectionView) ?? 0
+        let membersCount = (0..<sectionsCount)
+            .map({ dataSource.collectionView(multipleUserCollectionView, numberOfItemsInSection: $0) })
+            .reduce(0, +)
+        if membersCount <= 9 {
             let itemLength: CGFloat = 76
             let itemCount: UInt = 3
             multipleUserCollectionLayout.lineSize = itemLength
@@ -193,22 +201,6 @@ class CallViewController: UIViewController {
     
 }
 
-extension CallViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        groupCallMembers.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
-        let member = groupCallMembers[indexPath.row]
-        cell.avatarImageView.setImage(with: member)
-        cell.connectingView.isHidden = connectedGroupCallMemberUserIds.contains(member.userId)
-        return cell
-    }
-    
-}
-
 extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
@@ -243,16 +235,19 @@ extension CallViewController {
         }
         switch status {
         case .incoming:
+            minimizeButton.isHidden = true
             hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
             setAcceptButtonHidden(false)
             setConnectionButtonsEnabled(true)
         case .outgoing:
+            minimizeButton.isHidden = false
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
+            minimizeButton.isHidden = false
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setFunctionSwitchesHidden(false)
@@ -261,6 +256,7 @@ extension CallViewController {
                 self.view.layoutIfNeeded()
             }
         case .connected:
+            minimizeButton.isHidden = false
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
@@ -270,6 +266,7 @@ extension CallViewController {
             }
             setConnectionDurationTimerEnabled(true)
         case .disconnecting:
+            minimizeButton.isHidden = true
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
             setConnectionDurationTimerEnabled(false)
@@ -280,7 +277,7 @@ extension CallViewController {
 
 extension CallViewController {
     
-    private func setAcceptButtonHidden(_ hidden: Bool) {
+    func setAcceptButtonHidden(_ hidden: Bool) {
         acceptStackView.alpha = hidden ? 0 : 1
         if hidden {
             hangUpButtonLeadingConstraint.priority = .defaultLow
@@ -291,12 +288,12 @@ extension CallViewController {
         }
     }
     
-    private func setConnectionButtonsEnabled(_ enabled: Bool) {
+    func setConnectionButtonsEnabled(_ enabled: Bool) {
         acceptButton.isEnabled = enabled
         hangUpButton.isEnabled = enabled
     }
     
-    private func setFunctionSwitchesHidden(_ hidden: Bool) {
+    func setFunctionSwitchesHidden(_ hidden: Bool) {
         let alpha: CGFloat = hidden ? 0 : 1
         muteStackView.alpha = alpha
         speakerStackView.alpha = alpha

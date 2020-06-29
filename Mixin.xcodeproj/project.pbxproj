@@ -329,6 +329,7 @@
 		7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */; };
 		7BA514862499D96300261289 /* GroupCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA514852499D96300261289 /* GroupCall.swift */; };
 		7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA722801FC1F2A100132FF4 /* PhotoMessageCell.swift */; };
+		7BA8CC3A24A9C4D300455902 /* GroupCallConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */; };
 		7BA91A2222B391A40038664F /* HudView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BA91A2122B391A40038664F /* HudView.xib */; };
 		7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA931F41FC08DF4005DF478 /* TextMessageCell.swift */; };
 		7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */; };
@@ -1158,6 +1159,7 @@
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BA514852499D96300261289 /* GroupCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCall.swift; sourceTree = "<group>"; };
 		7BA722801FC1F2A100132FF4 /* PhotoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMessageCell.swift; sourceTree = "<group>"; };
+		7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallConfirmationViewController.swift; sourceTree = "<group>"; };
 		7BA91A2122B391A40038664F /* HudView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HudView.xib; sourceTree = "<group>"; };
 		7BA931F41FC08DF4005DF478 /* TextMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageCell.swift; sourceTree = "<group>"; };
 		7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategoryViewController.swift; sourceTree = "<group>"; };
@@ -1970,6 +1972,7 @@
 				7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
+				7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -4284,6 +4287,7 @@
 				E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */,
 				7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */,
 				7BF42E3922DCB132005066E6 /* GalleryItemModelController.swift in Sources */,
+				7BA8CC3A24A9C4D300455902 /* GroupCallConfirmationViewController.swift in Sources */,
 				7B8BB58A234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift in Sources */,
 				7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */,
 				7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */,

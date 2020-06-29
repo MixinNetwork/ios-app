@@ -11,14 +11,19 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CallViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="acceptButton" destination="dFe-fP-bsd" id="nwu-e8-G1b"/>
+                <outlet property="acceptButtonCenterXConstraint" destination="XEt-3C-WtG" id="NfV-Ap-tye"/>
+                <outlet property="acceptButtonTrailingConstraint" destination="zpq-vh-a5v" id="T26-4Z-fg5"/>
                 <outlet property="acceptStackView" destination="CLO-8P-tgo" id="mb4-Rv-i9R"/>
+                <outlet property="acceptTitleLabel" destination="oVs-zO-xAl" id="V2G-EB-Lm1"/>
                 <outlet property="avatarImageView" destination="wAa-Ej-6fx" id="58k-Ut-kGQ"/>
                 <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
                 <outlet property="hangUpButton" destination="8Eu-3w-9KA" id="NC4-ap-7B4"/>
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
+                <outlet property="hangUpStackView" destination="TQI-9I-kWd" id="VfY-N6-OxZ"/>
                 <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
+                <outlet property="minimizeButton" destination="c10-IX-mVV" id="ZHY-P9-Bbn"/>
                 <outlet property="multipleUserCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="multipleUserCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
                 <outlet property="multipleUserCollectionViewLeadingConstraint" destination="H1k-Lg-1To" id="6uR-ix-cww"/>
@@ -159,7 +164,7 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo" userLabel="Accept Stack View">
                                         <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
@@ -257,12 +262,13 @@
                                     <constraint firstAttribute="height" constant="204" id="DcG-ru-Zfz"/>
                                     <constraint firstItem="TQI-9I-kWd" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="GiG-fq-UMt"/>
                                     <constraint firstItem="CLO-8P-tgo" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="Lid-lz-a4J"/>
+                                    <constraint firstItem="CLO-8P-tgo" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="XEt-3C-WtG"/>
                                     <constraint firstItem="TQI-9I-kWd" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="ama-tW-Tyy"/>
                                     <constraint firstItem="XCJ-TX-CRZ" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="i83-42-yQU"/>
                                     <constraint firstItem="Ff2-j4-HiN" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="nX8-Gh-edv"/>
                                     <constraint firstItem="XCJ-TX-CRZ" firstAttribute="leading" secondItem="PGR-fd-qeK" secondAttribute="leading" id="rBr-IE-nKA"/>
                                     <constraint firstItem="TQI-9I-kWd" firstAttribute="leading" secondItem="PGR-fd-qeK" secondAttribute="leading" priority="750" id="rS5-an-9kh"/>
-                                    <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" id="zpq-vh-a5v"/>
+                                    <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" priority="750" id="zpq-vh-a5v"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">

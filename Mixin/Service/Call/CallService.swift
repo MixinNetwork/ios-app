@@ -83,6 +83,18 @@ class CallService: NSObject {
         updateCallKitAvailability()
     }
     
+    func showJoinGroupCallConfirmation(inCallUserIds ids: [String]) {
+        let controller = GroupCallConfirmationViewController(service: self)
+        controller.loadMembers(with: ids)
+        
+        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        self.window = window
+        
+        UIView.performWithoutAnimation(controller.view.layoutIfNeeded)
+    }
+    
     func dismissCallingInterface() {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
         if let container = UIApplication.homeContainerViewController {
@@ -128,7 +140,8 @@ class CallService: NSObject {
         let animated = self.window != nil
         
         let viewController = self.viewController ?? makeViewController()
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds, root: viewController)
+        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = viewController
         window.makeKeyAndVisible()
         self.window = window
         
@@ -207,18 +220,11 @@ class CallService: NSObject {
         }
     }
     
-    func updateInGroupCallUserIds(forConversationWith id: String) {
-        guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
-            return
-        }
-        inGroupCallUserIds[id] = peers.map(\.userId)
-    }
-    
-    func requestGroupCallExistence(forConversationWith id: String, completion: @escaping (Bool) -> Void) {
+    func requestInCallUserIds(forConversationWith id: String, completion: @escaping ([String]) -> Void) {
         queue.async {
-            let isGroupCallMemberEmpty = self.inGroupCallUserIds[id]?.isEmpty ?? true
+            let ids = self.inGroupCallUserIds[id] ?? []
             DispatchQueue.main.async {
-                completion(!isGroupCallMemberEmpty)
+                completion(ids)
             }
         }
     }
@@ -365,18 +371,17 @@ extension CallService {
     func requestStartGroupCall(conversation: ConversationItem, invitingUsers: [UserItem]) {
         let handle = CXHandle(type: .generic, value: conversation.conversationId)
         requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
-            let connectedMembers: [UserItem]
+            let connectedMembers = self.inGroupCallUserIds[conversation.conversationId]?.compactMap(UserDAO.shared.getUser(userId:)) ?? []
+            var connectingMembers = [UserItem]()
             if let account = LoginManager.shared.account {
                 let user = UserItem.createUser(from: account)
-                connectedMembers = [user]
-            } else {
-                connectedMembers = []
+                connectingMembers.append(user)
             }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: true,
                                  conversation: conversation,
                                  connectedMembers: connectedMembers,
-                                 connectingMembers: [],
+                                 connectingMembers: connectingMembers,
                                  invitingMembers: invitingUsers)
             return call
         })
@@ -423,7 +428,7 @@ extension CallService {
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
                 if let conversation = ConversationDAO.shared.getConversation(conversationId: call.conversationId) {
                     self.ringtonePlayer.stop()
-                    call.status = .incoming
+                    call.status = .connecting
                     DispatchQueue.main.sync {
                         self.showCallingInterface(call: call)
                     }
@@ -793,14 +798,14 @@ extension CallService {
                     return []
                 }
             }()
-            let connectingMembers: [UserItem]
-
-            if let account = LoginManager.shared.account {
-                let user = UserItem.createUser(from: account)
-                connectingMembers = [user]
-            } else {
-                connectingMembers = []
-            }
+            let connectingMembers: [UserItem] = {
+                if let account = LoginManager.shared.account {
+                    let user = UserItem.createUser(from: account)
+                    return [user]
+                } else {
+                    return []
+                }
+            }()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
@@ -1206,6 +1211,13 @@ extension CallService {
                 completion?(true)
             }
         }
+    }
+    
+    private func updateInGroupCallUserIds(forConversationWith id: String) {
+        guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
+            return
+        }
+        inGroupCallUserIds[id] = peers.map(\.userId)
     }
     
 }

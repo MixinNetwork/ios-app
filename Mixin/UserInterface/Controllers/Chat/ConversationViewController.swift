@@ -2177,10 +2177,11 @@ extension ConversationViewController {
     
     private func requestGroupCallExistenceAndBeginPollingIfNeeded() {
         let conversationId = self.conversationId
-        CallService.shared.requestGroupCallExistence(forConversationWith: conversationId) { [weak self] (hasCall) in
+        CallService.shared.requestInCallUserIds(forConversationWith: conversationId) { [weak self] (ids) in
             guard let self = self else {
                 return
             }
+            let hasCall = !ids.isEmpty
             self.groupCallIndicatorView.isHidden = !hasCall
             if hasCall {
                 CallService.shared.beginPollingKrakenList(forConversationWith: conversationId)

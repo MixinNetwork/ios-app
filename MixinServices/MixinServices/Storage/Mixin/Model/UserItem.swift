@@ -15,12 +15,11 @@ public struct UserItem: BaseCodable {
     public var muteUntil: String? = nil
     public var appId: String? = nil
     public let createdAt: String?
+    public var isScam: Bool = false
     public let relationship: String
     
     public var role: String = ""
     public var appCreatorId: String? = nil
-    
-    public var isScam: Bool = false
     
     public enum CodingKeys: String, CodingTableKey {
         
@@ -39,9 +38,9 @@ public struct UserItem: BaseCodable {
         case appId = "app_id"
         case relationship
         case createdAt = "created_at"
+        case isScam = "is_scam"
         case appCreatorId
         case role
-        case isScam = "is_scam"
     }
     
     public var isMuted: Bool {
@@ -95,11 +94,11 @@ extension UserItem {
     }
     
     public static func createUser(from user: UserResponse) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appCreatorId: user.app?.creatorId)
+        return UserItem(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, isScam: user.isScam, relationship: user.relationship.rawValue, role: "", appCreatorId: user.app?.creatorId)
     }
     
     public static func createUser(from user: User) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName ?? "", biography: user.biography ?? "", identityNumber: user.identityNumber, avatarUrl: user.avatarUrl ?? "", phone: user.phone, isVerified: user.isVerified ?? false, muteUntil: user.muteUntil, appId: user.appId ?? "", createdAt: user.createdAt, relationship: user.relationship, role: "", appCreatorId: user.app?.creatorId)
+        return UserItem(userId: user.userId, fullName: user.fullName ?? "", biography: user.biography ?? "", identityNumber: user.identityNumber, avatarUrl: user.avatarUrl ?? "", phone: user.phone, isVerified: user.isVerified ?? false, muteUntil: user.muteUntil, appId: user.appId ?? "", createdAt: user.createdAt, isScam: user.isScam, relationship: user.relationship, role: "", appCreatorId: user.app?.creatorId)
     }
     
     public static func createUser(from account: Account) -> UserItem {

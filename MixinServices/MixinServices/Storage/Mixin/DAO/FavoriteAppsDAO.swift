@@ -5,7 +5,7 @@ public final class FavoriteAppsDAO {
     public static let shared = FavoriteAppsDAO()
     
     private static let queryUsers = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam
     FROM users u
     LEFT JOIN favorite_apps ON favorite_apps.app_id = u.app_id
     WHERE favorite_apps.user_id = ?

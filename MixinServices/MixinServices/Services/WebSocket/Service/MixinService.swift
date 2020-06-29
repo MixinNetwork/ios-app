@@ -84,7 +84,7 @@ public class MixinService {
         guard signalKeyMessages.count > 0 else {
             return
         }
-        let checksum = getCheckSum(conversationId: conversationId)
+        let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
         let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages, checksum: checksum)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let (success, retry) = deliverNoThrow(blazeMessage: blazeMessage)
@@ -113,16 +113,7 @@ public class MixinService {
             }
         } while true
     }
-
-    private func getCheckSum(conversationId: String) -> String {
-        let sessions = ParticipantSessionDAO.shared.getParticipantSessions(conversationId: conversationId)
-        return sessions.count == 0 ? "" : generateConversationChecksum(sessions: sessions)
-    }
-
-    private func generateConversationChecksum(sessions: [ParticipantSession]) -> String {
-        return sessions.map { $0.sessionId }.sorted().joined().md5()
-    }
-
+    
     internal func checkSignalSession(recipientId: String, sessionId: String? = nil) throws -> Bool {
         let deviceId = SignalProtocol.convertSessionIdToDeviceId(sessionId)
         if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
@@ -152,7 +143,7 @@ public class MixinService {
             return false
         }
         let signalKeyMessages = [TransferMessage(recipientId: recipientId, data: cipherText, sessionId: sessionId)]
-        let checksum = getCheckSum(conversationId: conversationId)
+        let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
         let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages, checksum: checksum)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let (success, retry) = deliverNoThrow(blazeMessage: blazeMessage)
@@ -253,7 +244,8 @@ public class MixinService {
     internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
-            blazeMessage.params?.conversationChecksum = getCheckSum(conversationId: conversationId)
+            let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
+            blazeMessage.params?.conversationChecksum = checksum
         }
         repeat {
             guard LoginManager.shared.isLoggedIn else {

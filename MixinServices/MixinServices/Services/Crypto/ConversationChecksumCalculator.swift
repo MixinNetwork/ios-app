@@ -3,12 +3,12 @@ import Foundation
 enum ConversationChecksumCalculator {
     
     static func checksum(conversationId: String) -> String {
-        ParticipantSessionDAO.shared
-            .getParticipantSessions(conversationId: conversationId)
-            .map(\.sessionId)
-            .sorted(by: <)
-            .joined()
-            .md5()
+        let sessions = ParticipantSessionDAO.shared.getParticipantSessions(conversationId: conversationId)
+        if sessions.isEmpty {
+            return ""
+        } else {
+            return sessions.map(\.sessionId).sorted().joined().md5()
+        }
     }
     
 }

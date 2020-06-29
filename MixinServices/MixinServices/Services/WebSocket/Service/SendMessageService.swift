@@ -63,9 +63,12 @@ public class SendMessageService: MixinService {
     
     @discardableResult
     public func send(krakenRequest request: KrakenRequest) -> BlazeMessageData? {
-        if let response = deliverKeys(blazeMessage: request.blazeMessage) {
-            return response.toBlazeMessageData()
-        } else {
+        do {
+            return try WebSocketService.shared.respondedMessage(for: request.blazeMessage).blazeMessage?.toBlazeMessageData()
+        } catch let error as APIError where error.code == 20140 {
+            syncConversation(conversationId: request.conversationId)
+            return send(krakenRequest: request)
+        } catch {
             return nil
         }
     }

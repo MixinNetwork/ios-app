@@ -323,6 +323,7 @@
 "chat_location_distance" = "距离%@";
 "chat_location_search_no_result" = "找不到“%@”\n换个名字试试吧";
 "chat_number_of_selection" = "选择了%@个消息";
+"chat_warning_scam" = "警告：此账号被大量用户举报，请谨防网络诈骗，注意个人财产安全";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -653,7 +654,8 @@
 "profile_clear_contact_chat_hint" = "清空与\"%@\"的聊天记录?";
 "profile_clear_group_chat_hint" = "清空\"%@\"的聊天记录?";
 "profile_block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
-"profile_report_hint" = "举报并屏蔽？你们的对话会被立即删除";
+"profile_report_hint" = "举报并屏蔽？";
+"profile_report_success" = "已举报";
 "profile_join_in" = "%@ 加入";
 "profile_my_shared_apps" = "分享的应用";
 "profile_share_app_hint" = "若要分享应用，请添加其为联系人";

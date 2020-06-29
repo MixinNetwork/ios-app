@@ -323,6 +323,7 @@
 "chat_location_distance" = "Distance: %@";
 "chat_location_search_no_result" = "There were no results for \"%@\"\nTry a new search";
 "chat_number_of_selection" = "%@ Selected";
+"chat_warning_scam" = "Warning: Many users reported this account as a scam. Please be careful, especially if it asks you for money";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";
@@ -652,7 +653,8 @@
 "profile_clear_contact_chat_hint" = "Clear chat with \"%@\"?";
 "profile_clear_group_chat_hint" = "Clear \"%@\" group chat?";
 "profile_block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
-"profile_report_hint" = "Report and block? This conversation will also be deleted";
+"profile_report_hint" = "Report and block?";
+"profile_report_success" = "User is reported";
 "profile_join_in" = "Joined in %@";
 "profile_my_shared_apps" = "My Shared Apps";
 "profile_share_app_hint" = "If you want to share an app, add it to your contacts first";

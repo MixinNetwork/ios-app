@@ -16,6 +16,7 @@ public struct User: BaseCodable {
     public var appId: String? = nil
     public let createdAt: String?
     public let relationship: String
+    public var isScam: Bool = false
     
     public var app: App? = nil
     
@@ -32,6 +33,7 @@ public struct User: BaseCodable {
         case appId = "app_id"
         case relationship
         case createdAt = "created_at"
+        case isScam = "is_scam"
         
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
         public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -54,7 +56,7 @@ public struct User: BaseCodable {
     }
     
     public static func createUser(from user: UserResponse) -> User {
-        return User(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, app: user.app)
+        return User(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, isScam: user.isScam, app: user.app)
     }
     
     public static func createUser(from account: Account) -> User {

@@ -13,6 +13,7 @@ public struct UserResponse: Codable {
     public let muteUntil: String?
     public let createdAt: String
     public let app: App?
+    public let isScam: Bool
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -26,6 +27,7 @@ public struct UserResponse: Codable {
         case muteUntil = "mute_until"
         case createdAt = "created_at"
         case app
+        case isScam = "is_scam"
     }
     
 }
@@ -58,7 +60,7 @@ public enum Relationship: String, Codable {
 public extension UserResponse {
     
     static func createUser(account: Account) -> UserResponse {
-        return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil)
+        return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil, isScam: false)
     }
     
 }

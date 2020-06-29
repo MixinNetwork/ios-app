@@ -5,7 +5,7 @@ public final class UserDAO {
     public static let shared = UserDAO()
     
     private static let sqlQueryColumns = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.creator_id as appCreatorId
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
@@ -15,7 +15,7 @@ public final class UserDAO {
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
     private static let sqlQueryAppUserInConversation = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam
     FROM participants p, apps a, users u
     WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id
     """
@@ -82,7 +82,7 @@ public final class UserDAO {
     
     public func getAppUsers() -> [User] {
         let sql = """
-            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at
+            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam
             FROM apps a, users u
             WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
             ORDER BY u.full_name ASC

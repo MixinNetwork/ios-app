@@ -216,11 +216,15 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-        if hasUnreadAnnouncement {
-            updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+        if dataSource.category == .group {
+            let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+            if hasUnreadAnnouncement {
+                updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+            } else {
+                updateAnnouncementBadge(announcement: nil)
+            }
         } else {
-            updateAnnouncementBadge(announcement: nil)
+            showScamAnnouncementIfNeeded()
         }
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
@@ -265,6 +269,10 @@ class ConversationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isAppearanceAnimating = false
+        if let user = self.ownerUser {
+            let job = RefreshUserJob(userIds: [user.userId])
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -393,7 +401,11 @@ class ConversationViewController: UIViewController {
     }
     
     @IBAction func dismissAnnouncementBadgeAction(_ sender: Any) {
-        AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
+        if dataSource.category == .group {
+            AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
+        } else if let user = self.ownerUser {
+            AppGroupUserDefaults.User.closeScamAnnouncementDate[user.userId] = Date()
+        }
         updateAnnouncementBadge(announcement: nil)
     }
     
@@ -519,7 +531,8 @@ class ConversationViewController: UIViewController {
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
                     DispatchQueue.main.async {
-                        hud.hide()
+                        hud.set(style: .notification, text: R.string.localizable.profile_report_success())
+                        hud.scheduleAutoHidden()
                         UIApplication.homeNavigationController?.backToHome()
                     }
                 case let .failure(error):
@@ -698,13 +711,15 @@ class ConversationViewController: UIViewController {
                 titleLabel.text = conversation.name
                 dataSource?.conversation.name = conversation.name
             }
-            dataSource?.conversation.announcement = conversation.announcement
-            let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-            let canShowAnnouncement = ScreenSize.current > .inch4 || !isShowingKeyboard
-            if hasUnreadAnnouncement && canShowAnnouncement {
-                updateAnnouncementBadge(announcement: conversation.announcement)
-            } else {
-                updateAnnouncementBadge(announcement: nil)
+            if let dataSource = dataSource, dataSource.category == .group {
+                dataSource.conversation.announcement = conversation.announcement
+                let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+                let canShowAnnouncement = ScreenSize.current > .inch4 || !isShowingKeyboard
+                if hasUnreadAnnouncement && canShowAnnouncement {
+                    updateAnnouncementBadge(announcement: conversation.announcement)
+                } else {
+                    updateAnnouncementBadge(announcement: nil)
+                }
             }
             hideLoading()
         case .startedUpdateConversation:
@@ -730,6 +745,7 @@ class ConversationViewController: UIViewController {
         hideLoading()
         dataSource?.ownerUser = ownerUser
         updateInvitationHintView()
+        showScamAnnouncementIfNeeded()
     }
     
     @objc func menuControllerDidShowMenu(_ notification: Notification) {
@@ -834,9 +850,15 @@ class ConversationViewController: UIViewController {
     
     @objc func keyboardWillHide(_ notification: Notification) {
         isShowingKeyboard = false
-        let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-        if ScreenSize.current <= .inch4 && hasUnreadAnnouncement {
-            updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+        if dataSource.category == .group {
+            let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
+            if ScreenSize.current <= .inch4 && hasUnreadAnnouncement {
+                updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
+            }
+        } else {
+            if ScreenSize.current <= .inch4 {
+                showScamAnnouncementIfNeeded()
+            }
         }
     }
     
@@ -938,9 +960,6 @@ class ConversationViewController: UIViewController {
     func openOpponentApp(_ app: App) {
         guard !conversationId.isEmpty else {
             return
-        }
-        if let appUser = ownerUser {
-            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appUser.userId]))
         }
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
@@ -1773,6 +1792,28 @@ extension ConversationViewController {
             for subview in announcementBadgeView.subviews {
                 subview.removeFromSuperview()
             }
+        }
+    }
+    
+    private func showScamAnnouncementIfNeeded() {
+        guard let user = self.ownerUser else {
+            return
+        }
+        guard user.isScam else {
+            updateAnnouncementBadge(announcement: nil)
+            return
+        }
+        let shouldShowAnnouncement: Bool
+        if let date = AppGroupUserDefaults.User.closeScamAnnouncementDate[user.userId] {
+            shouldShowAnnouncement = abs(date.timeIntervalSinceNow) > .oneDay
+        } else {
+            shouldShowAnnouncement = true
+        }
+        if shouldShowAnnouncement {
+            announcementBadgeContentView.iconView.image = R.image.ic_warning()
+            updateAnnouncementBadge(announcement: R.string.localizable.chat_warning_scam())
+        } else {
+            updateAnnouncementBadge(announcement: nil)
         }
     }
     

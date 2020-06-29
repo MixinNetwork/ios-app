@@ -3,6 +3,7 @@ import UIKit
 class AnnouncementBadgeContentView: UIView {
     
     @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var closeButton: UIButton!
     

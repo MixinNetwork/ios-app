@@ -2177,7 +2177,7 @@ extension ConversationViewController {
     
     private func requestGroupCallExistenceAndBeginPollingIfNeeded() {
         let conversationId = self.conversationId
-        CallService.shared.requestInCallUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+        CallService.shared.requestKrakenPeerUserIds(forConversationWith: conversationId) { [weak self] (ids) in
             guard let self = self else {
                 return
             }

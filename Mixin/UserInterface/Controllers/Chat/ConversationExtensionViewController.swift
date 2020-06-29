@@ -112,7 +112,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 conversationViewController?.callOwnerUserIfPresent()
             case .groupCall:
                 if let conversation = dataSource?.conversation {
-                    CallService.shared.requestInCallUserIds(forConversationWith: conversation.conversationId) { (ids) in
+                    CallService.shared.requestKrakenPeerUserIds(forConversationWith: conversation.conversationId) { (ids) in
                         if ids.isEmpty {
                             let picker = GroupCallMemberPickerViewController(conversation: conversation)
                             picker.appearance = .startNewCall

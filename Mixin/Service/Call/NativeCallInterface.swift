@@ -110,10 +110,10 @@ extension NativeCallInterface: CallInterface {
     
     func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
         if let call = call as? PeerToPeerCall {
-        reportIncomingCall(uuid: call.uuid,
-                           handleId: call.remoteUserId,
-                           localizedName: call.remoteUsername,
-                           completion: completion)
+            reportIncomingCall(uuid: call.uuid,
+                               handleId: call.remoteUserId,
+                               localizedName: call.remoteUsername,
+                               completion: completion)
         } else if let call = call as? GroupCall {
             reportIncomingCall(uuid: call.uuid,
                                handleId: call.conversationId,
@@ -168,9 +168,10 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        if service.hasPendingSDP(for: action.callUUID) {
-            unansweredIncomingCallUUIDs.remove(action.callUUID)
-            service.answerCall(uuid: action.callUUID) { (success) in
+        let uuid = action.callUUID
+        if service.hasPendingSDP(for: uuid) || service.hasPendingAnswerGroupCall(with: uuid) {
+            unansweredIncomingCallUUIDs.remove(uuid)
+            service.answerCall(uuid: uuid) { (success) in
                 if success {
                     self.pendingAnswerAction = action
                 } else {

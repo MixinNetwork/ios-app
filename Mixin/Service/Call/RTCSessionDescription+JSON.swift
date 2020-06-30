@@ -7,6 +7,12 @@ extension RTCSessionDescription {
         case sdp, type
     }
     
+    private static let validTypeValues: Set<String> = {
+        let types: [RTCSdpType] = [.offer, .answer, .prAnswer]
+        let values = types.map(RTCSessionDescription.string(for:))
+        return Set(values)
+    }()
+    
     var jsonString: String? {
         let json: [String : Any] = [CodingKeys.sdp.rawValue: sdp,
                                     CodingKeys.type.rawValue: RTCSessionDescription.string(for: type)]
@@ -22,6 +28,9 @@ extension RTCSessionDescription {
             return nil
         }
         guard let sdp = json[CodingKeys.sdp.rawValue] as? String, let typeValue = json[CodingKeys.type.rawValue] as? String else {
+            return nil
+        }
+        guard Self.validTypeValues.contains(typeValue) else {
             return nil
         }
         self.init(type: RTCSessionDescription.type(for: typeValue), sdp: sdp)

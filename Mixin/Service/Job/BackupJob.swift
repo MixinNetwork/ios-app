@@ -71,6 +71,7 @@ class BackupJob: AsynchronousJob {
             }
         }
 
+        needBackupDatabase = !(AppGroupUserDefaults.Account.hasUnfinishedBackup && AppGroupUserDefaults.Account.hasFinishedDatabaseBackup)
         AppGroupUserDefaults.Account.hasUnfinishedBackup = true
 
         guard NetworkManager.shared.isReachableOnWiFi else {
@@ -83,14 +84,12 @@ class BackupJob: AsynchronousJob {
         uploadedSize = 0
         waitingUploadFiles = SafeDictionary<String, Upload>()
         uploadingFiles = SafeDictionary<String, Upload>()
-        needBackupDatabase = !(AppGroupUserDefaults.Account.hasUnfinishedBackup && AppGroupUserDefaults.Account.hasFinishedDatabaseBackup)
         if needBackupDatabase {
             AppGroupUserDefaults.Account.hasFinishedDatabaseBackup = false
         }
 
         var localPaths = Set<String>()
         var cloudPaths = Set<String>()
-        let startTime = Date()
 
         do {
             try FileManager.default.createDirectory(at: backupUrl, withIntermediateDirectories: true, attributes: nil)
@@ -125,6 +124,12 @@ class BackupJob: AsynchronousJob {
         } catch {
             reporter.report(error: error)
             return false
+        }
+
+        for path in cloudPaths {
+            if !localPaths.contains(path) {
+                try? FileManager.default.removeItem(at: backupUrl.appendingPathComponent(path))
+            }
         }
 
         fileCount = localPaths.count

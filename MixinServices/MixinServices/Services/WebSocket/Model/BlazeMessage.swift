@@ -38,6 +38,14 @@ public enum BlazeMessageAction: String {
     case createKraken = "CREATE_KRAKEN"
 }
 
+extension BlazeMessage: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        "<BlazeMessage id: \(id), action: \(action), data: \(data ?? "(null)")>"
+    }
+    
+}
+
 extension BlazeMessage {
     
     init(data: BlazeMessageData, action: String, fromPush: Bool? = nil) {

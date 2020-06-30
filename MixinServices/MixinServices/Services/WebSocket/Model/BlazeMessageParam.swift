@@ -28,6 +28,10 @@ struct BlazeMessageParam: Codable {
     var recipientIds: [String]? = nil
     var candidate: String? = nil
     
+    var krakenDebugDescription: String {
+        "<KrakenParam category: \(category ?? "(null)"), trackId: \(trackId ?? "(null)"), jsep: \(jsep ?? "(null)"), recipientIds: \(recipientIds.debugDescription ?? "(null)"), candidate: \(candidate ?? "(null)")>"
+    }
+    
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case recipientId = "recipient_id"

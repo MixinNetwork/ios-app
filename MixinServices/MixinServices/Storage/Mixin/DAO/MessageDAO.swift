@@ -275,6 +275,10 @@ public final class MessageDAO {
     public func getMessage(messageId: String) -> Message? {
         return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId)
     }
+
+    public func getMessage(messageId: String, userId: String) -> Message? {
+        return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId && Message.Properties.userId == userId)
+    }
     
     public func firstUnreadMessage(conversationId: String) -> Message? {
         guard hasUnreadMessage(conversationId: conversationId) else {

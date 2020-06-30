@@ -53,6 +53,10 @@ public final class ParticipantDAO {
     public func getParticipants(conversationId: String) -> [UserItem] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipantUsers, values: [conversationId])
     }
+
+    public func getParticipent(conversationId: String, userId: String) -> Participant? {
+        return MixinDatabase.shared.getCodable(condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
+    }
     
     public func getAllParticipants() -> [Participant] {
         return MixinDatabase.shared.getCodables()

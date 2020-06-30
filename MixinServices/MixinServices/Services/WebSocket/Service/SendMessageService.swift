@@ -74,21 +74,28 @@ public class SendMessageService: MixinService {
     }
 
     public func resendMessages(conversationId: String, userId: String, sessionId: String, messageIds: [String]) {
+        guard let participent = ParticipantDAO.shared.getParticipent(conversationId: conversationId, userId: userId) else {
+            return
+        }
+
         var jobs = [Job]()
         var resendMessages = [ResendSessionMessage]()
         for messageId in messageIds {
             guard !ResendSessionMessageDAO.shared.isExist(messageId: messageId, userId: userId, sessionId: sessionId) else {
                 continue
             }
-
-            if let message = MessageDAO.shared.getMessage(messageId: messageId), message.category != MessageCategory.MESSAGE_RECALL.rawValue {
-                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId, sessionId: sessionId)
-                let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
-                jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), sessionId: sessionId, blazeMessage: blazeMessage))
-                resendMessages.append(ResendSessionMessage(messageId: messageId, userId: userId, sessionId: sessionId, status: 1))
-            } else {
+            guard let needResendMessage = MessageDAO.shared.getMessage(messageId: messageId, userId: currentAccountId), needResendMessage.category != MessageCategory.MESSAGE_RECALL.rawValue else {
                 resendMessages.append(ResendSessionMessage(messageId: messageId, userId: userId, sessionId: sessionId, status: 0))
+                continue
             }
+            guard needResendMessage.createdAt > participent.createdAt else {
+                continue
+            }
+
+            let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId, sessionId: sessionId)
+            let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
+            jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), sessionId: sessionId, blazeMessage: blazeMessage))
+            resendMessages.append(ResendSessionMessage(messageId: messageId, userId: userId, sessionId: sessionId, status: 1))
         }
 
         MixinDatabase.shared.transaction(callback: { (database) in

@@ -175,7 +175,7 @@ extension CallService {
     }
     
     func requestEndCall() {
-        dispatch {
+        queue.async {
             guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
                 return
             }
@@ -190,7 +190,7 @@ extension CallService {
     }
     
     func requestAnswerCall() {
-        dispatch {
+        queue.async {
             guard let uuid = self.pendingAnswerCalls.first?.key else {
                 return
             }
@@ -198,28 +198,18 @@ extension CallService {
         }
     }
     
-    func requestSetMute(_ muted: Bool) {
-        dispatch {
-            guard let uuid = self.activeCall?.uuid else {
-                return
-            }
-            self.callInterface.requestSetMute(uuid: uuid, muted: muted) { (error) in
-                if let error = error {
-                    reporter.report(error: error)
-                }
-            }
-        }
-    }
-    
     func requestStartGroupCall(conversation: ConversationItem, invitingUsers: [UserItem]) {
         let handle = CXHandle(type: .generic, value: conversation.conversationId)
         requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
             let connectedMembers = self.krakenPeerUserIds[conversation.conversationId]?.compactMap(UserDAO.shared.getUser(userId:)) ?? []
-            var connectingMembers = [UserItem]()
-            if let account = LoginManager.shared.account {
-                let user = UserItem.createUser(from: account)
-                connectingMembers.append(user)
-            }
+            let connectingMembers: [UserItem] = {
+                if let account = LoginManager.shared.account {
+                    let user = UserItem.createUser(from: account)
+                    return [user]
+                } else {
+                    return []
+                }
+            }()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: true,
                                  conversation: conversation,
@@ -227,13 +217,6 @@ extension CallService {
                                  connectingMembers: connectingMembers,
                                  invitingMembers: invitingUsers)
             return call
-        })
-    }
-    
-    func requestJoin(groupCall: GroupCall, conversation: ConversationItem) {
-        let handle = CXHandle(type: .generic, value: conversation.conversationId)
-        requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { _ in
-            groupCall
         })
     }
     
@@ -291,7 +274,6 @@ extension CallService {
         guard let max = self.viewController, let callWindow = self.window else {
             return
         }
-        
         self.isMinimized = minimized
         let duration: TimeInterval = 0.3
         if minimized {
@@ -377,6 +359,10 @@ extension CallService {
             if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
                 self.startPeerToPeerCall(call, completion: completion)
             } else if let call = self.activeCall as? GroupCall, call.uuid == uuid {
+                call.status = call.isOutgoing ? .outgoing : .incoming
+                DispatchQueue.main.sync {
+                    self.showCallingInterface(call: call)
+                }
                 self.startGroupCall(call, completion: completion)
             } else {
                 self.alert(error: .inconsistentCallStarted)
@@ -393,14 +379,13 @@ extension CallService {
                 self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
             } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall {
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
-                if let conversation = ConversationDAO.shared.getConversation(conversationId: call.conversationId) {
-                    self.ringtonePlayer.stop()
-                    call.status = .connecting
-                    DispatchQueue.main.sync {
-                        self.showCallingInterface(call: call)
-                    }
-                    self.requestJoin(groupCall: call, conversation: conversation)
+                self.activeCall = call
+                self.ringtonePlayer.stop()
+                call.status = .connecting
+                DispatchQueue.main.sync {
+                    self.showCallingInterface(call: call)
                 }
+                self.startGroupCall(call, completion: completion)
             }
         }
     }
@@ -440,6 +425,7 @@ extension CallService {
                                                 trackId: nil,
                                                 action: .end)
                         SendMessageService.shared.send(krakenRequest: end)
+                        self.krakenPeerUserIds[call.conversationId]?.removeAll(where: { $0 == myUserId })
                     }
                 }
             }
@@ -711,7 +697,7 @@ extension CallService {
                 let subscribing = KrakenRequest(conversationId: call.conversationId,
                                                 trackId: trackId,
                                                 action: .subscribe)
-                if let responseDataString = SendMessageService.shared.send(krakenRequest: subscribing)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) {
+                if let responseDataString = SendMessageService.shared.send(krakenRequest: subscribing)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson), sdp.type == .offer {
                     rtcClient.set(remoteSdp: sdp) { (error) in
                         func endCall(error: Error) {
                             self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
@@ -970,7 +956,7 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = false
+        usesCallKit = AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
@@ -1180,10 +1166,6 @@ extension CallService {
     }
     
     private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
-        call.status = call.isOutgoing ? .outgoing : .incoming
-        DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
-        }
         rtcClient.offer { result in
             switch result {
             case .failure(let error):
@@ -1198,7 +1180,9 @@ extension CallService {
                     completion?(false)
                     return
                 }
-                self.callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
+                if call.isOutgoing {
+                    self.callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
+                }
                 call.trackId = data.trackId
                 let msg = Message.createKrakenStatusMessage(category: .KRAKEN_PUBLISH,
                                                             conversationId: call.conversationId,
@@ -1218,7 +1202,35 @@ extension CallService {
                         let subscribing = KrakenRequest(conversationId: call.conversationId,
                                                         trackId: data.trackId,
                                                         action: .subscribe)
-                        SendMessageService.shared.send(krakenRequest: subscribing)
+                        if let response = SendMessageService.shared.send(krakenRequest: subscribing), let responseData = Data(base64Encoded: response.data), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson), sdp.type == .offer {
+                            self.rtcClient.set(remoteSdp: sdp) { (error) in
+                                func endCall(error: Error) {
+                                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+                                    self.alert(error: .setRemoteAnswer(error))
+                                    let end = KrakenRequest(conversationId: call.conversationId,
+                                                            trackId: data.trackId,
+                                                            action: .end)
+                                    SendMessageService.shared.send(krakenRequest: end)
+                                    self.close(uuid: call.uuid)
+                                }
+                                if let error = error {
+                                    endCall(error: error)
+                                } else {
+                                    self.rtcClient.answer { (result) in
+                                        switch result {
+                                        case .success(let sdpJson):
+                                            let answer = KrakenRequest(conversationId: call.conversationId,
+                                                                       trackId: data.trackId,
+                                                                       action: .answer(sdp: sdpJson))
+                                            SendMessageService.shared.send(krakenRequest: answer)
+                                            call.reportMemberWithIdDidConnected(response.userId)
+                                        case .failure(let error):
+                                            endCall(error: error)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         self.pendingTrickles.removeValue(forKey: call.uuid)?.forEach({ (candidate) in
                             let trickle = KrakenRequest(conversationId: call.conversationId,
                                                         trackId: data.trackId,
@@ -1227,9 +1239,9 @@ extension CallService {
                         })
                         call.reportMemberWithIdDidConnected(myUserId)
                         call.invitePendingUsers()
+                        completion?(true)
                     }
                 }
-                completion?(true)
             }
         }
     }

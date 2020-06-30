@@ -75,9 +75,13 @@ extension NativeCallInterface: CallInterface {
     func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion) {
         let action = CXStartCallAction(call: uuid, handle: handle)
         callController.requestTransaction(with: action) { (error) in
-            if error == nil, let call = self.service.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
+            if error == nil {
                 let update = CXCallUpdate()
-                update.localizedCallerName = call.remoteUsername
+                if let call = self.service.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
+                    update.localizedCallerName = call.remoteUsername
+                } else if let call = self.service.activeCall as? GroupCall, call.conversationId == handle.value {
+                    update.localizedCallerName = call.conversationName
+                }
                 update.supportsHolding = false
                 update.supportsGrouping = false
                 update.supportsUngrouping = false

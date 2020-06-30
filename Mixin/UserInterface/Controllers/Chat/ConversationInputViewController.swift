@@ -358,9 +358,8 @@ class ConversationInputViewController: UIViewController {
                     if let app = app {
                         self?.opponentApp = app
                         AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-                    } else {
-                        self?.loadFavoriteApps(ownerUser: ownerUser)
                     }
+                    self?.loadFavoriteApps(ownerUser: ownerUser)
                     self?.reloadFixedExtensions()
                 }
             }

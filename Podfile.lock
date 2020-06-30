@@ -109,7 +109,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.5.1):
     - GoogleUtilities/Logger
-  - GoogleWebRTC (1.1.29400)
   - GTMSessionFetcher/Core (1.3.1)
   - GzipSwift (5.1.1)
   - Highlightr (2.1.0)
@@ -218,7 +217,6 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Crashlytics
   - Firebase/Performance
-  - GoogleWebRTC
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/wuyuehyang/libsignal-protocol-c.git`)
   - MixinServices (from `./MixinServices`)
@@ -256,7 +254,6 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleToolboxForMac
     - GoogleUtilities
-    - GoogleWebRTC
     - GTMSessionFetcher
     - GzipSwift
     - libcmark_gfm
@@ -343,7 +340,6 @@ SPEC CHECKSUMS:
   GoogleDataTransportCCTSupport: f880d70972efa2ed1be4e9173a0f4c5f3dc2d176
   GoogleToolboxForMac: 800648f8b3127618c1b59c7f97684427630c5ea3
   GoogleUtilities: 06eb53bb579efe7099152735900dd04bf09e7275
-  GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
@@ -375,6 +371,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 47c119c77449f7510ef04c63ac3b06d9eaaac128
+PODFILE CHECKSUM: 0621d4baf00bd5502355e1fab92cbbdf5e660716
 
 COCOAPODS: 1.9.3

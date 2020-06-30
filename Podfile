@@ -23,7 +23,6 @@ target 'Mixin' do
   pod 'SnapKit'
   pod 'PhoneNumberKit'
   pod 'RSKImageCropper'
-  pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'RDHCollectionViewGridLayout'
   pod 'R.swift'

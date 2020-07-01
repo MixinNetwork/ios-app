@@ -819,14 +819,7 @@ extension CallService {
 
 // MARK: - WebRTCClientDelegate
 extension CallService: WebRTCClientDelegate {
-    func getSenderPublicKey(userId: String, sessionId: String) -> Data? {
-        if let call = self.activeCall as? GroupCall {
-            let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: userId, sessionId: sessionId)
-            return frameKey?.dropFirst()
-        }
-        return nil
-    }
-
+    
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
         queue.async {
             if let call = self.activeCall as? PeerToPeerCall, let content = [candidate].jsonString {
@@ -875,6 +868,14 @@ extension CallService: WebRTCClientDelegate {
         dispatch {
             self.failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
         }
+    }
+    
+    func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
+        if let call = self.activeCall as? GroupCall {
+            let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: userId, sessionId: sessionId)
+            return frameKey?.dropFirst()
+        }
+        return nil
     }
     
 }

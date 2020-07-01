@@ -6,7 +6,7 @@ protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidFailed(_ client: WebRTCClient)
-    func getSenderPublicKey(userId: String, sessionId: String) -> Data?
+    func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
 }
 
 class WebRTCClient: NSObject {
@@ -143,7 +143,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             guard userSession[0] != myUserId else {
                 continue
             }
-            let frameKey = self.delegate?.getSenderPublicKey(userId: userSession[0], sessionId: userSession[1])
+            let frameKey = delegate?.webRTCClient(self,
+                                                  senderPublicKeyForUserWith: userSession[0],
+                                                  sessionId: userSession[1])
             if let frameKey = frameKey {
                 rtpReceiver.setFrameDecryptorKey(frameKey)
             }

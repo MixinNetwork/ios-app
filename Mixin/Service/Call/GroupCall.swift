@@ -11,6 +11,10 @@ class GroupCall: Call {
     
     private(set) var members: [UserItem]
     
+    override var debugDescription: String {
+        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), inviterUserId: \(inviterUserId ?? "(null)"), members: \(members.map(\.fullName).debugDescription), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+    }
+    
     var trackId: String?
     var inviterUserId: String?
     

@@ -49,6 +49,7 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     func reportMemberWithIdDidDisconnected(_ id: String) {
+        invitingMemberUserIds.remove(id)
         if let item = members.firstIndex(where: { $0.userId == id }) {
             let indexPath = IndexPath(item: item, section: 0)
             members.remove(at: item)

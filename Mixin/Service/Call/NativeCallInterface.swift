@@ -75,6 +75,7 @@ extension NativeCallInterface: CallInterface {
     func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion) {
         let action = CXStartCallAction(call: uuid, handle: handle)
         callController.requestTransaction(with: action) { (error) in
+            completion(error)
             if error == nil {
                 let update = CXCallUpdate()
                 if let call = self.service.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
@@ -89,7 +90,6 @@ extension NativeCallInterface: CallInterface {
                 update.hasVideo = false
                 self.provider.reportCall(with: uuid, updated: update)
             }
-            completion(error)
         }
     }
     

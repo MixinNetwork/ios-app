@@ -41,7 +41,9 @@ public enum BlazeMessageAction: String {
 extension BlazeMessage: CustomDebugStringConvertible {
     
     public var debugDescription: String {
-        "<BlazeMessage id: \(id), action: \(action), data: \(data ?? "(null)")>"
+        "<BlazeMessage id: \(id), action: \(action)>\n"
+            + "data: \(data ?? "(null)")\n"
+            + "param: \(params?.krakenDebugDescription ?? "(null)")\n"
     }
     
 }
@@ -147,8 +149,8 @@ extension BlazeMessage: Decodable {
                 case peers
             }
             let peersContainer = try container.nestedContainer(keyedBy: PeersCodingKeys.self, forKey: .data)
-            let peers = try peersContainer.decodeIfPresent([KrakenPeer].self, forKey: .peers)
-            data = peers != nil ? String(data: try JSONEncoder.default.encode(peers), encoding: .utf8) : nil
+            let peers = try peersContainer.decodeIfPresent([KrakenPeer].self, forKey: .peers) ?? []
+            data = String(data: try JSONEncoder.default.encode(peers), encoding: .utf8)
         default:
             data = nil
         }

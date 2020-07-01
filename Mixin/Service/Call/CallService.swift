@@ -51,6 +51,7 @@ class CallService: NSObject {
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
+    private let isMainlandChina = false
     
     private lazy var rtcClient = WebRTCClient(delegateQueue: queue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
@@ -456,10 +457,8 @@ extension CallService: CallMessageCoordinator {
                 self.handlePublishing(data: data)
             case .KRAKEN_INVITE:
                 self.handleInvitation(data: data)
-            case .KRAKEN_END:
-                self.handleKrakenEnd(data: data)
-            case .KRAKEN_DECLINE:
-                self.handleKrakenDecline(data: data)
+            case .KRAKEN_END, .KRAKEN_DECLINE:
+                self.handleKrakenDisconnect(data: data)
             case .KRAKEN_CANCEL:
                 self.handleKrakenCancel(data: data)
             default:
@@ -732,19 +731,12 @@ extension CallService {
         }
     }
     
-    private func handleKrakenEnd(data: BlazeMessageData) {
+    private func handleKrakenDisconnect(data: BlazeMessageData) {
         membersManager.removeUser(with: data.userId,
                                   fromConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall {
             call.reportMemberWithIdDidDisconnected(data.userId)
         }
-    }
-    
-    private func handleKrakenDecline(data: BlazeMessageData) {
-        guard let call = activeCall as? GroupCall else {
-            return
-        }
-        call.reportMemberWithIdDidDisconnected(data.userId)
     }
     
     private func handleKrakenCancel(data: BlazeMessageData) {
@@ -911,7 +903,7 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = false
+        usesCallKit = !isMainlandChina && AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {

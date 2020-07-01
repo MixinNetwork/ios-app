@@ -810,11 +810,13 @@ extension CallService: WebRTCClientDelegate {
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
-        if let call = self.activeCall as? GroupCall {
-            let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: userId, sessionId: sessionId)
-            return frameKey?.dropFirst()
+        guard let call = self.activeCall as? GroupCall else {
+            return nil
         }
-        return nil
+        let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId,
+                                                                userId: userId,
+                                                                sessionId: sessionId)
+        return frameKey?.dropFirst()
     }
     
 }
@@ -872,25 +874,26 @@ extension CallService: PKPushRegistryDelegate {
     
 }
 
-// MARK: - Private works
+// MARK: - Workers
 extension CallService {
     
     @objc private func unansweredTimeout() {
-        if let call = activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
-            dismissCallingInterface()
-            rtcClient.close()
-            isMuted = false
-            dispatch {
-                self.ringtonePlayer.stop()
-                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                      category: .WEBRTC_AUDIO_CANCEL,
-                                                      status: .SENDING,
-                                                      quoteMessageId: call.uuidString)
-                SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
-                self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
-                self.activeCall = nil
-                self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
-            }
+        guard let call = activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer else {
+            return
+        }
+        dismissCallingInterface()
+        rtcClient.close()
+        isMuted = false
+        dispatch {
+            self.ringtonePlayer.stop()
+            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                  category: .WEBRTC_AUDIO_CANCEL,
+                                                  status: .SENDING,
+                                                  quoteMessageId: call.uuidString)
+            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
+            self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
+            self.activeCall = nil
+            self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
         }
     }
     
@@ -904,39 +907,6 @@ extension CallService {
     
     private func updateCallKitAvailability() {
         usesCallKit = !isMainlandChina && AVAudioSession.sharedInstance().recordPermission == .granted
-    }
-    
-    private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
-        if let call = activeCall as? PeerToPeerCall {
-            if sendFailedMessageToRemote {
-                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                      category: .WEBRTC_AUDIO_FAILED,
-                                                      status: .SENDING,
-                                                      quoteMessageId: call.uuidString)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: call.remoteUser,
-                                                      isGroupMessage: false)
-            }
-            let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                            conversationId: call.conversationId,
-                                                            category: .WEBRTC_AUDIO_FAILED,
-                                                            status: .DELIVERED)
-            MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
-            close(uuid: call.uuid)
-        } else if let call = activeCall as? GroupCall {
-            if sendFailedMessageToRemote {
-                let request = KrakenRequest(conversationId: call.conversationId,
-                                            trackId: call.trackId,
-                                            action: .end)
-                SendMessageService.shared.send(krakenRequest: request)
-            }
-            let msg = Message.createKrakenStatusMessage(category: .KRAKEN_END,
-                                                        conversationId: call.conversationId,
-                                                        userId: "")
-            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-            close(uuid: call.uuid)
-        }
-        reporter.report(error: error)
     }
     
     private func updateAudioSessionConfiguration() {
@@ -995,6 +965,44 @@ extension CallService {
         }
         let duration = max(10, min(29, UIApplication.shared.backgroundTimeRemaining - 1))
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
+    }
+    
+}
+
+// MARK: - Calling Related Workers
+extension CallService {
+    
+    private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
+        if let call = activeCall as? PeerToPeerCall {
+            if sendFailedMessageToRemote {
+                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                      category: .WEBRTC_AUDIO_FAILED,
+                                                      status: .SENDING,
+                                                      quoteMessageId: call.uuidString)
+                SendMessageService.shared.sendMessage(message: msg,
+                                                      ownerUser: call.remoteUser,
+                                                      isGroupMessage: false)
+            }
+            let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                            conversationId: call.conversationId,
+                                                            category: .WEBRTC_AUDIO_FAILED,
+                                                            status: .DELIVERED)
+            MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
+            close(uuid: call.uuid)
+        } else if let call = activeCall as? GroupCall {
+            if sendFailedMessageToRemote {
+                let request = KrakenRequest(conversationId: call.conversationId,
+                                            trackId: call.trackId,
+                                            action: .end)
+                SendMessageService.shared.send(krakenRequest: request)
+            }
+            let msg = Message.createKrakenStatusMessage(category: .KRAKEN_END,
+                                                        conversationId: call.conversationId,
+                                                        userId: "")
+            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            close(uuid: call.uuid)
+        }
+        reporter.report(error: error)
     }
     
     private func requestStartCall(handle: CXHandle, playOutgoingRingtone: Bool, makeCall: @escaping (UUID) -> Call) {

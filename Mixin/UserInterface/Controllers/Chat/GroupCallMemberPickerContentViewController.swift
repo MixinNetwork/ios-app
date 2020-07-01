@@ -23,7 +23,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
                 image = R.image.call.ic_minimized_call()
                 setCollectionViewHidden(true, animated: false)
             } else {
-                image = R.image.ic_checkmark()
+                image = R.image.call.ic_invite_confirm()
                 setCollectionViewHidden(false, animated: false)
             }
             confirmButton.setImage(image, for: .normal)

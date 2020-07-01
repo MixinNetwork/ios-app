@@ -3,8 +3,8 @@ import MixinServices
 
 class GroupCallMemberDataSource: NSObject {
     
-    private(set) var connected: [UserItem]
-    private(set) var connecting: [UserItem]
+    private(set) var members: [UserItem]
+    private(set) var invitingMemberUserIds: Set<String>
     
     weak var collectionView: UICollectionView? {
         didSet {
@@ -16,67 +16,44 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
-    var allMembers: [UserItem] {
-        memberGroups.flatMap({ $0 })
-    }
-    
-    private var memberGroups: [[UserItem]] {
-        [connected, connecting]
-    }
-    
-    init(connected: [UserItem], connecting: [UserItem]) {
-        self.connected = connected
-        self.connecting = connecting
+    init(members: [UserItem], invitingMemberUserIds: Set<String>) {
+        self.members = members
+        self.invitingMemberUserIds = invitingMemberUserIds
         super.init()
     }
     
-    func reportMembersStartedConnecting(_ users: [UserItem]) {
-        guard let collectionView = collectionView else {
-            return
+    func reportStartInviting(_ members: [UserItem]) {
+        let filtered = members.filter { (user) -> Bool in
+            !members.contains(where: { $0.userId == user.userId })
         }
-        let filtered = users.filter { (user) -> Bool in
-            !connecting.contains(where: { $0.userId == user.userId })
+        for user in filtered {
+            // TODO: Update corresponding cell if existed
+            invitingMemberUserIds.insert(user.userId)
         }
-        let indexPaths = (connecting.count..<(connecting.count + filtered.count))
+        let indexPaths = (self.members.count..<(self.members.count + filtered.count))
             .map({ IndexPath(item: $0, section: 1) })
-        connecting.append(contentsOf: filtered)
-        collectionView.insertItems(at: indexPaths)
+        self.members.append(contentsOf: filtered)
+        collectionView?.insertItems(at: indexPaths)
     }
     
-    func reportMemberDidConnected(_ user: UserItem) {
-        guard let collectionView = collectionView else {
-            return
+    func reportMemberDidConnected(_ member: UserItem) {
+        invitingMemberUserIds.remove(member.userId)
+        if let item = members.firstIndex(where: { $0.userId == member.userId }) {
+            let indexPath = IndexPath(item: item, section: 0)
+            collectionView?.reloadItems(at: [indexPath])
+        } else {
+            let indexPath = IndexPath(item: members.count, section: 0)
+            members.append(member)
+            collectionView?.insertItems(at: [indexPath])
         }
-        collectionView.performBatchUpdates({
-            if !connected.contains(where: { $0.userId == user.userId }) {
-                let indexPath = IndexPath(item: self.connected.count, section: 0)
-                self.connected.append(user)
-                collectionView.insertItems(at: [indexPath])
-            }
-            if let index = self.connecting.firstIndex(where: { $0.userId == user.userId }) {
-                let indexPath = IndexPath(item: index, section: 1)
-                self.connecting.remove(at: index)
-                collectionView.deleteItems(at: [indexPath])
-            }
-        }, completion: nil)
     }
     
     func reportMemberWithIdDidDisconnected(_ id: String) {
-        guard let collectionView = collectionView else {
-            return
+        if let item = members.firstIndex(where: { $0.userId == id }) {
+            let indexPath = IndexPath(item: item, section: 0)
+            members.remove(at: item)
+            collectionView?.deleteItems(at: [indexPath])
         }
-        collectionView.performBatchUpdates({
-            if let index = self.connected.firstIndex(where: { $0.userId == id }) {
-                let indexPath = IndexPath(item: index, section: 0)
-                self.connected.remove(at: index)
-                collectionView.deleteItems(at: [indexPath])
-            }
-            if let index = self.connecting.firstIndex(where: { $0.userId == id }) {
-                let indexPath = IndexPath(item: index, section: 1)
-                self.connecting.remove(at: index)
-                collectionView.deleteItems(at: [indexPath])
-            }
-        }, completion: nil)
     }
     
 }
@@ -84,19 +61,19 @@ class GroupCallMemberDataSource: NSObject {
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        memberGroups[section].count
+        members.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
-        let member = memberGroups[indexPath.section][indexPath.row]
+        let member = members[indexPath.item]
         cell.avatarImageView.setImage(with: member)
-        cell.connectingView.isHidden = indexPath.section == 0
+        cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
         return cell
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        memberGroups.count
+        1
     }
     
 }

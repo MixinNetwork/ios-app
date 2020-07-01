@@ -24,7 +24,6 @@ target 'Mixin' do
   pod 'PhoneNumberKit'
   pod 'RSKImageCropper'
   pod 'AlignedCollectionViewFlowLayout'
-  pod 'RDHCollectionViewGridLayout'
   pod 'R.swift'
   pod 'Highlightr', :git => 'https://github.com/wuyuehyang/Highlightr.git', :branch => 'master'
   pod 'Texture', :git => 'https://github.com/TextureGroup/Texture.git', :branch => 'master'

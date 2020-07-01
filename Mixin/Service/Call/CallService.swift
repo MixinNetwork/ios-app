@@ -43,6 +43,7 @@ class CallService: NSObject {
     }
     
     private(set) lazy var ringtonePlayer = RingtonePlayer()
+    private(set) lazy var membersManager = GroupCallMembersManager(workingQueue: queue)
     
     private(set) var activeCall: Call? // Access from CallService.queue
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
@@ -63,8 +64,6 @@ class CallService: NSObject {
     private var pendingCandidates = [UUID: [RTCIceCandidate]]()
     private var pendingTrickles = [UUID: [String]]() // Key is Call's UUID, Value is array of candidate string
     private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
-    private var krakenPeerUserIds = [String: [String]]() // Key is conversation ID, value is an array of user IDs
-    private var krakenListPollingTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
     
     private var window: CallWindow?
     private var viewController: CallViewController?
@@ -139,15 +138,6 @@ class CallService: NSObject {
         }
     }
     
-    func requestKrakenPeerUserIds(forConversationWith id: String, completion: @escaping ([String]) -> Void) {
-        queue.async {
-            let ids = self.krakenPeerUserIds[id] ?? []
-            DispatchQueue.main.async {
-                completion(ids)
-            }
-        }
-    }
-    
     func alert(error: CallError) {
         let content = error.alertContent
         DispatchQueue.main.async {
@@ -198,24 +188,19 @@ extension CallService {
         }
     }
     
-    func requestStartGroupCall(conversation: ConversationItem, invitingUsers: [UserItem]) {
+    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
         let handle = CXHandle(type: .generic, value: conversation.conversationId)
         requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
-            let connectedMembers = self.krakenPeerUserIds[conversation.conversationId]?.compactMap(UserDAO.shared.getUser(userId:)) ?? []
-            let connectingMembers: [UserItem] = {
-                if let account = LoginManager.shared.account {
-                    let user = UserItem.createUser(from: account)
-                    return [user]
-                } else {
-                    return []
-                }
-            }()
+            var members = self.membersManager.members(inConversationWith: conversation.conversationId)
+            if let account = LoginManager.shared.account {
+                let me = UserItem.createUser(from: account)
+                members.append(me)
+            }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: true,
                                  conversation: conversation,
-                                 connectedMembers: connectedMembers,
-                                 connectingMembers: connectingMembers,
-                                 invitingMembers: invitingUsers)
+                                 members: members,
+                                 invitingMembers: invitingMembers)
             return call
         })
     }
@@ -317,34 +302,6 @@ extension CallService {
     
 }
 
-// MARK: - Kraken List Polling Interface
-extension CallService {
-    
-    func beginPollingKrakenList(forConversationWith id: String) {
-        endPollingKrakenList(forConversationWith: id)
-        let timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: { [weak self] (_) in
-            guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
-                return
-            }
-            guard let self = self else {
-                return
-            }
-            self.queue.async {
-                self.krakenPeerUserIds[id] = peers.map(\.userId)
-            }
-        })
-        krakenListPollingTimers.setObject(timer, forKey: id as NSString)
-    }
-    
-    func endPollingKrakenList(forConversationWith id: String) {
-        guard let timer = krakenListPollingTimers.object(forKey: id as NSString) else {
-            return
-        }
-        timer.invalidate()
-    }
-    
-}
-
 // MARK: - Callback
 extension CallService {
     
@@ -425,7 +382,8 @@ extension CallService {
                                                 trackId: nil,
                                                 action: .end)
                         SendMessageService.shared.send(krakenRequest: end)
-                        self.krakenPeerUserIds[call.conversationId]?.removeAll(where: { $0 == myUserId })
+                        self.membersManager.removeUser(with: myUserId,
+                                                       fromConversationWith: call.conversationId)
                     }
                 }
             }
@@ -690,47 +648,48 @@ extension CallService {
     
     private func handlePublishing(data: BlazeMessageData) {
         let publishingUserId = data.userId
-        updateInGroupCallUserIds(forConversationWith: data.conversationId)
-        if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
-            call.reportMemberWithIdStartedConnecting(data.userId)
-            if let trackId = call.trackId {
-                let subscribing = KrakenRequest(conversationId: call.conversationId,
-                                                trackId: trackId,
-                                                action: .subscribe)
-                if let responseDataString = SendMessageService.shared.send(krakenRequest: subscribing)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson), sdp.type == .offer {
-                    rtcClient.set(remoteSdp: sdp) { (error) in
-                        func endCall(error: Error) {
-                            self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-                            self.alert(error: .setRemoteAnswer(error))
-                            let end = KrakenRequest(conversationId: call.conversationId,
-                                                    trackId: data.trackId,
-                                                    action: .end)
-                            SendMessageService.shared.send(krakenRequest: end)
-                            self.close(uuid: call.uuid)
-                        }
-                        if let error = error {
-                            endCall(error: error)
-                        } else {
-                            self.rtcClient.answer { (result) in
-                                switch result {
-                                case .success(let sdpJson):
-                                    let answer = KrakenRequest(conversationId: call.conversationId,
-                                                               trackId: trackId,
-                                                               action: .answer(sdp: sdpJson))
-                                    SendMessageService.shared.send(krakenRequest: answer)
-                                    call.reportMemberWithIdDidConnected(publishingUserId)
-                                case .failure(let error):
-                                    endCall(error: error)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
+        membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
+        guard let call = activeCall as? GroupCall, call.conversationId == data.conversationId else {
             NotificationCenter.default.postOnMain(name: Self.didReceivePublishingWithoutActiveGroupCall,
                                                   object: self,
                                                   userInfo: [Self.conversationIdUserInfoKey: data.conversationId])
+            return
+        }
+        guard let trackId = call.trackId else {
+            return
+        }
+        let subscribing = KrakenRequest(conversationId: call.conversationId,
+                                        trackId: trackId,
+                                        action: .subscribe)
+        guard let responseDataString = SendMessageService.shared.send(krakenRequest: subscribing)?.data, let responseData = Data(base64Encoded: responseDataString), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson), sdp.type == .offer else {
+            return
+        }
+        rtcClient.set(remoteSdp: sdp) { (error) in
+            func endCall(error: Error) {
+                self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+                self.alert(error: .setRemoteAnswer(error))
+                let end = KrakenRequest(conversationId: call.conversationId,
+                                        trackId: data.trackId,
+                                        action: .end)
+                SendMessageService.shared.send(krakenRequest: end)
+                self.close(uuid: call.uuid)
+            }
+            if let error = error {
+                endCall(error: error)
+            } else {
+                self.rtcClient.answer { (result) in
+                    switch result {
+                    case .success(let sdpJson):
+                        let answer = KrakenRequest(conversationId: call.conversationId,
+                                                   trackId: trackId,
+                                                   action: .answer(sdp: sdpJson))
+                        SendMessageService.shared.send(krakenRequest: answer)
+                        call.reportMemberWithIdDidConnected(publishingUserId)
+                    case .failure(let error):
+                        endCall(error: error)
+                    }
+                }
+            }
         }
     }
     
@@ -744,27 +703,15 @@ extension CallService {
                 return
             }
             AudioManager.shared.pause()
-            updateInGroupCallUserIds(forConversationWith: data.conversationId)
-            let connectedMembers: [UserItem] = {
-                if let userIds = krakenPeerUserIds[data.conversationId] {
-                    return userIds.compactMap(UserDAO.shared.getUser(userId:))
-                } else {
-                    return []
-                }
-            }()
-            let connectingMembers: [UserItem] = {
-                if let account = LoginManager.shared.account {
-                    let user = UserItem.createUser(from: account)
-                    return [user]
-                } else {
-                    return []
-                }
-            }()
+            var members = membersManager.members(inConversationWith: data.conversationId)
+            if let account = LoginManager.shared.account {
+                let me = UserItem.createUser(from: account)
+                members.append(me)
+            }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
-                                 connectedMembers: connectedMembers,
-                                 connectingMembers: connectingMembers,
+                                 members: members,
                                  invitingMembers: [])
             call.inviterUserId = data.userId
             pendingAnswerCalls[uuid] = call
@@ -787,7 +734,8 @@ extension CallService {
     }
     
     private func handleKrakenEnd(data: BlazeMessageData) {
-        krakenPeerUserIds[data.conversationId]?.removeAll(where: { $0 == data.userId })
+        membersManager.removeUser(with: data.userId,
+                                  fromConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall {
             call.reportMemberWithIdDidDisconnected(data.userId)
         }
@@ -964,7 +912,7 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = AVAudioSession.sharedInstance().recordPermission == .granted
+        usesCallKit = false
     }
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
@@ -1232,7 +1180,7 @@ extension CallService {
                                                                        trackId: data.trackId,
                                                                        action: .answer(sdp: sdpJson))
                                             SendMessageService.shared.send(krakenRequest: answer)
-                                            call.reportMemberWithIdDidConnected(response.userId)
+                                            call.reportMemberWithIdDidConnected(myUserId)
                                         case .failure(let error):
                                             endCall(error: error)
                                         }
@@ -1246,20 +1194,12 @@ extension CallService {
                                                         action: .trickle(candidate: candidate))
                             SendMessageService.shared.send(krakenRequest: trickle)
                         })
-                        call.reportMemberWithIdDidConnected(myUserId)
                         call.invitePendingUsers()
                         completion?(true)
                     }
                 }
             }
         }
-    }
-    
-    private func updateInGroupCallUserIds(forConversationWith id: String) {
-        guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
-            return
-        }
-        krakenPeerUserIds[id] = peers.map(\.userId)
     }
     
 }

@@ -9,27 +9,27 @@ class GroupCall: Call {
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
-    private(set) var connectedMembers: [UserItem]
-    private(set) var connectingMembers: [UserItem]
+    private(set) var members: [UserItem]
     
     var trackId: String?
     var inviterUserId: String?
     
     // invite after group call is connected
-    private var pendingInvitingUsers: [UserItem]?
+    private var pendingInvitingMembers: [UserItem]?
     
     // Key is user ID
     private var invitationTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
     
-    init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, connectedMembers: [UserItem], connectingMembers: [UserItem], invitingMembers: [UserItem]) {
+    init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem]) {
         self.conversation = conversation
         self.conversationId = conversation.conversationId
         self.conversationName = conversation.getConversationName()
-        self.connectedMembers = connectedMembers
-        self.connectingMembers = connectingMembers
-        self.membersDataSource = GroupCallMemberDataSource(connected: connectedMembers,
-                                                           connecting: connectingMembers + invitingMembers)
-        self.pendingInvitingUsers = invitingMembers
+        let allMembers = members + invitingMembers
+        self.members = allMembers
+        let invitingMemberUserIds = Set(invitingMembers.map(\.userId))
+        self.membersDataSource = GroupCallMemberDataSource(members: allMembers,
+                                                           invitingMemberUserIds: invitingMemberUserIds)
+        self.pendingInvitingMembers = invitingMembers
         super.init(uuid: uuid, isOutgoing: isOutgoing)
     }
     
@@ -46,25 +46,67 @@ class GroupCall: Call {
         }
     }
     
-    func invite(users: [UserItem]) {
-        guard let trackId = trackId else {
-            assertionFailure()
-            return
-        }
-        let filtered = users.filter { (user) -> Bool in
-            !connectedMembers.contains(where: { user.userId == $0.userId })
-                && !connectingMembers.contains(where: { user.userId == $0.userId })
+    func invite(members: [UserItem]) {
+        let filtered = members.filter { (member) -> Bool in
+            !self.members.contains(where: { member.userId == $0.userId })
         }
         guard !filtered.isEmpty else {
             return
         }
+        self.members.append(contentsOf: filtered)
+        inviteWithoutFiltering(members: filtered)
+    }
+    
+    func invitePendingUsers() {
+        guard let members = pendingInvitingMembers else {
+            return
+        }
+        pendingInvitingMembers = nil
+        inviteWithoutFiltering(members: members)
+    }
+    
+    func reportMemberWithIdDidConnected(_ id: String) {
+        if let timer = invitationTimers.object(forKey: id as NSString) {
+            timer.invalidate()
+        }
+        guard let member = UserDAO.shared.getUser(userId: id) else {
+            return
+        }
+        if !members.contains(where: { $0.userId == id }) {
+            members.append(member)
+        }
+        DispatchQueue.main.async {
+            self.membersDataSource.reportMemberDidConnected(member)
+        }
+    }
+    
+    func reportMemberWithIdDidDisconnected(_ id: String) {
+        if let timer = invitationTimers.object(forKey: id as NSString) {
+            timer.invalidate()
+        }
+        if let index = members.firstIndex(where: { $0.userId == id }) {
+            members.remove(at: index)
+        }
+        DispatchQueue.main.async {
+            self.membersDataSource.reportMemberWithIdDidDisconnected(id)
+        }
+    }
+    
+    private func inviteWithoutFiltering(members: [UserItem]) {
+        guard let trackId = trackId else {
+            assertionFailure()
+            return
+        }
+        DispatchQueue.main.async {
+            self.membersDataSource.reportStartInviting(members)
+        }
         let conversationId = self.conversationId
-        let recipients = filtered.map(\.userId)
+        let userIds = members.map(\.userId)
         let invitation = KrakenRequest(conversationId: conversationId,
                                        trackId: trackId,
-                                       action: .invite(recipients: recipients))
+                                       action: .invite(recipients: userIds))
         SendMessageService.shared.send(krakenRequest: invitation) // TODO: Some of the recipients may fail?
-        for id in recipients {
+        for id in userIds {
             let key = id as NSString
             if let timer = invitationTimers.object(forKey: id as NSString) {
                 timer.invalidate()
@@ -76,7 +118,7 @@ class GroupCall: Call {
                                                action: .cancel(recipientId: id))
                     SendMessageService.shared.send(krakenRequest: cancel)
                     if let self = self {
-                        self.connectingMembers.removeAll(where: { $0.userId == id })
+                        self.members.removeAll(where: { $0.userId == id })
                         DispatchQueue.main.async {
                             self.membersDataSource.reportMemberWithIdDidDisconnected(id)
                         }
@@ -85,67 +127,6 @@ class GroupCall: Call {
             }
             invitationTimers.setObject(timer, forKey: key)
             RunLoop.main.add(timer, forMode: .common)
-        }
-        connectingMembers.append(contentsOf: filtered)
-        DispatchQueue.main.async {
-            self.membersDataSource.reportMembersStartedConnecting(filtered)
-        }
-    }
-    
-    func invitePendingUsers() {
-        guard let users = pendingInvitingUsers else {
-            return
-        }
-        pendingInvitingUsers = nil
-        invite(users: users)
-    }
-    
-    func reportMemberWithIdStartedConnecting(_ id: String) {
-        if let timer = invitationTimers.object(forKey: id as NSString) {
-            timer.invalidate()
-        }
-        guard let user = UserDAO.shared.getUser(userId: id) else {
-            return
-        }
-        guard !connectingMembers.contains(where: { $0.userId == id }) else {
-            return
-        }
-        connectingMembers.append(user)
-        DispatchQueue.main.async {
-            self.membersDataSource.reportMembersStartedConnecting([user])
-        }
-    }
-    
-    func reportMemberWithIdDidConnected(_ id: String) {
-        if let timer = invitationTimers.object(forKey: id as NSString) {
-            timer.invalidate()
-        }
-        guard let user = UserDAO.shared.getUser(userId: id) else {
-            return
-        }
-        if !connectedMembers.contains(where: { $0.userId == id }) {
-            connectedMembers.append(user)
-        }
-        if let index = connectingMembers.firstIndex(where: { $0.userId == id }) {
-            connectingMembers.remove(at: index)
-        }
-        DispatchQueue.main.async {
-            self.membersDataSource.reportMemberDidConnected(user)
-        }
-    }
-    
-    func reportMemberWithIdDidDisconnected(_ id: String) {
-        if let timer = invitationTimers.object(forKey: id as NSString) {
-            timer.invalidate()
-        }
-        if let index = connectedMembers.firstIndex(where: { $0.userId == id }) {
-            connectedMembers.remove(at: index)
-        }
-        if let index = connectingMembers.firstIndex(where: { $0.userId == id }) {
-            connectingMembers.remove(at: index)
-        }
-        DispatchQueue.main.async {
-            self.membersDataSource.reportMemberWithIdDidDisconnected(id)
         }
     }
     

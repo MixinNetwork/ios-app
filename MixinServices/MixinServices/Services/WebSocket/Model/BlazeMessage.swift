@@ -117,7 +117,6 @@ extension BlazeMessage {
         do {
             return try JSONDecoder.default.decode([KrakenPeer].self, from: data)
         } catch {
-            print(error)
             return nil
         }
     }

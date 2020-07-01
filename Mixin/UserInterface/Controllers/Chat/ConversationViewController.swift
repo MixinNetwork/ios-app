@@ -278,15 +278,16 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceivePublishing(_:)), name: CallService.didReceivePublishingWithoutActiveGroupCall, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateGroupCallIndicatorIfNeeded), name: CallService.didReceivePublishingWithoutActiveGroupCall, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
+        updateGroupCallIndicatorIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
-        requestGroupCallExistenceAndBeginPollingIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -302,7 +303,6 @@ class ConversationViewController: UIViewController {
         super.viewWillDisappear(animated)
         dismissMenu(animated: true)
         isAppearanceAnimating = true
-        CallService.shared.endPollingKrakenList(forConversationWith: conversationId)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -451,7 +451,7 @@ class ConversationViewController: UIViewController {
     }
     
     @IBAction func joinGroupCallAction(_ sender: Any) {
-        CallService.shared.requestStartGroupCall(conversation: dataSource.conversation, invitingUsers: [])
+        CallService.shared.requestStartGroupCall(conversation: dataSource.conversation, invitingMembers: [])
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
@@ -856,11 +856,17 @@ class ConversationViewController: UIViewController {
         previewDocumentMessageId = nil
     }
     
-    @objc func didReceivePublishing(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?[CallService.conversationIdUserInfoKey] as? String, conversationId == self.conversationId else {
+    @objc func updateGroupCallIndicatorIfNeeded() {
+        guard dataSource.category == .group else {
             return
         }
-        requestGroupCallExistenceAndBeginPollingIfNeeded()
+        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+            guard let self = self else {
+                return
+            }
+            let hasCall = !ids.isEmpty
+            self.groupCallIndicatorView.isHidden = !hasCall
+        }
     }
     
     @objc func endMultipleSelection() {
@@ -2173,20 +2179,6 @@ extension ConversationViewController {
             self.messageIdToFlashAfterAnimationFinished = flashingId
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
-    }
-    
-    private func requestGroupCallExistenceAndBeginPollingIfNeeded() {
-        let conversationId = self.conversationId
-        CallService.shared.requestKrakenPeerUserIds(forConversationWith: conversationId) { [weak self] (ids) in
-            guard let self = self else {
-                return
-            }
-            let hasCall = !ids.isEmpty
-            self.groupCallIndicatorView.isHidden = !hasCall
-            if hasCall {
-                CallService.shared.beginPollingKrakenList(forConversationWith: conversationId)
-            }
-        }
     }
     
 }

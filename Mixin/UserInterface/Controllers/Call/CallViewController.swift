@@ -1,6 +1,5 @@
 import UIKit
 import AVFoundation.AVFAudio
-import RDHCollectionViewGridLayout
 import MixinServices
 
 class CallViewController: UIViewController {
@@ -9,7 +8,7 @@ class CallViewController: UIViewController {
     @IBOutlet weak var inviteButton: UIButton!
     @IBOutlet weak var singleUserStackView: UIStackView!
     @IBOutlet weak var multipleUserCollectionView: GroupCallMembersCollectionView!
-    @IBOutlet weak var multipleUserCollectionLayout: RDHCollectionViewGridLayout!
+    @IBOutlet weak var multipleUserCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
@@ -39,8 +38,6 @@ class CallViewController: UIViewController {
     private weak var timer: Timer?
     
     private var statusObservation: NSKeyValueObservation?
-    private var groupCallMembers = [UserItem]()
-    private var connectedGroupCallMemberUserIds = Set<String>()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isMinimized {
@@ -96,31 +93,25 @@ class CallViewController: UIViewController {
             return
         }
         let sectionsCount = dataSource.numberOfSections?(in: multipleUserCollectionView) ?? 0
-        let membersCount = (0..<sectionsCount)
+        let allMembersCount = (0..<sectionsCount)
             .map({ dataSource.collectionView(multipleUserCollectionView, numberOfItemsInSection: $0) })
             .reduce(0, +)
-        if membersCount <= 9 {
+        if allMembersCount <= 9 {
             let itemLength: CGFloat = 76
-            let itemCount: UInt = 3
-            multipleUserCollectionLayout.lineSize = itemLength
-            multipleUserCollectionLayout.lineItemCount = itemCount
-            let totalSpacing = view.bounds.width - itemLength * CGFloat(itemCount)
+            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            let totalSpacing = view.bounds.width - itemLength * 3
             let interitemSpacing = floor(totalSpacing / 6)
-            multipleUserCollectionLayout.itemSpacing = interitemSpacing
             let sectionInset = interitemSpacing * 2
-            multipleUserCollectionViewLeadingConstraint.constant = sectionInset
-            multipleUserCollectionViewTrailingConstraint.constant = sectionInset
+            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         } else {
             let itemLength: CGFloat = 64
-            let itemCount: UInt = 4
-            multipleUserCollectionLayout.lineSize = itemLength
-            multipleUserCollectionLayout.lineItemCount = itemCount
-            let totalSpacing = view.bounds.width - itemLength * CGFloat(itemCount)
+            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            let totalSpacing = view.bounds.width - itemLength * 4
             let interitemSpacing = floor(totalSpacing / 6)
-            multipleUserCollectionLayout.itemSpacing = interitemSpacing
             let sectionInset = floor(interitemSpacing / 2 * 3)
-            multipleUserCollectionViewLeadingConstraint.constant = sectionInset
-            multipleUserCollectionViewTrailingConstraint.constant = sectionInset
+            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         }
     }
     
@@ -189,12 +180,11 @@ class CallViewController: UIViewController {
         }
         let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
         picker.appearance = .appendToExistedCall
-        picker.fixedSelections = call.membersDataSource.allMembers
-        picker.onConfirmation = { users in
-            guard !users.isEmpty else {
-                return
+        picker.fixedSelections = call.membersDataSource.members
+        picker.onConfirmation = { members in
+            CallService.shared.queue.async {
+                call.invite(members: members)
             }
-            call.invite(users: users)
         }
         present(picker, animated: true, completion: nil)
     }

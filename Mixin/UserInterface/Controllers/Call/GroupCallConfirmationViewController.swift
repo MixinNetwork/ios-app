@@ -3,7 +3,18 @@ import MixinServices
 
 class GroupCallConfirmationViewController: CallViewController {
     
+    private let conversation: ConversationItem
+    
     private var members = [UserItem]()
+    
+    init(conversation: ConversationItem, service: CallService) {
+        self.conversation = conversation
+        super.init(service: service)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,7 +26,7 @@ class GroupCallConfirmationViewController: CallViewController {
         singleUserStackView.isHidden = true
         multipleUserCollectionView.isHidden = false
         statusLabel.text = nil
-        acceptTitleLabel.text = nil
+        acceptTitleLabel.text = " " // Hold the place or stackview will be collapsed
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
@@ -28,7 +39,7 @@ class GroupCallConfirmationViewController: CallViewController {
     }
     
     override func acceptAction(_ sender: Any) {
-        // TODO
+        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [])
     }
     
     func loadMembers(with userIds: [String]) {
@@ -56,6 +67,7 @@ extension GroupCallConfirmationViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
         let member = members[indexPath.row]
         cell.avatarImageView.setImage(with: member)
+        cell.connectingView.isHidden = true
         return cell
     }
     

@@ -210,8 +210,8 @@ extension CallService {
 // MARK: - UI Related Interface
 extension CallService {
     
-    func showJoinGroupCallConfirmation(inCallUserIds ids: [String]) {
-        let controller = GroupCallConfirmationViewController(service: self)
+    func showJoinGroupCallConfirmation(conversation: ConversationItem, memberIds ids: [String]) {
+        let controller = GroupCallConfirmationViewController(conversation: conversation, service: self)
         controller.loadMembers(with: ids)
         
         let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
@@ -231,10 +231,9 @@ extension CallService {
             return viewController
         }
         
-        let animated = self.window != nil
-        
         let viewController = self.viewController ?? makeViewController()
         let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
+        let animated = window.rootViewController == viewController
         window.rootViewController = viewController
         window.makeKeyAndVisible()
         self.window = window

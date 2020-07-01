@@ -451,7 +451,7 @@ class ConversationViewController: UIViewController {
     }
     
     @IBAction func joinGroupCallAction(_ sender: Any) {
-        CallService.shared.requestStartGroupCall(conversation: dataSource.conversation, invitingMembers: [])
+        startOrJoinGroupCall()
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
@@ -1022,6 +1022,26 @@ class ConversationViewController: UIViewController {
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
         MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
+    }
+    
+    func startOrJoinGroupCall() {
+        guard dataSource.category == .group else {
+            return
+        }
+        let conversation = dataSource.conversation
+        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+            if ids.isEmpty {
+                let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                picker.appearance = .startNewCall
+                picker.onConfirmation = { (members) in
+                    CallService.shared.requestStartGroupCall(conversation: conversation,
+                                                             invitingMembers: members)
+                }
+                self?.present(picker, animated: true, completion: nil)
+            } else {
+                CallService.shared.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
+            }
+        }
     }
     
     // MARK: - Class func

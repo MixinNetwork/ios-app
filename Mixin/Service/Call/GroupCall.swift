@@ -4,12 +4,19 @@ import MixinServices
 
 class GroupCall: Call {
     
+    static let maxNumberOfMembers = 16
+    static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCall.MembersDidChange")
+    
     let conversation: ConversationItem
     let conversationId: String
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
-    private(set) var members: [UserItem]
+    private(set) var members: [UserItem] {
+        didSet {
+            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
+        }
+    }
     
     override var debugDescription: String {
         "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), inviterUserId: \(inviterUserId ?? "(null)"), members: \(members.map(\.fullName).debugDescription), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"

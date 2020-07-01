@@ -77,6 +77,10 @@ class CallViewController: UIViewController {
                            selector: #selector(audioSessionRouteChange(_:)),
                            name: AVAudioSession.routeChangeNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(groupCallMembersDidChange),
+                           name: GroupCall.membersDidChangeNotification,
+                           object: nil)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -145,6 +149,7 @@ class CallViewController: UIViewController {
             updateViews(status: call.status)
         } else if let call = call as? GroupCall {
             inviteButton.isHidden = false
+            inviteButton.isEnabled = call.members.count < GroupCall.maxNumberOfMembers
             singleUserStackView.isHidden = true
             multipleUserCollectionView.isHidden = false
             updateViews(status: call.status)
@@ -195,6 +200,16 @@ extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
         muteSwitch.isOn = service.isMuted
+    }
+    
+    @objc private func groupCallMembersDidChange(_ notification: Notification) {
+        guard let call = notification.object as? GroupCall, call == self.call else {
+            return
+        }
+        let membersCount = call.members.count
+        DispatchQueue.main.async {
+            self.inviteButton.isEnabled = membersCount < GroupCall.maxNumberOfMembers
+        }
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {

@@ -51,6 +51,7 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
     }
     
     override func viewDidLoad() {
+        contentViewController.loadViewIfNeeded()
         super.viewDidLoad()
         view.clipsToBounds = true
         addChild(contentViewController)

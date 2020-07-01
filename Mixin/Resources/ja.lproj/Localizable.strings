@@ -354,6 +354,7 @@
 "group_call_declined_lack_microphone_permission" = "Group call has been declined";
 "group_call" = "Group Call";
 "group_call_tap_to_join" = "Tap to join";
+"group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
 
 // Sticker
 "sticker_manager_title" = "スタンプ";

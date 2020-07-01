@@ -121,6 +121,15 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        var fixedSelectionsCount = fixedSelections.count
+        if appearance == .startNewCall {
+            fixedSelectionsCount += 1 // The user himself
+        }
+        guard fixedSelectionsCount + selections.count < GroupCall.maxNumberOfMembers else {
+            let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
+            alert(message)
+            return nil
+        }
         let item = userItem(at: indexPath)
         if fixedSelections.contains(where: { $0.userId == item.userId }) {
             return nil

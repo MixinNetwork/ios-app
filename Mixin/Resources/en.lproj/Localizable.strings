@@ -333,6 +333,9 @@
 "web_suspicious_continue" = "Continue Open URL";
 
 // Call
+"call_encryption" = "End-to-end Encrypted";
+"call_encryption_title" = "This call is secured with end-to-end encryption";
+"call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
 "call_status_outgoing" = "Calling...";
 "call_status_incoming" = "Incoming voice call";

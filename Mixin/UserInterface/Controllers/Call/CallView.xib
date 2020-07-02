@@ -17,6 +17,9 @@
                 <outlet property="acceptTitleLabel" destination="oVs-zO-xAl" id="V2G-EB-Lm1"/>
                 <outlet property="avatarImageView" destination="wAa-Ej-6fx" id="58k-Ut-kGQ"/>
                 <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
+                <outlet property="groupCallMembersCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
+                <outlet property="groupCallMembersCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
+                <outlet property="groupNameLabel" destination="9XF-0U-dfR" id="KC6-cL-Vx1"/>
                 <outlet property="hangUpButton" destination="8Eu-3w-9KA" id="NC4-ap-7B4"/>
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
@@ -24,14 +27,12 @@
                 <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="minimizeButton" destination="c10-IX-mVV" id="ZHY-P9-Bbn"/>
-                <outlet property="multipleUserCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
-                <outlet property="multipleUserCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
                 <outlet property="multipleUserCollectionViewLeadingConstraint" destination="H1k-Lg-1To" id="6uR-ix-cww"/>
                 <outlet property="multipleUserCollectionViewTrailingConstraint" destination="XVI-sG-LCq" id="1w6-X7-PSA"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
-                <outlet property="singleUserStackView" destination="eJy-52-qsF" id="LEU-g5-McS"/>
+                <outlet property="peerToPeerCallRemoteUserStackView" destination="eJy-52-qsF" id="LEU-g5-McS"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
                 <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="statusLabel" destination="NCO-o8-q8h" id="dVO-1b-9MK"/>
@@ -80,13 +81,59 @@
                                     <action selector="addMemberAction:" destination="-1" eventType="touchUpInside" id="Bem-zU-iww"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="02X-1z-xjL">
+                                <rect key="frame" x="62" y="35" width="251" height="149.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9XF-0U-dfR">
+                                        <rect key="frame" x="0.0" y="0.0" width="251" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular18"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9NK-rK-Zk2">
+                                        <rect key="frame" x="0.0" y="21.5" width="251" height="128"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="8ef-CD-7aN">
+                                            <rect key="frame" x="0.0" y="0.0" width="251" height="128"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VO9-wd-obK">
+                                                    <rect key="frame" x="0.0" y="0.0" width="251" height="128"/>
+                                                    <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
+                                                    <state key="normal" title="End-to-end Encrypted" image="Call/ic_encryption"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_encryption"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="showEncryptionHintAction:" destination="-1" eventType="touchUpInside" id="NTQ-pG-Dlb"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="VO9-wd-obK" firstAttribute="leading" secondItem="8ef-CD-7aN" secondAttribute="leading" id="8FA-7R-aZW"/>
+                                                <constraint firstItem="VO9-wd-obK" firstAttribute="top" secondItem="8ef-CD-7aN" secondAttribute="top" id="WEu-iJ-22a"/>
+                                                <constraint firstAttribute="trailing" secondItem="VO9-wd-obK" secondAttribute="trailing" id="hYd-jw-XYk"/>
+                                                <constraint firstAttribute="bottom" secondItem="VO9-wd-obK" secondAttribute="bottom" id="y63-dC-glh"/>
+                                            </constraints>
+                                        </view>
+                                        <vibrancyEffect>
+                                            <blurEffect style="dark"/>
+                                        </vibrancyEffect>
+                                    </visualEffectView>
+                                </subviews>
+                            </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="eJy-52-qsF">
-                                <rect key="frame" x="20" y="80" width="335" height="182.5"/>
+                                <rect key="frame" x="20" y="166" width="335" height="134.5"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wAa-Ej-6fx" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="102.5" y="0.0" width="130" height="130"/>
+                                        <rect key="frame" x="119.5" y="0.0" width="96" height="96"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="130" id="lKd-Qy-car"/>
+                                            <constraint firstAttribute="height" constant="96" id="lKd-Qy-car"/>
                                             <constraint firstAttribute="width" secondItem="wAa-Ej-6fx" secondAttribute="height" id="vyD-I0-U1m"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -98,11 +145,14 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
-                                        <rect key="frame" x="94" y="149" width="147" height="33.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
+                                        <rect key="frame" x="123.5" y="115" width="88.5" height="19.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                        </userDefinedRuntimeAttributes>
                                     </label>
                                 </subviews>
                             </stackView>
@@ -286,10 +336,11 @@
                             <constraint firstAttribute="trailing" secondItem="t3e-bg-GeY" secondAttribute="trailing" id="2qO-Pr-lPb"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
+                            <constraint firstItem="02X-1z-xjL" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="15" id="AGg-G4-PRz"/>
                             <constraint firstItem="t3e-bg-GeY" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="FlA-ya-AFs"/>
-                            <constraint firstItem="eJy-52-qsF" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="60" id="GBH-BC-P5I"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="Guz-Ik-vmb"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="LQ4-Qy-n6Z"/>
+                            <constraint firstItem="02X-1z-xjL" firstAttribute="leading" secondItem="c10-IX-mVV" secondAttribute="trailing" constant="8" id="MHR-b9-Hsu"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="NCO-o8-q8h" secondAttribute="trailing" id="TRc-3d-ucg"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="10" id="Zfy-I1-hTz"/>
                             <constraint firstItem="t3e-bg-GeY" firstAttribute="top" secondItem="CPG-77-gPe" secondAttribute="bottom" constant="20" id="aEe-II-OmB"/>
@@ -298,7 +349,9 @@
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
+                            <constraint firstItem="CPG-77-gPe" firstAttribute="leading" secondItem="02X-1z-xjL" secondAttribute="trailing" constant="8" id="ir0-KR-Vvj"/>
                             <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
+                            <constraint firstItem="eJy-52-qsF" firstAttribute="centerY" secondItem="6Bg-67-Oum" secondAttribute="centerY" multiplier="0.7" id="p9E-rK-eLj"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" id="pMt-Kq-ARA"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="CPG-77-gPe" secondAttribute="trailing" constant="10" id="sl4-BQ-LNn"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
@@ -322,6 +375,7 @@
     <resources>
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
+        <image name="Call/ic_encryption" width="9" height="12"/>
         <image name="Call/ic_minimize" width="24" height="24"/>
         <image name="ic_title_add" width="16" height="16"/>
     </resources>

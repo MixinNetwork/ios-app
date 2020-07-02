@@ -25,7 +25,7 @@ class GroupCallMembersManager {
     
     // This func is designed to be called in Conversation interface
     // To improve responsiveness, it won't retrive kraken list from server
-    // As long as loadMembersAsynchornouslyIfNeverLoaded is called on ConversationViewController.viewDidLoad,
+    // As long as loadMembersAsynchornouslyIfNeverLoaded is called before,
     // members returned by completion closure should be accurate
     func getMemberUserIds(forConversationWith id: String, completion: @escaping ([String]) -> Void) {
         queue.async {

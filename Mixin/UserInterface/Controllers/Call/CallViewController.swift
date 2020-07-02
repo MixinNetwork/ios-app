@@ -6,11 +6,12 @@ class CallViewController: UIViewController {
     
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var inviteButton: UIButton!
-    @IBOutlet weak var singleUserStackView: UIStackView!
-    @IBOutlet weak var multipleUserCollectionView: GroupCallMembersCollectionView!
-    @IBOutlet weak var multipleUserCollectionLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var groupNameLabel: UILabel!
+    @IBOutlet weak var peerToPeerCallRemoteUserStackView: UIStackView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var groupCallMembersCollectionView: GroupCallMembersCollectionView!
+    @IBOutlet weak var groupCallMembersCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var muteSwitch: CallSwitch!
     @IBOutlet weak var speakerSwitch: CallSwitch!
@@ -67,7 +68,7 @@ class CallViewController: UIViewController {
         speakerSwitch.iconPath = CallIconPath.speaker
         statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
                             adjustForContentSize: true)
-        multipleUserCollectionView.register(R.nib.groupCallMemberCell)
+        groupCallMembersCollectionView.register(R.nib.groupCallMemberCell)
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(callServiceMutenessDidChange),
@@ -93,29 +94,29 @@ class CallViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard let dataSource = multipleUserCollectionView.dataSource else {
+        guard let dataSource = groupCallMembersCollectionView.dataSource else {
             return
         }
-        let sectionsCount = dataSource.numberOfSections?(in: multipleUserCollectionView) ?? 0
+        let sectionsCount = dataSource.numberOfSections?(in: groupCallMembersCollectionView) ?? 0
         let allMembersCount = (0..<sectionsCount)
-            .map({ dataSource.collectionView(multipleUserCollectionView, numberOfItemsInSection: $0) })
+            .map({ dataSource.collectionView(groupCallMembersCollectionView, numberOfItemsInSection: $0) })
             .reduce(0, +)
         if allMembersCount <= 9 {
             let itemLength: CGFloat = 76
-            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            groupCallMembersCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
             let totalSpacing = view.bounds.width - itemLength * 3
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = interitemSpacing * 2
-            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+            groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         } else {
             let itemLength: CGFloat = 64
-            multipleUserCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
+            groupCallMembersCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
             let totalSpacing = view.bounds.width - itemLength * 4
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = floor(interitemSpacing / 2 * 3)
-            multipleUserCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            multipleUserCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+            groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         }
     }
     
@@ -135,9 +136,10 @@ class CallViewController: UIViewController {
         
         avatarImageView.prepareForReuse()
         if let call = call as? PeerToPeerCall {
+            groupNameLabel.text = " "
             inviteButton.isHidden = true
-            singleUserStackView.isHidden = false
-            multipleUserCollectionView.isHidden = true
+            peerToPeerCallRemoteUserStackView.isHidden = false
+            groupCallMembersCollectionView.isHidden = true
             if let user = call.remoteUser {
                 nameLabel.text = user.fullName
                 avatarImageView.setImage(with: user)
@@ -148,31 +150,16 @@ class CallViewController: UIViewController {
             }
             updateViews(status: call.status)
         } else if let call = call as? GroupCall {
+            groupNameLabel.text = call.conversationName
             inviteButton.isHidden = false
             inviteButton.isEnabled = call.members.count < GroupCall.maxNumberOfMembers
-            singleUserStackView.isHidden = true
-            multipleUserCollectionView.isHidden = false
+            peerToPeerCallRemoteUserStackView.isHidden = true
+            groupCallMembersCollectionView.isHidden = false
             updateViews(status: call.status)
-            call.membersDataSource.collectionView = multipleUserCollectionView
+            call.membersDataSource.collectionView = groupCallMembersCollectionView
         }
         muteSwitch.isOn = service.isMuted
         speakerSwitch.isOn = service.usesSpeaker
-    }
-    
-    @IBAction func hangUpAction(_ sender: Any) {
-        service.requestEndCall()
-    }
-    
-    @IBAction func acceptAction(_ sender: Any) {
-        service.requestAnswerCall()
-    }
-    
-    @IBAction func setMuteAction(_ sender: Any) {
-        service.isMuted = muteSwitch.isOn
-    }
-    
-    @IBAction func setSpeakerAction(_ sender: Any) {
-        service.usesSpeaker = speakerSwitch.isOn
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
@@ -192,6 +179,33 @@ class CallViewController: UIViewController {
             }
         }
         present(picker, animated: true, completion: nil)
+    }
+    
+    @IBAction func showEncryptionHintAction(_ sender: Any) {
+        let alert = UIAlertController(title: R.string.localizable.call_encryption_title(),
+                                      message: R.string.localizable.call_encryption_description(),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: self)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func hangUpAction(_ sender: Any) {
+        service.requestEndCall()
+    }
+    
+    @IBAction func acceptAction(_ sender: Any) {
+        service.requestAnswerCall()
+    }
+    
+    @IBAction func setMuteAction(_ sender: Any) {
+        service.isMuted = muteSwitch.isOn
+    }
+    
+    @IBAction func setSpeakerAction(_ sender: Any) {
+        service.usesSpeaker = speakerSwitch.isOn
     }
     
 }

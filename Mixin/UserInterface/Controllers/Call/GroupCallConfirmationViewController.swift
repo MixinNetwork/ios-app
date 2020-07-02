@@ -23,15 +23,16 @@ class GroupCallConfirmationViewController: CallViewController {
         minimizeButton.setImage(R.image.ic_title_close(), for: .normal)
         minimizeButton.tintColor = .white
         inviteButton.isHidden = true
-        singleUserStackView.isHidden = true
-        multipleUserCollectionView.isHidden = false
+        groupNameLabel.text = conversation.getConversationName()
+        peerToPeerCallRemoteUserStackView.isHidden = true
+        groupCallMembersCollectionView.isHidden = false
         statusLabel.text = nil
         acceptTitleLabel.text = " " // Hold the place or stackview will be collapsed
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
         acceptButtonCenterXConstraint.priority = .defaultHigh
-        multipleUserCollectionView.dataSource = self
+        groupCallMembersCollectionView.dataSource = self
     }
     
     override func minimizeAction(_ sender: Any) {
@@ -50,7 +51,7 @@ class GroupCallConfirmationViewController: CallViewController {
                     return
                 }
                 self.members = members
-                self.multipleUserCollectionView.reloadData()
+                self.groupCallMembersCollectionView.reloadData()
             }
         }
     }

@@ -98,6 +98,7 @@ extension NativeCallInterface: CallInterface {
     }
     
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
+        // TODO: This not expected to happen?
         if let action = pendingAnswerAction, uuid == action.callUUID {
             action.fail()
             pendingAnswerAction = nil
@@ -188,6 +189,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        unansweredIncomingCallUUIDs.remove(action.callUUID)
         service.endCall(uuid: action.callUUID)
         action.fulfill()
     }

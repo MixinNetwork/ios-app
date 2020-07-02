@@ -281,7 +281,9 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateGroupCallIndicatorIfNeeded), name: CallService.didReceivePublishingWithoutActiveGroupCall, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
+        if dataSource.category == .group {
+            CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
+        }
         updateGroupCallIndicatorIfNeeded()
     }
     
@@ -1002,7 +1004,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallService.shared.requestStartCall(remoteUser: ownerUser)
+        CallService.shared.requestStartPeerToPeerCall(remoteUser: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {

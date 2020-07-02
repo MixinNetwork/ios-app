@@ -183,7 +183,6 @@ extension WebRTCClient {
         config.sdpSemantics = .unifiedPlan
         config.iceServers = RTCIceServer.sharedServers
         config.continualGatheringPolicy = .gatherOnce
-        config.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: true)
         return config
     }
     
@@ -193,6 +192,12 @@ extension WebRTCClient {
         }
         RTCAudioSession.sharedInstance().useManualAudio = true
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [:])
+        if key != nil {
+             sharedConfig.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: true)
+        } else {
+             sharedConfig.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: false)
+        }
+
         let peerConnection = factory.peerConnection(with: sharedConfig,
                                                     constraints: constraints,
                                                     delegate: nil)

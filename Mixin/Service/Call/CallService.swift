@@ -241,7 +241,7 @@ extension CallService {
         UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
         
         let updateInterface = {
-            viewController.reloadAndObserve(call: call)
+            viewController.reload(call: call)
             viewController.view.layoutIfNeeded()
         }
         if animated {
@@ -397,6 +397,7 @@ extension CallService {
         pendingAnswerCalls = [:]
         pendingSDPs = [:]
         pendingCandidates = [:]
+        pendingTrickles = [:]
         ringtonePlayer.stop()
         performSynchronouslyOnMainThread {
             dismissCallingInterface()
@@ -418,6 +419,7 @@ extension CallService {
         pendingAnswerCalls.removeValue(forKey: uuid)
         pendingSDPs.removeValue(forKey: uuid)
         pendingCandidates.removeValue(forKey: uuid)
+        pendingTrickles.removeValue(forKey: uuid)
         if pendingAnswerCalls.isEmpty && activeCall == nil {
             ringtonePlayer.stop()
             performSynchronouslyOnMainThread {

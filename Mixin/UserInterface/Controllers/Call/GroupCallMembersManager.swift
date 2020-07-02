@@ -4,6 +4,9 @@ import MixinServices
 class GroupCallMembersManager {
     
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
+    static let didRemoveZombieMemberNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidRemoveZombieMember")
+    static let userIdUserInfoKey = "user_id"
+    static let conversationIdUserInfoKey = "conv_id"
     
     // Key is conversation ID, value is an array of user IDs
     // If the value is nil, the list has not been retrieved since App launch
@@ -77,25 +80,37 @@ class GroupCallMembersManager {
 
 extension GroupCallMembersManager {
     
-    func beginPolling(forConversationWith id: String) {
-        assert(Thread.isMainThread)
-        endPolling(forConversationWith: id)
+    func beginPolling(forConversationWith conversationId: String) {
+        assert(Thread.isMainThread) // TODO: Remove this restriction
+        endPolling(forConversationWith: conversationId)
         let timer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true, block: { [weak self] (_) in
             guard let self = self else {
                 return
             }
             self.queue.async {
-                guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
+                guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: conversationId) else {
                     return
                 }
-                self.members[id] = peers.map(\.userId)
+                let remoteUserIds = Set(peers.map(\.userId))
+                var localUserIds = self.members[conversationId] ?? []
+                for (index, userId) in localUserIds.enumerated().reversed() where !remoteUserIds.contains(userId) {
+                    localUserIds.remove(at: index)
+                    let userInfo = [
+                        Self.conversationIdUserInfoKey: conversationId,
+                        Self.userIdUserInfoKey: userId,
+                    ]
+                    NotificationCenter.default.post(name: Self.didRemoveZombieMemberNotification,
+                                                    object: self,
+                                                    userInfo: userInfo)
+                }
+                self.members[conversationId] = localUserIds
             }
         })
-        pollingTimers.setObject(timer, forKey: id as NSString)
+        pollingTimers.setObject(timer, forKey: conversationId as NSString)
     }
     
     func endPolling(forConversationWith id: String) {
-        assert(Thread.isMainThread)
+        assert(Thread.isMainThread) // TODO: Remove this restriction
         guard let timer = pollingTimers.object(forKey: id as NSString) else {
             return
         }

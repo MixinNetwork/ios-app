@@ -8,21 +8,11 @@ class MinimizedCallViewController: UIViewController {
     
     weak var call: Call? {
         didSet {
-            callStatusObservation?.invalidate()
-            if let call = call {
-                callStatusObservation = call.observe(\.status, changeHandler: { [weak self] (call, _) in
-                    performSynchronouslyOnMainThread {
-                        self?.updateLabel(status: call.status)
-                    }
-                })
-            }
             updateLabel(status: call?.status)
         }
     }
     
     private weak var timer: Timer?
-    
-    private var callStatusObservation: NSKeyValueObservation?
     
     private var centerRestriction: CGRect {
         let superview = parent?.view ?? AppDelegate.current.mainWindow
@@ -43,6 +33,10 @@ class MinimizedCallViewController: UIViewController {
         updateLabel(status: CallService.shared.activeCall?.status)
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.18
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(callStatusDidChange(_:)),
+                                               name: Call.statusDidChangeNotification,
+                                               object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -85,6 +79,18 @@ class MinimizedCallViewController: UIViewController {
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
             self.view.center = newCenter
         }, completion: nil)
+    }
+    
+    @objc private func callStatusDidChange(_ notification: Notification) {
+        guard (notification.object as? Call) == self.call else {
+            return
+        }
+        guard let status = notification.userInfo?[Call.statusUserInfoKey] as? Call.Status else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.updateLabel(status: status)
+        }
     }
     
     private func beginUpdatingDuration() {

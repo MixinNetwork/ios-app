@@ -3,12 +3,21 @@ import MixinServices
 
 class Call: NSObject {
     
+    static let statusDidChangeNotification = Notification.Name("one.mixin.messenger.Call.StatusDidChange")
+    static let statusUserInfoKey = "stat"
+    
     let uuid: UUID
     let isOutgoing: Bool
     
     var connectedDate: Date?
     
-    @objc dynamic var status: Status = .connecting
+    var status: Status = .connecting {
+        didSet {
+            NotificationCenter.default.post(name: Self.statusDidChangeNotification,
+                                            object: self,
+                                            userInfo: [Self.statusUserInfoKey: status])
+        }
+    }
     
     private(set) lazy var uuidString = uuid.uuidString.lowercased()
     

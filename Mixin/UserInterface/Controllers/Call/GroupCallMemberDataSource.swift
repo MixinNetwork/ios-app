@@ -3,8 +3,16 @@ import MixinServices
 
 class GroupCallMemberDataSource: NSObject {
     
-    private(set) var members: [UserItem]
+    static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMemberDataSource.MembersDidChange")
+    
+    private let conversationId: String
+    
     private(set) var invitingMemberUserIds: Set<String>
+    private(set) var members: [UserItem] {
+        didSet {
+            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
+        }
+    }
     
     weak var collectionView: UICollectionView? {
         didSet {
@@ -16,22 +24,31 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
-    init(members: [UserItem], invitingMemberUserIds: Set<String>) {
+    init(conversationId: String, members: [UserItem], invitingMemberUserIds: Set<String>) {
+        self.conversationId = conversationId
         self.members = members
         self.invitingMemberUserIds = invitingMemberUserIds
         super.init()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didRemoveZombieMember(_:)),
+                                               name: GroupCallMembersManager.didRemoveZombieMemberNotification,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func reportStartInviting(_ members: [UserItem]) {
         let filtered = members.filter { (user) -> Bool in
-            !members.contains(where: { $0.userId == user.userId })
+            !self.members.contains(where: { $0.userId == user.userId })
         }
         for user in filtered {
             // TODO: Update corresponding cell if existed
             invitingMemberUserIds.insert(user.userId)
         }
         let indexPaths = (self.members.count..<(self.members.count + filtered.count))
-            .map({ IndexPath(item: $0, section: 1) })
+            .map({ IndexPath(item: $0, section: 0) })
         self.members.append(contentsOf: filtered)
         collectionView?.insertItems(at: indexPaths)
     }
@@ -54,6 +71,24 @@ class GroupCallMemberDataSource: NSObject {
             let indexPath = IndexPath(item: item, section: 0)
             members.remove(at: item)
             collectionView?.deleteItems(at: [indexPath])
+        }
+    }
+    
+    @objc private func didRemoveZombieMember(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        guard let conversationId = userInfo[GroupCallMembersManager.conversationIdUserInfoKey] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let userId = userInfo[GroupCallMembersManager.userIdUserInfoKey] as? String else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.reportMemberWithIdDidDisconnected(userId)
         }
     }
     

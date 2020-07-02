@@ -38,8 +38,6 @@ class CallViewController: UIViewController {
     private weak var call: Call?
     private weak var timer: Timer?
     
-    private var statusObservation: NSKeyValueObservation?
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isMinimized {
             return AppDelegate.current.mainWindow.rootViewController?.preferredStatusBarStyle ?? .default
@@ -80,7 +78,11 @@ class CallViewController: UIViewController {
                            object: nil)
         center.addObserver(self,
                            selector: #selector(groupCallMembersDidChange),
-                           name: GroupCall.membersDidChangeNotification,
+                           name: GroupCallMemberDataSource.membersDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(callStatusDidChange(_:)),
+                           name: Call.statusDidChangeNotification,
                            object: nil)
     }
     
@@ -124,15 +126,8 @@ class CallViewController: UIViewController {
         setConnectionDurationTimerEnabled(false)
     }
     
-    func reloadAndObserve(call: Call?) {
+    func reload(call: Call?) {
         self.call = call
-        
-        statusObservation?.invalidate()
-        statusObservation = call?.observe(\.status) { [weak self] (call, _) in
-            performSynchronouslyOnMainThread {
-                self?.updateViews(status: call.status)
-            }
-        }
         
         avatarImageView.prepareForReuse()
         if let call = call as? PeerToPeerCall {
@@ -152,7 +147,7 @@ class CallViewController: UIViewController {
         } else if let call = call as? GroupCall {
             groupNameLabel.text = call.conversationName
             inviteButton.isHidden = false
-            inviteButton.isEnabled = call.members.count < GroupCall.maxNumberOfMembers
+            inviteButton.isEnabled = call.membersDataSource.members.count < GroupCall.maxNumberOfMembers
             peerToPeerCallRemoteUserStackView.isHidden = true
             groupCallMembersCollectionView.isHidden = false
             updateViews(status: call.status)
@@ -217,13 +212,13 @@ extension CallViewController {
     }
     
     @objc private func groupCallMembersDidChange(_ notification: Notification) {
-        guard let call = notification.object as? GroupCall, call == self.call else {
+        guard let dataSource = notification.object as? GroupCallMemberDataSource else {
             return
         }
-        let membersCount = call.members.count
-        DispatchQueue.main.async {
-            self.inviteButton.isEnabled = membersCount < GroupCall.maxNumberOfMembers
+        guard dataSource == (call as? GroupCall)?.membersDataSource else {
+            return
         }
+        inviteButton.isEnabled = dataSource.members.count < GroupCall.maxNumberOfMembers
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
@@ -242,6 +237,18 @@ extension CallViewController {
             } else {
                 self.speakerSwitch.isOn = routeContainsSpeaker
             }
+        }
+    }
+    
+    @objc private func callStatusDidChange(_ notification: Notification) {
+        guard (notification.object as? Call) == self.call else {
+            return
+        }
+        guard let status = notification.userInfo?[Call.statusUserInfoKey] as? Call.Status else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.updateViews(status: status)
         }
     }
     

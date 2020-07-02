@@ -5,21 +5,14 @@ import MixinServices
 class GroupCall: Call {
     
     static let maxNumberOfMembers = 16
-    static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCall.MembersDidChange")
     
     let conversation: ConversationItem
     let conversationId: String
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
-    private(set) var members: [UserItem] {
-        didSet {
-            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
-        }
-    }
-    
     override var debugDescription: String {
-        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), inviterUserId: \(inviterUserId ?? "(null)"), members: \(members.map(\.fullName).debugDescription), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), inviterUserId: \(inviterUserId ?? "(null)"), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
     var trackId: String?
@@ -35,13 +28,14 @@ class GroupCall: Call {
         self.conversation = conversation
         self.conversationId = conversation.conversationId
         self.conversationName = conversation.getConversationName()
-        let allMembers = members + invitingMembers
-        self.members = allMembers
-        let invitingMemberUserIds = Set(invitingMembers.map(\.userId))
-        self.membersDataSource = GroupCallMemberDataSource(members: allMembers,
-                                                           invitingMemberUserIds: invitingMemberUserIds)
+        self.membersDataSource = GroupCallMemberDataSource(conversationId: conversationId,
+                                                           members: members + invitingMembers,
+                                                           invitingMemberUserIds: Set(invitingMembers.map(\.userId)))
         self.pendingInvitingMembers = invitingMembers
         super.init(uuid: uuid, isOutgoing: isOutgoing)
+        DispatchQueue.main.async {
+            CallService.shared.membersManager.beginPolling(forConversationWith: conversation.conversationId)
+        }
     }
     
     deinit {
@@ -55,16 +49,21 @@ class GroupCall: Call {
                 timer.invalidate()
             }
         }
+        let conversationId = self.conversationId
+        DispatchQueue.main.async {
+            CallService.shared.membersManager.endPolling(forConversationWith: conversationId)
+        }
     }
     
     func invite(members: [UserItem]) {
+        let inCallMembers = CallService.shared.membersManager.members(inConversationWith: conversationId)
+        let inCallUserIds = Set(inCallMembers.map(\.userId))
         let filtered = members.filter { (member) -> Bool in
-            !self.members.contains(where: { member.userId == $0.userId })
+            !inCallUserIds.contains(member.userId)
         }
         guard !filtered.isEmpty else {
             return
         }
-        self.members.append(contentsOf: filtered)
         inviteWithoutFiltering(members: filtered)
     }
     
@@ -83,9 +82,6 @@ class GroupCall: Call {
         guard let member = UserDAO.shared.getUser(userId: id) else {
             return
         }
-        if !members.contains(where: { $0.userId == id }) {
-            members.append(member)
-        }
         DispatchQueue.main.async {
             self.membersDataSource.reportMemberDidConnected(member)
         }
@@ -94,9 +90,6 @@ class GroupCall: Call {
     func reportMemberWithIdDidDisconnected(_ id: String) {
         if let timer = invitationTimers.object(forKey: id as NSString) {
             timer.invalidate()
-        }
-        if let index = members.firstIndex(where: { $0.userId == id }) {
-            members.remove(at: index)
         }
         DispatchQueue.main.async {
             self.membersDataSource.reportMemberWithIdDidDisconnected(id)
@@ -128,11 +121,8 @@ class GroupCall: Call {
                                                trackId: trackId,
                                                action: .cancel(recipientId: id))
                     SendMessageService.shared.send(krakenRequest: cancel)
-                    if let self = self {
-                        self.members.removeAll(where: { $0.userId == id })
-                        DispatchQueue.main.async {
-                            self.membersDataSource.reportMemberWithIdDidDisconnected(id)
-                        }
+                    DispatchQueue.main.async {
+                        self?.membersDataSource.reportMemberWithIdDidDisconnected(id)
                     }
                 }
             }

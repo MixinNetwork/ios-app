@@ -192,11 +192,6 @@ extension WebRTCClient {
         }
         RTCAudioSession.sharedInstance().useManualAudio = true
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [:])
-        if key != nil {
-             sharedConfig.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: true)
-        } else {
-             sharedConfig.cryptoOptions = RTCCryptoOptions(srtpEnableGcmCryptoSuites: false, srtpEnableAes128Sha1_32CryptoCipher: false, srtpEnableEncryptedRtpHeaderExtensions: false, sframeRequireFrameEncryption: false)
-        }
 
         let peerConnection = factory.peerConnection(with: sharedConfig,
                                                     constraints: constraints,

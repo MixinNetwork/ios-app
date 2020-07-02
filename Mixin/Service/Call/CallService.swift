@@ -8,8 +8,6 @@ class CallService: NSObject {
     
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
-    static let didReceivePublishingWithoutActiveGroupCall = Notification.Name("one.mixin.messenger.CallService.DidReceivePublishingWithoutActiveGroupCall")
-    static let conversationIdUserInfoKey = "conv_id"
     
     let queue = DispatchQueue(label: "one.mixin.messenger.CallService")
     
@@ -649,10 +647,6 @@ extension CallService {
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
             subscribe(userId: data.userId, of: call)
-        } else {
-            NotificationCenter.default.postOnMain(name: Self.didReceivePublishingWithoutActiveGroupCall,
-                                                  object: self,
-                                                  userInfo: [Self.conversationIdUserInfoKey: data.conversationId])
         }
     }
     

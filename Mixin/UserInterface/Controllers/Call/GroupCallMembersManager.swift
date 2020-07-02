@@ -3,11 +3,17 @@ import MixinServices
 
 class GroupCallMembersManager {
     
+    static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
+    
     // Key is conversation ID, value is an array of user IDs
     // If the value is nil, the list has not been retrieved since App launch
     // If the value is an array regardless of empty or not, the list is in syncing
     // This var should be accessed from working queue
-    private(set) var members = [String: [String]]()
+    private(set) var members = [String: [String]]() {
+        didSet {
+            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
+        }
+    }
     
     private let queue: DispatchQueue
     private let pollingInterval: TimeInterval = 30

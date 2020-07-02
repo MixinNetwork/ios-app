@@ -1122,7 +1122,13 @@ extension CallService {
     
     private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)
-        rtcClient.offer(key: frameKey?.dropFirst()) { result in
+        rtcClient.offer(key: frameKey?.dropFirst()) { clientResult in
+            var result = clientResult
+            #if DEBUG
+            if GroupCallDebugConfig.throwErrorOnOfferGeneration {
+                result = .failure(.manuallyInitiated)
+            }
+            #endif
             switch result {
             case .failure(let error):
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
@@ -1136,6 +1142,13 @@ extension CallService {
                     completion?(false)
                     return
                 }
+                #if DEBUG
+                if GroupCallDebugConfig.invalidResponseOnPublishing {
+                    self.alert(error: .invalidKrakenResponse)
+                    completion?(false)
+                    return
+                }
+                #endif
                 if call.isOutgoing {
                     self.callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
                 }
@@ -1144,7 +1157,13 @@ extension CallService {
                                                             conversationId: call.conversationId,
                                                             userId: myUserId)
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-                self.rtcClient.set(remoteSdp: sdp) { (error) in
+                self.rtcClient.set(remoteSdp: sdp) { (clientError) in
+                    var error = clientError
+                    #if DEBUG
+                    if GroupCallDebugConfig.throwOnSettingSdpFromPublishingResponse {
+                        error = CallError.manuallyInitiated
+                    }
+                    #endif
                     if let error = error {
                         self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                         self.alert(error: .setRemoteAnswer(error))
@@ -1159,7 +1178,13 @@ extension CallService {
                                                         trackId: data.trackId,
                                                         action: .subscribe)
                         if let response = SendMessageService.shared.send(krakenRequest: subscribing), let responseData = Data(base64Encoded: response.data), let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData), let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson), sdp.type == .offer {
-                            self.rtcClient.set(remoteSdp: sdp) { (error) in
+                            self.rtcClient.set(remoteSdp: sdp) { (clientError) in
+                                var error = clientError
+                                #if DEBUG
+                                if GroupCallDebugConfig.throwErrorOnSettingSdpFromSubscribingResponse {
+                                    error = CallError.manuallyInitiated
+                                }
+                                #endif
                                 func endCall(error: Error) {
                                     self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                                     self.alert(error: .setRemoteAnswer(error))
@@ -1172,7 +1197,13 @@ extension CallService {
                                 if let error = error {
                                     endCall(error: error)
                                 } else {
-                                    self.rtcClient.answer { (result) in
+                                    self.rtcClient.answer { (clientResult) in
+                                        var result = clientResult
+                                        #if DEBUG
+                                        if GroupCallDebugConfig.throwErrorOnAnswerGeneration {
+                                            result = .failure(.manuallyInitiated)
+                                        }
+                                        #endif
                                         switch result {
                                         case .success(let sdpJson):
                                             let answer = KrakenRequest(conversationId: call.conversationId,
@@ -1186,6 +1217,8 @@ extension CallService {
                                     }
                                 }
                             }
+                        } else {
+                            print("")
                         }
                         self.pendingTrickles.removeValue(forKey: call.uuid)?.forEach({ (candidate) in
                             let trickle = KrakenRequest(conversationId: call.conversationId,

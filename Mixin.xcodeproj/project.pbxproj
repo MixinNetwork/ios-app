@@ -274,6 +274,7 @@
 		7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */; };
 		7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */; };
 		7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */; };
+		7B8D653324ACEAE70049D5C2 /* GroupCallDebugConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8D653224ACEAE70049D5C2 /* GroupCallDebugConfigViewController.swift */; };
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
@@ -411,6 +412,7 @@
 		7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */; };
 		7BC8503320CBA69B00A57B83 /* MXNAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */; };
 		7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */; };
+		7BC8987624AD907C00FA1C08 /* GroupCallDebugConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8987524AD907C00FA1C08 /* GroupCallDebugConfig.swift */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
@@ -1110,6 +1112,7 @@
 		7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudioCell.swift; sourceTree = "<group>"; };
 		7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageViewModel.swift; sourceTree = "<group>"; };
 		7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageCell.swift; sourceTree = "<group>"; };
+		7B8D653224ACEAE70049D5C2 /* GroupCallDebugConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallDebugConfigViewController.swift; sourceTree = "<group>"; };
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
@@ -1249,6 +1252,7 @@
 		7BC8502C20CBA69A00A57B83 /* MXNAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioMetadata.h; sourceTree = "<group>"; };
 		7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioRecorder.m; sourceTree = "<group>"; };
 		7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusError.h; sourceTree = "<group>"; };
+		7BC8987524AD907C00FA1C08 /* GroupCallDebugConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallDebugConfig.swift; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -1982,6 +1986,8 @@
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 				7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */,
+				7BC8987524AD907C00FA1C08 /* GroupCallDebugConfig.swift */,
+				7B8D653224ACEAE70049D5C2 /* GroupCallDebugConfigViewController.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -3528,7 +3534,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3548,7 +3554,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3812,6 +3818,7 @@
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
+				7B8D653324ACEAE70049D5C2 /* GroupCallDebugConfigViewController.swift in Sources */,
 				7BE6C996242DF47E00A0F2AE /* MessageItem+MessageAction.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
 				7B362BB522E87D38009BB0BF /* AssetSendVideoView.swift in Sources */,
@@ -3890,6 +3897,7 @@
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
+				7BC8987624AD907C00FA1C08 /* GroupCallDebugConfig.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,

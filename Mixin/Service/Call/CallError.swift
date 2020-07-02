@@ -18,6 +18,8 @@ enum CallError: Error {
     
     case invalidKrakenResponse
     
+    case manuallyInitiated
+    
     var alertContent: String {
         switch self {
         case .busy:

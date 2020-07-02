@@ -57,6 +57,11 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
         }
     }
     
+    @objc private func showGroupCallDebugConfig() {
+        let debugConfig = GroupCallDebugConfigViewController()
+        present(debugConfig, animated: true, completion: nil)
+    }
+    
 }
 
 extension ConversationExtensionViewController: UICollectionViewDataSource {
@@ -73,6 +78,16 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
             cell.imageView.contentMode = .center
             cell.label.text = ext.title
             cell.avatarImageView.isHidden = true
+            #if DEBUG
+            if ext == .groupCall {
+                if (cell.gestureRecognizers ?? []).isEmpty {
+                    let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showGroupCallDebugConfig))
+                    cell.addGestureRecognizer(recognizer)
+                }
+            } else {
+                cell.gestureRecognizers?.forEach(cell.removeGestureRecognizer(_:))
+            }
+            #endif
         } else {
             let appAndUser = apps[indexPath.row - fixedExtensions.count]
             let app = appAndUser.app

@@ -1186,7 +1186,11 @@ extension CallService {
         let subscribing = KrakenRequest(conversationId: call.conversationId,
                                         trackId: call.trackId,
                                         action: .subscribe)
-        guard let (_, sdp) = send(krakenRequest: subscribing), sdp.type == .offer else {
+        guard let (_, sdp) = send(krakenRequest: subscribing) else {
+            call.reportMemberWithIdDidConnected(userId)
+            return
+        }
+        guard sdp.type == .offer else {
             return
         }
         rtcClient.set(remoteSdp: sdp) { (clientError) in

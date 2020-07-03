@@ -381,9 +381,8 @@ extension CallService {
                                                 trackId: nil,
                                                 action: .end)
                         SendMessageService.shared.send(krakenRequest: end)
-                        self.membersManager.removeUser(with: myUserId,
-                                                       fromConversationWith: call.conversationId)
                     }
+                    self.membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
                 }
             }
             self.close(uuid: uuid)
@@ -648,6 +647,7 @@ extension CallService {
     private func handlePublishing(data: BlazeMessageData) {
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
+            call.reportMemberWithIdDidConnected(data.userId)
             subscribe(userId: data.userId, of: call)
         }
     }
@@ -693,8 +693,8 @@ extension CallService {
     }
     
     private func handleKrakenDisconnect(data: BlazeMessageData) {
-        membersManager.removeUser(with: data.userId,
-                                  fromConversationWith: data.conversationId)
+        membersManager.removeMember(with: data.userId,
+                                    fromConversationWith: data.conversationId)
         if let call = activeCall as? GroupCall {
             call.reportMemberWithIdDidDisconnected(data.userId)
         }
@@ -1186,11 +1186,7 @@ extension CallService {
         let subscribing = KrakenRequest(conversationId: call.conversationId,
                                         trackId: call.trackId,
                                         action: .subscribe)
-        guard let (_, sdp) = send(krakenRequest: subscribing) else {
-            call.reportMemberWithIdDidConnected(userId)
-            return
-        }
-        guard sdp.type == .offer else {
+        guard let (_, sdp) = send(krakenRequest: subscribing), sdp.type == .offer else {
             return
         }
         rtcClient.set(remoteSdp: sdp) { (clientError) in
@@ -1229,14 +1225,14 @@ extension CallService {
                                            trackId: call.trackId,
                                            action: .answer(sdp: sdpJson))
                 SendMessageService.shared.send(krakenRequest: answer)
-                call.reportMemberWithIdDidConnected(userId)
             case .failure(let error):
+                reporter.report(error: error)
                 // TODO: An local error happened on subscribing, does retrying like below making sense?
                 self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
                     guard self.activeCall == call else {
                         return
                     }
-                    self.subscribe(userId: userId, of: call)
+                    self.answer(userId: userId, of: call)
                 }
             }
         }

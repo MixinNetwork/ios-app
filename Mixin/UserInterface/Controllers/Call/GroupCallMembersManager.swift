@@ -3,20 +3,23 @@ import MixinServices
 
 class GroupCallMembersManager {
     
+    // This is a global storage for Group Call's members
+    // Members are first retrived when user opens a conversation or a KRAKEN_PUBLISH is received,
+    // then they are in sync with corresponding Kraken Messages
+    
+    enum UserInfoKey {
+        static let userIds = "user_ids"
+        static let conversationId = "conv_id"
+    }
+    
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
     static let didRemoveZombieMemberNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidRemoveZombieMember")
-    static let userIdUserInfoKey = "user_id"
-    static let conversationIdUserInfoKey = "conv_id"
     
     // Key is conversation ID, value is an array of user IDs
     // If the value is nil, the list has not been retrieved since App launch
     // If the value is an array regardless of empty or not, the list is in syncing
     // This var should be accessed from working queue
-    private(set) var members = [String: [String]]() {
-        didSet {
-            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
-        }
-    }
+    private(set) var members = [String: [String]]()
     
     private let queue: DispatchQueue
     private let pollingInterval: TimeInterval = 30
@@ -58,12 +61,29 @@ class GroupCallMembersManager {
         var members = self.members[conversationId] ?? []
         if !members.contains(userId) {
             members.append(userId)
+            self.members[conversationId] = members
+            let userInfo: [String: Any] = [
+                Self.UserInfoKey.conversationId: conversationId,
+                Self.UserInfoKey.userIds: members
+            ]
+            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
         }
-        self.members[conversationId] = members
     }
     
-    func removeUser(with userId: String, fromConversationWith conversationId: String) {
-        members[conversationId]?.removeAll(where: { $0 == userId })
+    func removeMember(with userId: String, fromConversationWith conversationId: String) {
+        guard var members = self.members[conversationId] else {
+            return
+        }
+        let countBefore = members.count
+        members.removeAll(where: { $0 == userId })
+        if members.count != countBefore {
+            self.members[conversationId] = members
+            let userInfo: [String: Any] = [
+                Self.UserInfoKey.conversationId: conversationId,
+                Self.UserInfoKey.userIds: members
+            ]
+            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
+        }
     }
     
     private func loadMembersIfNeverLoaded(forConversationWith id: String) {
@@ -73,7 +93,13 @@ class GroupCallMembersManager {
         guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id) else {
             return
         }
-        members[id] = peers.map(\.userId)
+        let userIds = peers.map(\.userId)
+        members[id] = userIds
+        let userInfo: [String: Any] = [
+            Self.UserInfoKey.conversationId: id,
+            Self.UserInfoKey.userIds: userIds
+        ]
+        NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
     }
     
 }
@@ -81,9 +107,8 @@ class GroupCallMembersManager {
 extension GroupCallMembersManager {
     
     func beginPolling(forConversationWith conversationId: String) {
-        assert(Thread.isMainThread) // TODO: Remove this restriction
         endPolling(forConversationWith: conversationId)
-        let timer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true, block: { [weak self] (_) in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (_) in
             guard let self = self else {
                 return
             }
@@ -93,24 +118,28 @@ extension GroupCallMembersManager {
                 }
                 let remoteUserIds = Set(peers.map(\.userId))
                 var localUserIds = self.members[conversationId] ?? []
+                var removedUserIds = [String]()
                 for (index, userId) in localUserIds.enumerated().reversed() where !remoteUserIds.contains(userId) {
                     localUserIds.remove(at: index)
-                    let userInfo = [
-                        Self.conversationIdUserInfoKey: conversationId,
-                        Self.userIdUserInfoKey: userId,
+                    removedUserIds.append(userId)
+                }
+                if !removedUserIds.isEmpty {
+                    self.members[conversationId] = localUserIds
+                    let userInfo: [String: Any] = [
+                        Self.UserInfoKey.conversationId: conversationId,
+                        Self.UserInfoKey.userIds: removedUserIds,
                     ]
                     NotificationCenter.default.post(name: Self.didRemoveZombieMemberNotification,
                                                     object: self,
                                                     userInfo: userInfo)
                 }
-                self.members[conversationId] = localUserIds
             }
-        })
+        }
+        RunLoop.main.add(timer, forMode: .common)
         pollingTimers.setObject(timer, forKey: conversationId as NSString)
     }
     
     func endPolling(forConversationWith id: String) {
-        assert(Thread.isMainThread) // TODO: Remove this restriction
         guard let timer = pollingTimers.object(forKey: id as NSString) else {
             return
         }

@@ -169,8 +169,12 @@ class CallViewController: UIViewController {
         picker.appearance = .appendToExistedCall
         picker.fixedSelections = call.membersDataSource.members
         picker.onConfirmation = { members in
+            let inCallUserIds = call.membersDataSource.memberUserIds
             CallService.shared.queue.async {
-                call.invite(members: members)
+                let filteredMembers = members.filter { (member) -> Bool in
+                    !inCallUserIds.contains(member.userId)
+                }
+                call.invite(members: filteredMembers)
             }
         }
         present(picker, animated: true, completion: nil)

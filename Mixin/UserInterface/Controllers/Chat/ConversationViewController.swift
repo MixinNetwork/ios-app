@@ -278,13 +278,15 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateGroupCallIndicatorIfNeeded), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateGroupCallIndicatorIfNeeded(_:)), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         if dataSource.category == .group {
             CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
         }
-        updateGroupCallIndicatorIfNeeded()
+        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { (ids) in
+            self.groupCallIndicatorView.isHidden = ids.isEmpty
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -858,16 +860,21 @@ class ConversationViewController: UIViewController {
         previewDocumentMessageId = nil
     }
     
-    @objc func updateGroupCallIndicatorIfNeeded() {
-        guard dataSource.category == .group else {
+    @objc func updateGroupCallIndicatorIfNeeded(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
             return
         }
-        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
-            guard let self = self else {
-                return
-            }
-            let hasCall = !ids.isEmpty
-            self.groupCallIndicatorView.isHidden = !hasCall
+        guard let conversationId = userInfo[GroupCallMembersManager.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let ids = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? [String] else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.groupCallIndicatorView.isHidden = ids.isEmpty
         }
     }
     

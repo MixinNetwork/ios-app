@@ -7,6 +7,7 @@ class Call: NSObject {
     static let statusUserInfoKey = "stat"
     
     let uuid: UUID
+    let conversationId: String
     let isOutgoing: Bool
     
     var connectedDate: Date?
@@ -21,8 +22,9 @@ class Call: NSObject {
     
     private(set) lazy var uuidString = uuid.uuidString.lowercased()
     
-    init(uuid: UUID, isOutgoing: Bool) {
+    init(uuid: UUID, conversationId: String, isOutgoing: Bool) {
         self.uuid = uuid
+        self.conversationId = conversationId
         self.isOutgoing = isOutgoing
         super.init()
     }

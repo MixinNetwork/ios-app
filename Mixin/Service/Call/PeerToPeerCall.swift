@@ -9,12 +9,11 @@ class PeerToPeerCall: Call {
     var remoteUser: UserItem?
     var hasReceivedRemoteAnswer = false
     
-    private(set) lazy var conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: remoteUserId)
-    
     init(uuid: UUID, isOutgoing: Bool, remoteUserId: String, remoteUsername: String) {
         self.remoteUserId = remoteUserId
         self.remoteUsername = remoteUsername
-        super.init(uuid: uuid, isOutgoing: isOutgoing)
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: remoteUserId)
+        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing)
     }
     
     convenience init(uuid: UUID, isOutgoing: Bool, remoteUser: UserItem) {

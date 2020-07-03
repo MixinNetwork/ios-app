@@ -9,8 +9,11 @@ class MinimizedCallViewController: UIViewController {
     weak var call: Call? {
         didSet {
             updateLabel(status: call?.status)
+            conversationId = call?.conversationId
         }
     }
+    
+    private(set) var conversationId: String?
     
     private weak var timer: Timer?
     

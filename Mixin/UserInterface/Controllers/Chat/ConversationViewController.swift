@@ -1004,7 +1004,12 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallService.shared.requestStartPeerToPeerCall(remoteUser: ownerUser)
+        let service = CallService.shared
+        if service.isMinimized, UIApplication.homeContainerViewController?.minimizedCallViewController.conversationId == conversationId {
+            service.setInterfaceMinimized(false, animated: true)
+        } else {
+            service.requestStartPeerToPeerCall(remoteUser: ownerUser)
+        }
     }
     
     func pickPhotoOrVideoAction() {
@@ -1030,18 +1035,23 @@ class ConversationViewController: UIViewController {
         guard dataSource.category == .group else {
             return
         }
-        let conversation = dataSource.conversation
-        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
-            if ids.isEmpty {
-                let picker = GroupCallMemberPickerViewController(conversation: conversation)
-                picker.appearance = .startNewCall
-                picker.onConfirmation = { (members) in
-                    CallService.shared.requestStartGroupCall(conversation: conversation,
-                                                             invitingMembers: members)
+        let service = CallService.shared
+        if service.isMinimized, UIApplication.homeContainerViewController?.minimizedCallViewController.conversationId == conversationId {
+            service.setInterfaceMinimized(false, animated: true)
+        } else {
+            let conversation = dataSource.conversation
+            service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+                if ids.isEmpty {
+                    let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                    picker.appearance = .startNewCall
+                    picker.onConfirmation = { (members) in
+                        service.requestStartGroupCall(conversation: conversation,
+                                                      invitingMembers: members)
+                    }
+                    self?.present(picker, animated: true, completion: nil)
+                } else {
+                    service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
                 }
-                self?.present(picker, animated: true, completion: nil)
-            } else {
-                CallService.shared.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
             }
         }
     }

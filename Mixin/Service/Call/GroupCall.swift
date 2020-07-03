@@ -7,7 +7,6 @@ class GroupCall: Call {
     static let maxNumberOfMembers = 16
     
     let conversation: ConversationItem
-    let conversationId: String
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
@@ -26,13 +25,13 @@ class GroupCall: Call {
     
     init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem]) {
         self.conversation = conversation
-        self.conversationId = conversation.conversationId
         self.conversationName = conversation.getConversationName()
+        let conversationId = conversation.conversationId
         self.membersDataSource = GroupCallMemberDataSource(conversationId: conversationId,
                                                            members: members + invitingMembers,
                                                            invitingMemberUserIds: Set(invitingMembers.map(\.userId)))
         self.pendingInvitingMembers = invitingMembers
-        super.init(uuid: uuid, isOutgoing: isOutgoing)
+        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing)
         DispatchQueue.main.async {
             CallService.shared.membersManager.beginPolling(forConversationWith: conversation.conversationId)
         }

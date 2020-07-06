@@ -771,7 +771,6 @@ extension CallService: WebRTCClientDelegate {
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         if let call = activeCall {
             callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-            membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
         }
         failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
     }
@@ -959,6 +958,7 @@ extension CallService {
                                                             status: .DELIVERED)
             MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
         } else if let call = activeCall as? GroupCall {
+            membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
             if sendFailedMessageToRemote {
                 let request = KrakenRequest(conversationId: call.conversationId,
                                             trackId: call.trackId,

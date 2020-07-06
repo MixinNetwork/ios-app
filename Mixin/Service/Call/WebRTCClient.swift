@@ -5,7 +5,7 @@ import MixinServices
 protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
-    func webRTCClientDidFailed(_ client: WebRTCClient)
+    func webRTCClientDidDisconnected(_ client: WebRTCClient)
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
 }
 
@@ -123,8 +123,10 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             queue.async {
                 self.delegate?.webRTCClientDidConnected(self)
             }
-        } else if newState == .closed {
-            // TODO
+        } else if newState == .disconnected {
+            queue.async {
+                self.delegate?.webRTCClientDidDisconnected(self)
+            }
         }
     }
     

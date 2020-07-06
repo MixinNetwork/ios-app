@@ -721,53 +721,51 @@ extension CallService {
 extension CallService: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        queue.async {
-            if let call = self.activeCall as? PeerToPeerCall, let content = [candidate].jsonString {
-                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                      category: .WEBRTC_ICE_CANDIDATE,
-                                                      content: content,
-                                                      status: .SENDING,
-                                                      quoteMessageId: call.uuidString)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: call.remoteUser,
-                                                      isGroupMessage: false)
-            } else if let call = self.activeCall as? GroupCall, let json = candidate.jsonString?.base64Encoded() {
-                if let trackId = call.trackId {
-                    let request = KrakenRequest(conversationId: call.conversationId,
-                                                trackId: trackId,
-                                                action: .trickle(candidate: json))
-                    SendMessageService.shared.send(krakenRequest: request)
-                } else {
-                    var trickles = self.pendingTrickles[call.uuid] ?? []
-                    trickles.append(json)
-                    self.pendingTrickles[call.uuid] = trickles
-                }
+        if let call = activeCall as? PeerToPeerCall, let content = [candidate].jsonString {
+            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                  category: .WEBRTC_ICE_CANDIDATE,
+                                                  content: content,
+                                                  status: .SENDING,
+                                                  quoteMessageId: call.uuidString)
+            SendMessageService.shared.sendMessage(message: msg,
+                                                  ownerUser: call.remoteUser,
+                                                  isGroupMessage: false)
+        } else if let call = self.activeCall as? GroupCall, let json = candidate.jsonString?.base64Encoded() {
+            if let trackId = call.trackId {
+                let request = KrakenRequest(conversationId: call.conversationId,
+                                            trackId: trackId,
+                                            action: .trickle(candidate: json))
+                SendMessageService.shared.send(krakenRequest: request)
+            } else {
+                var trickles = pendingTrickles[call.uuid] ?? []
+                trickles.append(json)
+                pendingTrickles[call.uuid] = trickles
             }
         }
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
-        queue.async {
-            guard let call = self.activeCall, call.connectedDate == nil else {
-                return
-            }
-            let date = Date()
-            call.connectedDate = date
-            if call.isOutgoing {
-                self.callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
-            } else {
-                self.callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
-            }
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            call.status = .connected
+        guard let call = activeCall, call.connectedDate == nil else {
+            return
         }
+        let date = Date()
+        call.connectedDate = date
+        if call.isOutgoing {
+            callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
+        } else {
+            callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
+        }
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        call.status = .connected
         updateAudioSessionConfiguration()
     }
     
-    func webRTCClientDidFailed(_ client: WebRTCClient) {
-        dispatch {
-            self.failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
+    func webRTCClientDidDisconnected(_ client: WebRTCClient) {
+        if let call = activeCall {
+            callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+            membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
         }
+        failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
@@ -934,6 +932,9 @@ extension CallService {
 extension CallService {
     
     private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
+        guard let activeCall = activeCall else {
+            return
+        }
         if let call = activeCall as? PeerToPeerCall {
             if sendFailedMessageToRemote {
                 let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
@@ -949,7 +950,6 @@ extension CallService {
                                                             category: .WEBRTC_AUDIO_FAILED,
                                                             status: .DELIVERED)
             MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
-            close(uuid: call.uuid)
         } else if let call = activeCall as? GroupCall {
             if sendFailedMessageToRemote {
                 let request = KrakenRequest(conversationId: call.conversationId,
@@ -961,8 +961,8 @@ extension CallService {
                                                         conversationId: call.conversationId,
                                                         userId: "")
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-            close(uuid: call.uuid)
         }
+        close(uuid: activeCall.uuid)
         reporter.report(error: error)
     }
     
@@ -1051,8 +1051,8 @@ extension CallService {
             self.showCallingInterface(call: call)
         }
         
-        for uuid in self.pendingAnswerCalls.keys {
-            self.endCall(uuid: uuid)
+        for uuid in pendingAnswerCalls.keys {
+            endCall(uuid: uuid)
         }
         self.ringtonePlayer.stop()
         self.rtcClient.set(remoteSdp: sdp) { (error) in

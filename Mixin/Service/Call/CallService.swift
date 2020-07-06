@@ -403,6 +403,11 @@ extension CallService {
         }
         isMuted = false
         usesSpeaker = false
+        if !usesCallKit {
+            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                RTCAudioSession.sharedInstance().isAudioEnabled = false
+            }
+        }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
     }
@@ -426,6 +431,11 @@ extension CallService {
             }
             isMuted = false
             usesSpeaker = false
+            if !usesCallKit {
+                RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                    RTCAudioSession.sharedInstance().isAudioEnabled = false
+                }
+            }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
         }
@@ -766,6 +776,11 @@ extension CallService: WebRTCClientDelegate {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         call.status = .connected
         updateAudioSessionConfiguration()
+        if !usesCallKit {
+            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                RTCAudioSession.sharedInstance().isAudioEnabled = true
+            }
+        }
     }
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
@@ -1154,6 +1169,9 @@ extension CallService {
         }
         #endif
         call.trackId = trackId
+        if call.isOutgoing {
+            callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
+        }
         rtcClient.set(remoteSdp: sdp) { (clientError) in
             var error = clientError
             #if DEBUG
@@ -1172,9 +1190,6 @@ extension CallService {
             } else {
                 completion?(true)
                 self.queue.async {
-                    if call.isOutgoing {
-                        self.callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
-                    }
                     self.subscribe(userId: myUserId, of: call)
                     self.pendingTrickles.removeValue(forKey: call.uuid)?.forEach({ (candidate) in
                         let trickle = KrakenRequest(conversationId: call.conversationId,

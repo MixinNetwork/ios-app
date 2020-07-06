@@ -42,11 +42,9 @@ extension MixinCallInterface: CallInterface {
             guard success else {
                 return
             }
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                try? RTCAudioSession.sharedInstance().setActive(true)
-                if playOutgoingRingtone {
-                    self.service.ringtonePlayer.play(ringtone: .outgoing)
-                }
+            if playOutgoingRingtone {
+                try? AVAudioSession.sharedInstance().setActive(true, options: [])
+                self.service.ringtonePlayer.play(ringtone: .outgoing)
             }
         })
         completion(nil)

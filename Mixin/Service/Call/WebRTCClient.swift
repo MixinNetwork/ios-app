@@ -87,9 +87,6 @@ class WebRTCClient: NSObject {
     }
     
     func close() {
-        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-            RTCAudioSession.sharedInstance().isAudioEnabled = false
-        }
         peerConnection?.close()
         peerConnection = nil
         audioTrack = nil
@@ -117,9 +114,6 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
         if newState == .connected {
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                RTCAudioSession.sharedInstance().isAudioEnabled = true
-            }
             queue.async {
                 self.delegate?.webRTCClientDidConnected(self)
             }

@@ -1,5 +1,6 @@
 import CallKit
 import AVFoundation
+import WebRTC
 
 class NativeCallInterface: NSObject {
     
@@ -207,10 +208,19 @@ extension NativeCallInterface: CXProviderDelegate {
         if let call = service.activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
             service.ringtonePlayer.play(ringtone: .outgoing)
         }
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            let session = RTCAudioSession.sharedInstance()
+            session.audioSessionDidActivate(audioSession)
+            session.isAudioEnabled = true
+        }
     }
     
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-        
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            let session = RTCAudioSession.sharedInstance()
+            session.audioSessionDidDeactivate(audioSession)
+            session.isAudioEnabled = false
+        }
     }
     
 }

@@ -646,9 +646,17 @@ extension CallService {
     
     private func handlePublishing(data: BlazeMessageData) {
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
+        let groupCall: GroupCall?
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
-            call.reportMemberWithIdDidConnected(data.userId)
+            groupCall = call
             subscribe(userId: data.userId, of: call)
+        } else if let uuid = UUID(uuidString: data.conversationId) {
+            groupCall = pendingAnswerCalls[uuid] as? GroupCall
+        } else {
+            groupCall = nil
+        }
+        if let call = groupCall {
+            call.reportMemberWithIdDidConnected(data.userId)
         }
     }
     

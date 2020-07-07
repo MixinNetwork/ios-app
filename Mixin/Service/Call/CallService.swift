@@ -177,6 +177,7 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: invitingMembers)
+            call.status = .outgoing
             return call
         })
     }
@@ -316,7 +317,6 @@ extension CallService {
             if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
                 self.startPeerToPeerCall(call, completion: completion)
             } else if let call = self.activeCall as? GroupCall, call.uuid == uuid {
-                call.status = call.isOutgoing ? .outgoing : .incoming
                 DispatchQueue.main.sync {
                     self.showCallingInterface(call: call)
                 }
@@ -691,6 +691,7 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
+            call.status = .incoming
             call.inviterUserId = data.userId
             pendingAnswerCalls[uuid] = call
             callInterface.reportIncomingCall(call) { (error) in
@@ -837,6 +838,7 @@ extension CallService: PKPushRegistryDelegate {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
+            call.status = .incoming
             call.inviterUserId = userId
             pendingAnswerCalls[uuid] = call
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in

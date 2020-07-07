@@ -308,6 +308,7 @@ extension CallService {
         AudioManager.shared.pause()
         dispatch {
             guard WebSocketService.shared.isConnected else {
+                self.activeCall = nil
                 self.alert(error: .networkFailure)
                 completion?(false)
                 return
@@ -1002,12 +1003,16 @@ extension CallService {
             let call = makeCall(uuid)
             activeCall = call
             callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
+                guard let error = error else {
+                    return
+                }
+                self.activeCall = nil
                 if let error = error as? CallError {
                     self.alert(error: error)
-                } else if let error = error {
-                    reporter.report(error: error)
+                } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
                 }
+                reporter.report(error: error)
             }
         }
         
@@ -1030,6 +1035,7 @@ extension CallService {
     
     private func startPeerToPeerCall(_ call: PeerToPeerCall, completion: ((Bool) -> Void)?) {
         guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: call.remoteUserId) else {
+            self.activeCall = nil
             self.alert(error: .missingUser(userId: call.remoteUserId))
             completion?(false)
             return

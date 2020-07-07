@@ -127,6 +127,7 @@ public final class ParticipantDAO {
             try db.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName, condition: ParticipantSession.Properties.conversationId == conversationId)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
+            NotificationCenter.default.post(name: .SenderKeyDidChange, object: nil, userInfo: ["conversation_id": conversationId])
         }
     }
     

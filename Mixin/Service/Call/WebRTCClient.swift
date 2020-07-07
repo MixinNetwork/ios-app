@@ -24,6 +24,10 @@ class WebRTCClient: NSObject {
     
     private var peerConnection: RTCPeerConnection?
     
+    private var rtpSender: RTCRtpSender?
+
+    private var rtpReceivers = [String : RTCRtpReceiver]()
+
     var canAddRemoteCandidate: Bool {
         peerConnection != nil
     }
@@ -143,6 +147,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
                                                   senderPublicKeyForUserWith: userSession[0],
                                                   sessionId: userSession[1])
             if let frameKey = frameKey {
+                rtpReceivers[m.streamId] = rtpReceiver
                 rtpReceiver.setFrameDecryptorKey(frameKey)
             }
         }
@@ -181,7 +186,21 @@ extension WebRTCClient {
         config.continualGatheringPolicy = .gatherOnce
         return config
     }
-    
+
+    func setSenderFrameKey(key: Data?) {
+        guard let key = key else {
+            return
+        }
+        rtpSender?.setFrameEncryptorKey(key)
+    }
+
+    func setReceiverFrameKey(userId: String, sessionId: String, frameKey: Data?) {
+        let key = "${userId}~${sessionId}"
+        if let receiver = rtpReceivers[key], let frameKey = frameKey {
+            receiver.setFrameDecryptorKey(frameKey)
+        }
+    }
+
     private func makePeerConnectionIfNeeded(key: Data? = nil) {
         guard self.peerConnection == nil else {
             return
@@ -197,10 +216,9 @@ extension WebRTCClient {
             let audioSource = factory.audioSource(with: audioConstraints)
             return factory.audioTrack(with: audioSource, trackId: audioId)
         }()
-        let rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
-        if let key = key {
-          rtpSender.setFrameEncryptorKey(key)
-        }
+        rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
+        setSenderFrameKey(key: key)
+        // RTCSetMinDebugLogLevel(.verbose)
         peerConnection.delegate = self
         self.peerConnection = peerConnection
         self.audioTrack = audioTrack

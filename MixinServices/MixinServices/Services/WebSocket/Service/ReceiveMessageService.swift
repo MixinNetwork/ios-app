@@ -339,6 +339,10 @@ public class ReceiveMessageService: MixinService {
                     } else {
                         self.processDecryptSuccess(data: data, plainText: plainText)
                     }
+                } else {
+                    if data.userId != myUserId {
+                        NotificationCenter.default.post(name: .SenderKeyDidChange, object: nil, userInfo: ["conversation_id": data.conversationId, "user_id": data.userId, "session_id": data.sessionId])
+                    }
                 }
             })
             let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)

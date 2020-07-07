@@ -1,7 +1,7 @@
 import Foundation
 
 public class MixinService {
-    
+
     public enum UserInfoKey {
         public static let messageId = "msg_id"
         public static let conversationId = "conv_id"
@@ -21,7 +21,7 @@ public class MixinService {
         return myUserId
     }
 
-    internal func checkSessionSenderKey(conversationId: String) throws {
+    public func checkSessionSenderKey(conversationId: String) throws {
         var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
         guard participants.count > 0 else {
             return

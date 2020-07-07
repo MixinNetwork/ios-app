@@ -10,9 +10,16 @@ public protocol CallMessageCoordinator: class {
 
 public class ReceiveMessageService: MixinService {
     
+    public enum UserInfoKey {
+        public static let conversationId = "cid"
+        public static let userId = "uid"
+        public static let sessionId = "sid"
+    }
+    
     public static let shared = ReceiveMessageService()
     public static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")
-
+    public static let senderKeyDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.SenderKeyDidChange")
+    
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
     
@@ -341,7 +348,12 @@ public class ReceiveMessageService: MixinService {
                     }
                 } else {
                     if data.userId != myUserId {
-                        NotificationCenter.default.post(name: .SenderKeyDidChange, object: nil, userInfo: ["conversation_id": data.conversationId, "user_id": data.userId, "session_id": data.sessionId])
+                        let userInfo = [
+                            Self.UserInfoKey.conversationId: data.conversationId,
+                            Self.UserInfoKey.userId: data.userId,
+                            Self.UserInfoKey.sessionId: data.sessionId
+                        ]
+                        NotificationCenter.default.post(name: Self.senderKeyDidChangeNotification, object: self, userInfo: userInfo)
                     }
                 }
             })

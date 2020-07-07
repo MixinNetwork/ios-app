@@ -1131,7 +1131,7 @@ extension CallService {
     }
     
     private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
-       try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
+        try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)
         rtcClient.offer(key: frameKey?.dropFirst()) { clientResult in
             var result = clientResult
@@ -1161,7 +1161,7 @@ extension CallService {
             completion?(false)
             return
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(senderKeyChange(_:)), name: .SenderKeyDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(senderKeyChange(_:)), name: ReceiveMessageService.senderKeyDidChangeNotification, object: nil)
         #if DEBUG
         if GroupCallDebugConfig.invalidResponseOnPublishing {
             failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
@@ -1263,21 +1263,29 @@ extension CallService {
         }
     }
     
-    @objc func senderKeyChange(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?["conversation_id"] as? String, let call = activeCall as? GroupCall, call.conversationId == conversationId else {
+    @objc private func senderKeyChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
             return
         }
-        if let userId = notification.userInfo?["user_id"] as? String, let sessionId = notification.userInfo?["session_id"] as? String, !userId.isEmpty && !sessionId.isEmpty {
-            let members = self.membersManager.members(inConversationWith: conversationId)
-            let userIds = members.map(\.userId)
-            if userIds.contains(userId) {
-                let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
-                rtcClient.setReceiverFrameKey(userId: userId, sessionId: sessionId, frameKey: frameKey)
-            }
-        } else {
-            try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
-            let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
-            rtcClient.setSenderFrameKey(key: frameKey)
+        guard let conversationId = userInfo[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
+            return
         }
-     }
+        queue.async {
+            guard let call = self.activeCall as? GroupCall, call.conversationId == conversationId else {
+                return
+            }
+            if let userId = userInfo[ReceiveMessageService.UserInfoKey.userId] as? String, let sessionId = userInfo[ReceiveMessageService.UserInfoKey.sessionId] as? String, !userId.isEmpty && !sessionId.isEmpty {
+                let userIds = self.membersManager.members[conversationId] ?? [] // Since there's an active call it won't be nil
+                if userIds.contains(userId) {
+                    let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
+                    self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
+                }
+            } else {
+                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
+                let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
+                self.rtcClient.setFrameEncryptorKey(frameKey)
+            }
+        }
+    }
+    
 }

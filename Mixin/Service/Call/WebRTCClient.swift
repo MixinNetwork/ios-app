@@ -23,11 +23,9 @@ class WebRTCClient: NSObject {
     private(set) var audioTrack: RTCAudioTrack?
     
     private var peerConnection: RTCPeerConnection?
-    
     private var rtpSender: RTCRtpSender?
-
     private var rtpReceivers = [String : RTCRtpReceiver]()
-
+    
     var canAddRemoteCandidate: Bool {
         peerConnection != nil
     }
@@ -90,10 +88,26 @@ class WebRTCClient: NSObject {
         peerConnection?.add(remoteCandidate)
     }
     
+    func setFrameEncryptorKey(_ key: Data?) {
+        guard let key = key else {
+            return
+        }
+        rtpSender?.setFrameEncryptorKey(key)
+    }
+    
+    func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String) {
+        let streamId = "\(userId)~\(sessionId)"
+        if let receiver = rtpReceivers[streamId], let key = key {
+            receiver.setFrameDecryptorKey(key)
+        }
+    }
+    
     func close() {
         peerConnection?.close()
         peerConnection = nil
         audioTrack = nil
+        rtpSender = nil
+        rtpReceivers = [:]
     }
     
 }
@@ -186,21 +200,7 @@ extension WebRTCClient {
         config.continualGatheringPolicy = .gatherOnce
         return config
     }
-
-    func setSenderFrameKey(key: Data?) {
-        guard let key = key else {
-            return
-        }
-        rtpSender?.setFrameEncryptorKey(key)
-    }
-
-    func setReceiverFrameKey(userId: String, sessionId: String, frameKey: Data?) {
-        let key = "${userId}~${sessionId}"
-        if let receiver = rtpReceivers[key], let frameKey = frameKey {
-            receiver.setFrameDecryptorKey(frameKey)
-        }
-    }
-
+    
     private func makePeerConnectionIfNeeded(key: Data? = nil) {
         guard self.peerConnection == nil else {
             return
@@ -217,8 +217,7 @@ extension WebRTCClient {
             return factory.audioTrack(with: audioSource, trackId: audioId)
         }()
         rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
-        setSenderFrameKey(key: key)
-        // RTCSetMinDebugLogLevel(.verbose)
+        setFrameEncryptorKey(key)
         peerConnection.delegate = self
         self.peerConnection = peerConnection
         self.audioTrack = audioTrack

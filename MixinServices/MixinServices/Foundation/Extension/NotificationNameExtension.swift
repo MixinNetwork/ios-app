@@ -13,9 +13,7 @@ public extension NSNotification.Name {
     static let SyncMessageDidAppear = NSNotification.Name("one.mixin.services.sync.message")
 
     static let ParticipantDidChange = NSNotification.Name("one.mixin.services.participant.changed")
-
-    static let SenderKeyDidChange = NSNotification.Name("one.mixin.services.senderkey.changed")
-
+    
     static let AssetsDidChange = NSNotification.Name("one.mixin.services.assets.changed")
 
     static let AssetVisibleDidChange = NSNotification.Name("one.mixin.services.asset.visible.changed")

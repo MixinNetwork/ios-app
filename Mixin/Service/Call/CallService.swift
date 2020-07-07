@@ -820,12 +820,7 @@ extension CallService: PKPushRegistryDelegate {
             completion()
             return
         }
-        guard let messageId = payload.dictionaryPayload["message_id"] as? String, let uuid = UUID(uuidString: messageId) else {
-            nativeCallInterface.reportImmediateFailureCall()
-            completion()
-            return
-        }
-        guard let userId = payload.dictionaryPayload["user_id"] as? String, let username = payload.dictionaryPayload["full_name"] as? String else {
+        guard let userId = payload.dictionaryPayload["user_id"] as? String else {
             nativeCallInterface.reportImmediateFailureCall()
             completion()
             return
@@ -835,7 +830,19 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit && !MessageDAO.shared.isExist(messageId: messageId) {
+        if usesCallKit, let name = payload.dictionaryPayload["name"] as? String, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+            let members = self.membersManager.members(inConversationWith: conversationId)
+            let call = GroupCall(uuid: uuid,
+                                 isOutgoing: false,
+                                 conversation: conversation,
+                                 members: members,
+                                 invitingMembers: [])
+            call.inviterUserId = userId
+            pendingAnswerCalls[uuid] = call
+            nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in
+                completion()
+            }
+        } else if usesCallKit, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
             pendingAnswerCalls[uuid] = call
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: userId, localizedName: username) { (error) in

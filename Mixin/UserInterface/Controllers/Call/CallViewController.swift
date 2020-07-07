@@ -297,6 +297,7 @@ extension CallViewController {
             setConnectionDurationTimerEnabled(true)
         case .disconnecting:
             minimizeButton.isHidden = true
+            inviteButton.isHidden = true
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
             setConnectionDurationTimerEnabled(false)

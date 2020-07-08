@@ -821,7 +821,7 @@ extension CallService: PKPushRegistryDelegate {
             completion()
             return
         }
-        guard let userId = payload.dictionaryPayload["user_id"] as? String else {
+        guard let userId = payload.dictionaryPayload["user_id"] as? String, let name = payload.dictionaryPayload["name"] as? String else {
             nativeCallInterface.reportImmediateFailureCall()
             completion()
             return
@@ -831,7 +831,7 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit, let name = payload.dictionaryPayload["name"] as? String, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
             let members = self.membersManager.members(inConversationWith: conversationId)
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,

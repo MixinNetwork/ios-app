@@ -788,8 +788,10 @@ extension CallService: WebRTCClientDelegate {
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         if let call = activeCall {
             callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+            if call is GroupCall {
+                failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
+            }
         }
-        failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {

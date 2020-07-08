@@ -109,7 +109,7 @@ class GroupCallMemberDataSource: NSObject {
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        members.count
+        min(GroupCall.maxNumberOfMembers, members.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

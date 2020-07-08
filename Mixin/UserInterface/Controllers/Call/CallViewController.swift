@@ -99,7 +99,7 @@ class CallViewController: UIViewController {
         guard let dataSource = groupCallMembersCollectionView.dataSource else {
             return
         }
-        let sectionsCount = dataSource.numberOfSections?(in: groupCallMembersCollectionView) ?? 0
+        let sectionsCount = dataSource.numberOfSections?(in: groupCallMembersCollectionView) ?? 1
         let allMembersCount = (0..<sectionsCount)
             .map({ dataSource.collectionView(groupCallMembersCollectionView, numberOfItemsInSection: $0) })
             .reduce(0, +)

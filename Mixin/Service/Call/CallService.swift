@@ -1253,7 +1253,7 @@ extension CallService {
         }
     }
     
-    func answer(userId: String, of call: GroupCall) {
+    private func answer(userId: String, of call: GroupCall) {
         rtcClient.answer { (clientResult) in
             var result = clientResult
             #if DEBUG

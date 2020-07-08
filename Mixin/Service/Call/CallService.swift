@@ -131,7 +131,7 @@ class CallService: NSObject {
     func hasPendingAnswerGroupCall(with uuid: UUID) -> Bool {
         if let call = activeCall, call.uuid == uuid {
             return true
-        } else if let _ = pendingAnswerCalls[uuid] {
+        } else if let call = pendingAnswerCalls[uuid], call is GroupCall {
             return true
         } else {
             return false

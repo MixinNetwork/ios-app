@@ -10,7 +10,7 @@ class NativeCallInterface: NSObject {
     private unowned let service: CallService
     
     private var pendingAnswerAction: CXAnswerCallAction?
-    private var unansweredIncomingCallUUIDs = Set<UUID>()
+    private var incomingCallUUIDs = Set<UUID>()
     
     required init(service: CallService) {
         self.service = service
@@ -51,11 +51,10 @@ class NativeCallInterface: NSObject {
         update.supportsUngrouping = false
         update.supportsDTMF = false
         update.hasVideo = false
-        if unansweredIncomingCallUUIDs.contains(uuid) {
+        if incomingCallUUIDs.contains(uuid) {
             provider.reportCall(with: uuid, updated: update)
             completion(nil)
             if let action = pendingAnswerAction, uuid == action.callUUID, service.hasPendingSDP(for: uuid) {
-                unansweredIncomingCallUUIDs.remove(uuid)
                 service.answerCall(uuid: action.callUUID) { (success) in
                     if !success {
                         action.fail()
@@ -64,7 +63,7 @@ class NativeCallInterface: NSObject {
                 }
             }
         } else {
-            unansweredIncomingCallUUIDs.insert(uuid)
+            incomingCallUUIDs.insert(uuid)
             provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
         }
     }
@@ -104,7 +103,7 @@ extension NativeCallInterface: CallInterface {
             action.fail()
             pendingAnswerAction = nil
         }
-        unansweredIncomingCallUUIDs.remove(uuid)
+        incomingCallUUIDs.remove(uuid)
         let action = CXEndCallAction(call: uuid)
         callController.requestTransaction(with: action, completion: completion)
     }
@@ -133,7 +132,7 @@ extension NativeCallInterface: CallInterface {
             action.fail()
             pendingAnswerAction = nil
         }
-        unansweredIncomingCallUUIDs.remove(uuid)
+        incomingCallUUIDs.remove(uuid)
         provider.reportCall(with: uuid, endedAt: nil, reason: reason)
     }
     
@@ -176,7 +175,6 @@ extension NativeCallInterface: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         let uuid = action.callUUID
         if service.hasPendingSDP(for: uuid) || service.hasPendingAnswerGroupCall(with: uuid) {
-            unansweredIncomingCallUUIDs.remove(uuid)
             service.answerCall(uuid: uuid) { (success) in
                 if success {
                     self.pendingAnswerAction = action
@@ -190,7 +188,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        unansweredIncomingCallUUIDs.remove(action.callUUID)
+        incomingCallUUIDs.remove(action.callUUID)
         service.endCall(uuid: action.callUUID)
         action.fulfill()
     }

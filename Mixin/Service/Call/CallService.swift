@@ -529,8 +529,9 @@ extension CallService: CallMessageCoordinator {
                 handle(data: data)
             } else {
                 let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+                let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
                 if isOffer, let uuid = UUID(uuidString: data.messageId), !hasCall(uuid: uuid) {
-                    if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval {
+                    if isTimedOut {
                         let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
                         MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
                     } else {
@@ -551,6 +552,23 @@ extension CallService: CallMessageCoordinator {
                                                           category: category,
                                                           status: .DELIVERED)
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                } else if data.category == MessageCategory.KRAKEN_INVITE.rawValue, let uuid = UUID(uuidString: data.conversationId), !hasCall(uuid: uuid) {
+                    if isTimedOut {
+                        // TODO: Inform user about timed out invitations?
+                    } else {
+                        let workItem = DispatchWorkItem(block: {
+                            handle(data: data)
+                            self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                        })
+                        if let item = self.listPendingCallWorkItems[uuid] {
+                            // TODO: Inform user about timed out invitations?
+                            item.cancel()
+                        }
+                        self.listPendingCallWorkItems[uuid] = workItem
+                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: workItem)
+                    }
+                } else if data.category == MessageCategory.KRAKEN_CANCEL.rawValue, let uuid = UUID(uuidString: data.conversationId), let workItem = self.listPendingCallWorkItems.removeValue(forKey: uuid) {
+                    workItem.cancel()
                 } else {
                     handle(data: data)
                 }

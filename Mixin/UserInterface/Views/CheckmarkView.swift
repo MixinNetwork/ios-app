@@ -41,6 +41,14 @@ class CheckmarkView: UIView {
         prepare()
     }
     
+    override var debugDescription: String {
+        var desc = super.debugDescription
+        if let index = desc.lastIndex(of: ">") {
+            desc.insert(contentsOf: "; status: \(status)", at: index)
+        }
+        return desc
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView.center = CGPoint(x: bounds.midX, y: bounds.midY)

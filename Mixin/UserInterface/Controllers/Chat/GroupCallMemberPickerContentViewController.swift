@@ -12,6 +12,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     
     var fixedSelections = [UserItem]() {
         didSet {
+            fixedUserIds = Set(fixedSelections.map(\.userId))
             collectionView.reloadData()
         }
     }
@@ -32,6 +33,9 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     
     private let conversation: ConversationItem
     private let callButtonSize = CGSize(width: 50, height: 50)
+    
+    // Automatically updates when fixed selections did set
+    private(set) var fixedUserIds = Set<String>()
     
     private var selections = [UserItem]()
     
@@ -113,10 +117,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         super.configure(cell: cell, at: indexPath)
         let user = userItem(at: indexPath)
-        // TODO: Improve speed with Set?
-        if fixedSelections.contains(where: { $0.userId == user.userId }) {
-            cell.checkmarkView.status = .forceSelected
-        }
+        cell.isForceSelected = fixedUserIds.contains(user.userId)
     }
     
     // MARK: - UITableViewDelegate
@@ -131,7 +132,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
             return nil
         }
         let item = userItem(at: indexPath)
-        if fixedSelections.contains(where: { $0.userId == item.userId }) {
+        if fixedUserIds.contains(item.userId) {
             return nil
         } else {
             return indexPath
@@ -245,7 +246,7 @@ extension GroupCallMemberPickerContentViewController {
             guard !isCancelled else {
                 return
             }
-            let fixedUserIds = Set(viewController?.fixedSelections.map(\.userId) ?? [])
+            let fixedUserIds = viewController?.fixedUserIds ?? []
             let participants = ParticipantDAO.shared
                 .getParticipants(conversationId: conversationId)
                 .filter { !$0.isBot && $0.relationship != Relationship.ME.rawValue }

@@ -81,7 +81,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="02X-1z-xjL">
-                                <rect key="frame" x="62" y="35" width="251" height="149.5"/>
+                                <rect key="frame" x="62" y="35" width="251" height="47.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9XF-0U-dfR">
                                         <rect key="frame" x="0.0" y="0.0" width="251" height="21.5"/>
@@ -92,38 +92,23 @@
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular18"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
-                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9NK-rK-Zk2">
-                                        <rect key="frame" x="0.0" y="21.5" width="251" height="128"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="8ef-CD-7aN">
-                                            <rect key="frame" x="0.0" y="0.0" width="251" height="128"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VO9-wd-obK">
-                                                    <rect key="frame" x="0.0" y="0.0" width="251" height="128"/>
-                                                    <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
-                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
-                                                    <state key="normal" title="End-to-end Encrypted" image="Call/ic_encryption"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_encryption"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="showEncryptionHintAction:" destination="-1" eventType="touchUpInside" id="NTQ-pG-Dlb"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="VO9-wd-obK" firstAttribute="leading" secondItem="8ef-CD-7aN" secondAttribute="leading" id="8FA-7R-aZW"/>
-                                                <constraint firstItem="VO9-wd-obK" firstAttribute="top" secondItem="8ef-CD-7aN" secondAttribute="top" id="WEu-iJ-22a"/>
-                                                <constraint firstAttribute="trailing" secondItem="VO9-wd-obK" secondAttribute="trailing" id="hYd-jw-XYk"/>
-                                                <constraint firstAttribute="bottom" secondItem="VO9-wd-obK" secondAttribute="bottom" id="y63-dC-glh"/>
-                                            </constraints>
-                                        </view>
-                                        <vibrancyEffect>
-                                            <blurEffect style="dark"/>
-                                        </vibrancyEffect>
-                                    </visualEffectView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VO9-wd-obK">
+                                        <rect key="frame" x="0.0" y="21.5" width="251" height="26"/>
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
+                                        <state key="normal" title="End-to-end Encrypted" image="Call/ic_encryption">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_encryption"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="showEncryptionHintAction:" destination="-1" eventType="touchUpInside" id="NTQ-pG-Dlb"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="eJy-52-qsF">

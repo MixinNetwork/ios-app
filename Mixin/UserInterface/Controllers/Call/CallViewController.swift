@@ -6,10 +6,9 @@ class CallViewController: UIViewController {
     
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var inviteButton: UIButton!
-    @IBOutlet weak var groupNameLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var peerToPeerCallRemoteUserStackView: UIStackView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var groupCallMembersCollectionView: GroupCallMembersCollectionView!
     @IBOutlet weak var groupCallMembersCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var statusLabel: UILabel!
@@ -131,7 +130,6 @@ class CallViewController: UIViewController {
         
         avatarImageView.prepareForReuse()
         if let call = call as? PeerToPeerCall {
-            groupNameLabel.text = " "
             inviteButton.isHidden = true
             peerToPeerCallRemoteUserStackView.isHidden = false
             groupCallMembersCollectionView.isHidden = true
@@ -145,7 +143,7 @@ class CallViewController: UIViewController {
             }
             updateViews(status: call.status)
         } else if let call = call as? GroupCall {
-            groupNameLabel.text = call.conversationName
+            nameLabel.text = call.conversationName
             inviteButton.isHidden = false
             inviteButton.isEnabled = call.membersDataSource.members.count < GroupCall.maxNumberOfMembers
             peerToPeerCallRemoteUserStackView.isHidden = true

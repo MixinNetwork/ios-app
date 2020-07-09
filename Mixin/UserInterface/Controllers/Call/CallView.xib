@@ -19,7 +19,6 @@
                 <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
                 <outlet property="groupCallMembersCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="groupCallMembersCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
-                <outlet property="groupNameLabel" destination="9XF-0U-dfR" id="KC6-cL-Vx1"/>
                 <outlet property="hangUpButton" destination="8Eu-3w-9KA" id="NC4-ap-7B4"/>
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
@@ -31,7 +30,7 @@
                 <outlet property="multipleUserCollectionViewTrailingConstraint" destination="XVI-sG-LCq" id="1w6-X7-PSA"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
-                <outlet property="nameLabel" destination="K4y-9l-7FO" id="h1P-rP-dci"/>
+                <outlet property="nameLabel" destination="9XF-0U-dfR" id="KC6-cL-Vx1"/>
                 <outlet property="peerToPeerCallRemoteUserStackView" destination="eJy-52-qsF" id="LEU-g5-McS"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
                 <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
@@ -128,7 +127,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="eJy-52-qsF">
-                                <rect key="frame" x="20" y="166" width="335" height="134.5"/>
+                                <rect key="frame" x="20" y="185.5" width="335" height="96"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wAa-Ej-6fx" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="119.5" y="0.0" width="96" height="96"/>
@@ -145,15 +144,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cedric Fung" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4y-9l-7FO">
-                                        <rect key="frame" x="123.5" y="115" width="88.5" height="19.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t3e-bg-GeY" userLabel="Group Call Members Wrapper">

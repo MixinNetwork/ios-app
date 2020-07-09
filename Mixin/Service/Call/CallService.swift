@@ -8,6 +8,9 @@ class CallService: NSObject {
     
     static let shared = CallService()
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
+    static let willActivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillActivateCall")
+    static let willDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillDeactivateCall")
+    static let callUserInfoKey = "call"
     
     let queue = DispatchQueue(label: "one.mixin.messenger.CallService")
     
@@ -47,9 +50,19 @@ class CallService: NSObject {
     private(set) lazy var ringtonePlayer = RingtonePlayer()
     private(set) lazy var membersManager = GroupCallMembersManager(workingQueue: queue)
     
-    private(set) var activeCall: Call? // Access from CallService.queue
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
     private(set) var isMinimized = false
+    
+    // Access from CallService.queue
+    private(set) var activeCall: Call? {
+        willSet {
+            if let call = activeCall, newValue == nil {
+                NotificationCenter.default.post(name: Self.willDeactivateCallNotification, object: self, userInfo: [Self.callUserInfoKey: call])
+            } else if activeCall == nil, let call = newValue {
+                NotificationCenter.default.post(name: Self.willActivateCallNotification, object: self, userInfo: [Self.callUserInfoKey: call])
+            }
+        }
+    }
     
     private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)

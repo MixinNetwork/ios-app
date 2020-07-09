@@ -270,22 +270,24 @@ class ConversationViewController: UIViewController {
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
         dataSource.initData(completion: finishInitialLoading)
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateGroupCallIndicatorIfNeeded(_:)), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        center.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
+        center.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
+        center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
+        center.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
+        center.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
+        center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
         if dataSource.category == .group {
             CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
-        }
-        CallService.shared.membersManager.getMemberUserIds(forConversationWith: conversationId) { (ids) in
-            self.groupCallIndicatorView.isHidden = ids.isEmpty
+            updateGroupCallIndicatorViewHidden()
+            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willActivateCallNotification, object: nil)
+            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willDeactivateCallNotification, object: nil)
         }
     }
     
@@ -448,7 +450,11 @@ class ConversationViewController: UIViewController {
             let (minY, maxY) = groupCallIndicatorCenterYLimitation
             let y = max(minY, min(maxY, groupCallIndicatorView.center.y))
             groupCallIndicatorCenterYConstraint.constant = y
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: view.layoutIfNeeded, completion: nil)
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           options: .curveEaseOut,
+                           animations: view.layoutIfNeeded,
+                           completion: nil)
         default:
             break
         }
@@ -860,24 +866,6 @@ class ConversationViewController: UIViewController {
         previewDocumentMessageId = nil
     }
     
-    @objc func updateGroupCallIndicatorIfNeeded(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
-        guard let conversationId = userInfo[GroupCallMembersManager.UserInfoKey.conversationId] as? String else {
-            return
-        }
-        guard conversationId == self.conversationId else {
-            return
-        }
-        guard let ids = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? [String] else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.groupCallIndicatorView.isHidden = ids.isEmpty
-        }
-    }
-    
     @objc func endMultipleSelection() {
         dataSource.selectedViewModels.removeAll()
         for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
@@ -926,6 +914,18 @@ class ConversationViewController: UIViewController {
             if ScreenSize.current <= .inch4 {
                 showScamAnnouncementIfNeeded()
             }
+        }
+    }
+    
+    @objc func groupCallMembersDidChange(_ notification: Notification) {
+        DispatchQueue.main.async {
+            guard let conversationId = notification.userInfo?[GroupCallMembersManager.UserInfoKey.conversationId] as? String else {
+                return
+            }
+            guard conversationId == self.conversationId else {
+                return
+            }
+            self.updateGroupCallIndicatorViewHidden()
         }
     }
     
@@ -1911,6 +1911,23 @@ extension ConversationViewController {
             updateAnnouncementBadge(announcement: R.string.localizable.chat_warning_scam())
         } else {
             updateAnnouncementBadge(announcement: nil)
+        }
+    }
+    
+    @objc private func updateGroupCallIndicatorViewHidden() {
+        let service = CallService.shared
+        let conversationId = self.conversationId
+        service.queue.async {
+            if let call = service.activeCall as? GroupCall, call.conversationId == conversationId {
+                DispatchQueue.main.async {
+                    self.groupCallIndicatorView.isHidden = true
+                }
+            } else {
+                let ids = service.membersManager.members[conversationId] ?? []
+                DispatchQueue.main.async {
+                    self.groupCallIndicatorView.isHidden = ids.isEmpty
+                }
+            }
         }
     }
     

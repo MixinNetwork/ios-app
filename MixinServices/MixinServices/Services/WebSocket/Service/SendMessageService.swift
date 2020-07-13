@@ -601,7 +601,6 @@ extension SendMessageService {
         var param = BlazeMessageParam()
         param.messageId = UUID().uuidString.lowercased()
         param.conversationId = id
-        param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
         param.category = "KRAKEN_LIST"
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
         return deliverKrakenMessage(blazeMessage: blazeMessage)?.toKrakenPeers()

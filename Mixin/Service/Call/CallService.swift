@@ -783,10 +783,6 @@ extension CallService {
                     return
                 }
                 self.log("[CallService] incoming call reporting error: \(error)")
-                let publishing = Message.createKrakenStatusMessage(category: .KRAKEN_PUBLISH,
-                                                                   conversationId: data.conversationId,
-                                                                   userId: data.userId)
-                MessageDAO.shared.insertMessage(message: publishing, messageSource: "")
                 let declining = KrakenRequest(conversationId: data.conversationId,
                                               trackId: nil,
                                               action: .decline(recipientId: data.userId))
@@ -1092,10 +1088,6 @@ extension CallService {
                                             action: .end)
                 SendMessageService.shared.send(krakenRequest: request)
             }
-            let msg = Message.createKrakenStatusMessage(category: .KRAKEN_END,
-                                                        conversationId: call.conversationId,
-                                                        userId: "")
-            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         }
         close(uuid: activeCall.uuid)
         reporter.report(error: error)

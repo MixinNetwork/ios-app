@@ -3,7 +3,6 @@ install! 'cocoapods',
 :incremental_installation => true
 
 platform :ios, '11.0'
-source 'https://github.com/CocoaPods/Specs.git'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
@@ -20,6 +19,8 @@ target 'Mixin' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Performance'
   pod 'Firebase/Crashlytics'
+  pod 'GoogleMLKit/BarcodeScanning'
+  pod 'GoogleMLKit/FaceDetection'
   pod 'SnapKit'
   pod 'PhoneNumberKit', :git => 'https://github.com/the0neyouseek/PhoneNumberKit'
   pod 'RSKImageCropper'

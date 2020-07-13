@@ -185,13 +185,8 @@ class WebViewController: UIViewController {
                 }
             }
         }))
-        
-        if let detector = qrCodeDetector, let cgImage = image.cgImage {
-            let ciImage = CIImage(cgImage: cgImage)
-            for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                guard let string = feature.messageString else {
-                    continue
-                }
+        QrCodeDetector.detect(in: image) { (string) in
+            if let string = string {
                 controller.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                         return
@@ -202,12 +197,10 @@ class WebViewController: UIViewController {
 
                     RecognizeWindow.instance().presentWindow(text: string)
                 }))
-                break
             }
+            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
         }
-        
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        self.present(controller, animated: true, completion: nil)
     }
     
 }

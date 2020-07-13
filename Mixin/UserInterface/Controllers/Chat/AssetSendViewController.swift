@@ -138,18 +138,11 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     private func detectQrCode(image: UIImage) {
-        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-            return
-        }
-        let ciImage = CIImage(cgImage: cgImage)
-        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-            guard let string = feature.messageString, !string.isEmpty else {
-                continue
+        QrCodeDetector.detect(in: image) { [weak self] (string) in
+            guard let string = string else {
+                return
             }
-            DispatchQueue.main.async { [weak self] in
-                self?.notificationController.presentQrCodeDetection(string)
-            }
-            break
+            self?.notificationController.presentQrCodeDetection(string)
         }
     }
     

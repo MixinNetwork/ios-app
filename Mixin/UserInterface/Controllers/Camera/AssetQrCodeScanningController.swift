@@ -52,16 +52,17 @@ class AssetQrCodeScanningController {
             }
             self.requestId = nil
             self.previewImageView.image = image
-            if let detector = qrCodeDetector, let cgImage = image?.cgImage {
-                let ciImage = CIImage(cgImage: cgImage)
-                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                    guard let string = feature.messageString else {
-                        continue
+            if let image = image {
+                QrCodeDetector.detect(in: image) { [weak self] (string) in
+                    guard let self = self else {
+                        return
                     }
-                    self.delegate?.assetQrCodeScanningController(self, didRecognizeString: string)
-                    return
+                    if let string = string {
+                        self.delegate?.assetQrCodeScanningController(self, didRecognizeString: string)
+                    } else {
+                        self.delegate?.assetQrCodeScanningControllerDidRecognizeNothing(self)
+                    }
                 }
-                self.delegate?.assetQrCodeScanningControllerDidRecognizeNothing(self)
             } else {
                 self.delegate?.assetQrCodeScanningControllerDidRecognizeNothing(self)
             }

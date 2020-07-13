@@ -1,6 +1,6 @@
 import UIKit
-import YYImage
 import Photos
+import YYImage
 import MixinServices
 
 final class GalleryImageItemViewController: GalleryItemViewController {
@@ -125,16 +125,11 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 guard let image = image, let weakSelf = self, weakSelf.item == item else {
                     return
                 }
-                guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-                    return
-                }
-                let ciImage = CIImage(cgImage: cgImage)
-                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                    guard let string = feature.messageString, let url = URL(string: string) else {
-                        continue
+                QrCodeDetector.detect(in: image) { [weak self] (string) in
+                    guard let self = self, self.item == item, let string = string else {
+                        return
                     }
-                    self?.detectedUrl = url
-                    break
+                    self.detectedUrl = URL(string: string)
                 }
             }
         }

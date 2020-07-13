@@ -1,14 +1,10 @@
 import Foundation
 import SDWebImage
+import MLKitVision
+import MLKitFaceDetection
 import MixinServices
 
 enum GroupIconMaker {
-    
-    private static let faceDetector: CIDetector? = {
-        let context = CIContext()
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        return CIDetector(ofType: CIDetectorTypeFace, context: context, options: options)
-    }()
     
     private enum AvatarRepresentation {
         case image(UIImage)
@@ -343,13 +339,13 @@ enum GroupIconMaker {
     }
     
     private static func faceRect(in image: UIImage) -> CGRect? {
-        guard let ciImage = image.ciImage, let detector = faceDetector else {
+        let visionImage = VisionImage(image: image)
+        visionImage.orientation = image.imageOrientation
+        if let faces = try? FaceDetector.faceDetector().results(in: visionImage), faces.count == 1 {
+            return faces[0].frame
+        } else {
             return nil
         }
-        guard let feature = detector.features(in: ciImage).compactMap({ $0 as? CIFaceFeature }).first else {
-            return nil
-        }
-        return feature.bounds
     }
     
     private static func drawSeparatorLine(number: Int, in rect: CGRect) {

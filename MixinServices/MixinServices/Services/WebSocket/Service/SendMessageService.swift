@@ -593,8 +593,16 @@ extension SendMessageService {
 extension SendMessageService {
 
     @discardableResult
-    public func send(krakenRequest request: KrakenRequest) -> BlazeMessageData? {
-        return deliverKrakenMessage(blazeMessage: request.blazeMessage)?.toBlazeMessageData()
+    public func send(krakenRequest request: KrakenRequest) -> Result<BlazeMessageData, Swift.Error> {
+        do {
+            if let data = try deliverKrakenMessage(blazeMessage: request.blazeMessage)?.toBlazeMessageData() {
+                return .success(data)
+            } else {
+                return .failure(MixinServicesError.emptyResponse)
+            }
+        } catch {
+            return .failure(error)
+        }
     }
 
     public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer]? {
@@ -603,23 +611,16 @@ extension SendMessageService {
         param.conversationId = id
         param.category = "KRAKEN_LIST"
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
-        return deliverKrakenMessage(blazeMessage: blazeMessage)?.toKrakenPeers()
+        return try? deliverKrakenMessage(blazeMessage: blazeMessage)?.toKrakenPeers()
     }
 
-    private func deliverKrakenMessage(blazeMessage: BlazeMessage) -> BlazeMessage? {
+    private func deliverKrakenMessage(blazeMessage: BlazeMessage) throws -> BlazeMessage? {
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
             let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
             blazeMessage.params?.conversationChecksum = checksum
         }
-
-        let (success, response, retry) = deliverNoThrow(blazeMessage: blazeMessage)
-        if success {
-            return response
-        } else if retry {
-            return deliverKrakenMessage(blazeMessage: blazeMessage)
-        }
-        return nil
+        return try deliver(blazeMessage: blazeMessage).responseMessage
     }
 
 }

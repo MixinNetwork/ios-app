@@ -358,6 +358,7 @@
 "group_call" = "群通话";
 "group_call_tap_to_join" = "点击加入";
 "group_call_selections_reach_limit" = "支持最多%@人同时通话";
+"group_call_room_full" = "房间已满";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

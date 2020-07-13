@@ -17,6 +17,7 @@ enum CallError: Error {
     case offerConstruction(Error?)
     
     case invalidKrakenResponse
+    case roomFull
     
     case manuallyInitiated
     
@@ -28,6 +29,8 @@ enum CallError: Error {
             return R.string.localizable.call_no_network()
         case .microphonePermissionDenied:
             return R.string.localizable.call_no_microphone_permission()
+        case .roomFull:
+            return R.string.localizable.group_call_room_full()
         default:
             return R.string.localizable.chat_message_call_failed()
         }

@@ -1225,20 +1225,27 @@ extension CallService {
 // MARK: - Group Call Workers
 extension CallService {
     
-    private func send(krakenRequest: KrakenRequest) -> (trackId: String, sdp: RTCSessionDescription)? {
-        guard let response = SendMessageService.shared.send(krakenRequest: krakenRequest) else {
-            return nil
+    private func send(krakenRequest: KrakenRequest) -> Result<(trackId: String, sdp: RTCSessionDescription), CallError> {
+        let response = SendMessageService.shared.send(krakenRequest: krakenRequest)
+        switch response {
+        case let .success(response):
+            guard let responseData = Data(base64Encoded: response.data) else {
+                return .failure(.invalidKrakenResponse)
+            }
+            guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
+                return .failure(.invalidKrakenResponse)
+            }
+            guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
+                return .failure(.invalidKrakenResponse)
+            }
+            return .success((data.trackId, sdp))
+        case let .failure(error):
+            if let error = error as? APIError, error.code == 5002000 {
+                return .failure(.roomFull)
+            } else {
+                return .failure(.invalidKrakenResponse)
+            }
         }
-        guard let responseData = Data(base64Encoded: response.data) else {
-            return nil
-        }
-        guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
-            return nil
-        }
-        guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
-            return nil
-        }
-        return (data.trackId, sdp)
     }
     
     private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
@@ -1270,13 +1277,19 @@ extension CallService {
                                        trackId: nil,
                                        action: .publish(sdp: sdp))
         self.log("[CallService] group call publish is sent")
-        guard let (trackId, sdp) = send(krakenRequest: publishing) else {
-            self.log("[CallService] publish failed for nil response")
+        let publishingResponse = send(krakenRequest: publishing)
+        switch publishingResponse {
+        case let .success((trackId, sdp)):
+            handlePublishingResponse(to: call, trackId: trackId, sdp: sdp, completion: completion)
+        case let .failure(error):
+            self.log("[CallService] publish failed for invalid response")
             failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
-            alert(error: .invalidKrakenResponse)
+            alert(error: error)
             completion?(false)
-            return
         }
+    }
+    
+    private func handlePublishingResponse(to call: GroupCall, trackId: String, sdp: RTCSessionDescription, completion: ((Bool) -> Void)?) {
         NotificationCenter.default.addObserver(self, selector: #selector(senderKeyChange(_:)), name: ReceiveMessageService.senderKeyDidChangeNotification, object: nil)
         #if DEBUG
         if GroupCallDebugConfig.invalidResponseOnPublishing {
@@ -1330,7 +1343,8 @@ extension CallService {
                                         trackId: call.trackId,
                                         action: .subscribe)
         self.log("[CallService] subscribe is sent")
-        guard let (_, sdp) = send(krakenRequest: subscribing), sdp.type == .offer else {
+        let subscribingResponse = send(krakenRequest: subscribing)
+        guard case let .success((_, sdp)) = subscribingResponse, sdp.type == .offer else {
             self.log("[CallService] subscribe impl ends for invalid response")
             return
         }

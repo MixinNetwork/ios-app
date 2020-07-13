@@ -22,7 +22,6 @@ public struct KrakenRequest {
         param.messageId = UUID().uuidString.lowercased()
         param.conversationId = conversationId
         param.trackId = trackId
-        param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
         switch action {
         case .invite(let ids):
             param.category = MessageCategory.KRAKEN_INVITE.rawValue

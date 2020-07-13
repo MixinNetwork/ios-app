@@ -127,6 +127,7 @@
 		7B45A51C2189F28E0008F894 /* ringtone_outgoing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
+		7B4A8F6F24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A8F6E24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift */; };
 		7B4AD8D924925F2F00E999B7 /* CallIconPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */; };
 		7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */; };
 		7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */; };
@@ -965,6 +966,7 @@
 		7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ringtone_outgoing.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
+		7B4A8F6E24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMembersFlowLayout.swift; sourceTree = "<group>"; };
 		7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallIconPath.swift; sourceTree = "<group>"; };
 		7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizablePopupViewController.swift; sourceTree = "<group>"; };
 		7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsViewController.swift; sourceTree = "<group>"; };
@@ -1978,6 +1980,7 @@
 				7B158FD923F23C6C00AAD66C /* CallWindow.swift */,
 				7B9650B124879EB100DE86B9 /* CallSwitch.swift */,
 				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
+				7B4A8F6E24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift */,
 				7B70D1A424A924DE0034B704 /* GroupCallMembersCollectionView.swift */,
 				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
 				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
@@ -4043,6 +4046,7 @@
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
+				7B4A8F6F24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,

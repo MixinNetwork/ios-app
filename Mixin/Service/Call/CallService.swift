@@ -160,6 +160,20 @@ class CallService: NSObject {
         }
     }
     
+    func minimizeIfThereIsAnActiveCall() {
+        queue.async {
+            guard self.activeCall != nil else {
+                return
+            }
+            DispatchQueue.main.sync {
+                guard !self.isMinimized else {
+                    return
+                }
+                self.setInterfaceMinimized(true, animated: true)
+            }
+        }
+    }
+    
     func alert(error: CallError) {
         let content = error.alertContent
         DispatchQueue.main.async {

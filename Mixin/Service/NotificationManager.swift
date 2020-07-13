@@ -157,6 +157,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                     } else {
                         pushConversationController()
                     }
+                    CallService.shared.minimizeIfThereIsAnActiveCall()
                 }
             }
         }

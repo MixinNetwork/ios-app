@@ -61,32 +61,6 @@ public class SendMessageService: MixinService {
         SendMessageService.shared.processMessages()
     }
     
-    @discardableResult
-    public func send(krakenRequest request: KrakenRequest) -> BlazeMessageData? {
-        do {
-            return try WebSocketService.shared.respondedMessage(for: request.blazeMessage).blazeMessage?.toBlazeMessageData()
-        } catch let error as APIError where error.code == 20140 {
-            syncConversation(conversationId: request.conversationId)
-            return send(krakenRequest: request)
-        } catch {
-            return nil
-        }
-    }
-    
-    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer]? {
-        var param = BlazeMessageParam()
-        param.messageId = UUID().uuidString.lowercased()
-        param.conversationId = id
-        param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
-        param.category = "KRAKEN_LIST"
-        let message = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
-        if let response = deliverKeys(blazeMessage: message) {
-            return response.toKrakenPeers()
-        } else {
-            return nil
-        }
-    }
-    
     func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
         MixinDatabase.shared.insertOrReplace(objects: [job])
@@ -612,6 +586,41 @@ extension SendMessageService {
             }
             throw error
         }
+    }
+
+}
+
+extension SendMessageService {
+
+    @discardableResult
+    public func send(krakenRequest request: KrakenRequest) -> BlazeMessageData? {
+        return deliverKrakenMessage(blazeMessage: request.blazeMessage)?.toBlazeMessageData()
+    }
+
+    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer]? {
+        var param = BlazeMessageParam()
+        param.messageId = UUID().uuidString.lowercased()
+        param.conversationId = id
+        param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
+        param.category = "KRAKEN_LIST"
+        let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
+        return deliverKrakenMessage(blazeMessage: blazeMessage)?.toKrakenPeers()
+    }
+
+    private func deliverKrakenMessage(blazeMessage: BlazeMessage) -> BlazeMessage? {
+        var blazeMessage = blazeMessage
+        if let conversationId = blazeMessage.params?.conversationId {
+            let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
+            blazeMessage.params?.conversationChecksum = checksum
+        }
+
+        let (success, response, retry) = deliverNoThrow(blazeMessage: blazeMessage)
+        if success {
+            return response
+        } else if retry {
+            return deliverKrakenMessage(blazeMessage: blazeMessage)
+        }
+        return nil
     }
 
 }

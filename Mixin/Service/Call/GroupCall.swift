@@ -20,9 +20,6 @@ class GroupCall: Call {
     // invite after group call is connected
     private var pendingInvitingMembers: [UserItem]?
     
-    // Key is user ID
-    private var invitationTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
-    
     init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem]) {
         self.conversation = conversation
         self.conversationName = conversation.getConversationName()
@@ -36,16 +33,6 @@ class GroupCall: Call {
     }
     
     deinit {
-        let timers = self.invitationTimers
-        CallService.shared.queue.async {
-            guard let enumerator = timers.objectEnumerator() else {
-                return
-            }
-            for case let timer as Timer in enumerator.allObjects {
-                timer.fire()
-                timer.invalidate()
-            }
-        }
         CallService.shared.membersManager.endPolling(forConversationWith: conversationId)
     }
     
@@ -63,23 +50,6 @@ class GroupCall: Call {
                                        trackId: trackId,
                                        action: .invite(recipients: userIds))
         SendMessageService.shared.send(krakenRequest: invitation)
-        for id in userIds {
-            let key = id as NSString
-            invitationTimers.object(forKey: key)?.invalidate()
-            let timer = Timer(timeInterval: callTimeoutInterval, repeats: false) { [weak self] (_) in
-                CallService.shared.queue.async {
-                    let cancel = KrakenRequest(conversationId: conversationId,
-                                               trackId: trackId,
-                                               action: .cancel(recipientId: id))
-                    SendMessageService.shared.send(krakenRequest: cancel)
-                    DispatchQueue.main.async {
-                        self?.membersDataSource.reportMemberWithIdDidDisconnected(id)
-                    }
-                }
-            }
-            invitationTimers.setObject(timer, forKey: key)
-            RunLoop.main.add(timer, forMode: .common)
-        }
     }
     
     func invitePendingUsers() {
@@ -91,7 +61,6 @@ class GroupCall: Call {
     }
     
     func reportMemberWithIdDidConnected(_ id: String) {
-        invitationTimers.object(forKey: id as NSString)?.invalidate()
         guard let member = UserDAO.shared.getUser(userId: id) else {
             return
         }
@@ -101,7 +70,6 @@ class GroupCall: Call {
     }
     
     func reportMemberWithIdDidDisconnected(_ id: String) {
-        invitationTimers.object(forKey: id as NSString)?.invalidate()
         DispatchQueue.main.async {
             self.membersDataSource.reportMemberWithIdDidDisconnected(id)
         }

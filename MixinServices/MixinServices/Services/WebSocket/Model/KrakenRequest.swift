@@ -9,7 +9,7 @@ public struct KrakenRequest {
         case answer(sdp: String)
         case trickle(candidate: String)
         case end
-        case cancel(recipientId: String)
+        case cancel
         case decline(recipientId: String)
     }
     
@@ -37,9 +37,8 @@ public struct KrakenRequest {
         case .trickle(let candidate):
             param.category = MessageCategory.KRAKEN_TRICKLE.rawValue
             param.candidate = candidate
-        case .cancel(let id):
+        case .cancel:
             param.category = MessageCategory.KRAKEN_CANCEL.rawValue
-            param.recipientId = id
         case .decline(let id):
             param.category = MessageCategory.KRAKEN_DECLINE.rawValue
             param.recipientId = id

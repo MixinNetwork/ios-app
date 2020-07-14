@@ -437,9 +437,15 @@ extension CallService {
                                                       action: .decline(recipientId: inviterUserId))
                         SendMessageService.shared.send(krakenRequest: declining)
                     } else {
+                        let action: KrakenRequest.Action
+                        if call.isOutgoing, call.trackId == nil {
+                            action = .cancel
+                        } else {
+                            action = .end
+                        }
                         let end = KrakenRequest(conversationId: call.conversationId,
-                                                trackId: nil,
-                                                action: .end)
+                                                trackId: call.trackId,
+                                                action: action)
                         SendMessageService.shared.send(krakenRequest: end)
                     }
                     self.membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)

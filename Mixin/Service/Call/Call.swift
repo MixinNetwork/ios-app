@@ -10,6 +10,8 @@ class Call: NSObject {
     let conversationId: String
     let isOutgoing: Bool
     
+    private(set) lazy var uuidString = uuid.uuidString.lowercased()
+    
     var connectedDate: Date?
     
     var status: Status = .connecting {
@@ -20,13 +22,14 @@ class Call: NSObject {
         }
     }
     
-    private(set) lazy var uuidString = uuid.uuidString.lowercased()
+    weak var timer: Timer?
     
     init(uuid: UUID, conversationId: String, isOutgoing: Bool) {
         self.uuid = uuid
         self.conversationId = conversationId
         self.isOutgoing = isOutgoing
         super.init()
+        self.status = isOutgoing ? .outgoing : .incoming
     }
     
 }

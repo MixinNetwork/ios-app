@@ -85,8 +85,6 @@ class CallService: NSObject {
     private var window: CallWindow?
     private var viewController: CallViewController?
     
-    private weak var unansweredTimer: Timer?
-    
     // Access from CallService.queue
     private var callInterface: CallInterface {
         if usesCallKit {
@@ -216,13 +214,11 @@ extension CallService {
                 members.append(me)
             }
             self.log("[CallService] Making call with members: \(members.map(\.fullName))")
-            let call = GroupCall(uuid: uuid,
-                                 isOutgoing: true,
-                                 conversation: conversation,
-                                 members: members,
-                                 invitingMembers: invitingMembers)
-            call.status = .outgoing
-            return call
+            return GroupCall(uuid: uuid,
+                             isOutgoing: true,
+                             conversation: conversation,
+                             members: members,
+                             invitingMembers: invitingMembers)
         })
     }
     
@@ -386,11 +382,13 @@ extension CallService {
         dispatch {
             if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, let sdp = self.pendingSDPs[uuid] {
                 self.log("[CallService] answer p2p call: \(call.debugDescription)")
+                call.timer?.invalidate()
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
                 self.pendingSDPs.removeValue(forKey: uuid)
                 self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
             } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall {
                 self.log("[CallService] answer group call: \(call.debugDescription)")
+                call.timer?.invalidate()
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
                 self.activeCall = call
                 self.ringtonePlayer.stop()
@@ -411,6 +409,7 @@ extension CallService {
             if let call = (self.pendingAnswerCalls[uuid] ?? self.activeCall), call.uuid == uuid {
                 let callStatusWasIncoming = call.status == .incoming
                 call.status = .disconnecting
+                call.timer?.invalidate()
                 self.log("[CallService] ending call: \(call.debugDescription)")
                 if let call = call as? PeerToPeerCall {
                     let category: MessageCategory
@@ -457,9 +456,12 @@ extension CallService {
     
     func closeAll() {
         self.log("[CallService] close all call")
+        activeCall?.timer?.invalidate()
         activeCall = nil
         rtcClient.close()
-        unansweredTimer?.invalidate()
+        for timer in pendingAnswerCalls.values.compactMap(\.timer) {
+            timer.invalidate()
+        }
         pendingAnswerCalls = [:]
         pendingSDPs = [:]
         pendingCandidates = [:]
@@ -484,11 +486,11 @@ extension CallService {
         if let call = activeCall, call.uuid == uuid {
             activeCall = nil
             rtcClient.close()
-            if call.isOutgoing {
-                unansweredTimer?.invalidate()
-            }
+            call.timer?.invalidate()
         }
-        pendingAnswerCalls.removeValue(forKey: uuid)
+        if let call = pendingAnswerCalls.removeValue(forKey: uuid) {
+            call.timer?.invalidate()
+        }
         pendingSDPs.removeValue(forKey: uuid)
         pendingCandidates.removeValue(forKey: uuid)
         pendingTrickles.removeValue(forKey: uuid)
@@ -535,10 +537,10 @@ extension CallService: CallMessageCoordinator {
                 self.handlePublishing(data: data)
             case .KRAKEN_INVITE:
                 self.handleInvitation(data: data)
-            case .KRAKEN_END, .KRAKEN_DECLINE:
-                self.handleKrakenDisconnect(data: data)
-            case .KRAKEN_CANCEL:
-                self.handleKrakenCancel(data: data)
+            case .KRAKEN_DECLINE:
+                self.handleKrakenDecline(data: data)
+            case .KRAKEN_END:
+                self.handleKrakenEnd(data: data)
             default:
                 self.handleCallStatusChange(data: data)
             }
@@ -658,7 +660,7 @@ extension CallService {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
             pendingAnswerCalls[uuid] = call
             pendingSDPs[uuid] = sdp
-            
+            beginUnanswerCountDown(for: call)
             callInterface.reportIncomingCall(call) { (error) in
                 if let error = error {
                     handle(error: error, username: user.fullName)
@@ -688,7 +690,7 @@ extension CallService {
         if let call = activeCall as? PeerToPeerCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
             callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             call.hasReceivedRemoteAnswer = true
-            unansweredTimer?.invalidate()
+            call.timer?.invalidate()
             ringtonePlayer.stop()
             call.status = .connecting
             rtcClient.set(remoteSdp: sdp) { (error) in
@@ -702,6 +704,7 @@ extension CallService {
         } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
             if let call = (activeCall ?? pendingAnswerCalls[uuid]) as? PeerToPeerCall, call.uuid == uuid {
                 call.status = .disconnecting
+                call.timer?.invalidate()
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             } else {
                 // When a call is pushed via APN User Notifications and gets cancelled before app is launched
@@ -761,15 +764,12 @@ extension CallService {
         do {
             DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             self.log("[CallService] Got Invitation from: \(data.userId)")
-            guard let uuid = UUID(uuidString: data.conversationId) else {
-                self.log("[CallService] invalid conversation id: \(data.conversationId)")
-                return
-            }
             guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
                 self.log("[CallService] no conversation: \(data.conversationId)")
                 return
             }
             AudioManager.shared.pause()
+            let uuid = UUID()
             var members = membersManager.members(inConversationWith: data.conversationId)
             if let account = LoginManager.shared.account {
                 let me = UserItem.createUser(from: account)
@@ -780,10 +780,10 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.status = .incoming
             call.inviterUserId = data.userId
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription)")
             pendingAnswerCalls[uuid] = call
+            beginUnanswerCountDown(for: call)
             callInterface.reportIncomingCall(call) { (error) in
                 guard let error = error else {
                     return
@@ -799,32 +799,44 @@ extension CallService {
         }
     }
     
-    private func handleKrakenDisconnect(data: BlazeMessageData) {
+    private func handleKrakenDecline(data: BlazeMessageData) {
         self.log("[CallService] Got \(data.category), report member: \(data.userId) disconnected")
-        membersManager.removeMember(with: data.userId,
-                                    fromConversationWith: data.conversationId)
-        if let call = activeCall as? GroupCall {
-            call.reportMemberWithIdDidDisconnected(data.userId)
+        reportMember(withUserId: data.userId,
+                     didDisconnectFromConversationWithConversationId: data.conversationId)
+    }
+    
+    private func handleKrakenEnd(data: BlazeMessageData) {
+        self.log("[CallService] Got kraken end from \(data.userId)")
+        reportMember(withUserId: data.userId,
+                     didDisconnectFromConversationWithConversationId: data.conversationId)
+        
+        func shouldStopRinging(call: GroupCall) -> Bool {
+            call.conversationId == data.conversationId
+                && call.inviterUserId == data.userId
+                && call.status == .incoming
+        }
+        
+        var calls = [GroupCall]()
+        if let call = activeCall as? GroupCall, shouldStopRinging(call: call) {
+            calls.append(call)
+        }
+        for case let (uuid, call as GroupCall) in pendingAnswerCalls where shouldStopRinging(call: call) {
+            pendingAnswerCalls.removeValue(forKey: uuid)
+            calls.append(call)
+        }
+        
+        for call in calls {
+            call.status = .disconnecting
+            close(uuid: call.uuid)
+            callInterface.reportCall(uuid: call.uuid, endedByReason: .remoteEnded)
         }
     }
     
-    private func handleKrakenCancel(data: BlazeMessageData) {
-        self.log("[CallService] Got kraken cancel from \(data.userId)")
-        guard let uuid = UUID(uuidString: data.conversationId) else {
-            self.log("[CallService] invalid conversation id: \(data.conversationId)")
-            return
+    private func reportMember(withUserId userId: String, didDisconnectFromConversationWithConversationId conversationId: String) {
+        membersManager.removeMember(with: userId, fromConversationWith: conversationId)
+        if let call = activeCall as? GroupCall {
+            call.reportMemberWithIdDidDisconnected(userId)
         }
-        guard let call = activeCall ?? pendingAnswerCalls.removeValue(forKey: uuid) else {
-            self.log("[CallService] no such call: \(uuid)")
-            return
-        }
-        guard call.uuid == uuid, call.status == .incoming else {
-            return
-        }
-        self.log("[CallService] cancel call: \(uuid)")
-        call.status = .disconnecting
-        callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
-        close(uuid: uuid)
     }
     
 }
@@ -930,16 +942,17 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+            let uuid = UUID()
             let members = self.membersManager.members(inConversationWith: conversationId)
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.status = .incoming
             call.inviterUserId = userId
             pendingAnswerCalls[uuid] = call
+            beginUnanswerCountDown(for: call)
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in
                 completion()
             }
@@ -947,6 +960,7 @@ extension CallService: PKPushRegistryDelegate {
         } else if usesCallKit, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
             pendingAnswerCalls[uuid] = call
+            beginUnanswerCountDown(for: call)
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: userId, localizedName: username) { (error) in
                 completion()
             }
@@ -970,22 +984,52 @@ extension CallService: PKPushRegistryDelegate {
 // MARK: - Workers
 extension CallService {
     
-    @objc private func unansweredTimeout() {
-        guard let call = activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer else {
+    private func beginUnanswerCountDown(for call: Call) {
+        guard call.timer == nil else {
             return
         }
-        dismissCallingInterface()
-        rtcClient.close()
-        isMuted = false
-        dispatch {
-            self.ringtonePlayer.stop()
-            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                  category: .WEBRTC_AUDIO_CANCEL,
-                                                  status: .SENDING,
-                                                  quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.remoteUserId)
-            self.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
-            self.activeCall = nil
+        let timer = Timer(timeInterval: callTimeoutInterval,
+                          target: self,
+                          selector: #selector(self.unansweredTimeout),
+                          userInfo: call.uuid,
+                          repeats: false)
+        RunLoop.main.add(timer, forMode: .default)
+        call.timer = timer
+    }
+    
+    @objc private func unansweredTimeout(_ timer: Timer) {
+        guard timer.isValid, let uuid = timer.userInfo as? UUID else {
+            return
+        }
+        queue.async {
+            timer.invalidate()
+            guard let call = self.activeCall ?? self.pendingAnswerCalls[uuid] else {
+                return
+            }
+            guard call.uuid == uuid, call.status == .incoming || call.status == .outgoing else {
+                return
+            }
+            if let call = call as? PeerToPeerCall {
+                call.status = .disconnecting
+                if call.isOutgoing {
+                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                          category: .WEBRTC_AUDIO_CANCEL,
+                                                          status: .SENDING,
+                                                          quoteMessageId: call.uuidString)
+                    SendMessageService.shared.sendWebRTCMessage(message: msg,
+                                                                recipientId: call.remoteUserId)
+                }
+                self.insertCallCompletedMessage(call: call,
+                                                isUserInitiated: false,
+                                                category: .WEBRTC_AUDIO_CANCEL)
+            } else if let call = call as? GroupCall, let inviterId = call.inviterUserId {
+                let request = KrakenRequest(conversationId: call.conversationId,
+                                            trackId: call.trackId,
+                                            action: .decline(recipientId: inviterId))
+                SendMessageService.shared.send(krakenRequest: request)
+            }
+            self.close(uuid: call.uuid)
+            DispatchQueue.main.async(execute: self.dismissCallingInterface)
             self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
         }
     }
@@ -1152,20 +1196,11 @@ extension CallService {
             return
         }
         call.remoteUser = remoteUser
-        call.status = .outgoing
         DispatchQueue.main.sync {
             self.showCallingInterface(call: call)
         }
-        
-        let timer = Timer(timeInterval: callTimeoutInterval,
-                          target: self,
-                          selector: #selector(self.unansweredTimeout),
-                          userInfo: nil,
-                          repeats: false)
-        RunLoop.main.add(timer, forMode: .default)
-        self.unansweredTimer = timer
-        
-        self.rtcClient.offer { result in
+        beginUnanswerCountDown(for: call)
+        rtcClient.offer { result in
             switch result {
             case .success(let sdpJson):
                 let msg = Message.createWebRTCMessage(messageId: call.uuidString,
@@ -1259,6 +1294,7 @@ extension CallService {
         try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
         self.log("[CallService] start group call impl framekey: \(frameKey)")
+        beginUnanswerCountDown(for: call)
         rtcClient.offer(key: frameKey) { clientResult in
             var result = clientResult
             #if DEBUG

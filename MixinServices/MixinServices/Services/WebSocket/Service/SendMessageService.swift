@@ -620,7 +620,13 @@ extension SendMessageService {
             let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
             blazeMessage.params?.conversationChecksum = checksum
         }
-        return try deliver(blazeMessage: blazeMessage).responseMessage
+        do {
+            return try deliver(blazeMessage: blazeMessage).responseMessage
+        } catch let error as APIError where error.code == 20140 {
+            return try deliverKrakenMessage(blazeMessage: blazeMessage)
+        } catch {
+            throw error
+        }
     }
 
 }

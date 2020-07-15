@@ -1,8 +1,8 @@
 PODS:
-  - Alamofire (5.2.0)
+  - Alamofire (5.2.1)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - Bugsnag (5.23.2)
-  - DeviceGuru (6.0.4)
+  - Bugsnag (6.1.0)
+  - DeviceGuru (6.0.5)
   - Firebase/Analytics (6.16.0):
     - Firebase/Core
   - Firebase/Core (6.16.0):
@@ -163,9 +163,9 @@ PODS:
     - R.swift.Library (~> 5.1.0)
   - R.swift.Library (5.1.0)
   - RSKImageCropper (2.2.3)
-  - SDWebImage (5.8.0):
-    - SDWebImage/Core (= 5.8.0)
-  - SDWebImage/Core (5.8.0)
+  - SDWebImage (5.8.3):
+    - SDWebImage/Core (= 5.8.3)
+  - SDWebImage/Core (5.8.3)
   - SDWebImageYYPlugin/YYImage (0.5.0):
     - SDWebImage/Core (~> 5.7)
     - YYImage/Core
@@ -316,10 +316,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/MixinNetwork/wcdb.git
 
 SPEC CHECKSUMS:
-  Alamofire: c1ca147559e730bfb2182c8c7aafbdd90a867987
+  Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  Bugsnag: fd14a681ca1ea0b9647d98e6b054e781433a7802
-  DeviceGuru: a686ecd9fc32f9fb15c1e6132e458037f68360a7
+  Bugsnag: 025732170de292e6a902ff808295ce54fb423612
+  DeviceGuru: 79cd775847d974b70e344009910b0e3d0b2ab088
   Firebase: 497158b816d0a86fc31babbd05546fcd7e6083ff
   FirebaseABTesting: 0d10f3cdc3fa00f3f175b5b56c1003c8e888299f
   FirebaseAnalytics: cf95d3aab897612783020fbd98401d5366f135ee
@@ -354,7 +354,7 @@ SPEC CHECKSUMS:
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
   R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
-  SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc
+  SDWebImage: 112503ec94a5a2a41869503844a15e8d8f1ead5c
   SDWebImageYYPlugin: 6808c1a0e3f59feb604c1f492e02dddf51c83b10
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531

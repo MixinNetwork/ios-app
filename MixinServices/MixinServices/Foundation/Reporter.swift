@@ -37,7 +37,7 @@ open class Reporter {
         guard let account = LoginManager.shared.account else {
             return
         }
-        Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
+        Bugsnag.setUser(account.user_id, withEmail: account.identity_number, andName: account.full_name)
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {

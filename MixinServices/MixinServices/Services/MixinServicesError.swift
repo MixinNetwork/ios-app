@@ -30,6 +30,7 @@ public enum MixinServicesError: Error {
     case backgroundUpgradeDatabase
     case requestTimeout(String)
     case emptyResponse
+    case badKrakenBlazeMessage
     
 }
 
@@ -83,6 +84,8 @@ extension MixinServicesError: CustomNSError {
             return 20
         case .emptyResponse:
             return 21
+        case .badKrakenBlazeMessage:
+            return 22
         }
     }
     

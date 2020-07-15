@@ -1042,6 +1042,10 @@ class ConversationViewController: UIViewController {
         guard dataSource.category == .group else {
             return
         }
+        guard WebSocketService.shared.isConnected && !SendMessageService.shared.isRequestingKrakenPeers else {
+            CallService.shared.alert(error: .networkFailure)
+            return
+        }
         let service = CallService.shared
         if service.isMinimized, UIApplication.homeContainerViewController?.minimizedCallViewController.conversationId == conversationId {
             service.setInterfaceMinimized(false, animated: true)

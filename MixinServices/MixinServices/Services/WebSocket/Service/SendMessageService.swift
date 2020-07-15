@@ -4,9 +4,13 @@ import WCDBSwift
 public class SendMessageService: MixinService {
 
     public static let shared = SendMessageService()
-    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
+    
+    internal static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
+    
+    @Atomic(false)
+    public private(set) var isRequestingKrakenPeers: Bool
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
@@ -591,42 +595,95 @@ extension SendMessageService {
 }
 
 extension SendMessageService {
-
+    
+    public typealias OnKrakenError = (_ callUUID: UUID, _ error: Swift.Error, _ numberOfRetries: UInt) -> Bool
+    
     @discardableResult
-    public func send(krakenRequest request: KrakenRequest) -> Result<BlazeMessageData, Swift.Error> {
+    public func send(krakenRequest request: KrakenRequest, shouldRetryOnError: OnKrakenError) -> Result<BlazeMessageData, Swift.Error> {
         do {
-            if let data = try deliverKrakenMessage(blazeMessage: request.blazeMessage)?.toBlazeMessageData() {
+            let response = try deliverKrakenMessage(callUUID: request.callUUID,
+                                                    blazeMessage: request.blazeMessage,
+                                                    numberOfRetries: 0,
+                                                    shouldRetryOnError: shouldRetryOnError)
+            if let data = response.toBlazeMessageData() {
                 return .success(data)
             } else {
-                return .failure(MixinServicesError.emptyResponse)
+                return .failure(MixinServicesError.badKrakenBlazeMessage)
             }
         } catch {
             return .failure(error)
         }
     }
-
-    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer]? {
+    
+    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer] {
+        isRequestingKrakenPeers = true
+        defer {
+            isRequestingKrakenPeers = false
+        }
         var param = BlazeMessageParam()
         param.messageId = UUID().uuidString.lowercased()
         param.conversationId = id
         param.category = "KRAKEN_LIST"
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
-        return try? deliverKrakenMessage(blazeMessage: blazeMessage)?.toKrakenPeers()
+        let response = try? deliverKrakenMessage(callUUID: UUID(),
+                                                 blazeMessage: blazeMessage,
+                                                 numberOfRetries: 0,
+                                                 shouldRetryOnError: { (_, _, _) in true })
+        return response?.toKrakenPeers() ?? []
     }
-
-    private func deliverKrakenMessage(blazeMessage: BlazeMessage) throws -> BlazeMessage? {
+    
+    private func deliverKrakenMessage(callUUID: UUID, blazeMessage: BlazeMessage, numberOfRetries: UInt, shouldRetryOnError: OnKrakenError) throws -> BlazeMessage {
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
             let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
             blazeMessage.params?.conversationChecksum = checksum
         }
+        
+        func send() throws -> BlazeMessage? {
+            repeat {
+                guard LoginManager.shared.isLoggedIn else {
+                    return nil
+                }
+                do {
+                    return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
+                } catch let error as APIError {
+                    if error.code == 403 || error.code == 401 {
+                        return nil
+                    } else if error.code == 20140 {
+                        if let conversationId = blazeMessage.params?.conversationId {
+                            syncConversation(conversationId: conversationId)
+                        }
+                        throw error
+                    }
+                    Thread.sleep(forTimeInterval: 2)
+                    if error.isClientError {
+                        continue
+                    }
+                    throw error
+                } catch {
+                    reporter.report(error: error)
+                    Thread.sleep(forTimeInterval: 2)
+                    return nil
+                }
+            } while true
+        }
+        
         do {
-            return try deliver(blazeMessage: blazeMessage).responseMessage
-        } catch let error as APIError where error.code == 20140 {
-            return try deliverKrakenMessage(blazeMessage: blazeMessage)
+            if let message = try send() {
+                return message
+            } else {
+                throw MixinServicesError.emptyResponse
+            }
         } catch {
-            throw error
+            if shouldRetryOnError(callUUID, error, numberOfRetries) {
+                return try deliverKrakenMessage(callUUID: callUUID,
+                                                blazeMessage: blazeMessage,
+                                                numberOfRetries: numberOfRetries + 1,
+                                                shouldRetryOnError: shouldRetryOnError)
+            } else {
+                throw error
+            }
         }
     }
-
+    
 }

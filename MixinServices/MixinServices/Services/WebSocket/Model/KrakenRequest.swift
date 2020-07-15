@@ -13,6 +13,7 @@ public struct KrakenRequest {
         case decline(recipientId: String)
     }
     
+    let callUUID: UUID
     let conversationId: String
     let trackId: String?
     let action: Action
@@ -48,7 +49,8 @@ public struct KrakenRequest {
         return BlazeMessage(params: param, action: BlazeMessageAction.createKraken.rawValue)
     }
     
-    public init(conversationId: String, trackId: String?, action: Action) {
+    public init(callUUID: UUID, conversationId: String, trackId: String?, action: Action) {
+        self.callUUID = callUUID
         self.conversationId = conversationId
         self.trackId = trackId
         self.action = action

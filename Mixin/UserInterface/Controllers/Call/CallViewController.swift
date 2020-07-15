@@ -190,6 +190,8 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
+        // Signaling may take a while, update views first
+        updateViews(status: .disconnecting)
         service.requestEndCall()
     }
     

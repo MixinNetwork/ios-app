@@ -32,6 +32,18 @@ class Call: NSObject {
         self.status = isOutgoing ? .outgoing : .incoming
     }
     
+    deinit {
+        // This is not the designated way to invalidate the timer
+        // In some cases, object may not deconstruct right after refCount is 0, e.g. after
+        // auto release pool to drain. In other cases, the timer should be invalidate
+        // when the call peer is connected or declined
+        // Invalidation here is only for fail-safe protection
+        if let timer = timer, timer.isValid {
+            assertionFailure()
+            timer.invalidate()
+        }
+    }
+    
 }
 
 extension Call {

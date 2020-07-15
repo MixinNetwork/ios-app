@@ -160,13 +160,16 @@ class CallService: NSObject {
     }
     
     func shouldRetryKrakenRequest(_ callUUID: UUID, _ error: Swift.Error, _ numberOfRetries: UInt) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
         guard activeCall?.uuid == callUUID || pendingAnswerCalls[callUUID] != nil else {
             self.log("[CallService] no active or pending call, give up kraken retrying")
             return false
         }
-        if let error = error as? APIError, error.code == 20140 {
-            self.log("[CallService] Got 20140, retry")
-            return true
+        if let error = error as? APIError, error.code == 401 ||  error.code == 403 {
+            self.log("[CallService] Got \(error.code)")
+            return false
         }
         let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
         self.log("[CallService] numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")

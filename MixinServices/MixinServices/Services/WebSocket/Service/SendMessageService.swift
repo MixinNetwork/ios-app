@@ -633,48 +633,29 @@ extension SendMessageService {
     }
     
     private func deliverKrakenMessage(callUUID: UUID, blazeMessage: BlazeMessage, numberOfRetries: UInt, shouldRetryOnError: OnKrakenError) throws -> BlazeMessage {
+        guard LoginManager.shared.isLoggedIn else {
+            throw MixinServicesError.emptyResponse
+        }
+
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
             let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
             blazeMessage.params?.conversationChecksum = checksum
         }
-        
-        func send() throws -> BlazeMessage? {
-            repeat {
-                guard LoginManager.shared.isLoggedIn else {
-                    return nil
-                }
-                do {
-                    return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
-                } catch let error as APIError {
-                    if error.code == 403 || error.code == 401 {
-                        return nil
-                    } else if error.code == 20140 {
-                        if let conversationId = blazeMessage.params?.conversationId {
-                            syncConversation(conversationId: conversationId)
-                        }
-                        throw error
-                    }
-                    Thread.sleep(forTimeInterval: 2)
-                    if error.isClientError {
-                        continue
-                    }
-                    throw error
-                } catch {
-                    reporter.report(error: error)
-                    Thread.sleep(forTimeInterval: 2)
-                    return nil
-                }
-            } while true
-        }
-        
+
         do {
-            if let message = try send() {
+            if let message = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage {
                 return message
             } else {
                 throw MixinServicesError.emptyResponse
             }
-        } catch {
+        } catch let error as APIError {
+            if error.code == 20140, let conversationId = blazeMessage.params?.conversationId {
+                syncConversation(conversationId: conversationId)
+                return try deliverKrakenMessage(callUUID: callUUID, blazeMessage: blazeMessage, numberOfRetries: numberOfRetries, shouldRetryOnError: shouldRetryOnError)
+            }
+
+            Thread.sleep(forTimeInterval: 2)
             if shouldRetryOnError(callUUID, error, numberOfRetries) {
                 return try deliverKrakenMessage(callUUID: callUUID,
                                                 blazeMessage: blazeMessage,

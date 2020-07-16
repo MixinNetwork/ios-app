@@ -652,7 +652,10 @@ extension SendMessageService {
         } catch let error as APIError {
             if error.code == 20140, let conversationId = blazeMessage.params?.conversationId {
                 syncConversation(conversationId: conversationId)
-                return try deliverKrakenMessage(callUUID: callUUID, blazeMessage: blazeMessage, numberOfRetries: numberOfRetries, shouldRetryOnError: shouldRetryOnError)
+                return try deliverKrakenMessage(callUUID: callUUID,
+                                                blazeMessage: blazeMessage,
+                                                numberOfRetries: numberOfRetries,
+                                                shouldRetryOnError: shouldRetryOnError)
             }
 
             Thread.sleep(forTimeInterval: 2)

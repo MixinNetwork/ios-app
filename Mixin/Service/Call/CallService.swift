@@ -163,8 +163,12 @@ class CallService: NSObject {
         guard LoginManager.shared.isLoggedIn else {
             return false
         }
-        guard activeCall?.uuid == callUUID || pendingAnswerCalls[callUUID] != nil else {
+        guard let call = activeOrPendingAnswerCall(with: callUUID) else {
             self.log("[CallService] no active or pending call, give up kraken retrying")
+            return false
+        }
+        guard call.status != .disconnecting else {
+            self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
         if let error = error as? APIError, error.code == 401 ||  error.code == 403 {
@@ -252,12 +256,14 @@ extension CallService {
     }
     
     func requestEndCall() {
+        activeCall?.status = .disconnecting
         queue.async {
             guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
                 self.log("[CallService] Request end call but finds no pending answer call")
                 return
             }
             self.log("[CallService] Request end call")
+            self.activeOrPendingAnswerCall(with: uuid)?.status = .disconnecting
             self.callInterface.requestEndCall(uuid: uuid) { (error) in
                 if let error = error {
                     self.log("[CallService] Error request end call: \(error)")
@@ -379,10 +385,10 @@ extension CallService {
                 completion?(false)
                 return
             }
-            if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
+            if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value, call.status != .disconnecting {
                 self.startPeerToPeerCall(call, completion: completion)
                 self.log("[CallService] start p2p call")
-            } else if let call = self.activeCall as? GroupCall, call.uuid == uuid {
+            } else if let call = self.activeCall as? GroupCall, call.uuid == uuid, call.status != .disconnecting {
                 DispatchQueue.main.sync {
                     self.showCallingInterface(call: call)
                 }
@@ -398,13 +404,13 @@ extension CallService {
     
     func answerCall(uuid: UUID, completion: ((Bool) -> Void)?) {
         dispatch {
-            if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, let sdp = self.pendingSDPs[uuid] {
+            if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, call.status != .disconnecting, let sdp = self.pendingSDPs[uuid] {
                 self.log("[CallService] answer p2p call: \(call.debugDescription)")
                 call.timer?.invalidate()
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
                 self.pendingSDPs.removeValue(forKey: uuid)
                 self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
-            } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall {
+            } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall, call.status != .disconnecting {
                 self.log("[CallService] answer group call: \(call.debugDescription)")
                 call.timer?.invalidate()
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
@@ -416,7 +422,7 @@ extension CallService {
                 }
                 self.startGroupCall(call, completion: completion)
             } else {
-                self.log("[CallService] answer call with: \(uuid) but there's nothting")
+                self.log("[CallService] answer call failed, call: \(self.pendingAnswerCalls[uuid]?.debugDescription)")
             }
         }
     }
@@ -424,7 +430,7 @@ extension CallService {
     func endCall(uuid: UUID) {
         dispatch {
             DispatchQueue.main.sync(execute: self.beginAutoCancellingBackgroundTaskIfNotActive)
-            if let call = (self.pendingAnswerCalls[uuid] ?? self.activeCall), call.uuid == uuid {
+            if let call = self.activeOrPendingAnswerCall(with: uuid) {
                 let callStatusWasIncoming = call.status == .incoming
                 call.status = .disconnecting
                 call.timer?.invalidate()
@@ -709,7 +715,7 @@ extension CallService {
         guard let uuid = UUID(uuidString: data.quoteMessageId) else {
             return
         }
-        if let call = activeCall as? PeerToPeerCall, uuid == call.uuid, call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+        if let call = activeCall as? PeerToPeerCall, uuid == call.uuid, call.isOutgoing, call.status != .disconnecting, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
             callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
             call.hasReceivedRemoteAnswer = true
             call.timer?.invalidate()
@@ -724,7 +730,7 @@ extension CallService {
                 }
             }
         } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
-            if let call = (activeCall ?? pendingAnswerCalls[uuid]) as? PeerToPeerCall, call.uuid == uuid {
+            if let call = activeOrPendingAnswerCall(with: uuid) as? PeerToPeerCall {
                 call.status = .disconnecting
                 call.timer?.invalidate()
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
@@ -1072,6 +1078,13 @@ extension CallService {
     
     private func updateCallKitAvailability() {
         usesCallKit = !isMainlandChina && AVAudioSession.sharedInstance().recordPermission == .granted
+    }
+    
+    private func activeOrPendingAnswerCall(with uuid: UUID) -> Call? {
+        if let call = activeCall, call.uuid == uuid {
+            return call
+        }
+        return pendingAnswerCalls[uuid]
     }
     
     private func updateAudioSessionConfiguration() {

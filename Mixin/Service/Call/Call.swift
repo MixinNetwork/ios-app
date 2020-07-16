@@ -14,7 +14,8 @@ class Call: NSObject {
     
     var connectedDate: Date?
     
-    var status: Status = .connecting {
+    @Atomic(.connecting)
+    var status: Status {
         didSet {
             NotificationCenter.default.post(name: Self.statusDidChangeNotification,
                                             object: self,

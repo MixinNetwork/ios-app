@@ -7,7 +7,7 @@ import MixinServices
 class CallService: NSObject {
     
     static let shared = CallService()
-    static let maxNumberOfKrakenRetries: UInt = 10
+    static let maxNumberOfKrakenRetries: UInt = 30
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
     static let willActivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillActivateCall")
     static let willDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillDeactivateCall")
@@ -173,10 +173,14 @@ class CallService: NSObject {
         }
         if let error = error as? APIError, error.code == 401 || error.code == 403 || error.code == 500 {
             self.log("[CallService] Got \(error.code)")
+            call.status = .disconnecting
             return false
         }
         let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
         self.log("[CallService] numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
+        if !shouldRetry {
+            call.status = .disconnecting
+        }
         return shouldRetry
     }
     
@@ -1398,7 +1402,7 @@ extension CallService {
                 completion?(false)
             case .success(let sdp):
                 self.publish(sdp: sdp, to: call, completion: completion)
-                if call.isOutgoing {
+                if call.isOutgoing, call.status != .disconnecting {
                     call.invitePendingUsers()
                 }
             }

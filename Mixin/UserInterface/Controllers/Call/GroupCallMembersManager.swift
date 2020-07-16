@@ -90,7 +90,7 @@ class GroupCallMembersManager {
         guard members[id] == nil else {
             return
         }
-        let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id)
+        let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id, keepRetryOnError: true) ?? []
         let userIds = peers.map(\.userId)
         members[id] = userIds
         let userInfo: [String: Any] = [
@@ -111,7 +111,9 @@ extension GroupCallMembersManager {
                 return
             }
             self.queue.async {
-                let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: conversationId)
+                guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: conversationId, keepRetryOnError: false) else {
+                    return
+                }
                 let remoteUserIds = Set(peers.map(\.userId))
                 var localUserIds = self.members[conversationId] ?? []
                 var removedUserIds = [String]()

@@ -615,7 +615,7 @@ extension SendMessageService {
         }
     }
     
-    public func requestKrakenPeers(forConversationWith id: String) -> [KrakenPeer] {
+    public func requestKrakenPeers(forConversationWith id: String, keepRetryOnError: Bool) -> [KrakenPeer]? {
         isRequestingKrakenPeers = true
         defer {
             isRequestingKrakenPeers = false
@@ -628,8 +628,8 @@ extension SendMessageService {
         let response = try? deliverKrakenMessage(callUUID: UUID(),
                                                  blazeMessage: blazeMessage,
                                                  numberOfRetries: 0,
-                                                 shouldRetryOnError: { (_, _, _) in true })
-        return response?.toKrakenPeers() ?? []
+                                                 shouldRetryOnError: { (_, _, _) in keepRetryOnError })
+        return response?.toKrakenPeers()
     }
     
     private func deliverKrakenMessage(callUUID: UUID, blazeMessage: BlazeMessage, numberOfRetries: UInt, shouldRetryOnError: OnKrakenError) throws -> BlazeMessage {

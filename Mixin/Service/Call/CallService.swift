@@ -461,12 +461,25 @@ extension CallService {
                                                       action: .decline(recipientId: inviterUserId))
                         SendMessageService.shared.send(krakenRequest: declining,
                                                        shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                        let message = Message.createKrakenMessage(conversationId: call.conversationId,
+                                                                  userId: myUserId,
+                                                                  category: .KRAKEN_DECLINE)
+                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
                     } else {
                         let action: KrakenRequest.Action
+                        let messageCategory: MessageCategory
                         if call.isOutgoing, call.trackId == nil {
                             action = .cancel
+                            messageCategory = .KRAKEN_CANCEL
                         } else {
                             action = .end
+                            messageCategory = .KRAKEN_END
+                        }
+                        let mediaDuration: Int64?
+                        if let date = call.connectedDate {
+                            mediaDuration = Int64(abs(date.timeIntervalSinceNow) * millisecondsPerSecond)
+                        } else {
+                            mediaDuration = nil
                         }
                         let end = KrakenRequest(callUUID: uuid,
                                                 conversationId: call.conversationId,
@@ -474,6 +487,11 @@ extension CallService {
                                                 action: action)
                         SendMessageService.shared.send(krakenRequest: end,
                                                        shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                        let message = Message.createKrakenMessage(conversationId: call.conversationId,
+                                                                  userId: myUserId,
+                                                                  category: messageCategory,
+                                                                  mediaDuration: mediaDuration)
+                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
                     }
                     self.membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
                 }
@@ -826,6 +844,10 @@ extension CallService {
                 self.close(uuid: uuid)
                 reporter.report(error: error)
             }
+            let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: .KRAKEN_INVITE)
+            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
     
@@ -833,6 +855,12 @@ extension CallService {
         self.log("[CallService] Got \(data.category), report member: \(data.userId) disconnected")
         reportMember(withUserId: data.userId,
                      didDisconnectFromConversationWithConversationId: data.conversationId)
+        if let call = activeCall, call.status == .connected, call.conversationId == data.conversationId {
+            let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: .KRAKEN_DECLINE)
+            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+        }
     }
     
     private func handleKrakenEnd(data: BlazeMessageData) {
@@ -840,17 +868,17 @@ extension CallService {
         reportMember(withUserId: data.userId,
                      didDisconnectFromConversationWithConversationId: data.conversationId)
         
-        func shouldStopRinging(call: GroupCall) -> Bool {
+        func shouldClose(call: GroupCall) -> Bool {
             call.conversationId == data.conversationId
                 && call.inviterUserId == data.userId
                 && call.status == .incoming
         }
         
         var calls = [GroupCall]()
-        if let call = activeCall as? GroupCall, shouldStopRinging(call: call) {
+        if let call = activeCall as? GroupCall, shouldClose(call: call) {
             calls.append(call)
         }
-        for case let (uuid, call as GroupCall) in pendingAnswerCalls where shouldStopRinging(call: call) {
+        for case let (uuid, call as GroupCall) in pendingAnswerCalls where shouldClose(call: call) {
             pendingAnswerCalls.removeValue(forKey: uuid)
             calls.append(call)
         }
@@ -859,6 +887,10 @@ extension CallService {
             call.status = .disconnecting
             close(uuid: call.uuid)
             callInterface.reportCall(uuid: call.uuid, endedByReason: .remoteEnded)
+            let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: .KRAKEN_CANCEL)
+            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
     

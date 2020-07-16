@@ -908,6 +908,16 @@ extension ConversationDataSource {
         } else if message.status == MessageStatus.UNKNOWN.rawValue {
             viewModel = UnknownMessageViewModel(message: message)
         } else {
+            let krakenCategories: Set<String> = {
+                let categories: [MessageCategory] = [
+                    .KRAKEN_PUBLISH,
+                    .KRAKEN_INVITE,
+                    .KRAKEN_CANCEL,
+                    .KRAKEN_DECLINE,
+                    .KRAKEN_END
+                ]
+                return Set(categories.map(\.rawValue))
+            }()
             if message.category.hasSuffix("_TEXT") {
                 viewModel = TextMessageViewModel(message: message)
             } else if message.category.hasSuffix("_IMAGE") {
@@ -945,7 +955,7 @@ extension ConversationDataSource {
                 viewModel.cellHeight = 38
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 viewModel = EncryptionHintViewModel(message: message)
-            } else if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue || message.category == MessageCategory.KRAKEN_END.rawValue {
+            } else if krakenCategories.contains(message.category) {
                 viewModel = SystemMessageViewModel(message: message)
             } else {
                 viewModel = UnknownMessageViewModel(message: message)

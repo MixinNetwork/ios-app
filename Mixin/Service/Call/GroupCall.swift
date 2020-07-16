@@ -59,7 +59,9 @@ class GroupCall: Call {
             return
         }
         pendingInvitingMembers = nil
-        invite(members: members)
+        if !members.isEmpty {
+            invite(members: members)
+        }
     }
     
     func reportMemberWithIdDidConnected(_ id: String) {

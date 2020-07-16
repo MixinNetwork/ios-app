@@ -202,30 +202,18 @@ extension Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category.rawValue, content: content, mediaDuration: mediaDuration, status: status.rawValue, quoteMessageId: quoteMessageId, createdAt: Date().toUTCString())
     }
     
-    public static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
-        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
-    }
-    
-    public static func createKrakenStatusMessage(category: MessageCategory, conversationId: String, userId: String) -> Message {
-        createMessage(messageId: UUID().uuidString.lowercased(),
+    public static func createKrakenMessage(conversationId: String, userId: String, category: MessageCategory, mediaDuration: Int64? = nil) -> Message {
+        createMessage(messageId: UUID().uuidString,
                       conversationId: conversationId,
                       userId: userId,
                       category: category.rawValue,
-                      content: "",
-                      mediaMimeType: nil,
-                      mediaSize: nil,
-                      mediaDuration: nil,
-                      mediaWidth: nil,
-                      mediaHeight: nil,
-                      mediaKey: nil,
-                      mediaDigest: nil,
-                      mediaStatus: nil,
-                      mediaWaveform: nil,
-                      thumbImage: nil,
+                      mediaDuration: mediaDuration,
                       status: MessageStatus.READ.rawValue,
-                      name: nil,
-                      quoteMessageId: nil,
                       createdAt: Date().toUTCString())
+    }
+    
+    public static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
+        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
     }
     
     public static func createMessage(message: MessageItem) -> Message {

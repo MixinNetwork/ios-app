@@ -40,7 +40,6 @@ class Call: NSObject {
         // when the call peer is connected or declined
         // Invalidation here is only for fail-safe protection
         if let timer = timer, timer.isValid {
-            assertionFailure()
             timer.invalidate()
         }
     }

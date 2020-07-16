@@ -142,9 +142,15 @@ class ConversationCell: ModernSelectedBackgroundCell {
                     contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
-                contentLabel.text = R.string.localizable.group_call_published(item.senderFullName)
+                contentLabel.text = R.string.localizable.group_call_publish(senderName)
+            } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {
+                contentLabel.text = R.string.localizable.group_call_cancel(senderName)
+            } else if category == MessageCategory.KRAKEN_DECLINE.rawValue {
+                contentLabel.text = R.string.localizable.group_call_decline(senderName)
+            } else if category == MessageCategory.KRAKEN_INVITE.rawValue {
+                contentLabel.text = R.string.localizable.group_call_invite(senderName)
             } else if category == MessageCategory.KRAKEN_END.rawValue {
-                contentLabel.text = R.string.localizable.group_call_ended()
+                contentLabel.text = R.string.localizable.group_call_end()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)

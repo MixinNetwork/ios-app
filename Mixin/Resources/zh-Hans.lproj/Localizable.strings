@@ -352,8 +352,12 @@
 "call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 "call_user_not_found" = "找不到用户";
 "call_declined_lack_microphone_permission" = "已拒绝通话";
-"group_call_published" = "%@ 开始了群通话";
-"group_call_ended" = "群通话已结束";
+"group_call_publish" = "%@ 开始了群通话";
+"group_call_invite" = "%@ 邀请你加入群组语音";
+"group_call_cancel" = "%@ 已取消群组语音";
+"group_call_decline" = "%@ 已拒绝群组语音";
+"group_call_end" = "群组语音结束";
+"group_call_end_duration" = "群组语音结束，时长%@";
 "group_call_declined_lack_microphone_permission" = "已拒绝通话";
 "group_call" = "群通话";
 "group_call_tap_to_join" = "点击加入";

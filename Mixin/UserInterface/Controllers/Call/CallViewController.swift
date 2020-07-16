@@ -172,7 +172,9 @@ class CallViewController: UIViewController {
                 let filteredMembers = members.filter { (member) -> Bool in
                     !inCallUserIds.contains(member.userId)
                 }
-                call.invite(members: filteredMembers)
+                if !filteredMembers.isEmpty {
+                    call.invite(members: filteredMembers)
+                }
             }
         }
         present(picker, animated: true, completion: nil)

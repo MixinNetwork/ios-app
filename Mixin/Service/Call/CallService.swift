@@ -316,7 +316,9 @@ extension CallService {
         let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
         let animated = window.rootViewController == viewController
         window.rootViewController = viewController
-        window.makeKeyAndVisible()
+        if !isMinimized {
+            window.makeKeyAndVisible()
+        }
         self.window = window
         
         UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
@@ -329,6 +331,9 @@ extension CallService {
             UIView.animate(withDuration: 0.3, animations: updateInterface)
         } else {
             UIView.performWithoutAnimation(updateInterface)
+        }
+        if isMinimized {
+            setInterfaceMinimized(true, animated: false)
         }
     }
     

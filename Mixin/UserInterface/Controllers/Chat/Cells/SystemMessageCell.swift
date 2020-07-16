@@ -13,6 +13,7 @@ class SystemMessageCell: MessageCell {
         label.textColor = .black
         label.backgroundColor = .clear
         label.numberOfLines = 0
+        label.textAlignment = .center
         messageContentView.addSubview(label)
         label.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()

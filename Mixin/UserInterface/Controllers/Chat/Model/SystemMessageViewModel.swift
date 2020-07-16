@@ -11,6 +11,7 @@ class SystemMessageViewModel: MessageViewModel {
     private static let paragraphStyle: NSParagraphStyle = {
         let style = NSMutableParagraphStyle()
         style.lineBreakMode = .byWordWrapping
+        style.alignment = .center
         return style.copy() as! NSParagraphStyle
     }()
     

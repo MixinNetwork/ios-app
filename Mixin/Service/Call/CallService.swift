@@ -463,7 +463,8 @@ extension CallService {
                                                        shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
-                                                                  category: .KRAKEN_DECLINE)
+                                                                  category: .KRAKEN_DECLINE,
+                                                                  createdAt: Date().toUTCString())
                         MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
                     } else {
                         let action: KrakenRequest.Action
@@ -490,7 +491,8 @@ extension CallService {
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: messageCategory,
-                                                                  mediaDuration: mediaDuration)
+                                                                  mediaDuration: mediaDuration,
+                                                                  createdAt: Date().toUTCString())
                         MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
                     }
                     self.membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
@@ -621,15 +623,22 @@ extension CallService: CallMessageCoordinator {
                                                           status: .DELIVERED)
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
                 } else if data.category == MessageCategory.KRAKEN_INVITE.rawValue, let uuid = UUID(uuidString: data.conversationId), !hasCall(uuid: uuid) {
+                    func insertTimedOutInvitation() {
+                        let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                                  userId: data.userId,
+                                                                  category: .KRAKEN_INVITE,
+                                                                  createdAt: data.createdAt)
+                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+                    }
                     if isTimedOut {
-                        // TODO: Inform user about timed out invitations?
+                        insertTimedOutInvitation()
                     } else {
                         let workItem = DispatchWorkItem(block: {
                             handle(data: data)
                             self.listPendingCallWorkItems.removeValue(forKey: uuid)
                         })
                         if let item = self.listPendingCallWorkItems[uuid] {
-                            // TODO: Inform user about timed out invitations?
+                            insertTimedOutInvitation()
                             item.cancel()
                         }
                         self.listPendingCallWorkItems[uuid] = workItem
@@ -846,7 +855,8 @@ extension CallService {
             }
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
                                                       userId: data.userId,
-                                                      category: .KRAKEN_INVITE)
+                                                      category: .KRAKEN_INVITE,
+                                                      createdAt: data.createdAt)
             MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
@@ -858,7 +868,8 @@ extension CallService {
         if let call = activeCall, call.status == .connected, call.conversationId == data.conversationId {
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
                                                       userId: data.userId,
-                                                      category: .KRAKEN_DECLINE)
+                                                      category: .KRAKEN_DECLINE,
+                                                      createdAt: data.createdAt)
             MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
@@ -889,7 +900,8 @@ extension CallService {
             callInterface.reportCall(uuid: call.uuid, endedByReason: .remoteEnded)
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
                                                       userId: data.userId,
-                                                      category: .KRAKEN_CANCEL)
+                                                      category: .KRAKEN_CANCEL,
+                                                      createdAt: data.createdAt)
             MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }

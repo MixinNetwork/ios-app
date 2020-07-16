@@ -171,9 +171,15 @@ class CallService: NSObject {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, error.code == 401 || error.code == 403 || error.code == 500 {
+        if let error = error as? APIError, [401, 403, 500, 5002002].contains(error.code) {
             self.log("[CallService] Got \(error.code)")
-            call.status = .disconnecting
+            let isRecoverable = [500, 5002002].contains(error.code)
+            let error = CallError.remoteError(error.code)
+            failCurrentCall(sendFailedMessageToRemote: isRecoverable, error: error)
+            callInterface.reportCall(uuid: callUUID, endedByReason: .failed)
+            if isRecoverable {
+                alert(error: error)
+            }
             return false
         }
         let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries

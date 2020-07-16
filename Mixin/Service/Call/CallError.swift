@@ -18,6 +18,7 @@ enum CallError: Error {
     
     case invalidKrakenResponse
     case roomFull
+    case remoteError(Int)
     
     case manuallyInitiated
     

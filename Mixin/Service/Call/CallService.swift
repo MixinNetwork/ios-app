@@ -171,7 +171,7 @@ class CallService: NSObject {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, error.code == 401 ||  error.code == 403 {
+        if let error = error as? APIError, error.code == 401 || error.code == 403 || error.code == 500 {
             self.log("[CallService] Got \(error.code)")
             return false
         }

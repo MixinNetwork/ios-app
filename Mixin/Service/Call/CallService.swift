@@ -1387,13 +1387,7 @@ extension CallService {
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
         self.log("[CallService] start group call impl framekey: \(frameKey)")
         beginUnanswerCountDown(for: call)
-        rtcClient.offer(key: frameKey) { clientResult in
-            var result = clientResult
-            #if DEBUG
-            if GroupCallDebugConfig.throwErrorOnOfferGeneration {
-                result = .failure(.manuallyInitiated)
-            }
-            #endif
+        rtcClient.offer(key: frameKey) { result in
             switch result {
             case .failure(let error):
                 self.log("[CallService] start group call impl got error: \(error)")
@@ -1429,25 +1423,11 @@ extension CallService {
     
     private func handlePublishingResponse(to call: GroupCall, trackId: String, sdp: RTCSessionDescription, completion: ((Bool) -> Void)?) {
         NotificationCenter.default.addObserver(self, selector: #selector(senderKeyChange(_:)), name: ReceiveMessageService.senderKeyDidChangeNotification, object: nil)
-        #if DEBUG
-        if GroupCallDebugConfig.invalidResponseOnPublishing {
-            failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
-            alert(error: .invalidKrakenResponse)
-            completion?(false)
-            return
-        }
-        #endif
         call.trackId = trackId
         if call.isOutgoing {
             callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
         }
-        rtcClient.set(remoteSdp: sdp) { (clientError) in
-            var error = clientError
-            #if DEBUG
-            if GroupCallDebugConfig.throwOnSettingSdpFromPublishingResponse {
-                error = CallError.manuallyInitiated
-            }
-            #endif
+        rtcClient.set(remoteSdp: sdp) { (error) in
             if let error = error {
                 self.log("[CallService] group call publish impl set sdp from publishing response failed: \(error)")
                 let end = KrakenRequest(callUUID: call.uuid,
@@ -1489,13 +1469,7 @@ extension CallService {
             return
         }
         self.log("[CallService] setting sdp from subscribe response")
-        rtcClient.set(remoteSdp: sdp) { (clientError) in
-            var error = clientError
-            #if DEBUG
-            if GroupCallDebugConfig.throwErrorOnSettingSdpFromSubscribingResponse {
-                error = CallError.manuallyInitiated
-            }
-            #endif
+        rtcClient.set(remoteSdp: sdp) { (error) in
             if let error = error {
                 reporter.report(error: error)
                 self.log("[CallService] subscribe failed to setting sdp: \(error)")
@@ -1514,13 +1488,7 @@ extension CallService {
     }
     
     private func answer(userId: String, of call: GroupCall) {
-        rtcClient.answer { (clientResult) in
-            var result = clientResult
-            #if DEBUG
-            if GroupCallDebugConfig.throwErrorOnAnswerGeneration {
-                result = .failure(.manuallyInitiated)
-            }
-            #endif
+        rtcClient.answer { (result) in
             switch result {
             case .success(let sdpJson):
                 let answer = KrakenRequest(callUUID: call.uuid,

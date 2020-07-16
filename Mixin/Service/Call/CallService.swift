@@ -1398,6 +1398,9 @@ extension CallService {
                 completion?(false)
             case .success(let sdp):
                 self.publish(sdp: sdp, to: call, completion: completion)
+                if call.isOutgoing {
+                    call.invitePendingUsers()
+                }
             }
         }
     }
@@ -1465,9 +1468,6 @@ extension CallService {
                         SendMessageService.shared.send(krakenRequest: trickle,
                                                        shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
                     })
-                    if call.isOutgoing {
-                        call.invitePendingUsers()
-                    }
                 }
             }
         }

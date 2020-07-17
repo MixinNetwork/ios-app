@@ -201,7 +201,7 @@ extension MessageItem {
     }
     
     public var isSystemMessage: Bool {
-        return category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+        category == MessageCategory.SYSTEM_CONVERSATION.rawValue || category.hasPrefix("KRAKEN_")
     }
     
     public var userIsBot: Bool {

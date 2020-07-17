@@ -29,7 +29,8 @@ class UserHandleViewController: UITableViewController {
     private var searchResults = [SearchResult]()
     private var keyword: String?
     private var onScrollingAnimationEnd: (() -> ())?
-    private var conversationViewController: ConversationViewController?
+    
+    private weak var conversationViewController: ConversationViewController?
     
     private lazy var tableFooterView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 7)

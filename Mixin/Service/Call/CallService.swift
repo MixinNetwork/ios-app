@@ -203,29 +203,32 @@ extension CallService {
     func requestStartPeerToPeerCall(remoteUser: UserItem) {
         self.log("[CallService] Request start p2p call with user: \(remoteUser.fullName)")
         let handle = CXHandle(type: .generic, value: remoteUser.userId)
-        requestStartCall(handle: handle, playOutgoingRingtone: true, makeCall: { uuid in
-            PeerToPeerCall(uuid: uuid, isOutgoing: true, remoteUser: remoteUser)
-        })
+        let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser)
+        requestStartCall(call, handle: handle, playOutgoingRingtone: true)
     }
     
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
         self.log("[CallService] Request start p2p call with conversation: \(conversation.getConversationName())")
-        let handle = CXHandle(type: .generic, value: conversation.conversationId)
-        requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
-            guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
-                return nil
-            }
-            if let account = LoginManager.shared.account {
-                let me = UserItem.createUser(from: account)
-                members.append(me)
-            }
-            self.log("[CallService] Making call with members: \(members.map(\.fullName))")
-            return GroupCall(uuid: uuid,
+        guard let uuid = UUID(uuidString: conversation.conversationId) else {
+            alert(error: .invalidUUID(uuid: conversation.conversationId))
+            return
+        }
+        guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
+            alert(error: .networkFailure)
+            return
+        }
+        if let account = LoginManager.shared.account {
+            let me = UserItem.createUser(from: account)
+            members.append(me)
+        }
+        self.log("[CallService] Making call with members: \(members.map(\.fullName))")
+        let call = GroupCall(uuid: uuid,
                              isOutgoing: true,
                              conversation: conversation,
                              members: members,
                              invitingMembers: invitingMembers)
-        })
+        let handle = CXHandle(type: .generic, value: conversation.conversationId)
+        requestStartCall(call, handle: handle, playOutgoingRingtone: false)
     }
     
     func requestAnswerCall() {
@@ -441,12 +444,14 @@ extension CallService {
                                                     isUserInitiated: true,
                                                     category: category)
                 } else if let call = call as? GroupCall {
-                    if callStatusWasIncoming, let inviterUserId = call.inviterUserId {
-                        let declining = KrakenRequest(callUUID: call.uuid,
-                                                      conversationId: call.conversationId,
-                                                      trackId: nil,
-                                                      action: .decline(recipientId: inviterUserId))
-                        KrakenMessageRetriever.shared.request(declining, completion: nil)
+                    if callStatusWasIncoming, !call.invitersUserId.isEmpty {
+                        for userId in call.invitersUserId {
+                            let declining = KrakenRequest(callUUID: call.uuid,
+                                                          conversationId: call.conversationId,
+                                                          trackId: nil,
+                                                          action: .decline(recipientId: userId))
+                            KrakenMessageRetriever.shared.request(declining, completion: nil)
+                        }
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: .KRAKEN_DECLINE,
@@ -815,12 +820,21 @@ extension CallService {
         do {
             DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             self.log("[CallService] Got Invitation from: \(data.userId)")
+            guard let uuid = UUID(uuidString: data.conversationId) else {
+                return
+            }
+            guard activeCall?.uuid != uuid else {
+                return
+            }
+            if let call = pendingAnswerCalls[uuid] as? GroupCall {
+                call.invitersUserId.insert(data.userId)
+                return
+            }
             guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
                 self.log("[CallService] no conversation: \(data.conversationId)")
                 return
             }
             AudioManager.shared.pause()
-            let uuid = UUID()
             guard var members = membersManager.members(inConversationWith: data.conversationId) else {
                 self.log("[CallService] failed to load members: \(data.conversationId)")
                 return
@@ -834,7 +848,7 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.inviterUserId = data.userId
+            call.invitersUserId = [data.userId]
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -862,7 +876,7 @@ extension CallService {
     private func handleKrakenDecline(data: BlazeMessageData) {
         self.log("[CallService] Got \(data.category), report member: \(data.userId) disconnected")
         reportMember(withUserId: data.userId,
-                     didDisconnectFromConversationWithConversationId: data.conversationId)
+                     didDisconnectFromConversationWithId: data.conversationId)
         if let call = activeCall, call.status == .connected, call.conversationId == data.conversationId {
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
                                                       userId: data.userId,
@@ -875,11 +889,12 @@ extension CallService {
     private func handleKrakenEnd(data: BlazeMessageData) {
         self.log("[CallService] Got kraken end from \(data.userId)")
         reportMember(withUserId: data.userId,
-                     didDisconnectFromConversationWithConversationId: data.conversationId)
+                     didDisconnectFromConversationWithId: data.conversationId)
         
         func shouldClose(call: GroupCall) -> Bool {
-            call.conversationId == data.conversationId
-                && call.inviterUserId == data.userId
+            call.invitersUserId.remove(data.userId)
+            return call.conversationId == data.conversationId
+                && call.invitersUserId.isEmpty
                 && call.status == .incoming
         }
         
@@ -904,7 +919,7 @@ extension CallService {
         }
     }
     
-    private func reportMember(withUserId userId: String, didDisconnectFromConversationWithConversationId conversationId: String) {
+    private func reportMember(withUserId userId: String, didDisconnectFromConversationWithId conversationId: String) {
         membersManager.removeMember(with: userId, fromConversationWith: conversationId)
         if let call = activeCall as? GroupCall {
             call.reportMemberWithIdDidDisconnected(userId)
@@ -1042,8 +1057,7 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            let uuid = UUID()
+        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
             guard let members = membersManager.members(inConversationWith: conversationId) else {
                 self.log("[CallService] failed to fetch members from PushKit notification")
                 nativeCallInterface.reportImmediateFailureCall()
@@ -1055,14 +1069,14 @@ extension CallService: PKPushRegistryDelegate {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.inviterUserId = userId
+            call.invitersUserId = [userId]
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in
                 completion()
             }
             self.log("[CallService] report incoming group call from PushKit notification: \(call.debugDescription)")
-        } else if usesCallKit, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
+        } else if usesCallKit, name.isEmpty, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -1127,12 +1141,14 @@ extension CallService {
                 self.insertCallCompletedMessage(call: call,
                                                 isUserInitiated: false,
                                                 category: .WEBRTC_AUDIO_CANCEL)
-            } else if let call = call as? GroupCall, let inviterId = call.inviterUserId {
-                let declining = KrakenRequest(callUUID: call.uuid,
-                                              conversationId: call.conversationId,
-                                              trackId: call.trackId,
-                                              action: .decline(recipientId: inviterId))
-                KrakenMessageRetriever.shared.request(declining, completion: nil)
+            } else if let call = call as? GroupCall, !call.invitersUserId.isEmpty {
+                for userId in call.invitersUserId {
+                    let declining = KrakenRequest(callUUID: call.uuid,
+                                                  conversationId: call.conversationId,
+                                                  trackId: call.trackId,
+                                                  action: .decline(recipientId: userId))
+                    KrakenMessageRetriever.shared.request(declining, completion: nil)
+                }
             }
             self.close(uuid: call.uuid)
             DispatchQueue.main.async(execute: self.dismissCallingInterface)
@@ -1257,7 +1273,7 @@ extension CallService {
         reporter.report(error: error)
     }
     
-    private func requestStartCall(handle: CXHandle, playOutgoingRingtone: Bool, makeCall: @escaping (UUID) -> Call?) {
+    private func requestStartCall(_ call: Call, handle: CXHandle, playOutgoingRingtone: Bool) {
         
         func performRequest() {
             guard activeCall == nil else {
@@ -1267,12 +1283,6 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
-            let uuid = UUID()
-            guard let call = makeCall(uuid) else {
-                alert(error: .networkFailure)
-                self.log("[CallService] failed to make a valid call")
-                return
-            }
             activeCall = call
             callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
                 guard let error = error else {

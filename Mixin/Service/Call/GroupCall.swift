@@ -11,11 +11,11 @@ class GroupCall: Call {
     let membersDataSource: GroupCallMemberDataSource
     
     override var debugDescription: String {
-        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), inviterUserId: \(inviterUserId ?? "(null)"), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), invitersUserId: \(invitersUserId), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
     var trackId: String?
-    var inviterUserId: String?
+    var invitersUserId = Set<String>()
     
     // invite after group call is connected
     private var pendingInvitingMembers: [UserItem]?

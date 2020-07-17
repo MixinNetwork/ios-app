@@ -280,6 +280,10 @@ extension CallService {
     func showCallingInterface(call: Call) {
         self.log("[CallService] show calling interface for call: \(call.debugDescription)")
         
+        if isMinimized {
+            setInterfaceMinimized(false, animated: false)
+        }
+        
         func makeViewController() -> CallViewController {
             let viewController = CallViewController(service: self)
             viewController.loadViewIfNeeded()
@@ -291,9 +295,7 @@ extension CallService {
         let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
         let animated = window.rootViewController == viewController
         window.rootViewController = viewController
-        if !isMinimized {
-            window.makeKeyAndVisible()
-        }
+        window.makeKeyAndVisible()
         self.window = window
         
         UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
@@ -307,46 +309,53 @@ extension CallService {
         } else {
             UIView.performWithoutAnimation(updateInterface)
         }
-        if isMinimized {
-            setInterfaceMinimized(true, animated: false)
-        }
     }
     
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
+        self.isMinimized = minimized
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
         }
         guard let max = self.viewController, let callWindow = self.window else {
             return
         }
-        self.isMinimized = minimized
         let duration: TimeInterval = 0.3
+        let updateViews: () -> Void
+        let completion: (Bool) -> Void
         if minimized {
             min.call = activeCall
             min.view.alpha = 0
             min.placeViewToTopRight()
             let scaleX = min.contentView.frame.width / max.view.frame.width
             let scaleY = min.contentView.frame.height / max.view.frame.height
-            UIView.animate(withDuration: duration, animations: {
+            updateViews = {
                 min.view.alpha = 1
                 max.view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
                 max.view.center = min.view.center
                 max.view.alpha = 0
                 max.setNeedsStatusBarAppearanceUpdate()
-            }) { (_) in
+            }
+            completion = { (_) in
                 AppDelegate.current.mainWindow.makeKeyAndVisible()
             }
         } else {
             callWindow.makeKeyAndVisible()
-            UIView.animate(withDuration: duration, animations: {
+            updateViews = {
                 min.view.alpha = 0
                 max.view.transform = .identity
                 max.view.center = CGPoint(x: callWindow.bounds.midX, y: callWindow.bounds.midY)
                 max.view.alpha = 1
                 max.setNeedsStatusBarAppearanceUpdate()
-            }) { (_) in
+            }
+            completion = { (_) in
                 min.call = nil
             }
+        }
+        if animated {
+            UIView.animate(withDuration: duration, animations: updateViews, completion: completion)
+        } else {
+            updateViews()
+            completion(true)
         }
     }
     
@@ -379,9 +388,6 @@ extension CallService {
                 self.startPeerToPeerCall(call, completion: completion)
                 self.log("[CallService] start p2p call")
             } else if let call = self.activeCall as? GroupCall, call.uuid == uuid, call.status != .disconnecting {
-                DispatchQueue.main.sync {
-                    self.showCallingInterface(call: call)
-                }
                 self.startGroupCall(call, completion: completion)
                 self.log("[CallService] start group call")
             } else {
@@ -407,9 +413,6 @@ extension CallService {
                 self.activeCall = call
                 self.ringtonePlayer.stop()
                 call.status = .connecting
-                DispatchQueue.main.sync {
-                    self.showCallingInterface(call: call)
-                }
                 self.startGroupCall(call, completion: completion)
             } else {
                 self.log("[CallService] answer call failed, call: \(self.pendingAnswerCalls[uuid]?.debugDescription)")
@@ -1426,6 +1429,9 @@ extension CallService {
     
     private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
         self.log("[CallService] start group call impl \(call.debugDescription)")
+        DispatchQueue.main.sync {
+            self.showCallingInterface(call: call)
+        }
         try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
         self.log("[CallService] start group call impl framekey: \(frameKey)")

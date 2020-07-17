@@ -1012,7 +1012,7 @@ class ConversationViewController: UIViewController {
             return
         }
         let service = CallService.shared
-        if service.isMinimized, UIApplication.homeContainerViewController?.minimizedCallViewController.conversationId == conversationId {
+        if service.isMinimized, service.activeCall?.conversationId == conversationId {
             service.setInterfaceMinimized(false, animated: true)
         } else {
             service.requestStartPeerToPeerCall(remoteUser: ownerUser)
@@ -1047,7 +1047,7 @@ class ConversationViewController: UIViewController {
             return
         }
         let service = CallService.shared
-        if service.isMinimized, UIApplication.homeContainerViewController?.minimizedCallViewController.conversationId == conversationId {
+        if service.isMinimized, service.activeCall?.conversationId == conversationId {
             service.setInterfaceMinimized(false, animated: true)
         } else {
             let conversation = dataSource.conversation

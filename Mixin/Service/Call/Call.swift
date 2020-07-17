@@ -13,8 +13,6 @@ class Call: NSObject {
     private(set) lazy var uuidString = uuid.uuidString.lowercased()
     
     var connectedDate: Date?
-    
-    @Atomic(.connecting)
     var status: Status {
         didSet {
             NotificationCenter.default.post(name: Self.statusDidChangeNotification,
@@ -29,8 +27,8 @@ class Call: NSObject {
         self.uuid = uuid
         self.conversationId = conversationId
         self.isOutgoing = isOutgoing
-        super.init()
         self.status = isOutgoing ? .outgoing : .incoming
+        super.init()
     }
     
     deinit {

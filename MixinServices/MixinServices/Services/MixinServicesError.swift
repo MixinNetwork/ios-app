@@ -31,6 +31,7 @@ public enum MixinServicesError: Error {
     case requestTimeout(String)
     case emptyResponse
     case badKrakenBlazeMessage
+    case missingConversationId
     
 }
 
@@ -86,6 +87,8 @@ extension MixinServicesError: CustomNSError {
             return 21
         case .badKrakenBlazeMessage:
             return 22
+        case .missingConversationId:
+            return 23
         }
     }
     

@@ -48,12 +48,13 @@ class GroupCallMembersManager {
         }
     }
     
-    func members(inConversationWith id: String) -> [UserItem] {
+    // A nil return value indicates there's an error fetching peers
+    func members(inConversationWith id: String) -> [UserItem]? {
         loadMembersIfNeverLoaded(forConversationWith: id)
         if let userIds = members[id] {
             return userIds.compactMap(UserDAO.shared.getUser(userId:))
         } else {
-            return []
+            return nil
         }
     }
     
@@ -87,12 +88,14 @@ class GroupCallMembersManager {
     }
     
     private func loadMembersIfNeverLoaded(forConversationWith id: String) {
-        guard members[id] == nil else {
+        guard self.members[id] == nil else {
             return
         }
-        let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: id, keepRetryOnError: true) ?? []
+        guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: id) else {
+            return
+        }
         let userIds = peers.map(\.userId)
-        members[id] = userIds
+        self.members[id] = userIds
         let userInfo: [String: Any] = [
             Self.UserInfoKey.conversationId: id,
             Self.UserInfoKey.userIds: userIds
@@ -111,7 +114,7 @@ extension GroupCallMembersManager {
                 return
             }
             self.queue.async {
-                guard let peers = SendMessageService.shared.requestKrakenPeers(forConversationWith: conversationId, keepRetryOnError: false) else {
+                guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: conversationId) else {
                     return
                 }
                 let remoteUserIds = Set(peers.map(\.userId))

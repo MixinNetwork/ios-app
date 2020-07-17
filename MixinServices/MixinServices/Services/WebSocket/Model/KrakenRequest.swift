@@ -13,10 +13,10 @@ public struct KrakenRequest {
         case decline(recipientId: String)
     }
     
-    let callUUID: UUID
-    let conversationId: String
-    let trackId: String?
-    let action: Action
+    public let callUUID: UUID
+    public let conversationId: String
+    public let trackId: String?
+    public let action: Action
     
     var blazeMessage: BlazeMessage {
         var param = BlazeMessageParam()
@@ -54,6 +54,14 @@ public struct KrakenRequest {
         self.conversationId = conversationId
         self.trackId = trackId
         self.action = action
+    }
+    
+}
+
+extension KrakenRequest: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        "<KrakenRequest callUUID: \(callUUID.uuidString), conversationId: \(conversationId), trackId: \(trackId), action: \(action)>"
     }
     
 }

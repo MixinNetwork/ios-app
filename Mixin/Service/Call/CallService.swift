@@ -101,6 +101,7 @@ class CallService: NSObject {
         queue.setSpecific(key: queueSpecificKey, value: ())
         rtcClient.delegate = self
         updateCallKitAvailability()
+        KrakenMessageRetriever.shared.delegate = self
     }
     
     func registerForPushKitNotificationsIfAvailable() {
@@ -159,37 +160,6 @@ class CallService: NSObject {
         }
     }
     
-    func shouldRetryKrakenRequest(_ callUUID: UUID, _ error: Swift.Error, _ numberOfRetries: UInt) -> Bool {
-        guard LoginManager.shared.isLoggedIn else {
-            return false
-        }
-        guard let call = activeOrPendingAnswerCall(with: callUUID) else {
-            self.log("[CallService] no active or pending call, give up kraken retrying")
-            return false
-        }
-        guard call.status != .disconnecting else {
-            self.log("[CallService] finds a disconnecting call, give up kraken request")
-            return false
-        }
-        if let error = error as? APIError, [401, 403, 5002002].contains(error.code) {
-            self.log("[CallService] Got \(error.code)")
-            let isRecoverable = [403, 5002002].contains(error.code)
-            let error = CallError.remoteError(error.code)
-            failCurrentCall(sendFailedMessageToRemote: isRecoverable, error: error)
-            callInterface.reportCall(uuid: callUUID, endedByReason: .failed)
-            if isRecoverable {
-                alert(error: error)
-            }
-            return false
-        }
-        let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
-        self.log("[CallService] numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
-        if !shouldRetry {
-            call.status = .disconnecting
-        }
-        return shouldRetry
-    }
-    
     func minimizeIfThereIsAnActiveCall() {
         queue.async {
             guard self.activeCall != nil else {
@@ -240,7 +210,9 @@ extension CallService {
         self.log("[CallService] Request start p2p call with conversation: \(conversation.getConversationName())")
         let handle = CXHandle(type: .generic, value: conversation.conversationId)
         requestStartCall(handle: handle, playOutgoingRingtone: false, makeCall: { uuid in
-            var members = self.membersManager.members(inConversationWith: conversation.conversationId)
+            guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
+                return nil
+            }
             if let account = LoginManager.shared.account {
                 let me = UserItem.createUser(from: account)
                 members.append(me)
@@ -266,14 +238,12 @@ extension CallService {
     }
     
     func requestEndCall() {
-        activeCall?.status = .disconnecting
         queue.async {
             guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
                 self.log("[CallService] Request end call but finds no pending answer call")
                 return
             }
             self.log("[CallService] Request end call")
-            self.activeOrPendingAnswerCall(with: uuid)?.status = .disconnecting
             self.callInterface.requestEndCall(uuid: uuid) { (error) in
                 if let error = error {
                     self.log("[CallService] Error request end call: \(error)")
@@ -474,8 +444,7 @@ extension CallService {
                                                       conversationId: call.conversationId,
                                                       trackId: nil,
                                                       action: .decline(recipientId: inviterUserId))
-                        SendMessageService.shared.send(krakenRequest: declining,
-                                                       shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                        KrakenMessageRetriever.shared.request(declining, completion: nil)
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: .KRAKEN_DECLINE,
@@ -501,8 +470,7 @@ extension CallService {
                                                 conversationId: call.conversationId,
                                                 trackId: call.trackId,
                                                 action: action)
-                        SendMessageService.shared.send(krakenRequest: end,
-                                                       shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                        KrakenMessageRetriever.shared.request(end, completion: nil)
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: messageCategory,
@@ -814,11 +782,12 @@ extension CallService {
 extension CallService {
     
     private func handlePublishing(data: BlazeMessageData) {
-        self.log("[CallService] Got publish from: \(data.userId)")
+        self.log("[CallService] Got publish from: \(data.userId), conversation: \(data.conversationId)")
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
         let groupCall: GroupCall?
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
             groupCall = call
+            self.log("[CallService] The call is active, subscribe the user: \(data.userId)")
             subscribe(userId: data.userId, of: call)
         } else if let uuid = UUID(uuidString: data.conversationId) {
             groupCall = pendingAnswerCalls[uuid] as? GroupCall
@@ -826,7 +795,10 @@ extension CallService {
             groupCall = nil
         }
         if let call = groupCall {
+            self.log("[CallService] reportMemberWithIdDidConnected: \(data.userId)")
             call.reportMemberWithIdDidConnected(data.userId)
+        } else {
+            self.log("[CallService] no group call, drops: \(data.userId)")
         }
     }
     
@@ -840,7 +812,10 @@ extension CallService {
             }
             AudioManager.shared.pause()
             let uuid = UUID()
-            var members = membersManager.members(inConversationWith: data.conversationId)
+            guard var members = membersManager.members(inConversationWith: data.conversationId) else {
+                self.log("[CallService] failed to load members: \(data.conversationId)")
+                return
+            }
             if let account = LoginManager.shared.account {
                 let me = UserItem.createUser(from: account)
                 members.append(me)
@@ -851,7 +826,7 @@ extension CallService {
                                  members: members,
                                  invitingMembers: [])
             call.inviterUserId = data.userId
-            self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription)")
+            self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             callInterface.reportIncomingCall(call) { (error) in
@@ -863,8 +838,7 @@ extension CallService {
                                               conversationId: data.conversationId,
                                               trackId: nil,
                                               action: .decline(recipientId: data.userId))
-                SendMessageService.shared.send(krakenRequest: declining,
-                                               shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                KrakenMessageRetriever.shared.request(declining, completion: nil)
                 self.close(uuid: uuid)
                 reporter.report(error: error)
             }
@@ -930,6 +904,39 @@ extension CallService {
     
 }
 
+// MARK: - Kraken response handlers
+extension CallService: KrakenMessageRetrieverDelegate {
+    
+    func krakenMessageRetriever(_ retriever: KrakenMessageRetriever, shouldRetryRequest request: KrakenRequest, error: Swift.Error, numberOfRetries: UInt) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        guard let call = activeOrPendingAnswerCall(with: request.callUUID) else {
+            self.log("[CallService] no active or pending call, give up kraken retrying")
+            return false
+        }
+        guard call.status != .disconnecting else {
+            self.log("[CallService] finds a disconnecting call, give up kraken request")
+            return false
+        }
+        if let error = error as? APIError, [401, 403, 5002002].contains(error.code) {
+            self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
+            let isRecoverable = [403, 5002002].contains(error.code)
+            let error = CallError.remoteError(error.code)
+            failCurrentCall(sendFailedMessageToRemote: isRecoverable, error: error)
+            callInterface.reportCall(uuid: request.callUUID, endedByReason: .failed)
+            if isRecoverable {
+                alert(error: error)
+            }
+            return false
+        }
+        let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
+        self.log("[CallService] numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
+        return shouldRetry
+    }
+    
+}
+
 // MARK: - WebRTCClientDelegate
 extension CallService: WebRTCClientDelegate {
     
@@ -945,12 +952,11 @@ extension CallService: WebRTCClientDelegate {
                                                   isGroupMessage: false)
         } else if let call = self.activeCall as? GroupCall, let json = candidate.jsonString?.base64Encoded() {
             if let trackId = call.trackId {
-                let request = KrakenRequest(callUUID: call.uuid,
+                let trickle = KrakenRequest(callUUID: call.uuid,
                                             conversationId: call.conversationId,
                                             trackId: trackId,
                                             action: .trickle(candidate: json))
-                SendMessageService.shared.send(krakenRequest: request,
-                                               shouldRetryOnError: shouldRetryKrakenRequest(_:_:_:))
+                KrakenMessageRetriever.shared.request(trickle, completion: nil)
             } else {
                 var trickles = pendingTrickles[call.uuid] ?? []
                 trickles.append(json)
@@ -984,12 +990,6 @@ extension CallService: WebRTCClientDelegate {
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
-        if let call = activeCall {
-            callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-            if call is GroupCall {
-                failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
-            }
-        }
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
@@ -1035,7 +1035,12 @@ extension CallService: PKPushRegistryDelegate {
         }
         if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
             let uuid = UUID()
-            let members = self.membersManager.members(inConversationWith: conversationId)
+            guard let members = membersManager.members(inConversationWith: conversationId) else {
+                self.log("[CallService] failed to fetch members from PushKit notification")
+                nativeCallInterface.reportImmediateFailureCall()
+                completion()
+                return
+            }
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
@@ -1114,12 +1119,11 @@ extension CallService {
                                                 isUserInitiated: false,
                                                 category: .WEBRTC_AUDIO_CANCEL)
             } else if let call = call as? GroupCall, let inviterId = call.inviterUserId {
-                let request = KrakenRequest(callUUID: call.uuid,
-                                            conversationId: call.conversationId,
-                                            trackId: call.trackId,
-                                            action: .decline(recipientId: inviterId))
-                SendMessageService.shared.send(krakenRequest: request,
-                                               shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                let declining = KrakenRequest(callUUID: call.uuid,
+                                              conversationId: call.conversationId,
+                                              trackId: call.trackId,
+                                              action: .decline(recipientId: inviterId))
+                KrakenMessageRetriever.shared.request(declining, completion: nil)
             }
             self.close(uuid: call.uuid)
             DispatchQueue.main.async(execute: self.dismissCallingInterface)
@@ -1233,19 +1237,18 @@ extension CallService {
         } else if let call = activeCall as? GroupCall {
             membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
             if sendFailedMessageToRemote {
-                let request = KrakenRequest(callUUID: call.uuid,
-                                            conversationId: call.conversationId,
-                                            trackId: call.trackId,
-                                            action: .end)
-                SendMessageService.shared.send(krakenRequest: request,
-                                               shouldRetryOnError: shouldRetryKrakenRequest(_:_:_:))
+                let end = KrakenRequest(callUUID: call.uuid,
+                                        conversationId: call.conversationId,
+                                        trackId: call.trackId,
+                                        action: .end)
+                KrakenMessageRetriever.shared.request(end, completion: nil)
             }
         }
         close(uuid: activeCall.uuid)
         reporter.report(error: error)
     }
     
-    private func requestStartCall(handle: CXHandle, playOutgoingRingtone: Bool, makeCall: @escaping (UUID) -> Call) {
+    private func requestStartCall(handle: CXHandle, playOutgoingRingtone: Bool, makeCall: @escaping (UUID) -> Call?) {
         
         func performRequest() {
             guard activeCall == nil else {
@@ -1256,7 +1259,11 @@ extension CallService {
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             let uuid = UUID()
-            let call = makeCall(uuid)
+            guard let call = makeCall(uuid) else {
+                alert(error: .networkFailure)
+                self.log("[CallService] failed to make a valid call")
+                return
+            }
             activeCall = call
             callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
                 guard let error = error else {
@@ -1368,26 +1375,32 @@ extension CallService {
 // MARK: - Group Call Workers
 extension CallService {
     
-    private func send(krakenRequest: KrakenRequest) -> Result<(trackId: String, sdp: RTCSessionDescription), CallError> {
-        let response = SendMessageService.shared.send(krakenRequest: krakenRequest,
-                                                      shouldRetryOnError: shouldRetryKrakenRequest(_:_:_:))
-        switch response {
-        case let .success(response):
-            guard let responseData = Data(base64Encoded: response.data) else {
-                return .failure(.invalidKrakenResponse)
-            }
-            guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
-                return .failure(.invalidKrakenResponse)
-            }
-            guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
-                return .failure(.invalidKrakenResponse)
-            }
-            return .success((data.trackId, sdp))
-        case let .failure(error):
-            if let error = error as? APIError, error.code == 5002000 {
-                return .failure(.roomFull)
-            } else {
-                return .failure(.invalidKrakenResponse)
+    private typealias SdpResult = Result<(trackId: String, sdp: RTCSessionDescription), CallError>
+    
+    private func request(_ request: KrakenRequest, completion: @escaping (SdpResult) -> Void) {
+        KrakenMessageRetriever.shared.request(request) { (result) in
+            switch result {
+            case .success(let data):
+                guard let responseData = Data(base64Encoded: data.data) else {
+                    completion(.failure(.invalidKrakenResponse))
+                    return
+                }
+                guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
+                    completion(.failure(.invalidKrakenResponse))
+                    return
+                }
+                guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
+                    print(data.jsep.base64Decoded())
+                    completion(.failure(.invalidKrakenResponse))
+                    return
+                }
+                completion(.success((data.trackId, sdp)))
+            case let .failure(error):
+                if let error = error as? APIError, error.code == 5002000 {
+                    completion(.failure(.roomFull))
+                } else {
+                    completion(.failure(.invalidKrakenResponse))
+                }
             }
         }
     }
@@ -1407,9 +1420,6 @@ extension CallService {
                 completion?(false)
             case .success(let sdp):
                 self.publish(sdp: sdp, to: call, completion: completion)
-                if call.isOutgoing, call.status != .disconnecting {
-                    call.invitePendingUsers()
-                }
             }
         }
     }
@@ -1420,15 +1430,16 @@ extension CallService {
                                        trackId: nil,
                                        action: .publish(sdp: sdp))
         self.log("[CallService] group call publish is sent")
-        let publishingResponse = send(krakenRequest: publishing)
-        switch publishingResponse {
-        case let .success((trackId, sdp)):
-            handlePublishingResponse(to: call, trackId: trackId, sdp: sdp, completion: completion)
-        case let .failure(error):
-            self.log("[CallService] publish failed for invalid response")
-            failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
-            alert(error: error)
-            completion?(false)
+        request(publishing) { (result) in
+            switch result {
+            case let .success((trackId, sdp)):
+                self.handlePublishingResponse(to: call, trackId: trackId, sdp: sdp, completion: completion)
+            case let .failure(error):
+                self.log("[CallService] publish failed for invalid response")
+                self.failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
+                self.alert(error: error)
+                completion?(false)
+            }
         }
     }
     
@@ -1437,6 +1448,7 @@ extension CallService {
         call.trackId = trackId
         if call.isOutgoing {
             callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
+            call.invitePendingUsers()
         }
         rtcClient.set(remoteSdp: sdp) { (error) in
             if let error = error {
@@ -1445,8 +1457,7 @@ extension CallService {
                                         conversationId: call.conversationId,
                                         trackId: trackId,
                                         action: .end)
-                SendMessageService.shared.send(krakenRequest: end,
-                                               shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                KrakenMessageRetriever.shared.request(end, completion: nil)
                 self.close(uuid: call.uuid)
                 self.alert(error: .setRemoteAnswer(error))
                 completion?(false)
@@ -1460,8 +1471,7 @@ extension CallService {
                                                     conversationId: call.conversationId,
                                                     trackId: trackId,
                                                     action: .trickle(candidate: candidate))
-                        SendMessageService.shared.send(krakenRequest: trickle,
-                                                       shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                        KrakenMessageRetriever.shared.request(trickle, completion: nil)
                     })
                 }
             }
@@ -1474,26 +1484,27 @@ extension CallService {
                                         trackId: call.trackId,
                                         action: .subscribe)
         self.log("[CallService] subscribe is sent")
-        let subscribingResponse = send(krakenRequest: subscribing)
-        guard case let .success((_, sdp)) = subscribingResponse, sdp.type == .offer else {
-            self.log("[CallService] subscribe impl ends for invalid response")
-            return
-        }
-        self.log("[CallService] setting sdp from subscribe response")
-        rtcClient.set(remoteSdp: sdp) { (error) in
-            if let error = error {
-                reporter.report(error: error)
-                self.log("[CallService] subscribe failed to setting sdp: \(error)")
-                // TODO: An local error happened on subscribing, does retrying like below making sense?
-                self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                    guard self.activeCall == call else {
-                        return
+        request(subscribing) { (result) in
+            guard case let .success((_, sdp)) = result, sdp.type == .offer else {
+                self.log("[CallService] subscribe impl ends for invalid response")
+                return
+            }
+            self.log("[CallService] setting sdp from subscribe response")
+            self.rtcClient.set(remoteSdp: sdp) { (error) in
+                if let error = error {
+                    reporter.report(error: error)
+                    self.log("[CallService] subscribe failed to setting sdp: \(error)")
+                    // TODO: An local error happened on subscribing, does retrying like below making sense?
+                    self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
+                        guard self.activeCall == call else {
+                            return
+                        }
+                        self.subscribe(userId: userId, of: call)
                     }
-                    self.subscribe(userId: userId, of: call)
+                } else {
+                    self.log("[CallService] successfully set sdp from subscribe response")
+                    self.answer(userId: userId, of: call)
                 }
-            } else {
-                self.log("[CallService] successfully set sdp from subscribe response")
-                self.answer(userId: userId, of: call)
             }
         }
     }
@@ -1506,8 +1517,7 @@ extension CallService {
                                            conversationId: call.conversationId,
                                            trackId: call.trackId,
                                            action: .answer(sdp: sdpJson))
-                SendMessageService.shared.send(krakenRequest: answer,
-                                               shouldRetryOnError: self.shouldRetryKrakenRequest(_:_:_:))
+                KrakenMessageRetriever.shared.request(answer, completion: nil)
                 self.log("[CallService] group call answer is sent")
             case .failure(let error):
                 self.log("[CallService] group call answer failed setting sdp: \(error)")

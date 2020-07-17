@@ -46,12 +46,12 @@ class GroupCall: Call {
         }
         let conversationId = self.conversationId
         let userIds = members.map(\.userId)
+        assert(!userIds.isEmpty)
         let invitation = KrakenRequest(callUUID: uuid,
                                        conversationId: conversationId,
                                        trackId: trackId,
                                        action: .invite(recipients: userIds))
-        SendMessageService.shared.send(krakenRequest: invitation,
-                                       shouldRetryOnError: CallService.shared.shouldRetryKrakenRequest(_:_:_:))
+        KrakenMessageRetriever.shared.request(invitation, completion: nil)
     }
     
     func invitePendingUsers() {

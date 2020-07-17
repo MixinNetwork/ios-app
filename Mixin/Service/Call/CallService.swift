@@ -73,6 +73,7 @@ class CallService: NSObject {
     private lazy var rtcClient = WebRTCClient(delegateQueue: queue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
     private lazy var mixinCallInterface = MixinCallInterface(service: self)
+    private lazy var listPendingInvitationCounter = Counter(value: 0)
     
     private var usesCallKit = false // Access from CallService.queue
     private var pushRegistry: PKPushRegistry?
@@ -82,6 +83,7 @@ class CallService: NSObject {
     private var pendingCandidates = [UUID: [RTCIceCandidate]]()
     private var pendingTrickles = [UUID: [String]]() // Key is Call's UUID, Value is array of candidate string
     private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
+    private var listPendingInvitations = [Int: BlazeMessageData]()
     
     private var window: CallWindow?
     private var viewController: CallViewController?
@@ -605,30 +607,36 @@ extension CallService: CallMessageCoordinator {
                                                           category: category,
                                                           status: .DELIVERED)
                     MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
-                } else if data.category == MessageCategory.KRAKEN_INVITE.rawValue, let uuid = UUID(uuidString: data.conversationId), !hasCall(uuid: uuid) {
-                    func insertTimedOutInvitation() {
+                } else if data.category == MessageCategory.KRAKEN_INVITE.rawValue {
+                    if isTimedOut {
                         let message = Message.createKrakenMessage(conversationId: data.conversationId,
                                                                   userId: data.userId,
                                                                   category: .KRAKEN_INVITE,
                                                                   createdAt: data.createdAt)
                         MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-                    }
-                    if isTimedOut {
-                        insertTimedOutInvitation()
                     } else {
-                        let workItem = DispatchWorkItem(block: {
-                            handle(data: data)
-                            self.listPendingCallWorkItems.removeValue(forKey: uuid)
+                        let index = self.listPendingInvitationCounter.advancedValue
+                        self.listPendingInvitations[index] = data
+                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: {
+                            guard let invitation = self.listPendingInvitations[index] else {
+                                return
+                            }
+                            handle(data: invitation)
                         })
-                        if let item = self.listPendingCallWorkItems[uuid] {
-                            insertTimedOutInvitation()
-                            item.cancel()
-                        }
-                        self.listPendingCallWorkItems[uuid] = workItem
-                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: workItem)
                     }
-                } else if data.category == MessageCategory.KRAKEN_CANCEL.rawValue, let uuid = UUID(uuidString: data.conversationId), let workItem = self.listPendingCallWorkItems.removeValue(forKey: uuid) {
-                    workItem.cancel()
+                } else if data.category == MessageCategory.KRAKEN_END.rawValue {
+                    self.listPendingInvitations = self.listPendingInvitations.filter({ (index, invitation) -> Bool in
+                        if invitation.conversationId == data.conversationId {
+                            let message = Message.createKrakenMessage(conversationId: invitation.conversationId,
+                                                                      userId: invitation.userId,
+                                                                      category: .KRAKEN_INVITE,
+                                                                      createdAt: invitation.createdAt)
+                            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+                            return false
+                        } else {
+                            return true
+                        }
+                    })
                 } else {
                     handle(data: data)
                 }
@@ -784,13 +792,14 @@ extension CallService {
     private func handlePublishing(data: BlazeMessageData) {
         self.log("[CallService] Got publish from: \(data.userId), conversation: \(data.conversationId)")
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
+        
         let groupCall: GroupCall?
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
             groupCall = call
             self.log("[CallService] The call is active, subscribe the user: \(data.userId)")
             subscribe(userId: data.userId, of: call)
-        } else if let uuid = UUID(uuidString: data.conversationId) {
-            groupCall = pendingAnswerCalls[uuid] as? GroupCall
+        } else if let call = pendingAnswerCalls.values.first(where: { $0.conversationId == data.conversationId }) {
+            groupCall = call as? GroupCall
         } else {
             groupCall = nil
         }

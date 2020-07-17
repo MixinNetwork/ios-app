@@ -59,6 +59,7 @@ class GroupCallMembersManager {
     }
     
     func addMember(with userId: String, toConversationWith conversationId: String) {
+        CallService.shared.log("[GroupCallMembersManager] Add member: \(userId), to: \(conversationId)")
         var members = self.members[conversationId] ?? []
         if !members.contains(userId) {
             members.append(userId)
@@ -75,6 +76,7 @@ class GroupCallMembersManager {
         guard var members = self.members[conversationId] else {
             return
         }
+        CallService.shared.log("[GroupCallMembersManager] Remove member: \(userId), from: \(conversationId)")
         let countBefore = members.count
         members.removeAll(where: { $0 == userId })
         if members.count != countBefore {
@@ -95,6 +97,7 @@ class GroupCallMembersManager {
             return
         }
         let userIds = peers.map(\.userId)
+        CallService.shared.log("[GroupCallMembersManager] Load members: \(peers.map(\.userId))")
         self.members[id] = userIds
         let userInfo: [String: Any] = [
             Self.UserInfoKey.conversationId: id,
@@ -125,6 +128,7 @@ extension GroupCallMembersManager {
                     removedUserIds.append(userId)
                 }
                 if !removedUserIds.isEmpty {
+                    CallService.shared.log("[GroupCallMembersManager] RemoveZombieMember: \(removedUserIds)")
                     self.members[conversationId] = localUserIds
                     let userInfo: [String: Any] = [
                         Self.UserInfoKey.conversationId: conversationId,

@@ -356,7 +356,7 @@
 "group_call_invite" = "%@ 邀请你加入群组语音";
 "group_call_cancel" = "%@ 已取消群组语音";
 "group_call_decline" = "%@ 已拒绝群组语音";
-"group_call_end" = "群组语音结束";
+"group_call_end" = "[群组语音结束]";
 "group_call_end_duration" = "群组语音结束，时长%@";
 "group_call_declined_lack_microphone_permission" = "已拒绝通话";
 "group_call" = "群通话";

@@ -188,7 +188,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {
-        if conversation.contentType.hasPrefix("WEBRTC_") || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue {
+        let hideStatus = ["WEBRTC_", "KRAKEN_"].contains(where: conversation.contentType.hasPrefix(_:))
+            || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue
+        if hideStatus {
             messageStatusImageView.isHidden = true
         } else if conversation.senderId == myUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
             messageStatusImageView.isHidden = false

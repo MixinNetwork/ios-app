@@ -356,7 +356,7 @@
 "group_call_invite" = "%@ has invited you to a group call";
 "group_call_cancel" = "%@ has cancelled group call";
 "group_call_decline" = "%@ has declined group call";
-"group_call_end" = "Group call ended";
+"group_call_end" = "[Group call ended]";
 "group_call_end_duration" = "Group call ended, duration: %@";
 "group_call_declined_lack_microphone_permission" = "Group call has been declined";
 "group_call" = "Group Call";

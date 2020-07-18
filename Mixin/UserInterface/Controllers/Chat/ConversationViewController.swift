@@ -81,8 +81,10 @@ class ConversationViewController: UIViewController {
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
     private var isShowingKeyboard = false
+    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
+    
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
@@ -107,6 +109,19 @@ class ConversationViewController: UIViewController {
         let view = R.nib.invitationHintView(owner: nil)!
         view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
         return view
+    }()
+    
+    private lazy var groupCallIndicatorView: GroupCallIndicatorView = {
+        let indicator = R.nib.groupCallIndicatorView(owner: self)!
+        indicator.isHidden = true
+        view.addSubview(indicator)
+        indicator.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview()
+        }
+        groupCallIndicatorCenterYConstraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
+        groupCallIndicatorCenterYConstraint.constant = groupCallIndicatorCenterYLimitation.min
+        groupCallIndicatorCenterYConstraint.isActive = true
+        return indicator
     }()
     
     private lazy var cancelSelectionButton: UIButton = {
@@ -172,6 +187,12 @@ class ConversationViewController: UIViewController {
         return AppDelegate.current.mainWindow.frame.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
+    }
+    
+    private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
+        let min = navigationBarView.frame.maxY + 30
+        let max = inputWrapperView.frame.minY - 30
+        return (min, max)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -249,16 +270,25 @@ class ConversationViewController: UIViewController {
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
         dataSource.initData(completion: finishInitialLoading)
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        center.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
+        center.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
+        center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
+        center.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
+        center.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
+        center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
+        if dataSource.category == .group {
+            CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
+            updateGroupCallIndicatorViewHidden()
+            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willActivateCallNotification, object: nil)
+            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willDeactivateCallNotification, object: nil)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -407,6 +437,31 @@ class ConversationViewController: UIViewController {
             AppGroupUserDefaults.User.closeScamAnnouncementDate[user.userId] = Date()
         }
         updateAnnouncementBadge(announcement: nil)
+    }
+    
+    @IBAction func groupCallIndicatorPanAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.setTranslation(.zero, in: nil)
+        case .changed:
+            groupCallIndicatorCenterYConstraint.constant += recognizer.translation(in: nil).y
+            recognizer.setTranslation(.zero, in: nil)
+        case .ended:
+            let (minY, maxY) = groupCallIndicatorCenterYLimitation
+            let y = max(minY, min(maxY, groupCallIndicatorView.center.y))
+            groupCallIndicatorCenterYConstraint.constant = y
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           options: .curveEaseOut,
+                           animations: view.layoutIfNeeded,
+                           completion: nil)
+        default:
+            break
+        }
+    }
+    
+    @IBAction func joinGroupCallAction(_ sender: Any) {
+        startOrJoinGroupCall()
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
@@ -862,6 +917,18 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc func groupCallMembersDidChange(_ notification: Notification) {
+        DispatchQueue.main.async {
+            guard let conversationId = notification.userInfo?[GroupCallMembersManager.UserInfoKey.conversationId] as? String else {
+                return
+            }
+            guard conversationId == self.conversationId else {
+                return
+            }
+            self.updateGroupCallIndicatorViewHidden()
+        }
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
@@ -944,7 +1011,20 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallService.shared.requestStartCall(opponentUser: ownerUser)
+        let conversationId = dataSource.conversationId
+        let service = CallService.shared
+        service.queue.async {
+            let activeCall = service.activeCall
+            DispatchQueue.main.sync {
+                if service.isMinimized, activeCall?.conversationId == conversationId {
+                    service.setInterfaceMinimized(false, animated: true)
+                } else if activeCall != nil {
+                    service.alert(error: .busy)
+                } else {
+                    service.requestStartPeerToPeerCall(remoteUser: ownerUser)
+                }
+            }
+        }
     }
     
     func pickPhotoOrVideoAction() {
@@ -964,6 +1044,43 @@ class ConversationViewController: UIViewController {
         let userInfo = ["source": "Conversation", "identityNumber": app.appNumber]
         reporter.report(event: .openApp, userInfo: userInfo)
         MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
+    }
+    
+    func startOrJoinGroupCall() {
+        guard dataSource.category == .group else {
+            return
+        }
+        guard WebSocketService.shared.isConnected && !SendMessageService.shared.isRequestingKrakenPeers else {
+            CallService.shared.alert(error: .networkFailure)
+            return
+        }
+        let conversation = dataSource.conversation
+        let conversationId = conversation.conversationId
+        let service = CallService.shared
+        service.queue.async {
+            let activeCall = service.activeCall
+            DispatchQueue.main.sync {
+                if service.isMinimized, activeCall?.conversationId == conversationId {
+                    service.setInterfaceMinimized(false, animated: true)
+                } else if activeCall != nil {
+                    service.alert(error: .busy)
+                } else {
+                    service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+                        if ids.isEmpty {
+                            let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                            picker.appearance = .startNewCall
+                            picker.onConfirmation = { (members) in
+                                service.requestStartGroupCall(conversation: conversation,
+                                                              invitingMembers: members)
+                            }
+                            self?.present(picker, animated: true, completion: nil)
+                        } else {
+                            service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - Class func
@@ -1814,6 +1931,23 @@ extension ConversationViewController {
             updateAnnouncementBadge(announcement: R.string.localizable.chat_warning_scam())
         } else {
             updateAnnouncementBadge(announcement: nil)
+        }
+    }
+    
+    @objc private func updateGroupCallIndicatorViewHidden() {
+        let service = CallService.shared
+        let conversationId = self.conversationId
+        service.queue.async {
+            if let call = service.activeCall as? GroupCall, call.conversationId == conversationId {
+                DispatchQueue.main.async {
+                    self.groupCallIndicatorView.isHidden = true
+                }
+            } else {
+                let ids = service.membersManager.members[conversationId] ?? []
+                DispatchQueue.main.async {
+                    self.groupCallIndicatorView.isHidden = ids.isEmpty
+                }
+            }
         }
     }
     

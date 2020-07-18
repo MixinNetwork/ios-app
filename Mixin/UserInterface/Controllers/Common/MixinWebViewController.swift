@@ -36,7 +36,13 @@ class MixinWebViewController: WebViewController {
         vc.view.frame = parent.view.bounds
         vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         parent.addChild(vc)
-        parent.view.addSubview(vc.view)
+        let parentView: UIView
+        if let view = parent.view as? UIVisualEffectView {
+            parentView = view.contentView
+        } else {
+            parentView = parent.view
+        }
+        parentView.addSubview(vc.view)
         vc.didMove(toParent: parent)
         
         vc.view.center.y = parent.view.bounds.height * 3 / 2

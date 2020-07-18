@@ -283,6 +283,7 @@
 "chat_menu_location" = "位置";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
+"chat_menu_group_call" = "群组通话";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";
@@ -332,11 +333,16 @@
 "web_suspicious_continue" = "继续访问";
 
 // Call
+"call_encryption" = "端对端加密";
+"call_encryption_title" = "此通话使用端对端加密进行保护";
+"call_encryption_description" = "除了参与通话的人，其他人包含Mixin在内都无法听取或查看。";
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
-"call_status_calling" = "正在呼叫...";
-"call_status_being_calling" = "语音通话来电";
+"call_status_outgoing" = "正在呼叫...";
+"call_status_incoming" = "语音通话来电";
 "call_status_connecting" = "正在连接";
 "call_status_disconnecting" = "正在断开";
+"call_status_waiting" = "等待接听";
+"call_status_done" = "已结束";
 "call_func_hangup" = "挂断";
 "call_func_decline" = "拒绝";
 "call_func_accept" = "接听";
@@ -346,6 +352,17 @@
 "call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 "call_user_not_found" = "找不到用户";
 "call_declined_lack_microphone_permission" = "已拒绝通话";
+"group_call_publish" = "%@ 开始了群通话";
+"group_call_invite" = "%@ 邀请你加入群组语音";
+"group_call_cancel" = "%@ 已取消群组语音";
+"group_call_decline" = "%@ 已拒绝群组语音";
+"group_call_end" = "[群组语音结束]";
+"group_call_end_duration" = "群组语音结束，时长%@";
+"group_call_declined_lack_microphone_permission" = "已拒绝通话";
+"group_call" = "群通话";
+"group_call_tap_to_join" = "点击加入";
+"group_call_selections_reach_limit" = "支持最多%@人同时通话";
+"group_call_room_full" = "房间已满";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

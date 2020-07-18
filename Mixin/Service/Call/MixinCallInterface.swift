@@ -23,7 +23,7 @@ class MixinCallInterface {
 
 extension MixinCallInterface: CallInterface {
     
-    func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion) {
+    func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion) {
         guard WebSocketService.shared.isConnected else {
             completion(CallError.networkFailure)
             return
@@ -42,8 +42,8 @@ extension MixinCallInterface: CallInterface {
             guard success else {
                 return
             }
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                try? RTCAudioSession.sharedInstance().setActive(true)
+            if playOutgoingRingtone {
+                try? AVAudioSession.sharedInstance().setActive(true, options: [])
                 self.service.ringtonePlayer.play(ringtone: .outgoing)
             }
         })
@@ -81,37 +81,38 @@ extension MixinCallInterface: CallInterface {
                     completion(CallError.microphonePermissionDenied)
                     return
                 }
-                if self.pendingIncomingUuid == nil {
-                    DispatchQueue.main.sync {
-                        if UIApplication.shared.applicationState == .active {
-                            self.service.ringtonePlayer.play(ringtone: .incoming)
-                            self.vibrator.start()
-                        } else {
-                            NotificationManager.shared.requestCallNotification(messageId: call.uuidString, callerName: call.opponentUsername)
-                            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-                                var authorizedStatus: [UNAuthorizationStatus] = [.authorized]
-                                if #available(iOS 12.0, *) {
-                                    authorizedStatus.append(.provisional)
-                                }
-                                if authorizedStatus.contains(settings.authorizationStatus) {
-                                    self.vibrator.start()
-                                }
+                guard self.pendingIncomingUuid == nil else {
+                    completion(CallError.busy)
+                    return
+                }
+                DispatchQueue.main.sync {
+                    if UIApplication.shared.applicationState == .active {
+                        self.service.ringtonePlayer.play(ringtone: .incoming)
+                        self.vibrator.start()
+                    } else {
+                        let manager = NotificationManager.shared
+                        if let call = call as? PeerToPeerCall {
+                            manager.requestCallNotification(id: call.uuidString,
+                                                            name: call.remoteUsername)
+                        } else if let call = call as? GroupCall {
+                            manager.requestCallNotification(id: call.uuidString,
+                                                            name: call.conversationName)
+                        }
+                        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                            var authorizedStatus: [UNAuthorizationStatus] = [.authorized]
+                            if #available(iOS 12.0, *) {
+                                authorizedStatus.append(.provisional)
+                            }
+                            if authorizedStatus.contains(settings.authorizationStatus) {
+                                self.vibrator.start()
                             }
                         }
-                        if let user = call.opponentUser {
-                            self.service.showCallingInterface(user: user,
-                                                              style: .incoming)
-                        } else {
-                            self.service.showCallingInterface(userId: call.opponentUserId,
-                                                              username: call.opponentUsername,
-                                                              style: .incoming)
-                        }
                     }
-                    self.pendingIncomingUuid = call.uuid
-                    completion(nil)
-                } else {
-                    completion(CallError.busy)
+                    call.status = .incoming
+                    self.service.showCallingInterface(call: call)
                 }
+                self.pendingIncomingUuid = call.uuid
+                completion(nil)
             }
         }
     }

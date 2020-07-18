@@ -14,10 +14,13 @@ enum CallError: Error {
     case answerConstruction(Error?)
     case setRemoteAnswer(Error)
     case clientFailure
-    case sdpConstruction(Error?)
-    case sdpSerialization(Error?)
+    case offerConstruction(Error?)
     
-    case invalidHandle
+    case invalidKrakenResponse
+    case roomFull
+    case remoteError(Int)
+    
+    case manuallyInitiated
     
     var alertContent: String {
         switch self {
@@ -27,8 +30,8 @@ enum CallError: Error {
             return R.string.localizable.call_no_network()
         case .microphonePermissionDenied:
             return R.string.localizable.call_no_microphone_permission()
-        case .invalidHandle:
-            return R.string.localizable.call_user_not_found()
+        case .roomFull:
+            return R.string.localizable.group_call_room_full()
         default:
             return R.string.localizable.chat_message_call_failed()
         }

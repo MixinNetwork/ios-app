@@ -202,6 +202,16 @@ extension Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category.rawValue, content: content, mediaDuration: mediaDuration, status: status.rawValue, quoteMessageId: quoteMessageId, createdAt: Date().toUTCString())
     }
     
+    public static func createKrakenMessage(conversationId: String, userId: String, category: MessageCategory, mediaDuration: Int64? = nil, createdAt: String) -> Message {
+        createMessage(messageId: UUID().uuidString,
+                      conversationId: conversationId,
+                      userId: userId,
+                      category: category.rawValue,
+                      mediaDuration: mediaDuration,
+                      status: MessageStatus.READ.rawValue,
+                      createdAt: createdAt)
+    }
+    
     public static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
     }
@@ -212,7 +222,7 @@ extension Message {
     
 }
 
-public enum MessageCategory: String {
+public enum MessageCategory: String, Decodable {
     
     case SIGNAL_KEY
     case SIGNAL_TEXT
@@ -252,6 +262,14 @@ public enum MessageCategory: String {
     case WEBRTC_AUDIO_END
     case WEBRTC_ICE_CANDIDATE
     case MESSAGE_RECALL
+    case KRAKEN_INVITE
+    case KRAKEN_PUBLISH
+    case KRAKEN_SUBSCRIBE
+    case KRAKEN_ANSWER
+    case KRAKEN_TRICKLE
+    case KRAKEN_END
+    case KRAKEN_CANCEL
+    case KRAKEN_DECLINE
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN

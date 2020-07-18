@@ -29,6 +29,9 @@ public enum MixinServicesError: Error {
     case gzipFailed
     case backgroundUpgradeDatabase
     case requestTimeout(String)
+    case emptyResponse
+    case badKrakenBlazeMessage
+    case missingConversationId
     
 }
 
@@ -80,6 +83,12 @@ extension MixinServicesError: CustomNSError {
             return 19
         case .requestTimeout:
             return 20
+        case .emptyResponse:
+            return 21
+        case .badKrakenBlazeMessage:
+            return 22
+        case .missingConversationId:
+            return 23
         }
     }
     

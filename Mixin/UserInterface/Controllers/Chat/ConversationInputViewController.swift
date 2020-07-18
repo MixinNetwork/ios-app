@@ -796,6 +796,8 @@ extension ConversationInputViewController {
             extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact, .location]
         } else if let app = opponentApp, app.creatorId == myUserId {
             extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact, .location]
+        } else if dataSource.category == .group {
+            extensionViewController.fixedExtensions = [.camera, .groupCall, .file, .contact, .location]
         } else {
             extensionViewController.fixedExtensions = [.camera, .file, .contact, .location]
         }

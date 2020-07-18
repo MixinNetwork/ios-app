@@ -1,7 +1,7 @@
 import Foundation
 
 public class MixinService {
-    
+
     public enum UserInfoKey {
         public static let messageId = "msg_id"
         public static let conversationId = "conv_id"
@@ -21,7 +21,7 @@ public class MixinService {
         return myUserId
     }
 
-    internal func checkSessionSenderKey(conversationId: String) throws {
+    public func checkSessionSenderKey(conversationId: String) throws {
         var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
         guard participants.count > 0 else {
             return
@@ -84,10 +84,10 @@ public class MixinService {
         guard signalKeyMessages.count > 0 else {
             return
         }
-        let checksum = getCheckSum(conversationId: conversationId)
+        let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
         let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages, checksum: checksum)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
-        let (success, retry) = deliverNoThrow(blazeMessage: blazeMessage)
+        let (success, _, retry) = deliverNoThrow(blazeMessage: blazeMessage)
         if success {
             let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
             MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
@@ -113,16 +113,7 @@ public class MixinService {
             }
         } while true
     }
-
-    private func getCheckSum(conversationId: String) -> String {
-        let sessions = ParticipantSessionDAO.shared.getParticipantSessions(conversationId: conversationId)
-        return sessions.count == 0 ? "" : generateConversationChecksum(sessions: sessions)
-    }
-
-    private func generateConversationChecksum(sessions: [ParticipantSession]) -> String {
-        return sessions.map { $0.sessionId }.sorted().joined().md5()
-    }
-
+    
     internal func checkSignalSession(recipientId: String, sessionId: String? = nil) throws -> Bool {
         let deviceId = SignalProtocol.convertSessionIdToDeviceId(sessionId)
         if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
@@ -152,10 +143,10 @@ public class MixinService {
             return false
         }
         let signalKeyMessages = [TransferMessage(recipientId: recipientId, data: cipherText, sessionId: sessionId)]
-        let checksum = getCheckSum(conversationId: conversationId)
+        let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
         let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages, checksum: checksum)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
-        let (success, retry) = deliverNoThrow(blazeMessage: blazeMessage)
+        let (success, _, retry) = deliverNoThrow(blazeMessage: blazeMessage)
         if success {
             MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString())])
         } else if retry {
@@ -226,21 +217,22 @@ public class MixinService {
     }
 
     @discardableResult
-    internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, retry: Bool) {
+    internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, responseMessage: BlazeMessage?, retry: Bool) {
         repeat {
             do {
-                return (try WebSocketService.shared.respondedMessage(for: blazeMessage).success, false)
+                let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
+                return (response.success, response.blazeMessage, false)
             } catch {
                 if let err = error as? APIError {
                     if err.code == 403 {
-                        return (true, false)
+                        return (true, nil, false)
                     } else if err.code == 401 {
-                        return (false, false)
+                        return (false, nil, false)
                     } else if err.code == 20140 {
                         if let conversationId = blazeMessage.params?.conversationId {
                             syncConversation(conversationId: conversationId)
                         }
-                        return (false, true)
+                        return (false, nil, true)
                     }
                 }
                 checkNetworkAndWebSocket()
@@ -250,18 +242,20 @@ public class MixinService {
     }
 
     @discardableResult
-    internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
+    internal func deliver(blazeMessage: BlazeMessage) throws -> (success: Bool, responseMessage: BlazeMessage?) {
         var blazeMessage = blazeMessage
         if let conversationId = blazeMessage.params?.conversationId {
-            blazeMessage.params?.conversationChecksum = getCheckSum(conversationId: conversationId)
+            let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
+            blazeMessage.params?.conversationChecksum = checksum
         }
         repeat {
             guard LoginManager.shared.isLoggedIn else {
-                return false
+                return (false, nil)
             }
             
             do {
-                return try WebSocketService.shared.respondedMessage(for: blazeMessage).success
+                let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
+                return (response.success, response.blazeMessage)
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
@@ -270,13 +264,13 @@ public class MixinService {
                 guard let err = error as? APIError else {
                     reporter.report(error: error)
                     Thread.sleep(forTimeInterval: 2)
-                    return false
+                    return (false, nil)
                 }
 
                 if err.code == 403 {
-                    return true
+                    return (true, nil)
                 } else if err.code == 401 {
-                    return false
+                    return (false, nil)
                 } else if err.code == 20140 {
                     if let conversationId = blazeMessage.params?.conversationId {
                         syncConversation(conversationId: conversationId)

@@ -1,15 +1,17 @@
 import Foundation
 
-internal class Atomic<T> {
+@propertyWrapper
+public class Atomic<Value> {
     
     private let lock = NSLock()
-    private var _value: T
     
-    init (_ value: T) {
+    private var _value: Value
+    
+    public init(_ value: Value) {
         _value = value
     }
     
-    var value: T {
+    public var wrappedValue: Value {
         get {
             lock.lock()
             let val = _value

@@ -144,9 +144,35 @@ public final class GroupSessionBuilder {
             throw SignalError.unknownError
         }
 
-
         // Convert to data
         let mess = Data(signalBuffer: serialized)
         return CiphertextMessage(type: .distribution, message: mess)
+    }
+
+    public func getSenderPublic(for localAddress: SignalSenderKeyName) throws -> Data {
+        // Create group builder
+        var builder: OpaquePointer? = nil
+        var result = withUnsafeMutablePointer(to: &builder) {
+            group_session_builder_create($0, store.storeContext, Signal.context)
+        }
+        guard result == 0 else { throw SignalError(value: result) }
+        defer { group_session_builder_free(builder) }
+
+        // get public key
+        var message: OpaquePointer? = nil
+        result = withUnsafeMutablePointer(to: &message) {
+            get_sender_key_public(builder, $0, localAddress.pointer)
+        }
+        guard result == 0 else { throw SignalError(value: result) }
+
+        var pubBuffer: OpaquePointer? = nil
+        result = withUnsafeMutablePointer(to: &pubBuffer) {
+            ec_public_key_serialize($0, message)
+        }
+        guard result == 0 else { throw SignalError(value: result) }
+
+        let pub = Data(signalBuffer: pubBuffer!)
+        signal_buffer_free(pubBuffer)
+        return pub
     }
 }

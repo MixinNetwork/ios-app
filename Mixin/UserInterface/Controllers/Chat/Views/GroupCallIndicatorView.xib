@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationViewController" customModule="Mixin" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="GroupCallIndicatorView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="138" height="48"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pwu-Li-FIg">
+                    <rect key="frame" x="0.0" y="0.0" width="138" height="48"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Call/ic_minimized_call_encrypted" translatesAutoresizingMaskIntoConstraints="NO" id="LLK-ZQ-p4G">
+                            <rect key="frame" x="4" y="4" width="40" height="40"/>
+                            <color key="backgroundColor" name="background_selection"/>
+                            <color key="tintColor" name="green"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="LLK-ZQ-p4G" secondAttribute="height" id="a5y-Jl-iw2"/>
+                            </constraints>
+                        </imageView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ZQJ-KN-vZx">
+                            <rect key="frame" x="48" y="5" width="80" height="37"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Call" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SVv-Tc-MHT">
+                                    <rect key="frame" x="0.0" y="0.0" width="80" height="19.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_call"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" text="Tap to join" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sx-4S-A9d">
+                                    <rect key="frame" x="0.0" y="23.5" width="80" height="13.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_call_tap_to_join"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gtt-to-wU0">
+                            <rect key="frame" x="0.0" y="0.0" width="138" height="48"/>
+                            <connections>
+                                <action selector="joinGroupCallAction:" destination="-1" eventType="touchUpInside" id="Yth-wa-AWv"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="Gtt-to-wU0" firstAttribute="top" secondItem="pwu-Li-FIg" secondAttribute="top" id="7lu-sT-Spk"/>
+                        <constraint firstAttribute="trailing" secondItem="ZQJ-KN-vZx" secondAttribute="trailing" constant="10" id="AJB-uz-XEw"/>
+                        <constraint firstAttribute="bottom" secondItem="Gtt-to-wU0" secondAttribute="bottom" id="Iv3-EG-bA2"/>
+                        <constraint firstItem="ZQJ-KN-vZx" firstAttribute="leading" secondItem="LLK-ZQ-p4G" secondAttribute="trailing" constant="4" id="MZn-B8-5rs"/>
+                        <constraint firstAttribute="bottom" secondItem="LLK-ZQ-p4G" secondAttribute="bottom" constant="4" id="Nlc-Vb-tOE"/>
+                        <constraint firstItem="Gtt-to-wU0" firstAttribute="leading" secondItem="pwu-Li-FIg" secondAttribute="leading" id="dB3-Ib-uMi"/>
+                        <constraint firstItem="LLK-ZQ-p4G" firstAttribute="leading" secondItem="pwu-Li-FIg" secondAttribute="leading" constant="4" id="gSg-aM-GsY"/>
+                        <constraint firstItem="LLK-ZQ-p4G" firstAttribute="top" secondItem="pwu-Li-FIg" secondAttribute="top" constant="4" id="goT-m4-nnK"/>
+                        <constraint firstItem="ZQJ-KN-vZx" firstAttribute="top" secondItem="pwu-Li-FIg" secondAttribute="top" constant="5" id="wn5-9Q-Tdl"/>
+                        <constraint firstAttribute="trailing" secondItem="Gtt-to-wU0" secondAttribute="trailing" id="x3d-Pl-8nB"/>
+                        <constraint firstAttribute="bottom" secondItem="ZQJ-KN-vZx" secondAttribute="bottom" constant="6" id="yzY-ll-5m7"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="pwu-Li-FIg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="4Tz-Iz-L72"/>
+                <constraint firstItem="pwu-Li-FIg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="FJm-47-jft"/>
+                <constraint firstAttribute="bottom" secondItem="pwu-Li-FIg" secondAttribute="bottom" id="TiY-8n-PWm"/>
+                <constraint firstAttribute="trailing" secondItem="pwu-Li-FIg" secondAttribute="trailing" id="flY-Bp-Qfa"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="contentView" destination="pwu-Li-FIg" id="zHS-R1-gAK"/>
+                <outlet property="imageView" destination="LLK-ZQ-p4G" id="eSh-eP-Skc"/>
+                <outletCollection property="gestureRecognizers" destination="FCD-Yt-vx7" appends="YES" id="BUQ-kW-Mhn"/>
+            </connections>
+            <point key="canvasLocation" x="140.57971014492756" y="153.34821428571428"/>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="FCD-Yt-vx7">
+            <connections>
+                <action selector="groupCallIndicatorPanAction:" destination="-1" id="JPZ-HH-9PP"/>
+            </connections>
+        </panGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="Call/ic_minimized_call_encrypted" width="18.5" height="21"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_selection">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="green">
+            <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

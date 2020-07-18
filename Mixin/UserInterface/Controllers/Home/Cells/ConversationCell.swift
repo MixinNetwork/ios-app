@@ -141,6 +141,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else {
                     contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
+            } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
+                contentLabel.text = R.string.localizable.group_call_publish(senderName)
+            } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {
+                contentLabel.text = R.string.localizable.group_call_cancel(senderName)
+            } else if category == MessageCategory.KRAKEN_DECLINE.rawValue {
+                contentLabel.text = R.string.localizable.group_call_decline(senderName)
+            } else if category == MessageCategory.KRAKEN_INVITE.rawValue {
+                contentLabel.text = R.string.localizable.group_call_invite(senderName)
+            } else if category == MessageCategory.KRAKEN_END.rawValue {
+                contentLabel.text = R.string.localizable.group_call_end()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
@@ -178,7 +188,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {
-        if conversation.contentType.hasPrefix("WEBRTC_") || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue {
+        let hideStatus = ["WEBRTC_", "KRAKEN_"].contains(where: conversation.contentType.hasPrefix(_:))
+            || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue
+        if hideStatus {
             messageStatusImageView.isHidden = true
         } else if conversation.senderId == myUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
             messageStatusImageView.isHidden = false

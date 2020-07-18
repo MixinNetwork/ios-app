@@ -1,15 +1,16 @@
 import CallKit
 import AVFoundation
+import WebRTC
 
 class NativeCallInterface: NSObject {
     
     private let provider: CXProvider
-    private let callController = CXCallController()
+    private let callController: CXCallController
     
     private unowned let service: CallService
     
     private var pendingAnswerAction: CXAnswerCallAction?
-    private var unansweredIncomingCallUUIDs = Set<UUID>()
+    private var incomingCallUUIDs = Set<UUID>()
     
     required init(service: CallService) {
         self.service = service
@@ -22,6 +23,7 @@ class NativeCallInterface: NSObject {
         config.supportedHandleTypes = [.generic]
         config.includesCallsInRecents = false
         self.provider = CXProvider(configuration: config)
+        self.callController = CXCallController(queue: service.queue)
         super.init()
         provider.setDelegate(self, queue: service.queue)
     }
@@ -40,20 +42,19 @@ class NativeCallInterface: NSObject {
         provider.reportCall(with: uuid, endedAt: nil, reason: .failed)
     }
     
-    func reportIncomingCall(uuid: UUID, userId: String, username: String, completion: @escaping CallInterfaceCompletion) {
+    func reportIncomingCall(uuid: UUID, handleId: String, localizedName: String, completion: @escaping CallInterfaceCompletion) {
         let update = CXCallUpdate()
-        update.remoteHandle = CXHandle(type: .generic, value: userId)
-        update.localizedCallerName = username
+        update.remoteHandle = CXHandle(type: .generic, value: handleId)
+        update.localizedCallerName = localizedName
         update.supportsHolding = false
         update.supportsGrouping = false
         update.supportsUngrouping = false
         update.supportsDTMF = false
         update.hasVideo = false
-        if unansweredIncomingCallUUIDs.contains(uuid) {
+        if incomingCallUUIDs.contains(uuid) {
             provider.reportCall(with: uuid, updated: update)
             completion(nil)
             if let action = pendingAnswerAction, uuid == action.callUUID, service.hasPendingSDP(for: uuid) {
-                unansweredIncomingCallUUIDs.remove(uuid)
                 service.answerCall(uuid: action.callUUID) { (success) in
                     if !success {
                         action.fail()
@@ -62,7 +63,7 @@ class NativeCallInterface: NSObject {
                 }
             }
         } else {
-            unansweredIncomingCallUUIDs.insert(uuid)
+            incomingCallUUIDs.insert(uuid)
             provider.reportNewIncomingCall(with: uuid, update: update, completion: completion)
         }
     }
@@ -71,12 +72,17 @@ class NativeCallInterface: NSObject {
 
 extension NativeCallInterface: CallInterface {
     
-    func requestStartCall(uuid: UUID, handle: CallHandle, completion: @escaping CallInterfaceCompletion) {
-        let action = CXStartCallAction(call: uuid, handle: handle.cxHandle)
+    func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion) {
+        let action = CXStartCallAction(call: uuid, handle: handle)
         callController.requestTransaction(with: action) { (error) in
+            completion(error)
             if error == nil {
                 let update = CXCallUpdate()
-                update.localizedCallerName = handle.name
+                if let call = self.service.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value {
+                    update.localizedCallerName = call.remoteUsername
+                } else if let call = self.service.activeCall as? GroupCall, call.conversationId == handle.value {
+                    update.localizedCallerName = call.conversationName
+                }
                 update.supportsHolding = false
                 update.supportsGrouping = false
                 update.supportsUngrouping = false
@@ -84,7 +90,6 @@ extension NativeCallInterface: CallInterface {
                 update.hasVideo = false
                 self.provider.reportCall(with: uuid, updated: update)
             }
-            completion(error)
         }
     }
     
@@ -93,11 +98,12 @@ extension NativeCallInterface: CallInterface {
     }
     
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
+        // TODO: This not expected to happen?
         if let action = pendingAnswerAction, uuid == action.callUUID {
             action.fail()
             pendingAnswerAction = nil
         }
-        unansweredIncomingCallUUIDs.remove(uuid)
+        incomingCallUUIDs.remove(uuid)
         let action = CXEndCallAction(call: uuid)
         callController.requestTransaction(with: action, completion: completion)
     }
@@ -108,10 +114,17 @@ extension NativeCallInterface: CallInterface {
     }
     
     func reportIncomingCall(_ call: Call, completion: @escaping CallInterfaceCompletion) {
-        reportIncomingCall(uuid: call.uuid,
-                           userId: call.opponentUserId,
-                           username: call.opponentUsername,
-                           completion: completion)
+        if let call = call as? PeerToPeerCall {
+            reportIncomingCall(uuid: call.uuid,
+                               handleId: call.remoteUserId,
+                               localizedName: call.remoteUsername,
+                               completion: completion)
+        } else if let call = call as? GroupCall {
+            reportIncomingCall(uuid: call.uuid,
+                               handleId: call.conversationId,
+                               localizedName: call.conversationName,
+                               completion: completion)
+        }
     }
     
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason) {
@@ -119,7 +132,7 @@ extension NativeCallInterface: CallInterface {
             action.fail()
             pendingAnswerAction = nil
         }
-        unansweredIncomingCallUUIDs.remove(uuid)
+        incomingCallUUIDs.remove(uuid)
         provider.reportCall(with: uuid, endedAt: nil, reason: reason)
     }
     
@@ -154,20 +167,15 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        guard let handle = CallHandle(cxHandle: action.handle) else {
-            service.alert(error: .invalidHandle)
-            action.fail()
-            return
-        }
-        service.startCall(uuid: action.callUUID, handle: handle) { (success) in
+        service.startCall(uuid: action.callUUID, handle: action.handle) { (success) in
             success ? action.fulfill() : action.fail()
         }
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        if service.hasPendingSDP(for: action.callUUID) {
-            unansweredIncomingCallUUIDs.remove(action.callUUID)
-            service.answerCall(uuid: action.callUUID) { (success) in
+        let uuid = action.callUUID
+        if service.hasPendingSDP(for: uuid) || service.hasPendingAnswerGroupCall(with: uuid) {
+            service.answerCall(uuid: uuid) { (success) in
                 if success {
                     self.pendingAnswerAction = action
                 } else {
@@ -180,6 +188,7 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        incomingCallUUIDs.remove(action.callUUID)
         service.endCall(uuid: action.callUUID)
         action.fulfill()
     }
@@ -194,13 +203,22 @@ extension NativeCallInterface: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        if let call = service.activeCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
+        if let call = service.activeCall as? PeerToPeerCall, call.isOutgoing, !call.hasReceivedRemoteAnswer {
             service.ringtonePlayer.play(ringtone: .outgoing)
+        }
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            let session = RTCAudioSession.sharedInstance()
+            session.audioSessionDidActivate(audioSession)
+            session.isAudioEnabled = true
         }
     }
     
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-        
+        RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            let session = RTCAudioSession.sharedInstance()
+            session.audioSessionDidDeactivate(audioSession)
+            session.isAudioEnabled = false
+        }
     }
     
 }

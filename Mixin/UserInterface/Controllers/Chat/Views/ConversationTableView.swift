@@ -312,6 +312,20 @@ class ConversationTableView: UITableView {
 extension ConversationTableView {
     
     enum ReuseId: String {
+        
+        static let systemMessageRepresentableMessageCategories: Set<String> = {
+            let categories: [MessageCategory] = [
+                .EXT_ENCRYPTION,
+                .SYSTEM_CONVERSATION,
+                .KRAKEN_PUBLISH,
+                .KRAKEN_INVITE,
+                .KRAKEN_CANCEL,
+                .KRAKEN_DECLINE,
+                .KRAKEN_END
+            ]
+            return Set(categories.map(\.rawValue))
+        }()
+        
         case text = "TextMessageCell"
         case photo = "PhotoMessageCell"
         case sticker = "StickerMessageCell"
@@ -358,7 +372,7 @@ extension ConversationTableView {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {
                 self = .unreadHint
-            } else if category == MessageCategory.EXT_ENCRYPTION.rawValue || category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
+            } else if Self.systemMessageRepresentableMessageCategories.contains(category) {
                 self = .system
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 self = .appButtonGroup

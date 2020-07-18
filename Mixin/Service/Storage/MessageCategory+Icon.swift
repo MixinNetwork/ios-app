@@ -24,7 +24,7 @@ extension MessageCategory {
             return R.image.ic_message_location()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return #imageLiteral(resourceName: "ic_message_transfer")
-        } else if category.hasPrefix("WEBRTC_") {
+        } else if ["WEBRTC_", "KRAKEN_"].contains(where: category.hasPrefix(_:)) {
             return R.image.ic_message_call()
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             return R.image.ic_message_recalled()

@@ -281,6 +281,7 @@
 "chat_menu_transfer" = "Transfer";
 "chat_menu_contact" = "Contact";
 "chat_menu_call" = "Call";
+"chat_menu_group_call" = "Group Call";
 "chat_menu_developer" = "Developer";
 "chat_menu_location" = "Location";
 "chat_photo_save" = "Save to Camera Roll";
@@ -332,11 +333,16 @@
 "web_suspicious_continue" = "Continue Open URL";
 
 // Call
+"call_encryption" = "End-to-end Encrypted";
+"call_encryption_title" = "This call is secured with end-to-end encryption";
+"call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
-"call_status_calling" = "Calling...";
-"call_status_being_calling" = "Incoming voice call";
+"call_status_outgoing" = "Calling...";
+"call_status_incoming" = "Incoming voice call";
 "call_status_connecting" = "Connecting";
 "call_status_disconnecting" = "Disconnecting";
+"call_status_waiting" = "Waiting";
+"call_status_done" = "Done";
 "call_func_hangup" = "Hang Up";
 "call_func_decline" = "Decline";
 "call_func_accept" = "Accept";
@@ -346,6 +352,17 @@
 "call_no_network" = "Call service unavailable. Make sure your phone has an internet connection and try again.";
 "call_user_not_found" = "User not found";
 "call_declined_lack_microphone_permission" = "Voice call has been declined";
+"group_call_publish" = "%@ has started a group call";
+"group_call_invite" = "%@ has invited you to a group call";
+"group_call_cancel" = "%@ has cancelled group call";
+"group_call_decline" = "%@ has declined group call";
+"group_call_end" = "[Group call ended]";
+"group_call_end_duration" = "Group call ended, duration: %@";
+"group_call_declined_lack_microphone_permission" = "Group call has been declined";
+"group_call" = "Group Call";
+"group_call_tap_to_join" = "Tap to join";
+"group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
+"group_call_room_full" = "Room is full";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

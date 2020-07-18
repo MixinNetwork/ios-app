@@ -1,15 +1,19 @@
 import Foundation
 import WebRTC
+import MixinServices
 
 protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
-    func webRTCClientDidFailed(_ client: WebRTCClient)
+    func webRTCClientDidDisconnected(_ client: WebRTCClient)
+    func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
 }
 
 class WebRTCClient: NSObject {
     
     weak var delegate: WebRTCClientDelegate?
+    
+    private unowned let queue: DispatchQueue
     
     private let audioId = "audio0"
     private let streamId = "stream0"
@@ -19,6 +23,8 @@ class WebRTCClient: NSObject {
     private(set) var audioTrack: RTCAudioTrack?
     
     private var peerConnection: RTCPeerConnection?
+    private var rtpSender: RTCRtpSender?
+    private var rtpReceivers = [String : RTCRtpReceiver]()
     
     var canAddRemoteCandidate: Bool {
         peerConnection != nil
@@ -28,48 +34,80 @@ class WebRTCClient: NSObject {
         return peerConnection?.iceConnectionState ?? .closed
     }
     
-    func offer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
-        makePeerConnectionIfNeeded()
+    init(delegateQueue: DispatchQueue) {
+        self.queue = delegateQueue
+        super.init()
+    }
+    
+    func offer(key: Data? = nil, completion: @escaping (Result<String, CallError>) -> Void) {
+        makePeerConnectionIfNeeded(key: key)
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.offer(for: constraints) { (sdp, error) in
-            if let sdp = sdp {
+            if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(sdp, nil)
+                    self.queue.async {
+                        completion(.success(json))
+                    }
                 })
             } else {
-                completion(nil, error)
+                self.queue.async {
+                    completion(.failure(.offerConstruction(error)))
+                }
             }
         }
     }
     
-    func answer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
+    func answer(completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded()
         let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.answer(for: constraints) { (sdp, error) in
-            if let sdp = sdp {
+            if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
-                    completion(sdp, nil)
+                    self.queue.async {
+                        completion(.success(json))
+                    }
                 })
             } else {
-                completion(nil, error)
+                self.queue.async {
+                    completion(.failure(.answerConstruction(error)))
+                }
             }
         }
     }
     
     func set(remoteSdp: RTCSessionDescription, completion: @escaping (Error?) -> Void) {
         makePeerConnectionIfNeeded()
-        peerConnection?.setRemoteDescription(remoteSdp, completionHandler: completion)
+        peerConnection?.setRemoteDescription(remoteSdp, completionHandler: { error in
+            self.queue.async {
+                completion(error)
+            }
+        })
     }
     
     func add(remoteCandidate: RTCIceCandidate) {
         peerConnection?.add(remoteCandidate)
     }
     
+    func setFrameEncryptorKey(_ key: Data?) {
+        guard let key = key else {
+            return
+        }
+        rtpSender?.setFrameEncryptorKey(key)
+    }
+    
+    func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String) {
+        let streamId = "\(userId)~\(sessionId)"
+        if let receiver = rtpReceivers[streamId], let key = key {
+            receiver.setFrameDecryptorKey(key)
+        }
+    }
+    
     func close() {
-        RTCAudioSession.sharedInstance().isAudioEnabled = false
         peerConnection?.close()
         peerConnection = nil
         audioTrack = nil
+        rtpSender = nil
+        rtpReceivers = [:]
     }
     
 }
@@ -94,25 +132,49 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
         if newState == .connected {
-            RTCAudioSession.sharedInstance().isAudioEnabled = true
-            delegate?.webRTCClientDidConnected(self)
-        } else if newState == .closed {
-            // TODO
+            queue.async {
+                self.delegate?.webRTCClientDidConnected(self)
+            }
+        } else if newState == .disconnected {
+            queue.async {
+                self.delegate?.webRTCClientDidDisconnected(self)
+            }
         }
     }
-
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
     }
-
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
     }
 
+    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
+        for m in mediaStreams {
+            let userSession = m.streamId.components(separatedBy:"~")
+            guard userSession.count == 2 else {
+                continue
+            }
+            guard userSession[0] != myUserId else {
+                continue
+            }
+            let frameKey = delegate?.webRTCClient(self,
+                                                  senderPublicKeyForUserWith: userSession[0],
+                                                  sessionId: userSession[1])
+            if let frameKey = frameKey {
+                rtpReceivers[m.streamId] = rtpReceiver
+                rtpReceiver.setFrameDecryptorKey(frameKey)
+            }
+        }
+    }
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        delegate?.webRTCClient(self, didGenerateLocalCandidate: candidate)
+        queue.async {
+            self.delegate?.webRTCClient(self, didGenerateLocalCandidate: candidate)
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
@@ -139,12 +201,13 @@ extension WebRTCClient {
         return config
     }
     
-    private func makePeerConnectionIfNeeded() {
+    private func makePeerConnectionIfNeeded(key: Data? = nil) {
         guard self.peerConnection == nil else {
             return
         }
         RTCAudioSession.sharedInstance().useManualAudio = true
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [:])
+
         let peerConnection = factory.peerConnection(with: sharedConfig,
                                                     constraints: constraints,
                                                     delegate: nil)
@@ -153,7 +216,8 @@ extension WebRTCClient {
             let audioSource = factory.audioSource(with: audioConstraints)
             return factory.audioTrack(with: audioSource, trackId: audioId)
         }()
-        peerConnection.add(audioTrack, streamIds: [streamId])
+        rtpSender = peerConnection.add(audioTrack, streamIds: [streamId])
+        setFrameEncryptorKey(key)
         peerConnection.delegate = self
         self.peerConnection = peerConnection
         self.audioTrack = audioTrack

@@ -8,6 +8,7 @@ protocol SelectedPeerCellDelegate: class {
 class SelectedPeerCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: AvatarImageView!
+    @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
     
     weak var delegate: SelectedPeerCellDelegate?
@@ -41,6 +42,11 @@ class SelectedPeerCell: UICollectionViewCell {
             imageView.setImage(with: user)
         }
         nameLabel.text = receiver.name
+    }
+    
+    func render(item: UserItem) {
+        imageView.setImage(with: item)
+        nameLabel.text = item.fullName
     }
     
 }

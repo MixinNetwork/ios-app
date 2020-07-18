@@ -50,6 +50,10 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         contentViewController.loadViewIfNeeded()
         super.viewDidLoad()
@@ -60,6 +64,7 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
         contentViewController.didMove(toParent: self)
         contentViewController.view.addGestureRecognizer(resizeRecognizer)
         resizeRecognizer.delegate = resizeRecognizerDelegate
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -70,6 +75,24 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
         case .compressed:
             return floor(window.bounds.height / 3 * 2)
         }
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard size == .compressed else {
+            return
+        }
+        size = .expanded
+        let animator = makeSizeAnimator(destination: size)
+        animator.addCompletion { (position) in
+            self.size = .expanded
+            self.updatePreferredContentSizeHeight(size: .expanded)
+            self.setNeedsSizeAppearanceUpdated(size: .expanded)
+            self.sizeAnimator = nil
+            self.resizeRecognizer.isEnabled = true
+        }
+        sizeAnimator = animator
+        resizeRecognizer.isEnabled = false
+        animator.startAnimation()
     }
     
 }

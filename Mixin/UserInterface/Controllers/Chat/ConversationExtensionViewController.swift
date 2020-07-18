@@ -21,9 +21,10 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
         }
     }
     
-    private let itemCountPerLine: CGFloat = 4
+    private let numberOfItemsEachLine: CGFloat = 4
+    private let itemIconWidth: CGFloat = 60
     
-    private var availableWidth: CGFloat = 0
+    private var lastLayoutWidth: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,13 +40,14 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let width = view.bounds.width - view.safeAreaInsets.horizontal
-        if availableWidth != width {
-            availableWidth = width
-            let spacing = (width - itemCountPerLine * collectionViewLayout.itemSize.width) / (itemCountPerLine + 1)
-            collectionViewLayout.sectionInset.left = spacing
-            collectionViewLayout.sectionInset.right = spacing
-            collectionViewLayout.minimumInteritemSpacing = spacing
+        let layoutWidth = view.bounds.width - view.safeAreaInsets.horizontal
+        if lastLayoutWidth != layoutWidth {
+            let spacing = layoutWidth - numberOfItemsEachLine * itemIconWidth
+            let inset = floor(spacing / (numberOfItemsEachLine * 2 + 2))
+            collectionViewLayout.sectionInset.left = inset
+            collectionViewLayout.sectionInset.right = inset
+            collectionViewLayout.itemSize.width = itemIconWidth + 2 * inset
+            lastLayoutWidth = layoutWidth
         }
     }
     

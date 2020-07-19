@@ -15,15 +15,13 @@ class GroupCallMembersManager {
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
     static let didRemoveZombieMemberNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidRemoveZombieMember")
     
-    // Key is conversation ID, value is an array of user IDs
-    // If the value is nil, the list has not been retrieved since App launch
-    // If the value is an array regardless of empty or not, the list is in syncing
-    // This var should be accessed from working queue
     private(set) var members = [String: [String]]()
     
     private let queue: DispatchQueue
     private let pollingInterval: TimeInterval = 30
     private let pollingTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
+    
+    private var loadedConversationsId = Set<String>()
     
     init(workingQueue: DispatchQueue) {
         self.queue = workingQueue
@@ -90,15 +88,22 @@ class GroupCallMembersManager {
     }
     
     private func loadMembersIfNeverLoaded(forConversationWith id: String) {
-        guard self.members[id] == nil else {
+        guard !loadedConversationsId.contains(id) else {
             return
         }
         guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: id) else {
             return
         }
+        CallService.shared.log("[GroupCallMembersManager] Load members: \(peers.map(\.userId)), for conversation: \(id)")
+        loadedConversationsId.insert(id)
         let userIds = peers.map(\.userId)
-        CallService.shared.log("[GroupCallMembersManager] Load members: \(peers.map(\.userId))")
-        self.members[id] = userIds
+        if var members = self.members[id] {
+            let remoteUserIds = Set(userIds)
+            members = members.filter(remoteUserIds.contains)
+            self.members[id] = members
+        } else {
+            self.members[id] = userIds
+        }
         let userInfo: [String: Any] = [
             Self.UserInfoKey.conversationId: id,
             Self.UserInfoKey.userIds: userIds

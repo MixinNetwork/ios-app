@@ -1018,6 +1018,10 @@ extension CallService: WebRTCClientDelegate {
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
+        if let call = activeCall as? GroupCall {
+            failCurrentCall(sendFailedMessageToRemote: true, error: .clientFailure)
+            callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+        }
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {

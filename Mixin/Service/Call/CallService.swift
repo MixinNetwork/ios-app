@@ -1181,6 +1181,9 @@ extension CallService {
     
     private func updateAudioSessionConfiguration() {
         let session = RTCAudioSession.sharedInstance()
+        let shouldOverrideAudioPort = session.currentRoute.outputs.contains { (desc) -> Bool in
+            desc.portType == .builtInReceiver || desc.portType == .builtInSpeaker
+        }
         let category = AVAudioSession.Category.playAndRecord.rawValue
         let options: AVAudioSession.CategoryOptions = {
             var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
@@ -1201,14 +1204,16 @@ extension CallService {
         config.category = category
         config.categoryOptions = options
         config.mode = mode
-        RTCAudioSessionConfiguration.setWebRTC(config)
         
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
             session.lockForConfiguration()
             do {
+                RTCAudioSessionConfiguration.setWebRTC(config)
                 try session.setCategory(category, with: options)
                 try session.setMode(mode)
-                try session.overrideOutputAudioPort(audioPort)
+                if shouldOverrideAudioPort {
+                    try session.overrideOutputAudioPort(audioPort)
+                }
             } catch {
                 reporter.report(error: error)
             }

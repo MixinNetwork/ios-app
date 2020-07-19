@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,7 +24,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Q7h-05-TmK" secondAttribute="height" multiplier="1:1" id="rte-Go-7Hz"/>
                             </constraints>
-                            <state key="normal" image="ic_video_fullsize"/>
+                            <state key="normal" image="ic_minimize"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykM-27-EvN">
                             <rect key="frame" x="370" y="0.0" width="44" height="44"/>
@@ -181,10 +179,10 @@
     <resources>
         <image name="bg_video_visual_control" width="20" height="88"/>
         <image name="ic_close_shadow" width="44" height="44"/>
+        <image name="ic_minimize" width="24" height="24"/>
         <image name="ic_pause_large" width="16" height="20"/>
         <image name="ic_play_large" width="22" height="22"/>
         <image name="ic_reload_large" width="28" height="24"/>
-        <image name="ic_video_fullsize" width="24" height="24"/>
         <image name="live_badge" width="45" height="29"/>
     </resources>
 </document>

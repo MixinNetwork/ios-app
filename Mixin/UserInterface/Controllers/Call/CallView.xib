@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -63,7 +63,7 @@
                                     <constraint firstAttribute="width" constant="44" id="0Nh-kk-5dU"/>
                                     <constraint firstAttribute="width" secondItem="c10-IX-mVV" secondAttribute="height" id="VfN-MZ-2Cr"/>
                                 </constraints>
-                                <state key="normal" image="Call/ic_minimize"/>
+                                <state key="normal" image="ic_minimize"/>
                                 <connections>
                                     <action selector="minimizeAction:" destination="-1" eventType="touchUpInside" id="Dq8-Le-S9c"/>
                                 </connections>
@@ -352,7 +352,7 @@
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
         <image name="Call/ic_encryption" width="9" height="12"/>
-        <image name="Call/ic_minimize" width="24" height="24"/>
+        <image name="ic_minimize" width="24" height="24"/>
         <image name="ic_title_add" width="16" height="16"/>
     </resources>
 </document>

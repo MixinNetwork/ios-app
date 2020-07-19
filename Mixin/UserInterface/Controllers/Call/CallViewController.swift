@@ -226,20 +226,25 @@ extension CallViewController {
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
-        let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
-            .outputs.map(\.portType)
-            .contains(.builtInSpeaker)
+        let currentRoutePortTypes = AVAudioSession.sharedInstance().currentRoute.outputs.map(\.portType)
+        let routeContainsBuiltInSpeaker = currentRoutePortTypes.contains(.builtInSpeaker)
+        let routeContainsBuiltInReceiver = currentRoutePortTypes.contains(.builtInReceiver)
         DispatchQueue.main.async {
-            if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsSpeaker) {
+            if !(routeContainsBuiltInSpeaker || routeContainsBuiltInReceiver) {
+                self.speakerSwitch.isEnabled = false
+            } else if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsBuiltInSpeaker) {
                 // The audio route changes for mysterious reason on iOS 13, It says category changes
                 // but I have intercept every category change request only to find AVAudioSessionCategoryPlayAndRecord
                 // with AVAudioSessionCategoryOptionDefaultToSpeaker is properly passed into AVAudioSession.
                 // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
                 // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
                 self.service.usesSpeaker = self.service.usesSpeaker
+                
+                self.speakerSwitch.isEnabled = true
                 self.speakerSwitch.isOn = self.service.usesSpeaker
             } else {
-                self.speakerSwitch.isOn = routeContainsSpeaker
+                self.speakerSwitch.isEnabled = true
+                self.speakerSwitch.isOn = routeContainsBuiltInSpeaker
             }
         }
     }

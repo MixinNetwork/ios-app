@@ -104,6 +104,10 @@ class CallService: NSObject {
         rtcClient.delegate = self
         updateCallKitAvailability()
         KrakenMessageRetriever.shared.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(audioSessionRouteChange),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
     
     func registerForPushKitNotificationsIfAvailable() {
@@ -1183,9 +1187,20 @@ extension CallService {
         return pendingAnswerCalls[uuid]
     }
     
+    @objc private func audioSessionRouteChange(_ notification: Notification) {
+        guard let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? Int else {
+            return
+        }
+        let isDeviceChanged = reason == kAudioSessionRouteChangeReason_NewDeviceAvailable
+            || reason == kAudioSessionRouteChangeReason_OldDeviceUnavailable
+        if isDeviceChanged {
+            updateAudioSessionConfiguration()
+        }
+    }
+    
     private func updateAudioSessionConfiguration() {
         let session = RTCAudioSession.sharedInstance()
-        let shouldOverrideAudioPort = session.currentRoute.outputs.contains { (desc) -> Bool in
+        let usingBuiltInOutput = session.currentRoute.outputs.contains { (desc) -> Bool in
             desc.portType == .builtInReceiver || desc.portType == .builtInSpeaker
         }
         let category = AVAudioSession.Category.playAndRecord.rawValue
@@ -1211,17 +1226,21 @@ extension CallService {
         
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
             session.lockForConfiguration()
+            defer {
+                session.unlockForConfiguration()
+            }
             do {
                 RTCAudioSessionConfiguration.setWebRTC(config)
                 try session.setCategory(category, with: options)
                 try session.setMode(mode)
-                if shouldOverrideAudioPort {
+                if usingBuiltInOutput {
                     try session.overrideOutputAudioPort(audioPort)
+                } else {
+                    try session.overrideOutputAudioPort(.none)
                 }
             } catch {
                 reporter.report(error: error)
             }
-            session.unlockForConfiguration()
         }
     }
     

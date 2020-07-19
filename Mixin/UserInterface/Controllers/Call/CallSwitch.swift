@@ -2,6 +2,15 @@ import UIKit
 
 class CallSwitch: UIControl {
     
+    override var isEnabled: Bool {
+        didSet {
+            if !isEnabled {
+                isOn = false
+                // TODO: decorations
+            }
+        }
+    }
+    
     var isOn = false {
         didSet {
             updateOpacity(isOn: isOn)

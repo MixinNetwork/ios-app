@@ -325,7 +325,6 @@ extension CallService {
         if minimized {
             min.call = activeCall
             min.view.alpha = 0
-            min.placeViewToTopRight()
             let scaleX = min.contentView.frame.width / max.view.frame.width
             let scaleY = min.contentView.frame.height / max.view.frame.height
             updateViews = {
@@ -340,6 +339,7 @@ extension CallService {
             }
         } else {
             callWindow.makeKeyAndVisible()
+            max.view.center = min.view.center
             updateViews = {
                 min.view.alpha = 0
                 max.view.transform = .identity
@@ -361,8 +361,9 @@ extension CallService {
     
     func dismissCallingInterface() {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
-        if let container = UIApplication.homeContainerViewController {
-            container.minimizedCallViewControllerIfLoaded?.view.alpha = 0
+        if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
+            mini.view.alpha = 0
+            mini.placeViewToTopRight()
         }
         viewController?.disableConnectionDurationTimer()
         viewController = nil

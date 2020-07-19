@@ -27,7 +27,6 @@ class GroupCallConfirmationViewController: CallViewController {
         peerToPeerCallRemoteUserStackView.isHidden = true
         groupCallMembersCollectionView.isHidden = false
         statusLabel.text = nil
-        acceptTitleLabel.text = " " // Hold the place or stackview will be collapsed
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow

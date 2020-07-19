@@ -16,10 +16,8 @@ class CallViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: CallSwitch!
     @IBOutlet weak var hangUpStackView: UIStackView!
     @IBOutlet weak var hangUpButton: UIButton!
-    @IBOutlet weak var hangUpTitleLabel: UILabel!
     @IBOutlet weak var acceptStackView: UIStackView!
     @IBOutlet weak var acceptButton: UIButton!
-    @IBOutlet weak var acceptTitleLabel: UILabel!
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
     
@@ -268,19 +266,16 @@ extension CallViewController {
         switch status {
         case .incoming:
             minimizeButton.isHidden = true
-            hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
             setAcceptButtonHidden(false)
             setConnectionButtonsEnabled(true)
         case .outgoing:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
@@ -289,7 +284,6 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)

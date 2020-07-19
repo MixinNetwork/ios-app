@@ -343,8 +343,6 @@
 "call_status_disconnecting" = "Disconnecting";
 "call_status_waiting" = "Waiting";
 "call_status_done" = "Done";
-"call_func_hangup" = "Hang Up";
-"call_func_decline" = "Decline";
 "call_func_accept" = "Accept";
 "call_func_mute" = "Mute";
 "call_func_speaker" = "Speaker";

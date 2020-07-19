@@ -343,8 +343,6 @@
 "call_status_disconnecting" = "正在断开";
 "call_status_waiting" = "等待接听";
 "call_status_done" = "已结束";
-"call_func_hangup" = "挂断";
-"call_func_decline" = "拒绝";
 "call_func_accept" = "接听";
 "call_func_mute" = "静音";
 "call_func_speaker" = "扬声器";

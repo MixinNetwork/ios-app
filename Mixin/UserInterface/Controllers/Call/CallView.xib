@@ -14,7 +14,6 @@
                 <outlet property="acceptButtonCenterXConstraint" destination="XEt-3C-WtG" id="NfV-Ap-tye"/>
                 <outlet property="acceptButtonTrailingConstraint" destination="zpq-vh-a5v" id="T26-4Z-fg5"/>
                 <outlet property="acceptStackView" destination="CLO-8P-tgo" id="mb4-Rv-i9R"/>
-                <outlet property="acceptTitleLabel" destination="oVs-zO-xAl" id="V2G-EB-Lm1"/>
                 <outlet property="avatarImageView" destination="wAa-Ej-6fx" id="58k-Ut-kGQ"/>
                 <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
                 <outlet property="groupCallMembersCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
@@ -23,7 +22,6 @@
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
                 <outlet property="hangUpStackView" destination="TQI-9I-kWd" id="VfY-N6-OxZ"/>
-                <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="minimizeButton" destination="c10-IX-mVV" id="ZHY-P9-Bbn"/>
                 <outlet property="multipleUserCollectionViewLeadingConstraint" destination="H1k-Lg-1To" id="6uR-ix-cww"/>
@@ -97,6 +95,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
+                                        <inset key="titleEdgeInsets" minX="4" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
                                         <state key="normal" title="End-to-end Encrypted" image="Call/ic_encryption">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -157,7 +156,7 @@
                                 <rect key="frame" x="30" y="463" width="315" height="204"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="TQI-9I-kWd" userLabel="HangUp Stack View">
-                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="0.0" y="70" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Eu-3w-9KA">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -176,16 +175,10 @@
                                                     <action selector="hangUpAction:" destination="-1" eventType="touchUpInside" id="fb8-yn-uMo"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="decline" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rlO-vX-Glj">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo" userLabel="Accept Stack View">
-                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="251" y="70" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -204,19 +197,10 @@
                                                     <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="HE9-t0-k8R"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="accept" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oVs-zO-xAl">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_accept"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-TX-CRZ" userLabel="Mute Stack View">
-                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="0.0" y="70" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -234,19 +218,10 @@
                                                     <action selector="setMuteAction:" destination="-1" eventType="valueChanged" id="hNd-m8-hSf"/>
                                                 </connections>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mute" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v04-5z-zV5">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_mute"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-j4-HiN" userLabel="Speaker Stack View">
-                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="251" y="70" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -264,15 +239,6 @@
                                                     <action selector="setSpeakerAction:" destination="-1" eventType="valueChanged" id="RW5-qO-zVy"/>
                                                 </connections>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="speaker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGX-Fl-Bb9">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_speaker"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                 </subviews>

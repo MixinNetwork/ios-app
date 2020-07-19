@@ -41,8 +41,8 @@ class GroupCallMemberDataSource: NSObject {
         self.memberUserIds = Set(members.map(\.userId))
         super.init()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRemoveZombieMember(_:)),
-                                               name: GroupCallMembersManager.didRemoveZombieMemberNotification,
+                                               selector: #selector(updateWithPolledPeers(_:)),
+                                               name: GroupCallMembersManager.didPollPeersNotification,
                                                object: nil)
     }
     
@@ -94,7 +94,7 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
-    @objc private func didRemoveZombieMember(_ notification: Notification) {
+    @objc private func updateWithPolledPeers(_ notification: Notification) {
         guard let userInfo = notification.userInfo else {
             return
         }
@@ -104,12 +104,21 @@ class GroupCallMemberDataSource: NSObject {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let userIds = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? [String] else {
+        guard let remoteUserIds = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? Set<String> else {
             return
         }
-        CallService.shared.log("[GroupCallMemberDataSource] remove zombies: \(userIds)")
         DispatchQueue.main.async {
-            userIds.forEach(self.reportMemberWithIdDidDisconnected(_:))
+            for (index, member) in self.members.enumerated().reversed() {
+                guard !remoteUserIds.contains(member.userId) && member.userId != myUserId else {
+                    continue
+                }
+                CallService.shared.log("[GroupCallMemberDataSource] remove zombie: \(member.fullName), at: \(index)")
+                self.invitingMemberUserIds.remove(member.userId)
+                self.memberUserIds.remove(member.userId)
+                self.members.remove(at: index)
+                let indexPath = IndexPath(item: index, section: 0)
+                self.collectionView?.deleteItems(at: [indexPath])
+            }
         }
     }
     

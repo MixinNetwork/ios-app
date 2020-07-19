@@ -13,7 +13,7 @@ class GroupCallMembersManager {
     }
     
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
-    static let didRemoveZombieMemberNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidRemoveZombieMember")
+    static let didPollPeersNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidPollPeers")
     
     private(set) var members = [String: [String]]()
     
@@ -117,32 +117,30 @@ extension GroupCallMembersManager {
     
     func beginPolling(forConversationWith conversationId: String) {
         endPolling(forConversationWith: conversationId)
-        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (_) in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (timer) in
             guard let self = self else {
+                CallService.shared.log("[PeerPolling] manager of \(conversationId) is nil out")
+                timer.invalidate()
                 return
             }
             self.queue.async {
                 guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: conversationId) else {
+                    CallService.shared.log("[PeerPolling] Peer request failed. cid: \(conversationId)")
                     return
                 }
                 let remoteUserIds = Set(peers.map(\.userId))
+                CallService.shared.log("[PeerPolling] remote id: \(remoteUserIds)")
                 var localUserIds = self.members[conversationId] ?? []
-                var removedUserIds = [String]()
-                for (index, userId) in localUserIds.enumerated().reversed() where !remoteUserIds.contains(userId) {
-                    localUserIds.remove(at: index)
-                    removedUserIds.append(userId)
-                }
-                if !removedUserIds.isEmpty {
-                    CallService.shared.log("[GroupCallMembersManager] RemoveZombieMember: \(removedUserIds)")
-                    self.members[conversationId] = localUserIds
-                    let userInfo: [String: Any] = [
-                        Self.UserInfoKey.conversationId: conversationId,
-                        Self.UserInfoKey.userIds: removedUserIds,
-                    ]
-                    NotificationCenter.default.post(name: Self.didRemoveZombieMemberNotification,
-                                                    object: self,
-                                                    userInfo: userInfo)
-                }
+                CallService.shared.log("[PeerPolling] local id: \(localUserIds)")
+                localUserIds = localUserIds.filter(remoteUserIds.contains)
+                self.members[conversationId] = localUserIds
+                let userInfo: [String: Any] = [
+                    Self.UserInfoKey.conversationId: conversationId,
+                    Self.UserInfoKey.userIds: remoteUserIds,
+                ]
+                NotificationCenter.default.post(name: Self.didPollPeersNotification,
+                                                object: self,
+                                                userInfo: userInfo)
             }
         }
         RunLoop.main.add(timer, forMode: .common)

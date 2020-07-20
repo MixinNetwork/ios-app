@@ -132,10 +132,10 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t3e-bg-GeY" userLabel="Group Call Members Wrapper">
-                                <rect key="frame" x="0.0" y="87" width="375" height="376"/>
+                                <rect key="frame" x="0.0" y="87" width="375" height="409.5"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8" customClass="GroupCallMembersCollectionView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="124" width="375" height="128"/>
+                                        <rect key="frame" x="0.0" y="141" width="375" height="128"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf" customClass="GroupCallMembersFlowLayout" customModule="Mixin" customModuleProvider="target">
                                             <size key="itemSize" width="128" height="128"/>
@@ -152,11 +152,17 @@
                                     <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="t3e-bg-GeY" secondAttribute="centerY" id="xOe-fq-bRD"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
+                                <rect key="frame" x="0.0" y="500.5" width="375" height="16.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGR-fd-qeK">
-                                <rect key="frame" x="30" y="463" width="315" height="204"/>
+                                <rect key="frame" x="30" y="533" width="315" height="64"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="TQI-9I-kWd" userLabel="HangUp Stack View">
-                                        <rect key="frame" x="0.0" y="70" width="64" height="64"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Eu-3w-9KA">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -178,7 +184,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo" userLabel="Accept Stack View">
-                                        <rect key="frame" x="251" y="70" width="64" height="64"/>
+                                        <rect key="frame" x="251" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -200,7 +206,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-TX-CRZ" userLabel="Mute Stack View">
-                                        <rect key="frame" x="0.0" y="70" width="64" height="64"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -221,7 +227,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-j4-HiN" userLabel="Speaker Stack View">
-                                        <rect key="frame" x="251" y="70" width="64" height="64"/>
+                                        <rect key="frame" x="251" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -245,7 +251,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Ff2-j4-HiN" secondAttribute="trailing" id="3Zl-T0-rDR"/>
-                                    <constraint firstAttribute="height" constant="204" id="DcG-ru-Zfz"/>
+                                    <constraint firstAttribute="height" constant="64" id="DcG-ru-Zfz"/>
                                     <constraint firstItem="TQI-9I-kWd" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="GiG-fq-UMt"/>
                                     <constraint firstItem="CLO-8P-tgo" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="Lid-lz-a4J"/>
                                     <constraint firstItem="CLO-8P-tgo" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="XEt-3C-WtG"/>
@@ -257,12 +263,6 @@
                                     <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" priority="750" id="zpq-vh-a5v"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
-                                <rect key="frame" x="0.0" y="446.5" width="375" height="16.5"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-yl-N8J" userLabel="Bottom Safe Area Placeholder">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -274,7 +274,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="0sZ-fs-VnN"/>
-                            <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="24S-vw-Uku"/>
+                            <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" constant="70" id="24S-vw-Uku"/>
                             <constraint firstAttribute="trailing" secondItem="t3e-bg-GeY" secondAttribute="trailing" id="2qO-Pr-lPb"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
@@ -291,12 +291,12 @@
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
+                            <constraint firstItem="NCO-o8-q8h" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" constant="4" id="h7g-t9-pS2"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="leading" secondItem="02X-1z-xjL" secondAttribute="trailing" constant="8" id="ir0-KR-Vvj"/>
                             <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="centerY" secondItem="6Bg-67-Oum" secondAttribute="centerY" multiplier="0.7" id="p9E-rK-eLj"/>
-                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" id="pMt-Kq-ARA"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="CPG-77-gPe" secondAttribute="trailing" constant="10" id="sl4-BQ-LNn"/>
-                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
+                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" constant="16" id="v3e-wI-VZf"/>
                             <constraint firstAttribute="bottom" secondItem="qGL-yl-N8J" secondAttribute="bottom" id="vtu-FQ-KW2"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="zfZ-FC-p7R"/>
                         </constraints>

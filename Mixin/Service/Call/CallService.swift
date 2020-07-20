@@ -459,6 +459,7 @@ extension CallService {
                                                           trackId: nil,
                                                           action: .decline(recipientId: userId))
                             KrakenMessageRetriever.shared.request(declining, completion: nil)
+                            self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                         }
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
@@ -486,6 +487,7 @@ extension CallService {
                                                 trackId: call.trackId,
                                                 action: action)
                         KrakenMessageRetriever.shared.request(end, completion: nil)
+                        self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: messageCategory,
@@ -870,6 +872,7 @@ extension CallService {
                                               trackId: nil,
                                               action: .decline(recipientId: data.userId))
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
                 reporter.report(error: error)
             }
@@ -989,6 +992,7 @@ extension CallService: WebRTCClientDelegate {
                                             trackId: trackId,
                                             action: .trickle(candidate: json))
                 KrakenMessageRetriever.shared.request(trickle, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(trickle.debugDescription)")
             } else {
                 var trickles = pendingTrickles[call.uuid] ?? []
                 trickles.append(json)
@@ -1160,6 +1164,7 @@ extension CallService {
                                                   trackId: call.trackId,
                                                   action: .decline(recipientId: userId))
                     KrakenMessageRetriever.shared.request(declining, completion: nil)
+                    self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 }
             }
             self.close(uuid: call.uuid)
@@ -1299,6 +1304,7 @@ extension CallService {
                                         trackId: call.trackId,
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
             }
         }
         close(uuid: activeCall.uuid)
@@ -1429,6 +1435,7 @@ extension CallService {
     private typealias SdpResult = Result<(trackId: String, sdp: RTCSessionDescription), CallError>
     
     private func request(_ request: KrakenRequest, completion: @escaping (SdpResult) -> Void) {
+        self.log("[KrakenMessageRetriever] Request \(request.debugDescription)")
         KrakenMessageRetriever.shared.request(request) { (result) in
             switch result {
             case .success(let data):
@@ -1512,6 +1519,7 @@ extension CallService {
                                         trackId: trackId,
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                 self.close(uuid: call.uuid)
                 self.alert(error: .setRemoteAnswer(error))
                 completion?(false)
@@ -1526,6 +1534,7 @@ extension CallService {
                                                     trackId: trackId,
                                                     action: .trickle(candidate: candidate))
                         KrakenMessageRetriever.shared.request(trickle, completion: nil)
+                        self.log("[KrakenMessageRetriever] Request \(trickle.debugDescription)")
                     })
                 }
             }
@@ -1572,6 +1581,7 @@ extension CallService {
                                            trackId: call.trackId,
                                            action: .answer(sdp: sdpJson))
                 KrakenMessageRetriever.shared.request(answer, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(answer.debugDescription)")
                 self.log("[CallService] group call answer is sent")
             case .failure(let error):
                 self.log("[CallService] group call answer failed setting sdp: \(error)")

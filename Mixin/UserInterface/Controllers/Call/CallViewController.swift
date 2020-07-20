@@ -22,8 +22,7 @@ class CallViewController: UIViewController {
     @IBOutlet weak var speakerStackView: UIStackView!
     
     @IBOutlet weak var topSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var multipleUserCollectionViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var multipleUserCollectionViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var groupCallMembersCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
@@ -107,6 +106,7 @@ class CallViewController: UIViewController {
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = interitemSpacing * 2
             groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.minimumLineSpacing = round(interitemSpacing / 3 * 4)
             groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         } else {
             let itemLength: CGFloat = 64
@@ -115,8 +115,23 @@ class CallViewController: UIViewController {
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = floor(interitemSpacing / 2 * 3)
             groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.minimumLineSpacing = interitemSpacing
             groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         }
+        let numberOfLines: Int
+        switch allMembersCount {
+        case 0...3:
+            numberOfLines = 1
+        case 4...6:
+            numberOfLines = 2
+        case 7...12:
+            numberOfLines = 3
+        default:
+            numberOfLines = 4
+        }
+        let itemsHeight = CGFloat(numberOfLines) * groupCallMembersCollectionLayout.itemSize.height
+        let separatorsHeight = CGFloat(numberOfLines - 1) * groupCallMembersCollectionLayout.minimumLineSpacing
+        groupCallMembersCollectionViewHeightConstraint.constant = itemsHeight + separatorsHeight
     }
     
     func disableConnectionDurationTimer() {

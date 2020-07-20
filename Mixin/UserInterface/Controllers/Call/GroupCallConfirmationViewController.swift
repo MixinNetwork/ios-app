@@ -60,7 +60,7 @@ class GroupCallConfirmationViewController: CallViewController {
 extension GroupCallConfirmationViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        min(GroupCall.maxNumberOfMembers, members.count)
+        members.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

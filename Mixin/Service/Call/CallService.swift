@@ -811,8 +811,12 @@ extension CallService {
         let groupCall: GroupCall?
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
             groupCall = call
-            self.log("[CallService] The call is active, subscribe the user: \(data.userId)")
-            subscribe(userId: data.userId, of: call)
+            if call.trackId != nil {
+                self.log("[CallService] The call is active with valid track id, subscribe the user: \(data.userId)")
+                subscribe(userId: data.userId, of: call)
+            } else {
+                self.log("[CallService] no track id is found. do not subscribe it")
+            }
         } else if let call = pendingAnswerCalls.values.first(where: { $0.conversationId == data.conversationId }) {
             groupCall = call as? GroupCall
         } else {

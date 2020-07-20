@@ -350,6 +350,8 @@
 "call_no_network" = "Call service unavailable. Make sure your phone has an internet connection and try again.";
 "call_user_not_found" = "User not found";
 "call_declined_lack_microphone_permission" = "Voice call has been declined";
+"call_webrtc_disconnected" = "The connection lost";
+"call_remote_error" = "The connection failed. Code %@";
 "group_call_publish" = "%@ has started a group call";
 "group_call_invite" = "%@ has invited you to a group call";
 "group_call_cancel" = "%@ has cancelled group call";

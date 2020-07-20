@@ -350,6 +350,8 @@
 "call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 "call_user_not_found" = "找不到用户";
 "call_declined_lack_microphone_permission" = "已拒绝通话";
+"call_webrtc_disconnected" = "连接已断开";
+"call_remote_error" = "连接失败。代码%@";
 "group_call_publish" = "%@ 开始了群通话";
 "group_call_invite" = "%@ 邀请你加入群组语音";
 "group_call_cancel" = "%@ 已取消群组语音";

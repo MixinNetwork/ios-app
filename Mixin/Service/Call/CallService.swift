@@ -598,7 +598,7 @@ extension CallService: CallMessageCoordinator {
                 self.handleInvitation(data: data)
             case .KRAKEN_DECLINE:
                 self.handleKrakenDecline(data: data)
-            case .KRAKEN_END:
+            case .KRAKEN_END, .KRAKEN_CANCEL:
                 self.handleKrakenEnd(data: data)
             default:
                 self.handleCallStatusChange(data: data)

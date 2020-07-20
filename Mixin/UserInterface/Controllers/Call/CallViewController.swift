@@ -200,7 +200,7 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        service.isMuted = muteSwitch.isOn
+        service.requestSetMute(muteSwitch.isOn)
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {

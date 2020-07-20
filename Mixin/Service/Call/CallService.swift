@@ -264,6 +264,17 @@ extension CallService {
         }
     }
     
+    func requestSetMute(_ muted: Bool) {
+        queue.async {
+            guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
+                self.log("[CallService] Request set mute but finds no pending answer call")
+                return
+            }
+            self.log("[CallService] Request set mute")
+            self.callInterface.requestSetMute(uuid: uuid, muted: muted) { (_) in }
+        }
+    }
+    
 }
 
 // MARK: - UI Related Interface

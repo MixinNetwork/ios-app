@@ -1571,12 +1571,16 @@ extension CallService {
                 return
             }
             self.log("[CallService] sender key is updated")
-            if let userId = userInfo[ReceiveMessageService.UserInfoKey.userId] as? String, let sessionId = userInfo[ReceiveMessageService.UserInfoKey.sessionId] as? String, !userId.isEmpty && !sessionId.isEmpty {
+            let userId = userInfo[ReceiveMessageService.UserInfoKey.userId] as? String
+            let sessionId = userInfo[ReceiveMessageService.UserInfoKey.sessionId] as? String
+            if let userId = userId, let sessionId = sessionId, !userId.isEmpty && !sessionId.isEmpty {
                 let userIds = self.membersManager.members[conversationId] ?? [] // Since there's an active call it won't be nil
                 if userIds.contains(userId) {
                     let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
                     self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
                 }
+            } else if let userId = userId, !userId.isEmpty {
+                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
                 let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)

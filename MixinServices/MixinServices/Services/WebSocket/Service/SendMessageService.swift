@@ -372,7 +372,13 @@ public class SendMessageService: MixinService {
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
                 case JobAction.REFRESH_SESSION.rawValue:
                     _ = ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
-                        return refreshParticipantSession(conversationId: job.conversationId!, userId: job.userId!, retry: true)
+                        let result = refreshParticipantSession(conversationId: job.conversationId!, userId: job.userId!, retry: true)
+                        let userInfo = [
+                            ReceiveMessageService.UserInfoKey.conversationId: job.conversationId,
+                            ReceiveMessageService.UserInfoKey.userId: job.userId
+                        ]
+                        NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification, object: self, userInfo: userInfo)
+                        return result
                     }
                 case JobAction.RESEND_KEY.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {

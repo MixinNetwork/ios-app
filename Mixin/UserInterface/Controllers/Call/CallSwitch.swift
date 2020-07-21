@@ -4,16 +4,13 @@ class CallSwitch: UIControl {
     
     override var isEnabled: Bool {
         didSet {
-            if !isEnabled {
-                isOn = false
-                // TODO: decorations
-            }
+            updateSubviews()
         }
     }
     
     var isOn = false {
         didSet {
-            updateOpacity(isOn: isOn)
+            updateSubviews()
         }
     }
     
@@ -61,10 +58,11 @@ class CallSwitch: UIControl {
         offIconLayer.bounds.size = path.bounds.size
     }
     
-    private func updateOpacity(isOn: Bool) {
-        offView.isHidden = isOn
-        offIconLayer.isHidden = isOn
-        onLayer.opacity = isOn ? 1 : 0
+    private func updateSubviews() {
+        offView.isHidden = isEnabled && isOn
+        offIconLayer.isHidden = isEnabled && isOn
+        offIconLayer.opacity = isEnabled ? 1 : 0.4
+        onLayer.opacity = (isEnabled && isOn) ? 1 : 0
     }
     
     private func updateOnLayerPath(iconPath: UIBezierPath) {
@@ -93,7 +91,7 @@ class CallSwitch: UIControl {
         onLayer.fillColor = UIColor.white.cgColor
         layer.addSublayer(onLayer)
         
-        updateOpacity(isOn: isOn)
+        updateSubviews()
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         addGestureRecognizer(recognizer)
     }

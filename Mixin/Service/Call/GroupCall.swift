@@ -29,11 +29,6 @@ class GroupCall: Call {
                                                            invitingMemberUserIds: Set(invitingMembers.map(\.userId)))
         self.pendingInvitingMembers = invitingMembers
         super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing)
-        CallService.shared.membersManager.beginPolling(forConversationWith: conversation.conversationId)
-    }
-    
-    deinit {
-        CallService.shared.membersManager.endPolling(forConversationWith: conversationId)
     }
     
     func invite(members: [UserItem]) {

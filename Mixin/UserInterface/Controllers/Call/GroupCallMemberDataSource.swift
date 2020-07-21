@@ -42,7 +42,7 @@ class GroupCallMemberDataSource: NSObject {
         super.init()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateWithPolledPeers(_:)),
-                                               name: GroupCallMembersManager.didPollPeersNotification,
+                                               name: GroupCallMembersManager.membersDidChangeNotification,
                                                object: nil)
     }
     
@@ -104,12 +104,13 @@ class GroupCallMemberDataSource: NSObject {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let remoteUserIds = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? Set<String> else {
+        guard let remoteUserIds = userInfo[GroupCallMembersManager.UserInfoKey.userIds] as? [String] else {
             return
         }
+        let remoteIds = Set(remoteUserIds)
         DispatchQueue.main.async {
             for (index, member) in self.members.enumerated().reversed() {
-                guard !remoteUserIds.contains(member.userId) && member.userId != myUserId else {
+                guard !remoteIds.contains(member.userId) && member.userId != myUserId else {
                     continue
                 }
                 CallService.shared.log("[GroupCallMemberDataSource] remove zombie: \(member.fullName), at: \(index)")

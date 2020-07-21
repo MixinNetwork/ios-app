@@ -13,7 +13,6 @@ class GroupCallMembersManager {
     }
     
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
-    static let didPollPeersNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidPollPeers")
     
     private(set) var members = [String: [String]]()
     
@@ -68,6 +67,7 @@ class GroupCallMembersManager {
             ]
             NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
         }
+        beginPolling(forConversationWith: conversationId)
     }
     
     func removeMember(with userId: String, fromConversationWith conversationId: String) {
@@ -85,6 +85,9 @@ class GroupCallMembersManager {
             ]
             NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
         }
+        if members.isEmpty {
+            endPolling(forConversationWith: conversationId)
+        }
     }
     
     private func loadMembersIfNeverLoaded(forConversationWith id: String) {
@@ -94,19 +97,25 @@ class GroupCallMembersManager {
         guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: id) else {
             return
         }
-        CallService.shared.log("[GroupCallMembersManager] Load members: \(peers.map(\.userId)), for conversation: \(id)")
+        let remoteUserIds = peers.map(\.userId)
+        CallService.shared.log("[GroupCallMembersManager] Load members: \(remoteUserIds), for conversation: \(id)")
         loadedConversationsId.insert(id)
-        let userIds = peers.map(\.userId)
-        if var members = self.members[id] {
-            let remoteUserIds = Set(userIds)
-            members = members.filter(remoteUserIds.contains)
-            self.members[id] = members
+        
+        let newMembers: [String]
+        if let members = self.members[id] {
+            let set = Set(remoteUserIds)
+            newMembers = members.filter(set.contains)
         } else {
-            self.members[id] = userIds
+            newMembers = remoteUserIds
+        }
+        self.members[id] = newMembers
+        
+        if !peers.isEmpty {
+            beginPolling(forConversationWith: id)
         }
         let userInfo: [String: Any] = [
             Self.UserInfoKey.conversationId: id,
-            Self.UserInfoKey.userIds: userIds
+            Self.UserInfoKey.userIds: newMembers
         ]
         NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
     }
@@ -115,8 +124,11 @@ class GroupCallMembersManager {
 
 extension GroupCallMembersManager {
     
-    func beginPolling(forConversationWith conversationId: String) {
-        endPolling(forConversationWith: conversationId)
+    private func beginPolling(forConversationWith conversationId: String) {
+        let key = conversationId as NSString
+        guard self.pollingTimers.object(forKey: key) == nil else {
+            return
+        }
         let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (timer) in
             guard let self = self else {
                 CallService.shared.log("[PeerPolling] manager of \(conversationId) is nil out")
@@ -134,20 +146,23 @@ extension GroupCallMembersManager {
                 CallService.shared.log("[PeerPolling] local id: \(localUserIds)")
                 localUserIds = localUserIds.filter(remoteUserIds.contains)
                 self.members[conversationId] = localUserIds
+                if localUserIds.isEmpty {
+                    timer.invalidate()
+                }
                 let userInfo: [String: Any] = [
                     Self.UserInfoKey.conversationId: conversationId,
-                    Self.UserInfoKey.userIds: remoteUserIds,
+                    Self.UserInfoKey.userIds: localUserIds
                 ]
-                NotificationCenter.default.post(name: Self.didPollPeersNotification,
+                NotificationCenter.default.post(name: Self.membersDidChangeNotification,
                                                 object: self,
                                                 userInfo: userInfo)
             }
         }
         RunLoop.main.add(timer, forMode: .common)
-        pollingTimers.setObject(timer, forKey: conversationId as NSString)
+        pollingTimers.setObject(timer, forKey: key)
     }
     
-    func endPolling(forConversationWith id: String) {
+    private func endPolling(forConversationWith id: String) {
         guard let timer = pollingTimers.object(forKey: id as NSString) else {
             return
         }

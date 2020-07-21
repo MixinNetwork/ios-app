@@ -1225,7 +1225,7 @@ extension CallService {
         }
         let category = AVAudioSession.Category.playAndRecord.rawValue
         let options: AVAudioSession.CategoryOptions = {
-            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP]
             if self.usesSpeaker {
                 options.insert(.defaultToSpeaker)
             }

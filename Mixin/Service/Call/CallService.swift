@@ -969,7 +969,7 @@ extension CallService: KrakenMessageRetrieverDelegate {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, [401, 403, 5002002].contains(error.code) {
+        if let error = error as? APIError, [401, 403, 5002000, 5002002].contains(error.code) {
             self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
             let isRecoverable = [403, 5002002].contains(error.code)
             let error = CallError.remoteError(error.code)

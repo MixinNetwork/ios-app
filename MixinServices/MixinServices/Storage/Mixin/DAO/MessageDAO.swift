@@ -105,7 +105,9 @@ public final class MessageDAO {
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
     ) WHERE conversation_id = ?
     """
-    
+
+    private let updateMediaStatusQueue = DispatchQueue(label: "one.mixin.services.queue.media.status.queue")
+
     public func getMediaUrls(categories: [MessageCategory]) -> [String] {
         let condition: Condition = Message.Properties.category.in(categories.map({ $0.rawValue }))
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
@@ -251,12 +253,29 @@ public final class MessageDAO {
     }
     
     public func updateMediaStatus(messageId: String, status: MediaStatus, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
-            return
+        let targetStatus = status
+        updateMediaStatusQueue.async {
+            MixinDatabase.shared.transaction { (database) in
+                let oldStatus = try database.getValue(on: Message.Properties.mediaStatus.asColumnResult(), fromTable: Message.tableName, where: Message.Properties.messageId == messageId)
+
+                guard oldStatus.type == .null || (oldStatus.stringValue != targetStatus.rawValue) else {
+                    return
+                }
+
+                if (targetStatus == .PENDING || targetStatus == .CANCELED) && oldStatus.stringValue == MediaStatus.DONE.rawValue {
+                    return
+                }
+
+                let updateStatment = try database.prepareUpdate(table: Message.tableName, on: [Message.Properties.mediaStatus]).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+                try updateStatment.execute(with: [targetStatus.rawValue])
+                guard updateStatment.changes ?? 0 > 0 else {
+                    return
+                }
+
+                let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: targetStatus))
+                NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+            }
         }
-        
-        let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: status))
-        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
     }
     
     public func updateOldStickerMessages() {

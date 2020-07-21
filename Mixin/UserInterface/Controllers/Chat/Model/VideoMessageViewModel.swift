@@ -84,7 +84,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
+        updateMediaStatus(message: message, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: VideoUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -106,7 +106,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             ConcurrentJobQueue.shared.cancelJob(jobId: VideoDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
+            updateMediaStatus(message: message, status: .CANCELED)
         }
     }
     

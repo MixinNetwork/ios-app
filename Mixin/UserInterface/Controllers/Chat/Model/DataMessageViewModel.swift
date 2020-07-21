@@ -51,7 +51,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         guard shouldBeginAttachmentLoading(isTriggeredByUser: isTriggeredByUser) else {
             return
         }
-        updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .PENDING)
+        updateMediaStatus(message: message, status: .PENDING)
         if shouldUpload {
             UploaderQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
         } else {
@@ -73,7 +73,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             ConcurrentJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: message.messageId))
         }
         if isTriggeredByUser {
-            updateMediaStatus(messageId: message.messageId, conversationId: message.conversationId, status: .CANCELED)
+            updateMediaStatus(message: message, status: .CANCELED)
         }
     }
     

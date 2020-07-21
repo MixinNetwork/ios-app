@@ -14,8 +14,9 @@ public class MixinService {
     public static var callMessageCoordinator: CallMessageCoordinator!
 
     public static var isStopProcessMessages = false
-    
-    public internal(set) var processing = false
+
+    @Atomic(false)
+    public internal(set) var processing: Bool
     
     internal var currentAccountId: String {
         return myUserId

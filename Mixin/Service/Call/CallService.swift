@@ -104,6 +104,10 @@ class CallService: NSObject {
         rtcClient.delegate = self
         updateCallKitAvailability()
         KrakenMessageRetriever.shared.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(audioSessionRouteChange),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
     
     func registerForPushKitNotificationsIfAvailable() {
@@ -260,6 +264,17 @@ extension CallService {
         }
     }
     
+    func requestSetMute(_ muted: Bool) {
+        queue.async {
+            guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
+                self.log("[CallService] Request set mute but finds no pending answer call")
+                return
+            }
+            self.log("[CallService] Request set mute")
+            self.callInterface.requestSetMute(uuid: uuid, muted: muted) { (_) in }
+        }
+    }
+    
 }
 
 // MARK: - UI Related Interface
@@ -325,7 +340,6 @@ extension CallService {
         if minimized {
             min.call = activeCall
             min.view.alpha = 0
-            min.placeViewToTopRight()
             let scaleX = min.contentView.frame.width / max.view.frame.width
             let scaleY = min.contentView.frame.height / max.view.frame.height
             updateViews = {
@@ -340,6 +354,7 @@ extension CallService {
             }
         } else {
             callWindow.makeKeyAndVisible()
+            max.view.center = min.view.center
             updateViews = {
                 min.view.alpha = 0
                 max.view.transform = .identity
@@ -361,8 +376,9 @@ extension CallService {
     
     func dismissCallingInterface() {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
-        if let container = UIApplication.homeContainerViewController {
-            container.minimizedCallViewControllerIfLoaded?.view.alpha = 0
+        if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
+            mini.view.alpha = 0
+            mini.placeViewToTopRight()
         }
         viewController?.disableConnectionDurationTimer()
         viewController = nil
@@ -454,6 +470,7 @@ extension CallService {
                                                           trackId: nil,
                                                           action: .decline(recipientId: userId))
                             KrakenMessageRetriever.shared.request(declining, completion: nil)
+                            self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                         }
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
@@ -481,6 +498,7 @@ extension CallService {
                                                 trackId: call.trackId,
                                                 action: action)
                         KrakenMessageRetriever.shared.request(end, completion: nil)
+                        self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                         let message = Message.createKrakenMessage(conversationId: call.conversationId,
                                                                   userId: myUserId,
                                                                   category: messageCategory,
@@ -580,7 +598,7 @@ extension CallService: CallMessageCoordinator {
                 self.handleInvitation(data: data)
             case .KRAKEN_DECLINE:
                 self.handleKrakenDecline(data: data)
-            case .KRAKEN_END:
+            case .KRAKEN_END, .KRAKEN_CANCEL:
                 self.handleKrakenEnd(data: data)
             default:
                 self.handleCallStatusChange(data: data)
@@ -804,8 +822,12 @@ extension CallService {
         let groupCall: GroupCall?
         if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
             groupCall = call
-            self.log("[CallService] The call is active, subscribe the user: \(data.userId)")
-            subscribe(userId: data.userId, of: call)
+            if call.trackId != nil {
+                self.log("[CallService] The call is active with valid track id, subscribe the user: \(data.userId)")
+                subscribe(userId: data.userId, of: call)
+            } else {
+                self.log("[CallService] no track id is found. do not subscribe it")
+            }
         } else if let call = pendingAnswerCalls.values.first(where: { $0.conversationId == data.conversationId }) {
             groupCall = call as? GroupCall
         } else {
@@ -865,6 +887,7 @@ extension CallService {
                                               trackId: nil,
                                               action: .decline(recipientId: data.userId))
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
                 reporter.report(error: error)
             }
@@ -946,7 +969,7 @@ extension CallService: KrakenMessageRetrieverDelegate {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, [401, 403, 5002002].contains(error.code) {
+        if let error = error as? APIError, [401, 403, 5002000, 5002002].contains(error.code) {
             self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
             let isRecoverable = [403, 5002002].contains(error.code)
             let error = CallError.remoteError(error.code)
@@ -984,6 +1007,7 @@ extension CallService: WebRTCClientDelegate {
                                             trackId: trackId,
                                             action: .trickle(candidate: json))
                 KrakenMessageRetriever.shared.request(trickle, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(trickle.debugDescription)")
             } else {
                 var trickles = pendingTrickles[call.uuid] ?? []
                 trickles.append(json)
@@ -1017,6 +1041,10 @@ extension CallService: WebRTCClientDelegate {
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
+        if let call = activeCall as? GroupCall {
+            failCurrentCall(sendFailedMessageToRemote: true, error: .clientDisconnected)
+            callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+        }
     }
     
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
@@ -1151,6 +1179,7 @@ extension CallService {
                                                   trackId: call.trackId,
                                                   action: .decline(recipientId: userId))
                     KrakenMessageRetriever.shared.request(declining, completion: nil)
+                    self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 }
             }
             self.close(uuid: call.uuid)
@@ -1178,11 +1207,25 @@ extension CallService {
         return pendingAnswerCalls[uuid]
     }
     
+    @objc private func audioSessionRouteChange(_ notification: Notification) {
+        guard let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? Int else {
+            return
+        }
+        let isDeviceChanged = reason == kAudioSessionRouteChangeReason_NewDeviceAvailable
+            || reason == kAudioSessionRouteChangeReason_OldDeviceUnavailable
+        if isDeviceChanged {
+            updateAudioSessionConfiguration()
+        }
+    }
+    
     private func updateAudioSessionConfiguration() {
         let session = RTCAudioSession.sharedInstance()
+        let usingBuiltInOutput = session.currentRoute.outputs.contains { (desc) -> Bool in
+            desc.portType == .builtInReceiver || desc.portType == .builtInSpeaker
+        }
         let category = AVAudioSession.Category.playAndRecord.rawValue
         let options: AVAudioSession.CategoryOptions = {
-            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP]
             if self.usesSpeaker {
                 options.insert(.defaultToSpeaker)
             }
@@ -1200,18 +1243,24 @@ extension CallService {
         config.category = category
         config.categoryOptions = options
         config.mode = mode
-        RTCAudioSessionConfiguration.setWebRTC(config)
         
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
             session.lockForConfiguration()
+            defer {
+                session.unlockForConfiguration()
+            }
             do {
+                RTCAudioSessionConfiguration.setWebRTC(config)
                 try session.setCategory(category, with: options)
                 try session.setMode(mode)
-                try session.overrideOutputAudioPort(audioPort)
+                if usingBuiltInOutput {
+                    try session.overrideOutputAudioPort(audioPort)
+                } else {
+                    try session.overrideOutputAudioPort(.none)
+                }
             } catch {
                 reporter.report(error: error)
             }
-            session.unlockForConfiguration()
         }
     }
     
@@ -1270,6 +1319,7 @@ extension CallService {
                                         trackId: call.trackId,
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
             }
         }
         close(uuid: activeCall.uuid)
@@ -1400,6 +1450,7 @@ extension CallService {
     private typealias SdpResult = Result<(trackId: String, sdp: RTCSessionDescription), CallError>
     
     private func request(_ request: KrakenRequest, completion: @escaping (SdpResult) -> Void) {
+        self.log("[KrakenMessageRetriever] Request \(request.debugDescription)")
         KrakenMessageRetriever.shared.request(request) { (result) in
             switch result {
             case .success(let data):
@@ -1483,6 +1534,7 @@ extension CallService {
                                         trackId: trackId,
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                 self.close(uuid: call.uuid)
                 self.alert(error: .setRemoteAnswer(error))
                 completion?(false)
@@ -1497,6 +1549,7 @@ extension CallService {
                                                     trackId: trackId,
                                                     action: .trickle(candidate: candidate))
                         KrakenMessageRetriever.shared.request(trickle, completion: nil)
+                        self.log("[KrakenMessageRetriever] Request \(trickle.debugDescription)")
                     })
                 }
             }
@@ -1543,6 +1596,7 @@ extension CallService {
                                            trackId: call.trackId,
                                            action: .answer(sdp: sdpJson))
                 KrakenMessageRetriever.shared.request(answer, completion: nil)
+                self.log("[KrakenMessageRetriever] Request \(answer.debugDescription)")
                 self.log("[CallService] group call answer is sent")
             case .failure(let error):
                 self.log("[CallService] group call answer failed setting sdp: \(error)")

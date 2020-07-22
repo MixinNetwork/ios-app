@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -14,20 +14,17 @@
                 <outlet property="acceptButtonCenterXConstraint" destination="XEt-3C-WtG" id="NfV-Ap-tye"/>
                 <outlet property="acceptButtonTrailingConstraint" destination="zpq-vh-a5v" id="T26-4Z-fg5"/>
                 <outlet property="acceptStackView" destination="CLO-8P-tgo" id="mb4-Rv-i9R"/>
-                <outlet property="acceptTitleLabel" destination="oVs-zO-xAl" id="V2G-EB-Lm1"/>
                 <outlet property="avatarImageView" destination="wAa-Ej-6fx" id="58k-Ut-kGQ"/>
                 <outlet property="bottomSafeAreaPlaceholderHeightConstraint" destination="R0S-lp-55q" id="88U-hq-lGe"/>
                 <outlet property="groupCallMembersCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="groupCallMembersCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
+                <outlet property="groupCallMembersCollectionViewHeightConstraint" destination="MMU-KX-gfx" id="EYu-ur-YrF"/>
                 <outlet property="hangUpButton" destination="8Eu-3w-9KA" id="NC4-ap-7B4"/>
                 <outlet property="hangUpButtonCenterXConstraint" destination="GiG-fq-UMt" id="Xqn-oa-qHC"/>
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
                 <outlet property="hangUpStackView" destination="TQI-9I-kWd" id="VfY-N6-OxZ"/>
-                <outlet property="hangUpTitleLabel" destination="rlO-vX-Glj" id="jED-LK-zLa"/>
                 <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="minimizeButton" destination="c10-IX-mVV" id="ZHY-P9-Bbn"/>
-                <outlet property="multipleUserCollectionViewLeadingConstraint" destination="H1k-Lg-1To" id="6uR-ix-cww"/>
-                <outlet property="multipleUserCollectionViewTrailingConstraint" destination="XVI-sG-LCq" id="1w6-X7-PSA"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
                 <outlet property="nameLabel" destination="9XF-0U-dfR" id="KC6-cL-Vx1"/>
@@ -63,7 +60,7 @@
                                     <constraint firstAttribute="width" constant="44" id="0Nh-kk-5dU"/>
                                     <constraint firstAttribute="width" secondItem="c10-IX-mVV" secondAttribute="height" id="VfN-MZ-2Cr"/>
                                 </constraints>
-                                <state key="normal" image="Call/ic_minimize"/>
+                                <state key="normal" image="ic_minimize"/>
                                 <connections>
                                     <action selector="minimizeAction:" destination="-1" eventType="touchUpInside" id="Dq8-Le-S9c"/>
                                 </connections>
@@ -97,6 +94,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
+                                        <inset key="titleEdgeInsets" minX="4" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
                                         <state key="normal" title="End-to-end Encrypted" image="Call/ic_encryption">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -133,11 +131,14 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t3e-bg-GeY" userLabel="Group Call Members Wrapper">
-                                <rect key="frame" x="0.0" y="87" width="375" height="376"/>
+                                <rect key="frame" x="0.0" y="87" width="375" height="409.5"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8" customClass="GroupCallMembersCollectionView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="124" width="375" height="128"/>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8" customClass="GroupCallMembersCollectionView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="141" width="375" height="128"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="MMU-KX-gfx"/>
+                                        </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf" customClass="GroupCallMembersFlowLayout" customModule="Mixin" customModuleProvider="target">
                                             <size key="itemSize" width="128" height="128"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -148,16 +149,22 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="wM3-bs-IJ8" firstAttribute="leading" secondItem="t3e-bg-GeY" secondAttribute="leading" id="H1k-Lg-1To"/>
-                                    <constraint firstAttribute="trailing" secondItem="wM3-bs-IJ8" secondAttribute="trailing" id="XVI-sG-LCq"/>
+                                    <constraint firstItem="wM3-bs-IJ8" firstAttribute="leading" secondItem="t3e-bg-GeY" secondAttribute="leading" id="LgH-bW-Oqx"/>
+                                    <constraint firstAttribute="trailing" secondItem="wM3-bs-IJ8" secondAttribute="trailing" id="iV4-A4-vMx"/>
                                     <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="t3e-bg-GeY" secondAttribute="centerY" id="xOe-fq-bRD"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
+                                <rect key="frame" x="0.0" y="500.5" width="375" height="16.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGR-fd-qeK">
-                                <rect key="frame" x="30" y="463" width="315" height="204"/>
+                                <rect key="frame" x="30" y="533" width="315" height="64"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="TQI-9I-kWd" userLabel="HangUp Stack View">
-                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Eu-3w-9KA">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -176,16 +183,10 @@
                                                     <action selector="hangUpAction:" destination="-1" eventType="touchUpInside" id="fb8-yn-uMo"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="decline" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rlO-vX-Glj">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="CLO-8P-tgo" userLabel="Accept Stack View">
-                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="251" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -204,19 +205,10 @@
                                                     <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="HE9-t0-k8R"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="accept" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oVs-zO-xAl">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_accept"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-TX-CRZ" userLabel="Mute Stack View">
-                                        <rect key="frame" x="0.0" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -234,19 +226,10 @@
                                                     <action selector="setMuteAction:" destination="-1" eventType="valueChanged" id="hNd-m8-hSf"/>
                                                 </connections>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mute" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v04-5z-zV5">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_mute"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-j4-HiN" userLabel="Speaker Stack View">
-                                        <rect key="frame" x="251" y="56.5" width="64" height="91.5"/>
+                                        <rect key="frame" x="251" y="0.0" width="64" height="64"/>
                                         <subviews>
                                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D" customClass="CallSwitch" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -264,22 +247,13 @@
                                                     <action selector="setSpeakerAction:" destination="-1" eventType="valueChanged" id="RW5-qO-zVy"/>
                                                 </connections>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="speaker" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGX-Fl-Bb9">
-                                                <rect key="frame" x="0.0" y="77" width="64" height="14.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="call_func_speaker"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                         </subviews>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Ff2-j4-HiN" secondAttribute="trailing" id="3Zl-T0-rDR"/>
-                                    <constraint firstAttribute="height" constant="204" id="DcG-ru-Zfz"/>
+                                    <constraint firstAttribute="height" constant="64" id="DcG-ru-Zfz"/>
                                     <constraint firstItem="TQI-9I-kWd" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="GiG-fq-UMt"/>
                                     <constraint firstItem="CLO-8P-tgo" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="Lid-lz-a4J"/>
                                     <constraint firstItem="CLO-8P-tgo" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="XEt-3C-WtG"/>
@@ -291,12 +265,6 @@
                                     <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" priority="750" id="zpq-vh-a5v"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
-                                <rect key="frame" x="0.0" y="446.5" width="375" height="16.5"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-yl-N8J" userLabel="Bottom Safe Area Placeholder">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -308,7 +276,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="0sZ-fs-VnN"/>
-                            <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" id="24S-vw-Uku"/>
+                            <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" constant="70" id="24S-vw-Uku"/>
                             <constraint firstAttribute="trailing" secondItem="t3e-bg-GeY" secondAttribute="trailing" id="2qO-Pr-lPb"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
@@ -325,12 +293,12 @@
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
+                            <constraint firstItem="NCO-o8-q8h" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" constant="4" id="h7g-t9-pS2"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="leading" secondItem="02X-1z-xjL" secondAttribute="trailing" constant="8" id="ir0-KR-Vvj"/>
                             <constraint firstAttribute="trailing" secondItem="qGL-yl-N8J" secondAttribute="trailing" id="jkU-8Z-l2D"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="centerY" secondItem="6Bg-67-Oum" secondAttribute="centerY" multiplier="0.7" id="p9E-rK-eLj"/>
-                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" id="pMt-Kq-ARA"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="CPG-77-gPe" secondAttribute="trailing" constant="10" id="sl4-BQ-LNn"/>
-                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" id="v3e-wI-VZf"/>
+                            <constraint firstItem="PGR-fd-qeK" firstAttribute="top" secondItem="NCO-o8-q8h" secondAttribute="bottom" constant="16" id="v3e-wI-VZf"/>
                             <constraint firstAttribute="bottom" secondItem="qGL-yl-N8J" secondAttribute="bottom" id="vtu-FQ-KW2"/>
                             <constraint firstItem="c10-IX-mVV" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="zfZ-FC-p7R"/>
                         </constraints>
@@ -352,7 +320,7 @@
         <image name="Call/ic_call" width="74" height="74"/>
         <image name="Call/ic_drop" width="74" height="74"/>
         <image name="Call/ic_encryption" width="9" height="12"/>
-        <image name="Call/ic_minimize" width="24" height="24"/>
+        <image name="ic_minimize" width="24" height="24"/>
         <image name="ic_title_add" width="16" height="16"/>
     </resources>
 </document>

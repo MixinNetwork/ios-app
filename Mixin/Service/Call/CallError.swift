@@ -13,14 +13,12 @@ enum CallError: Error {
     case setRemoteSdp(Error)
     case answerConstruction(Error?)
     case setRemoteAnswer(Error)
-    case clientFailure
+    case clientDisconnected
     case offerConstruction(Error?)
     
     case invalidKrakenResponse
     case roomFull
     case remoteError(Int)
-    
-    case manuallyInitiated
     
     var alertContent: String {
         switch self {
@@ -32,6 +30,10 @@ enum CallError: Error {
             return R.string.localizable.call_no_microphone_permission()
         case .roomFull:
             return R.string.localizable.group_call_room_full()
+        case .clientDisconnected:
+            return R.string.localizable.call_webrtc_disconnected()
+        case .remoteError(let code):
+            return R.string.localizable.call_remote_error("\(code)")
         default:
             return R.string.localizable.chat_message_call_failed()
         }

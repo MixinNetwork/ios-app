@@ -282,10 +282,10 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
         if dataSource.category == .group {
             CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
             updateGroupCallIndicatorViewHidden()
+            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
             center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willActivateCallNotification, object: nil)
             center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willDeactivateCallNotification, object: nil)
         }

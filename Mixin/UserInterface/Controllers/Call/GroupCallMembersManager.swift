@@ -13,17 +13,14 @@ class GroupCallMembersManager {
     }
     
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
-    static let didRemoveZombieMemberNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.DidRemoveZombieMember")
     
-    // Key is conversation ID, value is an array of user IDs
-    // If the value is nil, the list has not been retrieved since App launch
-    // If the value is an array regardless of empty or not, the list is in syncing
-    // This var should be accessed from working queue
     private(set) var members = [String: [String]]()
     
     private let queue: DispatchQueue
     private let pollingInterval: TimeInterval = 30
     private let pollingTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
+    
+    private var loadedConversationsId = Set<String>()
     
     init(workingQueue: DispatchQueue) {
         self.queue = workingQueue
@@ -70,6 +67,7 @@ class GroupCallMembersManager {
             ]
             NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
         }
+        beginPolling(forConversationWith: conversationId)
     }
     
     func removeMember(with userId: String, fromConversationWith conversationId: String) {
@@ -87,21 +85,37 @@ class GroupCallMembersManager {
             ]
             NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
         }
+        if members.isEmpty {
+            endPolling(forConversationWith: conversationId)
+        }
     }
     
     private func loadMembersIfNeverLoaded(forConversationWith id: String) {
-        guard self.members[id] == nil else {
+        guard !loadedConversationsId.contains(id) else {
             return
         }
         guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: id) else {
             return
         }
-        let userIds = peers.map(\.userId)
-        CallService.shared.log("[GroupCallMembersManager] Load members: \(peers.map(\.userId))")
-        self.members[id] = userIds
+        let remoteUserIds = peers.map(\.userId)
+        CallService.shared.log("[GroupCallMembersManager] Load members: \(remoteUserIds), for conversation: \(id)")
+        loadedConversationsId.insert(id)
+        
+        let newMembers: [String]
+        if let members = self.members[id] {
+            let set = Set(remoteUserIds)
+            newMembers = members.filter(set.contains)
+        } else {
+            newMembers = remoteUserIds
+        }
+        self.members[id] = newMembers
+        
+        if !peers.isEmpty {
+            beginPolling(forConversationWith: id)
+        }
         let userInfo: [String: Any] = [
             Self.UserInfoKey.conversationId: id,
-            Self.UserInfoKey.userIds: userIds
+            Self.UserInfoKey.userIds: newMembers
         ]
         NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self, userInfo: userInfo)
     }
@@ -110,41 +124,45 @@ class GroupCallMembersManager {
 
 extension GroupCallMembersManager {
     
-    func beginPolling(forConversationWith conversationId: String) {
-        endPolling(forConversationWith: conversationId)
-        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (_) in
+    private func beginPolling(forConversationWith conversationId: String) {
+        let key = conversationId as NSString
+        guard self.pollingTimers.object(forKey: key) == nil else {
+            return
+        }
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (timer) in
             guard let self = self else {
+                CallService.shared.log("[PeerPolling] manager of \(conversationId) is nil out")
+                timer.invalidate()
                 return
             }
             self.queue.async {
                 guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: conversationId) else {
+                    CallService.shared.log("[PeerPolling] Peer request failed. cid: \(conversationId)")
                     return
                 }
                 let remoteUserIds = Set(peers.map(\.userId))
+                CallService.shared.log("[PeerPolling] remote id: \(remoteUserIds)")
                 var localUserIds = self.members[conversationId] ?? []
-                var removedUserIds = [String]()
-                for (index, userId) in localUserIds.enumerated().reversed() where !remoteUserIds.contains(userId) {
-                    localUserIds.remove(at: index)
-                    removedUserIds.append(userId)
+                CallService.shared.log("[PeerPolling] local id: \(localUserIds)")
+                localUserIds = localUserIds.filter(remoteUserIds.contains)
+                self.members[conversationId] = localUserIds
+                if localUserIds.isEmpty {
+                    timer.invalidate()
                 }
-                if !removedUserIds.isEmpty {
-                    CallService.shared.log("[GroupCallMembersManager] RemoveZombieMember: \(removedUserIds)")
-                    self.members[conversationId] = localUserIds
-                    let userInfo: [String: Any] = [
-                        Self.UserInfoKey.conversationId: conversationId,
-                        Self.UserInfoKey.userIds: removedUserIds,
-                    ]
-                    NotificationCenter.default.post(name: Self.didRemoveZombieMemberNotification,
-                                                    object: self,
-                                                    userInfo: userInfo)
-                }
+                let userInfo: [String: Any] = [
+                    Self.UserInfoKey.conversationId: conversationId,
+                    Self.UserInfoKey.userIds: localUserIds
+                ]
+                NotificationCenter.default.post(name: Self.membersDidChangeNotification,
+                                                object: self,
+                                                userInfo: userInfo)
             }
         }
         RunLoop.main.add(timer, forMode: .common)
-        pollingTimers.setObject(timer, forKey: conversationId as NSString)
+        pollingTimers.setObject(timer, forKey: key)
     }
     
-    func endPolling(forConversationWith id: String) {
+    private func endPolling(forConversationWith id: String) {
         guard let timer = pollingTimers.object(forKey: id as NSString) else {
             return
         }

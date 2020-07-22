@@ -196,10 +196,6 @@ public class Localized {
     public static let CHAT_QUOTE_TYPE_VIDEO = LocalizedString("chat_quote_type_video", comment: "Video")
     public static let CHAT_RESTORE_SUBTITLE = LocalizedString("chat_restore_subtitle", comment: "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.")
     
-    // Call
-    public static let CALL_FUNC_HANGUP = LocalizedString("call_func_hangup", comment: "Hang Up")
-    public static let CALL_FUNC_DECLINE = LocalizedString("call_func_decline", comment: "Decline")
-    
     // Sticker
     public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")
     public static let STICKER_ADD_TITLE = LocalizedString("sticker_add_title", comment: "Add Sticker")

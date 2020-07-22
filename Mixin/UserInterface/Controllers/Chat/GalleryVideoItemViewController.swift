@@ -405,11 +405,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         executeInPortraitOrientation {
             self.isPipMode.toggle()
             if self.isPipMode {
-                self.controlView.pipButton.setImage(R.image.ic_video_pip(), for: .normal)
+                self.controlView.pipButton.setImage(R.image.ic_maximize(), for: .normal)
                 self.galleryViewController?.dismiss(pipController: self)
                 UIApplication.homeContainerViewController?.pipController = self
             } else {
-                self.controlView.pipButton.setImage(R.image.ic_video_fullsize(), for: .normal)
+                self.controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
                 self.galleryViewController?.show(itemViewController: self)
                 UIApplication.homeContainerViewController?.pipController = nil
             }

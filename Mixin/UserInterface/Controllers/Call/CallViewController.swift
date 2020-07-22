@@ -16,16 +16,13 @@ class CallViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: CallSwitch!
     @IBOutlet weak var hangUpStackView: UIStackView!
     @IBOutlet weak var hangUpButton: UIButton!
-    @IBOutlet weak var hangUpTitleLabel: UILabel!
     @IBOutlet weak var acceptStackView: UIStackView!
     @IBOutlet weak var acceptButton: UIButton!
-    @IBOutlet weak var acceptTitleLabel: UILabel!
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
     
     @IBOutlet weak var topSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var multipleUserCollectionViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var multipleUserCollectionViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var groupCallMembersCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
@@ -109,6 +106,7 @@ class CallViewController: UIViewController {
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = interitemSpacing * 2
             groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.minimumLineSpacing = round(interitemSpacing / 3 * 4)
             groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         } else {
             let itemLength: CGFloat = 64
@@ -117,8 +115,23 @@ class CallViewController: UIViewController {
             let interitemSpacing = floor(totalSpacing / 6)
             let sectionInset = floor(interitemSpacing / 2 * 3)
             groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
+            groupCallMembersCollectionLayout.minimumLineSpacing = interitemSpacing
             groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
         }
+        let numberOfLines: Int
+        switch allMembersCount {
+        case 0...3:
+            numberOfLines = 1
+        case 4...6:
+            numberOfLines = 2
+        case 7...12:
+            numberOfLines = 3
+        default:
+            numberOfLines = 4
+        }
+        let itemsHeight = CGFloat(numberOfLines) * groupCallMembersCollectionLayout.itemSize.height
+        let separatorsHeight = CGFloat(numberOfLines - 1) * groupCallMembersCollectionLayout.minimumLineSpacing
+        groupCallMembersCollectionViewHeightConstraint.constant = itemsHeight + separatorsHeight
     }
     
     func disableConnectionDurationTimer() {
@@ -202,7 +215,7 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        service.isMuted = muteSwitch.isOn
+        service.requestSetMute(muteSwitch.isOn)
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
@@ -228,20 +241,25 @@ extension CallViewController {
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
-        let routeContainsSpeaker = AVAudioSession.sharedInstance().currentRoute
-            .outputs.map(\.portType)
-            .contains(.builtInSpeaker)
+        let currentRoutePortTypes = AVAudioSession.sharedInstance().currentRoute.outputs.map(\.portType)
+        let routeContainsBuiltInSpeaker = currentRoutePortTypes.contains(.builtInSpeaker)
+        let routeContainsBuiltInReceiver = currentRoutePortTypes.contains(.builtInReceiver)
         DispatchQueue.main.async {
-            if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsSpeaker) {
+            if !(routeContainsBuiltInSpeaker || routeContainsBuiltInReceiver) {
+                self.speakerSwitch.isEnabled = false
+            } else if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsBuiltInSpeaker) {
                 // The audio route changes for mysterious reason on iOS 13, It says category changes
                 // but I have intercept every category change request only to find AVAudioSessionCategoryPlayAndRecord
                 // with AVAudioSessionCategoryOptionDefaultToSpeaker is properly passed into AVAudioSession.
                 // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
                 // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
                 self.service.usesSpeaker = self.service.usesSpeaker
+                
+                self.speakerSwitch.isEnabled = true
                 self.speakerSwitch.isOn = self.service.usesSpeaker
             } else {
-                self.speakerSwitch.isOn = routeContainsSpeaker
+                self.speakerSwitch.isEnabled = true
+                self.speakerSwitch.isOn = routeContainsBuiltInSpeaker
             }
         }
     }
@@ -268,19 +286,16 @@ extension CallViewController {
         switch status {
         case .incoming:
             minimizeButton.isHidden = true
-            hangUpTitleLabel.text = Localized.CALL_FUNC_DECLINE
             setFunctionSwitchesHidden(true)
             setAcceptButtonHidden(false)
             setConnectionButtonsEnabled(true)
         case .outgoing:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
@@ -289,7 +304,6 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
-            hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)

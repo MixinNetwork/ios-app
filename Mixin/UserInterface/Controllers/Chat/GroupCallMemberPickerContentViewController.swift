@@ -120,6 +120,16 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         cell.isForceSelected = fixedUserIds.contains(user.userId)
     }
     
+    override func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
+        centerWrapperViewBottomConstraint.constant = hidden ? -8 : -13
+        centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
+        } else {
+            UIView.performWithoutAnimation(view.layoutIfNeeded)
+        }
+    }
+    
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         var fixedSelectionsCount = fixedSelections.count

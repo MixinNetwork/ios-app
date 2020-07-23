@@ -63,9 +63,9 @@ class GroupCallMemberConnectingView: UIView {
         anim.autoreverses = true
         anim.repeatCount = .greatestFiniteMagnitude
         anim.beginTime = CACurrentMediaTime() + delay
-        anim.duration = 3
-        anim.keyTimes = [0, 0.3, 0.6, 1]
-        anim.values = [1, 0, 1, 1]
+        anim.duration = 1
+        anim.keyTimes = [0, 0.5, 1]
+        anim.values = [1, 0.5, 1]
         return anim
     }
     

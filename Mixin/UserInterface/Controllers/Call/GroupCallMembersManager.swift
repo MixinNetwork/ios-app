@@ -124,7 +124,7 @@ class GroupCallMembersManager {
 
 extension GroupCallMembersManager {
     
-    private func beginPolling(forConversationWith conversationId: String) {
+    func beginPolling(forConversationWith conversationId: String) {
         let key = conversationId as NSString
         guard self.pollingTimers.object(forKey: key) == nil else {
             return
@@ -141,13 +141,14 @@ extension GroupCallMembersManager {
                     return
                 }
                 let remoteUserIds = Set(peers.map(\.userId))
-                CallService.shared.log("[PeerPolling] remote id: \(remoteUserIds)")
+                CallService.shared.log("[PeerPolling] cid: \(conversationId), remote id: \(remoteUserIds)")
                 var localUserIds = self.members[conversationId] ?? []
-                CallService.shared.log("[PeerPolling] local id: \(localUserIds)")
+                CallService.shared.log("[PeerPolling] cid: \(conversationId), local id: \(localUserIds)")
                 localUserIds = localUserIds.filter(remoteUserIds.contains)
                 self.members[conversationId] = localUserIds
                 if localUserIds.isEmpty {
                     timer.invalidate()
+                    CallService.shared.log("[PeerPolling] Member polling for \(conversationId) ends")
                 }
                 let userInfo: [String: Any] = [
                     Self.UserInfoKey.conversationId: conversationId,
@@ -160,6 +161,7 @@ extension GroupCallMembersManager {
         }
         RunLoop.main.add(timer, forMode: .common)
         pollingTimers.setObject(timer, forKey: key)
+        CallService.shared.log("[PeerPolling] Begin polling members for \(conversationId)")
     }
     
     private func endPolling(forConversationWith id: String) {
@@ -167,6 +169,7 @@ extension GroupCallMembersManager {
             return
         }
         timer.invalidate()
+        CallService.shared.log("[PeerPolling] End polling members for \(id)")
     }
     
 }

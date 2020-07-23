@@ -1031,7 +1031,6 @@ extension CallService: WebRTCClientDelegate {
         }
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         call.status = .connected
-        updateAudioSessionConfiguration()
         if !usesCallKit {
             RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                 RTCAudioSession.sharedInstance().isAudioEnabled = true
@@ -1220,23 +1219,26 @@ extension CallService {
     
     private func updateAudioSessionConfiguration() {
         let session = RTCAudioSession.sharedInstance()
-        let usingBuiltInOutput = session.currentRoute.outputs.contains { (desc) -> Bool in
-            desc.portType == .builtInReceiver || desc.portType == .builtInSpeaker
-        }
+        
+        let portTypes = session.currentRoute.outputs.map(\.portType)
+        let builtInPortTypes: Set<AVAudioSession.Port> = [.builtInReceiver, .builtInSpeaker]
+        let outputContainsBuiltInDevices = portTypes.contains(where: builtInPortTypes.contains)
+        
         let category = AVAudioSession.Category.playAndRecord.rawValue
         let options: AVAudioSession.CategoryOptions = {
-            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP]
+            // Without the option of duckOthers, speaker button in system calling interface provided
+            // by CallKit will soon becomes off after turning on
+            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+            // Every post in the link above👆 is totally gibberish. A default mode gloss over the
+            // issue but mess it up when it comes to AirPods
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
             if self.usesSpeaker {
                 options.insert(.defaultToSpeaker)
             }
             return options
         }()
         
-        // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-        // DO NOT use the mode of voiceChat, or the speaker button in system
-        // calling interface will soon becomes off after turning on
-        let mode = AVAudioSession.Mode.default.rawValue
-        
+        let mode = AVAudioSession.Mode.voiceChat.rawValue
         let audioPort: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
         
         let config = RTCAudioSessionConfiguration()
@@ -1253,7 +1255,7 @@ extension CallService {
                 RTCAudioSessionConfiguration.setWebRTC(config)
                 try session.setCategory(category, with: options)
                 try session.setMode(mode)
-                if usingBuiltInOutput {
+                if outputContainsBuiltInDevices {
                     try session.overrideOutputAudioPort(audioPort)
                 } else {
                     try session.overrideOutputAudioPort(.none)

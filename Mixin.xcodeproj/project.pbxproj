@@ -195,6 +195,7 @@
 		7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */; };
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
+		7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B65568224C8555D0038BC14 /* GroupCallMemberConnectingView.swift */; };
 		7B66AC072428D72000869DBD /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66AC062428D72000869DBD /* PostViewController.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
 		7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */; };
@@ -1032,6 +1033,7 @@
 		7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
+		7B65568224C8555D0038BC14 /* GroupCallMemberConnectingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberConnectingView.swift; sourceTree = "<group>"; };
 		7B66AC062428D72000869DBD /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
 		7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverViewController.swift; sourceTree = "<group>"; };
@@ -1978,6 +1980,7 @@
 				7B4AD8D824925F2F00E999B7 /* CallIconPath.swift */,
 				7B4A8F6E24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift */,
 				7B70D1A424A924DE0034B704 /* GroupCallMembersCollectionView.swift */,
+				7B65568224C8555D0038BC14 /* GroupCallMemberConnectingView.swift */,
 				7BA9F31F24A22EC100D7C091 /* GroupCallMemberCell.xib */,
 				7BA9F31E24A22EC100D7C091 /* GroupCallMemberCell.swift */,
 				7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */,
@@ -3868,6 +3871,7 @@
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
+				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,

@@ -45,10 +45,10 @@ class BarChartView: UIView {
         if numberOfLayersToBeAdded > 0 {
             for i in 0..<numberOfLayersToBeAdded {
                 let index = oldProportions.count + i
-                let layer = makeBarLayer(at: index)
+                let layer = makeBarLayer(at: index, count: proportions.count)
                 barLayersContainerLayer.addSublayer(layer)
                 barLayers.append(layer)
-                let shadowLayer = makeShadowLayer(at: index)
+                let shadowLayer = makeShadowLayer(at: index, count: proportions.count)
                 shadowLayer.fillColor = UIColor.clear.cgColor
                 self.layer.insertSublayer(shadowLayer, at: 0)
                 shadowLayers.append(shadowLayer)
@@ -100,15 +100,20 @@ class BarChartView: UIView {
         }
     }
     
-    private func makeBarLayer(at index: Int) -> CAGradientLayer {
+    private func makeBarLayer(at index: Int, count: Int) -> CAGradientLayer {
         let layer = CAGradientLayer()
         switch index {
         case 0:
             layer.colors = [UIColor(rgbValue: 0x47A1FF).cgColor,
                             UIColor(rgbValue: 0x244BFF).cgColor]
         case 1:
-            layer.colors = [UIColor(rgbValue: 0x9C62FF).cgColor,
-                            UIColor(rgbValue: 0x5A24FF).cgColor]
+            if count == 3 {
+                layer.colors = [UIColor(rgbValue: 0xB852F6).cgColor,
+                                UIColor(rgbValue: 0xED1C80).cgColor]
+            } else {
+                layer.colors = [UIColor(rgbValue: 0xFFBB54).cgColor,
+                                UIColor(rgbValue: 0xFF9E2C).cgColor]
+            }
         default:
             layer.colors = [UIColor(rgbValue: 0xFFBB54).cgColor,
                             UIColor(rgbValue: 0xFF9E2C).cgColor]
@@ -119,14 +124,18 @@ class BarChartView: UIView {
         return layer
     }
     
-    private func makeShadowLayer(at index: Int) -> CAShapeLayer {
+    private func makeShadowLayer(at index: Int, count: Int) -> CAShapeLayer {
         let layer = CAShapeLayer()
         
         switch index {
         case 0:
             layer.shadowColor = UIColor(rgbValue: 0x246BFF).cgColor
         case 1:
-            layer.shadowColor = UIColor(rgbValue: 0x5724FF).cgColor
+            if count == 3 {
+                layer.shadowColor = UIColor(rgbValue: 0x491DF6).cgColor
+            } else {
+                layer.shadowColor = UIColor(rgbValue: 0xF3962C).cgColor
+            }
         default:
             layer.shadowColor = UIColor(rgbValue: 0xF3962C).cgColor
         }

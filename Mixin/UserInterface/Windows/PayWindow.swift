@@ -157,7 +157,7 @@ class PayWindow: BottomSheetView {
             mixinIDLabel.text = address.fullAddress
             multisigView.isHidden = true
             let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
-            let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: asset.priceUsd)
+            let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
                 amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
             } else {

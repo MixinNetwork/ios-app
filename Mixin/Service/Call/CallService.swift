@@ -212,7 +212,7 @@ extension CallService {
     }
     
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
-        self.log("[CallService] Request start p2p call with conversation: \(conversation.getConversationName())")
+        self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
         guard let uuid = UUID(uuidString: conversation.conversationId) else {
             alert(error: .invalidUUID(uuid: conversation.conversationId))
             return

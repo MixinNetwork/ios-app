@@ -1058,6 +1058,15 @@ extension CallService: WebRTCClientDelegate {
         return frameKey
     }
     
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String) {
+        guard let call = activeCall as? GroupCall else {
+            return
+        }
+        self.log("[CallService] Add member: \(userId), to: \(call.conversationId), from receiver delegation")
+        membersManager.addMember(with: userId, toConversationWith: call.conversationId)
+        call.reportMemberWithIdDidConnected(userId)
+    }
+    
 }
 
 // MARK: - PKPushRegistryDelegate

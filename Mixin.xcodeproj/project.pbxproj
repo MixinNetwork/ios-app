@@ -124,6 +124,7 @@
 		7B4203F924A3901200490347 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272084952490C269000EE939 /* WebRTC.framework */; };
 		7B4203FA24A3901200490347 /* WebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 272084952490C269000EE939 /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
+		7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B441ADB24CAE1B80067231A /* StreamId.swift */; };
 		7B45A51C2189F28E0008F894 /* ringtone_outgoing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
@@ -962,6 +963,7 @@
 		7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentExpirationHintingMessageCell.swift; sourceTree = "<group>"; };
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
+		7B441ADB24CAE1B80067231A /* StreamId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamId.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ringtone_outgoing.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
@@ -2126,6 +2128,7 @@
 				7BD97DD62179DDD600FAE490 /* IceServer.swift */,
 				7BE0E6562475062D00DCC0D3 /* Vibrator.swift */,
 				7B97124B247EBF9800F5CBE6 /* RingtonePlayer.swift */,
+				7B441ADB24CAE1B80067231A /* StreamId.swift */,
 				7BD97DD42179DD3400FAE490 /* WebRTCClient.swift */,
 				7BF7837A2179D1AF00BECB4B /* Call.swift */,
 				7B4CA8BD249B3F840048E46D /* PeerToPeerCall.swift */,
@@ -4223,6 +4226,7 @@
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
+				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,

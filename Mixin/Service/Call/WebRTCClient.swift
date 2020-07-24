@@ -7,6 +7,7 @@ protocol WebRTCClientDelegate: class {
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidDisconnected(_ client: WebRTCClient)
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String)
 }
 
 class WebRTCClient: NSObject {
@@ -96,7 +97,7 @@ class WebRTCClient: NSObject {
     }
     
     func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String) {
-        let streamId = "\(userId)~\(sessionId)"
+        let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
         if let receiver = rtpReceivers[streamId], let key = key {
             receiver.setFrameDecryptorKey(key)
         }
@@ -149,20 +150,20 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
-        for m in mediaStreams {
-            let userSession = m.streamId.components(separatedBy:"~")
-            guard userSession.count == 2 else {
-                continue
-            }
-            guard userSession[0] != myUserId else {
-                continue
-            }
+        let streamIds = mediaStreams
+            .map(\.streamId)
+            .compactMap(StreamId.init(rawValue:))
+            .filter({ $0.userId != myUserId })
+        for id in streamIds {
             let frameKey = delegate?.webRTCClient(self,
-                                                  senderPublicKeyForUserWith: userSession[0],
-                                                  sessionId: userSession[1])
+                                                  senderPublicKeyForUserWith: id.userId,
+                                                  sessionId: id.sessionId)
             if let frameKey = frameKey {
-                rtpReceivers[m.streamId] = rtpReceiver
+                rtpReceivers[id.rawValue] = rtpReceiver
                 rtpReceiver.setFrameDecryptorKey(frameKey)
+            }
+            queue.async {
+                self.delegate?.webRTCClient(self, didAddReceiverWith: id.userId)
             }
         }
     }

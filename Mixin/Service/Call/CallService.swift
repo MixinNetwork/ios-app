@@ -728,14 +728,23 @@ extension CallService {
                 handle(error: CallError.invalidSdp(sdp: data.data), username: user.fullName)
                 return
             }
-            AudioManager.shared.pause()
-            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
-            pendingAnswerCalls[uuid] = call
-            pendingSDPs[uuid] = sdp
-            beginUnanswerCountDown(for: call)
-            callInterface.reportIncomingCall(call) { (error) in
-                if let error = error {
-                    handle(error: error, username: user.fullName)
+            if !data.quoteMessageId.isEmpty {
+                if let call = activeCall as? PeerToPeerCall, call.uuid == UUID(uuidString: data.quoteMessageId), !call.isOutgoing {
+                    self.log("[CallService] Got restart offer, setting it")
+                    rtcClient.set(remoteSdp: sdp) { (error) in
+                        self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: nil)
+                    }
+                }
+            } else {
+                AudioManager.shared.pause()
+                let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
+                pendingAnswerCalls[uuid] = call
+                pendingSDPs[uuid] = sdp
+                beginUnanswerCountDown(for: call)
+                callInterface.reportIncomingCall(call) { (error) in
+                    if let error = error {
+                        handle(error: error, username: user.fullName)
+                    }
                 }
             }
         }
@@ -1043,6 +1052,34 @@ extension CallService: WebRTCClientDelegate {
         if let call = activeCall as? GroupCall {
             failCurrentCall(sendFailedMessageToRemote: true, error: .clientDisconnected)
             callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+        }
+    }
+    
+    func webRTCClientIceConnectionDidFailed(_ client: WebRTCClient) {
+        self.log("[CallService] RTC IceConnection Failed")
+        guard let call = activeCall as? PeerToPeerCall, call.isOutgoing else {
+            return
+        }
+        rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
+            switch result {
+            case .success(let sdpJson):
+                self.log("[CallService] Sending restart offer")
+                let msg = Message.createWebRTCMessage(messageId: UUID().uuidString.lowercased(),
+                                                      conversationId: call.conversationId,
+                                                      userId: myUserId,
+                                                      category: .WEBRTC_AUDIO_OFFER,
+                                                      content: sdpJson,
+                                                      mediaDuration: nil,
+                                                      status: .SENDING,
+                                                      quoteMessageId: call.uuidString)
+                SendMessageService.shared.sendMessage(message: msg,
+                                                      ownerUser: call.remoteUser,
+                                                      isGroupMessage: false)
+            case .failure(let error):
+                self.log("[CallService] Restart offer generation failed")
+                self.failCurrentCall(sendFailedMessageToRemote: true, error: .networkFailure)
+                self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+            }
         }
     }
     
@@ -1392,7 +1429,7 @@ extension CallService {
             self.showCallingInterface(call: call)
         }
         beginUnanswerCountDown(for: call)
-        rtcClient.offer { result in
+        rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
             switch result {
             case .success(let sdpJson):
                 let msg = Message.createWebRTCMessage(messageId: call.uuidString,
@@ -1423,33 +1460,38 @@ extension CallService {
         }
         self.ringtonePlayer.stop()
         self.rtcClient.set(remoteSdp: sdp) { (error) in
-            if let error = error {
-                self.failCurrentCall(sendFailedMessageToRemote: true,
-                                     error: .setRemoteSdp(error))
-                completion?(false)
-            } else {
-                self.rtcClient.answer(completion: { result in
-                    switch result {
-                    case .success(let sdpJson):
-                        let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                              category: .WEBRTC_AUDIO_ANSWER,
-                                                              content: sdpJson,
-                                                              status: .SENDING,
-                                                              quoteMessageId: call.uuidString)
-                        SendMessageService.shared.sendMessage(message: msg,
-                                                              ownerUser: call.remoteUser,
-                                                              isGroupMessage: false)
-                        if let candidates = self.pendingCandidates.removeValue(forKey: call.uuid) {
-                            candidates.forEach(self.rtcClient.add(remoteCandidate:))
-                        }
-                        completion?(true)
-                    case .failure(let error):
-                        self.failCurrentCall(sendFailedMessageToRemote: true,
-                                             error: error)
-                        completion?(false)
+            self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: completion)
+        }
+    }
+    
+    private func handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(_ call: PeerToPeerCall, error: Error?, completion: ((Bool) -> Void)?) {
+        if let error = error {
+            self.failCurrentCall(sendFailedMessageToRemote: true,
+                                 error: .setRemoteSdp(error))
+            completion?(false)
+        } else {
+            self.rtcClient.answer(completion: { result in
+                switch result {
+                case .success(let sdpJson):
+                    self.log("[CallService] Sending answer")
+                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                          category: .WEBRTC_AUDIO_ANSWER,
+                                                          content: sdpJson,
+                                                          status: .SENDING,
+                                                          quoteMessageId: call.uuidString)
+                    SendMessageService.shared.sendMessage(message: msg,
+                                                          ownerUser: call.remoteUser,
+                                                          isGroupMessage: false)
+                    if let candidates = self.pendingCandidates.removeValue(forKey: call.uuid) {
+                        candidates.forEach(self.rtcClient.add(remoteCandidate:))
                     }
-                })
-            }
+                    completion?(true)
+                case .failure(let error):
+                    self.failCurrentCall(sendFailedMessageToRemote: true,
+                                         error: error)
+                    completion?(false)
+                }
+            })
         }
     }
     
@@ -1498,7 +1540,7 @@ extension CallService {
         let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
         self.log("[CallService] start group call impl framekey: \(frameKey)")
         beginUnanswerCountDown(for: call)
-        rtcClient.offer(key: frameKey) { result in
+        rtcClient.offer(key: frameKey, withIceRestartConstraint: false) { result in
             switch result {
             case .failure(let error):
                 self.log("[CallService] start group call impl got error: \(error)")

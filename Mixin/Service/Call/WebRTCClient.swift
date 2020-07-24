@@ -6,6 +6,7 @@ protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidDisconnected(_ client: WebRTCClient)
+    func webRTCClientIceConnectionDidFailed(_ client: WebRTCClient)
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
     func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String)
 }
@@ -40,9 +41,17 @@ class WebRTCClient: NSObject {
         super.init()
     }
     
-    func offer(key: Data? = nil, completion: @escaping (Result<String, CallError>) -> Void) {
+    func offer(key: Data?, withIceRestartConstraint: Bool, completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded(key: key)
-        let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
+        
+        let mandatoryConstraints: [String: String]
+        if withIceRestartConstraint {
+            mandatoryConstraints = [kRTCMediaConstraintsIceRestart: kRTCMediaConstraintsValueTrue]
+        } else {
+            mandatoryConstraints = [:]
+        }
+        let constraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+        
         peerConnection?.offer(for: constraints) { (sdp, error) in
             if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
@@ -144,9 +153,15 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+        if newState == .failed {
+            queue.async {
+                self.delegate?.webRTCClientIceConnectionDidFailed(self)
+            }
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
+        
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {

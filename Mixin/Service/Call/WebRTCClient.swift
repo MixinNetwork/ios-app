@@ -6,7 +6,7 @@ protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidDisconnected(_ client: WebRTCClient)
-    func webRTCClientIceConnectionDidFailed(_ client: WebRTCClient)
+    func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState)
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
     func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String)
 }
@@ -153,10 +153,8 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        if newState == .failed {
-            queue.async {
-                self.delegate?.webRTCClientIceConnectionDidFailed(self)
-            }
+        queue.async {
+            self.delegate?.webRTCClient(self, didChangeIceConnectionStateTo: newState)
         }
     }
     

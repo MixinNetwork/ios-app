@@ -1055,30 +1055,35 @@ extension CallService: WebRTCClientDelegate {
         }
     }
     
-    func webRTCClientIceConnectionDidFailed(_ client: WebRTCClient) {
-        self.log("[CallService] RTC IceConnection Failed")
-        guard let call = activeCall as? PeerToPeerCall, call.isOutgoing else {
+    func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {
+        self.log("[CallService] RTC IceConnectionState change to: \(newState)")
+        DispatchQueue.main.async {
+            self.viewController?.unstableConnectionLabel.isHidden = newState != .failed
+        }
+        guard newState == .failed else {
             return
         }
-        rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
-            switch result {
-            case .success(let sdpJson):
-                self.log("[CallService] Sending restart offer")
-                let msg = Message.createWebRTCMessage(messageId: UUID().uuidString.lowercased(),
-                                                      conversationId: call.conversationId,
-                                                      userId: myUserId,
-                                                      category: .WEBRTC_AUDIO_OFFER,
-                                                      content: sdpJson,
-                                                      mediaDuration: nil,
-                                                      status: .SENDING,
-                                                      quoteMessageId: call.uuidString)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: call.remoteUser,
-                                                      isGroupMessage: false)
-            case .failure(let error):
-                self.log("[CallService] Restart offer generation failed")
-                self.failCurrentCall(sendFailedMessageToRemote: true, error: .networkFailure)
-                self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+        if let call = activeCall as? PeerToPeerCall, call.isOutgoing {
+            rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
+                switch result {
+                case .success(let sdpJson):
+                    self.log("[CallService] Sending restart offer")
+                    let msg = Message.createWebRTCMessage(messageId: UUID().uuidString.lowercased(),
+                                                          conversationId: call.conversationId,
+                                                          userId: myUserId,
+                                                          category: .WEBRTC_AUDIO_OFFER,
+                                                          content: sdpJson,
+                                                          mediaDuration: nil,
+                                                          status: .SENDING,
+                                                          quoteMessageId: call.uuidString)
+                    SendMessageService.shared.sendMessage(message: msg,
+                                                          ownerUser: call.remoteUser,
+                                                          isGroupMessage: false)
+                case .failure(let error):
+                    self.log("[CallService] Restart offer generation failed: \(error)")
+                    self.failCurrentCall(sendFailedMessageToRemote: true, error: .networkFailure)
+                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
+                }
             }
         }
     }

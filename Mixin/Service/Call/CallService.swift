@@ -1597,7 +1597,9 @@ extension CallService {
             case .failure(let error):
                 self.log("[CallService] start group call impl got error: \(error)")
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
-                self.alert(error: .offerConstruction(error))
+                if call.status != .disconnecting {
+                    self.alert(error: .offerConstruction(error))
+                }
                 completion?(false)
             }
         }
@@ -1645,8 +1647,10 @@ extension CallService {
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
+                if call.status != .disconnecting {
+                    self.alert(error: .setRemoteAnswer(error))
+                }
                 self.close(uuid: call.uuid)
-                self.alert(error: .setRemoteAnswer(error))
                 completion?(false)
             } else {
                 completion?(true)
@@ -1682,9 +1686,8 @@ extension CallService {
                 if let error = error {
                     reporter.report(error: error)
                     self.log("[CallService] subscribe failed to setting sdp: \(error)")
-                    // TODO: An local error happened on subscribing, does retrying like below making sense?
                     self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                        guard self.activeCall == call else {
+                        guard self.activeCall == call, call.status != .disconnecting else {
                             return
                         }
                         self.subscribe(userId: userId, of: call)
@@ -1707,13 +1710,11 @@ extension CallService {
                                            action: .answer(sdp: sdpJson))
                 KrakenMessageRetriever.shared.request(answer, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(answer.debugDescription)")
-                self.log("[CallService] group call answer is sent")
             case .failure(let error):
                 self.log("[CallService] group call answer failed setting sdp: \(error)")
                 reporter.report(error: error)
-                // TODO: An local error happened on subscribing, does retrying like below making sense?
                 self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                    guard self.activeCall == call else {
+                    guard self.activeCall == call, call.status != .disconnecting else {
                         return
                     }
                     self.answer(userId: userId, of: call)

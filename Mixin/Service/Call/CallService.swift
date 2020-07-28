@@ -1590,7 +1590,7 @@ extension CallService {
         }
         self.log("[CallService] start group call impl, framekey: \(frameKey)")
         beginUnanswerCountDown(for: call)
-        rtcClient.offer(key: frameKey, withIceRestartConstraint: false) { result in
+        rtcClient.offer(key: frameKey, withIceRestartConstraint: isRestarting) { result in
             switch result {
             case .success(let sdp):
                 self.publish(sdp: sdp, to: call, isRestarting: isRestarting, completion: completion)

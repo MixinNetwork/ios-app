@@ -85,6 +85,11 @@ class CallService: NSObject {
     private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
     private var listPendingInvitations = [Int: BlazeMessageData]()
     
+    // CallKit identify a call with an *unique* UUID, any duplication will cause undocumented behavior
+    // Since there's no unique id provided by backend, but only one call is allowed per-conversation,
+    // We map conversation id with uuid here
+    private var groupCallUUIDs = [String: UUID]()
+    
     private var window: CallWindow?
     private var viewController: CallViewController?
     
@@ -213,10 +218,6 @@ extension CallService {
     
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
         self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
-        guard let uuid = UUID(uuidString: conversation.conversationId) else {
-            alert(error: .invalidUUID(uuid: conversation.conversationId))
-            return
-        }
         guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
             alert(error: .networkFailure)
             return
@@ -226,7 +227,7 @@ extension CallService {
             members.append(me)
         }
         self.log("[CallService] Making call with members: \(members.map(\.fullName))")
-        let call = GroupCall(uuid: uuid,
+        let call = GroupCall(uuid: UUID(),
                              isOutgoing: true,
                              conversation: conversation,
                              members: members,
@@ -827,9 +828,11 @@ extension CallService {
     private func handlePublishing(data: BlazeMessageData) {
         self.log("[CallService] Got publish from: \(data.userId), conversation: \(data.conversationId)")
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
-        
+        guard let uuid = groupCallUUIDs[data.conversationId] else {
+            return
+        }
         let groupCall: GroupCall?
-        if let call = activeCall as? GroupCall, call.conversationId == data.conversationId {
+        if let call = activeCall as? GroupCall, call.uuid == uuid {
             groupCall = call
             if call.trackId != nil {
                 self.log("[CallService] The call is active with valid track id, subscribe the user: \(data.userId)")
@@ -837,8 +840,8 @@ extension CallService {
             } else {
                 self.log("[CallService] no track id is found. do not subscribe it")
             }
-        } else if let call = pendingAnswerCalls.values.first(where: { $0.conversationId == data.conversationId }) {
-            groupCall = call as? GroupCall
+        } else if let call = pendingAnswerCalls[uuid] as? GroupCall {
+            groupCall = call
         } else {
             groupCall = nil
         }
@@ -854,13 +857,10 @@ extension CallService {
         do {
             DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
             self.log("[CallService] Got Invitation from: \(data.userId)")
-            guard let uuid = UUID(uuidString: data.conversationId) else {
+            guard activeCall?.conversationId != data.conversationId else {
                 return
             }
-            guard activeCall?.uuid != uuid else {
-                return
-            }
-            if let call = pendingAnswerCalls[uuid] as? GroupCall {
+            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall {
                 call.invitersUserId.insert(data.userId)
                 return
             }
@@ -877,12 +877,14 @@ extension CallService {
                 let me = UserItem.createUser(from: account)
                 members.append(me)
             }
+            let uuid = UUID()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
             call.invitersUserId = [data.userId]
+            groupCallUUIDs[conversation.conversationId] = uuid
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -1146,19 +1148,21 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let uuid = UUID(uuidString: conversationId), let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
             guard let members = membersManager.members(inConversationWith: conversationId) else {
                 self.log("[CallService] failed to fetch members from PushKit notification")
                 nativeCallInterface.reportImmediateFailureCall()
                 completion()
                 return
             }
+            let uuid = UUID()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
             call.invitersUserId = [userId]
+            groupCallUUIDs[conversationId] = uuid
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in
@@ -1398,6 +1402,9 @@ extension CallService {
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             activeCall = call
+            if let call = call as? GroupCall {
+                groupCallUUIDs[call.conversationId] = call.uuid
+            }
             callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
                 guard let error = error else {
                     return
@@ -1539,7 +1546,7 @@ extension CallService {
                 } else if let error = error as? APIError, [5002001, 5002002, 5002003].contains(error.code) {
                     completion(.failure(.invalidPeerConnection(error.code)))
                 } else {
-                    completion(.failure(.invalidKrakenResponse))
+                    completion(.failure(.networkFailure))
                 }
             }
         }
@@ -1613,7 +1620,8 @@ extension CallService {
                     self.restartCurrentGroupCall()
                 } else {
                     self.log("[CallService] publish failed for invalid response")
-                    self.failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
+                    self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
+                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                     self.alert(error: error)
                     completion?(false)
                 }

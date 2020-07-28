@@ -21,7 +21,7 @@ target 'Mixin' do
   pod 'Firebase/Performance'
   pod 'Firebase/Crashlytics'
   pod 'SnapKit'
-  pod 'PhoneNumberKit'
+  pod 'PhoneNumberKit', :git => 'https://github.com/the0neyouseek/PhoneNumberKit'
   pod 'RSKImageCropper'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'

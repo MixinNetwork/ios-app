@@ -404,7 +404,7 @@ extension CallService {
                 self.startPeerToPeerCall(call, completion: completion)
                 self.log("[CallService] start p2p call")
             } else if let call = self.activeCall as? GroupCall, call.uuid == uuid, call.status != .disconnecting {
-                self.startGroupCall(call, completion: completion)
+                self.startGroupCall(call, isRestarting: false, completion: completion)
                 self.log("[CallService] start group call")
             } else {
                 self.alert(error: .inconsistentCallStarted)
@@ -429,7 +429,7 @@ extension CallService {
                 self.activeCall = call
                 self.ringtonePlayer.stop()
                 call.status = .connecting
-                self.startGroupCall(call, completion: completion)
+                self.startGroupCall(call, isRestarting: false, completion: completion)
             } else {
                 self.log("[CallService] answer call failed, call: \(self.pendingAnswerCalls[uuid]?.debugDescription)")
             }
@@ -978,20 +978,22 @@ extension CallService: KrakenMessageRetrieverDelegate {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, [401, 403, 5002000, 5002002].contains(error.code) {
-            self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
-            let isRecoverable = [403, 5002002].contains(error.code)
+        if let error = error as? APIError, error.code == 401 {
+            self.log("[CallService] Got 401 when requesting: \(request.debugDescription)")
             let error = CallError.remoteError(error.code)
-            failCurrentCall(sendFailedMessageToRemote: isRecoverable, error: error)
+            failCurrentCall(sendFailedMessageToRemote: false, error: error)
             callInterface.reportCall(uuid: request.callUUID, endedByReason: .failed)
-            if isRecoverable {
-                alert(error: error)
-            }
             return false
+        } else if let error = error as? APIError, [5002001, 5002002, 5002003].contains(error.code) {
+            self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
+            return false
+        } else if let error = error as? APIError, error.code == 5002000 {
+            return false
+        } else {
+            let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
+            self.log("[CallService] got error: \(error), numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
+            return shouldRetry
         }
-        let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
-        self.log("[CallService] numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
-        return shouldRetry
     }
     
 }
@@ -1049,20 +1051,19 @@ extension CallService: WebRTCClientDelegate {
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
-        if let call = activeCall as? GroupCall {
-            failCurrentCall(sendFailedMessageToRemote: true, error: .clientDisconnected)
-            callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-        }
     }
     
     func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {
-        self.log("[CallService] RTC IceConnectionState change to: \(newState)")
+        self.log("[CallService] RTC IceConnectionState change to: \(newState.rawValue)")
         DispatchQueue.main.async {
-            self.viewController?.unstableConnectionLabel.isHidden = newState != .failed
+            UIView.performWithoutAnimation {
+                self.viewController?.unstableConnectionLabel.isHidden = newState != .failed
+            }
         }
         guard newState == .failed else {
             return
         }
+        self.log("[CallService] RTC IceConnectionState change to failed")
         if let call = activeCall as? PeerToPeerCall, call.isOutgoing {
             rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
                 switch result {
@@ -1085,6 +1086,13 @@ extension CallService: WebRTCClientDelegate {
                     self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                 }
             }
+        } else if let call = activeCall as? GroupCall {
+            self.log("[CallService] Restart group call on ice failure, with restarting constraint")
+            startGroupCall(call, isRestarting: true, completion: { success in
+                if !success {
+                    self.restartCurrentGroupCall()
+                }
+            })
         }
     }
     
@@ -1521,7 +1529,6 @@ extension CallService {
                     return
                 }
                 guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
-                    print(data.jsep.base64Decoded())
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
@@ -1529,6 +1536,8 @@ extension CallService {
             case let .failure(error):
                 if let error = error as? APIError, error.code == 5002000 {
                     completion(.failure(.roomFull))
+                } else if let error = error as? APIError, [5002001, 5002002, 5002003].contains(error.code) {
+                    completion(.failure(.invalidPeerConnection(error.code)))
                 } else {
                     completion(.failure(.invalidKrakenResponse))
                 }
@@ -1536,43 +1545,78 @@ extension CallService {
         }
     }
     
-    private func startGroupCall(_ call: GroupCall, completion: ((Bool) -> Void)?) {
-        self.log("[CallService] start group call impl \(call.debugDescription)")
+    // Call this func on backend error
+    private func restartCurrentGroupCall() {
+        guard let call = activeCall as? GroupCall else {
+            return
+        }
+        self.log("[CallService] restart Current GroupCall \(call.debugDescription)")
+        call.frameKey = nil
+        rtcClient.close()
+        pendingTrickles.removeValue(forKey: call.uuid)
+        startGroupCall(call, isRestarting: false) { (success) in
+            if !success {
+                self.log("[CallService] failed to restart \(call.debugDescription), will restart again")
+                self.restartCurrentGroupCall()
+            }
+        }
+    }
+    
+    // Call this func for a new initiated call, or on ICE Connection reports failure
+    private func startGroupCall(_ call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
+        self.log("[CallService] start group call impl \(call.debugDescription), isRestarting: \(isRestarting)")
         DispatchQueue.main.sync {
             self.showCallingInterface(call: call)
         }
-        try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
-        let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
-        self.log("[CallService] start group call impl framekey: \(frameKey)")
+        let frameKey: Data?
+        if isRestarting {
+            if let key = call.frameKey {
+                frameKey = key
+            } else {
+                completion?(false)
+                return
+            }
+        } else {
+            try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
+            frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
+            call.frameKey = frameKey
+        }
+        self.log("[CallService] start group call impl, framekey: \(frameKey)")
         beginUnanswerCountDown(for: call)
         rtcClient.offer(key: frameKey, withIceRestartConstraint: false) { result in
             switch result {
+            case .success(let sdp):
+                self.publish(sdp: sdp, to: call, isRestarting: isRestarting, completion: completion)
             case .failure(let error):
                 self.log("[CallService] start group call impl got error: \(error)")
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
                 self.alert(error: .offerConstruction(error))
                 completion?(false)
-            case .success(let sdp):
-                self.publish(sdp: sdp, to: call, completion: completion)
             }
         }
     }
     
-    private func publish(sdp: String, to call: GroupCall, completion: ((Bool) -> Void)?) {
+    private func publish(sdp: String, to call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
+        let action: KrakenRequest.Action = isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp)
         let publishing = KrakenRequest(callUUID: call.uuid,
                                        conversationId: call.conversationId,
-                                       trackId: nil,
-                                       action: .publish(sdp: sdp))
-        self.log("[CallService] group call publish is sent")
+                                       trackId: call.trackId,
+                                       action: action)
         request(publishing) { (result) in
             switch result {
             case let .success((trackId, sdp)):
                 self.handlePublishingResponse(to: call, trackId: trackId, sdp: sdp, completion: completion)
             case let .failure(error):
-                self.log("[CallService] publish failed for invalid response")
-                self.failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
-                self.alert(error: error)
-                completion?(false)
+                if case let .invalidPeerConnection(code) = error {
+                    completion?(true)
+                    self.log("[CallService] Got invalid peer connection \(code), try to restart")
+                    self.restartCurrentGroupCall()
+                } else {
+                    self.log("[CallService] publish failed for invalid response")
+                    self.failCurrentCall(sendFailedMessageToRemote: true, error: .invalidKrakenResponse)
+                    self.alert(error: error)
+                    completion?(false)
+                }
             }
         }
     }

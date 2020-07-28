@@ -11,6 +11,7 @@ public struct KrakenRequest {
         case end
         case cancel
         case decline(recipientId: String)
+        case restart(sdp: String)
     }
     
     public let callUUID: UUID
@@ -45,6 +46,10 @@ public struct KrakenRequest {
             param.recipientId = id
         case .end:
             param.category = MessageCategory.KRAKEN_END.rawValue
+        case .restart(let sdp):
+            param.category = MessageCategory.KRAKEN_RESTART.rawValue
+            param.jsep = sdp.base64Encoded()
+            assert(trackId != nil)
         }
         return BlazeMessage(params: param, action: BlazeMessageAction.createKraken.rawValue)
     }

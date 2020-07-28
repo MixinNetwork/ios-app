@@ -270,6 +270,7 @@ public enum MessageCategory: String, Decodable {
     case KRAKEN_END
     case KRAKEN_CANCEL
     case KRAKEN_DECLINE
+    case KRAKEN_RESTART
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN

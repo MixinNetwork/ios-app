@@ -14,6 +14,7 @@ class GroupCall: Call {
         "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), invitersUserId: \(invitersUserId), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
+    var frameKey: Data?
     var trackId: String?
     var invitersUserId = Set<String>()
     

@@ -287,6 +287,7 @@
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";
+"chat_voice_record_on_call" = "正在通话中，请挂断当前电话后重试";
 "chat_voice_record_longpress_hint" = "长按说话，松手发送";
 "chat_quote_type_sticker" = "贴纸";
 "chat_quote_type_photo" = "图片";
@@ -363,6 +364,7 @@
 "group_call_tap_to_join" = "点击加入";
 "group_call_selections_reach_limit" = "支持最多%@人同时通话";
 "group_call_room_full" = "房间已满";
+"group_call_bad_network" = "当前通话网络状态不佳";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

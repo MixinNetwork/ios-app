@@ -230,7 +230,11 @@ extension AudioInputViewController {
         case .denied:
             alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         case .granted:
-            startRecording()
+            if CallService.shared.hasCall {
+                alert(R.string.localizable.chat_voice_record_on_call())
+            } else {
+                startRecording()
+            }
         case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
         @unknown default:

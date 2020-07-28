@@ -287,6 +287,7 @@
 "chat_photo_save" = "Save to Camera Roll";
 "chat_file_expired" = "Expired";
 "chat_voice_record_cancel" = "Slide to cancel";
+"chat_voice_record_on_call" = "You are on a call. Try after it was ended";
 "chat_voice_record_longpress_hint" = "Hold to record, release to send.";
 "chat_quote_type_sticker" = "Sticker";
 "chat_quote_type_photo" = "Photo";
@@ -363,6 +364,7 @@
 "group_call_tap_to_join" = "Tap to join";
 "group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
 "group_call_room_full" = "Room is full";
+"group_call_bad_network" = "Connection is unstable";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

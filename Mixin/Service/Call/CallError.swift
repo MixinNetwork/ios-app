@@ -18,6 +18,7 @@ enum CallError: Error {
     
     case invalidKrakenResponse
     case roomFull
+    case invalidPeerConnection(Int)
     case remoteError(Int)
     
     var alertContent: String {

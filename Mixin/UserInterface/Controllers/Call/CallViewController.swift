@@ -11,6 +11,7 @@ class CallViewController: UIViewController {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var groupCallMembersCollectionView: GroupCallMembersCollectionView!
     @IBOutlet weak var groupCallMembersCollectionLayout: GroupCallMembersFlowLayout!
+    @IBOutlet weak var unstableConnectionLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var muteSwitch: CallSwitch!
     @IBOutlet weak var speakerSwitch: CallSwitch!

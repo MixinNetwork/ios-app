@@ -33,6 +33,7 @@
                 <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
                 <outlet property="statusLabel" destination="NCO-o8-q8h" id="dVO-1b-9MK"/>
                 <outlet property="topSafeAreaPlaceholderHeightConstraint" destination="zsV-2R-gz5" id="4Yv-vt-eTb"/>
+                <outlet property="unstableConnectionLabel" destination="bax-vP-wzy" id="feJ-lM-xuU"/>
                 <outlet property="view" destination="bL8-4H-NX8" id="h0m-as-x2y"/>
             </connections>
         </placeholder>
@@ -154,6 +155,15 @@
                                     <constraint firstItem="wM3-bs-IJ8" firstAttribute="centerY" secondItem="t3e-bg-GeY" secondAttribute="centerY" id="xOe-fq-bRD"/>
                                 </constraints>
                             </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connection is unstable" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bax-vP-wzy">
+                                <rect key="frame" x="0.0" y="468" width="375" height="16.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_call_bad_network"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calling..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCO-o8-q8h">
                                 <rect key="frame" x="0.0" y="500.5" width="375" height="16.5"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
@@ -279,10 +289,12 @@
                             <constraint firstItem="qGL-yl-N8J" firstAttribute="top" secondItem="PGR-fd-qeK" secondAttribute="bottom" constant="70" id="24S-vw-Uku"/>
                             <constraint firstAttribute="trailing" secondItem="t3e-bg-GeY" secondAttribute="trailing" id="2qO-Pr-lPb"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="3" id="5eN-AA-37n"/>
+                            <constraint firstItem="bax-vP-wzy" firstAttribute="trailing" secondItem="6Bg-67-Oum" secondAttribute="trailing" id="6Re-pM-gU5"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="eJy-52-qsF" secondAttribute="trailing" constant="20" id="8ip-cT-vNQ"/>
                             <constraint firstItem="02X-1z-xjL" firstAttribute="top" secondItem="mNy-8K-X6S" secondAttribute="bottom" constant="15" id="AGg-G4-PRz"/>
                             <constraint firstItem="t3e-bg-GeY" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="FlA-ya-AFs"/>
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" id="Guz-Ik-vmb"/>
+                            <constraint firstItem="bax-vP-wzy" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" id="Hef-5E-rvS"/>
                             <constraint firstItem="eJy-52-qsF" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="20" id="LQ4-Qy-n6Z"/>
                             <constraint firstItem="02X-1z-xjL" firstAttribute="leading" secondItem="c10-IX-mVV" secondAttribute="trailing" constant="8" id="MHR-b9-Hsu"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="NCO-o8-q8h" secondAttribute="trailing" id="TRc-3d-ucg"/>
@@ -292,6 +304,7 @@
                             <constraint firstItem="mNy-8K-X6S" firstAttribute="top" secondItem="DGO-cU-Jif" secondAttribute="top" id="aZ3-kp-IfS"/>
                             <constraint firstAttribute="trailing" secondItem="mNy-8K-X6S" secondAttribute="trailing" id="aqM-ND-uNY"/>
                             <constraint firstItem="PGR-fd-qeK" firstAttribute="leading" secondItem="6Bg-67-Oum" secondAttribute="leading" constant="30" id="blF-Fl-XMC"/>
+                            <constraint firstItem="NCO-o8-q8h" firstAttribute="top" secondItem="bax-vP-wzy" secondAttribute="bottom" constant="16" id="e0k-fV-EpK"/>
                             <constraint firstItem="6Bg-67-Oum" firstAttribute="trailing" secondItem="PGR-fd-qeK" secondAttribute="trailing" constant="30" id="gJI-bE-Gck"/>
                             <constraint firstItem="NCO-o8-q8h" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" constant="4" id="h7g-t9-pS2"/>
                             <constraint firstItem="CPG-77-gPe" firstAttribute="leading" secondItem="02X-1z-xjL" secondAttribute="trailing" constant="8" id="ir0-KR-Vvj"/>

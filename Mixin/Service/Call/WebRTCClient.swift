@@ -6,7 +6,9 @@ protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidDisconnected(_ client: WebRTCClient)
+    func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState)
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String)
 }
 
 class WebRTCClient: NSObject {
@@ -39,9 +41,17 @@ class WebRTCClient: NSObject {
         super.init()
     }
     
-    func offer(key: Data? = nil, completion: @escaping (Result<String, CallError>) -> Void) {
+    func offer(key: Data?, withIceRestartConstraint: Bool, completion: @escaping (Result<String, CallError>) -> Void) {
         makePeerConnectionIfNeeded(key: key)
-        let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
+        
+        let mandatoryConstraints: [String: String]
+        if withIceRestartConstraint {
+            mandatoryConstraints = [kRTCMediaConstraintsIceRestart: kRTCMediaConstraintsValueTrue]
+        } else {
+            mandatoryConstraints = [:]
+        }
+        let constraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+        
         peerConnection?.offer(for: constraints) { (sdp, error) in
             if let sdp = sdp, let json = sdp.jsonString {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
@@ -96,7 +106,7 @@ class WebRTCClient: NSObject {
     }
     
     func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String) {
-        let streamId = "\(userId)~\(sessionId)"
+        let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
         if let receiver = rtpReceivers[streamId], let key = key {
             receiver.setFrameDecryptorKey(key)
         }
@@ -143,26 +153,30 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+        queue.async {
+            self.delegate?.webRTCClient(self, didChangeIceConnectionStateTo: newState)
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didStartReceivingOn transceiver: RTCRtpTransceiver) {
+        
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
-        for m in mediaStreams {
-            let userSession = m.streamId.components(separatedBy:"~")
-            guard userSession.count == 2 else {
-                continue
-            }
-            guard userSession[0] != myUserId else {
-                continue
-            }
+        let streamIds = mediaStreams
+            .map(\.streamId)
+            .compactMap(StreamId.init(rawValue:))
+            .filter({ $0.userId != myUserId })
+        for id in streamIds {
             let frameKey = delegate?.webRTCClient(self,
-                                                  senderPublicKeyForUserWith: userSession[0],
-                                                  sessionId: userSession[1])
+                                                  senderPublicKeyForUserWith: id.userId,
+                                                  sessionId: id.sessionId)
             if let frameKey = frameKey {
-                rtpReceivers[m.streamId] = rtpReceiver
+                rtpReceivers[id.rawValue] = rtpReceiver
                 rtpReceiver.setFrameDecryptorKey(frameKey)
+            }
+            queue.async {
+                self.delegate?.webRTCClient(self, didAddReceiverWith: id.userId)
             }
         }
     }

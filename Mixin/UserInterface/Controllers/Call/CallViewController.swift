@@ -165,6 +165,7 @@ class CallViewController: UIViewController {
             updateViews(status: call.status)
             call.membersDataSource.collectionView = groupCallMembersCollectionView
         }
+        unstableConnectionLabel.isHidden = true
         muteSwitch.isOn = service.isMuted
         speakerSwitch.isOn = service.usesSpeaker
     }

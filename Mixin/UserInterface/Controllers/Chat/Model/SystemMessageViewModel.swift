@@ -30,7 +30,7 @@ class SystemMessageViewModel: MessageViewModel {
             text = R.string.localizable.group_call_invite(senderName)
         } else if message.category == MessageCategory.KRAKEN_END.rawValue {
             let mediaDuration = Double(message.mediaDuration ?? 0) / millisecondsPerSecond
-            let duration = mediaDurationFormatter.string(from: mediaDuration) ?? "0"
+            let duration = CallDurationFormatter.string(from: mediaDuration) ?? "0"
             text = R.string.localizable.group_call_end_duration(duration)
         } else {
             text = SystemConversationAction.getSystemMessage(actionName: message.actionName,

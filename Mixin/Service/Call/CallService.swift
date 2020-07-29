@@ -45,7 +45,7 @@ class CallService: NSObject {
             return nil
         }
         let duration = abs(connectedDate.timeIntervalSinceNow)
-        return mediaDurationFormatter.string(from: duration)
+        return CallDurationFormatter.string(from: duration)
     }
     
     private(set) lazy var ringtonePlayer = RingtonePlayer()

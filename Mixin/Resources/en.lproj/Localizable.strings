@@ -58,6 +58,7 @@
 "date_format_day" = "hh:mm a";
 "date_format_month" = "E, d MMM";
 "date_format_date" = "MMM dd, yyyy";
+"date_format_week_date" = "E, d MMM yyyy";
 
 // Search
 "search_placeholder_number" = "Search Mixin ID or phone number: ";

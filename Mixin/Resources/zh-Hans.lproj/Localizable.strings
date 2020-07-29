@@ -56,8 +56,9 @@
 "connection_hint_progress" = "正在同步 %@%%";
 
 "date_format_day" = "ahh:mm";
-"date_format_month" = "MM月d日 E";
-"date_format_date" = "yyyy年M月d日";
+"date_format_month" = "MM 月 d 日 E";
+"date_format_date" = "yyyy 年 MM 月 d 日";
+"date_format_week_date" = "yyyy 年 MM 月 d 日 E";
 
 // Search
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";

@@ -1348,7 +1348,7 @@ extension ConversationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ConversationTableView.ReuseId.header.rawValue) as! ConversationDateHeaderView
         if let date = dataSource?.dates[section] {
-            header.label.text = DateFormatter.yyyymmdd.date(from: date)?.timeDayAgo()
+            header.label.text = DateFormatter.yyyymmdd.date(from: date)?.chatTimeAgo()
         }
         return header
     }

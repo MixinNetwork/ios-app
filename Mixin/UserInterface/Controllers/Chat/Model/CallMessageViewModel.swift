@@ -16,7 +16,7 @@ class CallMessageViewModel: IconPrefixedTextMessageViewModel {
             return Localized.CHAT_MESSAGE_CALL_FAILED
         case MessageCategory.WEBRTC_AUDIO_END.rawValue:
             let mediaDuration = Double(message.mediaDuration ?? 0) / millisecondsPerSecond
-            let duration = mediaDurationFormatter.string(from: mediaDuration) ?? "0"
+            let duration = CallDurationFormatter.string(from: mediaDuration) ?? "0"
             return Localized.CHAT_MESSAGE_CALL_DURATION(duration: duration)
         default:
             return ""

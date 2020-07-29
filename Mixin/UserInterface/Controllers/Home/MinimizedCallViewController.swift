@@ -12,6 +12,8 @@ class MinimizedCallViewController: UIViewController {
         }
     }
     
+    private let contentMargin: CGFloat = 20
+    
     private weak var timer: Timer?
     
     private var centerRestriction: CGRect {
@@ -66,11 +68,13 @@ class MinimizedCallViewController: UIViewController {
     }
     
     func placeViewToTopRight() {
+        updateViewSize()
         view.center = CGPoint(x: centerRestriction.maxX,
                               y: centerRestriction.minY)
     }
     
     func stickViewToEdge(center: CGPoint, animated: Bool) {
+        updateViewSize()
         let newCenter: CGPoint = {
             let x = center.x > centerRestriction.midX ? centerRestriction.maxX : centerRestriction.minX
             let y = max(centerRestriction.minY, min(centerRestriction.maxY, center.y))
@@ -99,6 +103,7 @@ class MinimizedCallViewController: UIViewController {
         }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (_) in
             self.statusLabel.text = CallService.shared.connectionDuration
+            self.stickViewToEdge(center: self.view.center, animated: true)
         })
     }
     
@@ -107,6 +112,9 @@ class MinimizedCallViewController: UIViewController {
     }
     
     private func updateLabel(status: Call.Status?) {
+        defer {
+            stickViewToEdge(center: view.center, animated: true)
+        }
         guard let status = status else {
             endUpdatingDuration()
             statusLabel.text = nil
@@ -119,6 +127,12 @@ class MinimizedCallViewController: UIViewController {
             endUpdatingDuration()
             statusLabel.text = status.briefLocalizedDescription
         }
+    }
+    
+    private func updateViewSize() {
+        view.layoutIfNeeded()
+        view.bounds.size = CGSize(width: contentView.frame.width + contentMargin,
+                                  height: contentView.frame.height + contentMargin)
     }
     
 }

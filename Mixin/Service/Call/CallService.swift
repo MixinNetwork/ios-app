@@ -45,7 +45,7 @@ class CallService: NSObject {
             return nil
         }
         let duration = abs(connectedDate.timeIntervalSinceNow)
-        return mediaDurationFormatter.string(from: duration)
+        return CallDurationFormatter.string(from: duration)
     }
     
     private(set) lazy var ringtonePlayer = RingtonePlayer()
@@ -535,6 +535,12 @@ extension CallService {
         }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
+        DispatchQueue.main.async {
+            if UIApplication.shared.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
+        }
     }
     
     func close(uuid: UUID) {
@@ -564,6 +570,12 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
+            DispatchQueue.main.async {
+                if UIApplication.shared.applicationState != .active {
+                    MixinService.isStopProcessMessages = true
+                    WebSocketService.shared.disconnect()
+                }
+            }
         }
     }
     

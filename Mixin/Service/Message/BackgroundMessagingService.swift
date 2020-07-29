@@ -25,7 +25,7 @@ class BackgroundMessagingService {
         end()
         requestTimeout = 3
         taskIdentifier = application.beginBackgroundTask(expirationHandler: {
-            Logger.write(log: "[AppDelegate] \(caller)...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
+            Logger.write(log: "[AppDelegate] \(caller)...hasCall:\(CallService.shared.hasCall)...expirationHandler...\(-startDate.timeIntervalSinceNow)s")
             if application.applicationState != .active && !CallService.shared.hasCall {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()

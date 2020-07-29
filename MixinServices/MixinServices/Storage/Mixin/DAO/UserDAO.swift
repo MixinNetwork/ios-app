@@ -62,6 +62,18 @@ public final class UserDAO {
         return MixinDatabase.shared.getCodable(condition: condition)
     }
     
+    public func getUsers(with ids: [String]) -> [UserItem] {
+        guard !ids.isEmpty else {
+            return []
+        }
+        let wildcards = [String](repeating: "?", count: ids.count).joined(separator: ",")
+        let sql = "\(UserDAO.sqlQueryColumns) WHERE u.user_id in (\(wildcards))"
+        let users: [UserItem] = MixinDatabase.shared.getCodables(sql: sql, values: ids)
+        let pairs = zip(users.map(\.userId), users)
+        let map = [String: UserItem](uniqueKeysWithValues: pairs)
+        return ids.compactMap { map[$0] }
+    }
+    
     public func getUsers(ofAppIds ids: [String]) -> [UserItem] {
         guard ids.count > 0 else {
             return []

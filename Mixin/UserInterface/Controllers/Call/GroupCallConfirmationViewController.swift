@@ -44,13 +44,12 @@ class GroupCallConfirmationViewController: CallViewController {
     
     func loadMembers(with userIds: [String]) {
         DispatchQueue.global().async {
-            let members = userIds.compactMap(UserDAO.shared.getUser(userId:))
+            let members = UserDAO.shared.getUsers(with: userIds)
             DispatchQueue.main.async {
-                guard self.isViewLoaded else {
-                    return
-                }
                 self.members = members
-                self.groupCallMembersCollectionView.reloadData()
+                if self.isViewLoaded {
+                    self.groupCallMembersCollectionView.reloadData()
+                }
             }
         }
     }

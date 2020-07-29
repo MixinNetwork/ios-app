@@ -844,6 +844,7 @@
 "about_privacy_policy" = "Privacy Policy";
 "about_logout_title" = "Do you want to log out?";
 "about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
+"about_app_upgrade" = "Version Update";
 
 "report_title"="Send the conversation log to developers?";
 "report_button"="Send to Developer";

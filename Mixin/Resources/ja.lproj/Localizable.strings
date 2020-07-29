@@ -844,6 +844,7 @@
 "about_privacy_policy" = "プライバシーポリシー";
 "about_logout_title" = "ログアウトしますか?";
 "about_logout_message" = "出金中にあなたに送信されたすべてのメッセージは削除され復元されません!";
+"about_app_upgrade" = "Version Update";
 
 "report_title"="Mixinの開発者へ会話記録を送信しますか?";
 "report_button"="開発者に送信";

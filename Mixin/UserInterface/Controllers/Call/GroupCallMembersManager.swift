@@ -49,7 +49,7 @@ class GroupCallMembersManager {
     func members(inConversationWith id: String) -> [UserItem]? {
         loadMembersIfNeverLoaded(forConversationWith: id)
         if let userIds = members[id] {
-            return userIds.compactMap(UserDAO.shared.getUser(userId:))
+            return UserDAO.shared.getUsers(with: userIds)
         } else {
             return nil
         }

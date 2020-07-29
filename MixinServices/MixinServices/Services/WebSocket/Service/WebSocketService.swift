@@ -166,7 +166,7 @@ public class WebSocketService {
             }
 
             if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut {
-                reporter.report(error: MixinServicesError.requestTimeout("websocket"))
+                reporter.reportErrorToFirebase(MixinServicesError.requestTimeout("websocket"))
                 let category = message.params?.category ?? ""
                 let log = "[WebSocketService][RespondedMessage][\(category)]...semaphore timeout...requestTimeout:\(requestTimeout)"
                 let conversationId = message.params?.conversationId ?? ""

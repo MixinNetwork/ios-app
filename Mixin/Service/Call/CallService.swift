@@ -72,10 +72,8 @@ class CallService: NSObject {
     
     private lazy var rtcClient = WebRTCClient(delegateQueue: queue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
-    private lazy var mixinCallInterface = MixinCallInterface(service: self)
     private lazy var listPendingInvitationCounter = Counter(value: 0)
     
-    private var usesCallKit = false // Access from CallService.queue
     private var pushRegistry: PKPushRegistry?
     
     private var pendingAnswerCalls = [UUID: Call]()
@@ -94,13 +92,10 @@ class CallService: NSObject {
     private var viewController: CallViewController?
     
     // Access from CallService.queue
-    private var callInterface: CallInterface {
-        if usesCallKit {
-            self.log("[CallService] using native call interface")
-        } else {
-            self.log("[CallService] using mixin call interface")
-        }
-        return usesCallKit ? nativeCallInterface : mixinCallInterface
+    private var callInterface: CallInterface!
+    
+    private var isUsingCallKit: Bool {
+        callInterface.isEqual(nativeCallInterface)
     }
     
     override init() {
@@ -109,10 +104,7 @@ class CallService: NSObject {
         rtcClient.delegate = self
         updateCallKitAvailability()
         KrakenMessageRetriever.shared.delegate = self
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(audioSessionRouteChange),
-                                               name: AVAudioSession.routeChangeNotification,
-                                               object: nil)
+        RTCAudioSession.sharedInstance().add(self)
     }
     
     func registerForPushKitNotificationsIfAvailable() {
@@ -120,7 +112,7 @@ class CallService: NSObject {
             guard self.pushRegistry == nil else {
                 return
             }
-            guard self.usesCallKit else {
+            guard self.isUsingCallKit else {
                 AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
                 return
             }
@@ -169,6 +161,10 @@ class CallService: NSObject {
         } else {
             return false
         }
+    }
+    
+    func hasCall(with uuid: UUID) -> Bool {
+        activeOrPendingAnswerCall(with: uuid) != nil
     }
     
     func minimizeIfThereIsAnActiveCall() {
@@ -532,7 +528,7 @@ extension CallService {
         }
         isMuted = false
         usesSpeaker = false
-        if !usesCallKit {
+        if !isUsingCallKit {
             RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                 RTCAudioSession.sharedInstance().isAudioEnabled = false
             }
@@ -561,7 +557,7 @@ extension CallService {
             }
             isMuted = false
             usesSpeaker = false
-            if !usesCallKit {
+            if !isUsingCallKit {
                 RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                     RTCAudioSession.sharedInstance().isAudioEnabled = false
                 }
@@ -1044,7 +1040,7 @@ extension CallService: WebRTCClientDelegate {
         }
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         call.status = .connected
-        if !usesCallKit {
+        if !isUsingCallKit {
             RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                 RTCAudioSession.sharedInstance().isAudioEnabled = true
             }
@@ -1148,7 +1144,7 @@ extension CallService: PKPushRegistryDelegate {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
         }
-        if usesCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+        if isUsingCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
             guard let members = membersManager.members(inConversationWith: conversationId) else {
                 self.log("[CallService] failed to fetch members from PushKit notification")
                 nativeCallInterface.reportImmediateFailureCall()
@@ -1169,7 +1165,7 @@ extension CallService: PKPushRegistryDelegate {
                 completion()
             }
             self.log("[CallService] report incoming group call from PushKit notification: \(call.debugDescription)")
-        } else if usesCallKit, name.isEmpty, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
+        } else if isUsingCallKit, name.isEmpty, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -1189,6 +1185,25 @@ extension CallService: PKPushRegistryDelegate {
             return
         }
         AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
+    }
+    
+}
+
+// MARK: - RTCAudioSessionDelegate
+extension CallService: RTCAudioSessionDelegate {
+    
+    func audioSessionDidBeginInterruption(_ session: RTCAudioSession) {
+        if !isUsingCallKit {
+            requestEndCall()
+        }
+    }
+    
+    func audioSessionDidChangeRoute(_ session: RTCAudioSession, reason: AVAudioSession.RouteChangeReason, previousRoute: AVAudioSessionRouteDescription) {
+        let deviceChangedReasons: [AVAudioSession.RouteChangeReason] = [.newDeviceAvailable, .oldDeviceUnavailable]
+        let isDeviceChanged = deviceChangedReasons.contains(reason)
+        if isDeviceChanged {
+            updateAudioSessionConfiguration()
+        }
     }
     
 }
@@ -1259,57 +1274,54 @@ extension CallService {
     }
     
     private func updateCallKitAvailability() {
-        usesCallKit = !isMainlandChina && AVAudioSession.sharedInstance().recordPermission == .granted
+        let usesCallKit = !isMainlandChina
+            && AVAudioSession.sharedInstance().recordPermission == .granted
+        if usesCallKit {
+            callInterface = nativeCallInterface
+        } else {
+            callInterface = MixinCallInterface(service: self)
+        }
     }
     
     private func activeOrPendingAnswerCall(with uuid: UUID) -> Call? {
         if let call = activeCall, call.uuid == uuid {
             return call
-        }
-        return pendingAnswerCalls[uuid]
-    }
-    
-    @objc private func audioSessionRouteChange(_ notification: Notification) {
-        guard let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? Int else {
-            return
-        }
-        let isDeviceChanged = reason == kAudioSessionRouteChangeReason_NewDeviceAvailable
-            || reason == kAudioSessionRouteChangeReason_OldDeviceUnavailable
-        if isDeviceChanged {
-            updateAudioSessionConfiguration()
+        } else {
+            return pendingAnswerCalls[uuid]
         }
     }
     
     private func updateAudioSessionConfiguration() {
-        let session = RTCAudioSession.sharedInstance()
-        
-        let portTypes = session.currentRoute.outputs.map(\.portType)
-        let builtInPortTypes: Set<AVAudioSession.Port> = [.builtInReceiver, .builtInSpeaker]
-        let outputContainsBuiltInDevices = portTypes.contains(where: builtInPortTypes.contains)
-        
-        let category = AVAudioSession.Category.playAndRecord.rawValue
-        let options: AVAudioSession.CategoryOptions = {
-            // Without the option of duckOthers, speaker button in system calling interface provided
-            // by CallKit will soon becomes off after turning on
-            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-            // Every post in the link above👆 is totally gibberish. A default mode gloss over the
-            // issue but mess it up when it comes to AirPods
-            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
-            if self.usesSpeaker {
-                options.insert(.defaultToSpeaker)
-            }
-            return options
-        }()
-        
-        let mode = AVAudioSession.Mode.voiceChat.rawValue
-        let audioPort: AVAudioSession.PortOverride = self.usesSpeaker ? .speaker : .none
-        
-        let config = RTCAudioSessionConfiguration()
-        config.category = category
-        config.categoryOptions = options
-        config.mode = mode
-        
+        let usesSpeaker = self.usesSpeaker
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+            let session = RTCAudioSession.sharedInstance()
+            
+            let portTypes = session.currentRoute.outputs.map(\.portType)
+            let builtInPortTypes: Set<AVAudioSession.Port> = [.builtInReceiver, .builtInSpeaker]
+            let outputContainsBuiltInDevices = portTypes.contains(where: builtInPortTypes.contains)
+            
+            let category = AVAudioSession.Category.playAndRecord.rawValue
+            let options: AVAudioSession.CategoryOptions = {
+                // Without the option of duckOthers, speaker button in system calling interface provided
+                // by CallKit will soon becomes off after turning on
+                // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+                // Every post in the link above👆 is totally gibberish. A default mode gloss over the
+                // issue but mess it up when it comes to AirPods
+                var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
+                if self.usesSpeaker {
+                    options.insert(.defaultToSpeaker)
+                }
+                return options
+            }()
+            
+            let mode = AVAudioSession.Mode.voiceChat.rawValue
+            let audioPort: AVAudioSession.PortOverride = usesSpeaker ? .speaker : .none
+            
+            let config = RTCAudioSessionConfiguration()
+            config.category = category
+            config.categoryOptions = options
+            config.mode = mode
+            
             session.lockForConfiguration()
             defer {
                 session.unlockForConfiguration()
@@ -1597,7 +1609,9 @@ extension CallService {
             case .failure(let error):
                 self.log("[CallService] start group call impl got error: \(error)")
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
-                self.alert(error: .offerConstruction(error))
+                if call.status != .disconnecting {
+                    self.alert(error: .offerConstruction(error))
+                }
                 completion?(false)
             }
         }
@@ -1645,8 +1659,10 @@ extension CallService {
                                         action: .end)
                 KrakenMessageRetriever.shared.request(end, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
+                if call.status != .disconnecting {
+                    self.alert(error: .setRemoteAnswer(error))
+                }
                 self.close(uuid: call.uuid)
-                self.alert(error: .setRemoteAnswer(error))
                 completion?(false)
             } else {
                 completion?(true)
@@ -1682,9 +1698,8 @@ extension CallService {
                 if let error = error {
                     reporter.report(error: error)
                     self.log("[CallService] subscribe failed to setting sdp: \(error)")
-                    // TODO: An local error happened on subscribing, does retrying like below making sense?
                     self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                        guard self.activeCall == call else {
+                        guard self.activeCall == call, call.status != .disconnecting else {
                             return
                         }
                         self.subscribe(userId: userId, of: call)
@@ -1707,13 +1722,11 @@ extension CallService {
                                            action: .answer(sdp: sdpJson))
                 KrakenMessageRetriever.shared.request(answer, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(answer.debugDescription)")
-                self.log("[CallService] group call answer is sent")
             case .failure(let error):
                 self.log("[CallService] group call answer failed setting sdp: \(error)")
                 reporter.report(error: error)
-                // TODO: An local error happened on subscribing, does retrying like below making sense?
                 self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                    guard self.activeCall == call else {
+                    guard self.activeCall == call, call.status != .disconnecting else {
                         return
                     }
                     self.answer(userId: userId, of: call)

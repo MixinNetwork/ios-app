@@ -654,6 +654,8 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
                     AudioManager.shared.pause()
+                } else if CallService.shared.hasCall {
+                    alert(R.string.localizable.chat_voice_record_on_call())
                 } else {
                     (cell as? AudioMessageCell)?.updateUnreadStyle()
                     AudioManager.shared.play(message: message)

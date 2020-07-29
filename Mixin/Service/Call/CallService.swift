@@ -535,6 +535,12 @@ extension CallService {
         }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
+        DispatchQueue.main.async {
+            if UIApplication.shared.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
+        }
     }
     
     func close(uuid: UUID) {
@@ -564,6 +570,12 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
+            DispatchQueue.main.async {
+                if UIApplication.shared.applicationState != .active {
+                    MixinService.isStopProcessMessages = true
+                    WebSocketService.shared.disconnect()
+                }
+            }
         }
     }
     

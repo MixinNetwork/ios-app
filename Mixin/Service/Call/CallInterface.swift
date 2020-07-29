@@ -3,7 +3,7 @@ import CallKit
 
 typealias CallInterfaceCompletion = (Error?) -> Void
 
-protocol CallInterface {
+protocol CallInterface: NSObjectProtocol {
     
     func requestStartCall(uuid: UUID, handle: CXHandle, playOutgoingRingtone: Bool, completion: @escaping CallInterfaceCompletion)
     func requestAnswerCall(uuid: UUID)

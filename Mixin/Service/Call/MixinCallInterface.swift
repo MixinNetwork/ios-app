@@ -5,7 +5,7 @@ import CallKit
 import WebRTC
 import MixinServices
 
-class MixinCallInterface {
+class MixinCallInterface: NSObject {
     
     private let callObserver = CXCallObserver()
     
@@ -17,6 +17,8 @@ class MixinCallInterface {
     
     required init(service: CallService) {
         self.service = service
+        super.init()
+        self.callObserver.setDelegate(self, queue: service.queue)
     }
     
 }
@@ -137,6 +139,16 @@ extension MixinCallInterface: CallInterface {
     
     func reportIncomingCall(uuid: UUID, connectedAtDate date: Date) {
         
+    }
+    
+}
+
+extension MixinCallInterface: CXCallObserverDelegate {
+    
+    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+        if call.hasConnected, !service.hasCall(with: call.uuid) {
+            service.requestEndCall()
+        }
     }
     
 }

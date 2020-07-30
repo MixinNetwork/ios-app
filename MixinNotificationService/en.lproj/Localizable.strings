@@ -42,6 +42,7 @@
 "alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_group_post_message" = "%@ send a post";
 "alert_key_group_location_message" = "%@ send a location";
+"alert_key_group_audio_invite_message" = "%@ invites you to a voice call";
 
 "toast_api_error_connection_timeout" = "Network connection timeout";
 "toast_operation_failed" = "The operation failed, please try again later";

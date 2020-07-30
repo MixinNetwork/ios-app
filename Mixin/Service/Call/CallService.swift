@@ -536,7 +536,7 @@ extension CallService {
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
         DispatchQueue.main.async {
-            if UIApplication.shared.applicationState != .active {
+            if UIApplication.shared.applicationState == .background {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }
@@ -571,7 +571,7 @@ extension CallService {
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             DispatchQueue.main.async {
-                if UIApplication.shared.applicationState != .active {
+                if UIApplication.shared.applicationState == .background {
                     MixinService.isStopProcessMessages = true
                     WebSocketService.shared.disconnect()
                 }

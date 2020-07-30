@@ -158,7 +158,7 @@ class CallViewController: UIViewController {
             updateViews(status: call.status)
         } else if let call = call as? GroupCall {
             nameLabel.text = call.conversationName
-            inviteButton.isHidden = false
+            inviteButton.isHidden = call.status != .connected
             inviteButton.isEnabled = call.membersDataSource.members.count < GroupCall.maxNumberOfMembers
             peerToPeerCallRemoteUserStackView.isHidden = true
             groupCallMembersCollectionView.isHidden = false
@@ -288,16 +288,19 @@ extension CallViewController {
         switch status {
         case .incoming:
             minimizeButton.isHidden = true
+            inviteButton.isHidden = true
             setFunctionSwitchesHidden(true)
             setAcceptButtonHidden(false)
             setConnectionButtonsEnabled(true)
         case .outgoing:
             minimizeButton.isHidden = false
+            inviteButton.isHidden = true
             setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             minimizeButton.isHidden = false
+            inviteButton.isHidden = true
             UIView.animate(withDuration: animationDuration) {
                 self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
@@ -306,6 +309,7 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
+            inviteButton.isHidden = false
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)

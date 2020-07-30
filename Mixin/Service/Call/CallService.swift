@@ -1778,7 +1778,7 @@ extension CallService {
                     self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
                 }
             } else if let userId = userId, !userId.isEmpty {
-                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
+                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
                 let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)

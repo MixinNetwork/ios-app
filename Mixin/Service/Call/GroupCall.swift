@@ -10,8 +10,8 @@ class GroupCall: Call {
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
-    override var debugDescription: String {
-        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), trackId: \(trackId ?? "(null)"), invitersUserId: \(invitersUserId), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+    override var description: String {
+        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), invitersUserId: \(invitersUserId), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
     var frameKey: Data?

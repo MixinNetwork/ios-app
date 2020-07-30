@@ -31,6 +31,7 @@ public class KrakenMessageRetriever {
             return peers
         } catch let error as APIError where error.code == 20140 {
             SendMessageService.shared.syncConversation(conversationId: id)
+            try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: id)
             return requestPeers(forConversationWith: id)
         } catch {
             return nil
@@ -59,6 +60,7 @@ public class KrakenMessageRetriever {
             } catch let error as APIError where error.code == 20140 {
                 if let conversationId = blazeMessage.params?.conversationId {
                     SendMessageService.shared.syncConversation(conversationId: conversationId)
+                    try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
                     self.request(request, completion: completion)
                 } else {
                     completion?(.failure(MixinServicesError.missingConversationId))

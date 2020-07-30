@@ -9,6 +9,10 @@ class PeerToPeerCall: Call {
     var remoteUser: UserItem?
     var hasReceivedRemoteAnswer = false
     
+    override var description: String {
+        "<PeerToPeerCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), remoteUsername: \(remoteUsername), hasReceivedRemoteAnswer: \(hasReceivedRemoteAnswer))>"
+    }
+    
     init(uuid: UUID, isOutgoing: Bool, remoteUserId: String, remoteUsername: String) {
         self.remoteUserId = remoteUserId
         self.remoteUsername = remoteUsername

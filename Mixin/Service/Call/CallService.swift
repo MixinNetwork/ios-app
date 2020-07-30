@@ -536,7 +536,7 @@ extension CallService {
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
         DispatchQueue.main.async {
-            if UIApplication.shared.applicationState != .active {
+            if UIApplication.shared.applicationState == .background {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }
@@ -571,7 +571,7 @@ extension CallService {
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
             DispatchQueue.main.async {
-                if UIApplication.shared.applicationState != .active {
+                if UIApplication.shared.applicationState == .background {
                     MixinService.isStopProcessMessages = true
                     WebSocketService.shared.disconnect()
                 }
@@ -1038,38 +1038,47 @@ extension CallService: WebRTCClientDelegate {
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
-        guard let call = activeCall, call.connectedDate == nil else {
-            self.log("[CallService] RTC connected, activeCall: \(activeCall)")
+        guard let call = activeCall else {
             return
         }
         self.log("[CallService] RTC connected, reporting with: \(call.debugDescription)")
-        let date = Date()
-        call.connectedDate = date
-        if call.isOutgoing {
-            callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
-        } else {
-            callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
+        if call.connectedDate == nil {
+            let date = Date()
+            call.connectedDate = date
+            if call.isOutgoing {
+                callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
+            } else {
+                callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
+            }
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            call.status = .connected
+            if !isUsingCallKit {
+                RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                    RTCAudioSession.sharedInstance().isAudioEnabled = true
+                }
+            }
         }
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-        call.status = .connected
-        if !isUsingCallKit {
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                RTCAudioSession.sharedInstance().isAudioEnabled = true
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.viewController?.unstableConnectionLabel.isHidden = true
             }
         }
     }
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
+        guard let call = activeCall, call.status == .connected else {
+            return
+        }
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.viewController?.unstableConnectionLabel.isHidden = false
+            }
+        }
     }
     
     func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {
         self.log("[CallService] RTC IceConnectionState change to: \(newState.rawValue)")
-        DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.viewController?.unstableConnectionLabel.isHidden = newState != .failed
-            }
-        }
         guard newState == .failed else {
             return
         }
@@ -1157,11 +1166,12 @@ extension CallService: PKPushRegistryDelegate {
             WebSocketService.shared.connectIfNeeded()
         }
         if isUsingCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            guard let members = membersManager.members(inConversationWith: conversationId) else {
-                self.log("[CallService] failed to fetch members from PushKit notification")
-                nativeCallInterface.reportImmediateFailureCall()
-                completion()
-                return
+            let members: [UserItem]
+            if let account = LoginManager.shared.account {
+                let me = UserItem.createUser(from: account)
+                members = [me]
+            } else {
+                members = []
             }
             let uuid = UUID()
             let call = GroupCall(uuid: uuid,
@@ -1769,7 +1779,7 @@ extension CallService {
                     self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
                 }
             } else if let userId = userId, !userId.isEmpty {
-                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
+                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
                 let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)

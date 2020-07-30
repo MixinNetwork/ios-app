@@ -836,6 +836,7 @@
 "alert_key_group_audio_message" = "%@が音声を送信しました";
 "alert_key_group_post_message" = "%@が投稿を送信しました";
 "alert_key_group_location_message" = "%@が位置情報を送信しました";
+"alert_key_group_audio_invite_message" = "%@が通話に招待されました";
 
 // About
 "about_twitter" = "Twitterをフォロー";

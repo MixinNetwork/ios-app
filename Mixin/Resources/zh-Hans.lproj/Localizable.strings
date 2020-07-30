@@ -837,6 +837,7 @@
 "alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_group_post_message" = "%@发来了一篇文章";
 "alert_key_group_location_message" = "%@发来一处位置";
+"alert_key_group_audio_invite_message" = "%@邀请你进行语音通话";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

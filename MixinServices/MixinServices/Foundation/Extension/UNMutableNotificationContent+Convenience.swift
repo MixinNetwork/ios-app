@@ -98,6 +98,8 @@ public extension UNMutableNotificationContent {
             } else {
                 return Localized.ALERT_KEY_CONTACT_LOCATION_MESSAGE
             }
+        } else if message.category.hasPrefix("KRAKEN_") {
+            return Localized.ALERT_KEY_GROUP_AUDIO_INVITE_MESSAGE(fullname: message.userFullName)
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:

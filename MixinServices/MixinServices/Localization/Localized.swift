@@ -67,6 +67,9 @@ public class Localized {
     public static func ALERT_KEY_GROUP_LOCATION_MESSAGE(fullname: String) -> String {
         return localized("alert_key_group_location_message", arguments: [fullname])
     }
+    public static func ALERT_KEY_GROUP_AUDIO_INVITE_MESSAGE(fullname: String) -> String {
+        return localized("alert_key_group_audio_invite_message", arguments: [fullname])
+    }
     
     public static let TOAST_API_ERROR_CONNECTION_TIMEOUT = localized("toast_api_error_connection_timeout")
     public static let TOAST_OPERATION_FAILED = localized("toast_operation_failed")

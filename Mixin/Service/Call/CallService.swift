@@ -1166,11 +1166,12 @@ extension CallService: PKPushRegistryDelegate {
             WebSocketService.shared.connectIfNeeded()
         }
         if isUsingCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            guard let members = membersManager.members(inConversationWith: conversationId) else {
-                self.log("[CallService] failed to fetch members from PushKit notification")
-                nativeCallInterface.reportImmediateFailureCall()
-                completion()
-                return
+            let members: [UserItem]
+            if let account = LoginManager.shared.account {
+                let me = UserItem.createUser(from: account)
+                members = [me]
+            } else {
+                members = []
             }
             let uuid = UUID()
             let call = GroupCall(uuid: uuid,

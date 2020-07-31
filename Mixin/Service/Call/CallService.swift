@@ -420,6 +420,9 @@ extension CallService {
                 self.pendingSDPs.removeValue(forKey: uuid)
                 self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
             } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall, call.status != .disconnecting {
+                DispatchQueue.main.sync {
+                    _ = self.handledUUIDs.insert(uuid)
+                }
                 self.log("[CallService] answer group call: \(call.debugDescription)")
                 call.timer?.invalidate()
                 self.pendingAnswerCalls.removeValue(forKey: uuid)
@@ -460,6 +463,9 @@ extension CallService {
                                                     isUserInitiated: true,
                                                     category: category)
                 } else if let call = call as? GroupCall {
+                    DispatchQueue.main.sync {
+                        _ = self.handledUUIDs.insert(uuid)
+                    }
                     if callStatusWasIncoming, !call.invitersUserId.isEmpty {
                         for userId in call.invitersUserId {
                             let declining = KrakenRequest(callUUID: call.uuid,
@@ -872,6 +878,16 @@ extension CallService {
                 call.invitersUserId.insert(data.userId)
                 return
             }
+            let uuid = UUID(uuidString: data.messageId) ?? UUID()
+            let isUUIDHandled = DispatchQueue.main.sync {
+                self.handledUUIDs.contains(uuid)
+            }
+            guard !isUUIDHandled else {
+                // TODO: The only reason this UUID is already handled is that the user had pick accept/decline
+                // from the CallKit's calling interface. Reporting incoming call will be confusing to user.
+                // But I think this could be managed with an invitation message in the database
+                return
+            }
             guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
                 self.log("[CallService] no conversation: \(data.conversationId)")
                 return
@@ -885,7 +901,6 @@ extension CallService {
                 let me = UserItem.createUser(from: account)
                 members.append(me)
             }
-            let uuid = UUID()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
@@ -1161,6 +1176,11 @@ extension CallService: PKPushRegistryDelegate {
             completion()
             return
         }
+        guard let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId) else {
+            nativeCallInterface.reportImmediateFailureCall()
+            completion()
+            return
+        }
         DispatchQueue.main.async {
             self.beginAutoCancellingBackgroundTaskIfNotActive()
             MixinService.isStopProcessMessages = false
@@ -1174,7 +1194,6 @@ extension CallService: PKPushRegistryDelegate {
             } else {
                 members = []
             }
-            let uuid = UUID()
             let call = GroupCall(uuid: uuid,
                                  isOutgoing: false,
                                  conversation: conversation,
@@ -1188,7 +1207,7 @@ extension CallService: PKPushRegistryDelegate {
                 completion()
             }
             self.log("[CallService] report incoming group call from PushKit notification: \(call.debugDescription)")
-        } else if isUsingCallKit, name.isEmpty, let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId), let username = payload.dictionaryPayload["full_name"] as? String {
+        } else if isUsingCallKit, name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String {
             let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)

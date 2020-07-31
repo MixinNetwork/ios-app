@@ -1057,6 +1057,7 @@ extension CallService: WebRTCClientDelegate {
                     RTCAudioSession.sharedInstance().isAudioEnabled = true
                 }
             }
+            updateAudioSessionConfiguration()
         }
         DispatchQueue.main.async {
             UIView.performWithoutAnimation {

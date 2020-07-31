@@ -1711,24 +1711,38 @@ extension CallService {
                                         action: .subscribe)
         self.log("[CallService] subscribe is sent")
         request(subscribing) { (result) in
-            guard case let .success((_, sdp)) = result, sdp.type == .offer else {
-                self.log("[CallService] subscribe impl ends for invalid response")
-                return
-            }
-            self.log("[CallService] setting sdp from subscribe response")
-            self.rtcClient.set(remoteSdp: sdp) { (error) in
-                if let error = error {
-                    reporter.report(error: error)
-                    self.log("[CallService] subscribe failed to setting sdp: \(error)")
-                    self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                        guard self.activeCall == call, call.status != .disconnecting else {
-                            return
+            switch result {
+            case let .success((_, sdp)) where sdp.type == .offer:
+                self.log("[CallService] setting sdp from subscribe response")
+                self.rtcClient.set(remoteSdp: sdp) { (error) in
+                    if let error = error {
+                        reporter.report(error: error)
+                        self.log("[CallService] subscribe failed to setting sdp: \(error)")
+                        self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
+                            guard self.activeCall == call, call.status != .disconnecting else {
+                                return
+                            }
+                            self.subscribe(userId: userId, of: call)
                         }
-                        self.subscribe(userId: userId, of: call)
+                    } else {
+                        self.log("[CallService] successfully set sdp from subscribe response")
+                        self.answer(userId: userId, of: call)
                     }
-                } else {
-                    self.log("[CallService] successfully set sdp from subscribe response")
-                    self.answer(userId: userId, of: call)
+                }
+            case .success:
+                self.log("[CallService] dropping subscribing result for non-offer sdp")
+            case .failure(let error):
+                switch error {
+                case .invalidKrakenResponse:
+                    self.log("[CallService] dropping subscribing result for invalid response")
+                case .invalidPeerConnection:
+                    self.log("[CallService] dropping subscribing result and restart the call")
+                    self.restartCurrentGroupCall()
+                default:
+                    self.log("[CallService] subscribing result reports \(error)")
+                    self.alert(error: error)
+                    self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
+                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                 }
             }
         }

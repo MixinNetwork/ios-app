@@ -166,26 +166,24 @@ extension BaseAPI {
             }
         }
 
-        if case let .failure(error) = result {
-            if error.code == 401 {
-                if let serverTime = Double(responseServerTime), serverTime > 0 {
-                    let clientTime = Date().timeIntervalSince1970
-                    if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                        return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
-                    } else {
-                        if abs(serverTime / 1000000000 - clientTime) > 300 {
-                            AppGroupUserDefaults.Account.isClockSkewed = true
-                            DispatchQueue.main.async {
-                                WebSocketService.shared.disconnect()
-                                NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
-                            }
-                            return result
+        if case let .failure(error) = result, error.code == 401 {
+            if let serverTime = Double(responseServerTime), serverTime > 0 {
+                let clientTime = Date().timeIntervalSince1970
+                if clientTime - requestTime.timeIntervalSince1970 > 60 {
+                    return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
+                } else {
+                    if abs(serverTime / 1000000000 - clientTime) > 300 {
+                        AppGroupUserDefaults.Account.isClockSkewed = true
+                        DispatchQueue.main.async {
+                            WebSocketService.shared.disconnect()
+                            NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                         }
+                        return result
                     }
                 }
-                reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
-                LoginManager.shared.logout(from: "SyncRequest")
             }
+            reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
+            LoginManager.shared.logout(from: "SyncRequest")
         }
         
         return result

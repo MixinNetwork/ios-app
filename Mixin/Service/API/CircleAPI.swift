@@ -30,42 +30,40 @@ final class CircleAPI: MixinAPI {
         }
     }
     
-    static let shared = CircleAPI()
-
-    func circles() -> MixinAPI.Result<[CircleResponse]> {
+    static func circles() -> MixinAPI.Result<[CircleResponse]> {
         return request(method: .get, url: Url.circles)
     }
 
-    func circleConversations(circleId: String, offset: String?, limit: Int) -> MixinAPI.Result<[CircleConversation]> {
+    static func circleConversations(circleId: String, offset: String?, limit: Int) -> MixinAPI.Result<[CircleConversation]> {
         return request(method: .get, url: Url.conversations(id: circleId, offset: offset, limit: limit))
     }
 
-    func create(name: String, completion: @escaping (MixinAPI.Result<CircleResponse>) -> Void) {
+    static func create(name: String, completion: @escaping (MixinAPI.Result<CircleResponse>) -> Void) {
         let param = ["name": name]
         request(method: .post, url: Url.circles, parameters: param, completion: completion)
     }
     
-    func update(id: String, name: String, completion: @escaping (MixinAPI.Result<CircleResponse>) -> Void) {
+    static func update(id: String, name: String, completion: @escaping (MixinAPI.Result<CircleResponse>) -> Void) {
         let param = ["name": name]
         request(method: .post, url: Url.update(id: id), parameters: param, completion: completion)
     }
 
-    func updateCircle(of id: String, requests: [CircleConversationRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
+    static func updateCircle(of id: String, requests: [CircleConversationRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
         let params = requests.map(\.jsonObject).toParameters()
         request(method: .post, url: Url.conversations(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func updateCircles(forConversationWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
+    static func updateCircles(forConversationWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
         let params = requests.map(\.jsonObject).toParameters()
         request(method: .post, url: Url.updateCircleForConversation(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func updateCircles(forUserWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
+    static func updateCircles(forUserWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
         let params = requests.map(\.jsonObject).toParameters()
         request(method: .post, url: Url.updateCircleForUser(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    func delete(id: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+    static func delete(id: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         request(method: .post, url: Url.delete(id: id), completion: completion)
     }
     

@@ -112,7 +112,7 @@ extension HomeNavigationController {
                 return
             }
 
-            AccountAPI.shared.updateSession(deviceCheckToken: token)
+            AccountAPI.updateSession(deviceCheckToken: token)
         }
     }
     

@@ -40,7 +40,7 @@ class ContactViewController: UITableViewController {
         reloadContacts()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadContacts), name: .ContactsDidChange, object: nil)
-        ContactAPI.shared.syncContacts()
+        ContactAPI.syncContacts()
         
     }
     
@@ -342,10 +342,10 @@ extension ContactViewController {
                     self.tableView.reloadData()
                 }
                 AppGroupUserDefaults.User.autoUploadsContacts = true
-                PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
+                PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
                     switch result {
                     case .success:
-                        ContactAPI.shared.syncContacts()
+                        ContactAPI.syncContacts()
                     case .failure:
                         break
                     }

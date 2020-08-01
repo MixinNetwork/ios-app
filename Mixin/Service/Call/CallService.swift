@@ -113,14 +113,14 @@ class CallService: NSObject {
                 return
             }
             guard self.isUsingCallKit else {
-                AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
+                AccountAPI.updateSession(voipToken: voipTokenRemove)
                 return
             }
             let registry = PKPushRegistry(queue: self.queue)
             registry.desiredPushTypes = [.voIP]
             registry.delegate = self
             if let token = registry.pushToken(for: .voIP)?.toHexString() {
-                AccountAPI.shared.updateSession(voipToken: token)
+                AccountAPI.updateSession(voipToken: token)
             }
             self.pushRegistry = registry
         }
@@ -1172,7 +1172,7 @@ extension CallService: PKPushRegistryDelegate {
             return
         }
         let token = pushCredentials.token.toHexString()
-        AccountAPI.shared.updateSession(voipToken: token)
+        AccountAPI.updateSession(voipToken: token)
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
@@ -1238,7 +1238,7 @@ extension CallService: PKPushRegistryDelegate {
         guard type == .voIP, registry.pushToken(for: .voIP) == nil else {
             return
         }
-        AccountAPI.shared.updateSession(voipToken: voipTokenRemove)
+        AccountAPI.updateSession(voipToken: voipTokenRemove)
     }
     
 }

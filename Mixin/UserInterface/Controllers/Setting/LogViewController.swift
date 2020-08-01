@@ -33,7 +33,7 @@ class LogViewController: UIViewController {
             return
         }
         isLoading = true
-        AccountAPI.shared.logs(offset: logs.last?.createdAt) { [weak self](result) in
+        AccountAPI.logs(offset: logs.last?.createdAt) { [weak self](result) in
             guard let self = self else {
                 return
             }

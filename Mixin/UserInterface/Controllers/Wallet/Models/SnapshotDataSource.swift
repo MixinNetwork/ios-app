@@ -106,7 +106,7 @@ class SnapshotDataSource {
             return
         }
 
-        AssetAPI.shared.snapshots(limit: 300, assetId: asset, destination: destination, tag: tag) { [weak self](result) in
+        AssetAPI.snapshots(limit: 300, assetId: asset, destination: destination, tag: tag) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

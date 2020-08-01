@@ -21,7 +21,7 @@ public class CreateConversationJob: BaseJob {
         }
 
         if conversation.category?.isEmpty ?? true {
-            switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
+            switch ConversationAPI.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
                 CircleConversationDAO.shared.update(conversation: response)
@@ -45,7 +45,7 @@ public class CreateConversationJob: BaseJob {
             let name = conversation.category == ConversationCategory.CONTACT.rawValue ? nil : conversation.name
             let request = ConversationRequest(conversationId: conversation.conversationId, name: name, category: conversation.category, participants: participants, duration: nil, announcement: nil)
 
-            switch ConversationAPI.shared.createConversation(conversation: request) {
+            switch ConversationAPI.createConversation(conversation: request) {
             case let .success(response):
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
             case let.failure(error):

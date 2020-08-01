@@ -1,14 +1,12 @@
 import MixinServices
 
 final class ContactAPI: MixinAPI {
-
-    static let shared = ContactAPI()
-
+    
     enum url {
         static let contacts = "friends"
     }
 
-    func syncContacts() {
+    static func syncContacts() {
         request(method: .get, url: url.contacts) { (result: MixinAPI.Result<[UserResponse]>) in
             switch result {
             case let .success(contacts):

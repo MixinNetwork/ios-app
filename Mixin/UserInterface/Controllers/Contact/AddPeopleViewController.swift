@@ -53,7 +53,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     @IBAction func searchAction(_ sender: Any) {
         searchButton.isBusy = true
-        UserAPI.shared.search(keyword: keyword) { [weak self] (result) in
+        UserAPI.search(keyword: keyword) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

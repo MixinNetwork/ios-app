@@ -64,7 +64,7 @@ extension CurrencySelectorViewController: UITableViewDelegate {
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
         let hud = Hud()
         hud.show(style: .busy, text: "", on: self.view)
-        AccountAPI.shared.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)

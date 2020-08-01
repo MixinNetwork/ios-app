@@ -204,7 +204,7 @@ extension AddMemberViewController: ContainerViewControllerDelegate {
         if let conversationId = conversationId {
             let userIds = selectedUsers.map { $0.userId }
             container?.rightButton.isBusy = true
-            ConversationAPI.shared.addParticipant(conversationId: conversationId, participantUserIds: userIds, completion: { [weak self] (result) in
+            ConversationAPI.addParticipant(conversationId: conversationId, participantUserIds: userIds, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
                 }

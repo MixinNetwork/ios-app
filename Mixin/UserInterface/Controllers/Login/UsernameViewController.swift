@@ -12,7 +12,7 @@ class UsernameViewController: LoginInfoInputViewController {
     
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
-        AccountAPI.shared.update(fullName: trimmedText) { [weak self] (account) in
+        AccountAPI.update(fullName: trimmedText) { [weak self] (account) in
             guard let weakSelf = self else {
                 return
             }

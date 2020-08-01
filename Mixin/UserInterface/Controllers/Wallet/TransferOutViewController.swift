@@ -321,7 +321,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private func reloadTransactionFeeHint(addressId: String) {
         displayFeeHint(loading: true)
-        WithdrawalAPI.shared.address(addressId: addressId) { [weak self](result) in
+        WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

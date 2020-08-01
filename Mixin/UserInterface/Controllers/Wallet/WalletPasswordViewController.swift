@@ -216,7 +216,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .initPinStep4(let previous):
             if previous == pin {
                 isBusy = true
-                AccountAPI.shared.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
+                AccountAPI.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
                     self?.isBusy = false
                     switch result {
                     case .success(let account):
@@ -236,7 +236,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .changePinStep1:
             isBusy = true
-            AccountAPI.shared.verify(pin: pin, completion: { [weak self] (result) in
+            AccountAPI.verify(pin: pin, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
                 }
@@ -277,7 +277,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .changePinStep5(let old, let previous):
             if previous == pin {
                 isBusy = true
-                AccountAPI.shared.updatePin(old: old, new: pin, completion: { [weak self] (result) in
+                AccountAPI.updatePin(old: old, new: pin, completion: { [weak self] (result) in
                     self?.isBusy = false
                     switch result {
                     case .success(let account):

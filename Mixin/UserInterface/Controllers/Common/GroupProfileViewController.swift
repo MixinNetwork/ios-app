@@ -64,7 +64,7 @@ final class GroupProfileViewController: ProfileViewController {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.GROUP.rawValue, participants: nil, duration: interval, announcement: nil)
-        ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
+        ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.conversation.muteUntil = response.muteUntil
@@ -115,7 +115,7 @@ extension GroupProfileViewController {
             return
         }
         relationshipView.isBusy = true
-        ConversationAPI.shared.joinConversation(codeId: codeId) { [weak self] (result) in
+        ConversationAPI.joinConversation(codeId: codeId) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -154,7 +154,7 @@ extension GroupProfileViewController {
             NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            ConversationAPI.shared.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in
+            ConversationAPI.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in
                 switch result {
                 case .success:
                     self?.conversation.name = name
@@ -175,7 +175,7 @@ extension GroupProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
+            ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
                 let exitSuccessBlock = {
                     self?.conversation.status = ConversationStatus.QUIT.rawValue
                     hud.set(style: .notification, text: R.string.localizable.action_done())
@@ -315,7 +315,7 @@ extension GroupProfileViewController {
             
             if let participants = response?.participants {
                 let participantIds = participants.prefix(4).map { $0.userId }
-                switch UserAPI.shared.showUsers(userIds: participantIds) {
+                switch UserAPI.showUsers(userIds: participantIds) {
                 case let .success(users):
                     let participants = users.map {
                         ParticipantUser(conversationId: conversationId,

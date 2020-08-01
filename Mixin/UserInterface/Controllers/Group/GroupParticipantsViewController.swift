@@ -195,21 +195,21 @@ extension GroupParticipantsViewController {
     
     private func makeAdmin(userId: String) {
         cell(for: userId)?.startLoading()
-        ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId,
+        ConversationAPI.adminParticipant(conversationId: conversation.conversationId,
                                                 userId: userId,
                                                 completion: responseHandler)
     }
 
     private func dismissAdmin(userId: String) {
         cell(for: userId)?.startLoading()
-        ConversationAPI.shared.dismissAdminParticipant(conversationId: conversation.conversationId,
+        ConversationAPI.dismissAdminParticipant(conversationId: conversation.conversationId,
                                                 userId: userId,
                                                 completion: responseHandler)
     }
     
     private func remove(userId: String) {
         cell(for: userId)?.startLoading()
-        ConversationAPI.shared.removeParticipant(conversationId: conversation.conversationId,
+        ConversationAPI.removeParticipant(conversationId: conversation.conversationId,
                                                  userId: userId,
                                                  completion: responseHandler)
     }

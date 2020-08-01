@@ -52,7 +52,7 @@ class PinValidationViewController: UIViewController {
     }
     
     func validate(pin: String) {
-        AccountAPI.shared.verify(pin: pin) { (result) in
+        AccountAPI.verify(pin: pin) { (result) in
             switch result {
             case .success:
                 self.loadingIndicator.stopAnimating()

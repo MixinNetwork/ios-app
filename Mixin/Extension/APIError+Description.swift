@@ -82,7 +82,7 @@ extension APIError {
 	@discardableResult
 	func pinErrorHandler(callback: @escaping(String) -> Void) -> Bool {
         if code == 20119 {
-            AccountAPI.shared.logs(category: "PIN_INCORRECT", limit: 5) { (result) in
+            AccountAPI.logs(category: "PIN_INCORRECT", limit: 5) { (result) in
                 switch result {
                 case let .success(logs):
                     var errorCount = 0

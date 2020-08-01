@@ -49,7 +49,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             ParticipantRequest(userId: $0.userId, role: "")
         }
         let request = ConversationRequest(conversationId: self.conversationId, name: self.groupName, category: ConversationCategory.GROUP.rawValue, participants: participants, duration: nil, announcement: nil)
-        ConversationAPI.shared.createConversation(conversation: request) { [weak self](result) in
+        ConversationAPI.createConversation(conversation: request) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

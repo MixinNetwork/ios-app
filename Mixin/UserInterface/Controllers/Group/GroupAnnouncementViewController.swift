@@ -14,7 +14,7 @@ class GroupAnnouncementViewController: AnnouncementViewController {
             return
         }
         saveButton.isBusy = true
-        ConversationAPI.shared.updateGroupAnnouncement(conversationId: conversation.conversationId, announcement: newAnnouncement) { [weak self] (response) in
+        ConversationAPI.updateGroupAnnouncement(conversationId: conversation.conversationId, announcement: newAnnouncement) { [weak self] (response) in
             switch response {
             case let .success(conversation):
                 let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))

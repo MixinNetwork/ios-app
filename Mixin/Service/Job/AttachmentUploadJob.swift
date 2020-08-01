@@ -29,7 +29,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             return false
         }
         repeat {
-            switch MessageAPI.shared.requestAttachment() {
+            switch MessageAPI.requestAttachment() {
             case let .success(attachResponse):
                 self.attachResponse = attachResponse
                 guard uploadAttachment(attachResponse: attachResponse) else {

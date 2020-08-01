@@ -57,7 +57,7 @@ class UrlWindow {
             var userItem = UserDAO.shared.getUser(userId: userId)
             var refreshUser = true
             if appItem == nil || userItem == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
+                switch UserAPI.showUser(userId: userId) {
                 case let .success(response):
                     refreshUser = false
                     userItem = UserItem.createUser(from: response)
@@ -123,7 +123,7 @@ class UrlWindow {
             if let traceId = traceId  {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(traceId: traceId)
                 if snapshotItem == nil {
-                    switch SnapshotAPI.shared.trace(traceId: traceId) {
+                    switch SnapshotAPI.trace(traceId: traceId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -141,7 +141,7 @@ class UrlWindow {
             } else if let snapshotId = snapshotId {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId)
                 if snapshotItem == nil {
-                    switch SnapshotAPI.shared.snapshot(snapshotId: snapshotId) {
+                    switch SnapshotAPI.snapshot(snapshotId: snapshotId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -164,7 +164,7 @@ class UrlWindow {
 
             if snapshot.type == SnapshotType.transfer.rawValue, let opponentId = snapshot.opponentId {
                 if !UserDAO.shared.isExist(userId: opponentId) {
-                    if case let .success(response) = UserAPI.shared.showUser(userId: opponentId) {
+                    if case let .success(response) = UserAPI.showUser(userId: opponentId) {
                         UserDAO.shared.updateUsers(users: [response])
                     }
                 }
@@ -209,7 +209,7 @@ class UrlWindow {
             var userItem = UserDAO.shared.getUser(identityNumber: identityNumber)
             var updateUserFromRemoteAfterReloaded = true
             if userItem == nil {
-                switch UserAPI.shared.search(keyword: identityNumber) {
+                switch UserAPI.search(keyword: identityNumber) {
                 case let .success(response):
                     updateUserFromRemoteAfterReloaded = false
                     userItem = UserItem.createUser(from: response)
@@ -386,7 +386,7 @@ class UrlWindow {
             }
 
             while asset.destination.isEmpty {
-                switch AssetAPI.shared.asset(assetId: asset.assetId) {
+                switch AssetAPI.asset(assetId: asset.assetId) {
                 case let .success(remoteAsset):
                     guard !remoteAsset.destination.isEmpty else {
                         Thread.sleep(forTimeInterval: 2)
@@ -419,7 +419,7 @@ class UrlWindow {
                 addressAction = .delete
                 address = AddressDAO.shared.getAddress(addressId: addressId)
                 if address == nil {
-                    switch WithdrawalAPI.shared.address(addressId: addressId) {
+                    switch WithdrawalAPI.address(addressId: addressId) {
                     case let .success(remoteAddress):
                         AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
                         address = remoteAddress
@@ -480,7 +480,7 @@ extension UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
 
-        UserAPI.shared.codes(codeId: codeId) { (result) in
+        UserAPI.codes(codeId: codeId) { (result) in
             switch result {
             case let .success(code):
                 if let user = code.user {
@@ -511,7 +511,7 @@ extension UrlWindow {
     private static func syncAddress(addressId: String, hud: Hud) -> Address? {
         var address = AddressDAO.shared.getAddress(addressId: addressId)
         if address == nil {
-            switch WithdrawalAPI.shared.address(addressId: addressId) {
+            switch WithdrawalAPI.address(addressId: addressId) {
             case let .success(remoteAddress):
                 AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
                 address = remoteAddress
@@ -541,7 +541,7 @@ extension UrlWindow {
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
         var asset = AssetDAO.shared.getAsset(assetId: assetId)
         if asset == nil {
-            switch AssetAPI.shared.asset(assetId: assetId) {
+            switch AssetAPI.asset(assetId: assetId) {
             case let .success(assetItem):
                 asset = AssetDAO.shared.saveAsset(asset: assetItem)
             case let .failure(error):
@@ -571,7 +571,7 @@ extension UrlWindow {
         var user = UserDAO.shared.getUser(userId: userId)
         var loadUserFromLocal = true
         if user == nil {
-            switch UserAPI.shared.showUser(userId: userId) {
+            switch UserAPI.showUser(userId: userId) {
             case let .success(userItem):
                 loadUserFromLocal = false
                 user = UserItem.createUser(from: userItem)
@@ -610,7 +610,7 @@ extension UrlWindow {
             let receivers = multisig.receivers
             var senderUsers = [UserResponse]()
             var receiverUsers = [UserResponse]()
-            switch UserAPI.shared.showUsers(userIds: multisig.senders + multisig.receivers) {
+            switch UserAPI.showUsers(userIds: multisig.senders + multisig.receivers) {
             case let .success(users):
                 senderUsers = users.filter { senders.contains($0.userId) }
                 receiverUsers = users.filter { receivers.contains($0.userId) }
@@ -648,7 +648,7 @@ extension UrlWindow {
 
             let receivers = payment.receivers
             var receiverUsers = [UserResponse]()
-            switch UserAPI.shared.showUsers(userIds: payment.receivers) {
+            switch UserAPI.showUsers(userIds: payment.receivers) {
             case let .success(users):
                 receiverUsers = users.filter { receivers.contains($0.userId) }
             case let .failure(error):
@@ -700,7 +700,7 @@ extension UrlWindow {
             let isMember = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }
             var participants = [ParticipantUser]()
-            switch UserAPI.shared.showUsers(userIds: userIds) {
+            switch UserAPI.showUsers(userIds: userIds) {
             case let .success(users):
                 participants = users.map {
                     ParticipantUser(conversationId: conversationId, user: $0)
@@ -714,7 +714,7 @@ extension UrlWindow {
             }
             var creatorUser = UserDAO.shared.getUser(userId: conversation.creatorId)
             if creatorUser == nil {
-                switch UserAPI.shared.showUser(userId: conversation.creatorId) {
+                switch UserAPI.showUser(userId: conversation.creatorId) {
                 case let .success(user):
                     creatorUser = UserItem.createUser(from: user)
                 case let .failure(error):

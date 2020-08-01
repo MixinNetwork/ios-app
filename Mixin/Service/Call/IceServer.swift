@@ -10,7 +10,7 @@ extension RTCIceServer {
         
     private static func loadIceServer() -> [RTCIceServer] {
         repeat {
-            switch CallAPI.shared.turn() {
+            switch CallAPI.turn() {
             case let .success(servers):
                 return servers.map({ RTCIceServer(urlStrings: [$0.url], username: $0.username, credential: $0.credential) })
             case let .failure(error):

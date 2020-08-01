@@ -12,7 +12,7 @@ extension LoginManager {
         guard let identityKeyPair = try? PreKeyUtil.getIdentityKeyPair() else {
             return
         }
-        ProvisioningAPI.shared.code { (response) in
+        ProvisioningAPI.code { (response) in
             switch response {
             case .success(let response):
                 guard let account = LoginManager.shared.account else {
@@ -30,7 +30,7 @@ extension LoginManager {
                     return
                 }
                 let secret = secretData.base64EncodedString()
-                ProvisioningAPI.shared.update(id: id, secret: secret, completion: { (result) in
+                ProvisioningAPI.update(id: id, secret: secret, completion: { (result) in
                     switch result {
                     case .success:
                         completion(true)

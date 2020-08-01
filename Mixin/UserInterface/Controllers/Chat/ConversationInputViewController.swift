@@ -239,7 +239,7 @@ class ConversationInputViewController: UIViewController {
             return
         }
         unblockButton.isBusy = true
-        UserAPI.shared.unblockUser(userId: user.userId) { (result) in
+        UserAPI.unblockUser(userId: user.userId) { (result) in
             switch result {
             case .success(let userResponse):
                 UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
@@ -862,14 +862,14 @@ extension ConversationInputViewController {
         }
         
         DispatchQueue.global().async(execute: loadApps)
-        UserAPI.shared.getFavoriteApps(ofUserWith: ownerId) { (result) in
+        UserAPI.getFavoriteApps(ofUserWith: ownerId) { (result) in
             guard case let .success(favApps) = result else {
                 return
             }
             DispatchQueue.global().async {
                 FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: ownerId)
                 let appUserIds = favApps.map({ $0.appId })
-                UserAPI.shared.showUsers(userIds: appUserIds) { (result) in
+                UserAPI.showUsers(userIds: appUserIds) { (result) in
                     guard case let .success(users) = result else {
                         return
                     }

@@ -78,7 +78,7 @@ class AddAssetViewController: UIViewController {
                 return
             }
             let result: [Asset]
-            switch AssetAPI.shared.search(keyword: keyword) {
+            switch AssetAPI.search(keyword: keyword) {
             case .success(let assets):
                 result = assets
             case .failure:

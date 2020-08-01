@@ -1,6 +1,6 @@
 import MixinServices
 
-final class CallAPI: BaseAPI {
+final class CallAPI: MixinAPI {
     
     static let shared = CallAPI()
     
@@ -8,11 +8,11 @@ final class CallAPI: BaseAPI {
         static let turn = "turn"
     }
     
-    func turn(completion: @escaping (BaseAPI.Result<[TurnServer]>) -> Void) {
+    func turn(completion: @escaping (MixinAPI.Result<[TurnServer]>) -> Void) {
         request(method: .get, url: url.turn, completion: completion)
     }
 
-    func turn() -> BaseAPI.Result<[TurnServer]> {
+    func turn() -> MixinAPI.Result<[TurnServer]> {
         return request(method: .get, url: url.turn)
     }
     

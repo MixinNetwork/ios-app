@@ -1,6 +1,6 @@
 import MixinServices
 
-final class EmergencyAPI: BaseAPI {
+final class EmergencyAPI: MixinAPI {
     
     static let shared = EmergencyAPI()
     
@@ -13,7 +13,7 @@ final class EmergencyAPI: BaseAPI {
         }
     }
     
-    func createContact(identityNumber: String, completion: @escaping (BaseAPI.Result<EmergencyResponse>) -> Void) {
+    func createContact(identityNumber: String, completion: @escaping (MixinAPI.Result<EmergencyResponse>) -> Void) {
         let req = EmergencyRequest(phone: nil,
                                    identityNumber: identityNumber,
                                    pin: nil,
@@ -26,7 +26,7 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func verifyContact(pin: String, id: String, code: String, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
+    func verifyContact(pin: String, id: String, code: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let req = EmergencyRequest(phone: nil,
                                        identityNumber: nil,
@@ -41,7 +41,7 @@ final class EmergencyAPI: BaseAPI {
         }
     }
     
-    func createSession(phoneNumber: String, identityNumber: String, completion: @escaping (BaseAPI.Result<EmergencyResponse>) -> Void) {
+    func createSession(phoneNumber: String, identityNumber: String, completion: @escaping (MixinAPI.Result<EmergencyResponse>) -> Void) {
         let req = EmergencyRequest(phone: phoneNumber,
                                    identityNumber: identityNumber,
                                    pin: nil,
@@ -55,7 +55,7 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func verifySession(id: String, code: String, sessionSecret: String?, registrationId: Int?, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
+    func verifySession(id: String, code: String, sessionSecret: String?, registrationId: Int?, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         let req = EmergencySessionRequest(code: code,
                                           sessionSecret: sessionSecret,
                                           registrationId: registrationId)
@@ -67,14 +67,14 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func show(pin: String, completion: @escaping (BaseAPI.Result<User>) -> Void) {
+    func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, url: Url.show, parameters: param, completion: completion)
         }
     }
     
-    func delete(pin: String, completion: @escaping (BaseAPI.Result<Account>) -> Void) {
+    func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, url: Url.delete, parameters: param, completion: completion)

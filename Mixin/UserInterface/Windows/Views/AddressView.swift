@@ -98,7 +98,7 @@ extension AddressView: PinFieldDelegate {
             guard let addressId = self.address?.addressId, let assetId = self.address?.assetId else {
                 return
             }
-            WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { [weak self](result) in
+            WithdrawalAPI.delete(addressId: addressId, pin: pin) { [weak self](result) in
                 self?.processing = false
                 switch result {
                 case .success:
@@ -118,7 +118,7 @@ extension AddressView: PinFieldDelegate {
             guard let address = addressRequest else {
                 return
             }
-            WithdrawalAPI.shared.save(address: address) { [weak self](result) in
+            WithdrawalAPI.save(address: address) { [weak self](result) in
                 self?.processing = false
                 switch result {
                 case let .success(address):

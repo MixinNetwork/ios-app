@@ -519,7 +519,7 @@ extension HomeViewController {
         guard !WebSocketService.shared.isConnected else {
             return
         }
-        AccountAPI.shared.me { (result) in
+        AccountAPI.me { (result) in
             guard case let .failure(error) = result, error.code == 10006 else {
                 return
             }
@@ -698,7 +698,7 @@ extension HomeViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            ConversationAPI.shared.exitConversation(conversationId: conversationId) { [weak self](result) in
+            ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
                 switch result {
                 case .success:
                     hud.hide()

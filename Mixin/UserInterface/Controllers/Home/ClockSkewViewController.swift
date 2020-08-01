@@ -23,7 +23,7 @@ class ClockSkewViewController: UIViewController {
         }
         continueButton.isBusy = true
 
-        AccountAPI.shared.me { [weak self](result) in
+        AccountAPI.me { [weak self](result) in
 
             switch result {
             case .success:

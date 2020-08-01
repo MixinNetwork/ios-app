@@ -15,11 +15,11 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
         let result: MixinAPI.Result<[Snapshot]>
         switch category {
         case .all:
-            result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category))
+            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category))
         case .opponent(let id):
-            result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), opponentId: id)
+            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), opponentId: id)
         case .asset(let id):
-            result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), assetId: id)
+            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), assetId: id)
         }
         switch result {
         case let .success(snapshots):

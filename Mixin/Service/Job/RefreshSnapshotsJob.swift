@@ -32,11 +32,11 @@ class RefreshSnapshotsJob: BaseJob {
         let result: MixinAPI.Result<[Snapshot]>
         switch category {
         case .all:
-            result = AssetAPI.shared.snapshots(limit: limit)
+            result = AssetAPI.snapshots(limit: limit)
         case .opponent(let id):
-            result = AssetAPI.shared.snapshots(limit: limit, opponentId: id)
+            result = AssetAPI.snapshots(limit: limit, opponentId: id)
         case .asset(let id):
-            result = AssetAPI.shared.snapshots(limit: limit, assetId: id)
+            result = AssetAPI.snapshots(limit: limit, assetId: id)
         }
         switch result {
         case let .success(snapshots):

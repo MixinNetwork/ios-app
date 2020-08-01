@@ -13,7 +13,7 @@ class RefreshOffsetJob: BaseJob {
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            switch MessageAPI.shared.messageStatus(offset: statusOffset) {
+            switch MessageAPI.messageStatus(offset: statusOffset) {
             case let .success(blazeMessages):
                 guard blazeMessages.count > 0, let lastStatusOffset = blazeMessages.last?.updatedAt.toUTCDate().nanosecond() else {
                     return

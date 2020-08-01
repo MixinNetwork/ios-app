@@ -2,9 +2,7 @@ import Foundation
 import Alamofire
 
 open class UserSessionAPI: MixinAPI {
-
-    internal static let shared = UserSessionAPI()
-
+    
     private enum url {
 
         static func users(id: String) -> String {
@@ -15,15 +13,15 @@ open class UserSessionAPI: MixinAPI {
         static let sessionFetch = "sessions/fetch"
     }
 
-    public func fetchSessions(userIds: [String]) -> MixinAPI.Result<[UserSession]> {
+    public static func fetchSessions(userIds: [String]) -> MixinAPI.Result<[UserSession]> {
          return request(method: .post, url: url.sessionFetch, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
 
-    public func showUser(userId: String) -> MixinAPI.Result<UserResponse> {
+    public static func showUser(userId: String) -> MixinAPI.Result<UserResponse> {
         return request(method: .get, url: url.users(id: userId))
     }
 
-    public func showUsers(userIds: [String]) -> MixinAPI.Result<[UserResponse]> {
+    public static func showUsers(userIds: [String]) -> MixinAPI.Result<[UserResponse]> {
         return request(method: .post, url: url.users, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
     

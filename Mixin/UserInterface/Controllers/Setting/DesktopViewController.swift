@@ -71,7 +71,7 @@ extension DesktopViewController: UITableViewDelegate {
                 return
             }
             isLogoutInProgress = true
-            AccountAPI.shared.logoutSession(sessionId: sessionId) { [weak self](result) in
+            AccountAPI.logoutSession(sessionId: sessionId) { [weak self](result) in
                 guard let self = self else {
                     return
                 }

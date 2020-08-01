@@ -14,7 +14,7 @@ class BiographyViewController: AnnouncementViewController {
             return
         }
         saveButton.isBusy = true
-        AccountAPI.shared.update(biography: newAnnouncement) { [weak self] (result) in
+        AccountAPI.update(biography: newAnnouncement) { [weak self] (result) in
             switch result {
             case let .success(account):
                 LoginManager.shared.setAccount(account)

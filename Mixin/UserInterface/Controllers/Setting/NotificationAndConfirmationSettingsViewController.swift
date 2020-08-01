@@ -116,7 +116,7 @@ extension NotificationAndConfirmationSettingsViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
                                             transfer_notification_threshold: value.doubleValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
@@ -139,7 +139,7 @@ extension NotificationAndConfirmationSettingsViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
                                             transfer_confirmation_threshold: value.doubleValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)

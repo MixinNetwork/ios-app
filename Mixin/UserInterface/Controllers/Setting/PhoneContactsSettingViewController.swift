@@ -51,14 +51,14 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
         }
         let hud = self.hud
         hud.show(style: .busy, text: "", on: navigationController.view)
-        PhoneContactAPI.shared.upload(contacts: contacts, completion: { [weak self](result) in
+        PhoneContactAPI.upload(contacts: contacts, completion: { [weak self](result) in
             switch result {
             case .success:
                 hud.hide()
                 AppGroupUserDefaults.User.autoUploadsContacts = isUpload
                 self?.reloadData()
                 if isUpload {
-                    ContactAPI.shared.syncContacts()
+                    ContactAPI.syncContacts()
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)

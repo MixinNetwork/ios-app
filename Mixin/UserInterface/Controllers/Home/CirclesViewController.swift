@@ -218,7 +218,7 @@ extension CirclesViewController {
         sheet.addAction(UIAlertAction(title: delete, style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            CircleAPI.shared.delete(id: circle.circleId) { (result) in
+            CircleAPI.delete(id: circle.circleId) { (result) in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
@@ -244,7 +244,7 @@ extension CirclesViewController {
     private func addCircle(name: String) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        CircleAPI.shared.create(name: name) { (result) in
+        CircleAPI.create(name: name) { (result) in
             switch result {
             case .success(let circle):
                 DispatchQueue.global().async {
@@ -268,7 +268,7 @@ extension CirclesViewController {
     private func editCircle(with circleId: String, name: String) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        CircleAPI.shared.update(id: circleId, name: name, completion: { result in
+        CircleAPI.update(id: circleId, name: name, completion: { result in
             switch result {
             case .success(let circle):
                 if circle.circleId == AppGroupUserDefaults.User.circleId {

@@ -8,7 +8,7 @@ class RefreshTopAssetsJob: AsynchronousJob {
     }
     
     override func execute() -> Bool {
-        AssetAPI.shared.topAssets { (result) in
+        AssetAPI.topAssets { (result) in
             switch result {
             case let .success(assets):
                 DispatchQueue.global().async {

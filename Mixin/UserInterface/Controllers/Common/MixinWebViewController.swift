@@ -126,7 +126,7 @@ class MixinWebViewController: WebViewController {
                 DispatchQueue.global().async { [weak self] in
                     var app = AppDAO.shared.getApp(appId: appId)
                     if app == nil || !(app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false) {
-                        if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                        if case let .success(response) = UserAPI.showUser(userId: appId) {
                             UserDAO.shared.updateUsers(users: [response])
                             app = response.app
                         }
@@ -177,7 +177,7 @@ class MixinWebViewController: WebViewController {
         if let user = UserDAO.shared.getUser(userId: userId) {
             return user
         } else {
-            switch UserAPI.shared.showUser(userId: userId) {
+            switch UserAPI.showUser(userId: userId) {
             case let .success(userItem):
                 let user = UserItem.createUser(from: userItem)
                 UserDAO.shared.updateUsers(users: [userItem])
@@ -344,7 +344,7 @@ extension MixinWebViewController {
             var userItem = UserDAO.shared.getUser(userId: appId)
             var updateUserFromRemoteAfterReloaded = true
             
-            if userItem == nil, case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+            if userItem == nil, case let .success(response) = UserAPI.showUser(userId: appId) {
                 updateUserFromRemoteAfterReloaded = false
                 userItem = UserItem.createUser(from: response)
                 UserDAO.shared.updateUsers(users: [response])
@@ -379,7 +379,7 @@ extension MixinWebViewController {
         DispatchQueue.global().async { [weak self] in
             var app = AppDAO.shared.getApp(appId: appId)
             if app == nil {
-                if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                if case let .success(response) = UserAPI.showUser(userId: appId) {
                     UserDAO.shared.updateUsers(users: [response])
                     app = response.app
                 }

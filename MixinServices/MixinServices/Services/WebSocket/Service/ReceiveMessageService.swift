@@ -304,7 +304,7 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
-        if case let .success(response) = UserSessionAPI.shared.showUser(userId: appId) {
+        if case let .success(response) = UserSessionAPI.showUser(userId: appId) {
             UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
         } else {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appId]))
@@ -671,7 +671,7 @@ public class ReceiveMessageService: MixinService {
             }
 
             repeat {
-                switch StickerAPI.shared.sticker(stickerId: stickerId) {
+                switch StickerAPI.sticker(stickerId: stickerId) {
                 case let .success(sticker):
                     StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
                     if let sticker = StickerDAO.shared.getSticker(stickerId: sticker.stickerId) {
@@ -707,13 +707,13 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
-        switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
+        switch ConversationAPI.getConversation(conversationId: data.conversationId) {
         case let .success(response):
             let userIds = response.participants
                 .map{ $0.userId }
                 .filter{ $0 != currentAccountId }
             if userIds.count > 0 {
-                switch UserSessionAPI.shared.showUsers(userIds: userIds) {
+                switch UserSessionAPI.showUsers(userIds: userIds) {
                 case let .success(users):
                     UserDAO.shared.updateUsers(users: users)
                 case .failure:
@@ -747,7 +747,7 @@ public class ReceiveMessageService: MixinService {
         guard User.systemUser != userId, userId != currentAccountId, !UserDAO.shared.isExist(userId: userId) else {
             return .SUCCESS
         }
-        switch UserSessionAPI.shared.showUser(userId: userId) {
+        switch UserSessionAPI.showUser(userId: userId) {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
@@ -768,7 +768,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         repeat {
-            switch UserSessionAPI.shared.showUser(userId: userId) {
+            switch UserSessionAPI.showUser(userId: userId) {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true
@@ -950,7 +950,7 @@ extension ReceiveMessageService {
             checkUser(userId: opponentId, tryAgain: true)
         }
 
-        switch AssetAPI.shared.asset(assetId: snapshot.assetId) {
+        switch AssetAPI.asset(assetId: snapshot.assetId) {
         case let .success(asset):
             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
         case .failure:

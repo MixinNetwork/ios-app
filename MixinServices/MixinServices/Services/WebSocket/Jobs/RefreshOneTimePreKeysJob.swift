@@ -7,7 +7,7 @@ public class RefreshOneTimePreKeysJob: BaseJob {
     }
     
     override public func run() throws {
-        guard case let .success(response) = SignalKeyAPI.shared.getSignalKeyCount() else {
+        guard case let .success(response) = SignalKeyAPI.getSignalKeyCount() else {
             return
         }
         guard response.preKeyCount < PreKeyUtil.prekeyMiniNum else {
@@ -19,7 +19,7 @@ public class RefreshOneTimePreKeysJob: BaseJob {
     private func refreshKeys() {
         do {
             let request = try PreKeyUtil.generateKeys()
-            _ = SignalKeyAPI.shared.pushSignalKeys(key: request)
+            _ = SignalKeyAPI.pushSignalKeys(key: request)
             Logger.write(log: "[RefreshOneTimePreKeysJob]...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         } catch let error as SignalError where IdentityDAO.shared.getLocalIdentity() == nil {
             let error = MixinServicesError.refreshOneTimePreKeys(error: error, identityCount: IdentityDAO.shared.getCount())

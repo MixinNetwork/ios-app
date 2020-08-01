@@ -8,7 +8,7 @@ class RefreshAccountJob: AsynchronousJob {
     }
 
 	override func execute() -> Bool {
-		AccountAPI.shared.me { (result) in
+		AccountAPI.me { (result) in
 			switch result {
 			case let .success(account):
                 DispatchQueue.global().async {

@@ -18,7 +18,7 @@ public class RefreshStickerJob: AsynchronousJob {
 
     public override func execute() -> Bool {
         if let albumId = self.albumId {
-            StickerAPI.shared.stickers(albumId: albumId) { (result) in
+            StickerAPI.stickers(albumId: albumId) { (result) in
                 switch result {
                 case let .success(stickers):
                     DispatchQueue.global().async {
@@ -37,7 +37,7 @@ public class RefreshStickerJob: AsynchronousJob {
             }
         } else {
             let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
-            StickerAPI.shared.albums { (result) in
+            StickerAPI.albums { (result) in
                 switch result {
                 case let .success(albums):
                     let icons = albums.compactMap({ URL(string: $0.iconUrl) })

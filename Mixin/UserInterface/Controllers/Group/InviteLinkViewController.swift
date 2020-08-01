@@ -75,7 +75,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
         }
 
         container?.rightButton.isBusy = true
-        ConversationAPI.shared.updateCodeId(conversationId: conversation.conversationId) { [weak self](result) in
+        ConversationAPI.updateCodeId(conversationId: conversation.conversationId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

@@ -29,7 +29,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     }
     
     override func requestVerificationCode(reCaptchaToken token: String?) {
-        AccountAPI.shared.sendCode(to: context.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+        AccountAPI.sendCode(to: context.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -72,7 +72,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     
     func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
         let request = AccountRequest(code: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
-        AccountAPI.shared.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
+        AccountAPI.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             DispatchQueue.global().async {
                 self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)
             }
@@ -117,7 +117,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         let vc = UsernameViewController()
                         self.navigationController?.pushViewController(vc, animated: true)
                     } else {
-                        ContactAPI.shared.syncContacts()
+                        ContactAPI.syncContacts()
                         AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                     }
                 }

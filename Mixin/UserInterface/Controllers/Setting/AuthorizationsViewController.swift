@@ -61,7 +61,7 @@ extension AuthorizationsViewController: UITableViewDelegate {
 extension AuthorizationsViewController {
     
     private func reload() {
-        AuthorizeAPI.shared.authorizations { [weak self] (result) in
+        AuthorizeAPI.authorizations { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.load(authorizations: response)

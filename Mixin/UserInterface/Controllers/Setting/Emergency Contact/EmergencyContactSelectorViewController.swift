@@ -43,7 +43,7 @@ class EmergencyContactSelectorViewController: UserItemPeerViewController<PeerCel
         }
         let hud = self.hud
         hud.show(style: .busy, text: "", on: navigationController.view)
-        EmergencyAPI.shared.createContact(identityNumber: identityNumber) { [weak self] (result) in
+        EmergencyAPI.createContact(identityNumber: identityNumber) { [weak self] (result) in
             switch result {
             case .success(let response):
                 hud.hide()

@@ -141,7 +141,7 @@ extension EditSharedAppsViewController: FavoriteAppCellDelegate {
             let user = favorites[indexPath.row]
             if let id = user.appId {
                 hud.show(style: .busy, text: "", on: view)
-                UserAPI.shared.unfavoriteApp(id: id) { [weak self] (result) in
+                UserAPI.unfavoriteApp(id: id) { [weak self] (result) in
                     switch result {
                     case .success:
                         self?.toggleSection(forCellAt: indexPath)
@@ -159,7 +159,7 @@ extension EditSharedAppsViewController: FavoriteAppCellDelegate {
             let user = candidates[indexPath.row]
             if let id = user.appId {
                 hud.show(style: .busy, text: "", on: view)
-                UserAPI.shared.setFavoriteApp(id: id) { [weak self] (result) in
+                UserAPI.setFavoriteApp(id: id) { [weak self] (result) in
                     switch result {
                     case .success(let favApp):
                         self?.toggleSection(forCellAt: indexPath)

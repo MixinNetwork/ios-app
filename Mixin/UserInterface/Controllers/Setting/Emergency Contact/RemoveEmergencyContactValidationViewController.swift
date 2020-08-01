@@ -15,7 +15,7 @@ class RemoveEmergencyContactValidationViewController: PinValidationViewControlle
     }
     
     override func validate(pin: String) {
-        EmergencyAPI.shared.delete(pin: pin) { [weak self] (result) in
+        EmergencyAPI.delete(pin: pin) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

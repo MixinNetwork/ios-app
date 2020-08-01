@@ -10,13 +10,12 @@ final class SnapshotAPI: MixinAPI {
             return "snapshots/trace/\(traceId)"
         }
     }
-    static let shared = SnapshotAPI()
     
-    func snapshot(snapshotId: String) -> MixinAPI.Result<Snapshot> {
+    static func snapshot(snapshotId: String) -> MixinAPI.Result<Snapshot> {
         return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
     }
     
-    func trace(traceId: String) -> MixinAPI.Result<Snapshot> {
+    static func trace(traceId: String) -> MixinAPI.Result<Snapshot> {
         return request(method: .get, url: url.trace(traceId: traceId))
     }
     

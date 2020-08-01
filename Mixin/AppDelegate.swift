@@ -125,7 +125,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString())
+        AccountAPI.updateSession(deviceToken: deviceToken.toHexString())
     }
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -249,7 +249,7 @@ extension AppDelegate {
             mainWindow.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
-                    PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)
+                    PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts)
                 })
             }
         } else {

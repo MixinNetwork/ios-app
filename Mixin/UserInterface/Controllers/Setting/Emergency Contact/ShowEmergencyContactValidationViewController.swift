@@ -15,7 +15,7 @@ class ShowEmergencyContactValidationViewController: PinValidationViewController 
     }
     
     override func validate(pin: String) {
-        EmergencyAPI.shared.show(pin: pin) { [weak self](result) in
+        EmergencyAPI.show(pin: pin) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

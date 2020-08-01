@@ -63,7 +63,7 @@ extension PhoneNumberSettingViewController: UITableViewDelegate {
         tableView.isUserInteractionEnabled = false
         section.setAccessory(.busy, forRowAt: indexPath.row)
         let request = UserPreferenceRequest(accept_search_source: newSource.rawValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }

@@ -73,7 +73,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             return false
         }
         repeat {
-            switch MessageAPI.shared.getAttachment(id: attachmentId) {
+            switch MessageAPI.getAttachment(id: attachmentId) {
             case let .success(attachmentResponse):
                 guard downloadAttachment(attachResponse: attachmentResponse) else {
                     removeJob()

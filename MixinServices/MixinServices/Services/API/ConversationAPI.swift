@@ -3,8 +3,6 @@ import Alamofire
 
 public class ConversationAPI : MixinAPI {
     
-    public static let shared = ConversationAPI()
-    
     private enum url {
         static let conversations = "conversations"
         static func conversations(id: String) -> String {
@@ -33,61 +31,61 @@ public class ConversationAPI : MixinAPI {
         
     }
     
-    public func createConversation(conversation: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func createConversation(conversation: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, url: url.conversations, parameters: conversation.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     
-    public func createConversation(conversation: ConversationRequest) -> MixinAPI.Result<ConversationResponse> {
+    public static func createConversation(conversation: ConversationRequest) -> MixinAPI.Result<ConversationResponse> {
         return request(method: .post, url: url.conversations, parameters: conversation.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>())
     }
     
-    public func getConversation(conversationId: String) -> MixinAPI.Result<ConversationResponse> {
+    public static func getConversation(conversationId: String) -> MixinAPI.Result<ConversationResponse> {
         return request(method: .get, url: url.conversations(id: conversationId))
     }
     
-    public func exitConversation(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+    public static func exitConversation(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         request(method: .post, url: url.exit(id: conversationId), completion: completion)
     }
     
-    public func joinConversation(codeId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func joinConversation(codeId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, url: url.join(codeId: codeId), completion: completion)
     }
     
-    public func addParticipant(conversationId: String, participantUserIds: [String], completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func addParticipant(conversationId: String, participantUserIds: [String], completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let parameters = participantUserIds.map({ ["user_id": $0, "role": ""] }).toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ADD), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    public func removeParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func removeParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let parameters = [["user_id": userId, "role": ""]].toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.REMOVE), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    public func adminParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func adminParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let parameters = [["user_id": userId, "role": ParticipantRole.ADMIN.rawValue]].toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ROLE), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
 
-    public func dismissAdminParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func dismissAdminParticipant(conversationId: String, userId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let parameters = [["user_id": userId, "role": ""]].toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ROLE), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
     
-    public func updateGroupName(conversationId: String, name: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func updateGroupName(conversationId: String, name: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: name, category: nil, participants: nil, duration: nil, announcement: nil)
         request(method: .post, url: url.conversations(id: conversationId), parameters: conversationRequest.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     
-    public func updateGroupAnnouncement(conversationId: String, announcement: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func updateGroupAnnouncement(conversationId: String, announcement: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: nil, participants: nil, duration: nil, announcement: announcement)
         request(method: .post, url: url.conversations(id: conversationId), parameters: conversationRequest.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     
-    public func mute(conversationId: String, conversationRequest: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func mute(conversationId: String, conversationRequest: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, url: url.mute(conversationId: conversationId), parameters: conversationRequest.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
     
-    public func updateCodeId(conversationId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func updateCodeId(conversationId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, url: url.reset(conversationId: conversationId), completion: completion)
     }
     

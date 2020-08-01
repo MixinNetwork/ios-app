@@ -3,8 +3,6 @@ import MixinServices
 
 final class WithdrawalAPI: MixinAPI {
     
-    static let shared = WithdrawalAPI()
-    
     private enum url {
         static func addresses(assetId: String) -> String {
             return "assets/\(assetId)/addresses"
@@ -21,37 +19,48 @@ final class WithdrawalAPI: MixinAPI {
         }
     }
     
-    func address(addressId: String) -> MixinAPI.Result<Address> {
+    static func address(addressId: String) -> MixinAPI.Result<Address> {
         return request(method: .get, url: url.address(addressId: addressId))
     }
     
-    func address(addressId: String, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
+    static func address(addressId: String, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
         request(method: .get, url: url.address(addressId: addressId), completion: completion)
     }
     
-    func addresses(assetId: String, completion: @escaping (MixinAPI.Result<[Address]>) -> Void) {
+    static func addresses(assetId: String, completion: @escaping (MixinAPI.Result<[Address]>) -> Void) {
         request(method: .get, url: url.addresses(assetId: assetId), completion: completion)
     }
     
-    func save(address: AddressRequest, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
-        KeyUtil.aesEncrypt(pin: address.pin, completion: completion) { [weak self](encryptedPin) in
+    static func save(address: AddressRequest, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
+        KeyUtil.aesEncrypt(pin: address.pin, completion: completion) { (encryptedPin) in
             var address = address
             address.pin = encryptedPin
-            self?.request(method: .post, url: url.addresses, parameters: address.toParameters(), encoding: EncodableParameterEncoding<AddressRequest>(), completion: completion)
+            self.request(method: .post,
+                         url: url.addresses,
+                         parameters: address.toParameters(),
+                         encoding: EncodableParameterEncoding<AddressRequest>(),
+                         completion: completion)
         }
     }
     
-    func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
-        KeyUtil.aesEncrypt(pin: withdrawal.pin, completion: completion) { [weak self](encryptedPin) in
+    static func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
+        KeyUtil.aesEncrypt(pin: withdrawal.pin, completion: completion) { (encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin
-            self?.request(method: .post, url: url.withdrawals, parameters: withdrawal.toParameters(), encoding: EncodableParameterEncoding<WithdrawalRequest>(), completion: completion)
+            self.request(method: .post,
+                         url: url.withdrawals,
+                         parameters: withdrawal.toParameters(),
+                         encoding: EncodableParameterEncoding<WithdrawalRequest>(),
+                         completion: completion)
         }
     }
     
-    func delete(addressId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
-            self?.request(method: .post, url: url.delete(addressId: addressId), parameters: ["PIN": encryptedPin], completion: completion)
+    static func delete(addressId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+            self.request(method: .post,
+                         url: url.delete(addressId: addressId),
+                         parameters: ["PIN": encryptedPin],
+                         completion: completion)
         }
     }
     

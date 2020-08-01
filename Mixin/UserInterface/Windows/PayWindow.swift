@@ -281,7 +281,7 @@ class PayWindow: BottomSheetView {
         super.removeFromSuperview()
 
         if case let .multisig(multisig, _, _) = pinAction! {
-            MultisigAPI.shared.cancel(requestId: multisig.requestId) { (_) in }
+            MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
         }
     }
 
@@ -558,14 +558,14 @@ extension PayWindow: PinFieldDelegate {
         case let .transfer(trackId, user, _):
             trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil)
             TraceDAO.shared.saveTrace(trace: trace)
-            PaymentAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
-            PaymentAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
+            PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, _, _):
             trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
             TraceDAO.shared.saveTrace(trace: trace)
-            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
@@ -580,9 +580,9 @@ extension PayWindow: PinFieldDelegate {
             }
             switch multisig.action {
             case MultisigAction.sign.rawValue:
-                MultisigAPI.shared.sign(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
+                MultisigAPI.sign(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
             case MultisigAction.unlock.rawValue:
-                MultisigAPI.shared.unlock(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
+                MultisigAPI.unlock(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
             default:
                 break
             }
@@ -656,9 +656,9 @@ extension PayWindow {
         if fromWeb {
             var response: MixinAPI.Result<PaymentResponse>?
             if let opponentId = opponentId {
-                response = PaymentAPI.shared.payments(assetId: asset.assetId, opponentId: opponentId, amount: amount, traceId: traceId)
+                response = PaymentAPI.payments(assetId: asset.assetId, opponentId: opponentId, amount: amount, traceId: traceId)
             } else if let addressId = addressId {
-                response = PaymentAPI.shared.payments(assetId: asset.assetId, addressId: addressId, amount: amount, traceId: traceId)
+                response = PaymentAPI.payments(assetId: asset.assetId, addressId: addressId, amount: amount, traceId: traceId)
             }
 
             if let result = response {
@@ -722,7 +722,7 @@ extension PayWindow {
                 }
                 return
             } else {
-                switch SnapshotAPI.shared.trace(traceId: traceId) {
+                switch SnapshotAPI.trace(traceId: traceId) {
                 case let .success(snapshot):
                     TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
                     DispatchQueue.main.async {

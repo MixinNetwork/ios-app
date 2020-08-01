@@ -66,8 +66,6 @@ open class BaseAPI {
                         reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
                         LoginManager.shared.logout(from: "AsyncRequest")
                         return
-                    case 501...:
-                        MixinServer.toggle(currentHttpUrl: rootURLString)
                     default:
                         break
                     }
@@ -85,13 +83,17 @@ open class BaseAPI {
                             completion(.success(try JSONDecoder.default.decode(ResultType.self, from: data)))
                         }
                     } catch {
+                        Logger.write(error: error)
                         MixinServer.toggle(currentHttpUrl: rootURLString)
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
+                    Logger.write(error: error)
                     if NetworkManager.shared.isReachable {
                         switch error._code {
                         case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                            MixinServer.toggle(currentHttpUrl: rootURLString)
+                        case 501...:
                             MixinServer.toggle(currentHttpUrl: rootURLString)
                         default:
                             break
@@ -136,13 +138,17 @@ extension BaseAPI {
                                 result = .success(model)
                             }
                         } catch {
+                            Logger.write(error: error)
                             MixinServer.toggle(currentHttpUrl: rootURLString)
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
+                        Logger.write(error: error)
                         if NetworkManager.shared.isReachable {
                             switch error._code {
                             case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                                MixinServer.toggle(currentHttpUrl: rootURLString)
+                            case 501...:
                                 MixinServer.toggle(currentHttpUrl: rootURLString)
                             default:
                                 break
@@ -179,8 +185,6 @@ extension BaseAPI {
                 }
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
                 LoginManager.shared.logout(from: "SyncRequest")
-            } else if error.code > 500 {
-                MixinServer.toggle(currentHttpUrl: rootURLString)
             }
         }
         

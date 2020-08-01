@@ -41,9 +41,11 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                     self.delegate?.websocketDidReceiveData(socket: self, data: data)
                 }
             case let .failure(error):
+                let log = "[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)"
                 #if DEBUG
-                print("[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)")
+                NSLog(log)
                 #endif
+                Logger.write(log: "[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)")
                 reporter.report(error: error)
             }
         })
@@ -79,11 +81,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
 extension NativeWebSocket: URLSessionWebSocketDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        print("[WebSocketClient] Errored! \(String(describing: error))")
-        print("------------------------------")
-        print("\(task.response)")
-        print("------------------------------")
-        print("\(task.currentRequest?.allHTTPHeaderFields)")
+        Logger.write(log: "[NativeWebSocket] task complete with error: \(error). response: \(task.response), header: \(task.currentRequest?.allHTTPHeaderFields)")
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
@@ -134,7 +132,7 @@ extension NativeWebSocket: URLSessionWebSocketDelegate {
             errMessage = reasonStr
         }
         #if DEBUG
-        print("[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(errMessage)")
+        Logger.write(log: "[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(errMessage)")
         #endif
 
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: isSwitchNetwork)

@@ -66,6 +66,8 @@ open class BaseAPI {
                         reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
                         LoginManager.shared.logout(from: "AsyncRequest")
                         return
+                    case 501...:
+                        MixinServer.toggle(currentHttpUrl: rootURLString)
                     default:
                         break
                     }
@@ -83,6 +85,7 @@ open class BaseAPI {
                             completion(.success(try JSONDecoder.default.decode(ResultType.self, from: data)))
                         }
                     } catch {
+                        MixinServer.toggle(currentHttpUrl: rootURLString)
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
@@ -133,6 +136,7 @@ extension BaseAPI {
                                 result = .success(model)
                             }
                         } catch {
+                            MixinServer.toggle(currentHttpUrl: rootURLString)
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
@@ -156,25 +160,30 @@ extension BaseAPI {
             }
         }
 
-        if case let .failure(error) = result, error.code == 401 {
-            if let serverTime = Double(responseServerTime), serverTime > 0 {
-                let clientTime = Date().timeIntervalSince1970
-                if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                    return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
-                } else {
-                    if abs(serverTime / 1000000000 - clientTime) > 300 {
-                        AppGroupUserDefaults.Account.isClockSkewed = true
-                        DispatchQueue.main.async {
-                            WebSocketService.shared.disconnect()
-                            NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
+        if case let .failure(error) = result {
+            if error.code == 401 {
+                if let serverTime = Double(responseServerTime), serverTime > 0 {
+                    let clientTime = Date().timeIntervalSince1970
+                    if clientTime - requestTime.timeIntervalSince1970 > 60 {
+                        return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
+                    } else {
+                        if abs(serverTime / 1000000000 - clientTime) > 300 {
+                            AppGroupUserDefaults.Account.isClockSkewed = true
+                            DispatchQueue.main.async {
+                                WebSocketService.shared.disconnect()
+                                NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
+                            }
+                            return result
                         }
-                        return result
                     }
                 }
+                reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
+                LoginManager.shared.logout(from: "SyncRequest")
+            } else if error.code > 500 {
+                MixinServer.toggle(currentHttpUrl: rootURLString)
             }
-            reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
-            LoginManager.shared.logout(from: "SyncRequest")
         }
+        
         return result
     }
 }

@@ -91,7 +91,7 @@ open class BaseAPI {
                     Logger.write(error: error)
                     if NetworkManager.shared.isReachable {
                         switch error._code {
-                        case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                        case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
                             MixinServer.toggle(currentHttpUrl: rootURLString)
                         case 501...:
                             MixinServer.toggle(currentHttpUrl: rootURLString)
@@ -146,7 +146,7 @@ extension BaseAPI {
                         Logger.write(error: error)
                         if NetworkManager.shared.isReachable {
                             switch error._code {
-                            case NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
+                            case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
                                 MixinServer.toggle(currentHttpUrl: rootURLString)
                             case 501...:
                                 MixinServer.toggle(currentHttpUrl: rootURLString)

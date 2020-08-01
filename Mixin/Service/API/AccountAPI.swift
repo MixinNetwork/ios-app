@@ -3,8 +3,6 @@ import Alamofire
 
 final class AccountAPI: MixinAPI {
     
-    private let avatarJPEGCompressionQuality: CGFloat = 0.8
-    
     enum url {
         static let verifications = "verifications"
         static func verifications(id: String) -> String {

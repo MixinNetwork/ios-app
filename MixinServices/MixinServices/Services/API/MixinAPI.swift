@@ -3,7 +3,7 @@ import Alamofire
 import Goutils
 import UIKit
 
-open class BaseAPI {
+open class MixinAPI {
     
     public typealias Result<Response: Decodable> = Swift.Result<Response, APIError>
     
@@ -26,15 +26,15 @@ open class BaseAPI {
 
     private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
         do {
-            return BaseAPI.session.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
+            return MixinAPI.session.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
             reporter.report(error: error)
-            return BaseAPI.session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return MixinAPI.session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
     @discardableResult
-    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (BaseAPI.Result<ResultType>) -> Void) -> Request? {
+    public func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (MixinAPI.Result<ResultType>) -> Void) -> Request? {
         if checkLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -106,15 +106,15 @@ open class BaseAPI {
 
 }
 
-extension BaseAPI {
+extension MixinAPI {
     
     @discardableResult
-    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> BaseAPI.Result<T> {
+    public func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> MixinAPI.Result<T> {
         return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
     }
 
-    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> BaseAPI.Result<T> {
-        var result: BaseAPI.Result<T> = .failure(APIError.createTimeoutError())
+    private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> MixinAPI.Result<T> {
+        var result: MixinAPI.Result<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
         let requestTime = Date()
         let rootURLString = MixinServer.httpUrl

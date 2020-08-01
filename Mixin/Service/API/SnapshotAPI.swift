@@ -1,7 +1,7 @@
 import MixinServices
 
-final class SnapshotAPI: BaseAPI {
-
+final class SnapshotAPI: MixinAPI {
+    
     private enum url {
         static func snapshot(snapshotId: String) -> String {
             return "snapshots/\(snapshotId)"
@@ -11,13 +11,13 @@ final class SnapshotAPI: BaseAPI {
         }
     }
     static let shared = SnapshotAPI()
-
-    func snapshot(snapshotId: String) -> BaseAPI.Result<Snapshot> {
+    
+    func snapshot(snapshotId: String) -> MixinAPI.Result<Snapshot> {
         return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
     }
-
-    func trace(traceId: String) -> BaseAPI.Result<Snapshot> {
+    
+    func trace(traceId: String) -> MixinAPI.Result<Snapshot> {
         return request(method: .get, url: url.trace(traceId: traceId))
     }
-
+    
 }

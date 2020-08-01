@@ -12,7 +12,7 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
     }
     
     override func run() throws {
-        let result: BaseAPI.Result<[Snapshot]>
+        let result: MixinAPI.Result<[Snapshot]>
         switch category {
         case .all:
             result = AssetAPI.shared.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category))

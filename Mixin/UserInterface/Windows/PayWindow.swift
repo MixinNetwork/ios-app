@@ -517,7 +517,7 @@ extension PayWindow: PinFieldDelegate {
         loadingView.startAnimating()
 
         var trace: Trace?
-        let completion = { [weak self](result: BaseAPI.Result<Snapshot>) in
+        let completion = { [weak self] (result: MixinAPI.Result<Snapshot>) in
             guard let weakSelf = self else {
                 return
             }
@@ -567,7 +567,7 @@ extension PayWindow: PinFieldDelegate {
             TraceDAO.shared.saveTrace(trace: trace)
             WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         case let .multisig(multisig, _, _):
-            let multisigCompletion = { [weak self](result: BaseAPI.Result<Empty>) in
+            let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
                     return
                 }
@@ -654,7 +654,7 @@ extension PayWindow {
     static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
 
         if fromWeb {
-            var response: BaseAPI.Result<PaymentResponse>?
+            var response: MixinAPI.Result<PaymentResponse>?
             if let opponentId = opponentId {
                 response = PaymentAPI.shared.payments(assetId: asset.assetId, opponentId: opponentId, amount: amount, traceId: traceId)
             } else if let addressId = addressId {

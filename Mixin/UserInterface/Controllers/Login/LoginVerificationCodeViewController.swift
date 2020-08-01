@@ -79,7 +79,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         })
     }
     
-    func handleLoginResult(_ result: BaseAPI.Result<Account>, privateKeyPem: String) {
+    func handleLoginResult(_ result: MixinAPI.Result<Account>, privateKeyPem: String) {
         switch result {
         case let .success(account):
             let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)

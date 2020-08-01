@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public final class AssetAPI: BaseAPI {
+public final class AssetAPI: MixinAPI {
 
     public static let shared = AssetAPI()
 
@@ -46,54 +46,54 @@ public final class AssetAPI: BaseAPI {
         static let fiats = "fiats"
     }
 
-    public func assets(completion: @escaping (BaseAPI.Result<[Asset]>) -> Void) {
+    public func assets(completion: @escaping (MixinAPI.Result<[Asset]>) -> Void) {
         request(method: .get, url: url.assets, completion: completion)
     }
 
-    public func assets() -> BaseAPI.Result<[Asset]> {
+    public func assets() -> MixinAPI.Result<[Asset]> {
         return request(method: .get, url: url.assets)
     }
 
-    public func asset(assetId: String, completion: @escaping (BaseAPI.Result<Asset>) -> Void) {
+    public func asset(assetId: String, completion: @escaping (MixinAPI.Result<Asset>) -> Void) {
         request(method: .get, url: url.assets(assetId: assetId), completion: completion)
     }
 
-    public func asset(assetId: String) -> BaseAPI.Result<Asset> {
+    public func asset(assetId: String) -> MixinAPI.Result<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
-    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil, destination: String? = nil, tag: String? = nil) -> BaseAPI.Result<[Snapshot]> {
+    public func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil, destination: String? = nil, tag: String? = nil) -> MixinAPI.Result<[Snapshot]> {
         assert(limit <= 500)
         return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId, destination: destination, tag: tag))
     }
 
-    public func snapshots(limit: Int, assetId: String, destination: String, tag: String, completion: @escaping (BaseAPI.Result<[Snapshot]>) -> Void) {
+    public func snapshots(limit: Int, assetId: String, destination: String, tag: String, completion: @escaping (MixinAPI.Result<[Snapshot]>) -> Void) {
         request(method: .get, url: url.snapshots(limit: limit, assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
 
-    public func snapshots(limit: Int, assetId: String, completion: @escaping (BaseAPI.Result<[Snapshot]>) -> Void) {
+    public func snapshots(limit: Int, assetId: String, completion: @escaping (MixinAPI.Result<[Snapshot]>) -> Void) {
         request(method: .get, url: url.snapshots(limit: limit, offset: nil, assetId: assetId, opponentId: nil), completion: completion)
     }
     
-    public func fee(assetId: String, completion: @escaping (BaseAPI.Result<Fee>) -> Void) {
+    public func fee(assetId: String, completion: @escaping (MixinAPI.Result<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
     }
 
-    public func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (BaseAPI.Result<[PendingDeposit]>) -> Void) {
+    public func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (MixinAPI.Result<[PendingDeposit]>) -> Void) {
         request(method: .get, url: url.pendingDeposits(assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
     
-    public func search(keyword: String) -> BaseAPI.Result<[Asset]>  {
+    public func search(keyword: String) -> MixinAPI.Result<[Asset]>  {
         guard let url = url.search(keyword: keyword) else {
             return .success([])
         }
         return request(method: .get, url: url)
     }
     
-    public func topAssets(completion: @escaping (BaseAPI.Result<[Asset]>) -> Void) {
+    public func topAssets(completion: @escaping (MixinAPI.Result<[Asset]>) -> Void) {
         request(method: .get, url: url.top, completion: completion)
     }
     
-    public func fiats(completion: @escaping (BaseAPI.Result<[FiatMoney]>) -> Void) {
+    public func fiats(completion: @escaping (MixinAPI.Result<[FiatMoney]>) -> Void) {
         request(method: .get, url: url.fiats, completion: completion)
     }
     

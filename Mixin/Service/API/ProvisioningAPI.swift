@@ -1,6 +1,6 @@
 import MixinServices
 
-final class ProvisioningAPI: BaseAPI {
+final class ProvisioningAPI: MixinAPI {
     
     static let shared = ProvisioningAPI()
     
@@ -11,11 +11,11 @@ final class ProvisioningAPI: BaseAPI {
         }
     }
     
-    func code(completion: @escaping (BaseAPI.Result<ProvisioningCodeResponse>) -> Void) {
+    func code(completion: @escaping (MixinAPI.Result<ProvisioningCodeResponse>) -> Void) {
         request(method: .get, url: url.code, completion: completion)
     }
     
-    func update(id: String, secret: String, completion: @escaping (BaseAPI.Result<ProvisioningResponse>) -> Void) {
+    func update(id: String, secret: String, completion: @escaping (MixinAPI.Result<ProvisioningResponse>) -> Void) {
         let params = ["secret": secret]
         request(method: .post, url: url.update(id: id), parameters: params, completion: completion)
     }

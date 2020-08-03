@@ -1582,14 +1582,17 @@ extension CallService {
             switch result {
             case .success(let data):
                 guard let responseData = Data(base64Encoded: data.data) else {
+                    self.log("[KrakenMessageRetriever] invalid response data: \(data.data)")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
                 guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
+                    self.log("[KrakenMessageRetriever] invalid KrakenPublishResponse: \(String(data: responseData, encoding: .utf8))")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
                 guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
+                    self.log("[KrakenMessageRetriever] invalid JSEP: \(data.jsep)")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }

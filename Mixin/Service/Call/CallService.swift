@@ -1343,18 +1343,13 @@ extension CallService {
             let outputContainsBuiltInDevices = portTypes.contains(where: builtInPortTypes.contains)
             
             let category = AVAudioSession.Category.playAndRecord.rawValue
-            let options: AVAudioSession.CategoryOptions = {
-                // Without the option of duckOthers, speaker button in system calling interface provided
-                // by CallKit will soon becomes off after turning on
-                // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-                // Every post in the link above👆 is totally gibberish. A default mode gloss over the
-                // issue but mess it up when it comes to AirPods
-                var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
-                if self.usesSpeaker {
-                    options.insert(.defaultToSpeaker)
-                }
-                return options
-            }()
+            
+            // Without the option of duckOthers, speaker button in system calling interface provided
+            // by CallKit will soon becomes off after turning on
+            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+            // Every post in the link above👆 is totally gibberish. A default mode gloss over the
+            // issue but mess it up when it comes to AirPods
+            let options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
             
             let mode = AVAudioSession.Mode.voiceChat.rawValue
             let audioPort: AVAudioSession.PortOverride = usesSpeaker ? .speaker : .none

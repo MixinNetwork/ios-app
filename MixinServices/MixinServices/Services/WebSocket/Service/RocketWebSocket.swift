@@ -66,19 +66,18 @@ extension RocketWebSocket: SRWebSocketDelegate {
             return
         }
         let nsError = error as NSError
-        if nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504 {
-            let log = "[RocketWebSocket][DidFailWithError]...websocket connect timeout ...\(nsError)"
-            #if DEBUG
-            NSLog(log)
-            #endif
-            Logger.write(log: log)
+
+        let log = "[RocketWebSocket][DidFailWithError]\(err)"
+        #if DEBUG
+        NSLog(log)
+        #endif
+        Logger.write(log: log)
+
+        if (nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504)
+            || (nsError.domain == NSPOSIXErrorDomain && nsError.code == 61) {
+            // Connection time out or refused
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: true)
         } else {
-            let log = "[RocketWebSocket][DidFailWithError]\(err)"
-            #if DEBUG
-            NSLog(log)
-            #endif
-            Logger.write(log: log)
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
 
             if nsError.domain == NSPOSIXErrorDomain && nsError.code == 57 {

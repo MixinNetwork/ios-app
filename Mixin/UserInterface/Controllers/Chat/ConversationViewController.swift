@@ -1056,33 +1056,47 @@ class ConversationViewController: UIViewController {
             CallService.shared.alert(error: .networkFailure)
             return
         }
-        let conversation = dataSource.conversation
-        let conversationId = conversation.conversationId
-        let service = CallService.shared
-        service.queue.async {
-            let activeCall = service.activeCall
-            DispatchQueue.main.sync {
-                if service.isMinimized, activeCall?.conversationId == conversationId {
-                    service.setInterfaceMinimized(false, animated: true)
-                } else if activeCall != nil {
-                    service.alert(error: .busy)
-                } else {
-                    service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
-                        if ids.isEmpty {
-                            let picker = GroupCallMemberPickerViewController(conversation: conversation)
-                            picker.appearance = .startNewCall
-                            picker.onConfirmation = { (members) in
-                                service.requestStartGroupCall(conversation: conversation,
-                                                              invitingMembers: members)
+        
+        func performCall() {
+            let conversation = dataSource.conversation
+            let conversationId = conversation.conversationId
+            let service = CallService.shared
+            service.queue.async {
+                let activeCall = service.activeCall
+                DispatchQueue.main.sync {
+                    if service.isMinimized, activeCall?.conversationId == conversationId {
+                        service.setInterfaceMinimized(false, animated: true)
+                    } else if activeCall != nil {
+                        service.alert(error: .busy)
+                    } else {
+                        service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
+                            if ids.isEmpty {
+                                let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                                picker.appearance = .startNewCall
+                                picker.onConfirmation = { (members) in
+                                    service.requestStartGroupCall(conversation: conversation,
+                                                                  invitingMembers: members)
+                                }
+                                self?.present(picker, animated: true, completion: nil)
+                            } else {
+                                service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
                             }
-                            self?.present(picker, animated: true, completion: nil)
-                        } else {
-                            service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
                         }
                     }
                 }
             }
         }
+        
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            DispatchQueue.main.async {
+                if isGranted {
+                    performCall()
+                } else {
+                    CallService.shared.alert(error: .microphonePermissionDenied)
+                }
+            }
+        }
+        
     }
     
     // MARK: - Class func

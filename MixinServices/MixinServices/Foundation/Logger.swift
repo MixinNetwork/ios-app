@@ -10,7 +10,15 @@ public enum Logger {
     public static func write(error: Error, extra: String = "") {
         queue.async {
             makeLogDirectoryIfNeeded()
+
+            #if DEBUG
+            print("===error:\(error)...\n\(extra)")
+            #endif
+
             writeLog(filename: errorLog, log: String(describing: error), newSection: true)
+            if !extra.isEmpty {
+                writeLog(filename: errorLog, log: extra)
+            }
         }
     }
     

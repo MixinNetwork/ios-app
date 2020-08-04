@@ -83,12 +83,12 @@ open class BaseAPI {
                             completion(.success(try JSONDecoder.default.decode(ResultType.self, from: data)))
                         }
                     } catch {
-                        Logger.write(error: error)
+                        Logger.write(error: error, extra: "data decode failed.")
                         MixinServer.toggle(currentHttpUrl: rootURLString)
                         handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
                 case let .failure(error):
-                    Logger.write(error: error)
+                    Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
                     if NetworkManager.shared.isReachable {
                         switch error._code {
                         case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
@@ -138,12 +138,12 @@ extension BaseAPI {
                                 result = .success(model)
                             }
                         } catch {
-                            Logger.write(error: error)
+                            Logger.write(error: error, extra: "data decode failed.")
                             MixinServer.toggle(currentHttpUrl: rootURLString)
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
-                        Logger.write(error: error)
+                        Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
                         if NetworkManager.shared.isReachable {
                             switch error._code {
                             case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:

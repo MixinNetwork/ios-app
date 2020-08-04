@@ -30,7 +30,7 @@ public class KrakenMessageRetriever {
         do {
             let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers()
             return peers
-        } catch let error as APIError where error.code == 20140 {
+        } catch MixinAPIError.invalidConversationChecksum {
             SendMessageService.shared.syncConversation(conversationId: id)
             try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: id)
             return requestPeers(forConversationWith: id)
@@ -59,7 +59,7 @@ public class KrakenMessageRetriever {
                 } else {
                     completion?(.failure(MixinServicesError.badKrakenBlazeMessage))
                 }
-            } catch let error as APIError where error.code == 20140 {
+            } catch MixinAPIError.invalidConversationChecksum {
                 if let conversationId = blazeMessage.params?.conversationId {
                     SendMessageService.shared.syncConversation(conversationId: conversationId)
                     try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)

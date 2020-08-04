@@ -679,10 +679,12 @@ public class ReceiveMessageService: MixinService {
                     }
                     return transferStickerData
                 case let .failure(error):
-                    guard error.code != 404 else {
+                    switch error {
+                    case .endpointNotFound:
                         return nil
+                    default:
+                        checkNetworkAndWebSocket()
                     }
-                    checkNetworkAndWebSocket()
                 }
             } while LoginManager.shared.isLoggedIn
             return nil
@@ -752,10 +754,15 @@ public class ReceiveMessageService: MixinService {
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
         case let .failure(error):
-            if tryAgain && error.code != 404 {
-                ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
+            switch error {
+            case .endpointNotFound:
+                return .ERROR
+            default:
+                if tryAgain {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
+                }
+                return .START
             }
-            return error.code == 404 ? .ERROR : .START
         }
     }
 
@@ -773,10 +780,12 @@ public class ReceiveMessageService: MixinService {
                 UserDAO.shared.updateUsers(users: [response])
                 return true
             case let .failure(error):
-                guard error.code != 404 else {
+                switch error {
+                case .endpointNotFound:
                     return false
+                default:
+                    checkNetworkAndWebSocket()
                 }
-                checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn
 

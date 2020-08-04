@@ -29,7 +29,8 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):
-                if error.code == 10005 {
+                switch error {
+                case .requiresReCaptcha:
                     ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
@@ -38,7 +39,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
                             self?.continueButton.isBusy = false
                         }
                     }
-                } else {
+                default:
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

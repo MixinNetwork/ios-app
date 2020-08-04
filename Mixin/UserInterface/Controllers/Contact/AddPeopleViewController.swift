@@ -66,7 +66,8 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
                 vc.updateUserFromRemoteAfterReloaded = false
                 weakSelf.present(vc, animated: true, completion: nil)
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.code == 404 ? R.string.localizable.user_not_found() : error.localizedDescription)
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
+                showAutoHiddenHud(style: .error, text: text)
             }
         }
     }

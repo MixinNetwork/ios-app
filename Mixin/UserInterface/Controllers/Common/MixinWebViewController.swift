@@ -184,11 +184,8 @@ class MixinWebViewController: WebViewController {
                 return user
             case let .failure(error):
                 DispatchQueue.main.async {
-                    if error.code == 404 {
-                        hud.set(style: .error, text: R.string.localizable.user_not_found())
-                    } else {
-                        hud.set(style: .error, text: error.localizedDescription)
-                    }
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
+                    hud.set(style: .error, text: text)
                     hud.scheduleAutoHidden()
                 }
                 return nil
@@ -277,10 +274,11 @@ extension MixinWebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        guard let failURL = (error as NSError).userInfo["NSErrorFailingURLKey"] as? URL, let host = failURL.host else {
+        let nsError = error as NSError
+        guard let failURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL, let host = failURL.host else {
             return
         }
-        switch error.errorCode {
+        switch nsError.code {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorInternationalRoamingOff, NSURLErrorDataNotAllowed, NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost, NSURLErrorNetworkConnectionLost:
             loadFailView.isHidden = false
             loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)

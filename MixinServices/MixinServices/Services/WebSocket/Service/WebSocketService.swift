@@ -133,7 +133,7 @@ public class WebSocketService {
                 return (false, nil)
             }
             var response: BlazeMessage?
-            var err = APIError.createTimeoutError()
+            var err = MixinAPIError.makeNetworkConnectionTimeOutError()
             
             let semaphore = DispatchSemaphore(value: 0)
             messageHandlers[message.id] = { (jobResult) in
@@ -141,14 +141,14 @@ public class WebSocketService {
                 case let .success(blazeMessage):
                     response = blazeMessage
                 case let .failure(error):
-                    if error.code == 10002 {
+                    if case .invalidRequestData = error {
                         if let param = message.params, let messageId = param.messageId, messageId != messageId.lowercased() {
                             MessageDAO.shared.deleteMessage(id: messageId)
                             JobDAO.shared.removeJob(jobId: message.id)
                         }
                     }
                     if let conversationId = message.params?.conversationId {
-                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage][\(message.action)]...\(error.debugDescription)")
+                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage][\(message.action)]...\(error)")
                     }
                     err = error
                 }
@@ -242,10 +242,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 messageHandlers.removeValue(forKey: message.id)
                 handler(.failure(error))
             }
-            let needsLogout = message.action == BlazeMessageAction.error.rawValue
-                && error.code == 401
-                && !AppGroupUserDefaults.Account.isClockSkewed
-            if needsLogout {
+            if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.Account.isClockSkewed {
                 LoginManager.shared.logout(from: "WebSocketService")
             }
         } else {
@@ -294,7 +291,7 @@ extension WebSocketService {
         enqueueOperation {
             ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
             for handler in self.messageHandlers.values {
-                handler(.failure(APIError.createTimeoutError()))
+                handler(.failure(MixinAPIError.makeNetworkConnectionTimeOutError()))
             }
             self.messageHandlers.removeAll()
             ConcurrentJobQueue.shared.suspend()

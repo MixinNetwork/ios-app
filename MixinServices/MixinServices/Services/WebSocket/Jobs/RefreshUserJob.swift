@@ -30,11 +30,11 @@ public class RefreshUserJob: BaseJob {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
             case let .failure(error):
-                guard error.code != 404 else {
+                if case .endpointNotFound = error {
                     processNotFoundUser(userId: userId)
-                    return
+                } else {
+                    throw error
                 }
-                throw error
             }
         } else {
             switch UserSessionAPI.showUsers(userIds: userIds) {

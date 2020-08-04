@@ -520,7 +520,7 @@ extension HomeViewController {
             return
         }
         AccountAPI.me { (result) in
-            guard case let .failure(error) = result, error.code == 10006 else {
+            guard case .failure(.requiresUpdate) = result else {
                 return
             }
             AppDelegate.current.mainWindow.rootViewController = UpdateViewController.instance()
@@ -707,13 +707,14 @@ extension HomeViewController {
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                     }
                 case let .failure(error):
-                    if error.code == 404 || error.code == 403 {
+                    switch error {
+                    case .forbidden, .endpointNotFound:
                         hud.hide()
                         self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
                         DispatchQueue.global().async {
                             ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         }
-                    } else {
+                    default:
                         hud.set(style: .error, text: error.localizedDescription)
                         hud.scheduleAutoHidden()
                     }

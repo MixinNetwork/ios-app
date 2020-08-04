@@ -40,7 +40,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case let .failure(error):
-                if error.code == 10005 {
+                switch error {
+                case .requiresReCaptcha:
                     ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
@@ -49,7 +50,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                             self?.resendButton.isBusy = false
                         }
                     }
-                } else {
+                default:
                     reporter.report(error: error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false

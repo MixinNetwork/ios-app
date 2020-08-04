@@ -65,9 +65,11 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
                 LoginManager.shared.setAccount(account)
                 self?.showSuccessAlert()
             case .failure(let error):
-                if !error.pinErrorHandler(callback: { (errorMsg) in
-                    self?.alert(errorMsg)
-                }) {
+                if PINVerificationFailureHandler.canHandle(error: error) {
+                    PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
+                        self?.alert(description)
+                    }
+                } else {
                     self?.handleVerificationCodeError(error)
                 }
             }

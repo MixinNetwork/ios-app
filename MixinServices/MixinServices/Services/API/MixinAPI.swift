@@ -5,11 +5,11 @@ import UIKit
 
 open class MixinAPI {
     
-    public typealias Result<Response: Decodable> = Swift.Result<Response, APIError>
+    public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
     private struct ResponseObject<ResultType: Decodable>: Decodable {
         let data: ResultType?
-        let error: APIError?
+        let error: MixinAPIError?
     }
     private static let session: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default
@@ -40,32 +40,29 @@ open class MixinAPI {
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
-                let handerError = { (error: APIError) in
-                    switch error.code {
-                    case 401:
-                        if let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String, let serverTime = Double(responseServerTime), serverTime > 0 {
-                            let clientTime = Date().timeIntervalSince1970
-                            if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                                self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, retry: true, completion: completion)
-                                return
-                            } else {
-                                if abs(serverTime / 1000000000 - clientTime) > 300 {
-                                    AppGroupUserDefaults.Account.isClockSkewed = true
-                                    DispatchQueue.main.async {
-                                        WebSocketService.shared.disconnect()
-                                        NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
-                                    }
-                                    return
+                let handerError = { (error: MixinAPIError) in
+                    guard case .unauthorized = error else {
+                        completion(.failure(error))
+                        return
+                    }
+                    if let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String, let serverTime = Double(responseServerTime), serverTime > 0 {
+                        let clientTime = Date().timeIntervalSince1970
+                        if clientTime - requestTime.timeIntervalSince1970 > 60 {
+                            self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, retry: true, completion: completion)
+                            return
+                        } else {
+                            if abs(serverTime / 1000000000 - clientTime) > 300 {
+                                AppGroupUserDefaults.Account.isClockSkewed = true
+                                DispatchQueue.main.async {
+                                    WebSocketService.shared.disconnect()
+                                    NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                                 }
+                                return
                             }
                         }
-                        reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
-                        LoginManager.shared.logout(from: "AsyncRequest")
-                        return
-                    default:
-                        break
                     }
-                    completion(.failure(error))
+                    reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
+                    LoginManager.shared.logout(from: "AsyncRequest")
                 }
                 switch response.result {
                 case .success(let data):
@@ -81,7 +78,7 @@ open class MixinAPI {
                     } catch {
                         Logger.write(error: error, extra: "data decode failed.")
                         MixinServer.toggle(currentHttpUrl: rootURLString)
-                        handerError(APIError.createError(error: error, status: httpStatusCode))
+                        completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):
                     Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
@@ -95,7 +92,7 @@ open class MixinAPI {
                             break
                         }
                     }
-                    handerError(APIError.createError(error: error, status: httpStatusCode))
+                    completion(.failure(.networkConnection(error)))
                 }
             })
     }
@@ -110,7 +107,7 @@ extension MixinAPI {
     }
 
     private static func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> MixinAPI.Result<T> {
-        var result: MixinAPI.Result<T> = .failure(APIError.createTimeoutError())
+        var result: MixinAPI.Result<T> = .failure(.makeNetworkConnectionTimeOutError())
         var responseServerTime = ""
         let requestTime = Date()
         let rootURLString = MixinServer.httpUrl
@@ -136,7 +133,7 @@ extension MixinAPI {
                         } catch {
                             Logger.write(error: error, extra: "data decode failed.")
                             MixinServer.toggle(currentHttpUrl: rootURLString)
-                            result = .failure(APIError.createError(error: error, status: httpStatusCode))
+                            result = .failure(.invalidJSON(error))
                         }
                     case let .failure(error):
                         Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
@@ -150,18 +147,19 @@ extension MixinAPI {
                                 break
                             }
                         }
-                        result = .failure(APIError.createError(error: error, status: httpStatusCode))
+                        result = .failure(.networkConnection(error))
                     }
                     semaphore.signal()
                 })
 
             if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= Double(requestTimeout) {
+                // TODO: Use Alamofire's timeout mechanism to avoid data race
                 Logger.write(log: "[BaseAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(url)")
-                result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
+                result = .failure(MixinAPIError.makeNetworkConnectionTimeOutError())
             }
         }
-
-        if case let .failure(error) = result, error.code == 401 {
+        
+        if case let .failure(.unauthorized) = result {
             if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
                 if clientTime - requestTime.timeIntervalSince1970 > 60 {

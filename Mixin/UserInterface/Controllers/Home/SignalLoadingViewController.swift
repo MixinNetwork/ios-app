@@ -51,11 +51,13 @@ class SignalLoadingViewController: UIViewController {
                 }
                 return
             case let .failure(error):
-                guard error.code != 401 else {
+                switch error {
+                case .unauthorized:
                     return
+                default:
+                    Thread.sleep(forTimeInterval: 2)
+                    reporter.report(error: error)
                 }
-                Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
             }
         } while true
     }
@@ -167,11 +169,13 @@ class SignalLoadingViewController: UIViewController {
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
                 return
             case let .failure(error):
-                guard error.code != 401 else {
+                switch error {
+                case .unauthorized:
                     return
+                default:
+                    Thread.sleep(forTimeInterval: 2)
+                    reporter.report(error: error)
                 }
-                Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
             }
         } while true
     }

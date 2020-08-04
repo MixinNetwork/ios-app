@@ -15,7 +15,7 @@ public var currentDecimalSeparator: String {
     Locale.current.decimalSeparator ?? "."
 }
 
-public var requestTimeout = isAppExtension ? 3 : 5
+public var requestTimeout: TimeInterval = isAppExtension ? 3 : 5
 
 public var globalSignalContext: OpaquePointer {
     return Signal.context

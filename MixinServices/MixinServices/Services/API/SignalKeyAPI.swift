@@ -9,7 +9,7 @@ public class SignalKeyAPI : MixinAPI {
     }
     
     public static func pushSignalKeys(key: SignalKeyRequest) -> MixinAPI.Result<Empty> {
-        return request(method: .post, url: url.signal, parameters: key.toParameters(), encoding: EncodableParameterEncoding<SignalKeyRequest>())
+        return request(method: .post, url: url.signal, parameters: key)
     }
     
     public static func getSignalKeyCount() -> MixinAPI.Result<SignalKeyCount> {

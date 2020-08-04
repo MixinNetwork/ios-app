@@ -8,8 +8,8 @@ final class PhoneContactAPI: MixinAPI {
     }
     
     static func upload(contacts: [PhoneContact], completion: ((MixinAPI.Result<Empty>) -> Void)? = nil) {
-        let parameters = contacts.map({ ["phone": $0.phoneNumber, "full_name": $0.fullName] }).toParameters()
-        request(method: .post, url: url.contacts, parameters: parameters, encoding: JSONArrayEncoding()) { (result) in
+        let parameters = contacts.map({ ["phone": $0.phoneNumber, "full_name": $0.fullName] })
+        request(method: .post, url: url.contacts, parameters: parameters) { (result) in
             completion?(result)
         }
     }

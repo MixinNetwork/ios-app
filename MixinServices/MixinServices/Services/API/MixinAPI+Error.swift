@@ -1,10 +1,13 @@
 import Foundation
+import Alamofire
 
 public enum MixinAPIError: Error {
     
     case prerequistesNotFulfilled
+    case invalidHTTPStatusCode(Int)
     case invalidJSON(Error)
-    case networkConnection(Error)
+    case httpTransport(AFError)
+    case webSocketTimeOut
     case unknown(status: Int, code: Int)
     
     case invalidRequestBody
@@ -178,15 +181,25 @@ extension MixinAPIError: Decodable {
 
 extension MixinAPIError {
     
-    static func makeNetworkConnectionTimeOutError() -> MixinAPIError {
-        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: nil)
-        return MixinAPIError.networkConnection(error)
+    public var isTransportTimedOut: Bool {
+        switch self {
+        case .webSocketTimeOut:
+            return true
+        case let .httpTransport(underlying as NSError):
+            return underlying.domain == NSURLErrorDomain && underlying.code == NSURLErrorTimedOut
+        default:
+            return false
+        }
     }
     
-    public var isNetworkConnectionTimedOut: Bool {
+    public var isServerSideError: Bool {
         switch self {
-        case .networkConnection(let underlying as NSError):
-            return underlying.domain == NSURLErrorDomain && underlying.code == NSURLErrorTimedOut
+        case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
+            return true
+        case let .invalidHTTPStatusCode(code):
+            return code >= 500
+        case let .unknown(status, _):
+            return status >= 500
         default:
             return false
         }
@@ -194,12 +207,10 @@ extension MixinAPIError {
     
     public var worthRetrying: Bool {
         switch self {
-        case .networkConnection:
-            return true
-        case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
+        case .httpTransport, .webSocketTimeOut:
             return true
         default:
-            return false
+            return isServerSideError
         }
     }
     

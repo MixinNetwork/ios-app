@@ -22,7 +22,7 @@ final class PaymentAPI: MixinAPI {
         var transactionRequest = transactionRequest
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             transactionRequest.pin = encryptedPin
-            self.request(method: .post, url: url.transactions, parameters: transactionRequest.toParameters(), encoding: EncodableParameterEncoding<RawTransactionRequest>(), completion: completion)
+            self.request(method: .post, url: url.transactions, parameters: transactionRequest, completion: completion)
         }
     }
     

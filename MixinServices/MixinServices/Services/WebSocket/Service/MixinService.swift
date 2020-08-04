@@ -276,7 +276,7 @@ public class MixinService {
                         syncConversation(conversationId: conversationId)
                     }
                     throw error
-                case .networkConnection:
+                case .httpTransport, .webSocketTimeOut:
                     checkNetworkAndWebSocket()
                     continue
                 default:
@@ -297,13 +297,13 @@ public class MixinService {
     internal func checkNetworkAndWebSocket() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!ReachabilityManger.isReachable || !WebSocketService.shared.isConnected)
     }
 
     internal func checkNetwork() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !NetworkManager.shared.isReachable
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.isReachable
     }
     
     public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {

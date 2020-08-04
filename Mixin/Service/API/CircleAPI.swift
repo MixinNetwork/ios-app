@@ -49,18 +49,18 @@ final class CircleAPI: MixinAPI {
     }
 
     static func updateCircle(of id: String, requests: [CircleConversationRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
-        let params = requests.map(\.jsonObject).toParameters()
-        request(method: .post, url: Url.conversations(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
+        let params = requests.map(\.jsonObject)
+        request(method: .post, url: Url.conversations(id: id), parameters: params, completion: completion)
     }
     
     static func updateCircles(forConversationWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
-        let params = requests.map(\.jsonObject).toParameters()
-        request(method: .post, url: Url.updateCircleForConversation(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
+        let params = requests.map(\.jsonObject)
+        request(method: .post, url: Url.updateCircleForConversation(id: id), parameters: params, completion: completion)
     }
     
     static func updateCircles(forUserWith id: String, requests: [ConversationCircleRequest], completion: @escaping (MixinAPI.Result<[CircleConversation]>) -> Void) {
-        let params = requests.map(\.jsonObject).toParameters()
-        request(method: .post, url: Url.updateCircleForUser(id: id), parameters: params, encoding: JSONArrayEncoding(), completion: completion)
+        let params = requests.map(\.jsonObject)
+        request(method: .post, url: Url.updateCircleForUser(id: id), parameters: params, completion: completion)
     }
     
     static func delete(id: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {

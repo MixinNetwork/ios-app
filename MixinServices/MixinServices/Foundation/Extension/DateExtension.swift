@@ -72,5 +72,3 @@ public let mediaDurationFormatter: DateComponentsFormatter = {
     formatter.unitsStyle = .positional
     return formatter
 }()
-
-public let millisecondsPerSecond: Double = 1000

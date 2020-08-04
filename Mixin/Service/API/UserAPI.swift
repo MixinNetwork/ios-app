@@ -48,7 +48,7 @@ final class UserAPI: UserSessionAPI {
 
     @discardableResult
     static func showUsers(userIds: [String], completion: @escaping (MixinAPI.Result<[UserResponse]>) -> Void) -> Request? {
-        return request(method: .post, url: url.users, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
+        return request(method: .post, url: url.users, parameters: userIds, completion: completion)
     }
     
     @discardableResult
@@ -62,42 +62,42 @@ final class UserAPI: UserSessionAPI {
 
     static func addFriend(userId: String, full_name: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: full_name, action: .ADD)
-        request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.relationships, parameters: relationshipRequest, completion: completion)
     }
 
     static func removeFriend(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .REMOVE)
-        request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.relationships, parameters: relationshipRequest, completion: completion)
     }
 
     static func remarkFriend(userId: String, full_name: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: full_name, action: .UPDATE)
-        request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.relationships, parameters: relationshipRequest, completion: completion)
     }
 
     static func blockUser(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
-        request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.relationships, parameters: relationshipRequest, completion: completion)
     }
 
     static func blockUser(userId: String) -> MixinAPI.Result<UserResponse> {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
-        return request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
+        return request(method: .post, url: url.relationships, parameters: relationshipRequest)
     }
 
     static func reportUser(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
-        request(method: .post, url: url.reports, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.reports, parameters: relationshipRequest, completion: completion)
     }
 
     static func reportUser(userId: String) -> MixinAPI.Result<UserResponse> {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
-        return request(method: .post, url: url.reports, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
+        return request(method: .post, url: url.reports, parameters: relationshipRequest)
     }
 
     static func unblockUser(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .UNBLOCK)
-        request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
+        request(method: .post, url: url.relationships, parameters: relationshipRequest, completion: completion)
     }
 
     static func getFavoriteApps(ofUserWith id: String, completion: @escaping (MixinAPI.Result<[FavoriteApp]>) -> Void) {

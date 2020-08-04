@@ -22,7 +22,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         case .never:
             return false
         case .wifi:
-            return NetworkManager.shared.isReachableOnWiFi
+            return ReachabilityManger.isReachableOnEthernetOrWiFi
         case .wifiAndCellular:
             return true
         }

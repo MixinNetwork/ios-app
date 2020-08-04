@@ -12,7 +12,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         case .never:
             return false
         case .wifi:
-            return NetworkManager.shared.isReachableOnWiFi
+            return ReachabilityManger.isReachableOnEthernetOrWiFi
         case .wifiAndCellular:
             return true
         }

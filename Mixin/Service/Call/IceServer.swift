@@ -17,7 +17,7 @@ extension RTCIceServer {
                 Logger.write(error: error)
                 repeat {
                     Thread.sleep(forTimeInterval: 2)
-                } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !NetworkManager.shared.isReachable
+                } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.isReachable
             }
         } while LoginManager.shared.isLoggedIn
         return []

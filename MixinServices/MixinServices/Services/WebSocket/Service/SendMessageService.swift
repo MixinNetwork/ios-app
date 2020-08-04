@@ -331,13 +331,13 @@ public class SendMessageService: MixinService {
                 return false
             case MixinAPIError.forbidden:
                 return true
-            case MixinAPIError.networkConnection:
+            case MixinAPIError.httpTransport, MixinAPIError.webSocketTimeOut:
                 Thread.sleep(forTimeInterval: 2)
             default:
                 reporter.report(error: error)
             }
             
-            while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
+            while LoginManager.shared.isLoggedIn && (!ReachabilityManger.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
             return false
@@ -408,7 +408,7 @@ public class SendMessageService: MixinService {
                 return true
             } catch {
                 checkNetworkAndWebSocket()
-                if let error = error as? MixinAPIError, error.isNetworkConnectionTimedOut {
+                if let error = error as? MixinAPIError, error.isTransportTimedOut {
                     
                 } else {
                     var blazeMessage = ""

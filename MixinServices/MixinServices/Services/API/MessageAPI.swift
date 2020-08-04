@@ -20,8 +20,8 @@ public class MessageAPI: MixinAPI {
     }
     
     public static func acknowledgements(ackMessages: [AckMessage]) -> MixinAPI.Result<Empty> {
-        let parameters = ackMessages.map({ ["message_id": $0.messageId, "status": $0.status] }).toParameters()
-        return request(method: .post, url: url.acknowledgements, parameters: parameters, encoding: JSONArrayEncoding())
+        let parameters = ackMessages.map({ ["message_id": $0.messageId, "status": $0.status] })
+        return request(method: .post, url: url.acknowledgements, parameters: parameters)
     }
     
     public static func messageStatus(offset: Int64) -> MixinAPI.Result<[BlazeMessageData]> {

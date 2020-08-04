@@ -13,7 +13,7 @@ class BackupJob: BaseJob {
     private var realUploadedSize: Int64 = 0
     private var isStoppedQuery = false
     private var isContinueBackup: Bool {
-        return !isCancelled && NetworkManager.shared.isReachableOnWiFi
+        return !isCancelled && ReachabilityManger.isReachableOnEthernetOrWiFi
     }
 
     private(set) var isBackingUp = true

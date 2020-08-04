@@ -15,15 +15,13 @@ open class UploadOrDownloadJob: AsynchronousJob {
         if weakSelf.isCancelled || !LoginManager.shared.isLoggedIn {
             weakSelf.finishJob()
             return
-        } else if let err = error {
-            switch err.errorCode {
-            case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost:
-                if weakSelf.retry() {
-                    return
-                }
-                weakSelf.finishJob()
+        } else if let error = error {
+            let nsError = error as NSError
+            let connectionErrors = [NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost]
+            let isConnectionError = nsError.domain == NSURLErrorDomain && connectionErrors.contains(nsError.code)
+            if isConnectionError, weakSelf.retry() {
                 return
-            default:
+            } else {
                 weakSelf.finishJob()
                 return
             }

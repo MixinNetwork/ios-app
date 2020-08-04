@@ -1013,18 +1013,19 @@ extension CallService: KrakenMessageRetrieverDelegate {
             self.log("[CallService] finds a disconnecting call, give up kraken request")
             return false
         }
-        if let error = error as? APIError, error.code == 401 {
+        switch error {
+        case MixinAPIError.unauthorized:
             self.log("[CallService] Got 401 when requesting: \(request.debugDescription)")
-            let error = CallError.remoteError(error.code)
+            let error = CallError.invalidPeerConnection(.unauthorized)
             failCurrentCall(sendFailedMessageToRemote: false, error: error)
             callInterface.reportCall(uuid: request.callUUID, endedByReason: .failed)
             return false
-        } else if let error = error as? APIError, [5002001, 5002002, 5002003].contains(error.code) {
-            self.log("[CallService] Got \(error.code) when requesting: \(request.debugDescription)")
+        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
+            self.log("[CallService] Got \(error) when requesting: \(request.debugDescription)")
             return false
-        } else if let error = error as? APIError, error.code == 5002000 {
+        case MixinAPIError.roomFull:
             return false
-        } else {
+        default:
             let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
             self.log("[CallService] got error: \(error), numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
             return shouldRetry
@@ -1605,11 +1606,12 @@ extension CallService {
                 }
                 completion(.success((data.trackId, sdp)))
             case let .failure(error):
-                if let error = error as? APIError, error.code == 5002000 {
+                switch error {
+                case MixinAPIError.roomFull:
                     completion(.failure(.roomFull))
-                } else if let error = error as? APIError, [5002001, 5002002, 5002003].contains(error.code) {
-                    completion(.failure(.invalidPeerConnection(error.code)))
-                } else {
+                case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
+                    completion(.failure(.invalidPeerConnection(error as! MixinAPIError)))
+                default:
                     completion(.failure(.networkFailure))
                 }
             }

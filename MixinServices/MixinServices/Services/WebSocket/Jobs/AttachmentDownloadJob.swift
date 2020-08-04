@@ -81,13 +81,12 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                 }
                 return true
             case let .failure(error):
-                guard error.code != 404 else {
+                if case .endpointNotFound = error {
                     downloadExpired()
                     removeJob()
                     finishJob()
                     return false
-                }
-                guard error.isClientError || error.isServerError else {
+                } else if !error.worthRetrying {
                     return false
                 }
                 checkNetworkAndWebSocket()

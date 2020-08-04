@@ -43,18 +43,14 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
-                case let .failure(error):
-                    weakSelf.isBusy = false
-                    weakSelf.verificationCodeField.clear()
-                    weakSelf.alertPinError(error: error)
+            case let .failure(error):
+                weakSelf.isBusy = false
+                weakSelf.verificationCodeField.clear()
+                PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
+                    self?.alert(description)
                 }
+            }
         })
-    }
-
-    private func alertPinError(error: APIError) {
-        error.pinErrorHandler { [weak self](errorMsg) in
-            self?.alert(errorMsg)
-        }
     }
     
     override func requestVerificationCode(reCaptchaToken token: String?) {
@@ -68,7 +64,8 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case let.failure(error):
-                if error.code == 10005 {
+                switch error {
+                case .requiresReCaptcha:
                     ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
@@ -77,7 +74,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                             self?.resendButton.isBusy = false
                         }
                     }
-                } else {
+                default:
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }

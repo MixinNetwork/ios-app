@@ -64,12 +64,9 @@ class UrlWindow {
                     appItem = response.app
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.app_not_found())
                     DispatchQueue.main.async {
-                        if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: R.string.localizable.app_not_found())
-                        } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        }
+                        showAutoHiddenHud(style: .error, text: text)
                     }
                     return
                 }
@@ -127,12 +124,9 @@ class UrlWindow {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.snapshot_not_found())
                         DispatchQueue.main.async {
-                            if error.code == 404 {
-                                hud.set(style: .error, text: R.string.localizable.snapshot_not_found())
-                            } else {
-                                hud.set(style: .error, text: error.localizedDescription)
-                            }
+                            hud.set(style: .error, text: text)
                             hud.scheduleAutoHidden()
                         }
                         return
@@ -145,12 +139,9 @@ class UrlWindow {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.snapshot_not_found())
                         DispatchQueue.main.async {
-                            if error.code == 404 {
-                                hud.set(style: .error, text: R.string.localizable.snapshot_not_found())
-                            } else {
-                                hud.set(style: .error, text: error.localizedDescription)
-                            }
+                            hud.set(style: .error, text: text)
                             hud.scheduleAutoHidden()
                         }
                         return
@@ -215,12 +206,9 @@ class UrlWindow {
                     userItem = UserItem.createUser(from: response)
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
                     DispatchQueue.main.async {
-                        if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: R.string.localizable.user_not_found())
-                        } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        }
+                        showAutoHiddenHud(style: .error, text: text)
                     }
                     return
                 }
@@ -424,12 +412,9 @@ class UrlWindow {
                         AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
                         address = remoteAddress
                     case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.address_not_found())
                         DispatchQueue.main.async {
-                            if error.code == 404 {
-                                hud.set(style: .error, text: R.string.localizable.address_not_found())
-                            } else {
-                                hud.set(style: .error, text: error.localizedDescription)
-                            }
+                            hud.set(style: .error, text: text)
                             hud.scheduleAutoHidden()
                         }
                         return
@@ -497,11 +482,8 @@ extension UrlWindow {
                     hud.hide()
                 }
             case let .failure(error):
-                if error.code == 404 {
-                    hud.set(style: .error, text: Localized.CODE_RECOGNITION_FAIL_TITLE)
-                } else {
-                    hud.set(style: .error, text: error.localizedDescription)
-                }
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.code_recognition_fail_title())
+                hud.set(style: .error, text: text)
                 hud.scheduleAutoHidden()
             }
         }
@@ -517,11 +499,8 @@ extension UrlWindow {
                 address = remoteAddress
             case let .failure(error):
                 DispatchQueue.main.async {
-                    if error.code == 404 {
-                        hud.set(style: .error, text: R.string.localizable.address_not_found())
-                    } else {
-                        hud.set(style: .error, text: error.localizedDescription)
-                    }
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.address_not_found())
+                    hud.set(style: .error, text: text)
                     hud.scheduleAutoHidden()
                 }
                 return nil
@@ -545,12 +524,9 @@ extension UrlWindow {
             case let .success(assetItem):
                 asset = AssetDAO.shared.saveAsset(asset: assetItem)
             case let .failure(error):
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
                 DispatchQueue.main.async {
-                    if error.code == 404 {
-                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
-                    } else {
-                        hud.set(style: .error, text: error.localizedDescription)
-                    }
+                    hud.set(style: .error, text: text)
                     hud.scheduleAutoHidden()
                 }
                 return nil
@@ -577,12 +553,9 @@ extension UrlWindow {
                 user = UserItem.createUser(from: userItem)
                 UserDAO.shared.updateUsers(users: [userItem])
             case let .failure(error):
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
                 DispatchQueue.main.async {
-                    if error.code == 404 {
-                        hud.set(style: .error, text: R.string.localizable.user_not_found())
-                    } else {
-                        hud.set(style: .error, text: error.localizedDescription)
-                    }
+                    hud.set(style: .error, text: text)
                     hud.scheduleAutoHidden()
                 }
                 return nil

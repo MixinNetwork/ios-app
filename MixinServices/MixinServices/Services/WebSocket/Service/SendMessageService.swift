@@ -251,13 +251,14 @@ public class SendMessageService: MixinService {
             case .success:
                 return true
             case let .failure(error):
-                guard error.code != 401 else {
+                switch error {
+                case .unauthorized:
                     return false
-                }
-                guard error.code != 403 else {
+                case .endpointNotFound:
                     return true
+                default:
+                    checkNetwork()
                 }
-                checkNetwork()
             }
         } while true
     }
@@ -325,18 +326,17 @@ public class SendMessageService: MixinService {
         do {
             return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
         } catch {
-            if let err = error as? APIError {
-                if err.code == 403 {
-                    return true
-                } else if err.code == 401 {
-                    return false
-                } else if err.isClientError {
-                    Thread.sleep(forTimeInterval: 2)
-                } else {
-                    reporter.report(error: error)
-                }
+            switch error {
+            case MixinAPIError.unauthorized:
+                return false
+            case MixinAPIError.forbidden:
+                return true
+            case MixinAPIError.networkConnection:
+                Thread.sleep(forTimeInterval: 2)
+            default:
+                reporter.report(error: error)
             }
-
+            
             while LoginManager.shared.isLoggedIn && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
@@ -408,9 +408,8 @@ public class SendMessageService: MixinService {
                 return true
             } catch {
                 checkNetworkAndWebSocket()
-
-                if let err = error as? APIError, err.status == NSURLErrorTimedOut {
-
+                if let error = error as? MixinAPIError, error.isNetworkConnectionTimedOut {
+                    
                 } else {
                     var blazeMessage = ""
                     var conversationId = job.conversationId ?? ""
@@ -422,7 +421,7 @@ public class SendMessageService: MixinService {
                     }
 
                     var userInfo = [String: Any]()
-                    userInfo["errorCode"] = error.errorCode
+                    userInfo["errorCode"] = (error as NSError).code
                     userInfo["errorDescription"] = error.localizedDescription
                     userInfo["JobAction"] = job.action
                     userInfo["conversationId"] = conversationId
@@ -447,7 +446,7 @@ public class SendMessageService: MixinService {
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
 
-                if let err = error as? APIError, err.code == 10002 {
+                if case let MixinAPIError.invalidRequestData = error {
                     return true
                 }
             }
@@ -595,13 +594,12 @@ extension SendMessageService {
     private func deliverMessage(blazeMessage: BlazeMessage) throws {
         do {
             try deliver(blazeMessage: blazeMessage)
+        } catch MixinAPIError.forbidden {
+            print("\(MixinAPIError.forbidden)")
         } catch {
             #if DEBUG
             print(error)
             #endif
-            if let err = error as? APIError, err.code == 403 {
-                return
-            }
             throw error
         }
     }

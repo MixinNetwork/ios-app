@@ -44,8 +44,8 @@ open class Reporter {
         
     }
 
-    open func report(error: APIError) {
-        guard error.status != NSURLErrorTimedOut else {
+    open func report(error: MixinAPIError) {
+        guard !error.isNetworkConnectionTimedOut else {
             return
         }
         Bugsnag.notifyError(error)

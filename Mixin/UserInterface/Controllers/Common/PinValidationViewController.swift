@@ -64,7 +64,7 @@ class PinValidationViewController: UIViewController {
             case let .failure(error):
                 if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
                     reporter.report(error: MixinError.invalidPin)
-                } else if error.status != NSURLErrorTimedOut {
+                } else if error.isNetworkConnectionTimedOut {
                     reporter.report(error: error)
                 }
                 self.handle(error: error)
@@ -72,10 +72,11 @@ class PinValidationViewController: UIViewController {
         }
     }
     
-    func handle(error: APIError) {
+    func handle(error: MixinAPIError) {
         pinField.clear()
         pinField.receivesInput = true
-        if error.code == 429 {
+        switch error {
+        case .tooManyRequests:
             self.loadingIndicator.stopAnimating()
             limitationHintView.isHidden = false
             numberPadViewBottomConstraint.constant = numberPadView.frame.height
@@ -83,12 +84,12 @@ class PinValidationViewController: UIViewController {
                 UIView.setAnimationCurve(.overdamped)
                 self.view.layoutIfNeeded()
             })
-        } else {
-            error.pinErrorHandler { (errorMessage) in
+        default:
+            PINVerificationFailureHandler.handle(error: error) { (description) in
                 self.loadingIndicator.stopAnimating()
                 self.pinField.isHidden = false
                 self.descriptionLabel.textColor = .mixinRed
-                self.descriptionLabel.text = errorMessage
+                self.descriptionLabel.text = description
             }
         }
     }

@@ -27,7 +27,7 @@ open class BaseJob: Operation {
                 
                 checkNetworkAndWebSocket()
                 
-                guard let err = error as? APIError, err.isClientError || err.isServerError else {
+                guard let err = error as? MixinAPIError, err.worthRetrying else {
                     return
                 }
             }

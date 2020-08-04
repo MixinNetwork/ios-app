@@ -6,7 +6,7 @@ struct BlazeMessage: Encodable {
     var action: String
     var params: BlazeMessageParam?
     let data: String?
-    let error: APIError?
+    let error: MixinAPIError?
     
     var fromPush: Bool? = nil
     
@@ -127,6 +127,13 @@ extension BlazeMessage {
 
 extension BlazeMessage: Decodable {
     
+    enum CodingKeys: CodingKey {
+        case id
+        case action
+        case params
+        case data
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
@@ -156,7 +163,7 @@ extension BlazeMessage: Decodable {
         }
         
         params = try container.decodeIfPresent(BlazeMessageParam.self, forKey: .params)
-        error = try container.decodeIfPresent(APIError.self, forKey: .error)
+        error = nil
     }
     
 }

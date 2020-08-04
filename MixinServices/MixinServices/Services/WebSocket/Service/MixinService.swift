@@ -106,10 +106,12 @@ public class MixinService {
                 CircleConversationDAO.shared.update(conversation: response)
                 return
             case let .failure(error):
-                if error.code == 401 {
+                switch error {
+                case .unauthorized:
                     return
+                default:
+                    checkNetworkAndWebSocket()
                 }
-                checkNetworkAndWebSocket()
             }
         } while true
     }
@@ -179,13 +181,13 @@ public class MixinService {
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
                 return true
             case let .failure(error):
-                guard retry else {
+                if !retry {
                     return false
-                }
-                guard error.code != 401 else {
+                } else if case .unauthorized = error {
                     return false
+                } else {
+                    checkNetworkAndWebSocket()
                 }
-                checkNetworkAndWebSocket()
             }
         } while true
     }
@@ -200,17 +202,12 @@ public class MixinService {
         repeat {
             do {
                 return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
+            } catch MixinAPIError.unauthorized {
+                return nil
+            } catch MixinAPIError.forbidden {
+                return nil
             } catch {
-                if let err = error as? APIError {
-                    if err.code == 401 {
-                        return nil
-                    } else if err.code == 403 {
-                        return nil
-                    }
-                }
-
                 checkNetworkAndWebSocket()
-
                 Thread.sleep(forTimeInterval: 2)
             }
         } while true
@@ -218,23 +215,32 @@ public class MixinService {
 
     @discardableResult
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, responseMessage: BlazeMessage?, retry: Bool) {
+        func wait() {
+            checkNetworkAndWebSocket()
+            Thread.sleep(forTimeInterval: 2)
+        }
+        
         repeat {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage, false)
-            } catch {
-                if let err = error as? APIError {
-                    if err.code == 403 {
-                        return (true, nil, false)
-                    } else if err.code == 401 {
-                        return (false, nil, false)
-                    } else if err.code == 20140 {
-                        if let conversationId = blazeMessage.params?.conversationId {
-                            syncConversation(conversationId: conversationId)
-                        }
-                        return (false, nil, true)
+            } catch let error as MixinAPIError {
+                switch error {
+                case .unauthorized:
+                    return (false, nil, false)
+                case .forbidden:
+                    return (true, nil, false)
+                case .invalidConversationChecksum:
+                    if let conversationId = blazeMessage.params?.conversationId {
+                        syncConversation(conversationId: conversationId)
                     }
+                    return (false, nil, true)
+                default:
+                    break
                 }
+                checkNetworkAndWebSocket()
+                Thread.sleep(forTimeInterval: 2)
+            } catch {
                 checkNetworkAndWebSocket()
                 Thread.sleep(forTimeInterval: 2)
             }
@@ -256,34 +262,34 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage)
-            } catch {
+            } catch let error as MixinAPIError {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif
-
-                guard let err = error as? APIError else {
-                    reporter.report(error: error)
-                    Thread.sleep(forTimeInterval: 2)
+                switch error {
+                case .unauthorized:
                     return (false, nil)
-                }
-
-                if err.code == 403 {
+                case .forbidden:
                     return (true, nil)
-                } else if err.code == 401 {
-                    return (false, nil)
-                } else if err.code == 20140 {
+                case .invalidConversationChecksum:
                     if let conversationId = blazeMessage.params?.conversationId {
                         syncConversation(conversationId: conversationId)
                     }
                     throw error
-                }
-
-                checkNetworkAndWebSocket()
-
-                if err.isClientError {
+                case .networkConnection:
+                    checkNetworkAndWebSocket()
                     continue
+                default:
+                    checkNetworkAndWebSocket()
+                    throw error
                 }
-                throw error
+            } catch {
+                #if DEBUG
+                print("======SendMessaegService...deliver...error:\(error)")
+                #endif
+                reporter.report(error: error)
+                Thread.sleep(forTimeInterval: 2)
+                return (false, nil)
             }
         } while true
     }

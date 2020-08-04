@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 enum CallError: Error {
     
@@ -18,8 +19,7 @@ enum CallError: Error {
     
     case invalidKrakenResponse
     case roomFull
-    case invalidPeerConnection(Int)
-    case remoteError(Int)
+    case invalidPeerConnection(MixinAPIError)
     
     var alertContent: String {
         switch self {
@@ -33,8 +33,8 @@ enum CallError: Error {
             return R.string.localizable.group_call_room_full()
         case .clientDisconnected:
             return R.string.localizable.call_webrtc_disconnected()
-        case .remoteError(let code):
-            return R.string.localizable.call_remote_error("\(code)")
+        case .invalidPeerConnection(let error):
+            return R.string.localizable.call_remote_error("\(error)")
         default:
             return R.string.localizable.chat_message_call_failed()
         }

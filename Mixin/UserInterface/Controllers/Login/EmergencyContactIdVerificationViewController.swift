@@ -36,11 +36,7 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
                 vc.emergencyContactIdentityNumber = identityNumber
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
             case .failure(let error):
-                if error.code == 20130 {
-                    weakSelf.alert(R.string.localizable.text_invalid_emergency_id())
-                } else {
-                    weakSelf.alert(error.localizedDescription)
-                }
+                weakSelf.alert(error.localizedDescription)
             }
             weakSelf.continueButton.isBusy = false
         }

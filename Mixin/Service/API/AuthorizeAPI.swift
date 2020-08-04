@@ -19,7 +19,7 @@ final class AuthorizeAPI: MixinAPI {
     }
     
     static func authorize(authorization: AuthorizationRequest, completion: @escaping (MixinAPI.Result<AuthorizationResponse>) -> Void) {
-        request(method: .post, url: url.authorize, parameters: authorization.toParameters(), encoding: EncodableParameterEncoding<AuthorizationRequest>(), completion: completion)
+        request(method: .post, url: url.authorize, parameters: authorization, completion: completion)
     }
 
 }

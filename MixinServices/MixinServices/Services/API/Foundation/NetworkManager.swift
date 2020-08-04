@@ -1,28 +1,28 @@
 import Foundation
 import Alamofire
 
-public class NetworkManager {
+public enum ReachabilityManger {
     
-    public static let shared = NetworkManager()
+    public static let reachabilityDidChangeNotification = NSNotification.Name("one.mixin.services.ReachabilityManger.ReachabilityDidChange")
     
-    private let reachabilityManager = Alamofire.NetworkReachabilityManager()
-
-    private init() {
-        reachabilityManager?.startListening(onQueue: .main, onUpdatePerforming: { (_) in
-            NotificationCenter.default.post(name: .NetworkDidChange, object: nil)
+    private static let manager = NetworkReachabilityManager()
+    
+    public static var isReachable: Bool {
+        manager?.isReachable ?? false
+    }
+    
+    public static var isReachableOnEthernetOrWiFi: Bool {
+        manager?.isReachableOnEthernetOrWiFi ?? false
+    }
+    
+    public static func startListening() {
+        manager?.startListening(onQueue: .main, onUpdatePerforming: { (status) in
+            NotificationCenter.default.post(name: Self.reachabilityDidChangeNotification, object: nil)
         })
     }
     
-    public var isReachable: Bool {
-        return reachabilityManager?.isReachable ?? false
-    }
-    
-    public var isReachableOnWiFi: Bool {
-        return reachabilityManager?.isReachableOnEthernetOrWiFi ?? false
-    }
-    
-    deinit {
-        reachabilityManager?.stopListening()
+    public static func stopListening() {
+        manager?.stopListening()
     }
     
 }

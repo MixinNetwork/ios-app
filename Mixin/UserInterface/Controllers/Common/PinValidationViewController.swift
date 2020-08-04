@@ -64,7 +64,7 @@ class PinValidationViewController: UIViewController {
             case let .failure(error):
                 if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
                     reporter.report(error: MixinError.invalidPin)
-                } else if error.isNetworkConnectionTimedOut {
+                } else if error.isTransportTimedOut {
                     reporter.report(error: error)
                 }
                 self.handle(error: error)

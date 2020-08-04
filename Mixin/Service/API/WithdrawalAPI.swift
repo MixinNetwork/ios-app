@@ -37,8 +37,7 @@ final class WithdrawalAPI: MixinAPI {
             address.pin = encryptedPin
             self.request(method: .post,
                          url: url.addresses,
-                         parameters: address.toParameters(),
-                         encoding: EncodableParameterEncoding<AddressRequest>(),
+                         parameters: address,
                          completion: completion)
         }
     }
@@ -49,8 +48,7 @@ final class WithdrawalAPI: MixinAPI {
             withdrawal.pin = encryptedPin
             self.request(method: .post,
                          url: url.withdrawals,
-                         parameters: withdrawal.toParameters(),
-                         encoding: EncodableParameterEncoding<WithdrawalRequest>(),
+                         parameters: withdrawal,
                          completion: completion)
         }
     }

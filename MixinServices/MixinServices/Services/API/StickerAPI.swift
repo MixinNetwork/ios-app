@@ -41,7 +41,7 @@ public class StickerAPI : MixinAPI {
     }
     
     public static func removeSticker(stickerIds: [String], completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, url: url.remove, parameters: stickerIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
+        request(method: .post, url: url.remove, parameters: stickerIds, completion: completion)
     }
     
 }

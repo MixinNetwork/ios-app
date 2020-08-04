@@ -47,11 +47,11 @@ final class AccountAPI: MixinAPI {
         if let bundleIdentifier = Bundle.main.bundleIdentifier {
             param["package_name"] = bundleIdentifier
         }
-        return request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
+        return request(method: .post, url: url.verifications, parameters: param, requiresLogin: false, completion: completion)
     }
     
     static func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
+        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest, requiresLogin: false, completion: completion)
     }
     
     static func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
@@ -61,8 +61,7 @@ final class AccountAPI: MixinAPI {
             parameters.pin = encryptedPin
             self.request(method: .post,
                          url: url.verifications(id: verificationId),
-                         parameters: parameters.toParameters(),
-                         encoding: EncodableParameterEncoding<AccountRequest>(),
+                         parameters: parameters,
                          completion: completion)
         }
     }
@@ -87,17 +86,17 @@ final class AccountAPI: MixinAPI {
 
     static func updateSession(deviceToken: String? = nil, voipToken: String? = nil, deviceCheckToken: String? = nil) {
         let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken ?? "", device_check_token: deviceCheckToken ?? "")
-        request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: MixinAPI.Result<Account>) in
+        request(method: .post, url: url.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
 
         }
     }
 
     static func getSessions(userIds: [String], completion: @escaping (MixinAPI.Result<[UserSession]>) -> Void) {
-        request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
+        request(method: .post, url: url.sessions, parameters: userIds, completion: completion)
     }
     
     static func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, url: url.preferences, parameters: preferenceRequest.toParameters(), encoding: EncodableParameterEncoding<UserPreferenceRequest>(), completion: completion)
+        request(method: .post, url: url.preferences, parameters: preferenceRequest, completion: completion)
     }
 
     static func verify(pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {

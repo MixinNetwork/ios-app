@@ -19,8 +19,7 @@ final class EmergencyAPI: MixinAPI {
                                    purpose: .contact)
         request(method: .post,
                 url: Url.create,
-                parameters: req.toParameters(),
-                encoding: EncodableParameterEncoding<EmergencyRequest>(),
+                parameters: req,
                 completion: completion)
     }
     
@@ -33,8 +32,7 @@ final class EmergencyAPI: MixinAPI {
                                        purpose: .contact)
             request(method: .post,
                     url: Url.verify(id: id),
-                    parameters: req.toParameters(),
-                    encoding: EncodableParameterEncoding<EmergencyRequest>(),
+                    parameters: req,
                     completion: completion)
         }
     }
@@ -47,9 +45,8 @@ final class EmergencyAPI: MixinAPI {
                                    purpose: .session)
         request(method: .post,
                 url: Url.create,
-                parameters: req.toParameters(),
-                encoding: EncodableParameterEncoding<EmergencyRequest>(),
-                checkLogin: false,
+                parameters: req,
+                requiresLogin: false,
                 completion: completion)
     }
     
@@ -59,9 +56,8 @@ final class EmergencyAPI: MixinAPI {
                                           registrationId: registrationId)
         request(method: .post,
                 url: Url.verify(id: id),
-                parameters: req.toParameters(),
-                encoding: EncodableParameterEncoding<EmergencySessionRequest>(),
-                checkLogin: false,
+                parameters: req,
+                requiresLogin: false,
                 completion: completion)
     }
     

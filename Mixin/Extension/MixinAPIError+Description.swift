@@ -7,11 +7,13 @@ extension MixinAPIError {
         switch self {
         case .prerequistesNotFulfilled:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
+        case .invalidHTTPStatusCode:
+            return Localized.TOAST_API_ERROR_SERVER_5XX
         case .invalidJSON:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
-        case let .networkConnection(error as NSError):
-            if error.domain == NSURLErrorDomain {
-                switch error.code {
+        case let .httpTransport(error):
+            if let underlying = error.underlyingError, (underlying as NSError).domain == NSURLErrorDomain {
+                switch (underlying as NSError).code {
                 case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
                     return Localized.TOAST_API_ERROR_NO_CONNECTION
                 case NSURLErrorTimedOut:
@@ -24,6 +26,8 @@ extension MixinAPIError {
             } else {
                 return MixinServices.Localized.TOAST_OPERATION_FAILED
             }
+        case .webSocketTimeOut:
+            return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
         case let .unknown(code, status):
             return MixinServices.Localized.TOAST_OPERATION_FAILED
             

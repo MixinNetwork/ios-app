@@ -61,7 +61,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .wifiAndCellular:
             return true
         case .wifi:
-            return NetworkManager.shared.isReachableOnWiFi
+            return ReachabilityManger.isReachableOnEthernetOrWiFi
         case .never:
             return false
         }

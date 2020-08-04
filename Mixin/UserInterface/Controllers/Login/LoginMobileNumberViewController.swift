@@ -33,7 +33,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     }()
     
     private var isNetworkPermissionRestricted: Bool {
-        return cellularData.restrictedState == .restricted && !NetworkManager.shared.isReachable
+        return cellularData.restrictedState == .restricted && !ReachabilityManger.isReachable
     }
     
     deinit {
@@ -88,7 +88,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                             self?.continueButton.isBusy = false
                         }
                     })
-                case .networkConnection(let underlying as NSError) where underlying.domain == NSURLErrorDomain:
+                case let .httpTransport(underlying as NSError) where underlying.domain == NSURLErrorDomain:
                     if underlying.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
                         weakSelf.alertSettings(R.string.localizable.permission_denied_network())
                         weakSelf.continueButton.isBusy = false
@@ -96,7 +96,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                 default:
-                    if !error.isNetworkConnectionTimedOut {
+                    if !error.isTransportTimedOut {
                         var userInfo = [String: Any]()
                         userInfo["error"] = "\(error)"
                         if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {

@@ -33,7 +33,10 @@ public class WebSocketService {
 
     internal init() {
         queue.setSpecific(key: queueSpecificKey, value: ())
-        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged), name: .NetworkDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(networkChanged),
+                                               name: ReachabilityManger.reachabilityDidChangeNotification,
+                                               object: nil)
     }
 
     deinit {
@@ -45,7 +48,7 @@ public class WebSocketService {
             guard canProcessMessages else {
                 return
             }
-            guard NetworkManager.shared.isReachable else {
+            guard ReachabilityManger.isReachable else {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
@@ -79,10 +82,7 @@ public class WebSocketService {
 
             var request = URLRequest(url: url)
             request.timeoutInterval = 5
-            let headers = MixinRequest.getHeaders(request: request)
-            for (field, value) in headers {
-                request.setValue(value, forHTTPHeaderField: field)
-            }
+            request.allHTTPHeaderFields = Authenticator.signedHeaders(for: request)
             if isAppExtension {
                 request.setValue("Mixin-Notification-Extension-1", forHTTPHeaderField: "Sec-WebSocket-Protocol")
             }
@@ -113,7 +113,7 @@ public class WebSocketService {
             guard canProcessMessages else {
                 return
             }
-            guard NetworkManager.shared.isReachable else {
+            guard ReachabilityManger.isReachable else {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
@@ -133,7 +133,7 @@ public class WebSocketService {
                 return (false, nil)
             }
             var response: BlazeMessage?
-            var err = MixinAPIError.makeNetworkConnectionTimeOutError()
+            var err = MixinAPIError.webSocketTimeOut
             
             let semaphore = DispatchSemaphore(value: 0)
             messageHandlers[message.id] = { (jobResult) in
@@ -164,8 +164,8 @@ public class WebSocketService {
                 messageHandlers.removeValue(forKey: message.id)
                 throw err
             }
-
-            if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut {
+            
+            if semaphore.wait(timeout: .now() + .seconds(Int(requestTimeout))) == .timedOut {
                 let category = message.params?.category ?? ""
                 let log = "[WebSocketService][RespondedMessage][\(category)]...semaphore timeout...requestTimeout:\(requestTimeout)"
                 let conversationId = message.params?.conversationId ?? ""
@@ -291,7 +291,7 @@ extension WebSocketService {
         enqueueOperation {
             ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
             for handler in self.messageHandlers.values {
-                handler(.failure(MixinAPIError.makeNetworkConnectionTimeOutError()))
+                handler(.failure(.webSocketTimeOut))
             }
             self.messageHandlers.removeAll()
             ConcurrentJobQueue.shared.suspend()
@@ -301,7 +301,7 @@ extension WebSocketService {
             }
             self.status = .disconnected
 
-            if NetworkManager.shared.isReachable {
+            if ReachabilityManger.isReachable {
                 if -self.lastConnectionDate.timeIntervalSinceNow >= 2 {
                     self.connect()
                 } else {

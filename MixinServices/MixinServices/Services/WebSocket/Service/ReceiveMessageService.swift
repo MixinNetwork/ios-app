@@ -269,6 +269,8 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
+        _ = syncUser(userId: data.getSenderId())
+
         let message = Message.createMessage(appMessage: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -287,6 +289,8 @@ public class ReceiveMessageService: MixinService {
         if let updatedAt = appCard.updatedAt, let appId = appCard.appId {
             syncApp(appId: appId, updatedAt: updatedAt)
         }
+        _ = syncUser(userId: data.getSenderId())
+
         let message = Message.createMessage(appMessage: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)

@@ -623,12 +623,14 @@ extension PayWindow: PinFieldDelegate {
 
         switch pinAction {
         case let .transfer(trackId, user, _):
+            TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil))
             PaymentAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
             PaymentAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, _, fromWeb):
             if fromWeb {
+                TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: amount, opponentId: nil, destination: address.destination, tag: address.tag))
                 PaymentAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
                     guard let weakSelf = self else {
                         return
@@ -646,6 +648,7 @@ extension PayWindow: PinFieldDelegate {
                     }
                 }
             } else {
+                TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag))
                 WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
             }
         case let .multisig(multisig, _, _):

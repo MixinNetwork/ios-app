@@ -15,7 +15,7 @@ public class MixinService {
 
     public static var isStopProcessMessages = false
 
-    @Atomic(false)
+    @Synchronized(value: false)
     public internal(set) var processing: Bool
     
     internal var currentAccountId: String {

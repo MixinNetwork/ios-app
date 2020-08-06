@@ -1,13 +1,13 @@
 import Foundation
 
 @propertyWrapper
-public class Atomic<Value> {
+public class Synchronized<Value> {
     
     private let lock = NSLock()
     
     private var _value: Value
     
-    public init(_ value: Value) {
+    public init(value: Value) {
         _value = value
     }
     

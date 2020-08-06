@@ -9,7 +9,7 @@ public class SendMessageService: MixinService {
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     
-    @Atomic(false)
+    @Synchronized(value: false)
     public private(set) var isRequestingKrakenPeers: Bool
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")

@@ -15,7 +15,7 @@ public enum MixinServer {
         ("blaze.mixin.one", "https://api.mixin.one/")
     ]
     
-    @Atomic(AppGroupUserDefaults.serverIndex)
+    @Synchronized(value: AppGroupUserDefaults.serverIndex)
     private static var serverIndex: Int
     
     public static func toggle(currentWebSocketHost host: String?) {

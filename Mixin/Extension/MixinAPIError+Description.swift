@@ -6,35 +6,35 @@ extension MixinAPIError {
     var localizedDescription: String {
         switch self {
         case .prerequistesNotFulfilled:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidHTTPStatusCode:
             return Localized.TOAST_API_ERROR_SERVER_5XX
         case .invalidJSON:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case let .httpTransport(error):
             if let underlying = error.underlyingError, (underlying as NSError).domain == NSURLErrorDomain {
                 switch (underlying as NSError).code {
                 case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
                     return Localized.TOAST_API_ERROR_NO_CONNECTION
                 case NSURLErrorTimedOut:
-                    return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+                    return R.string.localizable.toast_api_error_connection_timeout()
                 case NSURLErrorNetworkConnectionLost:
                     return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
                 default:
-                    return MixinServices.Localized.TOAST_OPERATION_FAILED
+                    return R.string.localizable.toast_operation_failed()
                 }
             } else {
-                return MixinServices.Localized.TOAST_OPERATION_FAILED
+                return R.string.localizable.toast_operation_failed()
             }
         case .webSocketTimeOut:
-            return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+            return R.string.localizable.toast_api_error_connection_timeout()
         case let .unknown(code, status):
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
             
         case .invalidRequestBody:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .unauthorized:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .forbidden:
             return R.string.localizable.toast_api_error_forbidden()
         case .endpointNotFound:
@@ -46,27 +46,27 @@ extension MixinAPIError {
             return Localized.TOAST_API_ERROR_SERVER_5XX
             
         case .invalidRequestData:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .failedToDeliverSMS:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidReCaptcha:
             return Localized.TOAST_RECAPTCHA_INVALID
         case .requiresReCaptcha:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .requiresUpdate:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidPhoneNumber:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .insufficientIdentityNumber:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidInvitationCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidPhoneVerificationCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .expiredPhoneVerificationCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidQrCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .groupChatIsFull:
             return Localized.GROUP_JOIN_FAIL_FULL
         case .insufficientBalance:
@@ -76,21 +76,21 @@ extension MixinAPIError {
         case .transferAmountTooSmall:
             return Localized.TRANSFER_ERROR_AMOUNT_TOO_SMALL
         case .expiredAuthorizationCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .phoneNumberInUse:
             return Localized.TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER
         case .tooManyAppsCreated:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .insufficientFee:
             return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
         case .transferIsAlreadyPaid:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .tooManyStickers:
             return Localized.STICKER_ADD_LIMIT
         case .withdrawAmountTooSmall:
             return Localized.WITHDRAWAL_AMOUNT_TOO_SMALL
         case .tooManyFriends:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .sendingVerificationCodeTooFrequently:
             return R.string.localizable.text_invalid_code_too_frequent()
         case .invalidEmergencyContact:
@@ -102,31 +102,31 @@ extension MixinAPIError {
         case .circleConversationReachLimit:
             return R.string.localizable.circle_conversation_add_reach_limit()
         case .invalidConversationChecksum:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
             
         case .chainNotInSync:
             return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
         case .missingPrivateKey:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .malformedAddress:
             return Localized.ADDRESS_FORMAT_ERROR
         case .insufficientPool:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
             
         case .invalidParameters:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidSDP:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .invalidCandidate:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .roomFull:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .peerNotFound:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .peerClosed:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         case .trackNotFound:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.toast_operation_failed()
         }
     }
     

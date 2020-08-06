@@ -86,6 +86,9 @@
 "toast_api_error_not_found" = "Not found";
 "toast_api_error_too_many_requests" = "Rate limit exceeded";
 "toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
+"toast_api_error_connection_timeout" = "Network connection timeout";
+"toast_operation_failed" = "The operation failed, please try again later";
+
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_copied" = "Copied";
@@ -804,6 +807,23 @@
 "setting_appearance" = "Appearance";
 "setting_pin" = "PIN";
 
+// About
+"about_twitter" = "Follow us on Twitter";
+"about_facebook" = "Follow us on Facebook";
+"about_help" = "Help Center";
+"about_terms_of_service" = "Terms of Service";
+"about_privacy_policy" = "Privacy Policy";
+"about_logout_title" = "Do you want to log out?";
+"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
+"about_app_upgrade" = "Version Update";
+
+"report_title"="Send the conversation log to developers?";
+"report_button"="Send to Developer";
+"report_share"="Share Log File";
+"report_copy_user_id"="Copy User Id";
+"report_copy_conversation_id"="Copy Conversation Id";
+"report_message"="Allow Manual Report Message";
+
 // Notifications
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";
@@ -850,20 +870,3 @@
 "alert_key_group_post_message" = "%@ send a post";
 "alert_key_group_location_message" = "%@ send a location";
 "alert_key_group_audio_invite_message" = "%@ invites you to a voice call";
-
-// About
-"about_twitter" = "Follow us on Twitter";
-"about_facebook" = "Follow us on Facebook";
-"about_help" = "Help Center";
-"about_terms_of_service" = "Terms of Service";
-"about_privacy_policy" = "Privacy Policy";
-"about_logout_title" = "Do you want to log out?";
-"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
-"about_app_upgrade" = "Version Update";
-
-"report_title"="Send the conversation log to developers?";
-"report_button"="Send to Developer";
-"report_share"="Share Log File";
-"report_copy_user_id"="Copy User Id";
-"report_copy_conversation_id"="Copy Conversation Id";
-"report_message"="Allow Manual Report Message";

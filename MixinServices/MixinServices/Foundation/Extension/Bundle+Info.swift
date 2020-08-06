@@ -2,13 +2,6 @@ import Foundation
 
 public extension Bundle {
     
-    static let mixinServicesResource: Bundle = {
-        let frameworkBundle = Bundle(for: Localized.self)
-        let url = frameworkBundle.url(forResource: "MixinServicesResource",
-                                      withExtension: "bundle")!
-        return Bundle(url: url)!
-    }()
-    
     var shortVersion: String {
         return infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }

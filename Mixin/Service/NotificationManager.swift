@@ -31,7 +31,7 @@ class NotificationManager: NSObject {
     func requestCallNotification(id: String, name: String) {
         let content = UNMutableNotificationContent()
         content.title = name
-        content.body = MixinServices.Localized.ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE
+        content.body = R.string.localizable.alert_key_contact_audio_call_message()
         content.sound = .call
         content.categoryIdentifier = NotificationCategoryIdentifier.call
         let request = UNNotificationRequest(identifier: id,

@@ -410,7 +410,7 @@ extension MessageReceiverViewController {
         let filename = message.messageId + ExtensionName.jpeg.withDot
         let path = AttachmentContainer.url(for: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
-            showAutoHiddenHud(style: .error, text: MixinServices.Localized.TOAST_OPERATION_FAILED)
+            showAutoHiddenHud(style: .error, text: R.string.localizable.toast_operation_failed())
             return nil
         }
         message.thumbImage = image.base64Thumbnail()

@@ -435,6 +435,13 @@
 		7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD127FB22D8892200BB5316 /* GalleryViewController.swift */; };
 		7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */; };
 		7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD344082334CE12005C26E3 /* UserHandleCell.swift */; };
+		7BD3860124DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD3860024DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift */; };
+		7BD3860224DC55A000A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD3860024DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift */; };
+		7BD3860424DC56DA00A3035C /* UNNotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */; };
+		7BD3860624DC576B00A3035C /* UNNotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */; };
+		7BD387F524DC591E00A3035C /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD387F424DC591D00A3035C /* R.generated.swift */; };
+		7BD3880024DC66F900A3035C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7BD387FC24DC66F900A3035C /* Localizable.strings */; };
+		7BD3880124DC66FB00A3035C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7BD387FC24DC66F900A3035C /* Localizable.strings */; };
 		7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B5F20BEA03200D06E5C /* WaveformView.swift */; };
 		7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */; };
 		7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A889233228D900DD4E9A /* WebViewController.swift */; };
@@ -589,7 +596,6 @@
 		DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */; };
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
 		DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */; };
-		DF2EAEB823EF0A05005E5A4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF2EAEB523EF0646005E5A4F /* Localizable.strings */; };
 		DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
@@ -617,7 +623,6 @@
 		DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */; };
 		DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */; };
 		DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */; };
-		DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F461F9CD29A0036D5FD /* Localizable.strings */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
@@ -1286,6 +1291,12 @@
 		7BD127FB22D8892200BB5316 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleViewController.swift; sourceTree = "<group>"; };
 		7BD344082334CE12005C26E3 /* UserHandleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleCell.swift; sourceTree = "<group>"; };
+		7BD3860024DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNMutableNotificationContent+Convenience.swift"; sourceTree = "<group>"; };
+		7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationConstants.swift; sourceTree = "<group>"; };
+		7BD387F424DC591D00A3035C /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		7BD387FD24DC66F900A3035C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7BD387FE24DC66F900A3035C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7BD387FF24DC66F900A3035C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
 		7BD5A889233228D900DD4E9A /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -1451,9 +1462,6 @@
 		DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageCell.swift; sourceTree = "<group>"; };
 		DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
 		DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAddMemberCell.swift; sourceTree = "<group>"; };
-		DF2EAEB423EF0646005E5A4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DF2EAEB623EF064A005E5A4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		DF2EAEB723EF064B005E5A4F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanUpUnusedAttachmentJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -1484,7 +1492,6 @@
 		DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryCode.xcassets; sourceTree = "<group>"; };
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
-		DF5D9F451F9CD29A0036D5FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
 		DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNProvisionCryptor.h; sourceTree = "<group>"; };
 		DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNProvisionCryptor.m; sourceTree = "<group>"; };
@@ -1492,7 +1499,6 @@
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
 		DF6ABB152295049E00A012B2 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
-		DF6CF2E6221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF6CF2E7221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrcodeWindow.swift; sourceTree = "<group>"; };
 		DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletPasswordViewController.swift; sourceTree = "<group>"; };
@@ -1521,7 +1527,6 @@
 		DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingViewController.swift; sourceTree = "<group>"; };
 		DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersViewController.swift; sourceTree = "<group>"; };
 		DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserCell.swift; sourceTree = "<group>"; };
-		DF8CECFA1FC58D7D00E40064 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DF8CECFE1FC58DBD00E40064 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DF8CED001FC58DC000E40064 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
@@ -2607,8 +2612,8 @@
 		DF5D9F341F9C95F20036D5FD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				DF5D9F461F9CD29A0036D5FD /* Localizable.strings */,
 				DF8CECFF1FC58DBD00E40064 /* InfoPlist.strings */,
+				7BD387FC24DC66F900A3035C /* Localizable.strings */,
 				7BAB3057247E7A72005D6C3F /* call.caf */,
 				7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */,
 				274264A820011BB0000A8808 /* mixin.caf */,
@@ -3135,8 +3140,10 @@
 				E00A69ED23BB234C00984FF3 /* MixinNotificationService.entitlements */,
 				E090B9F923B3957E0088355B /* NotificationService.swift */,
 				7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */,
+				7BD3860024DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift */,
+				7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */,
+				7BD387F424DC591D00A3035C /* R.generated.swift */,
 				DF68CD71244EC1970059A678 /* Mixin-Keys.plist */,
-				DF2EAEB523EF0646005E5A4F /* Localizable.strings */,
 				E090B9FB23B3957E0088355B /* Info.plist */,
 			);
 			path = MixinNotificationService;
@@ -3168,7 +3175,6 @@
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DFBC049F20026CB5008CA56A /* Upload Bugsnag dSYM */,
 				DF1BD0B42292AF2900EBDC22 /* Crashlytics */,
-				776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */,
 				E090B9FF23B3957E0088355B /* Embed App Extensions */,
 				27254EED24B706350026CF98 /* ShellScript */,
 				DF21616C24ECD0FE0087D7B0 /* Check Bundle */,
@@ -3193,7 +3199,6 @@
 				DFE861B52422673B009B1833 /* Sources */,
 				DFE861B62422673B009B1833 /* Frameworks */,
 				DFE861B72422673B009B1833 /* Resources */,
-				CB5728E78EE6BA983EB90403 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3209,10 +3214,10 @@
 			buildConfigurationList = E090BA0223B3957E0088355B /* Build configuration list for PBXNativeTarget "MixinNotificationService" */;
 			buildPhases = (
 				FED24911AA9C3341EB83FB9E /* [CP] Check Pods Manifest.lock */,
+				7BD387F324DC58A000A3035C /* R.swift */,
 				E090B9F323B3957E0088355B /* Sources */,
 				E090B9F423B3957E0088355B /* Frameworks */,
 				E090B9F523B3957E0088355B /* Resources */,
-				C4BC0BC97D28F5C46D8311A1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3291,7 +3296,6 @@
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
-				DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
@@ -3313,6 +3317,7 @@
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
+				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
@@ -3423,7 +3428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */,
-				DF2EAEB823EF0A05005E5A4F /* Localizable.strings in Resources */,
+				7BD3880124DC66FB00A3035C /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3447,23 +3452,25 @@
 			shellPath = /bin/sh;
 			shellScript = "APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\nFRAMEWORK_TMP_PATH=\"$FRAMEWORK_EXECUTABLE_PATH-tmp\"\n\ncase \"${TARGET_BUILD_DIR}\" in\n*\"iphonesimulator\")\n    echo \"No need to remove archs\"\n    ;;\n*)\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"i386\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"i386\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"i386 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"x86_64\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"x86_64 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    ;;\nesac\n\necho \"Completed for executable $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\ndone\n";
 		};
-		776EAE6AB92B4847B2042637 /* [CP] Copy Pods Resources */ = {
+		7BD387F324DC58A000A3035C /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
+			inputFileListPaths = (
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = R.swift;
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/MixinNotificationService/R.generated.swift\"\n";
 		};
 		A4B665A98EE2333D67BFCC9D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3503,42 +3510,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C4BC0BC97D28F5C46D8311A1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CB5728E78EE6BA983EB90403 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/MixinServices/MixinServicesResource.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MixinServicesResource.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DF1BD0B42292AF2900EBDC22 /* Crashlytics */ = {
@@ -4101,6 +4072,7 @@
 				DFC0ECFE23BB610C0091E7AC /* EmergencyAPI.swift in Sources */,
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
+				7BD3860224DC55A000A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				7B4A8F6F24BC2D5D00BA6998 /* GroupCallMembersFlowLayout.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
@@ -4207,6 +4179,7 @@
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
+				7BD3860424DC56DA00A3035C /* UNNotificationConstants.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
@@ -4411,8 +4384,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BD3860124DC559B00A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */,
 				E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */,
+				7BD387F524DC591E00A3035C /* R.generated.swift in Sources */,
 				7BA21082248E1C30003FBC25 /* CallMessageSaver.swift in Sources */,
+				7BD3860624DC576B00A3035C /* UNNotificationConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4440,22 +4416,12 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		DF2EAEB523EF0646005E5A4F /* Localizable.strings */ = {
+		7BD387FC24DC66F900A3035C /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DF2EAEB423EF0646005E5A4F /* en */,
-				DF2EAEB623EF064A005E5A4F /* zh-Hans */,
-				DF2EAEB723EF064B005E5A4F /* ja */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		DF5D9F461F9CD29A0036D5FD /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DF5D9F451F9CD29A0036D5FD /* en */,
-				DF8CECFA1FC58D7D00E40064 /* zh-Hans */,
-				DF6CF2E6221A801600B65294 /* ja */,
+				7BD387FD24DC66F900A3035C /* en */,
+				7BD387FE24DC66F900A3035C /* ja */,
+				7BD387FF24DC66F900A3035C /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

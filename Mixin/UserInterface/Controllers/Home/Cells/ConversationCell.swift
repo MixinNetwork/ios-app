@@ -72,45 +72,45 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_PHOTO)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_photo())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_PHOTO
+                    contentLabel.text = R.string.localizable.notification_content_photo()
                 }
             } else if category.hasSuffix("_STICKER") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_STICKER)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_sticker())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_STICKER
+                    contentLabel.text = R.string.localizable.notification_content_sticker()
                 }
             } else if category.hasSuffix("_CONTACT") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_CONTACT)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_contact())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_CONTACT
+                    contentLabel.text = R.string.localizable.notification_content_contact()
                 }
             } else if category.hasSuffix("_DATA") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_FILE)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_file())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_FILE
+                    contentLabel.text = R.string.localizable.notification_content_file()
                 }
             } else if category.hasSuffix("_VIDEO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_VIDEO)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_video())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VIDEO
+                    contentLabel.text = R.string.localizable.notification_content_video()
                 }
             } else if category.hasSuffix("_LIVE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_LIVE)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_live())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_LIVE
+                    contentLabel.text = R.string.localizable.notification_content_live()
                 }
             } else if category.hasSuffix("_AUDIO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(MixinServices.Localized.NOTIFICATION_CONTENT_AUDIO)"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_audio())"
                 } else {
-                    contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_AUDIO
+                    contentLabel.text = R.string.localizable.notification_content_audio()
                 }
             } else if category.hasSuffix("_POST") {
                 if item.isGroup() {
@@ -125,9 +125,9 @@ class ConversationCell: ModernSelectedBackgroundCell {
                     contentLabel.text = R.string.localizable.notification_content_location()
                 }
             } else if category.hasPrefix("WEBRTC_") {
-                contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_VOICE_CALL
+                contentLabel.text = R.string.localizable.notification_content_voice_call()
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                contentLabel.text = MixinServices.Localized.NOTIFICATION_CONTENT_TRANSFER
+                contentLabel.text = R.string.localizable.notification_content_transfer()
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"

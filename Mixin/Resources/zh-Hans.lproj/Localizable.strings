@@ -86,6 +86,8 @@
 "toast_api_error_not_found" = "没有找到相应的信息";
 "toast_api_error_too_many_requests" = "请求太快啦";
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
+"toast_api_error_connection_timeout" = "网络连接超时";
+"toast_operation_failed" = "操作失败，请稍后重试";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制";
@@ -806,7 +808,24 @@
 "setting_appearance" = "显示";
 "setting_pin" = "密码";
 
-// Notifications
+// About
+"about_twitter" = "关注我们的 Twitter";
+"about_facebook" = "关注我们的 Facebook";
+"about_help" = "帮助中心";
+"about_terms_of_service" = "隐私政策";
+"about_privacy_policy" = "服务条款";
+"about_logout_title" = "想要退出登录？";
+"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
+"about_app_upgrade" = "版本更新";
+
+"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
+"report_button"="把日志发给开发者";
+"report_share"="分享日志文件";
+"report_copy_user_id"="复制用户 ID";
+"report_copy_conversation_id"="复制会话 ID";
+"report_message"="允许手动上报消息";
+
+// Notification
 "notification_reply" = "回复";
 "notification_mute" = "屏蔽";
 "notification_content_general" = "你收到了一条消息";
@@ -852,20 +871,3 @@
 "alert_key_group_post_message" = "%@发来了一篇文章";
 "alert_key_group_location_message" = "%@发来一处位置";
 "alert_key_group_audio_invite_message" = "%@邀请你进行语音通话";
-
-// About
-"about_twitter" = "关注我们的 Twitter";
-"about_facebook" = "关注我们的 Facebook";
-"about_help" = "帮助中心";
-"about_terms_of_service" = "隐私政策";
-"about_privacy_policy" = "服务条款";
-"about_logout_title" = "想要退出登录？";
-"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
-"about_app_upgrade" = "版本更新";
-
-"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
-"report_button"="把日志发给开发者";
-"report_share"="分享日志文件";
-"report_copy_user_id"="复制用户 ID";
-"report_copy_conversation_id"="复制会话 ID";
-"report_message"="允许手动上报消息";

@@ -3,40 +3,46 @@ import Alamofire
 
 final class AccountAPI: MixinAPI {
     
-    enum url {
-        static let verifications = "verifications"
+    enum Path {
+        static let verifications = "/verifications"
         static func verifications(id: String) -> String {
-            return "verifications/\(id)"
+            return "/verifications/\(id)"
         }
-        static let me = "me"
-        static let logout = "logout"
-        static let preferences = "me/preferences"
-
-        static let session = "session"
-
-        static let verifyPin = "pin/verify"
-        static let updatePin = "pin/update"
-		static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil) -> String {
-            var url = "logs"
+        static let me = "/me"
+        static let logout = "/logout"
+        static let preferences = "/me/preferences"
+        
+        static let session = "/session"
+        
+        static let verifyPin = "/pin/verify"
+        static let updatePin = "/pin/update"
+        static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil) -> String {
+            var params = [String]()
             if let offset = offset {
-                url += "?offset=\(offset)"
+                params.append("offset=\(offset)")
             }
             if let category = category {
-                url += (url.contains("?") ? "&" : "?") + "category=\(category)"
+                params.append("category=\(category)")
             }
             if let limit = limit {
-                url += (url.contains("?") ? "&" : "?") + "limit=\(limit)"
+                params.append("limit=\(limit)")
             }
-            return url
+            
+            var path = "/logs"
+            if !params.isEmpty {
+                let query = "?" + params.joined(separator: "&")
+                path.append(contentsOf: query)
+            }
+            return path
         }
-
-        static let sessions = "sessions/fetch"
+        
+        static let sessions = "/sessions/fetch"
     }
-
+    
     static func me(completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .get, url: url.me, completion: completion)
+        request(method: .get, path: Path.me, completion: completion)
     }
-
+    
     @discardableResult
     static func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,
@@ -47,11 +53,11 @@ final class AccountAPI: MixinAPI {
         if let bundleIdentifier = Bundle.main.bundleIdentifier {
             param["package_name"] = bundleIdentifier
         }
-        return request(method: .post, url: url.verifications, parameters: param, requiresLogin: false, completion: completion)
+        return request(method: .post, path: Path.verifications, parameters: param, requiresLogin: false, completion: completion)
     }
     
     static func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest, requiresLogin: false, completion: completion)
+        request(method: .post, path: Path.verifications(id: verificationId), parameters: accountRequest, requiresLogin: false, completion: completion)
     }
     
     static func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
@@ -60,7 +66,7 @@ final class AccountAPI: MixinAPI {
             var parameters = accountRequest
             parameters.pin = encryptedPin
             self.request(method: .post,
-                         url: url.verifications(id: verificationId),
+                         path: Path.verifications(id: verificationId),
                          parameters: parameters,
                          completion: completion)
         }
@@ -81,28 +87,28 @@ final class AccountAPI: MixinAPI {
         if let avatarBase64 = avatarBase64 {
             param["avatar_base64"] = avatarBase64
         }
-        request(method: .post, url: url.me, parameters: param, completion: completion)
+        request(method: .post, path: Path.me, parameters: param, completion: completion)
     }
-
+    
     static func updateSession(deviceToken: String? = nil, voipToken: String? = nil, deviceCheckToken: String? = nil) {
         let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken ?? "", device_check_token: deviceCheckToken ?? "")
-        request(method: .post, url: url.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
-
+        request(method: .post, path: Path.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
+            
         }
     }
-
+    
     static func getSessions(userIds: [String], completion: @escaping (MixinAPI.Result<[UserSession]>) -> Void) {
-        request(method: .post, url: url.sessions, parameters: userIds, completion: completion)
+        request(method: .post, path: Path.sessions, parameters: userIds, completion: completion)
     }
     
     static func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, url: url.preferences, parameters: preferenceRequest, completion: completion)
+        request(method: .post, path: Path.preferences, parameters: preferenceRequest, completion: completion)
     }
-
+    
     static func verify(pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             self.request(method: .post,
-                         url: url.verifyPin,
+                         path: Path.verifyPin,
                          parameters: ["pin": encryptedPin],
                          completion: completion)
         }
@@ -126,15 +132,15 @@ final class AccountAPI: MixinAPI {
             return
         }
         param["pin"] = encryptedNewPin
-        request(method: .post, url: url.updatePin, parameters: param, completion: completion)
+        request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
     }
-
+    
     static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
-        request(method: .get, url: url.logs(offset: offset, category: category, limit: limit), completion: completion)
+        request(method: .get, path: Path.logs(offset: offset, category: category, limit: limit), completion: completion)
     }
-
+    
     static func logoutSession(sessionId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, url: url.logout, parameters: ["session_id": sessionId], completion: completion)
+        request(method: .post, path: Path.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     
 }

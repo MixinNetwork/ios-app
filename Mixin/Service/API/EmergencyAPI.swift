@@ -2,12 +2,12 @@ import MixinServices
 
 final class EmergencyAPI: MixinAPI {
     
-    private enum Url {
-        static let create = "emergency_verifications"
-        static let show = "emergency_contact"
-        static let delete = "emergency_contact/delete"
+    private enum Path {
+        static let create = "/emergency_verifications"
+        static let show = "/emergency_contact"
+        static let delete = "/emergency_contact/delete"
         static func verify(id: String) -> String {
-            return "emergency_verifications/" + id
+            "/emergency_verifications/" + id
         }
     }
     
@@ -18,7 +18,7 @@ final class EmergencyAPI: MixinAPI {
                                    code: nil,
                                    purpose: .contact)
         request(method: .post,
-                url: Url.create,
+                path: Path.create,
                 parameters: req,
                 completion: completion)
     }
@@ -31,7 +31,7 @@ final class EmergencyAPI: MixinAPI {
                                        code: code,
                                        purpose: .contact)
             request(method: .post,
-                    url: Url.verify(id: id),
+                    path: Path.verify(id: id),
                     parameters: req,
                     completion: completion)
         }
@@ -44,7 +44,7 @@ final class EmergencyAPI: MixinAPI {
                                    code: nil,
                                    purpose: .session)
         request(method: .post,
-                url: Url.create,
+                path: Path.create,
                 parameters: req,
                 requiresLogin: false,
                 completion: completion)
@@ -55,7 +55,7 @@ final class EmergencyAPI: MixinAPI {
                                           sessionSecret: sessionSecret,
                                           registrationId: registrationId)
         request(method: .post,
-                url: Url.verify(id: id),
+                path: Path.verify(id: id),
                 parameters: req,
                 requiresLogin: false,
                 completion: completion)
@@ -64,14 +64,14 @@ final class EmergencyAPI: MixinAPI {
     static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, url: Url.show, parameters: param, completion: completion)
+            request(method: .post, path: Path.show, parameters: param, completion: completion)
         }
     }
     
     static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, url: Url.delete, parameters: param, completion: completion)
+            request(method: .post, path: Path.delete, parameters: param, completion: completion)
         }
     }
     

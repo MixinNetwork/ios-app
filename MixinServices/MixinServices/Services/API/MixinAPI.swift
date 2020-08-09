@@ -21,35 +21,35 @@ open class MixinAPI {
     }()
     
     @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, url: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
         }, requiresLogin: requiresLogin, completion: completion)
     }
     
     @discardableResult
-    public static func request<Response>(method: HTTPMethod, url: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: JSONEncoding.default)
+            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoding: JSONEncoding.default)
         }, requiresLogin: requiresLogin, completion: completion)
     }
     
     @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, url: String, parameters: Parameters) -> MixinAPI.Result<Response> {
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters) -> MixinAPI.Result<Response> {
         request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default) { (request) in
+            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoder: JSONParameterEncoder.default) { (request) in
                 request.timeoutInterval = requestTimeout
             }
-        }, debugDescription: url)
+        }, debugDescription: path)
     }
     
     @discardableResult
-    public static func request<Response>(method: HTTPMethod, url: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
         request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: JSONEncoding.default) { (request) in
+            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoding: JSONEncoding.default) { (request) in
                 request.timeoutInterval = requestTimeout
             }
-        }, debugDescription: url)
+        }, debugDescription: path)
     }
     
     private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, debugDescription: String) -> MixinAPI.Result<Response> {

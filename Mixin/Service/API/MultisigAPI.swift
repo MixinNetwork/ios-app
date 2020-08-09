@@ -3,26 +3,26 @@ import MixinServices
 
 final class MultisigAPI: MixinAPI {
     
-    private enum url {
+    private enum Path {
         static func cancel(id: String) -> String {
-            return "multisigs/\(id)/cancel"
+            return "/multisigs/\(id)/cancel"
         }
         static func sign(id: String) -> String {
-            return "multisigs/\(id)/sign"
+            return "/multisigs/\(id)/sign"
         }
         static func unlock(id: String) -> String {
-            return "multisigs/\(id)/unlock"
+            return "/multisigs/\(id)/unlock"
         }
     }
     
     static func cancel(requestId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, url: url.cancel(id: requestId), completion: completion)
+        request(method: .post, path: Path.cancel(id: requestId), completion: completion)
     }
     
     static func sign(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             self.request(method: .post,
-                         url: url.sign(id: requestId),
+                         path: Path.sign(id: requestId),
                          parameters: ["pin": encryptedPin],
                          completion: completion)
         }
@@ -31,7 +31,7 @@ final class MultisigAPI: MixinAPI {
     static func unlock(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             self.request(method: .post,
-                         url: url.unlock(id: requestId),
+                         path: Path.unlock(id: requestId),
                          parameters: ["pin": encryptedPin],
                          completion: completion)
         }

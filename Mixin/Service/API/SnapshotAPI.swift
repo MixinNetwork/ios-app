@@ -2,21 +2,21 @@ import MixinServices
 
 final class SnapshotAPI: MixinAPI {
     
-    private enum url {
+    private enum Path {
         static func snapshot(snapshotId: String) -> String {
-            return "snapshots/\(snapshotId)"
+            return "/snapshots/\(snapshotId)"
         }
         static func trace(traceId: String) -> String {
-            return "snapshots/trace/\(traceId)"
+            return "/snapshots/trace/\(traceId)"
         }
     }
     
     static func snapshot(snapshotId: String) -> MixinAPI.Result<Snapshot> {
-        return request(method: .get, url: url.snapshot(snapshotId: snapshotId))
+        return request(method: .get, path: Path.snapshot(snapshotId: snapshotId))
     }
     
     static func trace(traceId: String) -> MixinAPI.Result<Snapshot> {
-        return request(method: .get, url: url.trace(traceId: traceId))
+        return request(method: .get, path: Path.trace(traceId: traceId))
     }
     
 }

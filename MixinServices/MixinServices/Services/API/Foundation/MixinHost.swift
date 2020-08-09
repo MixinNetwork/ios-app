@@ -1,32 +1,32 @@
 import Foundation
 
-public enum MixinServer {
+public enum MixinHost {
     
-    public static var webSocketHost: String {
-        return all[MixinServer.serverIndex].0
+    public static var webSocket: String {
+        return all[MixinHost.serverIndex].0
     }
     
-    public static var httpUrl: String {
-        return all[MixinServer.serverIndex].1
+    public static var http: String {
+        return all[MixinHost.serverIndex].1
     }
     
-    private static let all = [
-        ("mixin-blaze.zeromesh.net", "https://mixin-api.zeromesh.net"),
-        ("blaze.mixin.one", "https://api.mixin.one")
+    public static let all = [
+        ("mixin-blaze.zeromesh.net", "mixin-api.zeromesh.net"),
+        ("blaze.mixin.one", "api.mixin.one")
     ]
     
     @Synchronized(value: AppGroupUserDefaults.serverIndex)
     private static var serverIndex: Int
     
     public static func toggle(currentWebSocketHost host: String?) {
-        guard host == webSocketHost else {
+        guard host == webSocket else {
             return
         }
         toggleIndex()
     }
     
-    public static func toggle(currentHttpUrl url: String) {
-        guard url == httpUrl else {
+    public static func toggle(currentHttpHost host: String) {
+        guard host == http else {
             return
         }
         toggleIndex()
@@ -39,7 +39,7 @@ public enum MixinServer {
         }
         serverIndex = nextIndex
         AppGroupUserDefaults.serverIndex = nextIndex
-        Logger.write(log: "[MixinServer][ToggleIndex]...\(webSocketHost):\(httpUrl)", newSection: true)
+        Logger.write(log: "[MixinHost][ToggleIndex]...\(webSocket):\(http)", newSection: true)
     }
     
 }

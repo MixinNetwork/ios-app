@@ -55,7 +55,7 @@ public class WebSocketService {
             guard self.status == .disconnected else {
                 return
             }
-            guard let url = URL(string: "wss://\(MixinServer.webSocketHost)") else {
+            guard let url = URL(string: "wss://\(MixinHost.webSocket)") else {
                 return
             }
 
@@ -67,10 +67,10 @@ public class WebSocketService {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
             }
 
-            self.host = MixinServer.webSocketHost
+            self.host = MixinHost.webSocket
             self.status = .connecting
 
-            let socket = RocketWebSocket(host: MixinServer.webSocketHost, queue: self.queue)
+            let socket = RocketWebSocket(host: MixinHost.webSocket, queue: self.queue)
             self.socket = socket
             self.socket?.delegate = self
 
@@ -224,7 +224,7 @@ extension WebSocketService: WebSocketProviderDelegate {
         }
 
         if isSwitchNetwork {
-            MixinServer.toggle(currentWebSocketHost: host)
+            MixinHost.toggle(currentWebSocketHost: host)
         }
 
         reconnect(sendDisconnectToRemote: false)

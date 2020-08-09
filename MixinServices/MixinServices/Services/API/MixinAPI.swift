@@ -7,6 +7,42 @@ open class MixinAPI {
     
     public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
+    @discardableResult
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+        }, requiresLogin: requiresLogin, completion: completion)
+    }
+    
+    @discardableResult
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default)
+        }, requiresLogin: requiresLogin, completion: completion)
+    }
+    
+    @discardableResult
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters) -> MixinAPI.Result<Response> {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default) { (request) in
+                request.timeoutInterval = requestTimeout
+            }
+        }, debugDescription: path)
+    }
+    
+    @discardableResult
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default) { (request) in
+                request.timeoutInterval = requestTimeout
+            }
+        }, debugDescription: path)
+    }
+    
+}
+
+extension MixinAPI {
+    
     private struct ResponseObject<Response: Decodable>: Decodable {
         let data: Response?
         let error: MixinAPIError?
@@ -20,36 +56,9 @@ open class MixinAPI {
         return session
     }()
     
-    @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
-        request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, completion: completion)
-    }
-    
-    @discardableResult
-    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
-        request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoding: JSONEncoding.default)
-        }, requiresLogin: requiresLogin, completion: completion)
-    }
-    
-    @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters) -> MixinAPI.Result<Response> {
-        request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoder: JSONParameterEncoder.default) { (request) in
-                request.timeoutInterval = requestTimeout
-            }
-        }, debugDescription: path)
-    }
-    
-    @discardableResult
-    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
-        request(makeRequest: { (session) -> DataRequest in
-            session.request(MixinServer.httpUrl + path, method: method, parameters: parameters, encoding: JSONEncoding.default) { (request) in
-                request.timeoutInterval = requestTimeout
-            }
-        }, debugDescription: path)
+    private static func url(with path: String) -> URL {
+        let string = "https://" + MixinHost.http + path
+        return URL(string: string)!
     }
     
     private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, debugDescription: String) -> MixinAPI.Result<Response> {
@@ -75,7 +84,7 @@ open class MixinAPI {
             return nil
         }
         let requestTime = Date()
-        let rootURLString = MixinServer.httpUrl
+        let host = MixinHost.http
         
         func handleDeauthorization(response: HTTPURLResponse?) {
             let xServerTime = response?.allHeaderFields["x-server-time"] as? String ?? "0"
@@ -110,7 +119,7 @@ open class MixinAPI {
                                 handleDeauthorization(response: response.response)
                             default:
                                 if error.isServerSideError {
-                                    MixinServer.toggle(currentHttpUrl: rootURLString)
+                                    MixinHost.toggle(currentHttpHost: host)
                                 }
                                 completion(.failure(error))
                             }
@@ -147,7 +156,7 @@ open class MixinAPI {
                     }()
                     
                     if shouldToggleServer {
-                        MixinServer.toggle(currentHttpUrl: rootURLString)
+                        MixinHost.toggle(currentHttpHost: host)
                     }
                     
                     switch error {

@@ -66,7 +66,7 @@ extension RocketWebSocket: SRWebSocketDelegate {
             return
         }
         let nsError = error as NSError
-        Logger.write(error: err, extra: "[RocketWebSocket][DidFailWithError]...\(MixinServer.webSocketHost)")
+        Logger.write(error: err, extra: "[RocketWebSocket][DidFailWithError]...\(MixinHost.webSocket)")
 
         if (nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504)
             || (nsError.domain == NSPOSIXErrorDomain && nsError.code == 61) {

@@ -11,8 +11,8 @@ public enum MixinServer {
     }
     
     private static let all = [
-        ("mixin-blaze.zeromesh.net", "https://mixin-api.zeromesh.net/"),
-        ("blaze.mixin.one", "https://api.mixin.one/")
+        ("mixin-blaze.zeromesh.net", "https://mixin-api.zeromesh.net"),
+        ("blaze.mixin.one", "https://api.mixin.one")
     ]
     
     @Synchronized(value: AppGroupUserDefaults.serverIndex)

@@ -84,17 +84,18 @@ class ConversationInputTextView: UITextView {
                 }
                 let replacedRange = NSRange(location: offset(from: beginningOfDocument, to: start),
                                             length: index + 1)
-                let mutable = attributedText.mutableCopy() as! NSMutableAttributedString
-                mutable.mutableString.replaceCharacters(in: replacedRange, with: replacement)
+                let mutable = NSMutableAttributedString(attributedString: attributedText)
+                mutable.replaceCharacters(in: replacedRange, with: replacement)
                 let replacementRange = NSRange(location: replacedRange.location,
                                                length: (replacement as NSString).length - 1)
                 let attrs: [NSAttributedString.Key: Any] = [
                     .foregroundColor: UIColor.theme,
-                    .mentionLength: replacementRange.length
+                    .mentionToken: MentionToken(length: replacementRange.length)
                 ]
                 mutable.addAttributes(attrs, range: replacementRange)
-                attributedText = (mutable.copy() as! NSAttributedString)
+                attributedText = NSAttributedString(attributedString: mutable)
                 delegate?.textViewDidChange?(self)
+                break
             }
         }
     }
@@ -109,7 +110,7 @@ class ConversationInputTextView: UITextView {
                                                  in: textContainer,
                                                  fractionOfDistanceBetweenInsertionPoints: nil)
         var effectiveRange = NSRange(location: NSNotFound, length: 0)
-        let isMentionToken = attributedText.attribute(.mentionLength, at: index, effectiveRange: &effectiveRange) != nil
+        let isMentionToken = attributedText.attribute(.mentionToken, at: index, effectiveRange: &effectiveRange) != nil
         if isMentionToken, effectiveRange.location != NSNotFound {
             let rect = layoutManager.boundingRect(forGlyphRange: effectiveRange, in: textContainer)
             isFloatingCursorGoingBackward = point.x <= rect.midX

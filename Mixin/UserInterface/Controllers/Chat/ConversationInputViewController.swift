@@ -683,8 +683,8 @@ extension ConversationInputViewController: UITextViewDelegate {
         let fullRange = NSRange(location: 0, length: textView.attributedText.length)
         var rangesToRemove = [NSRange]()
         mentionRanges.removeAll()
-        textView.attributedText.enumerateAttribute(.mentionLength, in: fullRange, options: [], using: { (value, range, stop) in
-            guard let length = value as? Int else {
+        textView.attributedText.enumerateAttribute(.mentionToken, in: fullRange, options: [], using: { (value, range, stop) in
+            guard let length = (value as? MentionToken)?.length else {
                 return
             }
             if length == range.length {

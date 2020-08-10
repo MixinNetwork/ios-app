@@ -697,7 +697,9 @@ extension ConversationInputViewController: UITextViewDelegate {
         
         if let range = rangeToRemove {
             DispatchQueue.main.async {
-                textView.text = (textView.text as NSString).replacingCharacters(in: range, with: "")
+                let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+                mutable.replaceCharacters(in: range, with: "")
+                textView.attributedText = NSAttributedString(attributedString: mutable)
                 self.textViewDidChange(textView)
                 textView.selectedRange = NSRange(location: range.location, length: 0)
             }

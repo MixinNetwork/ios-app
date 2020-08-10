@@ -674,6 +674,8 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        textView.typingAttributes = typingAttributes
+        textView.textStorage.addAttributes(typingAttributes, range: range)
         return !audioViewController.isRecording
     }
     
@@ -737,6 +739,9 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
+        guard textView == self.textView else {
+            return
+        }
         guard !isManipulatingSelection else {
             return
         }
@@ -751,9 +756,23 @@ extension ConversationInputViewController: UITextViewDelegate {
                 selectedRange.location > range.location && selectedRange.location < NSMaxRange(range)
             }
             if textView.text.count == lastTextCountWhenMentionRangeChanges, let range = mentionRangeWithCaretInside {
-                let isCaretGoingBackwards = selectedRange.location < lastSelectedRange.location
-                let location = isCaretGoingBackwards ? range.location : NSMaxRange(range)
-                textView.selectedRange = NSRange(location: location, length: 0)
+                let isCursorGoingBackward: Bool
+                if self.textView.isFloatingCursor {
+                    isCursorGoingBackward = self.textView.isFloatingCursorGoingBackward
+                } else {
+                    isCursorGoingBackward = selectedRange.location < lastSelectedRange.location
+                }
+                let isCursorGoingForward: Bool
+                if self.textView.isFloatingCursor {
+                    isCursorGoingForward = self.textView.isFloatingCursorGoingForward
+                } else {
+                    isCursorGoingForward = selectedRange.location > lastSelectedRange.location
+                }
+                if isCursorGoingBackward {
+                    textView.selectedRange = NSRange(location: range.location, length: 0)
+                } else if isCursorGoingForward {
+                    textView.selectedRange = NSRange(location: NSMaxRange(range), length: 0)
+                }
             }
         } else {
             for mentionRange in mentionRanges {

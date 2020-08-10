@@ -5,6 +5,10 @@ class ConversationInputTextView: UITextView {
     
     weak var overrideNext: UIResponder?
     
+    private(set) var isFloatingCursor = false
+    private(set) var isFloatingCursorGoingForward = false
+    private(set) var isFloatingCursorGoingBackward = false
+    
     override var next: UIResponder? {
         if let responder = overrideNext {
             return responder
@@ -93,6 +97,33 @@ class ConversationInputTextView: UITextView {
                 delegate?.textViewDidChange?(self)
             }
         }
+    }
+    
+    override func beginFloatingCursor(at point: CGPoint) {
+        isFloatingCursor = true
+        super.beginFloatingCursor(at: point)
+    }
+    
+    override func updateFloatingCursor(at point: CGPoint) {
+        let index = layoutManager.characterIndex(for: point,
+                                                 in: textContainer,
+                                                 fractionOfDistanceBetweenInsertionPoints: nil)
+        var effectiveRange = NSRange(location: NSNotFound, length: 0)
+        let isMentionToken = attributedText.attribute(.mentionLength, at: index, effectiveRange: &effectiveRange) != nil
+        if isMentionToken, effectiveRange.location != NSNotFound {
+            let rect = layoutManager.boundingRect(forGlyphRange: effectiveRange, in: textContainer)
+            isFloatingCursorGoingBackward = point.x <= rect.midX
+            isFloatingCursorGoingForward = point.x > rect.midX
+        } else {
+            isFloatingCursorGoingBackward = false
+            isFloatingCursorGoingForward = false
+        }
+        super.updateFloatingCursor(at: point)
+    }
+    
+    override func endFloatingCursor() {
+        super.endFloatingCursor()
+        isFloatingCursor = false
     }
     
 }

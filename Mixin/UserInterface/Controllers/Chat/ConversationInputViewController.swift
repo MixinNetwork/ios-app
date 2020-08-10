@@ -681,7 +681,7 @@ extension ConversationInputViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         let fullRange = NSRange(location: 0, length: textView.attributedText.length)
-        var rangeToRemove: NSRange?
+        var rangesToRemove = [NSRange]()
         mentionRanges.removeAll()
         textView.attributedText.enumerateAttribute(.mentionLength, in: fullRange, options: [], using: { (value, range, stop) in
             guard let length = value as? Int else {
@@ -690,18 +690,19 @@ extension ConversationInputViewController: UITextViewDelegate {
             if length == range.length {
                 mentionRanges.insert(range)
             } else {
-                rangeToRemove = range
-                stop.pointee = true
+                rangesToRemove.append(range)
             }
         })
         
-        if let range = rangeToRemove {
+        if !rangesToRemove.isEmpty {
             DispatchQueue.main.async {
-                let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
-                mutable.replaceCharacters(in: range, with: "")
-                textView.attributedText = NSAttributedString(attributedString: mutable)
+                for range in rangesToRemove.reversed() {
+                    let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+                    mutable.replaceCharacters(in: range, with: "")
+                    textView.attributedText = NSAttributedString(attributedString: mutable)
+                    textView.selectedRange = NSRange(location: range.location, length: 0)
+                }
                 self.textViewDidChange(textView)
-                textView.selectedRange = NSRange(location: range.location, length: 0)
             }
             return
         }

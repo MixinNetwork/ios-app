@@ -699,6 +699,7 @@ extension ConversationInputViewController: UITextViewDelegate {
             DispatchQueue.main.async {
                 textView.text = (textView.text as NSString).replacingCharacters(in: range, with: "")
                 self.textViewDidChange(textView)
+                textView.selectedRange = NSRange(location: range.location, length: 0)
             }
             return
         }

@@ -466,8 +466,8 @@ extension CallService {
                     DispatchQueue.main.sync {
                         _ = self.handledUUIDs.insert(uuid)
                     }
-                    if callStatusWasIncoming, !call.invitersUserId.isEmpty {
-                        for userId in call.invitersUserId {
+                    if callStatusWasIncoming, !call.inviters.isEmpty {
+                        for userId in call.inviters.map(\.userId) {
                             let declining = KrakenRequest(callUUID: call.uuid,
                                                           conversationId: call.conversationId,
                                                           trackId: nil,
@@ -874,8 +874,9 @@ extension CallService {
             guard activeCall?.conversationId != data.conversationId else {
                 return
             }
-            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall {
-                call.invitersUserId.insert(data.userId)
+            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall, !call.inviters.contains(where: { $0.userId == data.userId }), let user = UserDAO.shared.getUser(userId: data.userId) {
+                call.inviters.append(user)
+                callInterface.reportIncomingCall(call, completion: { _ in })
                 return
             }
             let uuid = UUID(uuidString: data.messageId) ?? UUID()
@@ -906,7 +907,9 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.invitersUserId = [data.userId]
+            if let user = UserDAO.shared.getUser(userId: data.userId) {
+                call.inviters = [user]
+            }
             groupCallUUIDs[conversation.conversationId] = uuid
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
@@ -952,9 +955,9 @@ extension CallService {
                      didDisconnectFromConversationWithId: data.conversationId)
         
         func shouldClose(call: GroupCall) -> Bool {
-            call.invitersUserId.remove(data.userId)
+            call.inviters.removeAll(where: { $0.userId == data.userId })
             return call.conversationId == data.conversationId
-                && call.invitersUserId.isEmpty
+                && call.inviters.isEmpty
                 && call.status == .incoming
         }
         
@@ -1199,7 +1202,9 @@ extension CallService: PKPushRegistryDelegate {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.invitersUserId = [userId]
+            if let user = UserDAO.shared.getUser(userId: userId) {
+                call.inviters = [user]
+            }
             groupCallUUIDs[conversationId] = uuid
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -1291,8 +1296,8 @@ extension CallService {
                 self.insertCallCompletedMessage(call: call,
                                                 isUserInitiated: false,
                                                 category: .WEBRTC_AUDIO_CANCEL)
-            } else if let call = call as? GroupCall, !call.invitersUserId.isEmpty {
-                for userId in call.invitersUserId {
+            } else if let call = call as? GroupCall, !call.inviters.isEmpty {
+                for userId in call.inviters.map(\.userId) {
                     let declining = KrakenRequest(callUUID: call.uuid,
                                                   conversationId: call.conversationId,
                                                   trackId: call.trackId,

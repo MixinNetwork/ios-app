@@ -10,16 +10,24 @@ class GroupCall: Call {
     let conversationName: String
     let membersDataSource: GroupCallMemberDataSource
     
-    override var description: String {
-        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), invitersUserId: \(invitersUserId), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
-    }
-    
     var frameKey: Data?
     var trackId: String?
-    var invitersUserId = Set<String>()
+    var inviters = [UserItem]()
     
     // invite after group call is connected
     private var pendingInvitingMembers: [UserItem]?
+    
+    override var description: String {
+        "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), inviters: \(inviters.map(\.fullName)), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+    }
+    
+    var localizedName: String {
+        if inviters.isEmpty {
+            return conversationName
+        } else {
+            return inviters.map(\.fullName).joined(separator: ", ")
+        }
+    }
     
     init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem]) {
         self.conversation = conversation

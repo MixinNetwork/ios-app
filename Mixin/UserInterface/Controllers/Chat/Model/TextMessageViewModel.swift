@@ -318,11 +318,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 let newSearchingLocation = NSMaxRange(range)
                 let newSearchingLength = searchingRange.length - (newSearchingLocation - searchingRange.location)
                 searchingRange = NSRange(location: newSearchingLocation, length: newSearchingLength)
-                guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
-                    continue
-                }
                 guard let url = MixinInternalURL.identityNumber(mention.key).url else {
                     continue
+                }
+                ranges.removeAll { (linkRange) -> Bool in
+                    linkRange.range.intersection(range) != nil
                 }
                 let linkRange = Link.Range(range: range, url: url)
                 ranges.append(linkRange)

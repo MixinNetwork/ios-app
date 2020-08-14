@@ -28,8 +28,10 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? DataMessageViewModel {
             updateOperationButtonStyle()
-            if let mediaMimeType = viewModel.message.mediaMimeType {
-                leftView.extensionNameLabel.text = FileManager.default.pathExtension(mimeType: mediaMimeType)
+            if let mime = viewModel.message.mediaMimeType, let name = FileManager.default.pathExtension(mimeType: mime) {
+                leftView.extensionNameLabel.text = name
+            } else {
+                leftView.extensionNameLabel.text = "FILE"
             }
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue

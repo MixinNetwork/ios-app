@@ -183,7 +183,6 @@
 "contact_phone_contact_invite" = "Invite";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "Mobile: %@";
-"contact_search_not_found" = "user not found";
 "contact_avatar_picking_fail" = "Failed to change your profile photo";
 "contact_change_name_fail" = "Failed to change your name";
 "contact_my_qr_code" = "My QR Code";
@@ -194,6 +193,7 @@
 "placeholder_mixin_id_or_phone" = "Mixin ID, Phone number";
 "placeholder_new_name" = "new name";
 "navigation_title_add_people" = "Add people";
+"user_not_found" = "User not found";
 
 // Apps
 "app_not_found" = "App not found.";

@@ -123,7 +123,7 @@ class UrlWindow {
             if let traceId = traceId  {
                 snapshotItem = SnapshotDAO.shared.getSnapshot(traceId: traceId)
                 if snapshotItem == nil {
-                    switch SnapshotAPI.shared.snapshot(traceId: traceId) {
+                    switch SnapshotAPI.shared.trace(traceId: traceId) {
                     case let .success(snapshot):
                         snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot)
                     case let .failure(error):
@@ -184,32 +184,15 @@ class UrlWindow {
             return false
         }
 
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            var userItem = UserDAO.shared.getUser(userId: userId)
-            var updateUserFromRemoteAfterReloaded = true
-            if userItem == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
-                case let .success(response):
-                    updateUserFromRemoteAfterReloaded = false
-                    userItem = UserItem.createUser(from: response)
-                    UserDAO.shared.updateUsers(users: [response])
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
-                        } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        }
-                    }
-                    return
-                }
-            }
-
-            guard let user = userItem, user.isCreatedByMessenger else {
+            guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud), user.isCreatedByMessenger else {
                 return
             }
 
             DispatchQueue.main.async {
+                hud.hide()
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
                 UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
@@ -234,7 +217,7 @@ class UrlWindow {
                 case let .failure(error):
                     DispatchQueue.main.async {
                         if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
+                            showAutoHiddenHud(style: .error, text: R.string.localizable.user_not_found())
                         } else {
                             showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         }
@@ -259,30 +242,15 @@ class UrlWindow {
             return false
         }
 
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            var userItem = UserDAO.shared.getUser(userId: userId)
-            if userItem == nil {
-                switch UserAPI.shared.showUser(userId: userId) {
-                case let .success(response):
-                    userItem = UserItem.createUser(from: response)
-                    UserDAO.shared.updateUsers(users: [response])
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        if error.code == 404 {
-                            showAutoHiddenHud(style: .error, text: Localized.CONTACT_SEARCH_NOT_FOUND)
-                        } else {
-                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        }
-                    }
-                    return
-                }
-            }
-
-            guard let user = userItem else {
+            guard let (user, _) = syncUser(userId: userId, hud: hud) else {
                 return
             }
 
             DispatchQueue.main.async {
+                hud.hide()
                 let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
                 if clearNavigationStack {
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
@@ -320,36 +288,68 @@ class UrlWindow {
             guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
                 return
             }
-            var address = AddressDAO.shared.getAddress(addressId: addressId)
-            if address == nil {
-                switch WithdrawalAPI.shared.address(addressId: addressId) {
-                case let .success(remoteAddress):
-                    AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
-                    address = remoteAddress
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        if error.code == 404 {
-                            hud.set(style: .error, text: R.string.localizable.address_not_found())
-                        } else {
-                            hud.set(style: .error, text: error.localizedDescription)
-                        }
-                        hud.scheduleAutoHidden()
-                    }
-                    return
-                }
+            guard let address = syncAddress(addressId: addressId, hud: hud) else {
+                return
             }
-
-            hud.safeHide()
-
-            guard let addr = address else {
+            guard checkTrace(traceId: traceId, asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true), destination: address.destination, tag: address.tag, amount: amount, memo: memo ?? "", hud: hud) else {
                 return
             }
 
             DispatchQueue.main.async {
-                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: addr, chainAsset: chainAsset, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
 
+        return true
+    }
+
+    private class func checkTrace(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, amount: String, memo: String, hud: Hud) -> Bool {
+        switch SnapshotAPI.shared.trace(traceId: traceId) {
+        case let .success(snapshot):
+            TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+            DispatchQueue.main.async {
+                hud.hide()
+                PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: Localized.TRANSFER_PAID).presentPopupControllerAnimated()
+            }
+            return false
+        case let .failure(error):
+            if error.code != 404 {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return false
+            }
+        }
+
+        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
+            if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
+                DispatchQueue.main.async {
+                    hud.hide()
+                    PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
+                }
+                return false
+            } else {
+                switch SnapshotAPI.shared.trace(traceId: traceId) {
+                case let .success(snapshot):
+                    TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
+                    }
+                    return false
+                case let .failure(error):
+                    if error.code != 404 {
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: error.localizedDescription)
+                            hud.scheduleAutoHidden()
+                        }
+                        return false
+                    }
+                }
+            }
+        }
         return true
     }
 
@@ -383,27 +383,20 @@ class UrlWindow {
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        PaymentAPI.shared.payments(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId) { (result) in
-            switch result {
-            case let .success(payment):
-                DispatchQueue.global().async {
-                    if let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId) ?? syncAsset(assetId: payment.asset.chainId, hud: hud) {
-                        DispatchQueue.main.async {
-                            hud.hide()
-                            let asset = AssetItem(asset: payment.asset, chainIconUrl: chainAsset.iconUrl, chainName: chainAsset.name, chainSymbol: chainAsset.symbol)
-                            let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
-                            PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: UserItem.createUser(from: payment.recipient), fromWeb: true), amount: amount, memo: memo ?? "", error: error).presentPopupControllerAnimated()
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            hud.set(style: .error, text: R.string.localizable.asset_not_found())
-                            hud.scheduleAutoHidden()
-                        }
-                    }
-                }
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
+        DispatchQueue.global().async {
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+                return
+            }
+            guard let (user, _) = syncUser(userId: recipientId, hud: hud) else {
+                return
+            }
+            guard checkTrace(traceId: traceId, asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: true), amount: amount, memo: memo ?? "", hud: hud) else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: true), amount: amount, memo: memo ?? "", error: nil).presentPopupControllerAnimated()
             }
         }
         return true
@@ -549,6 +542,36 @@ extension UrlWindow {
         return true
     }
 
+    private static func syncAddress(addressId: String, hud: Hud) -> Address? {
+        var address = AddressDAO.shared.getAddress(addressId: addressId)
+        if address == nil {
+            switch WithdrawalAPI.shared.address(addressId: addressId) {
+            case let .success(remoteAddress):
+                AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
+                address = remoteAddress
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    if error.code == 404 {
+                        hud.set(style: .error, text: R.string.localizable.address_not_found())
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
+
+        if address == nil {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.address_not_found())
+                hud.scheduleAutoHidden()
+            }
+        }
+
+        return address
+    }
+
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
         var asset = AssetDAO.shared.getAsset(assetId: assetId)
         if asset == nil {
@@ -576,6 +599,39 @@ extension UrlWindow {
         }
 
         return asset
+    }
+
+    private static func syncUser(userId: String, hud: Hud) -> (UserItem, Bool)? {
+        var user = UserDAO.shared.getUser(userId: userId)
+        var loadUserFromLocal = true
+        if user == nil {
+            switch UserAPI.shared.showUser(userId: userId) {
+            case let .success(userItem):
+                loadUserFromLocal = false
+                user = UserItem.createUser(from: userItem)
+                UserDAO.shared.updateUsers(users: [userItem])
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    if error.code == 404 {
+                        hud.set(style: .error, text: R.string.localizable.user_not_found())
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
+
+        if let userItem = user {
+            return (userItem, loadUserFromLocal)
+        } else {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.user_not_found())
+                hud.scheduleAutoHidden()
+            }
+            return nil
+        }
     }
 
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {

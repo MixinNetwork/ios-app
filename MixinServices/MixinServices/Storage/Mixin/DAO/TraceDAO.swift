@@ -10,19 +10,19 @@ public final class TraceDAO {
             condition = Trace.Properties.assetId == assetId
                 && Trace.Properties.amount == amount
                 && Trace.Properties.opponentId == opponentId
-                && Trace.Properties.createdAt <= createdAt
+                && Trace.Properties.createdAt >= createdAt
         } else if let destination = destination, !destination.isEmpty {
             if let tag = tag, !tag.isEmpty {
                 condition = Trace.Properties.assetId == assetId
                     && Trace.Properties.amount == amount
                     && Trace.Properties.destination == destination
                     && Trace.Properties.tag == tag
-                    && Trace.Properties.createdAt <= createdAt
+                    && Trace.Properties.createdAt >= createdAt
             } else {
                 condition = Trace.Properties.assetId == assetId
                     && Trace.Properties.amount == amount
                     && Trace.Properties.destination == destination
-                    && Trace.Properties.createdAt <= createdAt
+                    && Trace.Properties.createdAt >= createdAt
             }
         } else {
             return nil
@@ -30,10 +30,25 @@ public final class TraceDAO {
         return MixinDatabase.shared.getCodable(condition: condition)
     }
 
-    public func saveTrace(trace: Trace) {
+    public func getTrace(traceId: String) -> Trace? {
+        return MixinDatabase.shared.getCodable(condition: Trace.Properties.traceId == traceId)
+    }
+
+    public func deleteTrace(traceId: String) {
+        MixinDatabase.shared.delete(table: Trace.tableName, condition: Trace.Properties.traceId == traceId)
+    }
+
+    public func saveTrace(trace: Trace?) {
+        guard let trace = trace else {
+            return
+        }
         DispatchQueue.global().async {
             MixinDatabase.shared.insertOrReplace(objects: [trace])
         }
+    }
+
+    public func updateSnapshot(traceId: String, snapshotId: String) {
+        MixinDatabase.shared.update(maps: [(Trace.Properties.snapshotId, snapshotId)], tableName: Trace.tableName, condition: Trace.Properties.traceId == traceId)
     }
 
 }

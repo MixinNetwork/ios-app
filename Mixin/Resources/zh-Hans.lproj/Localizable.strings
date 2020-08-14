@@ -183,12 +183,12 @@
 "contact_phone_contact_invite" = "邀请";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "手机号: %@";
-"contact_search_not_found" = "找不到这个用户";
 "contact_avatar_picking_fail" = "上传头像失败，请稍后重试";
 "contact_change_name_fail" = "修改名称失败，请稍后重试";
 "contact_my_qr_code" = "我的二维码";
 "contact_receive_money" = "我的收款码";
-"contact_qr_code_save" = "Save Image";
+"contact_qr_code_save" = "保存图片";
+"user_not_found" = "找不到这个用户";
 
 "button_title_search" = "搜索";
 "placeholder_mixin_id_or_phone" = "Mixin ID 或手机号";

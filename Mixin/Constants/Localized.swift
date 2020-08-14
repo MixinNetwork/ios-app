@@ -141,7 +141,6 @@ public class Localized {
     public static let BUTTON_TITLE_SEARCH = LocalizedString("button_title_search", comment: "Search")
     public static let PLACEHOLDER_NEW_NAME = LocalizedString("placeholder_new_name", comment: "new name")
     public static let NAVIGATION_TITLE_ADD_PEOPLE = LocalizedString("navigation_title_add_people", comment: "Add people")
-    public static let CONTACT_SEARCH_NOT_FOUND = LocalizedString("contact_search_not_found", comment: "user not found")
     public static let CONTACT_AVATAR_PICKING_FAIL = LocalizedString("contact_avatar_picking_fail", comment: "Failed to change your profile photo")
     public static let CONTACT_CHANGE_NAME_FAIL = LocalizedString("contact_change_name_fail", comment: "Failed to change your name")
     public static let CONTACT_MY_QR_CODE = LocalizedString("contact_my_qr_code", comment: "My QR Code")

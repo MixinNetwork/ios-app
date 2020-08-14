@@ -1,13 +1,12 @@
 import Foundation
 import MixinServices
 
-struct PaymentResponse: Codable {
-    
-    let recipient: UserResponse
+struct TraceResponse: Codable {
+
     let asset: Asset
-    let amount: String
+    let snapshot: Snapshot?
     let status: String
-    
+
 }
 
 enum PaymentStatus: String, Codable {

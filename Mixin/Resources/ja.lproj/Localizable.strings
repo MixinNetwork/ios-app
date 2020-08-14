@@ -183,12 +183,12 @@
 "contact_phone_contact_invite" = "招待する";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "電話番号: %@";
-"contact_search_not_found" = "ユーザーが見つかりません";
 "contact_avatar_picking_fail" = "プロフィールを変更できませんでした";
 "contact_change_name_fail" = "名前を変更できませんでした";
 "contact_my_qr_code" = "あなたのQRコード";
 "contact_receive_money" = "送金を受け取る";
 "contact_qr_code_save" = "画像を保存する";
+"user_not_found" = "ユーザーが見つかりません";
 
 "button_title_search" = "検索";
 "placeholder_mixin_id_or_phone" = "Mixin ID, 電話番号";

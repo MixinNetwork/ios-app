@@ -11,6 +11,7 @@ public struct Trace: BaseCodable {
     public let opponentId: String?
     public let destination: String?
     public let tag: String?
+    public let snapshotId: String?
     public let createdAt: String
 
     public enum CodingKeys: String, CodingTableKey {
@@ -21,6 +22,7 @@ public struct Trace: BaseCodable {
         case opponentId = "opponent_id"
         case destination
         case tag
+        case snapshotId = "snapshot_id"
         case createdAt = "created_at"
 
         public static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -38,6 +40,7 @@ public struct Trace: BaseCodable {
         self.opponentId = opponentId
         self.destination = destination
         self.tag = tag
+        self.snapshotId = nil
         self.createdAt = createdAt
     }
 }

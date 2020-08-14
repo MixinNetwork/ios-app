@@ -684,7 +684,6 @@
 		DFC0ECE623BB60DE0091E7AC /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */; };
 		DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */; };
 		DFC0ECE823BB60DE0091E7AC /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */; };
-		DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */; };
 		DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */; };
 		DFC0ECF523BB610C0091E7AC /* PaymentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEB23BB610A0091E7AC /* PaymentAPI.swift */; };
 		DFC0ECF623BB610C0091E7AC /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ECEC23BB610A0091E7AC /* CallAPI.swift */; };
@@ -701,6 +700,9 @@
 		DFC0ED0423BB611E0091E7AC /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0123BB611E0091E7AC /* UserAPI.swift */; };
 		DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0623BB7D700091E7AC /* TurnServer.swift */; };
 		DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */; };
+		DFC2646A24E5580700BF954D /* TraceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2646924E5580700BF954D /* TraceResponse.swift */; };
+		DFC2646C24E585C000BF954D /* PayConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */; };
+		DFC2646E24E585CE00BF954D /* PayConfirmationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */; };
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
@@ -1546,7 +1548,6 @@
 		DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCodeResponse.swift; sourceTree = "<group>"; };
 		DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
-		DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
 		DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultisigResponse.swift; sourceTree = "<group>"; };
 		DFC0ECEB23BB610A0091E7AC /* PaymentAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentAPI.swift; sourceTree = "<group>"; };
 		DFC0ECEC23BB610A0091E7AC /* CallAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
@@ -1563,6 +1564,9 @@
 		DFC0ED0123BB611E0091E7AC /* UserAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		DFC0ED0623BB7D700091E7AC /* TurnServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
 		DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
+		DFC2646924E5580700BF954D /* TraceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceResponse.swift; sourceTree = "<group>"; };
+		DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayConfirmationWindow.swift; sourceTree = "<group>"; };
+		DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayConfirmationWindow.xib; sourceTree = "<group>"; };
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
@@ -2332,6 +2336,8 @@
 				DF43304622648B4E006D971D /* AssetInfoWindow.xib */,
 				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
 				DF8CECE61FC317BF00E40064 /* PayWindow.xib */,
+				DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */,
+				DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */,
 				DF6ABB152295049E00A012B2 /* AddressWindow.swift */,
 				DF6ABB132295019C00A012B2 /* AddressWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
@@ -2880,12 +2886,12 @@
 				DFC0ECD823BB60DD0091E7AC /* EmergencyResponse.swift */,
 				DFC0ECE023BB60DE0091E7AC /* MultisigResponse.swift */,
 				DFC0ECDD23BB60DD0091E7AC /* PaymentCodeResponse.swift */,
-				DFC0ECDF23BB60DE0091E7AC /* PaymentResponse.swift */,
 				DFCFA857247656CC00581312 /* LogResponse.swift */,
 				DFC0ECDC23BB60DD0091E7AC /* ProvisioningCodeResponse.swift */,
 				DFC0ECD923BB60DD0091E7AC /* ProvisioningResponse.swift */,
 				DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */,
 				DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */,
+				DFC2646924E5580700BF954D /* TraceResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -3360,6 +3366,7 @@
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
+				DFC2646E24E585CE00BF954D /* PayConfirmationWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
@@ -3866,6 +3873,7 @@
 				7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */,
 				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
+				DFC2646C24E585C000BF954D /* PayConfirmationWindow.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,
@@ -4177,6 +4185,7 @@
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DFC0ECF823BB610C0091E7AC /* ContactAPI.swift in Sources */,
+				DFC2646A24E5580700BF954D /* TraceResponse.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
 				7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */,
@@ -4252,7 +4261,6 @@
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */,
-				DFC0ECE923BB60DE0091E7AC /* PaymentResponse.swift in Sources */,
 				7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,

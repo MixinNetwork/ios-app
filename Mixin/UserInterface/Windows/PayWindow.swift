@@ -590,6 +590,7 @@ extension PayWindow: PinFieldDelegate {
         payLabel.isHidden = true
         loadingView.startAnimating()
 
+        var trace: Trace?
         let completion = { [weak self](result: BaseAPI.Result<Snapshot>) in
             guard let weakSelf = self else {
                 return
@@ -597,6 +598,9 @@ extension PayWindow: PinFieldDelegate {
 
             switch result {
             case let .success(snapshot):
+                if let trace = trace {
+                    TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: snapshot.snapshotId)
+                }
                 switch pinAction {
                 case .transfer, .payment:
                     AppGroupUserDefaults.User.hasPerformedTransfer = true
@@ -623,34 +627,16 @@ extension PayWindow: PinFieldDelegate {
 
         switch pinAction {
         case let .transfer(trackId, user, _):
-            TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil))
+            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil)
+            TraceDAO.shared.saveTrace(trace: trace)
             PaymentAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
             PaymentAPI.shared.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
-        case let .withdraw(trackId, address, _, fromWeb):
-            if fromWeb {
-                TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: amount, opponentId: nil, destination: address.destination, tag: address.tag))
-                PaymentAPI.shared.payments(assetId: asset.assetId, addressId: address.addressId, amount: amount, traceId: trackId) { [weak self](result) in
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    switch result {
-                    case let .success(payment):
-                        guard payment.status != PaymentStatus.paid.rawValue else {
-                            weakSelf.errorContinueAction = .close
-                            weakSelf.failedHandler(errorMsg: Localized.TRANSFER_PAID)
-                            return
-                        }
-                        WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: weakSelf.memo), completion: completion)
-                    case let .failure(error):
-                        weakSelf.failedHandler(error: error)
-                    }
-                }
-            } else {
-                TraceDAO.shared.saveTrace(trace: Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag))
-                WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
-            }
+        case let .withdraw(trackId, address, _, _):
+            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
+            TraceDAO.shared.saveTrace(trace: trace)
+            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self](result: BaseAPI.Result<Empty>) in
                 guard let weakSelf = self else {

@@ -586,6 +586,10 @@
 "withdraw_use_touch" = "Use Touch Withdraw";
 "transfer_large_title" = "Large Amount Confirmation";
 "transfer_large_prompt" = "Are you sure you want to transfer %@ worth %@ to %@?";
+"transfer_duplicate_title" = "Duplicate Transfer Confirmation";
+"transfer_duplicate_prompt" = "You have already transferred %1$@ to %2$@ %3$@ ago. Do you want to transfer it again?";
+"withdraw_duplicate_title" = "Duplicate Withdraw Confirmation";
+"withdraw_duplicate_prompt" = "You have already withdrawn %1$@ to %2$@ %3$@ ago, Do you want to withdraw it again?";
 
 // Multisig
 "multisig_by_pin" = "Multisig by PIN";

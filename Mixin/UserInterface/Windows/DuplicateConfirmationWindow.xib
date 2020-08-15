@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="y7t-NN-kgF" customClass="PayConfirmationWindow" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="y7t-NN-kgF" customClass="DuplicateConfirmationWindow" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -55,8 +55,8 @@
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hCN-jh-ZW6">
                             <rect key="frame" x="40" y="70" width="334" height="384"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer Confirmation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-PD-2RY">
-                                    <rect key="frame" x="74.5" y="0.0" width="185.5" height="21.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Duplicate Transfer Confirmation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-PD-2RY">
+                                    <rect key="frame" x="32" y="0.0" width="270" height="21.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
@@ -250,19 +250,6 @@
                                         <constraint firstAttribute="bottom" secondItem="Q4h-ZK-U3X" secondAttribute="bottom" id="xcY-ji-xGx"/>
                                     </constraints>
                                 </view>
-                                <button hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DpI-7F-cIu">
-                                    <rect key="frame" x="110.5" y="354" width="113" height="0.0"/>
-                                    <color key="backgroundColor" name="background"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <state key="normal" title="Use Face Pay" image="ic_pay_face">
-                                        <color key="titleColor" red="0.29411764709999999" green="0.48627450979999998" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    </state>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_use_face"/>
-                                    </userDefinedRuntimeAttributes>
-                                </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mrT-eC-luc">
                                     <rect key="frame" x="29.5" y="354" width="275" height="30"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -315,20 +302,17 @@
                 <outlet property="amountExchangeLabel" destination="DSV-vU-jJ2" id="tkB-Df-UM8"/>
                 <outlet property="amountLabel" destination="mAb-DT-EOg" id="Leg-iH-ZKn"/>
                 <outlet property="assetIconView" destination="9KZ-t4-edy" id="SW3-66-RV4"/>
-                <outlet property="bigAmountCancelButton" destination="Q4h-ZK-U3X" id="eft-9I-oGU"/>
-                <outlet property="bigAmountConfirmButton" destination="a0F-ly-bky" id="9uV-4W-j7R"/>
+                <outlet property="confirmButton" destination="a0F-ly-bky" id="Wx7-5y-Ka2"/>
                 <outlet property="contentBottomConstraint" destination="sX1-Fp-W4p" id="qVP-7D-64I"/>
-                <outlet property="dismissButton" destination="Hg4-6k-MYk" id="QaG-eI-U5h"/>
-                <outlet property="mixinIDLabel" destination="0Ff-mC-TOt" id="EzN-iW-iKD"/>
-                <outlet property="nameLabel" destination="ctr-PD-2RY" id="VWc-D9-CtN"/>
                 <outlet property="popupView" destination="UUl-xL-gXt" id="AX3-Ul-iqV"/>
+                <outlet property="tipsLabel" destination="0Ff-mC-TOt" id="neW-RD-KyW"/>
+                <outlet property="titleLabel" destination="ctr-PD-2RY" id="nTs-Qo-Aed"/>
             </connections>
             <point key="canvasLocation" x="82.400000000000006" y="63.418290854572717"/>
         </view>
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>
-        <image name="ic_pay_face" width="20" height="20"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

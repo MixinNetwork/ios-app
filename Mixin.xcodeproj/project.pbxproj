@@ -701,8 +701,8 @@
 		DFC0ED0723BB7D700091E7AC /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0623BB7D700091E7AC /* TurnServer.swift */; };
 		DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */; };
 		DFC2646A24E5580700BF954D /* TraceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2646924E5580700BF954D /* TraceResponse.swift */; };
-		DFC2646C24E585C000BF954D /* PayConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */; };
-		DFC2646E24E585CE00BF954D /* PayConfirmationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */; };
+		DFC2646C24E585C000BF954D /* DuplicateConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC2646B24E585C000BF954D /* DuplicateConfirmationWindow.swift */; };
+		DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFC2646D24E585CE00BF954D /* DuplicateConfirmationWindow.xib */; };
 		DFCC4342206B668A006F50BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCC4341206B668A006F50BE /* Security.framework */; };
 		DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */; };
 		DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */; };
@@ -1565,8 +1565,8 @@
 		DFC0ED0623BB7D700091E7AC /* TurnServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
 		DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		DFC2646924E5580700BF954D /* TraceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceResponse.swift; sourceTree = "<group>"; };
-		DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayConfirmationWindow.swift; sourceTree = "<group>"; };
-		DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayConfirmationWindow.xib; sourceTree = "<group>"; };
+		DFC2646B24E585C000BF954D /* DuplicateConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateConfirmationWindow.swift; sourceTree = "<group>"; };
+		DFC2646D24E585CE00BF954D /* DuplicateConfirmationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DuplicateConfirmationWindow.xib; sourceTree = "<group>"; };
 		DFCC4341206B668A006F50BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerManagerViewController.swift; sourceTree = "<group>"; };
 		DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAddViewController.swift; sourceTree = "<group>"; };
@@ -2336,8 +2336,8 @@
 				DF43304622648B4E006D971D /* AssetInfoWindow.xib */,
 				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
 				DF8CECE61FC317BF00E40064 /* PayWindow.xib */,
-				DFC2646B24E585C000BF954D /* PayConfirmationWindow.swift */,
-				DFC2646D24E585CE00BF954D /* PayConfirmationWindow.xib */,
+				DFC2646B24E585C000BF954D /* DuplicateConfirmationWindow.swift */,
+				DFC2646D24E585CE00BF954D /* DuplicateConfirmationWindow.xib */,
 				DF6ABB152295049E00A012B2 /* AddressWindow.swift */,
 				DF6ABB132295019C00A012B2 /* AddressWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
@@ -3366,7 +3366,7 @@
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
-				DFC2646E24E585CE00BF954D /* PayConfirmationWindow.xib in Resources */,
+				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
@@ -3873,7 +3873,7 @@
 				7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */,
 				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
-				DFC2646C24E585C000BF954D /* PayConfirmationWindow.swift in Sources */,
+				DFC2646C24E585C000BF954D /* DuplicateConfirmationWindow.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,

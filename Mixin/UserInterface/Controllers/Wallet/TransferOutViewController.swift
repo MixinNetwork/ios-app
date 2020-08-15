@@ -274,7 +274,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {
-                    PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
+                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
                 }
                 return false
             } else {
@@ -282,7 +282,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 case let .success(snapshot):
                     TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
                     DispatchQueue.main.async {
-                        PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
                     }
                     return false
                 case let .failure(error):

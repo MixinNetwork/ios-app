@@ -310,7 +310,7 @@ class UrlWindow {
             TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
             DispatchQueue.main.async {
                 hud.hide()
-                PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: Localized.TRANSFER_PAID).presentPopupControllerAnimated()
+                DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, error: Localized.TRANSFER_PAID).presentPopupControllerAnimated()
             }
             return false
         case let .failure(error):
@@ -327,7 +327,7 @@ class UrlWindow {
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {
                     hud.hide()
-                    PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
+                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
                 }
                 return false
             } else {
@@ -336,7 +336,7 @@ class UrlWindow {
                     TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
                     DispatchQueue.main.async {
                         hud.hide()
-                        PayConfirmationWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
+                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
                     }
                     return false
                 case let .failure(error):

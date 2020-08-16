@@ -444,7 +444,6 @@ public class Localized {
     
     // Transfer
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
-    public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "This payment link has already been paid by someone, you can not make a duplicate payment.")
     public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
         return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)
     }

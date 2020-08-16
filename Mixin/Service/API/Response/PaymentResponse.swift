@@ -1,10 +1,8 @@
 import Foundation
 import MixinServices
 
-struct TraceResponse: Codable {
+struct PaymentResponse: Codable {
 
-    let asset: Asset
-    let snapshot: Snapshot?
     let status: String
 
 }

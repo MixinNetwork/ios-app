@@ -207,34 +207,65 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         payWindow.onDismiss = { [weak self] in
             self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
         }
+
         switch opponent! {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in
-                guard Self.checkTrace(traceId: traceId, asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: false), opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, textfield: amountTextField) else {
+                defer {
                     DispatchQueue.main.async {
-                        self?.continueButton.isBusy = false
+                       self?.continueButton.isBusy = false
+                    }
+                }
+
+                let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField)
+                guard canPay else {
+                    if let error = errorMsg {
+                        showAutoHiddenHud(style: .error, text: error)
                     }
                     return
                 }
-                DispatchQueue.main.async {
-                    guard let weakSelf = self else {
-                        return
+
+                let showPayWindow = {
+                    DispatchQueue.main.async {
+                        payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
                     }
-                    weakSelf.continueButton.isBusy = false
-                    payWindow.render(asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
                 }
+
+                let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+                let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+                if threshold == 0 || fiatMoneyValue < threshold {
+                    showPayWindow()
+                } else {
+                    DispatchQueue.main.async {
+                        BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, fromWeb: false) { (isContinue) in
+                            guard isContinue else {
+                                return
+                            }
+
+                            showPayWindow()
+                        }.presentPopupControllerAnimated()
+                    }
+                }
+
             }
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
-                guard let chainAsset = chainAsset ?? AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                defer {
                     DispatchQueue.main.async {
-                        self?.continueButton.isBusy = false
+                       self?.continueButton.isBusy = false
                     }
+                }
+
+                guard let chainAsset = chainAsset ?? AssetDAO.shared.getAsset(assetId: asset.chainId) else {
                     return
                 }
-                guard Self.checkTrace(traceId: traceId, asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false), destination: address.destination, tag: address.tag, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, textfield: amountTextField) else {
-                    DispatchQueue.main.async {
-                        self?.continueButton.isBusy = false
+
+                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false)
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField)
+                guard canPay else {
+                    if let error = errorMsg {
+                        showAutoHiddenHud(style: .error, text: error)
                     }
                     return
                 }
@@ -243,8 +274,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                     guard let weakSelf = self else {
                         return
                     }
-                    weakSelf.continueButton.isBusy = false
-
                     guard weakSelf.checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                         showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
                         return
@@ -268,32 +297,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             }
         }
-    }
-
-    private static func checkTrace(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, textfield: UITextField?) -> Bool {
-        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
-            if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
-                DispatchQueue.main.async {
-                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
-                }
-                return false
-            } else {
-                switch SnapshotAPI.shared.trace(traceId: traceId) {
-                case let .success(snapshot):
-                    TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
-                    DispatchQueue.main.async {
-                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
-                    }
-                    return false
-                case let .failure(error):
-                    if error.code != 404 {
-                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                        return false
-                    }
-                }
-            }
-        }
-        return true
     }
     
     @IBAction func switchAssetAction(_ sender: Any) {

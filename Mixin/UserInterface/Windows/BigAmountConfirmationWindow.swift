@@ -1,38 +1,27 @@
 import Foundation
 import MixinServices
 
-class DuplicateConfirmationWindow: BottomSheetView {
+class BigAmountConfirmationWindow: BottomSheetView {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tipsLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var confirmButton: RoundedButton!
 
-    private weak var textfield: UITextField?
-    private var asset: AssetItem!
-    private var amount = ""
-    private var memo = ""
-    private var action: PayWindow.PinAction!
-    private var error: String?
-    private var fiatMoneyAmount: String?
     private var timer: Timer?
     private var countDown = 3
+    private var completion: CompletionHandler?
+
+    typealias CompletionHandler = (Bool) -> Void
 
     deinit {
         timer?.invalidate()
         timer = nil
     }
 
-    func render(traceCreatedAt: String, asset: AssetItem, action: PayWindow.PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil) -> DuplicateConfirmationWindow {
-        self.asset = asset
-        self.action = action
-        self.amount = amount
-        self.memo = memo
-        self.error = error
-        self.fiatMoneyAmount = fiatMoneyAmount
-        self.textfield = textfield
+    func render(asset: AssetItem, user: UserItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, fromWeb: Bool, completion: @escaping CompletionHandler) -> BigAmountConfirmationWindow {
+        self.completion = completion
 
         let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
         let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
@@ -44,16 +33,7 @@ class DuplicateConfirmationWindow: BottomSheetView {
             amountExchangeLabel.text = amountExchange
         }
 
-        switch action {
-        case let .transfer(_, user, _):
-            titleLabel.text = R.string.localizable.transfer_duplicate_title()
-            tipsLabel.text = R.string.localizable.transfer_duplicate_prompt(amountLabel.text ?? "", user.fullName, traceCreatedAt.toUTCDate().simpleTimeAgo())
-        case let .withdraw(_, address, _, _):
-            titleLabel.text = R.string.localizable.withdraw_duplicate_title()
-            tipsLabel.text = R.string.localizable.withdraw_duplicate_prompt(amountLabel.text ?? "", address.fullAddress.toSimpleKey(), traceCreatedAt.toUTCDate().simpleTimeAgo())
-        default:
-            break
-        }
+        tipsLabel.text = R.string.localizable.transfer_large_prompt(amountExchangeLabel.text ?? "", asset.symbol, user.fullName)
 
         assetIconView.setIcon(asset: asset)
 
@@ -66,17 +46,12 @@ class DuplicateConfirmationWindow: BottomSheetView {
     }
 
     @IBAction func continueAction(_ sender: Any) {
-        switch action! {
-        case let .transfer(_, user, _):
-            break
-        case let .withdraw(_, address, _, _):
-            break
-        default:
-            break
-        }
+        completion?(true)
+        dismissPopupControllerAnimated()
     }
 
     @IBAction func dismissAction(_ sender: Any) {
+        completion?(false)
         dismissPopupControllerAnimated()
     }
 
@@ -100,7 +75,7 @@ class DuplicateConfirmationWindow: BottomSheetView {
         }
     }
 
-    static func instance() -> DuplicateConfirmationWindow {
-        return Bundle.main.loadNibNamed("DuplicateConfirmationWindow", owner: nil, options: nil)?.first as! DuplicateConfirmationWindow
+    static func instance() -> BigAmountConfirmationWindow {
+        return Bundle.main.loadNibNamed("BigAmountConfirmationWindow", owner: nil, options: nil)?.first as! BigAmountConfirmationWindow
     }
 }

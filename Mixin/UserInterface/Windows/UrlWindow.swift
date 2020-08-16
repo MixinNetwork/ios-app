@@ -291,65 +291,27 @@ class UrlWindow {
             guard let address = syncAddress(addressId: addressId, hud: hud) else {
                 return
             }
-            guard checkTrace(traceId: traceId, asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true), destination: address.destination, tag: address.tag, amount: amount, memo: memo ?? "", hud: hud) else {
+
+            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true)
+            let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true)
+            guard canPay else {
+                DispatchQueue.main.async {
+                    if let error = errorMsg {
+                        hud.set(style: .error, text: error)
+                        hud.scheduleAutoHidden()
+                    } else {
+                        hud.hide()
+                    }
+                }
                 return
             }
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true), amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
 
-        return true
-    }
-
-    private class func checkTrace(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, amount: String, memo: String, hud: Hud) -> Bool {
-        switch SnapshotAPI.shared.trace(traceId: traceId) {
-        case let .success(snapshot):
-            TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
-            DispatchQueue.main.async {
-                hud.hide()
-                DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, error: Localized.TRANSFER_PAID).presentPopupControllerAnimated()
-            }
-            return false
-        case let .failure(error):
-            if error.code != 404 {
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
-                return false
-            }
-        }
-
-        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
-            if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
-                DispatchQueue.main.async {
-                    hud.hide()
-                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
-                }
-                return false
-            } else {
-                switch SnapshotAPI.shared.trace(traceId: traceId) {
-                case let .success(snapshot):
-                    TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
-                    DispatchQueue.main.async {
-                        hud.hide()
-                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo).presentPopupControllerAnimated()
-                    }
-                    return false
-                case let .failure(error):
-                    if error.code != 404 {
-                        DispatchQueue.main.async {
-                            hud.set(style: .error, text: error.localizedDescription)
-                            hud.scheduleAutoHidden()
-                        }
-                        return false
-                    }
-                }
-            }
-        }
         return true
     }
 
@@ -390,13 +352,24 @@ class UrlWindow {
             guard let (user, _) = syncUser(userId: recipientId, hud: hud) else {
                 return
             }
-            guard checkTrace(traceId: traceId, asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: true), amount: amount, memo: memo ?? "", hud: hud) else {
+
+            let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true)
+            let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo ?? "", fromWeb: true)
+            guard canPay else {
+                DispatchQueue.main.async {
+                    if let error = errorMsg {
+                        hud.set(style: .error, text: error)
+                        hud.scheduleAutoHidden()
+                    } else {
+                        hud.hide()
+                    }
+                }
                 return
             }
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .transfer(trackId: traceId, user: user, fromWeb: true), amount: amount, memo: memo ?? "", error: nil).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
             }
         }
         return true
@@ -427,7 +400,7 @@ class UrlWindow {
                         continue
                     }
                     guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
-                        hud.safeHide()
+                        hud.hideInMainThread()
                         return
                     }
                     asset = localAsset
@@ -446,7 +419,7 @@ class UrlWindow {
             let addressAction: AddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
                 guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
-                    hud.safeHide()
+                    hud.hideInMainThread()
                     return
                 }
 
@@ -471,7 +444,7 @@ class UrlWindow {
                 }
             } else {
                 guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
-                    hud.safeHide()
+                    hud.hideInMainThread()
                     return
                 }
 
@@ -693,7 +666,7 @@ extension UrlWindow {
                 return
             }
 
-            let error = payment.status == PaymentStatus.paid.rawValue ? Localized.TRANSFER_PAID : ""
+            let error = payment.status == PaymentStatus.paid.rawValue ? R.string.localizable.transfer_paid() : ""
 
             DispatchQueue.main.async {
                 hud.hide()

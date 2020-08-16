@@ -614,6 +614,9 @@ extension PayWindow: PinFieldDelegate {
                 SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
                 weakSelf.successHandler()
             case let .failure(error):
+                if let trace = trace, [20117, 20118, 20119, 20120, 20124, 30100].contains(error.code) {
+                    TraceDAO.shared.deleteTrace(traceId: trace.traceId)
+                }
                 weakSelf.failedHandler(error: error)
             }
         }
@@ -718,4 +721,88 @@ extension PayWindow: PinFieldDelegate {
         }
         AudioServicesPlaySystemSound(soundId)
     }
+}
+
+extension PayWindow {
+
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, textfield: UITextField? = nil) -> (Bool, String?) {
+        if fromWeb {
+            var response: BaseAPI.Result<PaymentResponse>?
+            if let opponentId = opponentId {
+                response = PaymentAPI.shared.payments(assetId: asset.assetId, opponentId: opponentId, amount: amount, traceId: traceId)
+            } else if let addressId = addressId {
+                response = PaymentAPI.shared.payments(assetId: asset.assetId, addressId: addressId, amount: amount, traceId: traceId)
+            }
+
+            if let result = response {
+                switch result {
+                case let .success(payment):
+                    if payment.status == PaymentStatus.paid.rawValue {
+                        DispatchQueue.main.async {
+                            PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.transfer_paid(), fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                        }
+                        return (false, nil)
+                    }
+                case let .failure(error):
+                    return (false, error.localizedDescription)
+                }
+            }
+        }
+
+        let (isDuplicated, createdAt, errMsg) = PayWindow.checkDuplicate(traceId: traceId, assetId: asset.assetId, opponentId: opponentId, destination: destination, tag: tag, amount: amount)
+        if isDuplicated {
+            DispatchQueue.main.async {
+                DuplicateConfirmationWindow.instance().render(traceCreatedAt: createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+            }
+            return (false, nil)
+        } else if let error = errMsg {
+           return (false, error)
+        }
+
+        return (true, nil)
+    }
+
+    static func checkPaid(traceId: String) -> (Bool, String?) {
+        switch SnapshotAPI.shared.trace(traceId: traceId) {
+        case let .success(snapshot):
+            TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+            return (true, nil)
+        case let .failure(error):
+            if error.code == 404 {
+                return (false, nil)
+            } else {
+                return (false, error.localizedDescription)
+            }
+        }
+    }
+
+    static func checkLargeAmount(amount: String, dust: String) -> Bool {
+        guard let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: dust, locale: .us) else {
+            return false
+        }
+        return amount >= dust
+    }
+
+    static func checkDuplicate(traceId: String, assetId: String, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, amount: String) -> (Bool, String, String?) {
+        guard let trace = TraceDAO.shared.getTrace(assetId: assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) else {
+            return (false, "", nil)
+        }
+
+        if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
+            return (true, trace.createdAt, nil)
+        } else {
+            switch SnapshotAPI.shared.trace(traceId: traceId) {
+            case let .success(snapshot):
+                TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+                return (true, snapshot.createdAt, nil)
+            case let .failure(error):
+                if error.code == 404 {
+                    return (false, "", nil)
+                } else {
+                    return (false, "", error.localizedDescription)
+                }
+            }
+        }
+    }
+
 }

@@ -97,7 +97,7 @@ final class Hud: NSObject {
         })
     }
 
-    func safeHide() {
+    func hideInMainThread() {
         if Thread.isMainThread {
             hide()
         } else {

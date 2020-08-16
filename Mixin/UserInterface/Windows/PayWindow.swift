@@ -749,57 +749,28 @@ extension PayWindow {
             }
         }
 
-        let (isDuplicated, createdAt, errMsg) = PayWindow.checkDuplicate(traceId: traceId, assetId: asset.assetId, opponentId: opponentId, destination: destination, tag: tag, amount: amount)
-        if isDuplicated {
-            DispatchQueue.main.async {
-                DuplicateConfirmationWindow.instance().render(traceCreatedAt: createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
-            }
-            return (false, nil)
-        } else if let error = errMsg {
-           return (false, error)
-        }
-
-        return (true, nil)
-    }
-
-    static func checkPaid(traceId: String) -> (Bool, String?) {
-        switch SnapshotAPI.shared.trace(traceId: traceId) {
-        case let .success(snapshot):
-            TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+        guard let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) else {
             return (true, nil)
-        case let .failure(error):
-            if error.code == 404 {
-                return (false, nil)
-            } else {
-                return (false, error.localizedDescription)
-            }
-        }
-    }
-
-    static func checkLargeAmount(amount: String, dust: String) -> Bool {
-        guard let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: dust, locale: .us) else {
-            return false
-        }
-        return amount >= dust
-    }
-
-    static func checkDuplicate(traceId: String, assetId: String, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, amount: String) -> (Bool, String, String?) {
-        guard let trace = TraceDAO.shared.getTrace(assetId: assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) else {
-            return (false, "", nil)
         }
 
         if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
-            return (true, trace.createdAt, nil)
+            DispatchQueue.main.async {
+                DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+            }
+            return (false, nil)
         } else {
             switch SnapshotAPI.shared.trace(traceId: traceId) {
             case let .success(snapshot):
                 TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
-                return (true, snapshot.createdAt, nil)
+                DispatchQueue.main.async {
+                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                }
+                return (false, nil)
             case let .failure(error):
                 if error.code == 404 {
-                    return (false, "", nil)
+                    return (true, nil)
                 } else {
-                    return (false, "", error.localizedDescription)
+                    return (false, error.localizedDescription)
                 }
             }
         }

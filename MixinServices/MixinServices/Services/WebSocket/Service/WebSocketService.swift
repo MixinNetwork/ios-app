@@ -148,7 +148,7 @@ public class WebSocketService {
                         }
                     }
                     if let conversationId = message.params?.conversationId {
-                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage]...\(error.debugDescription)")
+                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage][\(message.action)]...\(error.debugDescription)")
                     }
                     err = error
                 }

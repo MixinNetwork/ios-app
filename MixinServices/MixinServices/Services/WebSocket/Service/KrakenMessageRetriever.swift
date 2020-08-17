@@ -25,7 +25,8 @@ public class KrakenMessageRetriever {
         param.category = "KRAKEN_LIST"
         param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
-        
+
+        Logger.write(conversationId: id, log: "[KrakenMessageRetriever][RequestPeers]...listKrakenPeers...")
         do {
             let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers()
             return peers
@@ -48,6 +49,7 @@ public class KrakenMessageRetriever {
         if let conversationId = blazeMessage.params?.conversationId {
             let checksum = ConversationChecksumCalculator.checksum(conversationId: conversationId)
             blazeMessage.params?.conversationChecksum = checksum
+            Logger.write(conversationId: conversationId, log: "[KrakenMessageRetriever][KrakenRequest]...\(blazeMessage.params?.category ?? "")")
         }
         
         queue.async {

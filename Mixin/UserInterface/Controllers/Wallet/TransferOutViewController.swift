@@ -230,7 +230,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                         showPayWindow()
                     } else {
                         DispatchQueue.main.async {
-                            BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, fromWeb: false) { (isContinue) in
+                            BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo) { (isContinue) in
                                 guard isContinue else {
                                     self?.amountTextField.becomeFirstResponder()
                                     return

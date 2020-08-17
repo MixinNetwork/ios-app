@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (5.2.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - Bugsnag (6.1.2)
+  - Bugsnag (6.1.3)
   - DeviceGuru (6.0.5)
   - Firebase/Analytics (6.29.0):
     - Firebase/Core
@@ -306,7 +306,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  Bugsnag: 67aed7ab92990833e164c2b83a240951ddb1ea33
+  Bugsnag: 62dc800fefb846ec607b8434183311d501204465
   DeviceGuru: 79cd775847d974b70e344009910b0e3d0b2ab088
   Firebase: 57957c8d6eb3d8b80a560b1dc58be24724b89ff2
   FirebaseABTesting: 9e368b88c2f1c5d7a433828d9d224779b53207b6

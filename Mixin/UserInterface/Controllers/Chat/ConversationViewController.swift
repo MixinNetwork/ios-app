@@ -1021,7 +1021,7 @@ class ConversationViewController: UIViewController {
                 if service.isMinimized, activeCall?.conversationId == conversationId {
                     service.setInterfaceMinimized(false, animated: true)
                 } else if activeCall != nil {
-                    service.alert(error: .busy)
+                    service.alert(error: CallError.busy)
                 } else {
                     service.requestStartPeerToPeerCall(remoteUser: ownerUser)
                 }
@@ -1053,7 +1053,7 @@ class ConversationViewController: UIViewController {
             return
         }
         guard WebSocketService.shared.isConnected && !SendMessageService.shared.isRequestingKrakenPeers else {
-            CallService.shared.alert(error: .networkFailure)
+            CallService.shared.alert(error: CallError.networkFailure)
             return
         }
         
@@ -1067,7 +1067,7 @@ class ConversationViewController: UIViewController {
                     if service.isMinimized, activeCall?.conversationId == conversationId {
                         service.setInterfaceMinimized(false, animated: true)
                     } else if activeCall != nil {
-                        service.alert(error: .busy)
+                        service.alert(error: CallError.busy)
                     } else {
                         service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
                             if ids.isEmpty {
@@ -1092,7 +1092,7 @@ class ConversationViewController: UIViewController {
                 if isGranted {
                     performCall()
                 } else {
-                    CallService.shared.alert(error: .microphonePermissionDenied)
+                    CallService.shared.alert(error: CallError.microphonePermissionDenied)
                 }
             }
         }

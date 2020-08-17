@@ -181,15 +181,21 @@ class CallService: NSObject {
         }
     }
     
-    func alert(error: CallError) {
-        let content = error.alertContent
+    func alert(error: Error) {
+        let content: String
+        if let error = error as? CallError {
+            content = error.alertContent
+        } else {
+            content = R.string.localizable.chat_message_call_failed()
+        }
         DispatchQueue.main.async {
             guard let controller = AppDelegate.current.mainWindow.rootViewController else {
                 return
             }
-            if case .microphonePermissionDenied = error {
+            switch error {
+            case CallError.microphonePermissionDenied:
                 controller.alertSettings(content)
-            } else {
+            default:
                 controller.alert(content)
             }
         }
@@ -215,7 +221,7 @@ extension CallService {
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
         self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
         guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
-            alert(error: .networkFailure)
+            alert(error: CallError.networkFailure)
             return
         }
         if let account = LoginManager.shared.account {
@@ -393,7 +399,7 @@ extension CallService {
         dispatch {
             guard WebSocketService.shared.isConnected else {
                 self.activeCall = nil
-                self.alert(error: .networkFailure)
+                self.alert(error: CallError.networkFailure)
                 completion?(false)
                 return
             }
@@ -404,7 +410,7 @@ extension CallService {
                 self.startGroupCall(call, isRestarting: false, completion: completion)
                 self.log("[CallService] start group call")
             } else {
-                self.alert(error: .inconsistentCallStarted)
+                self.alert(error: CallError.inconsistentCallStarted)
                 self.log("[CallService] inconsistentCallStarted")
                 completion?(false)
             }
@@ -715,7 +721,7 @@ extension CallService {
                 case CallError.microphonePermissionDenied:
                     declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
                     DispatchQueue.main.sync {
-                        self.alert(error: .microphonePermissionDenied)
+                        self.alert(error: CallError.microphonePermissionDenied)
                         if UIApplication.shared.applicationState != .active {
                             NotificationManager.shared.requestDeclinedCallNotification(username: username, messageId: data.messageId)
                         }
@@ -926,6 +932,7 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
+                self.alert(error: error)
                 reporter.report(error: error)
             }
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
@@ -1449,7 +1456,7 @@ extension CallService {
         
         func performRequest() {
             guard activeCall == nil else {
-                alert(error: .busy)
+                alert(error: CallError.busy)
                 self.log("[CallService] request start call impl reports busy")
                 return
             }
@@ -1479,7 +1486,7 @@ extension CallService {
                 self.dispatch(performRequest)
             } else {
                 DispatchQueue.main.async {
-                    self.alert(error: .microphonePermissionDenied)
+                    self.alert(error: CallError.microphonePermissionDenied)
                 }
             }
         }
@@ -1494,7 +1501,7 @@ extension CallService {
     private func startPeerToPeerCall(_ call: PeerToPeerCall, completion: ((Bool) -> Void)?) {
         guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: call.remoteUserId) else {
             self.activeCall = nil
-            self.alert(error: .missingUser(userId: call.remoteUserId))
+            self.alert(error: CallError.missingUser(userId: call.remoteUserId))
             completion?(false)
             return
         }
@@ -1655,7 +1662,7 @@ extension CallService {
                 self.log("[CallService] start group call impl got error: \(error)")
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
                 if call.status != .disconnecting {
-                    self.alert(error: .offerConstruction(error))
+                    self.alert(error: CallError.offerConstruction(error))
                 }
                 completion?(false)
             }
@@ -1705,7 +1712,7 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(end, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                 if call.status != .disconnecting {
-                    self.alert(error: .setRemoteAnswer(error))
+                    self.alert(error: CallError.setRemoteAnswer(error))
                 }
                 self.close(uuid: call.uuid)
                 completion?(false)

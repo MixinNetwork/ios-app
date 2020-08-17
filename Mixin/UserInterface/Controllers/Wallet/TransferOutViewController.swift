@@ -241,7 +241,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                         }
                     }
                 }
-                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField) { (isContinue) in
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (isContinue) in
                     guard isContinue else {
                         self?.amountTextField.becomeFirstResponder()
                         return
@@ -296,7 +296,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                         showPayWindow()
                     }
                 }
-                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField) { (isContinue) in
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (isContinue) in
                     guard isContinue else {
                         self?.amountTextField.becomeFirstResponder()
                         return

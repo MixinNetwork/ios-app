@@ -656,7 +656,8 @@ extension PayWindow: PinFieldDelegate {
 
 extension PayWindow {
 
-    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, textfield: UITextField? = nil, duplicateCallback: @escaping DuplicateConfirmationWindow.CompletionHandler) -> (Bool, String?) {
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, duplicateCallback: @escaping DuplicateConfirmationWindow.CompletionHandler) -> (Bool, String?) {
+
         if fromWeb {
             var response: BaseAPI.Result<PaymentResponse>?
             if let opponentId = opponentId {
@@ -670,7 +671,7 @@ extension PayWindow {
                 case let .success(payment):
                     if payment.status == PaymentStatus.paid.rawValue {
                         DispatchQueue.main.async {
-                            PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.transfer_paid(), fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                            PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.transfer_paid(), fiatMoneyAmount: fiatMoneyAmount).presentPopupControllerAnimated()
                         }
                         return (false, nil)
                     }

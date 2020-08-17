@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UUl-xL-gXt" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="408" width="414" height="501"/>
+                    <rect key="frame" x="0.0" y="387" width="414" height="522"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hI0-vY-TTF" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -53,7 +53,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hCN-jh-ZW6">
-                            <rect key="frame" x="40" y="70" width="334" height="384"/>
+                            <rect key="frame" x="40" y="70" width="334" height="405"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Duplicate Transfer Confirmation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-PD-2RY">
                                     <rect key="frame" x="32" y="0.0" width="270" height="21.5"/>
@@ -189,15 +189,32 @@
                                     <color key="textColor" name="text_accessory"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xGv-gc-QaR">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vq8-xG-umy">
                                     <rect key="frame" x="29.5" y="240" width="275" height="4"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="4" id="XEt-iG-SLH"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Happy Birthday!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKK-fA-3Wo">
+                                    <rect key="frame" x="115" y="244" width="104" height="17"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xGv-gc-QaR">
+                                    <rect key="frame" x="29.5" y="261" width="275" height="4"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="4" id="Oqk-tw-zJS"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3rl-3X-4xm">
-                                    <rect key="frame" x="47" y="244" width="240" height="110"/>
+                                    <rect key="frame" x="47" y="265" width="240" height="110"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-ly-bky" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="24" width="240" height="42"/>
@@ -254,7 +271,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mrT-eC-luc">
-                                    <rect key="frame" x="29.5" y="354" width="275" height="30"/>
+                                    <rect key="frame" x="29.5" y="375" width="275" height="30"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="9AO-86-V1V" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -307,6 +324,8 @@
                 <outlet property="assetIconView" destination="9KZ-t4-edy" id="SW3-66-RV4"/>
                 <outlet property="confirmButton" destination="a0F-ly-bky" id="Wx7-5y-Ka2"/>
                 <outlet property="contentBottomConstraint" destination="sX1-Fp-W4p" id="qVP-7D-64I"/>
+                <outlet property="memoLabel" destination="hKK-fA-3Wo" id="v5f-3W-CVN"/>
+                <outlet property="memoPlaceView" destination="vq8-xG-umy" id="aZI-8J-vOz"/>
                 <outlet property="popupView" destination="UUl-xL-gXt" id="AX3-Ul-iqV"/>
                 <outlet property="tipsLabel" destination="0Ff-mC-TOt" id="neW-RD-KyW"/>
                 <outlet property="titleLabel" destination="ctr-PD-2RY" id="nTs-Qo-Aed"/>
@@ -326,7 +345,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

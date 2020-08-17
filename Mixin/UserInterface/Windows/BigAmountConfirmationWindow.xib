@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WtQ-zV-pqS" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="425" width="414" height="484"/>
+                    <rect key="frame" x="0.0" y="404" width="414" height="505"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Gx-t1-Cq2" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -53,7 +53,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xku-eL-RYg">
-                            <rect key="frame" x="40" y="70" width="334" height="367"/>
+                            <rect key="frame" x="40" y="70" width="334" height="388"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Large Amount Confirmation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZHZ-cR-7kH">
                                     <rect key="frame" x="50" y="0.0" width="234" height="21.5"/>
@@ -190,15 +190,32 @@
                                     <color key="textColor" name="text_accessory"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l8H-kp-kki">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qCJ-a2-1gB">
                                     <rect key="frame" x="29.5" y="223" width="275" height="4"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="4" id="hWn-7q-jw3"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Happy Birthday!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WfC-eK-ghR">
+                                    <rect key="frame" x="115" y="227" width="104" height="17"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l8H-kp-kki">
+                                    <rect key="frame" x="29.5" y="244" width="275" height="4"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="4" id="SMB-IQ-lev"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q1G-ug-UKi">
-                                    <rect key="frame" x="47" y="227" width="240" height="110"/>
+                                    <rect key="frame" x="47" y="248" width="240" height="110"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w7u-sx-AFc" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="24" width="240" height="42"/>
@@ -255,7 +272,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AWP-bq-yly">
-                                    <rect key="frame" x="29.5" y="337" width="275" height="30"/>
+                                    <rect key="frame" x="29.5" y="358" width="275" height="30"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="xrr-mE-Kob" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -304,12 +321,15 @@
             <viewLayoutGuide key="safeArea" id="y24-jA-bj0"/>
             <connections>
                 <outlet property="amountExchangeLabel" destination="LHH-62-QtR" id="FeQ-wL-nuq"/>
-                <outlet property="amountLabel" destination="i4Y-Hc-HHx" id="iO0-QZ-M18"/>
+                <outlet property="amountLabel" destination="i4Y-Hc-HHx" id="duK-Jo-mqj"/>
                 <outlet property="assetIconView" destination="ZaE-oD-gLc" id="umc-1P-JD4"/>
                 <outlet property="confirmButton" destination="w7u-sx-AFc" id="QdG-z7-iAA"/>
                 <outlet property="contentBottomConstraint" destination="SEf-4v-mbG" id="6x5-Iq-cck"/>
+                <outlet property="memoLabel" destination="WfC-eK-ghR" id="VWr-GT-9Tb"/>
+                <outlet property="memoPlaceView" destination="qCJ-a2-1gB" id="OFA-wP-mRK"/>
                 <outlet property="popupView" destination="WtQ-zV-pqS" id="oNP-r7-Ifg"/>
-                <outlet property="tipsLabel" destination="VPY-cY-WNi" id="TBo-Bt-bSR"/>
+                <outlet property="tipsLabel" destination="VPY-cY-WNi" id="tII-4o-GK3"/>
+                <outlet property="titleLabel" destination="ZHZ-cR-7kH" id="yOC-pV-GE1"/>
             </connections>
             <point key="canvasLocation" x="82.400000000000006" y="63.418290854572717"/>
         </view>
@@ -326,7 +346,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

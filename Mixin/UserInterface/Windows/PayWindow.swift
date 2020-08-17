@@ -50,11 +50,6 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiverMoreLabel: UILabel!
     @IBOutlet weak var multisigActionView: UIImageView!
     @IBOutlet weak var multisigStackView: UIStackView!
-    @IBOutlet weak var bigAmountTipsView: UIView!
-    @IBOutlet weak var bigAmountConfirmButton: RoundedButton!
-    @IBOutlet weak var bigAmountCancelButton: UIButton!
-    @IBOutlet weak var bigAmountTitleSpaceView: UIView!
-    @IBOutlet weak var bigAmountIconSpaceView: UIView!
 
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
@@ -84,15 +79,8 @@ class PayWindow: BottomSheetView {
         }
         return true
     }
-    private weak var bigAmountTimer: Timer?
-    private var countdown = 3
 
     var onDismiss: (() -> Void)?
-
-    deinit {
-        bigAmountTimer?.invalidate()
-        bigAmountTimer = nil
-    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -123,39 +111,27 @@ class PayWindow: BottomSheetView {
 
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
-        var showBigAmountTips = false
         switch pinAction! {
         case let .transfer(_, user, _):
             multisigView.isHidden = true
-            let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-            let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
-            if threshold == 0 || fiatMoneyValue < threshold {
-                showTransferView(user: user, showError: showError, showBiometric: showBiometric)
-            } else {
-                showBigAmountTips = true
-                nameLabel.text = R.string.localizable.transfer_large_title()
-                mixinIDLabel.text = R.string.localizable.transfer_large_prompt(amountExchangeLabel.text ?? "", asset.symbol, user.fullName)
-                mixinIDLabel.textColor = .walletRed
-                pinView.isHidden = true
-                bigAmountTipsView.isHidden = false
-                bigAmountTitleSpaceView.isHidden = false
-                bigAmountIconSpaceView.isHidden = false
-                updateContinueButton()
-                bigAmountTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] (timer) in
-                    guard let self = self else {
-                        return
-                    }
-                    self.countdown -= 1
-                    self.updateContinueButton()
-                    if self.countdown <= 0 {
-                        timer.invalidate()
+            nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
+            mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
+            mixinIDLabel.textColor = .accessoryText
+            pinView.isHidden = false
+            if !showError {
+                payLabel.text = R.string.localizable.transfer_by_pin()
+                if showBiometric {
+                    if biometryType == .faceID {
+                        biometricButton.setTitle(R.string.localizable.transfer_use_face(), for: .normal)
+                    } else {
+                        biometricButton.setTitle(R.string.localizable.transfer_use_touch(), for: .normal)
                     }
                 }
             }
         case let .withdraw(_, address, chainAsset, _):
+            multisigView.isHidden = true
             nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
             mixinIDLabel.text = address.fullAddress
-            multisigView.isHidden = true
             let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
             let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
@@ -205,9 +181,7 @@ class PayWindow: BottomSheetView {
         memoLabel.text = memo
 
         dismissButton.isEnabled = true
-        if showBigAmountTips {
-
-        } else if let err = error, !err.isEmpty {
+        if let err = error, !err.isEmpty {
             errorContinueAction = .close
             pinView.isHidden = true
             biometricButton.isHidden = true
@@ -218,37 +192,6 @@ class PayWindow: BottomSheetView {
             resetPinInput()
         }
         return self
-    }
-
-    private func updateContinueButton() {
-        var title = R.string.localizable.action_continue()
-        if countdown > 0 {
-            title += " (\(countdown))"
-            bigAmountConfirmButton.isEnabled = false
-        } else {
-            bigAmountConfirmButton.isEnabled = true
-        }
-        UIView.performWithoutAnimation {
-            bigAmountConfirmButton.setTitle(title, for: .normal)
-            bigAmountConfirmButton.layoutIfNeeded()
-        }
-    }
-
-    private func showTransferView(user: UserItem, showError: Bool, showBiometric: Bool) {
-        nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
-        mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
-        mixinIDLabel.textColor = .accessoryText
-        pinView.isHidden = false
-        if !showError {
-            payLabel.text = R.string.localizable.transfer_by_pin()
-            if showBiometric {
-                if biometryType == .faceID {
-                    biometricButton.setTitle(R.string.localizable.transfer_use_face(), for: .normal)
-                } else {
-                    biometricButton.setTitle(R.string.localizable.transfer_use_touch(), for: .normal)
-                }
-            }
-        }
     }
 
     private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserResponse], receivers: [UserResponse]) {
@@ -441,18 +384,6 @@ class PayWindow: BottomSheetView {
             dismissPopupControllerAnimated()
         }
     }
-
-    @IBAction func bigAmountContinueAction(_ sender: Any) {
-        guard case let .transfer(_, user, _) = pinAction! else {
-            return
-        }
-        bigAmountTipsView.isHidden = true
-        bigAmountTitleSpaceView.isHidden = true
-        bigAmountIconSpaceView.isHidden = true
-        showTransferView(user: user, showError: false, showBiometric: isAllowBiometricPay)
-        resetPinInput()
-    }
-
 
     @IBAction func dismissTipsAction(_ sender: Any) {
         dismissPopupControllerAnimated()
@@ -725,7 +656,7 @@ extension PayWindow: PinFieldDelegate {
 
 extension PayWindow {
 
-    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, textfield: UITextField? = nil) -> (Bool, String?) {
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, textfield: UITextField? = nil, duplicateCallback: @escaping DuplicateConfirmationWindow.CompletionHandler) -> (Bool, String?) {
         if fromWeb {
             var response: BaseAPI.Result<PaymentResponse>?
             if let opponentId = opponentId {
@@ -755,7 +686,7 @@ extension PayWindow {
 
         if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
             DispatchQueue.main.async {
-                DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: duplicateCallback).presentPopupControllerAnimated()
             }
             return (false, nil)
         } else {
@@ -763,7 +694,7 @@ extension PayWindow {
             case let .success(snapshot):
                 TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
                 DispatchQueue.main.async {
-                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: textfield).presentPopupControllerAnimated()
+                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: duplicateCallback).presentPopupControllerAnimated()
                 }
                 return (false, nil)
             case let .failure(error):

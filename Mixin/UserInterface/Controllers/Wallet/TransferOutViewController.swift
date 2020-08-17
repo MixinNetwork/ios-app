@@ -212,42 +212,47 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in
                 defer {
-                    DispatchQueue.main.async {
-                       self?.continueButton.isBusy = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self?.continueButton.isBusy = false
                     }
                 }
 
                 let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
-                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField)
-                guard canPay else {
-                    if let error = errorMsg {
-                        showAutoHiddenHud(style: .error, text: error)
-                    }
-                    return
-                }
-
                 let showPayWindow = {
                     DispatchQueue.main.async {
                         payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
                     }
                 }
+                let checkBigAmountAction = {
+                    let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+                    let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+                    if threshold == 0 || fiatMoneyValue < threshold {
+                        showPayWindow()
+                    } else {
+                        DispatchQueue.main.async {
+                            BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, fromWeb: false) { (isContinue) in
+                                guard isContinue else {
+                                    self?.amountTextField.becomeFirstResponder()
+                                    return
+                                }
 
-                let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-                let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
-                if threshold == 0 || fiatMoneyValue < threshold {
-                    showPayWindow()
-                } else {
-                    DispatchQueue.main.async {
-                        BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, fromWeb: false) { (isContinue) in
-                            guard isContinue else {
-                                return
-                            }
-
-                            showPayWindow()
-                        }.presentPopupControllerAnimated()
+                                showPayWindow()
+                            }.presentPopupControllerAnimated()
+                        }
                     }
                 }
-
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField) { (isContinue) in
+                    guard isContinue else {
+                        self?.amountTextField.becomeFirstResponder()
+                        return
+                    }
+                    checkBigAmountAction()
+                }
+                if canPay {
+                    checkBigAmountAction()
+                } else if let error = errorMsg {
+                    showAutoHiddenHud(style: .error, text: error)
+                }
             }
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
@@ -262,38 +267,45 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
 
                 let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false)
-                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField)
-                guard canPay else {
-                    if let error = errorMsg {
-                        showAutoHiddenHud(style: .error, text: error)
+                let showPayWindow = {
+                    DispatchQueue.main.async {
+                        payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
                     }
-                    return
                 }
+                let checkFirstWithdrawAction = {
+                    DispatchQueue.main.async {
+                        guard let weakSelf = self else {
+                            return
+                        }
+                        guard weakSelf.checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
+                            showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
+                            return
+                        }
+                        guard !weakSelf.hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
+                            weakSelf.newAddressTips = true
+                            WithdrawalTipWindow.instance().render(asset: asset) { (isContinue: Bool) in
+                                if isContinue {
+                                    showPayWindow()
+                                } else {
+                                    weakSelf.amountTextField.becomeFirstResponder()
+                                }
+                            }.presentPopupControllerAnimated()
+                            return
+                        }
 
-                DispatchQueue.main.async {
-                    guard let weakSelf = self else {
+                        showPayWindow()
+                    }
+                }
+                let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField) { (isContinue) in
+                    guard isContinue else {
                         return
                     }
-                    guard weakSelf.checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
-                        showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
-                        return
-                    }
-                    guard !weakSelf.hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
-                        weakSelf.newAddressTips = true
-                        WithdrawalTipWindow.instance().render(asset: asset) { [weak self](isContinue: Bool) in
-                            guard let weakSelf = self else {
-                                return
-                            }
-                            if isContinue {
-                                payWindow.render(asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
-                            } else {
-                                weakSelf.amountTextField.becomeFirstResponder()
-                            }
-                        }.presentPopupControllerAnimated()
-                        return
-                    }
-
-                    payWindow.render(asset: asset, action: .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false), amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: amountTextField).presentPopupControllerAnimated()
+                    checkFirstWithdrawAction()
+                }
+                if canPay {
+                    checkFirstWithdrawAction()
+                } else if let error = errorMsg {
+                    showAutoHiddenHud(style: .error, text: error)
                 }
             }
         }

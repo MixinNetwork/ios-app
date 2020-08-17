@@ -212,7 +212,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in
                 defer {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         self?.continueButton.isBusy = false
                     }
                 }
@@ -257,8 +257,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
                 defer {
-                    DispatchQueue.main.async {
-                       self?.continueButton.isBusy = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        self?.continueButton.isBusy = false
                     }
                 }
 
@@ -298,6 +298,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
                 let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false, textfield: amountTextField) { (isContinue) in
                     guard isContinue else {
+                        self?.amountTextField.becomeFirstResponder()
                         return
                     }
                     checkFirstWithdrawAction()

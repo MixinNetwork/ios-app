@@ -59,10 +59,6 @@ extension Date {
     func timeHoursAndMinutes() -> String {
         return DateFormatter.dayDate.string(from: self)
     }
-
-    func dayBefore() -> Date {
-        return addingTimeInterval(-3600)
-    }
 }
 
 extension TimeInterval {

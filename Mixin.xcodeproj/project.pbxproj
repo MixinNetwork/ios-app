@@ -333,6 +333,7 @@
 		7BA398CE242B54A100DB5154 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
 		7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */; };
 		7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */; };
+		7BA41A9324E123F50042ED03 /* MentionToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA41A9224E123F50042ED03 /* MentionToken.swift */; };
 		7BA514862499D96300261289 /* GroupCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA514852499D96300261289 /* GroupCall.swift */; };
 		7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA722801FC1F2A100132FF4 /* PhotoMessageCell.swift */; };
 		7BA8CC3A24A9C4D300455902 /* GroupCallConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */; };
@@ -1174,6 +1175,7 @@
 		7BA398CC242B539900DB5154 /* UIColor+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Assets.swift"; sourceTree = "<group>"; };
 		7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
+		7BA41A9224E123F50042ED03 /* MentionToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionToken.swift; sourceTree = "<group>"; };
 		7BA514852499D96300261289 /* GroupCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCall.swift; sourceTree = "<group>"; };
 		7BA722801FC1F2A100132FF4 /* PhotoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMessageCell.swift; sourceTree = "<group>"; };
 		7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1861,6 +1863,7 @@
 				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
+				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4315,6 +4318,7 @@
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */,
 				7BEED892246D0C6C00387EAE /* NativeCallInterface.swift in Sources */,
+				7BA41A9324E123F50042ED03 /* MentionToken.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,

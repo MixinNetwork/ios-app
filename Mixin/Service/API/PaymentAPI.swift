@@ -6,29 +6,17 @@ final class PaymentAPI: BaseAPI {
         static let transactions = "transactions"
         static let transfers = "transfers"
         static let payments = "payments"
-
-        static func pendingDeposits(assetId: String, destination: String, tag: String) -> String {
-            return "external/transactions?asset=\(assetId)&destination=\(destination)&tag=\(tag)"
-        }
-
-        static func search(keyword: String) -> String? {
-            return "network/assets/search/\(keyword)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        }
-        static let top = "network/assets/top"
-
-        static let fiats = "fiats"
-
     }
     static let shared = PaymentAPI()
 
-    func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (BaseAPI.Result<PaymentResponse>) -> Void) {
+    func payments(assetId: String, opponentId: String, amount: String, traceId: String) -> BaseAPI.Result<PaymentResponse> {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
-        request(method: .post, url: url.payments, parameters: param, completion: completion)
+        return request(method: .post, url: url.payments, parameters: param)
     }
 
-    func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (BaseAPI.Result<PaymentResponse>) -> Void) {
+    func payments(assetId: String, addressId: String, amount: String, traceId: String) -> BaseAPI.Result<PaymentResponse> {
         let param: [String : Any] = ["asset_id": assetId, "address_id": addressId, "amount": amount, "trace_id": traceId]
-        request(method: .post, url: url.payments, parameters: param, completion: completion)
+        return request(method: .post, url: url.payments, parameters: param)
     }
 
     func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (BaseAPI.Result<Snapshot>) -> Void) {

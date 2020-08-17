@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -69,13 +69,6 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="8" id="9iR-Qr-lZT"/>
-                                    </constraints>
-                                </view>
-                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cjm-q8-Bxd">
-                                    <rect key="frame" x="50" y="29.5" width="195" height="8"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="8" id="lEn-OV-tXF"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="7000100102" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xua-9X-dAo">
@@ -275,25 +268,6 @@
                                         </constraint>
                                     </constraints>
                                 </view>
-                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XDT-yW-kJB">
-                                    <rect key="frame" x="50" y="62.5" width="195" height="16"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="cbC-ph-m5I" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                    <real key="value" value="4"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                                    <real key="value" value="6"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                                    <real key="value" value="8"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </constraint>
-                                    </constraints>
-                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2K-V8-QTR" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="112.5" y="62.5" width="70" height="70"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -470,63 +444,6 @@
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="x3V-ed-5MN"/>
                                     </constraints>
                                 </view>
-                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVF-bX-Nd3" userLabel="BigAmoutTips">
-                                    <rect key="frame" x="27.5" y="304.5" width="240" height="110"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bH7-jx-UjS" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="24" width="240" height="42"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="42" id="VTV-Ng-XyO"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
-                                            <state key="normal" title="Continue">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="bigAmountContinueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="eRx-wM-TqJ"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZE3-zW-4Tp">
-                                            <rect key="frame" x="97.5" y="81" width="45" height="29"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <state key="normal" title="Cancel"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="dismissTipsAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Coh-fD-igK"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="ZE3-zW-4Tp" secondAttribute="bottom" id="CDs-hT-qZu"/>
-                                        <constraint firstItem="ZE3-zW-4Tp" firstAttribute="centerX" secondItem="RVF-bX-Nd3" secondAttribute="centerX" id="Dbt-y2-k2z"/>
-                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="110" id="Goh-Xt-D0L" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                    <real key="value" value="67"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                                    <real key="value" value="67"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                                                    <real key="value" value="75"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </constraint>
-                                        <constraint firstAttribute="trailing" secondItem="bH7-jx-UjS" secondAttribute="trailing" id="LIP-Es-5ww"/>
-                                        <constraint firstItem="bH7-jx-UjS" firstAttribute="leading" secondItem="RVF-bX-Nd3" secondAttribute="leading" id="RJh-3B-7Ca"/>
-                                        <constraint firstAttribute="bottom" secondItem="bH7-jx-UjS" secondAttribute="bottom" constant="44" id="hft-O5-euu"/>
-                                        <constraint firstItem="bH7-jx-UjS" firstAttribute="top" secondItem="RVF-bX-Nd3" secondAttribute="top" constant="24" id="kpE-lM-MZ4"/>
-                                    </constraints>
-                                </view>
                                 <button hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9LC-YO-0cd">
                                     <rect key="frame" x="91" y="304.5" width="113" height="0.0"/>
                                     <color key="backgroundColor" name="background"/>
@@ -693,11 +610,6 @@
                 <outlet property="amountExchangeLabel" destination="2PH-Ch-c3M" id="OEd-UD-9Xl"/>
                 <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
                 <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
-                <outlet property="bigAmountCancelButton" destination="ZE3-zW-4Tp" id="4tr-vC-ek3"/>
-                <outlet property="bigAmountConfirmButton" destination="bH7-jx-UjS" id="ipg-LG-2dW"/>
-                <outlet property="bigAmountIconSpaceView" destination="XDT-yW-kJB" id="lPe-lw-GY3"/>
-                <outlet property="bigAmountTipsView" destination="RVF-bX-Nd3" id="QU3-OF-hzq"/>
-                <outlet property="bigAmountTitleSpaceView" destination="Cjm-q8-Bxd" id="Qa9-g4-UdR"/>
                 <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
                 <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
                 <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>
@@ -744,7 +656,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

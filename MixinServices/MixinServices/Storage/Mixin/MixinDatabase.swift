@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 23
+    private static let version: Int = 24
     
     override public var database: Database! {
         get { _database }
@@ -51,7 +51,9 @@ public class MixinDatabase: BaseDatabase {
                 
                 try database.create(of: Circle.self)
                 try database.create(of: CircleConversation.self)
-                
+
+                try database.create(of: Trace.self)
+
                 try self.createAfter(database: database, localVersion: localVersion)
                 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()

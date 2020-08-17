@@ -58,6 +58,11 @@ public extension Date {
     func logDatetime() -> String {
         return DateFormatter.log.string(from: self)
     }
+
+    public func dayBefore() -> Date {
+        return addingTimeInterval(-86400)
+    }
+
 }
 
 public let mediaDurationFormatter: DateComponentsFormatter = {

@@ -485,7 +485,7 @@ extension SearchViewController {
                     weakSelf.present(vc, animated: true, completion: nil)
                 }
             case let .failure(error):
-                let text = error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription
+                let text = error.code == 404 ? R.string.localizable.user_not_found() : error.localizedDescription
                 showAutoHiddenHud(style: .error, text: text)
             }
         }

@@ -122,7 +122,7 @@ extension NativeCallInterface: CallInterface {
         } else if let call = call as? GroupCall {
             reportIncomingCall(uuid: call.uuid,
                                handleId: call.conversationId,
-                               localizedName: call.conversationName,
+                               localizedName: call.localizedName,
                                completion: completion)
         }
     }

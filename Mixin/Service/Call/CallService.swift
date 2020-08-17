@@ -181,15 +181,21 @@ class CallService: NSObject {
         }
     }
     
-    func alert(error: CallError) {
-        let content = error.alertContent
+    func alert(error: Error) {
+        let content: String
+        if let error = error as? CallError {
+            content = error.alertContent
+        } else {
+            content = R.string.localizable.chat_message_call_failed()
+        }
         DispatchQueue.main.async {
             guard let controller = AppDelegate.current.mainWindow.rootViewController else {
                 return
             }
-            if case .microphonePermissionDenied = error {
+            switch error {
+            case CallError.microphonePermissionDenied:
                 controller.alertSettings(content)
-            } else {
+            default:
                 controller.alert(content)
             }
         }
@@ -215,7 +221,7 @@ extension CallService {
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
         self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
         guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
-            alert(error: .networkFailure)
+            alert(error: CallError.networkFailure)
             return
         }
         if let account = LoginManager.shared.account {
@@ -393,7 +399,7 @@ extension CallService {
         dispatch {
             guard WebSocketService.shared.isConnected else {
                 self.activeCall = nil
-                self.alert(error: .networkFailure)
+                self.alert(error: CallError.networkFailure)
                 completion?(false)
                 return
             }
@@ -404,7 +410,7 @@ extension CallService {
                 self.startGroupCall(call, isRestarting: false, completion: completion)
                 self.log("[CallService] start group call")
             } else {
-                self.alert(error: .inconsistentCallStarted)
+                self.alert(error: CallError.inconsistentCallStarted)
                 self.log("[CallService] inconsistentCallStarted")
                 completion?(false)
             }
@@ -466,8 +472,8 @@ extension CallService {
                     DispatchQueue.main.sync {
                         _ = self.handledUUIDs.insert(uuid)
                     }
-                    if callStatusWasIncoming, !call.invitersUserId.isEmpty {
-                        for userId in call.invitersUserId {
+                    if callStatusWasIncoming, !call.inviters.isEmpty {
+                        for userId in call.inviters.map(\.userId) {
                             let declining = KrakenRequest(callUUID: call.uuid,
                                                           conversationId: call.conversationId,
                                                           trackId: nil,
@@ -715,7 +721,7 @@ extension CallService {
                 case CallError.microphonePermissionDenied:
                     declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
                     DispatchQueue.main.sync {
-                        self.alert(error: .microphonePermissionDenied)
+                        self.alert(error: CallError.microphonePermissionDenied)
                         if UIApplication.shared.applicationState != .active {
                             NotificationManager.shared.requestDeclinedCallNotification(username: username, messageId: data.messageId)
                         }
@@ -874,8 +880,9 @@ extension CallService {
             guard activeCall?.conversationId != data.conversationId else {
                 return
             }
-            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall {
-                call.invitersUserId.insert(data.userId)
+            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall, !call.inviters.contains(where: { $0.userId == data.userId }), let user = UserDAO.shared.getUser(userId: data.userId) {
+                call.inviters.append(user)
+                callInterface.reportIncomingCall(call, completion: { _ in })
                 return
             }
             let uuid = UUID(uuidString: data.messageId) ?? UUID()
@@ -906,7 +913,9 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.invitersUserId = [data.userId]
+            if let user = UserDAO.shared.getUser(userId: data.userId) {
+                call.inviters = [user]
+            }
             groupCallUUIDs[conversation.conversationId] = uuid
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
@@ -923,6 +932,7 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
+                self.alert(error: error)
                 reporter.report(error: error)
             }
             let message = Message.createKrakenMessage(conversationId: data.conversationId,
@@ -952,9 +962,9 @@ extension CallService {
                      didDisconnectFromConversationWithId: data.conversationId)
         
         func shouldClose(call: GroupCall) -> Bool {
-            call.invitersUserId.remove(data.userId)
+            call.inviters.removeAll(where: { $0.userId == data.userId })
             return call.conversationId == data.conversationId
-                && call.invitersUserId.isEmpty
+                && call.inviters.isEmpty
                 && call.status == .incoming
         }
         
@@ -1199,7 +1209,9 @@ extension CallService: PKPushRegistryDelegate {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: [])
-            call.invitersUserId = [userId]
+            if let user = UserDAO.shared.getUser(userId: userId) {
+                call.inviters = [user]
+            }
             groupCallUUIDs[conversationId] = uuid
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
@@ -1291,8 +1303,8 @@ extension CallService {
                 self.insertCallCompletedMessage(call: call,
                                                 isUserInitiated: false,
                                                 category: .WEBRTC_AUDIO_CANCEL)
-            } else if let call = call as? GroupCall, !call.invitersUserId.isEmpty {
-                for userId in call.invitersUserId {
+            } else if let call = call as? GroupCall, !call.inviters.isEmpty {
+                for userId in call.inviters.map(\.userId) {
                     let declining = KrakenRequest(callUUID: call.uuid,
                                                   conversationId: call.conversationId,
                                                   trackId: call.trackId,
@@ -1343,18 +1355,13 @@ extension CallService {
             let outputContainsBuiltInDevices = portTypes.contains(where: builtInPortTypes.contains)
             
             let category = AVAudioSession.Category.playAndRecord.rawValue
-            let options: AVAudioSession.CategoryOptions = {
-                // Without the option of duckOthers, speaker button in system calling interface provided
-                // by CallKit will soon becomes off after turning on
-                // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
-                // Every post in the link above👆 is totally gibberish. A default mode gloss over the
-                // issue but mess it up when it comes to AirPods
-                var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
-                if self.usesSpeaker {
-                    options.insert(.defaultToSpeaker)
-                }
-                return options
-            }()
+            
+            // Without the option of duckOthers, speaker button in system calling interface provided
+            // by CallKit will soon becomes off after turning on
+            // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
+            // Every post in the link above👆 is totally gibberish. A default mode gloss over the
+            // issue but mess it up when it comes to AirPods
+            let options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
             
             let mode = AVAudioSession.Mode.voiceChat.rawValue
             let audioPort: AVAudioSession.PortOverride = usesSpeaker ? .speaker : .none
@@ -1449,7 +1456,7 @@ extension CallService {
         
         func performRequest() {
             guard activeCall == nil else {
-                alert(error: .busy)
+                alert(error: CallError.busy)
                 self.log("[CallService] request start call impl reports busy")
                 return
             }
@@ -1479,7 +1486,7 @@ extension CallService {
                 self.dispatch(performRequest)
             } else {
                 DispatchQueue.main.async {
-                    self.alert(error: .microphonePermissionDenied)
+                    self.alert(error: CallError.microphonePermissionDenied)
                 }
             }
         }
@@ -1494,7 +1501,7 @@ extension CallService {
     private func startPeerToPeerCall(_ call: PeerToPeerCall, completion: ((Bool) -> Void)?) {
         guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: call.remoteUserId) else {
             self.activeCall = nil
-            self.alert(error: .missingUser(userId: call.remoteUserId))
+            self.alert(error: CallError.missingUser(userId: call.remoteUserId))
             completion?(false)
             return
         }
@@ -1582,14 +1589,17 @@ extension CallService {
             switch result {
             case .success(let data):
                 guard let responseData = Data(base64Encoded: data.data) else {
+                    self.log("[KrakenMessageRetriever] invalid response data: \(data.data)")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
                 guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
+                    self.log("[KrakenMessageRetriever] invalid KrakenPublishResponse: \(String(data: responseData, encoding: .utf8))")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
                 guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
+                    self.log("[KrakenMessageRetriever] invalid JSEP: \(data.jsep)")
                     completion(.failure(.invalidKrakenResponse))
                     return
                 }
@@ -1652,7 +1662,7 @@ extension CallService {
                 self.log("[CallService] start group call impl got error: \(error)")
                 self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
                 if call.status != .disconnecting {
-                    self.alert(error: .offerConstruction(error))
+                    self.alert(error: CallError.offerConstruction(error))
                 }
                 completion?(false)
             }
@@ -1702,7 +1712,7 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(end, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(end.debugDescription)")
                 if call.status != .disconnecting {
-                    self.alert(error: .setRemoteAnswer(error))
+                    self.alert(error: CallError.setRemoteAnswer(error))
                 }
                 self.close(uuid: call.uuid)
                 completion?(false)

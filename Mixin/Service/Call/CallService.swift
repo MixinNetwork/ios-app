@@ -18,12 +18,7 @@ class CallService: NSObject {
     var isMuted = false {
         didSet {
             NotificationCenter.default.postOnMain(name: Self.mutenessDidChangeNotification)
-            if let audioTrack = rtcClient.audioTrack {
-                audioTrack.isEnabled = !isMuted
-                self.log("[CallService] isMuted: \(isMuted)")
-            } else {
-                self.log("[CallService] isMuted: \(isMuted), finds no audio track")
-            }
+            updateAudioTrackEnabling()
         }
     }
     
@@ -1346,6 +1341,15 @@ extension CallService {
         }
     }
     
+    private func updateAudioTrackEnabling() {
+        if let audioTrack = rtcClient.audioTrack {
+            audioTrack.isEnabled = !isMuted
+            self.log("[CallService] isMuted: \(isMuted)")
+        } else {
+            self.log("[CallService] isMuted: \(isMuted), finds no audio track")
+        }
+    }
+    
     private func updateAudioSessionConfiguration() {
         let usesSpeaker = self.usesSpeaker
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
@@ -1633,6 +1637,9 @@ extension CallService {
                 self.restartCurrentGroupCall()
             }
         }
+        
+        // Disable audio track if muted since audio track is replaced with a new one
+        updateAudioTrackEnabling()
     }
     
     // Call this func for a new initiated call, or on ICE Connection reports failure
@@ -1687,7 +1694,7 @@ extension CallService {
                     self.log("[CallService] Got invalid peer connection \(code), try to restart")
                     self.restartCurrentGroupCall()
                 } else {
-                    self.log("[CallService] publish failed for invalid response")
+                    self.log("[CallService] publish failed for invalid response: \(error)")
                     self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
                     self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                     self.alert(error: error)

@@ -1,6 +1,6 @@
 import Foundation
 
-struct BlazeMessage: Encodable {
+struct BlazeMessage {
     
     var id: String
     var action: String
@@ -18,6 +18,19 @@ struct BlazeMessage: Encodable {
             .acknowledgeMessageReceipt
         ]
         return actions.map(\.rawValue).contains(action)
+    }
+    
+}
+
+extension BlazeMessage: Encodable {
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(action, forKey: .action)
+        try container.encode(params, forKey: .params)
+        try container.encode(data, forKey: .data)
+        // ⚠️ This func doesn't encode error since this is only used for message sending
     }
     
 }
@@ -132,6 +145,7 @@ extension BlazeMessage: Decodable {
         case action
         case params
         case data
+        case error
     }
     
     init(from decoder: Decoder) throws {
@@ -163,7 +177,7 @@ extension BlazeMessage: Decodable {
         }
         
         params = try container.decodeIfPresent(BlazeMessageParam.self, forKey: .params)
-        error = nil
+        error = try container.decodeIfPresent(MixinAPIError.self, forKey: .error)
     }
     
 }

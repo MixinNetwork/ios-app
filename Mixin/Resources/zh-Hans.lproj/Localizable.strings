@@ -588,9 +588,9 @@
 "transfer_large_title" = "大额转账确认";
 "transfer_large_prompt" = "确定转价值 %@ 的 %@ 给%@ ？";
 "transfer_duplicate_title" = "重复转账确认";
-"transfer_duplicate_prompt" = "你已经在 %3$@前给%2$@转账了 %1$@，确认还要再转一次吗？";
+"transfer_duplicate_prompt" = "你已经在%3$@前给%2$@转账了 %1$@，确认还要再转一次吗？";
 "withdraw_duplicate_title" = "重复提现确认";
-"withdraw_duplicate_prompt" = "你已经在 %3$@前提现 %1$@ 到 %2$@，确认还要再提一次吗？";
+"withdraw_duplicate_prompt" = "你已经在%3$@前提现 %1$@ 到 %2$@，确认还要再提一次吗？";
 
 // Multisig
 "multisig_by_pin" = "通过密码签名";

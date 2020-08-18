@@ -2350,6 +2350,8 @@
 				DFC2647524E933B700BF954D /* BigAmountConfirmationWindow.xib */,
 				DFC2646B24E585C000BF954D /* DuplicateConfirmationWindow.swift */,
 				DFC2646D24E585CE00BF954D /* DuplicateConfirmationWindow.xib */,
+				DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */,
+				DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */,
 				DF6ABB152295049E00A012B2 /* AddressWindow.swift */,
 				DF6ABB132295019C00A012B2 /* AddressWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
@@ -2363,8 +2365,6 @@
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
 				DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */,
 				DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */,
-				DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */,
-				DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */,
 				DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */,
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
 			);

@@ -20,22 +20,8 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Gx-t1-Cq2" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLr-Mh-4FA">
-                                    <rect key="frame" x="358" y="0.0" width="56" height="56"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="56" id="RDt-eA-GqB"/>
-                                    </constraints>
-                                    <state key="normal" image="ic_dialog_close"/>
-                                    <connections>
-                                        <action selector="dismissAction:" destination="ifY-Ht-DZN" eventType="touchUpInside" id="2Fj-eC-R1l"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="sLr-Mh-4FA" firstAttribute="top" secondItem="7Gx-t1-Cq2" secondAttribute="top" id="BH2-aB-spw"/>
-                                <constraint firstAttribute="trailing" secondItem="sLr-Mh-4FA" secondAttribute="trailing" id="JFv-rW-C3L"/>
                                 <constraint firstAttribute="height" constant="70" id="VD5-Vh-x1C" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
@@ -49,7 +35,6 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>
-                                <constraint firstItem="sLr-Mh-4FA" firstAttribute="width" secondItem="sLr-Mh-4FA" secondAttribute="height" multiplier="1:1" id="jcj-Jc-FpK"/>
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xku-eL-RYg">
@@ -335,7 +320,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_dialog_close" width="26" height="26"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -343,10 +327,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

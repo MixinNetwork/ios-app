@@ -656,7 +656,7 @@ extension PayWindow: PinFieldDelegate {
 
 extension PayWindow {
 
-    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, duplicateCallback: @escaping DuplicateConfirmationWindow.CompletionHandler) -> (Bool, String?) {
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
 
         if fromWeb {
             var response: BaseAPI.Result<PaymentResponse>?
@@ -673,39 +673,83 @@ extension PayWindow {
                         DispatchQueue.main.async {
                             PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.transfer_paid(), fiatMoneyAmount: fiatMoneyAmount).presentPopupControllerAnimated()
                         }
-                        return (false, nil)
+                        completion(false, nil)
+                        return
                     }
                 case let .failure(error):
-                    return (false, error.localizedDescription)
+                    completion(false, error.localizedDescription)
+                    return
                 }
             }
         }
 
-        guard let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) else {
-            return (true, nil)
+        let checkAmountAction = {
+            switch action {
+            case let .transfer(_, user, _):
+                let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
+                let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+                if threshold != 0 && fiatMoneyValue >= threshold {
+                    DispatchQueue.main.async {
+                        BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()
+                    }
+                    return
+                }
+            case let .withdraw(_, address, _, _):
+                if let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: address.dust, locale: .us), amount < dust {
+                    completion(false, R.string.localizable.withdrawal_minimum_amount(address.dust, asset.symbol))
+                    return
+                }
+
+                if AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] == nil && amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10 {
+                    DispatchQueue.main.async {
+                        WithdrawalTipWindow.instance().render(asset: asset, completion: completion).presentPopupControllerAnimated()
+                    }
+                    return
+                }
+            default:
+                break
+            }
+
+            completion(true, nil)
         }
 
-        if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
-            DispatchQueue.main.async {
-                DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: duplicateCallback).presentPopupControllerAnimated()
-            }
-            return (false, nil)
-        } else {
-            switch SnapshotAPI.shared.trace(traceId: traceId) {
-            case let .success(snapshot):
-                TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
+
+            if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {
-                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: duplicateCallback).presentPopupControllerAnimated()
+                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
+                        if isContinue {
+                            checkAmountAction()
+                        } else {
+                            completion(false, errorMsg)
+                        }
+                    }.presentPopupControllerAnimated()
                 }
-                return (false, nil)
-            case let .failure(error):
-                if error.code == 404 {
-                    return (true, nil)
-                } else {
-                    return (false, error.localizedDescription)
+                return
+            } else {
+                switch SnapshotAPI.shared.trace(traceId: traceId) {
+                case let .success(snapshot):
+                    TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
+                    DispatchQueue.main.async {
+                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
+                            if isContinue {
+                                checkAmountAction()
+                            } else {
+                                completion(false, errorMsg)
+                            }
+                        }.presentPopupControllerAnimated()
+                    }
+                    return
+                case let .failure(error):
+                    if error.code != 404 {
+                        completion(false, error.localizedDescription)
+                        return
+                    }
                 }
             }
         }
+
+        checkAmountAction()
     }
 
 }

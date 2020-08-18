@@ -293,24 +293,13 @@ class UrlWindow {
             }
 
             let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true)
-            let showPayWindow = {
-                DispatchQueue.main.async {
-                    hud.hide()
-                    PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
-                }
-            }
-            let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (isContinue) in
-                guard isContinue else {
-                    return
-                }
-                showPayWindow()
-            }
+            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
 
-            if canPay {
-                showPayWindow()
-            } else {
                 DispatchQueue.main.async {
-                    if let error = errorMsg {
+                    if canPay {
+                        hud.hide()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                    } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
                     } else {
@@ -362,24 +351,12 @@ class UrlWindow {
             }
 
             let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true)
-            let showPayWindow = {
+            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
                 DispatchQueue.main.async {
-                    hud.hide()
-                    PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
-                }
-            }
-            let (canPay, errorMsg) = PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo ?? "", fromWeb: true) { (isContinue) in
-                guard isContinue else {
-                    return
-                }
-                showPayWindow()
-            }
-
-            if canPay {
-                showPayWindow()
-            } else {
-                DispatchQueue.main.async {
-                    if let error = errorMsg {
+                    if canPay {
+                        hud.hide()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                    } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
                     } else {

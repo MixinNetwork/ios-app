@@ -12,15 +12,23 @@ class AssetConfirmationWindow: BottomSheetView {
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoPlaceView: UIView!
 
+    private var canDismiss = false
     private var timer: Timer?
     private var countDown = 3
-    private var completion: CompletionHandler?
+    var completion: CompletionHandler?
 
-    typealias CompletionHandler = (Bool) -> Void
+    typealias CompletionHandler = (Bool, String?) -> Void
 
     deinit {
         timer?.invalidate()
         timer = nil
+    }
+
+    override func dismissPopupControllerAnimated() {
+        guard canDismiss else {
+            return
+        }
+        super.dismissPopupControllerAnimated()
     }
 
     func render(asset: AssetItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
@@ -41,21 +49,27 @@ class AssetConfirmationWindow: BottomSheetView {
         memoPlaceView.isHidden = memo.isEmpty
         memoLabel.text = memo
 
+        initTimer()
+        return self
+    }
+
+    func initTimer() {
         confirmButton.setTitle("\(R.string.localizable.action_continue())(\(self.countDown))", for: .normal)
         confirmButton.isEnabled = false
         timer?.invalidate()
         timer = nil
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDownAction), userInfo: nil, repeats: true)
-        return self
     }
 
     @IBAction func continueAction(_ sender: Any) {
-        completion?(true)
+        canDismiss = true
+        completion?(true, nil)
         dismissPopupControllerAnimated()
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        completion?(false)
+        canDismiss = true
+        completion?(false, nil)
         dismissPopupControllerAnimated()
     }
 

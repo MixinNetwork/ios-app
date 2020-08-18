@@ -156,6 +156,16 @@ extension MixinAPIError {
             self = .malformedAddress
         case (202, 30103):
             self = .insufficientPool
+            
+        case (202, 5002000):
+            self = .roomFull
+        case (202, 5002001):
+            self = .peerNotFound
+        case (202, 5002002):
+            self = .peerClosed
+        case (202, 5002003):
+            self = .trackNotFound
+            
         default:
             self = .unknown(status: status, code: code)
         }

@@ -84,12 +84,18 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         if self.asset != nil {
             updateAssetUI()
         } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(fetchAvailableAssets), name: .AssetsDidChange, object: nil)
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             fetchAvailableAssets()
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true
         amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func keyboardWillChangeFrame(_ notification: Notification) {
@@ -265,10 +271,17 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountEditingChanged(sender)
     }
     
-    private func fetchAvailableAssets() {
+    @objc private func fetchAvailableAssets() {
         switchAssetButton.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
-            if self?.asset == nil {
+            if let asset = self?.asset {
+                if let asset = AssetDAO.shared.getAsset(assetId: asset.assetId) {
+                    self?.asset = asset
+                    DispatchQueue.main.async {
+                        self?.updateAssetUI()
+                    }
+                }
+            } else {
                 if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
                     self?.asset = defaultAsset
                 } else {

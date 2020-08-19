@@ -916,6 +916,14 @@ extension CallService {
                 self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
                 self.alert(error: error)
+                if case CallError.microphonePermissionDenied = error {
+                    DispatchQueue.main.async {
+                        if UIApplication.shared.applicationState != .active {
+                            NotificationManager.shared.requestDeclinedGroupCallNotification(localizedName: call.localizedName,
+                                                                                            messageId: data.messageId)
+                        }
+                    }
+                }
                 reporter.report(error: error)
             }
             let message = Message.createKrakenMessage(conversationId: data.conversationId,

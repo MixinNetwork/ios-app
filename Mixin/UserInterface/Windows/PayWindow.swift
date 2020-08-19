@@ -16,7 +16,6 @@ class PayWindow: BottomSheetView {
 
     enum ErrorContinueAction {
         case retryPin
-        case changeAmount
         case close
     }
 
@@ -463,8 +462,6 @@ extension PayWindow: PinFieldDelegate {
             switch error.code {
             case 20118, 20119:
                 self.errorContinueAction = .retryPin
-            case 20120, 20117:
-                self.errorContinueAction = .changeAmount
             default:
                 self.errorContinueAction = .close
             }
@@ -479,8 +476,6 @@ extension PayWindow: PinFieldDelegate {
         switch continueAction {
         case .retryPin:
             errorContinueButton.setTitle(R.string.localizable.action_try_again(), for: .normal)
-        case .changeAmount:
-            errorContinueButton.setTitle(R.string.localizable.wallet_withdrawal_change_amount(), for: .normal)
         case .close:
             errorContinueButton.setTitle(R.string.localizable.dialog_button_ok(), for: .normal)
         }

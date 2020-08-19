@@ -542,12 +542,6 @@ extension CallService {
         }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
-        DispatchQueue.main.async {
-            if UIApplication.shared.applicationState == .background {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-        }
     }
     
     func close(uuid: UUID) {
@@ -577,12 +571,6 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
-            DispatchQueue.main.async {
-                if UIApplication.shared.applicationState == .background {
-                    MixinService.isStopProcessMessages = true
-                    WebSocketService.shared.disconnect()
-                }
-            }
         }
     }
     
@@ -1396,23 +1384,28 @@ extension CallService {
     }
     
     private func beginAutoCancellingBackgroundTaskIfNotActive() {
-        guard UIApplication.shared.applicationState != .active else {
+        let application = UIApplication.shared
+        guard application.applicationState != .active else {
             return
         }
         var identifier: UIBackgroundTaskIdentifier = .invalid
         var cancelBackgroundTask: DispatchWorkItem!
         cancelBackgroundTask = DispatchWorkItem {
+            if application.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
             if identifier != .invalid {
-                UIApplication.shared.endBackgroundTask(identifier)
+                application.endBackgroundTask(identifier)
             }
             if let task = cancelBackgroundTask {
                 task.cancel()
             }
         }
-        identifier = UIApplication.shared.beginBackgroundTask {
+        identifier = application.beginBackgroundTask {
             cancelBackgroundTask.perform()
         }
-        let duration = max(10, min(29, UIApplication.shared.backgroundTimeRemaining - 1))
+        let duration = max(10, min(29, application.backgroundTimeRemaining - 1))
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
     }
     

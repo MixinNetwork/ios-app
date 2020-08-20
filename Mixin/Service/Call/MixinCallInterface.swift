@@ -8,10 +8,9 @@ import MixinServices
 class MixinCallInterface: NSObject {
     
     private let callObserver = CXCallObserver()
+    private let vibrator = Vibrator()
     
     private unowned let service: CallService
-    
-    private lazy var vibrator = Vibrator()
     
     private var pendingIncomingUuid: UUID?
     
@@ -19,6 +18,10 @@ class MixinCallInterface: NSObject {
         self.service = service
         super.init()
         self.callObserver.setDelegate(self, queue: service.queue)
+    }
+    
+    deinit {
+        vibrator.stop()
     }
     
 }

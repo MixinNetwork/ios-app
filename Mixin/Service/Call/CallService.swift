@@ -1322,9 +1322,9 @@ extension CallService {
     private func updateCallKitAvailability() {
         let usesCallKit = !isMainlandChina
             && AVAudioSession.sharedInstance().recordPermission == .granted
-        if usesCallKit {
+        if usesCallKit && !(callInterface is NativeCallInterface) {
             callInterface = nativeCallInterface
-        } else {
+        } else if !usesCallKit && !(callInterface is MixinCallInterface) {
             callInterface = MixinCallInterface(service: self)
         }
     }

@@ -350,6 +350,7 @@ extension UserProfileViewController {
                     return
                 }
                 DispatchQueue.main.async {
+                    AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                     MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
                 }
                 reporter.report(event: .openApp, userInfo: ["source": "UserWindow", "identityNumber": app.appNumber])

@@ -27,7 +27,7 @@ public final class TraceDAO {
         } else {
             return nil
         }
-        return MixinDatabase.shared.getCodable(condition: condition)
+        return MixinDatabase.shared.getCodable(condition: condition, orderBy: [Trace.Properties.createdAt.asOrder(by: .descending)])
     }
 
     public func getTrace(traceId: String) -> Trace? {

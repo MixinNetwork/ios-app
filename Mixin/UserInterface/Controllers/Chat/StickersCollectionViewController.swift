@@ -25,11 +25,10 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
     var animated: Bool = false {
         didSet {
             for case let cell as StickerPreviewCell in collectionView.visibleCells {
-                cell.imageView.autoPlayAnimatedImage = animated
                 if animated {
-                    cell.imageView.startAnimating()
+                    cell.startAnimating()
                 } else {
-                    cell.imageView.stopAnimating()
+                    cell.stopAnimating()
                 }
             }
         }
@@ -78,8 +77,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
             return
         }
         if animated {
-            cell.imageView.autoPlayAnimatedImage = true
-            cell.imageView.startAnimating()
+            cell.startAnimating()
         }
     }
     
@@ -87,8 +85,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
         guard let cell = cell as? StickerPreviewCell else {
             return
         }
-        cell.imageView.autoPlayAnimatedImage = false
-        cell.imageView.stopAnimating()
+        cell.stopAnimating()
     }
     
 }

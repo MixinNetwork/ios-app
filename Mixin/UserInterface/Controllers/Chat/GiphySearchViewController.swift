@@ -19,11 +19,10 @@ class GiphySearchViewController: UIViewController {
     private var animated: Bool = false {
         didSet {
             for case let cell as StickerPreviewCell in collectionView.visibleCells {
-                cell.imageView.autoPlayAnimatedImage = animated
                 if animated {
-                    cell.imageView.startAnimating()
+                    cell.startAnimating()
                 } else {
-                    cell.imageView.stopAnimating()
+                    cell.stopAnimating()
                 }
             }
         }
@@ -132,9 +131,8 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! StickerPreviewCell
-        cell.imageView.contentMode = .scaleAspectFill
         let url = images[indexPath.row].previewUrl
-        cell.imageView.sd_setImage(with: url)
+        cell.load(imageURL: url, contentMode: .scaleAspectFill)
         return cell
     }
     
@@ -149,7 +147,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let image = images[indexPath.row]
         let cell = collectionView.cellForItem(at: indexPath) as? StickerPreviewCell
-        dataSource?.send(image: image, thumbnail: cell?.imageView.image)
+        dataSource?.send(image: image, thumbnail: cell?.image)
         dismissAction(collectionView)
     }
     
@@ -158,8 +156,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
             return
         }
         if animated {
-            cell.imageView.autoPlayAnimatedImage = true
-            cell.imageView.startAnimating()
+            cell.startAnimating()
         }
     }
     
@@ -167,8 +164,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
         guard let cell = cell as? StickerPreviewCell else {
             return
         }
-        cell.imageView.autoPlayAnimatedImage = false
-        cell.imageView.stopAnimating()
+        cell.stopAnimating()
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {

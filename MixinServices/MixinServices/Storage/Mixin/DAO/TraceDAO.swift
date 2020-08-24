@@ -43,7 +43,7 @@ public final class TraceDAO {
             return
         }
         DispatchQueue.global().async {
-            MixinDatabase.shared.delete(table: Trace.tableName, condition: Trace.Properties.createdAt < Date().dayBefore().toUTCString())
+            MixinDatabase.shared.delete(table: Trace.tableName, condition: Trace.Properties.createdAt < Date().within6Hours().toUTCString())
             MixinDatabase.shared.insertOrReplace(objects: [trace])
         }
     }

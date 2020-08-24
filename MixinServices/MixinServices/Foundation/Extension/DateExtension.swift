@@ -59,8 +59,8 @@ public extension Date {
         return DateFormatter.log.string(from: self)
     }
 
-    public func dayBefore() -> Date {
-        return addingTimeInterval(-86400)
+    public func within6Hours() -> Date {
+        return addingTimeInterval(-21600)
     }
 
 }

@@ -708,7 +708,7 @@ extension PayWindow {
             completion(true, nil)
         }
 
-        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().dayBefore().toUTCString()) {
+        if let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
 
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {

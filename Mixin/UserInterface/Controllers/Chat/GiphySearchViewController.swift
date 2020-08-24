@@ -18,7 +18,7 @@ class GiphySearchViewController: UIViewController {
     private var isLoadingMore = false
     private var animated: Bool = false {
         didSet {
-            for case let cell as AnimatedImageCollectionViewCell in collectionView.visibleCells {
+            for case let cell as StickerPreviewCell in collectionView.visibleCells {
                 cell.imageView.autoPlayAnimatedImage = animated
                 if animated {
                     cell.imageView.startAnimating()
@@ -70,7 +70,7 @@ class GiphySearchViewController: UIViewController {
         updatePreferredContentSizeHeight()
         keywordTextField.delegate = self
         collectionView.keyboardDismissMode = .onDrag
-        collectionView.register(AnimatedImageCollectionViewCell.self,
+        collectionView.register(StickerPreviewCell.self,
                                 forCellWithReuseIdentifier: ReuseId.cell)
         collectionView.register(UINib(nibName: "LoadingIndicatorFooterView", bundle: .main),
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -131,7 +131,7 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! AnimatedImageCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! StickerPreviewCell
         cell.imageView.contentMode = .scaleAspectFill
         let url = images[indexPath.row].previewUrl
         cell.imageView.sd_setImage(with: url)
@@ -148,13 +148,13 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let image = images[indexPath.row]
-        let cell = collectionView.cellForItem(at: indexPath) as? AnimatedImageCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? StickerPreviewCell
         dataSource?.send(image: image, thumbnail: cell?.imageView.image)
         dismissAction(collectionView)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? AnimatedImageCollectionViewCell else {
+        guard let cell = cell as? StickerPreviewCell else {
             return
         }
         if animated {
@@ -164,7 +164,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? AnimatedImageCollectionViewCell else {
+        guard let cell = cell as? StickerPreviewCell else {
             return
         }
         cell.imageView.autoPlayAnimatedImage = false

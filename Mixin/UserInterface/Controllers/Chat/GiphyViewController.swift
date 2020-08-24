@@ -62,7 +62,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerPreviewCell
         if indexPath.row == 0 {
             cell.imageView.contentMode = .center
             cell.imageView.image = UIImage(named: "ic_giphy_search")
@@ -85,7 +85,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
             present(vc, animated: true, completion: nil)
         } else {
             let image = images[indexPath.row - 1]
-            let cell = collectionView.cellForItem(at: indexPath) as? AnimatedImageCollectionViewCell
+            let cell = collectionView.cellForItem(at: indexPath) as? StickerPreviewCell
             dataSource?.send(image: image, thumbnail: cell?.imageView.image)
         }
     }

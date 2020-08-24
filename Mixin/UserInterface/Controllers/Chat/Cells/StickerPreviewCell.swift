@@ -1,7 +1,7 @@
 import UIKit
 import YYImage
 
-class AnimatedImageCollectionViewCell: UICollectionViewCell {
+class StickerPreviewCell: UICollectionViewCell {
     
     lazy var imageView: YYAnimatedImageView = {
         let view = YYAnimatedImageView()

@@ -24,7 +24,7 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
     
     var animated: Bool = false {
         didSet {
-            for case let cell as AnimatedImageCollectionViewCell in collectionView.visibleCells {
+            for case let cell as StickerPreviewCell in collectionView.visibleCells {
                 cell.imageView.autoPlayAnimatedImage = animated
                 if animated {
                     cell.imageView.startAnimating()
@@ -48,7 +48,7 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .background
         collectionView.alwaysBounceVertical = true
-        collectionView.register(AnimatedImageCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseId)
+        collectionView.register(StickerPreviewCell.self, forCellWithReuseIdentifier: cellReuseId)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -74,7 +74,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? AnimatedImageCollectionViewCell else {
+        guard let cell = cell as? StickerPreviewCell else {
             return
         }
         if animated {
@@ -84,7 +84,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? AnimatedImageCollectionViewCell else {
+        guard let cell = cell as? StickerPreviewCell else {
             return
         }
         cell.imageView.autoPlayAnimatedImage = false

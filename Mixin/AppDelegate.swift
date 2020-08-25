@@ -4,8 +4,9 @@ import SDWebImage
 import YYImage
 import AVFoundation
 import WebKit
-import MixinServices
 import FirebaseCore
+import Lottie
+import MixinServices
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -116,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        
+        LOTAnimationCache.shared().clear()
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

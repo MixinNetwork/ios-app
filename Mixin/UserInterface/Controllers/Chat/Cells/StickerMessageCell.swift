@@ -1,37 +1,62 @@
 import UIKit
 import YYImage
+import Lottie
+import Alamofire
 import MixinServices
 
 class StickerMessageCell: DetailInfoMessageCell {
     
     static let contentCornerRadius: CGFloat = 6
     
+    let imageWrapperView = UIView()
     let contentImageView = YYAnimatedImageView()
+    let lottieAnimationView = LOTAnimationView()
     
     lazy var selectedOverlapImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.alpha = 0
         imageView.tintColor = UIColor.black.withAlphaComponent(0.2)
-        contentImageView.addSubview(imageView)
+        imageWrapperView.addSubview(imageView)
         return imageView
     }()
     
+    private weak var lottieAnimationDownloadRequest: DownloadRequest?
+    
     override var contentFrame: CGRect {
-        return contentImageView.frame
+        return imageWrapperView.frame
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
         contentImageView.image = nil
+        lottieAnimationDownloadRequest?.cancel()
+        lottieAnimationView.sceneModel = nil
     }
-
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        if let viewModel = viewModel as? StickerMessageViewModel, let assetUrl = viewModel.message.assetUrl {
-            contentImageView.frame = viewModel.contentFrame
-            let context = stickerLoadContext(category: viewModel.message.assetCategory)
-            contentImageView.sd_setImage(with: URL(string: assetUrl), placeholderImage: nil, context: context)
+        if let viewModel = viewModel as? StickerMessageViewModel {
+            imageWrapperView.frame = viewModel.contentFrame
+            if let assetUrl = viewModel.message.assetUrl, let url = URL(string: assetUrl) {
+                if viewModel.message.assetType == "JSON" {
+                    lottieAnimationView.isHidden = false
+                    contentImageView.isHidden = true
+                    lottieAnimationDownloadRequest = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
+                        guard let self = self else {
+                            return
+                        }
+                        self.lottieAnimationView.sceneModel = composition
+                        self.lottieAnimationView.loopAnimation = true
+                        self.lottieAnimationView.play()
+                    })
+                } else {
+                    lottieAnimationView.isHidden = true
+                    contentImageView.isHidden = false
+                    let context = stickerLoadContext(category: viewModel.message.assetCategory)
+                    contentImageView.sd_setImage(with: URL(string: assetUrl), placeholderImage: nil, context: context)
+                }
+            }
         }
     }
     
@@ -48,10 +73,20 @@ class StickerMessageCell: DetailInfoMessageCell {
     }
     
     override func prepare() {
-        messageContentView.addSubview(contentImageView)
+        messageContentView.addSubview(imageWrapperView)
+        imageWrapperView.clipsToBounds = true
+        imageWrapperView.layer.cornerRadius = Self.contentCornerRadius
+        
+        contentImageView.frame = imageWrapperView.bounds
+        contentImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageWrapperView.addSubview(contentImageView)
         contentImageView.contentMode = .scaleAspectFill
-        contentImageView.clipsToBounds = true
-        contentImageView.layer.cornerRadius = Self.contentCornerRadius
+        
+        lottieAnimationView.frame = imageWrapperView.bounds
+        lottieAnimationView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageWrapperView.addSubview(lottieAnimationView)
+        lottieAnimationView.contentMode = .scaleAspectFill
+        
         super.prepare()
         backgroundImageView.removeFromSuperview()
     }

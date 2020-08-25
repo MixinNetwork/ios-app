@@ -20,7 +20,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         return imageView
     }()
     
-    private weak var lottieAnimationDownloadRequest: DownloadRequest?
+    private weak var lottieAnimationDownloadToken: LottieAnimationLoader.Token?
     
     override var contentFrame: CGRect {
         return imageWrapperView.frame
@@ -30,7 +30,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
         contentImageView.image = nil
-        lottieAnimationDownloadRequest?.cancel()
+        lottieAnimationDownloadToken?.cancel()
         lottieAnimationView.sceneModel = nil
     }
     
@@ -42,7 +42,7 @@ class StickerMessageCell: DetailInfoMessageCell {
                 if viewModel.message.assetType == "JSON" {
                     lottieAnimationView.isHidden = false
                     contentImageView.isHidden = true
-                    lottieAnimationDownloadRequest = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
+                    lottieAnimationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
                         guard let self = self else {
                             return
                         }

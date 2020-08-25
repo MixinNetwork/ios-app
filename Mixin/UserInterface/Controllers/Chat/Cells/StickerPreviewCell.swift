@@ -37,7 +37,7 @@ class StickerPreviewCell: UICollectionViewCell {
     
     private weak var imageViewIfLoaded: YYAnimatedImageView?
     private weak var animationViewIfLoaded: LOTAnimationView?
-    private weak var animationDownloadRequest: DownloadRequest?
+    private weak var animationDownloadToken: LottieAnimationLoader.Token?
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -45,7 +45,7 @@ class StickerPreviewCell: UICollectionViewCell {
             imageView.sd_cancelCurrentImageLoad()
             imageView.image = nil
         }
-        animationDownloadRequest?.cancel()
+        animationDownloadToken?.cancel()
         if let animationView = animationViewIfLoaded {
             animationView.animation = nil
         }
@@ -58,7 +58,7 @@ class StickerPreviewCell: UICollectionViewCell {
         if sticker.assetType.uppercased() == "JSON" {
             animationView.isHidden = false
             imageViewIfLoaded?.isHidden = true
-            animationDownloadRequest = LottieAnimationLoader.shared.loadAnimation(with: url) { [weak self] (animation) in
+            animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url) { [weak self] (animation) in
                 self?.animationView.sceneModel = animation
             }
         } else {

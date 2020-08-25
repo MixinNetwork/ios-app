@@ -8,6 +8,8 @@ class StickerMessageCell: DetailInfoMessageCell {
     
     static let contentCornerRadius: CGFloat = 6
     
+    private static let defaultOverlapImage = UIColor.black.image
+    
     let imageWrapperView = UIView()
     let contentImageView = YYAnimatedImageView()
     let lottieAnimationView = LOTAnimationView()
@@ -61,11 +63,9 @@ class StickerMessageCell: DetailInfoMessageCell {
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {
-        guard let overlapImage = contentImageView.image?.withRenderingMode(.alwaysTemplate) else {
-            return
-        }
-        selectedOverlapImageView.image = overlapImage
-        selectedOverlapImageView.frame = contentImageView.bounds
+        let overlapImage = contentImageView.image ?? Self.defaultOverlapImage
+        selectedOverlapImageView.image = overlapImage?.withRenderingMode(.alwaysTemplate)
+        selectedOverlapImageView.frame = imageWrapperView.bounds
         let shouldHighlight = highlight && !isMultipleSelecting
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
             self.selectedOverlapImageView.alpha = shouldHighlight ? 1 : 0
@@ -79,13 +79,13 @@ class StickerMessageCell: DetailInfoMessageCell {
         
         contentImageView.frame = imageWrapperView.bounds
         contentImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageWrapperView.addSubview(contentImageView)
         contentImageView.contentMode = .scaleAspectFill
+        imageWrapperView.addSubview(contentImageView)
         
         lottieAnimationView.frame = imageWrapperView.bounds
         lottieAnimationView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageWrapperView.addSubview(lottieAnimationView)
         lottieAnimationView.contentMode = .scaleAspectFill
+        imageWrapperView.addSubview(lottieAnimationView)
         
         super.prepare()
         backgroundImageView.removeFromSuperview()

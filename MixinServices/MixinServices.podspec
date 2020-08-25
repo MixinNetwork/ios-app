@@ -39,4 +39,5 @@ Mixin Core Services.
   s.dependency 'SocketRocket'
   s.dependency 'WCDB.swift'
   s.dependency 'SwiftyMarkdown'
+  s.dependency 'lottie-ios'
 end

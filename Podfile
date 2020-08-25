@@ -3,12 +3,12 @@ install! 'cocoapods',
 :incremental_installation => true
 
 platform :ios, '11.0'
-source 'https://github.com/CocoaPods/Specs.git'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
   pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
   pod 'SwiftyMarkdown', :git => 'https://github.com/wuyuehyang/SwiftyMarkdown.git'
+  pod 'lottie-ios', :git => 'https://github.com/airbnb/lottie-ios.git', :branch => 'lottie/objectiveC'
   pod 'MixinServices', :path => './MixinServices'
 end
 
@@ -29,7 +29,6 @@ target 'Mixin' do
   pod 'Texture', :git => 'https://github.com/TextureGroup/Texture.git', :branch => 'master'
   pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
   pod 'TexturedMaaku/SyntaxColors', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
-  pod 'lottie-ios'
   mixin_services
 end
 

@@ -309,7 +309,11 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
-            inviteButton.isHidden = false
+            if let call = call, call is GroupCall {
+                inviteButton.isHidden = false
+            } else {
+                inviteButton.isHidden = true
+            }
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)

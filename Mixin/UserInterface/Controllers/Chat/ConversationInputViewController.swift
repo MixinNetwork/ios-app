@@ -675,7 +675,9 @@ extension ConversationInputViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         textView.typingAttributes = typingAttributes
-        textView.textStorage.addAttributes(typingAttributes, range: range)
+        if !text.isEmpty {
+            textView.textStorage.addAttributes(typingAttributes, range: range)
+        }
         return !audioViewController.isRecording
     }
     
@@ -734,7 +736,8 @@ extension ConversationInputViewController: UITextViewDelegate {
         
         if detectsMentionToken {
             if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
-                let text = (self.textView.text as NSString).substring(with: range)
+                let keywordRange = NSRange(location: range.location + 1, length: range.length - 1)
+                let text = (self.textView.text as NSString).substring(with: keywordRange)
                 conversationViewController.inputTextViewDidInputMentionCandidate(text)
             } else {
                 conversationViewController.inputTextViewDidInputMentionCandidate(nil)

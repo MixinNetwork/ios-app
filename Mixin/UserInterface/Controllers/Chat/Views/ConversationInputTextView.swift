@@ -17,7 +17,7 @@ class ConversationInputTextView: UITextView {
         }
     }
     
-    // Return the token between Mention.prefix and the caret
+    // Return the token from Mention.prefix to the caret
     // token is separated with space
     var inputingMentionTokenRange: NSRange? {
         guard !text.isEmpty else {
@@ -36,7 +36,7 @@ class ConversationInputTextView: UITextView {
             if char == " " {
                 return nil
             } else if char == Mention.prefix {
-                let start = stringBeforeCaret.index(stringBeforeCaret.startIndex, offsetBy: index.advanced(by: 1))
+                let start = stringBeforeCaret.index(stringBeforeCaret.startIndex, offsetBy: index)
                 let end = stringBeforeCaret.endIndex
                 return NSRange(start..<end, in: stringBeforeCaret)
             }

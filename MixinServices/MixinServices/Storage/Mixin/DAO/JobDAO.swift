@@ -41,7 +41,11 @@ public final class JobDAO {
         guard jobIds.count > 0 else {
             return
         }
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId.in(jobIds))
+        if jobIds.count == 1 {
+            MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId == jobIds[0])
+        } else {
+            MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId.in(jobIds))
+        }
     }
     
 }

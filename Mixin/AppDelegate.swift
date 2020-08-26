@@ -188,7 +188,11 @@ extension AppDelegate {
 
         if NetworkManager.shared.isReachableOnWiFi {
             if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
-                BackupJobQueue.shared.addJob(job: BackupJob())
+                if let backupJob = BackupJobQueue.shared.backupJob {
+                    backupJob.checkUploadStatus()
+                } else {
+                    BackupJobQueue.shared.addJob(job: BackupJob())
+                }
             }
             if AppGroupUserDefaults.Account.canRestoreMedia {
                 BackupJobQueue.shared.addJob(job: RestoreJob())

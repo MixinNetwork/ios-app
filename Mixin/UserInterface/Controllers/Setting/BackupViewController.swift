@@ -42,9 +42,9 @@ class BackupViewController: SettingsTableViewController {
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         return controller
     }()
-    
+
     private weak var timer: Timer?
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
         timer?.invalidate()
@@ -83,8 +83,12 @@ class BackupViewController: SettingsTableViewController {
             AppGroupUserDefaults.User.lastBackupDate = nil
             AppGroupUserDefaults.User.lastBackupSize = nil
         }
+
+        if BackupJobQueue.shared.isBackingUp {
+            BackupJobQueue.shared.backupJob?.checkUploadStatus()
+        }
     }
-    
+
     @objc func backupChanged() {
         timer?.invalidate()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -154,17 +158,16 @@ extension BackupViewController {
     private func updateActionSectionFooter() {
         let text: String?
         if let backupJob = BackupJobQueue.shared.backupJob {
-            if backupJob.isBackingUp {
-                if backupJob.backupSize == 0 {
-                    text = R.string.localizable.setting_backup_preparing()
-                } else {
-                    let progress = NumberFormatter.simplePercentage.stringFormat(value: Float64(backupJob.backupSize) / Float64(backupJob.backupTotalSize))
-                    text = R.string.localizable.setting_backup_preparing_progress(progress)
-                }
-            } else if backupJob.uploadedSize == 0 {
+            let prepareProgress = backupJob.prepareProgress
+            let uploadedSize = backupJob.totalUploadedSize
+            if prepareProgress == 0 {
+                text = R.string.localizable.setting_backup_preparing()
+            } else if prepareProgress < 1 {
+                let progress = NumberFormatter.simplePercentage.stringFormat(value: prepareProgress)
+                text = R.string.localizable.setting_backup_preparing_progress(progress)
+            } else if uploadedSize == 0 {
                 text = R.string.localizable.setting_backup_uploading()
             } else {
-                let uploadedSize = backupJob.uploadedSize
                 let totalFileSize = backupJob.totalFileSize
                 let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
                 text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)

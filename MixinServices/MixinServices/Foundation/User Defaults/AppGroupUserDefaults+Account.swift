@@ -12,6 +12,7 @@ extension AppGroupUserDefaults {
             case canRestoreChat = "can_restore_chat"
             case canRestoreMedia = "can_restore_media"
             case hasUnfinishedBackup = "has_unfinished_backup"
+            case hasFinishedDatabaseBackup = "has_finished_database_backup"
             case extensionSession = "extension_session"
             case lastDesktopLoginDate = "last_desktop_login_date"
         }
@@ -36,6 +37,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .account, key: Key.hasUnfinishedBackup, defaultValue: false)
         public static var hasUnfinishedBackup: Bool
+
+        @Default(namespace: .account, key: Key.hasFinishedDatabaseBackup, defaultValue: false)
+        public static var hasFinishedDatabaseBackup: Bool
         
         @Default(namespace: .account, key: Key.extensionSession, defaultValue: nil)
         public static var extensionSession: String?

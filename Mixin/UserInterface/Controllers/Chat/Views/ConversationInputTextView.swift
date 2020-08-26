@@ -87,13 +87,14 @@ class ConversationInputTextView: UITextView {
                 let mutable = NSMutableAttributedString(attributedString: attributedText)
                 mutable.replaceCharacters(in: replacedRange, with: replacement)
                 let replacementRange = NSRange(location: replacedRange.location,
-                                               length: (replacement as NSString).length - 1)
+                                               length: (replacement as NSString).length - 1) // 1 for the space after
                 let attrs: [NSAttributedString.Key: Any] = [
                     .foregroundColor: UIColor.theme,
                     .mentionToken: MentionToken(length: replacementRange.length)
                 ]
                 mutable.addAttributes(attrs, range: replacementRange)
                 attributedText = NSAttributedString(attributedString: mutable)
+                selectedRange = NSRange(location: NSMaxRange(replacementRange) + 1, length: 0) // 1 for the space after
                 delegate?.textViewDidChange?(self)
                 break
             }

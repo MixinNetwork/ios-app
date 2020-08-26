@@ -106,20 +106,27 @@ class ConversationInputTextView: UITextView {
     }
     
     override func updateFloatingCursor(at point: CGPoint) {
+        defer {
+            super.updateFloatingCursor(at: point)
+        }
+        let range = NSRange(location: 0, length: attributedText.length)
         let index = layoutManager.characterIndex(for: point,
                                                  in: textContainer,
                                                  fractionOfDistanceBetweenInsertionPoints: nil)
+        let location = index - 1
+        guard location >= 0 && location < attributedText.length else {
+            return
+        }
         var effectiveRange = NSRange(location: NSNotFound, length: 0)
-        let isMentionToken = attributedText.attribute(.mentionToken, at: index, effectiveRange: &effectiveRange) != nil
-        if isMentionToken, effectiveRange.location != NSNotFound {
-            let rect = layoutManager.boundingRect(forGlyphRange: effectiveRange, in: textContainer)
-            isFloatingCursorGoingBackward = point.x <= rect.midX
-            isFloatingCursorGoingForward = point.x > rect.midX
+        let token = attributedText.attribute(.mentionToken, at: location, longestEffectiveRange: &effectiveRange, in: range)
+        if let token = token as? MentionToken, effectiveRange.location != NSNotFound {
+            let middle = effectiveRange.location + 1 + token.length / 2
+            isFloatingCursorGoingBackward = location < middle
+            isFloatingCursorGoingForward = location >= middle
         } else {
             isFloatingCursorGoingBackward = false
-            isFloatingCursorGoingForward = false
+            isFloatingCursorGoingForward = true
         }
-        super.updateFloatingCursor(at: point)
     }
     
     override func endFloatingCursor() {

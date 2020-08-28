@@ -957,6 +957,7 @@ class ConversationViewController: UIViewController {
             }
             let height = userHandleWrapperView.bounds.height
                 - userHandleViewController.tableHeaderView.frame.height
+                + UserHandleTableHeaderView.decorationHeight
                 + userHandleViewController.tableView.contentOffset.y
             handleHeight = min(maxHeight, height)
         }

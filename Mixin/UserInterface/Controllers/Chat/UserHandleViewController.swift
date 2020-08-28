@@ -154,6 +154,7 @@ class UserHandleViewController: UITableViewController {
             onScrollingAnimationEnd = nil
             tableView.reloadData()
             tableView.setContentOffset(.zero, animated: false)
+            view.layoutIfNeeded()
             completion?(hasContent)
         }
     }

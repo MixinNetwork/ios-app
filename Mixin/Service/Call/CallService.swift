@@ -904,7 +904,17 @@ extension CallService {
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             callInterface.reportIncomingCall(call) { (error) in
+                let invitationStatus: MessageStatus
+                defer {
+                    let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                              userId: data.userId,
+                                                              category: .KRAKEN_INVITE,
+                                                              status: invitationStatus.rawValue,
+                                                              createdAt: data.createdAt)
+                    MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+                }
                 guard let error = error else {
+                    invitationStatus = .READ
                     return
                 }
                 self.log("[CallService] incoming call reporting error: \(error)")
@@ -915,22 +925,24 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
-                self.alert(error: error)
-                if case CallError.microphonePermissionDenied = error {
+                switch error {
+                case CallError.microphonePermissionDenied:
                     DispatchQueue.main.async {
                         if UIApplication.shared.applicationState != .active {
                             NotificationManager.shared.requestDeclinedGroupCallNotification(localizedName: call.localizedName,
                                                                                             messageId: data.messageId)
                         }
                     }
+                    self.alert(error: error)
+                    invitationStatus = .READ
+                case CallError.busy:
+                    invitationStatus = .DELIVERED
+                default:
+                    self.alert(error: error)
+                    invitationStatus = .READ
+                    reporter.report(error: error)
                 }
-                reporter.report(error: error)
             }
-            let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: .KRAKEN_INVITE,
-                                                      createdAt: data.createdAt)
-            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
     

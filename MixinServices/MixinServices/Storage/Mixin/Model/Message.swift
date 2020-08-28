@@ -202,13 +202,13 @@ extension Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category.rawValue, content: content, mediaDuration: mediaDuration, status: status.rawValue, quoteMessageId: quoteMessageId, createdAt: Date().toUTCString())
     }
     
-    public static func createKrakenMessage(conversationId: String, userId: String, category: MessageCategory, mediaDuration: Int64? = nil, createdAt: String) -> Message {
+    public static func createKrakenMessage(conversationId: String, userId: String, category: MessageCategory, mediaDuration: Int64? = nil, status: MessageStatus.RawValue = MessageStatus.READ.rawValue, createdAt: String) -> Message {
         createMessage(messageId: UUID().uuidString,
                       conversationId: conversationId,
                       userId: userId,
                       category: category.rawValue,
                       mediaDuration: mediaDuration,
-                      status: MessageStatus.READ.rawValue,
+                      status: status,
                       createdAt: createdAt)
     }
     

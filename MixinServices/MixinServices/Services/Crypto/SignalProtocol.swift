@@ -128,8 +128,10 @@ public class SignalProtocol {
             SignalProtocol.shared.clearSenderKey(groupId: conversationId, senderId: myUserId)
             reporter.report(error: MixinServicesError.encryptGroupMessageData(SignalError.invalidKey))
         } catch let error as SignalError {
+            Logger.write(conversationId: conversationId, log: "[SignalProtocol][EncryptGroupMessageData][SignalError]...senderId:\(senderId)...\(error)...")
             reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
         } catch {
+            Logger.write(conversationId: conversationId, log: "[SignalProtocol][EncryptGroupMessageData]...senderId:\(senderId)...\(error)...")
             reporter.report(error: error)
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: nil))

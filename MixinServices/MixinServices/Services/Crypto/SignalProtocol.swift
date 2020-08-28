@@ -44,6 +44,7 @@ public class SignalProtocol {
     func clearSenderKey(groupId: String, senderId: String) {
         let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
         store.senderKeyStore!.removeSenderKey(senderKeyName: senderKeyName)
+        Logger.write(conversationId: groupId, log: "[SignalProtocol][ClearSenderKey]...senderId:\(senderId)")
     }
 
     func isExistSenderKey(groupId: String, senderId: String) -> Bool {
@@ -122,6 +123,10 @@ public class SignalProtocol {
             cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
         } catch SignalError.noSession {
             // Do nothing
+        } catch SignalError.invalidKey {
+            Logger.write(conversationId: conversationId, log: "[SignalProtocol][EncryptGroupMessageData][SignalError]...invalidKey...senderId:\(senderId)...")
+            SignalProtocol.shared.clearSenderKey(groupId: conversationId, senderId: myUserId)
+            reporter.report(error: MixinServicesError.encryptGroupMessageData(SignalError.invalidKey))
         } catch let error as SignalError {
             reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
         } catch {

@@ -87,6 +87,7 @@ class ConversationInputViewController: UIViewController {
     private var lastTextCountWhenMentionRangeChanges = 0
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
+    private var lastMentionDetectedText: String?
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -734,14 +735,8 @@ extension ConversationInputViewController: UITextViewDelegate {
             interactiveDismissResponder.height += diff
         }
         
-        if detectsMentionToken {
-            if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
-                let keywordRange = NSRange(location: range.location + 1, length: range.length - 1)
-                let text = (self.textView.text as NSString).substring(with: keywordRange)
-                conversationViewController.inputTextViewDidInputMentionCandidate(text)
-            } else {
-                conversationViewController.inputTextViewDidInputMentionCandidate(nil)
-            }
+        if textView.text != lastMentionDetectedText {
+            detectAndReportMentionCandidateIfNeeded()
         }
     }
     
@@ -791,6 +786,7 @@ extension ConversationInputViewController: UITextViewDelegate {
         }
         lastSelectedRange = textView.selectedRange
         textView.typingAttributes = typingAttributes
+        detectAndReportMentionCandidateIfNeeded()
     }
     
 }
@@ -1003,6 +999,20 @@ extension ConversationInputViewController {
                 self.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
             }
         }
+    }
+    
+    private func detectAndReportMentionCandidateIfNeeded() {
+        guard detectsMentionToken else {
+            return
+        }
+        if let range = self.textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
+            let keywordRange = NSRange(location: range.location + 1, length: range.length - 1)
+            let text = (self.textView.text as NSString).substring(with: keywordRange)
+            conversationViewController.inputTextViewDidInputMentionCandidate(text)
+        } else {
+            conversationViewController.inputTextViewDidInputMentionCandidate(nil)
+        }
+        lastMentionDetectedText = textView.text
     }
     
 }

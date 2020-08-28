@@ -3,6 +3,7 @@ import Foundation
 class QuotedMessageViewModel {
     
     static let contentMargin = MessageViewModel.Margin(leading: 11, trailing: 11, top: 6, bottom: 6)
+    static let titleRightMargin: CGFloat = 4
     static let iconSize = CGSize(width: 15, height: 15)
     static let iconTrailingMargin: CGFloat = 4
     static let subtitleTopMargin: CGFloat = 4
@@ -117,6 +118,10 @@ class QuotedMessageViewModel {
                     .insetBy(dx: Self.avatarImageMargin, dy: Self.avatarImageMargin)
             } else {
                 imageFrame = CGRect(origin: imageOrigin, size: imageSize)
+            }
+            let intersection = titleFrame.maxX - imageFrame.minX
+            if intersection > -Self.titleRightMargin {
+                titleFrame.size.width -= Self.titleRightMargin + intersection
             }
         } else {
             imageFrame = .zero

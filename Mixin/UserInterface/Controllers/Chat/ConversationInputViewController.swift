@@ -735,9 +735,8 @@ extension ConversationInputViewController: UITextViewDelegate {
             interactiveDismissResponder.height += diff
         }
         
-        if textView.text != lastMentionDetectedText {
-            detectAndReportMentionCandidateIfNeeded()
-        }
+        detectAndReportMentionCandidateIfNeeded()
+        lastMentionDetectedText = textView.text
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
@@ -786,7 +785,12 @@ extension ConversationInputViewController: UITextViewDelegate {
         }
         lastSelectedRange = textView.selectedRange
         textView.typingAttributes = typingAttributes
-        detectAndReportMentionCandidateIfNeeded()
+        
+        if textView.text == lastMentionDetectedText {
+            // Only detects on cursor movement
+            // Ignore any selection change caused by text input
+            detectAndReportMentionCandidateIfNeeded()
+        }
     }
     
 }
@@ -1012,7 +1016,6 @@ extension ConversationInputViewController {
         } else {
             conversationViewController.inputTextViewDidInputMentionCandidate(nil)
         }
-        lastMentionDetectedText = textView.text
     }
     
 }

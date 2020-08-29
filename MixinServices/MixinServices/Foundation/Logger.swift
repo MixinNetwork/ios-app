@@ -5,6 +5,7 @@ public enum Logger {
     
     private static let queue = DispatchQueue(label: "one.mixin.services.queue.log")
     private static let systemLog = "system"
+    private static let callLog = "call"
     private static let errorLog = "error"
 
     public static func write(error: Error, extra: String = "") {
@@ -26,7 +27,9 @@ public enum Logger {
         queue.async {
             makeLogDirectoryIfNeeded()
 
-            if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
+            if log.hasPrefix("[Call]") {
+                writeLog(filename: callLog, log: log, newSection: newSection)
+            } else if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
                 write(conversationId: conversationId, log: log, newSection: newSection)
             } else {
                 writeLog(filename: systemLog, log: log, newSection: newSection)

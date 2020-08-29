@@ -203,7 +203,7 @@ class CallService: NSObject {
     
     func log(_ log: String) {
         NSLog(log)
-        Logger.write(log: log)
+        Logger.write(log: "[Call]" + log)
     }
     
 }

@@ -413,29 +413,39 @@ public class SendMessageService: MixinService {
 
                 } else {
                     var blazeMessage = ""
+                    var conversationId = job.conversationId ?? ""
                     if let bm = job.blazeMessage {
                         blazeMessage = String(data: bm, encoding: .utf8) ?? ""
+                        if conversationId.isEmpty {
+                            conversationId = job.toBlazeMessage().params?.conversationId ?? ""
+                        }
                     }
 
-                    #if DEBUG
-                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)....currentUserId:\(myUserId)...blazeMessage:\(blazeMessage)")
-                    #endif
-                    Logger.write(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...blazeMessage:\(blazeMessage)...\(error)")
                     var userInfo = [String: Any]()
                     userInfo["errorCode"] = error.errorCode
+                    userInfo["errorCodeLineNumber"] = "\(#line)"
+                    userInfo["errorFunction"] = "\(#function)"
                     userInfo["errorDescription"] = error.localizedDescription
                     userInfo["JobAction"] = job.action
+                    userInfo["conversationId"] = conversationId
+                    if !conversationId.isEmpty && job.action == JobAction.SEND_MESSAGE.rawValue {
+                        if let conversationName = ConversationDAO.shared.getConversation(conversationId: conversationId)?.name {
+                            userInfo["conversationName"] = conversationName
+                        }
+                    }
                     userInfo["blazeMessage"] = blazeMessage
                     if let err = error as? SignalError {
                         userInfo["signalErrorCode"] = err.rawValue
                         if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
+                            Logger.write(error: error, userInfo: userInfo)
                             reporter.report(error: MixinServicesError.sendMessage(userInfo))
                             LoginManager.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
+                    Logger.write(error: error, userInfo: userInfo)
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
 

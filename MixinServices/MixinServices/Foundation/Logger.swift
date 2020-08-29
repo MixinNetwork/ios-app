@@ -8,11 +8,30 @@ public enum Logger {
     private static let callLog = "call"
     private static let errorLog = "error"
 
-    public static func writeError(log: String, newSection: Bool = false) {
+    public static func write(errorMsg: String) {
         queue.async {
             makeLogDirectoryIfNeeded()
 
-            writeLog(filename: errorLog, log: log, newSection: newSection)
+            #if DEBUG
+            print("===errorMsg:\(errorMsg)...")
+            #endif
+
+            writeLog(filename: errorLog, log: "\n------------------------------------\n[Error]" + errorMsg)
+        }
+    }
+
+    public static func write(error: Error, userInfo: [String: Any]) {
+        queue.async {
+            makeLogDirectoryIfNeeded()
+
+            #if DEBUG
+            print("===error:\(error)...\n\(userInfo)")
+            #endif
+
+            writeLog(filename: errorLog, log: "\n------------------------------------\n[Error]" + String(describing: error))
+            for (key, value) in userInfo {
+                writeLog(filename: errorLog, log: "[\(key)]:\(value)", appendTime: false)
+            }
         }
     }
 
@@ -24,7 +43,7 @@ public enum Logger {
             print("===error:\(error)...\n\(extra)")
             #endif
 
-            writeLog(filename: errorLog, log: String(describing: error), newSection: true)
+            writeLog(filename: errorLog, log: "\n------------------------------------\n[Error]" + String(describing: error))
             if !extra.isEmpty {
                 writeLog(filename: errorLog, log: extra)
             }
@@ -58,11 +77,16 @@ public enum Logger {
         }
     }
 
-    private static func writeLog(filename: String, log: String, newSection: Bool = false) {
+    private static func writeLog(filename: String, log: String, newSection: Bool = false, appendTime: Bool = true) {
         makeLogDirectoryIfNeeded()
-        var log = "\(isAppExtension ? "[AppExtension]" : "")" + log + "...\(DateFormatter.filename.string(from: Date()))\n"
+        var log = "\(isAppExtension ? "[AppExtension]" : "")" + log
+        if appendTime {
+            log += "...\(DateFormatter.filename.string(from: Date()))"
+        }
         if newSection {
-            log += "------------------------------\n"
+            log += "\n------------------------------\n"
+        } else {
+            log += "\n"
         }
         let url = AppGroupContainer.logUrl.appendingPathComponent("\(filename).txt")
         let path = url.path

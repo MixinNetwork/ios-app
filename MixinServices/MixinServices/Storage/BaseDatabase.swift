@@ -60,6 +60,7 @@ public class BaseDatabase {
                 }
                 reporter.report(error: error)
             }
+            Logger.write(error: error)
         })
     }
     

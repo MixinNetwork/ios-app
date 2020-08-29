@@ -8,6 +8,14 @@ public enum Logger {
     private static let callLog = "call"
     private static let errorLog = "error"
 
+    public static func writeError(log: String, newSection: Bool = false) {
+        queue.async {
+            makeLogDirectoryIfNeeded()
+
+            writeLog(filename: errorLog, log: log, newSection: newSection)
+        }
+    }
+
     public static func write(error: Error, extra: String = "") {
         queue.async {
             makeLogDirectoryIfNeeded()

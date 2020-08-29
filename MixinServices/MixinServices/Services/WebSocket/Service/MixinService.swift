@@ -47,7 +47,6 @@ public class MixinService {
         var signalKeyMessages = [TransferMessage]()
         for p in participants {
             if SignalProtocol.shared.containsSession(recipient: p.userId, deviceId: SignalProtocol.convertSessionIdToDeviceId(p.sessionId)) {
-                Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey]...containsSession...\(p.userId)")
                 let (cipherText, isError) = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, recipientId: p.userId, sessionId: p.sessionId)
                 if isError {
                     requestSignalKeyUsers.append(BlazeMessageParamSession(userId: p.userId, sessionId: p.sessionId))

@@ -109,6 +109,10 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
         guard let attachmentId = message.content, !attachmentId.isEmpty else {
             return nil
         }
+        guard UUID(uuidString: attachmentId) != nil else {
+            Logger.writeError(log: "[AttachmentDownloadJob][\(message.category)][\(message.messageId)]...attachment id is not uuid...mediaUrl:\(message.mediaUrl)...mediaStatus:\(message.mediaStatus ?? "")...attachmentId:\(attachmentId)", newSection: true)
+            return nil
+        }
         guard !(jobId?.isEmpty ?? true) || message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.READ.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return nil
         }

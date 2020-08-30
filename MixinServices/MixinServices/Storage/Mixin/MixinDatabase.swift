@@ -60,7 +60,7 @@ public class MixinDatabase: BaseDatabase {
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
                 
                 if clearSentSenderKey {
-                    try database.update(maps: [(ParticipantSession.Properties.sentToServer, nil)], tableName: ParticipantSession.tableName)
+                    try database.update(maps: [(ParticipantSession.Properties.sentToServer, MixinDatabase.NullValue())], tableName: ParticipantSession.tableName)
                 }
                 try database.setDatabaseVersion(version: MixinDatabase.version)
             })

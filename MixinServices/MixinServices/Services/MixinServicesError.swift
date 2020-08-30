@@ -27,8 +27,6 @@ public enum MixinServicesError: Error {
     case websocketError(errType: String, errMessage: String, errCode: Int)
     case messageTooBig(gzipSize: Int, category: String, conversationId: String)
     case gzipFailed
-    case backgroundUpgradeDatabase
-    case requestTimeout(String)
     case emptyResponse
     case badKrakenBlazeMessage
     case missingConversationId
@@ -79,10 +77,6 @@ extension MixinServicesError: CustomNSError {
             return 17
         case .gzipFailed:
             return 18
-        case .backgroundUpgradeDatabase:
-            return 19
-        case .requestTimeout:
-            return 20
         case .emptyResponse:
             return 21
         case .badKrakenBlazeMessage:
@@ -140,8 +134,6 @@ extension MixinServicesError: CustomNSError {
             userInfo["conversationId"] = conversationId
             userInfo["category"] = category
             userInfo["size"] = "\(gzipSize / 1024)kb"
-        case let .requestTimeout(category):
-            return ["category": category]
         default:
             userInfo = [:]
         }

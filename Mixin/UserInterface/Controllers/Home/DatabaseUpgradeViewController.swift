@@ -27,7 +27,6 @@ class DatabaseUpgradeViewController: UIViewController {
     private func upgrade() {
         Logger.write(log: "DatabaseUpgradeViewController...applicationState:\(UIApplication.shared.applicationStateString)")
         guard UIApplication.shared.applicationState == .active else {
-            reporter.report(error: MixinServicesError.backgroundUpgradeDatabase)
             return
         }
         guard !isUpgrade else {

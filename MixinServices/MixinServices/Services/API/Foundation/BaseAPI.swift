@@ -160,7 +160,6 @@ extension BaseAPI {
                 })
 
             if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= Double(requestTimeout) {
-                reporter.reportErrorToFirebase(MixinServicesError.requestTimeout("http"))
                 Logger.write(log: "[BaseAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(url)")
                 result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
             }

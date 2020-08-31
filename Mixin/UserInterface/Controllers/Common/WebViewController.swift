@@ -14,6 +14,10 @@ class WebViewController: UIViewController {
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var pageControlView: PageControlView!
     @IBOutlet weak var suspicionView: UIView!
+    @IBOutlet weak var loadFailView: UIView!
+    @IBOutlet weak var contactDeveloperButton: UIButton!
+    @IBOutlet weak var loadFailLabel: UILabel!
+
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
@@ -72,6 +76,14 @@ class WebViewController: UIViewController {
     @IBAction func continueAction(_ sender: Any) {
         
     }
+
+    @IBAction func reloadAction(_ sender: Any) {
+
+    }
+
+    @IBAction func contactDeveloperAction(_ sender: Any) {
+    }
+    
     
     @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
         switch recognizer.state {
@@ -147,7 +159,7 @@ class WebViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    private func dismiss() {
+    func dismiss() {
         if let parent = parent {
             isBeingDismissedAsChild = true
             parent.setNeedsStatusBarAppearanceUpdate()

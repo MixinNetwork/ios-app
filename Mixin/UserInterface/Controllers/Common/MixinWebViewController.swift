@@ -65,6 +65,56 @@ class MixinWebViewController: WebViewController {
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        loadWebView()
+    }
+
+    private func loadNormalUrl() {
+        webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
+            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
+                return
+            }
+            self?.titleLabel.text = webView.title
+        })
+        webView.load(URLRequest(url: context.initialUrl))
+    }
+
+    private func loadAppUrl(title: String, iconUrl: URL?) {
+        titleLabel.text = title
+        if let iconUrl = iconUrl {
+            titleImageView.isHidden = false
+            titleImageView.sd_setImage(with: iconUrl, completed: nil)
+        }
+        webView.load(URLRequest(url: context.initialUrl))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
+    }
+
+    override func continueAction(_ sender: Any) {
+        suspicionView.isHidden = true
+        loadNormalUrl()
+    }
+
+    override func reloadAction(_ sender: Any) {
+        reloadWebView()
+    }
+
+    private func reloadWebView() {
+        loadFailView.isHidden = true
+        if let currentUrl = webView.url {
+            let request = URLRequest(url: currentUrl,
+                                     cachePolicy: .reloadIgnoringLocalCacheData,
+                                     timeoutInterval: 10)
+            self.webView.load(request)
+        } else {
+            loadWebView()
+        }
+    }
+
+    private func loadWebView() {
         switch context.style {
         case .webPage:
             loadNormalUrl()
@@ -99,34 +149,51 @@ class MixinWebViewController: WebViewController {
         }
     }
 
-    private func loadNormalUrl() {
-        webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
-            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
+    override func contactDeveloperAction(_ sender: Any) {
+        guard case let .app(appId, _, _, _) = context.style else {
+            return
+        }
+
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async { [weak self] in
+            guard let developerUserId = Self.syncUser(userId: appId, hud: hud)?.appCreatorId else {
                 return
             }
-            self?.titleLabel.text = webView.title
-        })
-        webView.load(URLRequest(url: context.initialUrl))
-    }
-
-    private func loadAppUrl(title: String, iconUrl: URL?) {
-        titleLabel.text = title
-        if let iconUrl = iconUrl {
-            titleImageView.isHidden = false
-            titleImageView.sd_setImage(with: iconUrl, completed: nil)
+            guard let developUser = Self.syncUser(userId: developerUserId, hud: hud) else {
+               return
+            }
+            DispatchQueue.main.async {
+                hud.hide()
+                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    self?.dismiss()
+                }
+            }
         }
-        webView.load(URLRequest(url: context.initialUrl))
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
     }
 
-    override func continueAction(_ sender: Any) {
-        suspicionView.isHidden = true
-        loadNormalUrl()
+    private static func syncUser(userId: String, hud: Hud) -> UserItem? {
+        if let user = UserDAO.shared.getUser(userId: userId) {
+            return user
+        } else {
+            switch UserAPI.shared.showUser(userId: userId) {
+            case let .success(userItem):
+                let user = UserItem.createUser(from: userItem)
+                UserDAO.shared.updateUsers(users: [userItem])
+                return user
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    if error.code == 404 {
+                        hud.set(style: .error, text: R.string.localizable.user_not_found())
+                    } else {
+                        hud.set(style: .error, text: error.localizedDescription)
+                    }
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
     }
     
     override func moreAction(_ sender: Any) {
@@ -144,10 +211,7 @@ class MixinWebViewController: WebViewController {
             }))
             
             controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                let request = URLRequest(url: currentUrl,
-                                         cachePolicy: .reloadIgnoringLocalCacheData,
-                                         timeoutInterval: 10)
-                self.webView.load(request)
+                self.reloadWebView()
             }))
         case .webPage:
             controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
@@ -157,10 +221,7 @@ class MixinWebViewController: WebViewController {
                 self.copyAction(currentUrl: currentUrl)
             }))
             controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                let request = URLRequest(url: currentUrl,
-                                         cachePolicy: .reloadIgnoringLocalCacheData,
-                                         timeoutInterval: 10)
-                self.webView.load(request)
+                self.reloadWebView()
             }))
             controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
                 UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
@@ -214,7 +275,24 @@ extension MixinWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         reloadTheme(webView: webView)
     }
-    
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        guard let failURL = (error as NSError).userInfo["NSErrorFailingURLKey"] as? URL, let host = failURL.host else {
+            return
+        }
+        switch error.errorCode {
+        case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorInternationalRoamingOff, NSURLErrorDataNotAllowed, NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost, NSURLErrorNetworkConnectionLost:
+            loadFailView.isHidden = false
+            loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
+            if case .app = context.style {
+                contactDeveloperButton.isHidden = false
+            } else {
+                contactDeveloperButton.isHidden = true
+            }
+        default:
+            break
+        }
+    }
 }
 
 extension MixinWebViewController: WKUIDelegate {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,8 +11,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WebViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="contactDeveloperButton" destination="jrV-x8-8df" id="xMA-E0-2vw"/>
                 <outlet property="contentView" destination="qfE-71-gkL" id="erb-sW-bho"/>
                 <outlet property="edgePanGestureRecognizer" destination="jJd-09-I6d" id="WyK-4B-JlT"/>
+                <outlet property="loadFailLabel" destination="BWi-j4-CXd" id="5h9-7C-HDx"/>
+                <outlet property="loadFailView" destination="HJD-vA-d0u" id="xkg-Vw-fGY"/>
                 <outlet property="pageControlView" destination="qgI-3r-2Us" id="Bo1-rR-aAL"/>
                 <outlet property="showPageTitleConstraint" destination="FOH-4r-I3H" id="xNX-p3-ijo"/>
                 <outlet property="statusBarBackgroundView" destination="PwQ-Xy-eeX" id="RV7-pT-ySK"/>
@@ -79,14 +82,14 @@
                                 <outletCollection property="gestureRecognizers" destination="rvV-eC-CSv" appends="YES" id="sq8-AK-NVe"/>
                             </connections>
                         </view>
-                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-BD-TfW">
+                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-BD-TfW" userLabel="Suspicious Link">
                             <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_suspicious" translatesAutoresizingMaskIntoConstraints="NO" id="38B-Yw-vhu">
-                                    <rect key="frame" x="141" y="178" width="132" height="132"/>
+                                    <rect key="frame" x="174" y="178" width="66" height="66"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Suspicious Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6iO-Dv-EXI">
-                                    <rect key="frame" x="141" y="342" width="132" height="21.5"/>
+                                    <rect key="frame" x="141" y="276" width="132" height="21.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
@@ -96,7 +99,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="The link is not in the corresponding resource patterns." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8x-vt-eak">
-                                    <rect key="frame" x="36" y="379.5" width="342" height="38"/>
+                                    <rect key="frame" x="36" y="313.5" width="342" height="38"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="text_accessory"/>
                                     <nil key="highlightedColor"/>
@@ -105,7 +108,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EW9-JN-Uuf" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="135.5" y="663" width="143" height="42"/>
+                                    <rect key="frame" x="135.5" y="662" width="143" height="42"/>
                                     <constraints>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="Of0-Sg-Y2v"/>
                                     </constraints>
@@ -121,8 +124,8 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYI-Oc-tGO">
-                                    <rect key="frame" x="124" y="737" width="166" height="41"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <rect key="frame" x="120" y="736" width="174" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                     <state key="normal" title="Continue Open URL">
                                         <color key="titleColor" name="theme"/>
@@ -130,7 +133,6 @@
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_continue"/>
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="wYb-3Z-MvC"/>
@@ -152,6 +154,78 @@
                                 <constraint firstAttribute="trailing" secondItem="i8x-vt-eak" secondAttribute="trailing" constant="36" id="skm-H5-Dzm"/>
                             </constraints>
                         </view>
+                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJD-vA-d0u" userLabel="Timeout">
+                            <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_web_load_fail" translatesAutoresizingMaskIntoConstraints="NO" id="lgh-Ef-vxG">
+                                    <rect key="frame" x="171" y="178" width="72" height="72"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="This webpage can't be reached" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cFw-Jd-8Sj">
+                                    <rect key="frame" x="76" y="282" width="262.5" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <color key="textColor" name="title"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_cannot_reached_title"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="mixin.one took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWi-j4-CXd">
+                                    <rect key="frame" x="36" y="319.5" width="342" height="58"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <color key="textColor" name="text_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_cannot_reached_desc"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bg3-fY-q44" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="149" y="662" width="116" height="42"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="mRY-f4-j1O"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                                    <state key="normal" title="Reload"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_reload"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="reloadAction:" destination="-1" eventType="touchUpInside" id="IMc-h9-etT"/>
+                                    </connections>
+                                </button>
+                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jrV-x8-8df">
+                                    <rect key="frame" x="123.5" y="736" width="167" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                                    <state key="normal" title="Contact Developer">
+                                        <color key="titleColor" name="theme"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_contact_developer"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="contactDeveloperAction:" destination="-1" eventType="touchUpInside" id="rlP-Y0-eli"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" name="background"/>
+                            <constraints>
+                                <constraint firstItem="BWi-j4-CXd" firstAttribute="leading" secondItem="HJD-vA-d0u" secondAttribute="leading" constant="36" id="1R9-Iz-VPe"/>
+                                <constraint firstItem="bg3-fY-q44" firstAttribute="centerX" secondItem="HJD-vA-d0u" secondAttribute="centerX" id="40O-Eq-r9L"/>
+                                <constraint firstAttribute="bottom" secondItem="jrV-x8-8df" secondAttribute="bottom" constant="40" id="7g7-sa-2ig"/>
+                                <constraint firstItem="jrV-x8-8df" firstAttribute="top" secondItem="bg3-fY-q44" secondAttribute="bottom" constant="32" id="8zK-bt-dGr"/>
+                                <constraint firstItem="lgh-Ef-vxG" firstAttribute="top" secondItem="HJD-vA-d0u" secondAttribute="top" constant="178" id="D8N-y8-deK"/>
+                                <constraint firstItem="lgh-Ef-vxG" firstAttribute="centerX" secondItem="HJD-vA-d0u" secondAttribute="centerX" id="MZ8-WX-dmj"/>
+                                <constraint firstItem="jrV-x8-8df" firstAttribute="centerX" secondItem="HJD-vA-d0u" secondAttribute="centerX" id="SWy-Yl-HOA"/>
+                                <constraint firstAttribute="trailing" secondItem="BWi-j4-CXd" secondAttribute="trailing" constant="36" id="Wlg-pp-GBb"/>
+                                <constraint firstItem="BWi-j4-CXd" firstAttribute="top" secondItem="cFw-Jd-8Sj" secondAttribute="bottom" constant="16" id="eHg-wq-d2S"/>
+                                <constraint firstItem="cFw-Jd-8Sj" firstAttribute="centerX" secondItem="HJD-vA-d0u" secondAttribute="centerX" id="eTV-FD-U5c"/>
+                                <constraint firstItem="cFw-Jd-8Sj" firstAttribute="top" secondItem="lgh-Ef-vxG" secondAttribute="bottom" constant="32" id="isW-eV-5gJ"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qgI-3r-2Us" customClass="PageControlView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="316" y="44" width="88" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -166,8 +240,10 @@
                         <constraint firstItem="PwQ-Xy-eeX" firstAttribute="top" secondItem="qfE-71-gkL" secondAttribute="top" id="3UX-d7-C2r"/>
                         <constraint firstItem="Sgc-x5-ePK" firstAttribute="top" secondItem="3hf-le-hfu" secondAttribute="bottom" priority="750" id="FOH-4r-I3H"/>
                         <constraint firstItem="PwQ-Xy-eeX" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="JHq-Mw-ffQ"/>
+                        <constraint firstItem="HJD-vA-d0u" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="NQK-a6-RRN"/>
                         <constraint firstAttribute="trailing" secondItem="PwQ-Xy-eeX" secondAttribute="trailing" id="OnM-FR-N8V"/>
                         <constraint firstItem="3hf-le-hfu" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="PuO-mc-tRh"/>
+                        <constraint firstAttribute="trailing" secondItem="HJD-vA-d0u" secondAttribute="trailing" id="TLi-i6-iGP"/>
                         <constraint firstAttribute="trailing" secondItem="LRm-BD-TfW" secondAttribute="trailing" id="W37-Fa-bGl"/>
                         <constraint firstAttribute="bottom" secondItem="Sgc-x5-ePK" secondAttribute="bottom" id="aFw-mJ-ebA"/>
                         <constraint firstItem="LRm-BD-TfW" firstAttribute="leading" secondItem="qfE-71-gkL" secondAttribute="leading" id="aig-I8-t4p"/>
@@ -186,10 +262,12 @@
                 <constraint firstItem="qfE-71-gkL" firstAttribute="top" secondItem="aTq-9R-NxD" secondAttribute="top" id="4Oe-NX-hN6"/>
                 <constraint firstItem="qgI-3r-2Us" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" id="9Yh-4c-qu9"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="bottom" secondItem="LRm-BD-TfW" secondAttribute="bottom" id="JE6-bq-uF1"/>
+                <constraint firstItem="cqB-gA-yky" firstAttribute="top" secondItem="HJD-vA-d0u" secondAttribute="top" id="LEu-hf-p4F"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="trailing" secondItem="qgI-3r-2Us" secondAttribute="trailing" constant="10" id="MqL-uW-xwL"/>
                 <constraint firstAttribute="bottom" secondItem="qfE-71-gkL" secondAttribute="bottom" id="Th2-7B-F67"/>
                 <constraint firstItem="qfE-71-gkL" firstAttribute="leading" secondItem="aTq-9R-NxD" secondAttribute="leading" id="d2o-o1-uOv"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="top" secondItem="PwQ-Xy-eeX" secondAttribute="bottom" id="i2x-Ge-5cU"/>
+                <constraint firstItem="HJD-vA-d0u" firstAttribute="bottom" secondItem="cqB-gA-yky" secondAttribute="bottom" id="lB4-Ge-3qG"/>
                 <constraint firstAttribute="trailing" secondItem="qfE-71-gkL" secondAttribute="trailing" id="nNy-Fh-qVy"/>
                 <constraint firstItem="LRm-BD-TfW" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" id="odN-fp-mqW"/>
             </constraints>
@@ -213,6 +291,7 @@
     </objects>
     <resources>
         <image name="ic_suspicious" width="66" height="66"/>
+        <image name="ic_web_load_fail" width="72" height="72"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

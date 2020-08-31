@@ -37,6 +37,7 @@
 "action_share" = "共有";
 "action_share_to" = "共有する";
 "action_copy" = "コピー";
+"action_reload" = "Reload";
 "action_authorize" = "許可する";
 "action_revoke" = "許可しない";
 "action_delete_me" = "あなたを削除";
@@ -333,6 +334,9 @@
 "web_suspicious_link_tips" = "リンクの信憑性は証明されていません";
 "web_suspicious_back" = "チャットに戻る";
 "web_suspicious_continue" = "リンクを開く";
+"web_cannot_reached_title" = "This webpage can't be reached";
+"web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
+"web_contact_developer" = "Contact Developer";
 
 // Call
 "call_encryption" = "End-to-end Encrypted";

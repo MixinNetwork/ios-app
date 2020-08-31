@@ -37,6 +37,7 @@
 "action_filter" = "筛选";
 "action_skip" = "跳过";
 "action_copy" = "复制";
+"action_reload" = "重新载入";
 "action_authorize" = "授权";
 "action_revoke" = "取消授权";
 "action_delete_me" = "删除";
@@ -333,6 +334,9 @@
 "web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
 "web_suspicious_back" = "返回聊天";
 "web_suspicious_continue" = "继续访问";
+"web_cannot_reached_title" = "无法访问此网页";
+"web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
+"web_contact_developer" = "联系开发者";
 
 // Call
 "call_encryption" = "端对端加密";

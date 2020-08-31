@@ -37,6 +37,7 @@
 "action_share" = "Share";
 "action_share_to" = "Share To";
 "action_copy" = "Copy";
+"action_reload" = "Reload";
 "action_authorize" = "Authorize";
 "action_revoke" = "Revoke access";
 "action_delete_me" = "Delete for Me";
@@ -333,6 +334,9 @@
 "web_suspicious_link_tips" = "The link is not in the corresponding resource patterns.";
 "web_suspicious_back" = "Back To Chat";
 "web_suspicious_continue" = "Continue Open URL";
+"web_cannot_reached_title" = "This webpage can't be reached";
+"web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
+"web_contact_developer" = "Contact Developer";
 
 // Call
 "call_encryption" = "End-to-end Encrypted";

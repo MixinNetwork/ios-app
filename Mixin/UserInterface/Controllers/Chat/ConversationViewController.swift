@@ -944,6 +944,7 @@ class ConversationViewController: UIViewController {
         let handleHeight: CGFloat
         if isUserHandleHidden {
             handleHeight = 0
+            userHandleViewController.tableHeaderPlaceholderHeight = 0
         } else {
             var maxHeight = userHandleWrapperView.frame.height
                 - announcementBadgeContentView.minHeightConstraint.constant
@@ -951,12 +952,16 @@ class ConversationViewController: UIViewController {
                 || mentionWrapperView.alpha == 1
                 || !announcementBadgeView.subviews.isEmpty
             if shouldCalculateAccessoryButtonsHeight {
-                maxHeight -= accessoryButtonsWrapperView.frame.height
-                maxHeight -= accessoryButtonsWrapperBottomConstraint.constant
-                maxHeight -= accessoryButtonsWrapperTopConstraint.constant
+                let height = accessoryButtonsWrapperView.frame.height
+                    + accessoryButtonsWrapperBottomConstraint.constant
+                    + accessoryButtonsWrapperTopConstraint.constant
+                maxHeight -= height
+                userHandleViewController.tableHeaderPlaceholderHeight = height
+            } else {
+                userHandleViewController.tableHeaderPlaceholderHeight = 0
             }
             let height = userHandleWrapperView.bounds.height
-                - userHandleViewController.tableHeaderView.frame.height
+                - userHandleViewController.tableHeaderHeight
                 + UserHandleTableHeaderView.decorationHeight
                 + userHandleViewController.tableView.contentOffset.y
             handleHeight = min(maxHeight, height)
@@ -1668,6 +1673,7 @@ extension ConversationViewController {
                 UIView.setAnimationDuration(animationDuration)
             }
             scrollToBottomWrapperView.alpha = 1
+            updateOverlays()
             if animated {
                 view.layoutIfNeeded()
                 updateOverlays()
@@ -1680,6 +1686,7 @@ extension ConversationViewController {
                 UIView.setAnimationDuration(animationDuration)
             }
             scrollToBottomWrapperView.alpha = 0
+            updateOverlays()
             if animated {
                 view.layoutIfNeeded()
                 updateOverlays()

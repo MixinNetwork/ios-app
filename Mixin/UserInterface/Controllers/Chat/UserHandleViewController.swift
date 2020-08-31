@@ -9,6 +9,8 @@ class UserHandleViewController: UITableViewController {
         let identityNumberKeywordRange: NSRange?
     }
     
+    var tableHeaderPlaceholderHeight: CGFloat = 0
+    
     var users = [UserItem]() {
         didSet {
             guard let keyword = keyword else {
@@ -18,19 +20,23 @@ class UserHandleViewController: UITableViewController {
         }
     }
     
-    private(set) lazy var tableHeaderView: UserHandleTableHeaderView = {
-        let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 100)
-        let view = UserHandleTableHeaderView(frame: frame)
-        view.backgroundColor = .clear
-        view.clipsToBounds = true
-        return view
-    }()
+    var tableHeaderHeight: CGFloat {
+        tableHeaderView.frame.height
+    }
     
     private var searchResults = [SearchResult]()
     private var keyword: String?
     private var onScrollingAnimationEnd: (() -> ())?
     
     private weak var conversationViewController: ConversationViewController?
+    
+    private lazy var tableHeaderView: UserHandleTableHeaderView = {
+        let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 100)
+        let view = UserHandleTableHeaderView(frame: frame)
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        return view
+    }()
     
     private lazy var tableFooterView: UIView = {
         let frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 7)
@@ -58,7 +64,9 @@ class UserHandleViewController: UITableViewController {
         super.viewWillLayoutSubviews()
         let contentHeight = min(CGFloat(searchResults.count), 3.5) * tableView.rowHeight
             + UserHandleTableHeaderView.decorationHeight
-        let tableHeaderHeight = tableView.frame.height - contentHeight
+        let tableHeaderHeight = tableView.frame.height
+            - contentHeight
+            + tableHeaderPlaceholderHeight
         if tableHeaderView.frame.height != tableHeaderHeight {
             tableHeaderView.frame.size.height = tableHeaderHeight
             tableView.tableHeaderView = tableHeaderView

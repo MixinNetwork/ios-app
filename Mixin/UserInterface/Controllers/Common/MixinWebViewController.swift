@@ -24,6 +24,7 @@ class MixinWebViewController: WebViewController {
         config.userContentController.addUserScript(Script.disableImageSelection)
         config.userContentController.add(self, name: HandlerName.mixinContext)
         config.userContentController.add(self, name: HandlerName.reloadTheme)
+        config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
     

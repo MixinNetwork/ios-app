@@ -159,7 +159,6 @@
 "init_explain" = "Messages between users are protected with an end-to-end encryption";
 "toast_recaptcha_timed_out" = "Validation timed out";
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
-"toast_update_tips" = "Please update Mixin from App Store to continue use the service.";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 
@@ -711,6 +710,11 @@
 "database_upgrade" = "Upgrade Database";
 "database_upgrade_tips" = "The database is being upgraded, please do not close this App.";
 "database_upgrade_progress" = "Upgrading";
+
+// App
+"app_update_button" = "Update";
+"app_update_title" = "Update Mixin";
+"app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 
 // Setting
 "setting_title" = "Settings";

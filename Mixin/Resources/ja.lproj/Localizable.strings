@@ -159,7 +159,6 @@
 "init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化によって守られています";
 "toast_recaptcha_timed_out" = "認証時間切れ";
 "toast_recaptcha_invalid" = "リキャプチャが間違っています";
-"toast_update_tips" = "Mixinをアップデートしてください";
 "desktop_login_confim" = "デスクトップ版Mixinメッセンジャーからログインを確認してください";
 "desktop_upgrade" = "デスクトップ版Mixinメッセンジャーを最新のバージョンにしてください";
 
@@ -711,6 +710,11 @@
 "database_upgrade" = "データベースをアップグレードする";
 "database_upgrade_tips" = "データベースがアップデートされました、このままお待ちください";
 "database_upgrade_progress" = "アップグレードを行っています...";
+
+// App
+"app_update_button" = "Update";
+"app_update_title" = "Update Mixin";
+"app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 
 // Setting
 "setting_title" = "設定";

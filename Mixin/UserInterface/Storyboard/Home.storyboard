@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -1223,7 +1223,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaM-RW-vC7" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="135.5" y="483" width="104" height="44"/>
+                                <rect key="frame" x="135.5" y="533" width="104" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                 <state key="normal" title="Continue">
@@ -1251,7 +1251,7 @@
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="Tou-53-uta" secondAttribute="trailing" constant="50" id="8sK-NH-KGs"/>
-                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="bottom" secondItem="zaM-RW-vC7" secondAttribute="bottom" constant="140" id="FhQ-05-f1g"/>
+                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="bottom" secondItem="zaM-RW-vC7" secondAttribute="bottom" constant="90" id="FhQ-05-f1g"/>
                             <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="0gh-oY-fRs" secondAttribute="trailing" constant="36" id="Mqb-DS-5Fh"/>
                             <constraint firstItem="Tou-53-uta" firstAttribute="leading" secondItem="O9K-H9-6Uy" secondAttribute="leading" constant="50" id="g59-wc-j7A"/>
                             <constraint firstItem="hmp-73-im2" firstAttribute="centerX" secondItem="O9K-H9-6Uy" secondAttribute="centerX" id="jd2-8R-2VL"/>
@@ -1280,6 +1280,85 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xxp-dS-d33" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="526" y="462"/>
+        </scene>
+        <!--Update View Controller-->
+        <scene sceneID="EGI-SV-HwK">
+            <objects>
+                <viewController storyboardIdentifier="update" id="g58-Lj-4dl" customClass="UpdateViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oy5-iG-C3N">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="Xfh-Bz-oig">
+                                <rect key="frame" x="147.5" y="94" width="80" height="80"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Update Mixin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YLu-Dq-yzN">
+                                <rect key="frame" x="50" y="198" width="275" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" name="title"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="app_update_title"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iax-W3-8VY" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="141.5" y="533" width="92" height="44"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                                <state key="normal" title="Update">
+                                    <color key="titleColor" name="theme"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="app_update_button"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="continueAction:" destination="g58-Lj-4dl" eventType="touchUpInside" id="y10-d0-xY4"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xyZ-Q7-nXW">
+                                <rect key="frame" x="36" y="235.5" width="303" height="78"/>
+                                <string key="text">The current version (0.21.0) is no longer available! Please click "Update" below to update to the latest version from the App Store.</string>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <color key="textColor" name="text_accessory"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="app_update_tips"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="background_secondary"/>
+                        <constraints>
+                            <constraint firstItem="rsg-Ae-cWf" firstAttribute="trailing" secondItem="xyZ-Q7-nXW" secondAttribute="trailing" constant="36" id="9mk-E5-pCu"/>
+                            <constraint firstItem="Xfh-Bz-oig" firstAttribute="top" secondItem="rsg-Ae-cWf" secondAttribute="top" constant="94" id="Fwt-9R-gkP" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="YLu-Dq-yzN" firstAttribute="top" secondItem="Xfh-Bz-oig" secondAttribute="bottom" constant="24" id="SZQ-gf-g9n"/>
+                            <constraint firstItem="YLu-Dq-yzN" firstAttribute="leading" secondItem="rsg-Ae-cWf" secondAttribute="leading" constant="50" id="Yof-Jr-Jxh"/>
+                            <constraint firstItem="rsg-Ae-cWf" firstAttribute="bottom" secondItem="Iax-W3-8VY" secondAttribute="bottom" constant="90" id="b1p-Cq-1Mv"/>
+                            <constraint firstItem="Xfh-Bz-oig" firstAttribute="centerX" secondItem="rsg-Ae-cWf" secondAttribute="centerX" id="erX-YM-bIv"/>
+                            <constraint firstItem="xyZ-Q7-nXW" firstAttribute="top" secondItem="YLu-Dq-yzN" secondAttribute="bottom" constant="16" id="mmH-y4-AbP"/>
+                            <constraint firstItem="rsg-Ae-cWf" firstAttribute="trailing" secondItem="YLu-Dq-yzN" secondAttribute="trailing" constant="50" id="o4f-Bu-oAN"/>
+                            <constraint firstItem="Iax-W3-8VY" firstAttribute="centerX" secondItem="rsg-Ae-cWf" secondAttribute="centerX" id="qrT-pC-IbO"/>
+                            <constraint firstItem="xyZ-Q7-nXW" firstAttribute="leading" secondItem="rsg-Ae-cWf" secondAttribute="leading" constant="36" id="uH0-b9-kw5"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="rsg-Ae-cWf"/>
+                    </view>
+                    <connections>
+                        <outlet property="tipsLabel" destination="xyZ-Q7-nXW" id="sf4-rH-4bB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fEz-VB-9wV" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="529" y="1199"/>
         </scene>
         <!--Restore View Controller-->
         <scene sceneID="hQT-bq-Xq1">
@@ -1356,7 +1435,7 @@ chat history from icloud</string>
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UlL-mJ-MXf">
-                                <rect key="frame" x="20" y="483" width="335" height="44"/>
+                                <rect key="frame" x="20" y="533" width="335" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="120.5" y="0.0" width="94" height="44"/>
@@ -1396,7 +1475,7 @@ chat history from icloud</string>
                             <constraint firstAttribute="trailing" secondItem="pVY-uP-Bar" secondAttribute="trailing" constant="36" id="g2G-aW-r5T"/>
                             <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
                             <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" priority="250" constant="140" id="sSb-oW-edw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" priority="250" constant="90" id="sSb-oW-edw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                         <real key="value" value="60"/>
@@ -1562,10 +1641,10 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

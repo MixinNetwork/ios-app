@@ -519,13 +519,11 @@ extension HomeViewController {
         guard !WebSocketService.shared.isConnected else {
             return
         }
-        AccountAPI.shared.me { [weak self](result) in
-            guard let weakSelf = self else {
+        AccountAPI.shared.me { (result) in
+            guard case let .failure(error) = result, error.code == 10006 else {
                 return
             }
-            if case let .failure(error) = result, error.code == 10006 {
-                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
-            }
+            AppDelegate.current.mainWindow.rootViewController = UpdateViewController.instance()
         }
     }
     

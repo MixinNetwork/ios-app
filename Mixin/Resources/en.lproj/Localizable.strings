@@ -517,7 +517,7 @@
 "transactions_filter_sort_by_amount" = "Amount";
 "transactions_filter_filter_by" = "Filter by";
 "transactions_filter_filter_by_all" = "All";
-"pending_deposit_confirmation" = "%@ confirmations";
+"pending_deposit_confirmation" = "%@ Confirmations";
 "pending_deposit_hint" = "Pending";
 "wallet_asset_symbol" = "Symbol";
 "wallet_asset_chain" = "Chain";
@@ -539,7 +539,8 @@
 "transaction_date" = "Date";
 "transaction_sender" = "Sender";
 "transaction_receiver" = "Receiver";
-"transaction_transaction_hash" = "Transaction Hash";
+"transaction_hash" = "Transaction Hash";
+"transaction_status" = "Status";
 "transaction_type_deposit" = "Deposit";
 "transaction_type_transfer" = "Transfer";
 "transaction_type_withdrawal" = "Withdrawal";

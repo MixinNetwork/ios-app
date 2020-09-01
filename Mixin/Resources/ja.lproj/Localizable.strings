@@ -539,7 +539,8 @@
 "transaction_date" = "日付";
 "transaction_sender" = "送金者";
 "transaction_receiver" = "受取者";
-"transaction_transaction_hash" = "トランザクションハッシュ";
+"transaction_hash" = "トランザクションハッシュ";
+"transaction_status" = "Status";
 "transaction_type_deposit" = "入金";
 "transaction_type_transfer" = "送金";
 "transaction_type_withdrawal" = "出金";

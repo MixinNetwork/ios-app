@@ -159,10 +159,8 @@ extension AssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        if snapshot.type != SnapshotType.pendingDeposit.rawValue {
-            let vc = TransactionViewController.instance(asset: asset, snapshot: snapshot)
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        let vc = TransactionViewController.instance(asset: asset, snapshot: snapshot)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

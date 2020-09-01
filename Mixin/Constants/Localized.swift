@@ -416,7 +416,6 @@ public class Localized {
     public static let TRANSACTION_DATE = LocalizedString("transaction_date", comment: "Date")
     public static let TRANSACTION_SENDER = LocalizedString("transaction_sender", comment: "Sender")
     public static let TRANSACTION_RECEIVER = LocalizedString("transaction_receiver", comment: "Receiver")
-    public static let TRANSACTION_TRANSACTION_HASH = LocalizedString("transaction_transaction_hash", comment: "Transaction Hash")
     public static let TRANSACTION_TYPE_DEPOSIT = LocalizedString("transaction_type_deposit", comment: "Deposit")
     public static let TRANSACTION_TYPE_TRANSFER = LocalizedString("transaction_type_transfer", comment: "Tansfer")
     public static let TRANSACTION_TYPE_WITHDRAWAL = LocalizedString("transaction_type_withdrawal", comment: "Withdrawal")

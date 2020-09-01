@@ -16,6 +16,7 @@ class HiddenAssetViewController: UIViewController {
             weakSelf.assets.remove(at: indexPath.row)
             weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
             AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
+            NotificationCenter.default.postOnMain(name: .AssetVisibleDidChange)
         })
         action.backgroundColor = .theme
         return action

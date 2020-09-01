@@ -39,4 +39,5 @@ Mixin Core Services.
   s.dependency 'WCDB.swift'
   s.dependency 'SwiftyMarkdown'
   s.dependency 'lottie-ios'
+  s.dependency 'MixinCrypto'
 end

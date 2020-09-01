@@ -119,7 +119,6 @@ public enum Logger {
             #if DEBUG
             print("======FileManagerExtension...writeLog...error:\(error)")
             #endif
-            reporter.report(error: error)
         }
     }
     

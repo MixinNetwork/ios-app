@@ -709,7 +709,7 @@ extension HomeViewController {
                     }
                 case let .failure(error):
                     switch error {
-                    case .forbidden, .endpointNotFound:
+                    case .forbidden, .notFound:
                         hud.hide()
                         self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
                         DispatchQueue.global().async {

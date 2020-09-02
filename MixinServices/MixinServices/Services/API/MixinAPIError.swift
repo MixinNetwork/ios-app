@@ -13,7 +13,7 @@ public enum MixinAPIError: Error {
     case invalidRequestBody
     case unauthorized
     case forbidden
-    case endpointNotFound
+    case notFound
     case tooManyRequests
     
     case internalServerError
@@ -77,7 +77,7 @@ extension MixinAPIError {
         case (202, 403):
             self = .forbidden
         case (202, 404):
-            self = .endpointNotFound
+            self = .notFound
         case (202, 429):
             self = .tooManyRequests
             

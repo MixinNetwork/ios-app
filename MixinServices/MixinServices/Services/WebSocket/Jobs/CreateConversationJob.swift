@@ -27,7 +27,7 @@ public class CreateConversationJob: BaseJob {
                 CircleConversationDAO.shared.update(conversation: response)
             case let .failure(error):
                 switch error {
-                case .forbidden, .endpointNotFound:
+                case .forbidden, .notFound:
                     ConversationDAO.shared.exitGroup(conversationId: conversationId)
                 default:
                     throw error

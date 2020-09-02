@@ -37,7 +37,7 @@ extension MixinAPIError {
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .forbidden:
             return R.string.localizable.toast_api_error_forbidden()
-        case .endpointNotFound:
+        case .notFound:
             return Localized.TOAST_API_ERROR_NOT_FOUND
         case .tooManyRequests:
             return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
@@ -132,7 +132,7 @@ extension MixinAPIError {
     
     func localizedDescription(overridingNotFoundDescriptionWith notFoundDescription: String) -> String {
         switch self {
-        case .endpointNotFound:
+        case .notFound:
             return notFoundDescription
         default:
             return localizedDescription

@@ -191,7 +191,7 @@ extension GroupProfileViewController {
                     exitSuccessBlock()
                 case let .failure(error):
                     switch error {
-                    case .forbidden, .endpointNotFound:
+                    case .forbidden, .notFound:
                         exitSuccessBlock()
                     default:
                         hud.set(style: .error, text: error.localizedDescription)

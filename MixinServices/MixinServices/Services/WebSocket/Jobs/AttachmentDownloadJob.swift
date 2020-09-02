@@ -80,7 +80,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                     return false
                 }
                 return true
-            case .failure(.endpointNotFound):
+            case .failure(.notFound):
                 downloadExpired()
                 removeJob()
                 finishJob()

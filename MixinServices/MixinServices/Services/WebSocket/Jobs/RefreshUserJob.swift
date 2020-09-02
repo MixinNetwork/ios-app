@@ -29,7 +29,7 @@ public class RefreshUserJob: BaseJob {
             switch UserSessionAPI.showUser(userId: userId) {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
-            case .failure(.endpointNotFound):
+            case .failure(.notFound):
                 processNotFoundUser(userId: userId)
             case let .failure(error):
                 throw error

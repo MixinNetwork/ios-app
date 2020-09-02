@@ -678,7 +678,7 @@ public class ReceiveMessageService: MixinService {
                         StickerPrefetcher.prefetch(stickers: [sticker])
                     }
                     return transferStickerData
-                case .failure(.endpointNotFound):
+                case .failure(.notFound):
                     return nil
                 case let .failure(error):
                     checkNetworkAndWebSocket()
@@ -750,7 +750,7 @@ public class ReceiveMessageService: MixinService {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
-        case .failure(.endpointNotFound):
+        case .failure(.notFound):
             return .ERROR
         case .failure:
             if tryAgain {
@@ -773,7 +773,7 @@ public class ReceiveMessageService: MixinService {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true
-            case .failure(.endpointNotFound):
+            case .failure(.notFound):
                 return false
             case .failure:
                 checkNetworkAndWebSocket()

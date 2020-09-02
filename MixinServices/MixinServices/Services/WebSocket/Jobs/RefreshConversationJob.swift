@@ -31,7 +31,7 @@ public class RefreshConversationJob: BaseJob {
             }
         case let .failure(error):
             switch error {
-            case .forbidden, .endpointNotFound:
+            case .forbidden, .notFound:
                 ConversationDAO.shared.exitGroup(conversationId: conversationId)
             default:
                 throw error

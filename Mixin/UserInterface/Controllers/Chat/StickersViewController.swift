@@ -35,7 +35,7 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerPreviewCell
         let sticker = stickers[indexPath.row]
-        cell.load(sticker: sticker)
+        cell.stickerView.load(sticker: sticker)
         return cell
     }
     

@@ -64,10 +64,10 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerPreviewCell
         if indexPath.row == 0 {
-            cell.load(image: R.image.ic_giphy_search(), contentMode: .center)
+            cell.stickerView.load(image: R.image.ic_giphy_search(), contentMode: .center)
         } else {
             let url = images[indexPath.row - 1].previewUrl
-            cell.load(imageURL: url, contentMode: .scaleAspectFill)
+            cell.stickerView.load(imageURL: url, contentMode: .scaleAspectFill)
         }
         return cell
     }

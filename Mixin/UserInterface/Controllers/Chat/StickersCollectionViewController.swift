@@ -26,9 +26,9 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
         didSet {
             for case let cell as StickerPreviewCell in collectionView.visibleCells {
                 if animated {
-                    cell.startAnimating()
+                    cell.stickerView.startAnimating()
                 } else {
-                    cell.stopAnimating()
+                    cell.stickerView.stopAnimating()
                 }
             }
         }
@@ -77,7 +77,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
             return
         }
         if animated {
-            cell.startAnimating()
+            cell.stickerView.startAnimating()
         }
     }
     
@@ -85,7 +85,7 @@ extension StickersCollectionViewController: UICollectionViewDelegate {
         guard let cell = cell as? StickerPreviewCell else {
             return
         }
-        cell.stopAnimating()
+        cell.stickerView.stopAnimating()
     }
     
 }

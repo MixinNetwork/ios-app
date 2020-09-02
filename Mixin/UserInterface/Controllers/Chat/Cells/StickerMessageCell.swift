@@ -11,8 +11,7 @@ class StickerMessageCell: DetailInfoMessageCell {
     private static let defaultOverlapImage = UIColor.black.image
     
     let imageWrapperView = UIView()
-    let contentImageView = YYAnimatedImageView()
-    let lottieAnimationView = LOTAnimationView()
+    let stickerView = AnimatedStickerView()
     
     lazy var selectedOverlapImageView: UIImageView = {
         let imageView = UIImageView()
@@ -30,40 +29,19 @@ class StickerMessageCell: DetailInfoMessageCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.sd_cancelCurrentImageLoad()
-        contentImageView.image = nil
-        lottieAnimationDownloadToken?.cancel()
-        lottieAnimationView.sceneModel = nil
+        stickerView.prepareForReuse()
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? StickerMessageViewModel {
             imageWrapperView.frame = viewModel.contentFrame
-            if let assetUrl = viewModel.message.assetUrl, let url = URL(string: assetUrl) {
-                if viewModel.message.assetTypeIsJSON {
-                    lottieAnimationView.isHidden = false
-                    contentImageView.isHidden = true
-                    lottieAnimationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
-                        guard let self = self else {
-                            return
-                        }
-                        self.lottieAnimationView.sceneModel = composition
-                        self.lottieAnimationView.loopAnimation = true
-                        self.lottieAnimationView.play()
-                    })
-                } else {
-                    lottieAnimationView.isHidden = true
-                    contentImageView.isHidden = false
-                    let context = stickerLoadContext(category: viewModel.message.assetCategory)
-                    contentImageView.sd_setImage(with: URL(string: assetUrl), placeholderImage: nil, context: context)
-                }
-            }
+            stickerView.load(message: viewModel.message)
         }
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {
-        let overlapImage = contentImageView.image ?? Self.defaultOverlapImage
+        let overlapImage = stickerView.imageViewIfLoaded?.image ?? Self.defaultOverlapImage
         selectedOverlapImageView.image = overlapImage?.withRenderingMode(.alwaysTemplate)
         selectedOverlapImageView.frame = imageWrapperView.bounds
         let shouldHighlight = highlight && !isMultipleSelecting
@@ -77,15 +55,10 @@ class StickerMessageCell: DetailInfoMessageCell {
         imageWrapperView.clipsToBounds = true
         imageWrapperView.layer.cornerRadius = Self.contentCornerRadius
         
-        contentImageView.frame = imageWrapperView.bounds
-        contentImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentImageView.contentMode = .scaleAspectFill
-        imageWrapperView.addSubview(contentImageView)
-        
-        lottieAnimationView.frame = imageWrapperView.bounds
-        lottieAnimationView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        lottieAnimationView.contentMode = .scaleAspectFill
-        imageWrapperView.addSubview(lottieAnimationView)
+        stickerView.frame = imageWrapperView.bounds
+        stickerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        stickerView.contentMode = .scaleAspectFill
+        imageWrapperView.addSubview(stickerView)
         
         super.prepare()
         backgroundImageView.removeFromSuperview()

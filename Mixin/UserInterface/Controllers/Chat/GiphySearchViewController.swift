@@ -20,9 +20,9 @@ class GiphySearchViewController: UIViewController {
         didSet {
             for case let cell as StickerPreviewCell in collectionView.visibleCells {
                 if animated {
-                    cell.startAnimating()
+                    cell.stickerView.startAnimating()
                 } else {
-                    cell.stopAnimating()
+                    cell.stickerView.stopAnimating()
                 }
             }
         }
@@ -132,7 +132,7 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! StickerPreviewCell
         let url = images[indexPath.row].previewUrl
-        cell.load(imageURL: url, contentMode: .scaleAspectFill)
+        cell.stickerView.load(imageURL: url, contentMode: .scaleAspectFill)
         return cell
     }
     
@@ -156,7 +156,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
             return
         }
         if animated {
-            cell.startAnimating()
+            cell.stickerView.startAnimating()
         }
     }
     
@@ -164,7 +164,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
         guard let cell = cell as? StickerPreviewCell else {
             return
         }
-        cell.stopAnimating()
+        cell.stickerView.stopAnimating()
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {

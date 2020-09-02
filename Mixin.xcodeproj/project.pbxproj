@@ -115,6 +115,7 @@
 		7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936CE20C15BA00075A97A /* MixinKeys.swift */; };
 		7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */; };
 		7B396F0224597FD800C4B436 /* UserHandleWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */; };
+		7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */; };
 		7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */; };
 		7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */; };
 		7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FD4EB241965AA00B58006 /* LocationViewController.swift */; };
@@ -963,6 +964,7 @@
 		7B3936CE20C15BA00075A97A /* MixinKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinKeys.swift; sourceTree = "<group>"; };
 		7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaViewController.swift; sourceTree = "<group>"; };
 		7B396F0124597FD800C4B436 /* UserHandleWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleWrapperView.swift; sourceTree = "<group>"; };
+		7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedStickerView.swift; sourceTree = "<group>"; };
 		7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAnnouncementViewController.swift; sourceTree = "<group>"; };
 		7B3FD4E924192D0C00B58006 /* RenderingModeSwitchableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderingModeSwitchableImageView.swift; sourceTree = "<group>"; };
 		7B3FD4EB241965AA00B58006 /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -2785,6 +2787,7 @@
 				7B70D8502457F4EC00E01239 /* AnnouncementBadgeContentView.swift */,
 				7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */,
 				7BFD375524936763006D758F /* GroupCallIndicatorView.swift */,
+				7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4362,6 +4365,7 @@
 				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,

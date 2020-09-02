@@ -34,10 +34,10 @@ class FavoriteStickersViewController: StickersViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerPreviewCell
         if indexPath.row == 0 {
-            cell.load(image: R.image.ic_sticker_add(), contentMode: .center)
+            cell.stickerView.load(image: R.image.ic_sticker_add(), contentMode: .center)
         } else {
             let sticker = stickers[indexPath.row - 1]
-            cell.load(sticker: sticker)
+            cell.stickerView.load(sticker: sticker)
         }
         return cell
     }

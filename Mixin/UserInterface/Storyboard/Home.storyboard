@@ -841,7 +841,7 @@
                                 <rect key="frame" x="147.5" y="94" width="80" height="80"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
-                                <rect key="frame" x="0.0" y="501" width="375" height="46"/>
+                                <rect key="frame" x="0.0" y="561" width="375" height="46"/>
                                 <subviews>
                                     <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="9Se-cC-O8P" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="177.5" y="0.0" width="20" height="20"/>
@@ -877,7 +877,7 @@
                         <constraints>
                             <constraint firstItem="CZJ-hH-T5C" firstAttribute="centerX" secondItem="G5m-8U-XPN" secondAttribute="centerX" id="2nj-ak-Snw"/>
                             <constraint firstItem="YgL-nK-KrB" firstAttribute="top" secondItem="CZJ-hH-T5C" secondAttribute="bottom" constant="16" id="7LO-Vs-nAS"/>
-                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="120" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="60" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch4">
                                         <real key="value" value="60"/>
@@ -1223,7 +1223,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaM-RW-vC7" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="135.5" y="533" width="104" height="44"/>
+                                <rect key="frame" x="135.5" y="563" width="104" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                 <state key="normal" title="Continue">
@@ -1251,7 +1251,7 @@
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="Tou-53-uta" secondAttribute="trailing" constant="50" id="8sK-NH-KGs"/>
-                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="bottom" secondItem="zaM-RW-vC7" secondAttribute="bottom" constant="90" id="FhQ-05-f1g"/>
+                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="bottom" secondItem="zaM-RW-vC7" secondAttribute="bottom" constant="60" id="FhQ-05-f1g"/>
                             <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="0gh-oY-fRs" secondAttribute="trailing" constant="36" id="Mqb-DS-5Fh"/>
                             <constraint firstItem="Tou-53-uta" firstAttribute="leading" secondItem="O9K-H9-6Uy" secondAttribute="leading" constant="50" id="g59-wc-j7A"/>
                             <constraint firstItem="hmp-73-im2" firstAttribute="centerX" secondItem="O9K-H9-6Uy" secondAttribute="centerX" id="jd2-8R-2VL"/>
@@ -1303,7 +1303,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iax-W3-8VY" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="141.5" y="533" width="92" height="44"/>
+                                <rect key="frame" x="141.5" y="563" width="92" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                 <state key="normal" title="Update">
@@ -1343,7 +1343,7 @@
                             </constraint>
                             <constraint firstItem="YLu-Dq-yzN" firstAttribute="top" secondItem="Xfh-Bz-oig" secondAttribute="bottom" constant="24" id="SZQ-gf-g9n"/>
                             <constraint firstItem="YLu-Dq-yzN" firstAttribute="leading" secondItem="rsg-Ae-cWf" secondAttribute="leading" constant="50" id="Yof-Jr-Jxh"/>
-                            <constraint firstItem="rsg-Ae-cWf" firstAttribute="bottom" secondItem="Iax-W3-8VY" secondAttribute="bottom" constant="90" id="b1p-Cq-1Mv"/>
+                            <constraint firstItem="rsg-Ae-cWf" firstAttribute="bottom" secondItem="Iax-W3-8VY" secondAttribute="bottom" constant="60" id="b1p-Cq-1Mv"/>
                             <constraint firstItem="Xfh-Bz-oig" firstAttribute="centerX" secondItem="rsg-Ae-cWf" secondAttribute="centerX" id="erX-YM-bIv"/>
                             <constraint firstItem="xyZ-Q7-nXW" firstAttribute="top" secondItem="YLu-Dq-yzN" secondAttribute="bottom" constant="16" id="mmH-y4-AbP"/>
                             <constraint firstItem="rsg-Ae-cWf" firstAttribute="trailing" secondItem="YLu-Dq-yzN" secondAttribute="trailing" constant="50" id="o4f-Bu-oAN"/>
@@ -1435,7 +1435,7 @@ chat history from icloud</string>
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UlL-mJ-MXf">
-                                <rect key="frame" x="20" y="533" width="335" height="44"/>
+                                <rect key="frame" x="20" y="563" width="335" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="120.5" y="0.0" width="94" height="44"/>
@@ -1475,7 +1475,7 @@ chat history from icloud</string>
                             <constraint firstAttribute="trailing" secondItem="pVY-uP-Bar" secondAttribute="trailing" constant="36" id="g2G-aW-r5T"/>
                             <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
                             <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" priority="250" constant="90" id="sSb-oW-edw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="UlL-mJ-MXf" secondAttribute="bottom" priority="250" constant="60" id="sSb-oW-edw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                         <real key="value" value="60"/>
@@ -1641,7 +1641,7 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

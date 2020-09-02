@@ -24,7 +24,7 @@ extension APIError {
         case 10004:
             return Localized.TOAST_RECAPTCHA_INVALID
         case 10006:
-            return Localized.TOAST_UPDATE_TIPS
+            return R.string.localizable.app_update_short_tips()
         case 20117:
             return Localized.TRANSFER_ERROR_BALANCE_INSUFFICIENT
         case 20118:

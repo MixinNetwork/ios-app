@@ -523,6 +523,7 @@ extension HomeViewController {
             guard case let .failure(error) = result, error.code == 10006 else {
                 return
             }
+            WebSocketService.shared.disconnect()
             AppDelegate.current.mainWindow.rootViewController = UpdateViewController.instance()
         }
     }

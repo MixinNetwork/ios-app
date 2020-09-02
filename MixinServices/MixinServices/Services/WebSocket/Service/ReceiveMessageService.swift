@@ -678,13 +678,10 @@ public class ReceiveMessageService: MixinService {
                         StickerPrefetcher.prefetch(stickers: [sticker])
                     }
                     return transferStickerData
+                case .failure(.endpointNotFound):
+                    return nil
                 case let .failure(error):
-                    switch error {
-                    case .endpointNotFound:
-                        return nil
-                    default:
-                        checkNetworkAndWebSocket()
-                    }
+                    checkNetworkAndWebSocket()
                 }
             } while LoginManager.shared.isLoggedIn
             return nil
@@ -753,16 +750,13 @@ public class ReceiveMessageService: MixinService {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
-        case let .failure(error):
-            switch error {
-            case .endpointNotFound:
-                return .ERROR
-            default:
-                if tryAgain {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
-                }
-                return .START
+        case .failure(.endpointNotFound):
+            return .ERROR
+        case .failure:
+            if tryAgain {
+                ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
             }
+            return .START
         }
     }
 
@@ -779,13 +773,10 @@ public class ReceiveMessageService: MixinService {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true
-            case let .failure(error):
-                switch error {
-                case .endpointNotFound:
-                    return false
-                default:
-                    checkNetworkAndWebSocket()
-                }
+            case .failure(.endpointNotFound):
+                return false
+            case .failure:
+                checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn
 

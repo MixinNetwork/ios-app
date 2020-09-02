@@ -105,13 +105,10 @@ public class MixinService {
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
                 CircleConversationDAO.shared.update(conversation: response)
                 return
+            case .failure(.unauthorized):
+                return
             case let .failure(error):
-                switch error {
-                case .unauthorized:
-                    return
-                default:
-                    checkNetworkAndWebSocket()
-                }
+                checkNetworkAndWebSocket()
             }
         } while true
     }
@@ -224,22 +221,15 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage, false)
-            } catch let error as MixinAPIError {
-                switch error {
-                case .unauthorized:
-                    return (false, nil, false)
-                case .forbidden:
-                    return (true, nil, false)
-                case .invalidConversationChecksum:
-                    if let conversationId = blazeMessage.params?.conversationId {
-                        syncConversation(conversationId: conversationId)
-                    }
-                    return (false, nil, true)
-                default:
-                    break
+            } catch MixinAPIError.unauthorized {
+                return (false, nil, false)
+            } catch MixinAPIError.forbidden {
+                return (true, nil, false)
+            } catch MixinAPIError.invalidConversationChecksum {
+                if let conversationId = blazeMessage.params?.conversationId {
+                    syncConversation(conversationId: conversationId)
                 }
-                checkNetworkAndWebSocket()
-                Thread.sleep(forTimeInterval: 2)
+                return (false, nil, true)
             } catch {
                 checkNetworkAndWebSocket()
                 Thread.sleep(forTimeInterval: 2)

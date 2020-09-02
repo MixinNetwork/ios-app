@@ -50,14 +50,11 @@ class SignalLoadingViewController: UIViewController {
                     WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
                 }
                 return
+            case .failure(.unauthorized):
+                return
             case let .failure(error):
-                switch error {
-                case .unauthorized:
-                    return
-                default:
-                    Thread.sleep(forTimeInterval: 2)
-                    reporter.report(error: error)
-                }
+                Thread.sleep(forTimeInterval: 2)
+                reporter.report(error: error)
             }
         } while true
     }
@@ -168,14 +165,11 @@ class SignalLoadingViewController: UIViewController {
                 }
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
                 return
+            case .failure(.unauthorized):
+                return
             case let .failure(error):
-                switch error {
-                case .unauthorized:
-                    return
-                default:
-                    Thread.sleep(forTimeInterval: 2)
-                    reporter.report(error: error)
-                }
+                Thread.sleep(forTimeInterval: 2)
+                reporter.report(error: error)
             }
         } while true
     }

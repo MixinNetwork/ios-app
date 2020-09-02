@@ -740,13 +740,10 @@ extension PayWindow {
                         }.presentPopupControllerAnimated()
                     }
                     return
+                case .failure(.endpointNotFound):
+                    break
                 case let .failure(error):
-                    switch error {
-                    case .endpointNotFound:
-                        break
-                    default:
-                        completion(false, error.localizedDescription)
-                    }
+                    completion(false, error.localizedDescription)
                 }
             }
         }

@@ -250,15 +250,12 @@ public class SendMessageService: MixinService {
             switch MessageAPI.acknowledgements(ackMessages: ackMessages) {
             case .success:
                 return true
-            case let .failure(error):
-                switch error {
-                case .unauthorized:
-                    return false
-                case .endpointNotFound:
-                    return true
-                default:
-                    checkNetwork()
-                }
+            case .failure(.unauthorized):
+                return false
+            case .failure(.endpointNotFound):
+                return true
+            case .failure:
+                checkNetwork()
             }
         } while true
     }
@@ -325,12 +322,12 @@ public class SendMessageService: MixinService {
     private func deliverLowPriorityMessages(blazeMessage: BlazeMessage) -> Bool {
         do {
             return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
+        } catch MixinAPIError.unauthorized {
+            return false
+        } catch MixinAPIError.forbidden {
+            return true
         } catch {
             switch error {
-            case MixinAPIError.unauthorized:
-                return false
-            case MixinAPIError.forbidden:
-                return true
             case MixinAPIError.httpTransport, MixinAPIError.webSocketTimeOut:
                 Thread.sleep(forTimeInterval: 2)
             default:

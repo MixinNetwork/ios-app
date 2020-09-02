@@ -80,15 +80,14 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                     return false
                 }
                 return true
+            case .failure(.endpointNotFound):
+                downloadExpired()
+                removeJob()
+                finishJob()
+                return false
+            case let .failure(error) where !error.worthRetrying:
+                return false
             case let .failure(error):
-                if case .endpointNotFound = error {
-                    downloadExpired()
-                    removeJob()
-                    finishJob()
-                    return false
-                } else if !error.worthRetrying {
-                    return false
-                }
                 checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled

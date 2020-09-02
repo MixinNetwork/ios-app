@@ -82,7 +82,7 @@ public class WebSocketService {
 
             var request = URLRequest(url: url)
             request.timeoutInterval = 5
-            request.allHTTPHeaderFields = Authenticator.signedHeaders(for: request)
+            request.allHTTPHeaderFields = RequestSigning.signedHeaders(for: request)
             if isAppExtension {
                 request.setValue("Mixin-Notification-Extension-1", forHTTPHeaderField: "Sec-WebSocket-Protocol")
             }

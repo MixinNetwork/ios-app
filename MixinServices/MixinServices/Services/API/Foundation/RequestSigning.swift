@@ -1,7 +1,7 @@
 import Foundation
 import DeviceGuru
 
-enum Authenticator {
+enum RequestSigning {
     
     private static let baseHeaders: [String: String] = [
         "Content-Type": "application/json",

@@ -212,11 +212,6 @@ public class MixinService {
 
     @discardableResult
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, responseMessage: BlazeMessage?, retry: Bool) {
-        func wait() {
-            checkNetworkAndWebSocket()
-            Thread.sleep(forTimeInterval: 2)
-        }
-        
         repeat {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)

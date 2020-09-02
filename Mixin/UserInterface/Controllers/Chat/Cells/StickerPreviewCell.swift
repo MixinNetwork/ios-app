@@ -55,7 +55,7 @@ class StickerPreviewCell: UICollectionViewCell {
         guard let url = URL(string: sticker.assetUrl) else {
             return
         }
-        if sticker.assetType.uppercased() == "JSON" {
+        if sticker.assetTypeIsJSON {
             animationView.isHidden = false
             imageViewIfLoaded?.isHidden = true
             animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url) { [weak self] (animation) in

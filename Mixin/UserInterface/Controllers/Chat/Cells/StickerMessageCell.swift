@@ -41,7 +41,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? StickerMessageViewModel {
             imageWrapperView.frame = viewModel.contentFrame
             if let assetUrl = viewModel.message.assetUrl, let url = URL(string: assetUrl) {
-                if viewModel.message.assetType == "JSON" {
+                if viewModel.message.assetTypeIsJSON {
                     lottieAnimationView.isHidden = false
                     contentImageView.isHidden = true
                     lottieAnimationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in

@@ -223,6 +223,14 @@ extension MessageItem {
         return true
     }
     
+    public var assetTypeIsJSON: Bool {
+        if let type = assetType?.uppercased() {
+            return type == "JSON"
+        } else {
+            return false
+        }
+    }
+    
     public func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
         guard userId != myUserId else {
             return false

@@ -714,6 +714,7 @@
 // App
 "app_update_button" = "Update";
 "app_update_title" = "Update Mixin";
+"app_update_short_tips" = "Please update Mixin from App Store to continue use the service.";
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 
 // Setting

@@ -103,6 +103,7 @@ PODS:
   - Highlightr (2.1.0)
   - libcmark_gfm (0.29.3)
   - libsignal-protocol-c (2.3.2)
+  - lottie-ios (3.1.8)
   - Maaku/CMark (0.9.2):
     - libcmark_gfm (~> 0.29.3)
   - Maaku/Core (0.9.2):
@@ -207,6 +208,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
+  - lottie-ios
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/the0neyouseek/PhoneNumberKit`)
   - R.swift
@@ -240,6 +242,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - GzipSwift
     - libcmark_gfm
+    - lottie-ios
     - Maaku
     - nanopb
     - PINCache
@@ -327,6 +330,7 @@ SPEC CHECKSUMS:
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
   libcmark_gfm: cbf2fe0fd3983202f00b40d4742d82cd173ff7c3
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
+  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
   MixinServices: fe6f31cfb652a079fe9dd327800ccb612b4d47c4
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
@@ -352,6 +356,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 5c04c95b6abf2923032b575e0fe9d06ef8e70257
+PODFILE CHECKSUM: c4d45adad6ab12bff312784f0dadcd6faa92e1ce
 
 COCOAPODS: 1.9.3

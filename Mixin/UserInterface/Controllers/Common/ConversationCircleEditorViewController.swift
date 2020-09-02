@@ -89,7 +89,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     private func performAddCircle(name: String) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        CircleAPI.shared.create(name: name) { (result) in
+        CircleAPI.create(name: name) { (result) in
             switch result {
             case .success(let circle):
                 DispatchQueue.global().async {
@@ -104,7 +104,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     }
     
     private func addThisConversationIntoCircle(circleId: String, hud: Hud) {
-        let completion = { [weak self] (result: BaseAPI.Result<[CircleConversation]>) in
+        let completion = { [weak self] (result: MixinAPI.Result<[CircleConversation]>) in
             switch result {
             case .success(let objects):
                 DispatchQueue.global().async {
@@ -122,9 +122,9 @@ class ConversationCircleEditorViewController: UITableViewController {
         }
         let requests = [ConversationCircleRequest(action: .ADD, circleId: circleId)]
         if let userId = ownerId {
-            CircleAPI.shared.updateCircles(forUserWith: userId, requests: requests, completion: completion)
+            CircleAPI.updateCircles(forUserWith: userId, requests: requests, completion: completion)
         } else {
-            CircleAPI.shared.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
+            CircleAPI.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
         }
     }
     
@@ -214,7 +214,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         let conversationId = self.conversationId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        let completion: (BaseAPI.Result<[CircleConversation]>) -> Void
+        let completion: (MixinAPI.Result<[CircleConversation]>) -> Void
         let requests: [ConversationCircleRequest]
         
         if indexPath.section == 0 {
@@ -269,9 +269,9 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         }
         
         if let userId = ownerId {
-            CircleAPI.shared.updateCircles(forUserWith: userId, requests: requests, completion: completion)
+            CircleAPI.updateCircles(forUserWith: userId, requests: requests, completion: completion)
         } else {
-            CircleAPI.shared.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
+            CircleAPI.updateCircles(forConversationWith: conversationId, requests: requests, completion: completion)
         }
     }
     

@@ -24,7 +24,7 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
         continueButton.isBusy = true
         var context = self.context!
         let identityNumber = self.trimmedText
-        EmergencyAPI.shared.createSession(phoneNumber: context.fullNumber, identityNumber: identityNumber) { [weak self] (result) in
+        EmergencyAPI.createSession(phoneNumber: context.fullNumber, identityNumber: identityNumber) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

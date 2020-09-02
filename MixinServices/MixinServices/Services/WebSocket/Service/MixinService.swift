@@ -15,7 +15,7 @@ public class MixinService {
 
     public static var isStopProcessMessages = false
 
-    @Atomic(false)
+    @Synchronized(value: false)
     public internal(set) var processing: Bool
     
     internal var currentAccountId: String {
@@ -100,7 +100,7 @@ public class MixinService {
 
     internal func syncConversation(conversationId: String) {
         repeat {
-            switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
+            switch ConversationAPI.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
                 CircleConversationDAO.shared.update(conversation: response)
@@ -171,7 +171,7 @@ public class MixinService {
                 return false
             }
 
-            switch UserSessionAPI.shared.fetchSessions(userIds: [userId]) {
+            switch UserSessionAPI.fetchSessions(userIds: [userId]) {
             case let .success(sessions):
                 let participantSessions = sessions.map {
                     ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())

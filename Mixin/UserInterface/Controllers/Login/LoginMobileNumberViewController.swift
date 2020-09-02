@@ -65,7 +65,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
                                fullNumber: fullNumber(withSpacing: false))
-        self.request = AccountAPI.shared.sendCode(to: ctx.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+        self.request = AccountAPI.sendCode(to: ctx.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

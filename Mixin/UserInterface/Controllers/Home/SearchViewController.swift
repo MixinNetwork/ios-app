@@ -469,7 +469,7 @@ extension SearchViewController {
         }
         searchNumberRequest?.cancel()
         searchNumberCell?.isBusy = true
-        searchNumberRequest = UserAPI.shared.search(keyword: keyword) { [weak self] (result) in
+        searchNumberRequest = UserAPI.search(keyword: keyword) { [weak self] (result) in
             guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
                 return
             }

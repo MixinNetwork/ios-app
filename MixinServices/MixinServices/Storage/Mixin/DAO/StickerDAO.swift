@@ -90,7 +90,7 @@ public final class StickerDAO {
         if let albumId = AlbumDAO.shared.getSelfAlbumId() {
             insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
         } else {
-            switch StickerAPI.shared.albums() {
+            switch StickerAPI.albums() {
             case let .success(albums):
                 for album in albums {
                     guard album.category == AlbumCategory.PERSONAL.rawValue else {

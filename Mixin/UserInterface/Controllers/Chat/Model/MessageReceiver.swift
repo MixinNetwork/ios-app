@@ -71,7 +71,7 @@ extension MessageReceiver {
     private static func user(id: String) -> UserItem? {
         if let user = UserDAO.shared.getUser(userId: id) {
             return user
-        } else if case let .success(user) = UserAPI.shared.showUser(userId: id) {
+        } else if case let .success(user) = UserAPI.showUser(userId: id) {
             UserDAO.shared.updateUsers(users: [user])
             if let user = UserDAO.shared.getUser(userId: id) {
                 return user

@@ -21,7 +21,7 @@ public class RefreshConversationJob: BaseJob {
             return
         }
         
-        switch ConversationAPI.shared.getConversation(conversationId: conversationId) {
+        switch ConversationAPI.getConversation(conversationId: conversationId) {
         case let .success(response):
             if response.category == ConversationCategory.GROUP.rawValue {
                 ConversationDAO.shared.updateConversation(conversation: response)

@@ -13,7 +13,7 @@ class RefreshCircleJob: AsynchronousJob {
     }
 
     override func execute() -> Bool {
-        CircleAPI.shared.circle(id: circleId, completion: { (result) in
+        CircleAPI.circle(id: circleId, completion: { (result) in
             switch result {
             case let .success(circle):
                 DispatchQueue.global().async {

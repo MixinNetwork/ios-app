@@ -32,7 +32,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
         let context = self.context!
         isBusy = true
         let request = AccountRequest(code: code, registrationId: nil, pin: context.pin, sessionSecret: nil)
-        AccountAPI.shared.changePhoneNumber(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
+        AccountAPI.changePhoneNumber(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -58,7 +58,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
     }
     
     override func requestVerificationCode(reCaptchaToken token: String?) {
-        AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
+        AccountAPI.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

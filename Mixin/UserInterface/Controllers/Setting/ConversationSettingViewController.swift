@@ -79,7 +79,7 @@ extension ConversationSettingViewController {
     private func setMessageSourceEverybody() {
         messageSourceSection.setAccessory(.busy, forRowAt: 0)
         let request = UserPreferenceRequest(receive_message_source: ReceiveMessageSource.everybody.rawValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }
@@ -98,7 +98,7 @@ extension ConversationSettingViewController {
     private func setMessageSourceContacts() {
         messageSourceSection.setAccessory(.busy, forRowAt: 1)
         let request = UserPreferenceRequest(receive_message_source: ReceiveMessageSource.contacts.rawValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }
@@ -117,7 +117,7 @@ extension ConversationSettingViewController {
     private func setConversationSourceEverybody() {
         conversationSourceSection.setAccessory(.busy, forRowAt: 0)
         let request = UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.everybody.rawValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }
@@ -136,7 +136,7 @@ extension ConversationSettingViewController {
     private func setConversationSourceContacts() {
         conversationSourceSection.setAccessory(.busy, forRowAt: 1)
         let request = UserPreferenceRequest(accept_conversation_source: AcceptConversationSource.contacts.rawValue)
-        AccountAPI.shared.preferences(preferenceRequest: request, completion: { [weak self] (result) in
+        AccountAPI.preferences(preferenceRequest: request, completion: { [weak self] (result) in
             guard let self = self else {
                 return
             }

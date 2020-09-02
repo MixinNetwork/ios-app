@@ -1,15 +1,13 @@
 import MixinServices
 
-final class ContactAPI: BaseAPI {
-
-    static let shared = ContactAPI()
-
+final class ContactAPI: MixinAPI {
+    
     enum url {
         static let contacts = "friends"
     }
 
-    func syncContacts() {
-        request(method: .get, url: url.contacts) { (result: BaseAPI.Result<[UserResponse]>) in
+    static func syncContacts() {
+        request(method: .get, url: url.contacts) { (result: MixinAPI.Result<[UserResponse]>) in
             switch result {
             case let .success(contacts):
                 UserDAO.shared.updateUsers(users: contacts, notifyContact: true)

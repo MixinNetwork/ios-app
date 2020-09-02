@@ -534,7 +534,7 @@ class ConversationViewController: UIViewController {
             return
         }
         strangerHintView.blockButton.isBusy = true
-        UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
+        UserAPI.blockUser(userId: userId) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -553,7 +553,7 @@ class ConversationViewController: UIViewController {
             return
         }
         strangerHintView.addContactButton.isBusy = true
-        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
+        UserAPI.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -581,7 +581,7 @@ class ConversationViewController: UIViewController {
             }
 
             DispatchQueue.global().async {
-                switch UserAPI.shared.reportUser(userId: inviterId) {
+                switch UserAPI.reportUser(userId: inviterId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     ConversationDAO.shared.deleteChat(conversationId: conversationId)
@@ -1227,7 +1227,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             conversationInputViewController.quote = (message, viewModel.thumbnail)
         case .addToStickers:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
-                StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
+                StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in
                     switch result {
                     case let .success(sticker):
                         DispatchQueue.global().async {
@@ -2051,7 +2051,7 @@ extension ConversationViewController {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(appId: appId)
                 if app == nil {
-                    if case let .success(response) = UserAPI.shared.showUser(userId: appId) {
+                    if case let .success(response) = UserAPI.showUser(userId: appId) {
                         UserDAO.shared.updateUsers(users: [response])
                         app = response.app
                     }
@@ -2080,7 +2080,7 @@ extension ConversationViewController {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(ofUserId: sendUserId)
                 if app == nil {
-                    if case let .success(response) = UserAPI.shared.showUser(userId: sendUserId) {
+                    if case let .success(response) = UserAPI.showUser(userId: sendUserId) {
                         UserDAO.shared.updateUsers(users: [response])
                         app = response.app
                     }
@@ -2127,7 +2127,7 @@ extension ConversationViewController {
             let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
             if user == nil {
-                switch UserAPI.shared.search(keyword: developID) {
+                switch UserAPI.search(keyword: developID) {
                 case let .success(userResponse):
                     UserDAO.shared.updateUsers(users: [userResponse])
                     user = UserItem.createUser(from: userResponse)

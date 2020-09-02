@@ -43,7 +43,7 @@ class SignalLoadingViewController: UIViewController {
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            switch SignalKeyAPI.shared.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
+            switch SignalKeyAPI.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
                 AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
                 DispatchQueue.main.async {
@@ -68,7 +68,7 @@ class SignalLoadingViewController: UIViewController {
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            switch CircleAPI.shared.circles() {
+            switch CircleAPI.circles() {
             case let .success(response):
                 let circles = response.map { Circle(circleId: $0.circleId, name: $0.name, createdAt: $0.createdAt) }
                 MixinDatabase.shared.insertOrReplace(objects: circles)
@@ -92,7 +92,7 @@ class SignalLoadingViewController: UIViewController {
                 return
             }
 
-            switch CircleAPI.shared.circleConversations(circleId: circleId, offset: offset, limit: 500) {
+            switch CircleAPI.circleConversations(circleId: circleId, offset: offset, limit: 500) {
             case let .success(conversations):
                 MixinDatabase.shared.insertOrReplace(objects: conversations)
                 offset = conversations.last?.createdAt
@@ -121,7 +121,7 @@ class SignalLoadingViewController: UIViewController {
                 return
             }
 
-            switch UserAPI.shared.fetchSessions(userIds: userIds) {
+            switch UserAPI.fetchSessions(userIds: userIds) {
             case let .success(remoteSessions):
                 defer {
                     AppGroupUserDefaults.Crypto.isSessionSynchronized = true

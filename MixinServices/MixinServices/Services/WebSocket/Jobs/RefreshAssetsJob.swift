@@ -16,7 +16,7 @@ public class RefreshAssetsJob: AsynchronousJob {
     
     public override func execute() -> Bool {
         if let assetId = self.assetId {
-            AssetAPI.shared.asset(assetId: assetId) { (result) in
+            AssetAPI.asset(assetId: assetId) { (result) in
                 switch result {
                 case let .success(asset):
                     DispatchQueue.global().async {
@@ -33,7 +33,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                 }
             }
         } else {
-            AssetAPI.shared.assets { (result) in
+            AssetAPI.assets { (result) in
                 switch result {
                 case let .success(assets):
                     DispatchQueue.global().async {
@@ -53,7 +53,7 @@ public class RefreshAssetsJob: AsynchronousJob {
     }
 
     private func updateFiats() {
-        AssetAPI.shared.fiats { (result) in
+        AssetAPI.fiats { (result) in
             switch result {
             case let .success(fiatMonies):
                 DispatchQueue.main.async {
@@ -71,7 +71,7 @@ public class RefreshAssetsJob: AsynchronousJob {
     }
 
     private func updatePendingDeposits(asset: Asset) {
-        AssetAPI.shared.pendingDeposits(assetId: asset.assetId, destination: asset.destination, tag: asset.tag) { (result) in
+        AssetAPI.pendingDeposits(assetId: asset.assetId, destination: asset.destination, tag: asset.tag) { (result) in
             switch result {
             case let .success(deposits):
                 DispatchQueue.global().async {
@@ -89,7 +89,7 @@ public class RefreshAssetsJob: AsynchronousJob {
     }
     
     private func updateSnapshots(assetId: String) {
-        AssetAPI.shared.snapshots(limit: 200, assetId: assetId) { (result) in
+        AssetAPI.snapshots(limit: 200, assetId: assetId) { (result) in
             switch result {
              case let .success(snapshots):
                 DispatchQueue.global().async {

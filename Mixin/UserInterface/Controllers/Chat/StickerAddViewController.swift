@@ -167,7 +167,7 @@ extension StickerAddViewController {
     
     private func performAddition(data: Data) {
         let base64 = data.base64EncodedString()
-        StickerAPI.shared.addSticker(stickerBase64: base64, completion: { [weak self] (result) in
+        StickerAPI.addSticker(stickerBase64: base64, completion: { [weak self] (result) in
             switch result {
             case let .success(sticker):
                 SDImageCache.persistentSticker.storeImageData(toDisk: data, forKey: sticker.assetUrl)

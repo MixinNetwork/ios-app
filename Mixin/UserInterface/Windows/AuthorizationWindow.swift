@@ -45,7 +45,7 @@ class AuthorizationWindow: BottomSheetView {
         }
 
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: [])
-        AuthorizeAPI.shared.authorize(authorization: request) { (result) in
+        AuthorizeAPI.authorize(authorization: request) { (result) in
             switch result {
             case let .success(response):
                 UIApplication.shared.tryOpenThirdApp(response: response)
@@ -65,7 +65,7 @@ class AuthorizationWindow: BottomSheetView {
         }
         authorizeButton.isBusy = true
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: selectedScopes)
-        AuthorizeAPI.shared.authorize(authorization: request, completion: { [weak self](result) in
+        AuthorizeAPI.authorize(authorization: request, completion: { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }

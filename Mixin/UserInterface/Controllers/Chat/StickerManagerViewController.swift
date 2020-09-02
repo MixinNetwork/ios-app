@@ -68,7 +68,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 return stickers[indexPath.row].stickerId
             }
 
-            StickerAPI.shared.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
+            StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
                 }

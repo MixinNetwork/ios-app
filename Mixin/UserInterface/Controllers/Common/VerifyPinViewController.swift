@@ -39,7 +39,7 @@ class VerifyPinViewController: ContinueButtonViewController {
     override func continueAction(_ sender: Any) {
         isBusy = true
         let pin = pinField.text
-        AccountAPI.shared.verify(pin: pin) { [weak self] (result) in
+        AccountAPI.verify(pin: pin) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

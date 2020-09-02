@@ -185,7 +185,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
 
         let requests = addMembers + removeMembers
         let circleId = self.circleId
-        CircleAPI.shared.updateCircle(of: circleId, requests: requests) { (result) in
+        CircleAPI.updateCircle(of: circleId, requests: requests) { (result) in
             switch result {
             case let .success(circles):
                 DispatchQueue.global().async {

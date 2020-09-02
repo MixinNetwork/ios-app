@@ -17,7 +17,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
     }
     
     private func requestVerificationCode(reCaptchaToken token: String? = nil) {
-        AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
+        AccountAPI.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

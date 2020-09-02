@@ -133,7 +133,7 @@ final class UserProfileViewController: ProfileViewController {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil)
-        ConversationAPI.shared.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
+        ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.user.muteUntil = response.muteUntil
@@ -211,7 +211,7 @@ extension UserProfileViewController: ImagePickerControllerDelegate {
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: view)
-        AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
+        AccountAPI.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
                 LoginManager.shared.setAccount(account)
@@ -248,7 +248,7 @@ extension UserProfileViewController {
     
     @objc func addContact() {
         relationshipView.isBusy = true
-        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
+        UserAPI.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
@@ -305,7 +305,7 @@ extension UserProfileViewController {
         presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { (name) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            AccountAPI.shared.update(fullName: name) { (result) in
+            AccountAPI.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
                     LoginManager.shared.setAccount(account)
@@ -373,7 +373,7 @@ extension UserProfileViewController {
         presentEditNameController(title: R.string.localizable.profile_edit_name(), text: user.fullName, placeholder: R.string.localizable.profile_full_name()) { [weak self] (name) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            UserAPI.shared.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
+            UserAPI.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
                 switch result {
                 case let .success(response):
                     self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
@@ -446,7 +446,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: removeTitle, style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            UserAPI.shared.removeFriend(userId: userId, completion: { [weak self] (result) in
+            UserAPI.removeFriend(userId: userId, completion: { [weak self] (result) in
                 switch result {
                 case let .success(response):
                     self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
@@ -468,7 +468,7 @@ extension UserProfileViewController {
             self.relationshipView.isBusy = true
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            UserAPI.shared.blockUser(userId: userId) { [weak self] (result) in
+            UserAPI.blockUser(userId: userId) { [weak self] (result) in
                 switch result {
                 case let .success(response):
                     self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
@@ -487,7 +487,7 @@ extension UserProfileViewController {
         relationshipView.isBusy = true
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+        UserAPI.unblockUser(userId: user.userId) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
@@ -508,7 +508,7 @@ extension UserProfileViewController {
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
-                switch UserAPI.shared.reportUser(userId: userId) {
+                switch UserAPI.reportUser(userId: userId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     DispatchQueue.main.async {
@@ -818,7 +818,7 @@ extension UserProfileViewController {
         
         if updateUserFromRemoteAfterReloaded {
             updateUserFromRemoteAfterReloaded = false
-            UserAPI.shared.showUser(userId: user.userId) { [weak self] (result) in
+            UserAPI.showUser(userId: user.userId) { [weak self] (result) in
                 guard case let .success(response) = result else {
                     return
                 }
@@ -839,14 +839,14 @@ extension UserProfileViewController {
                 guard fromRemote else {
                     return
                 }
-                UserAPI.shared.getFavoriteApps(ofUserWith: userId) { (result) in
+                UserAPI.getFavoriteApps(ofUserWith: userId) { (result) in
                     guard case let .success(favApps) = result else {
                         return
                     }
                     DispatchQueue.global().async {
                         FavoriteAppsDAO.shared.updateFavoriteApps(favApps, forUserWith: userId)
                         let appUserIds = favApps.map({ $0.appId })
-                        UserAPI.shared.showUsers(userIds: appUserIds) { (result) in
+                        UserAPI.showUsers(userIds: appUserIds) { (result) in
                             guard case let .success(users) = result else {
                                 return
                             }
@@ -881,7 +881,7 @@ extension UserProfileViewController {
         DispatchQueue.global().async { [weak self] in
             var developer = UserDAO.shared.getUser(userId: creatorId)
             if developer == nil {
-                switch UserAPI.shared.showUser(userId: creatorId) {
+                switch UserAPI.showUser(userId: creatorId) {
                 case let .success(user):
                     UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     developer = UserItem.createUser(from: user)

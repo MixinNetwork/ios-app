@@ -9,7 +9,7 @@ public class SendMessageService: MixinService {
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     
-    @Atomic(false)
+    @Synchronized(value: false)
     public private(set) var isRequestingKrakenPeers: Bool
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
@@ -247,7 +247,7 @@ public class SendMessageService: MixinService {
 
     private func sendAckMessages(ackMessages: [AckMessage]) -> Bool {
         repeat {
-            switch MessageAPI.shared.acknowledgements(ackMessages: ackMessages) {
+            switch MessageAPI.acknowledgements(ackMessages: ackMessages) {
             case .success:
                 return true
             case let .failure(error):
@@ -566,7 +566,7 @@ extension SendMessageService {
             participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
         }
         let request = ConversationRequest(conversationId: conversation.conversationId, name: nil, category: conversation.category, participants: participants, duration: nil, announcement: nil)
-        switch ConversationAPI.shared.createConversation(conversation: request) {
+        switch ConversationAPI.createConversation(conversation: request) {
         case let .success(response):
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
         case let .failure(error):

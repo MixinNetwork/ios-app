@@ -276,7 +276,7 @@ extension WebSocketService {
         case connected
     }
     
-    private typealias IncomingMessageHandler = (BaseAPI.Result<BlazeMessage>) -> Void
+    private typealias IncomingMessageHandler = (MixinAPI.Result<BlazeMessage>) -> Void
     
     private func enqueueOperation(_ closure: @escaping () -> Void) {
         if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {

@@ -48,10 +48,12 @@ class AnimatedStickerView: UIView {
         if let imageView = imageViewIfLoaded {
             imageView.sd_cancelCurrentImageLoad()
             imageView.image = nil
+            imageView.contentMode = contentMode
         }
         animationDownloadToken?.cancel()
         if let animationView = animationViewIfLoaded {
             animationView.animation = nil
+            animationView.contentMode = contentMode
         }
     }
     
@@ -60,11 +62,7 @@ class AnimatedStickerView: UIView {
             return
         }
         if sticker.assetTypeIsJSON {
-            animationView.isHidden = false
-            imageViewIfLoaded?.isHidden = true
-            animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url) { [weak self] (animation) in
-                self?.animationView.sceneModel = animation
-            }
+            loadAnimation(url: url)
         } else {
             imageView.isHidden = false
             animationViewIfLoaded?.isHidden = true
@@ -79,16 +77,7 @@ class AnimatedStickerView: UIView {
             return
         }
         if message.assetTypeIsJSON {
-            animationView.isHidden = false
-            imageViewIfLoaded?.isHidden = true
-            animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
-                guard let self = self else {
-                    return
-                }
-                self.animationView.sceneModel = composition
-                self.animationView.loopAnimation = true
-                self.animationView.play()
-            })
+            loadAnimation(url: url)
         } else {
             animationViewIfLoaded?.isHidden = true
             imageView.isHidden = false
@@ -132,6 +121,19 @@ class AnimatedStickerView: UIView {
         if let animationView = animationViewIfLoaded {
             animationView.pause()
         }
+    }
+    
+    private func loadAnimation(url: URL) {
+        animationView.isHidden = false
+        imageViewIfLoaded?.isHidden = true
+        animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
+            guard let self = self else {
+                return
+            }
+            self.animationView.sceneModel = composition
+            self.animationView.loopAnimation = true
+            self.animationView.play()
+        })
     }
     
 }

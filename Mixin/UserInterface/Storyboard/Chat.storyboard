@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -523,7 +523,7 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="319" y="3" width="45" height="44"/>
+                                        <rect key="frame" x="320" y="3" width="44" height="44"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                         <connections>
@@ -1084,16 +1084,17 @@
                             <inset key="sectionInset" minX="8" minY="8" maxX="8" maxY="8"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell_identifier_favorite_sticker" id="WqR-XS-89k" customClass="FavoriteStickerCell" customModule="Mixin" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="favorite_sticker" id="WqR-XS-89k" customClass="FavoriteStickerCell" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="8" y="8" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R9u-H5-ZSM" customClass="YYAnimatedImageView">
+                                        <view clipsSubviews="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="rlw-WS-4J9" customClass="AnimatedStickerView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
-                                        </imageView>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
                                         <view hidden="YES" alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnb-Eb-FO1">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1104,22 +1105,22 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="R9u-H5-ZSM" firstAttribute="top" secondItem="WqR-XS-89k" secondAttribute="top" id="3GX-c6-pPf"/>
                                     <constraint firstItem="bnb-Eb-FO1" firstAttribute="top" secondItem="WqR-XS-89k" secondAttribute="top" id="4wF-eX-nFa"/>
+                                    <constraint firstItem="rlw-WS-4J9" firstAttribute="leading" secondItem="WqR-XS-89k" secondAttribute="leading" id="6H8-A9-Gwa"/>
+                                    <constraint firstAttribute="trailing" secondItem="rlw-WS-4J9" secondAttribute="trailing" id="BCO-Uj-UVX"/>
                                     <constraint firstAttribute="trailing" secondItem="bnb-Eb-FO1" secondAttribute="trailing" id="HQx-l2-gs0"/>
-                                    <constraint firstAttribute="bottom" secondItem="R9u-H5-ZSM" secondAttribute="bottom" id="J1o-Zo-Nsx"/>
+                                    <constraint firstAttribute="bottom" secondItem="rlw-WS-4J9" secondAttribute="bottom" id="UoX-Hb-ICs"/>
                                     <constraint firstAttribute="trailing" secondItem="7Mx-fi-w5O" secondAttribute="trailing" constant="6" id="ZIA-ux-QqW"/>
+                                    <constraint firstItem="rlw-WS-4J9" firstAttribute="top" secondItem="WqR-XS-89k" secondAttribute="top" id="d19-jU-L94"/>
                                     <constraint firstItem="7Mx-fi-w5O" firstAttribute="top" secondItem="WqR-XS-89k" secondAttribute="top" constant="6" id="gy8-Qb-rqT"/>
-                                    <constraint firstAttribute="trailing" secondItem="R9u-H5-ZSM" secondAttribute="trailing" id="lwi-xy-Fli"/>
                                     <constraint firstAttribute="bottom" secondItem="bnb-Eb-FO1" secondAttribute="bottom" id="lyo-w2-Rvb"/>
                                     <constraint firstItem="bnb-Eb-FO1" firstAttribute="leading" secondItem="WqR-XS-89k" secondAttribute="leading" id="rpd-xy-GT5"/>
-                                    <constraint firstItem="R9u-H5-ZSM" firstAttribute="leading" secondItem="WqR-XS-89k" secondAttribute="leading" id="wRc-Fv-mLO"/>
                                 </constraints>
                                 <size key="customSize" width="100" height="100"/>
                                 <connections>
                                     <outlet property="selectionImageView" destination="7Mx-fi-w5O" id="UfJ-s7-ZFy"/>
                                     <outlet property="selectionMaskView" destination="bnb-Eb-FO1" id="wbw-Y3-LSP"/>
-                                    <outlet property="stickerImageView" destination="R9u-H5-ZSM" id="uiT-cJ-YBf"/>
+                                    <outlet property="stickerView" destination="rlw-WS-4J9" id="7T4-vY-UUb"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

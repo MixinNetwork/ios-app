@@ -252,7 +252,7 @@ public class SendMessageService: MixinService {
                 return true
             case .failure(.unauthorized):
                 return false
-            case .failure(.notFound):
+            case .failure(.forbidden):
                 return true
             case .failure:
                 checkNetwork()

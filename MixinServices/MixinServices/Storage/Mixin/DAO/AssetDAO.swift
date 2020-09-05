@@ -23,6 +23,10 @@ public final class AssetDAO {
     public func getAsset(assetId: String) -> AssetItem? {
         return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId]).first
     }
+
+    public func getAssetIds() -> [String] {
+        return MixinDatabase.shared.getStringValues(column: Asset.Properties.assetId.asColumnResult(), tableName: Asset.tableName)
+    }
     
     public func isExist(assetId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId)
@@ -63,7 +67,7 @@ public final class AssetDAO {
     }
     
     public func getDefaultTransferAsset() -> AssetItem? {
-        if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
+        if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !assetId.isEmpty, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
             return asset
         }
         if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable).first {

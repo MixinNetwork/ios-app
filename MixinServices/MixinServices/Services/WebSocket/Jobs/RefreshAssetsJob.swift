@@ -40,6 +40,15 @@ public class RefreshAssetsJob: AsynchronousJob {
                         guard !MixinService.isStopProcessMessages else {
                             return
                         }
+                        let localAssetIds = AssetDAO.shared.getAssetIds()
+                        if localAssetIds.count > 0 {
+                            let remoteAssetIds = assets.map { $0.assetId }
+                            let notExistAssetIds = Set<String>(localAssetIds).subtracting(remoteAssetIds)
+                            if notExistAssetIds.count > 0 {
+                                MixinDatabase.shared.update(maps: [(Asset.Properties.balance, "0")], tableName: Asset.tableName, condition: Asset.Properties.assetId.in(Array(notExistAssetIds)))
+                            }
+                        }
+
                         AssetDAO.shared.insertOrUpdateAssets(assets: assets)
                     }
                     self.updateFiats()

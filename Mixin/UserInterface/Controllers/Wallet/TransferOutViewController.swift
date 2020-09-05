@@ -274,12 +274,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @objc private func fetchAvailableAssets() {
         switchAssetButton.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
-            if let asset = self?.asset {
-                if let asset = AssetDAO.shared.getAsset(assetId: asset.assetId) {
-                    self?.asset = asset
-                    DispatchQueue.main.async {
-                        self?.updateAssetUI()
-                    }
+            if let assetId = self?.asset?.assetId, let asset = AssetDAO.shared.getAsset(assetId: assetId) {
+                self?.asset = asset
+                DispatchQueue.main.async {
+                    self?.updateAssetUI()
                 }
             } else {
                 if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {

@@ -44,6 +44,7 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     public var participantUserId: String? = nil
     
     public var assetUrl: String? = nil
+    public var assetType: String? = nil
     public var assetSymbol: String? = nil
     
     public var assetIcon: String? = nil
@@ -166,6 +167,7 @@ extension MessageItem {
         case assetWidth
         case assetHeight
         case assetUrl
+        case assetType
         case assetCategory
         
         case actionName
@@ -219,6 +221,14 @@ extension MessageItem {
             return false
         }
         return true
+    }
+    
+    public var assetTypeIsJSON: Bool {
+        if let type = assetType?.uppercased() {
+            return type == "JSON"
+        } else {
+            return false
+        }
     }
     
     public func isRepresentativeMessage(conversation: ConversationItem) -> Bool {

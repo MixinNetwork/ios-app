@@ -120,18 +120,17 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell_identifier_favorite_sticker", for: indexPath) as! FavoriteStickerCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorite_sticker, for: indexPath)!
         if isDeleteStickers {
             cell.render(sticker: stickers[indexPath.row], isDeleteStickers: isDeleteStickers)
         } else {
             if indexPath.row == 0 {
                 cell.selectionImageView.isHidden = true
-                cell.stickerImageView.image = R.image.ic_sticker_add()
+                cell.stickerView.load(image: R.image.ic_sticker_add(), contentMode: .center)
             } else {
                 cell.render(sticker: stickers[indexPath.row-1], isDeleteStickers: isDeleteStickers)
             }
         }
-
         return cell
     }
 
@@ -160,35 +159,4 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-}
-
-
-class FavoriteStickerCell: UICollectionViewCell {
-
-    @IBOutlet weak var selectionImageView: UIImageView!
-    @IBOutlet weak var stickerImageView: YYAnimatedImageView!
-    @IBOutlet weak var selectionMaskView: UIView!
-    
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView()
-    }
-
-    override var isSelected: Bool {
-        didSet {
-            if !selectionImageView.isHidden {
-                selectionImageView.image = isSelected ? R.image.ic_member_selected() : R.image.ic_sticker_normal()
-                selectionMaskView.isHidden = !isSelected
-            }
-        }
-    }
-
-    func render(sticker: StickerItem, isDeleteStickers: Bool) {
-        selectionImageView.isHidden = !isDeleteStickers
-        if let url = URL(string: sticker.assetUrl) {
-            let context = stickerLoadContext(category: sticker.category)
-            stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: context)
-        }
-    }
 }

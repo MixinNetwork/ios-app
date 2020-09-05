@@ -103,6 +103,7 @@ PODS:
   - Highlightr (2.1.0)
   - libcmark_gfm (0.29.3)
   - libsignal-protocol-c (2.3.2)
+  - lottie-ios (2.5.3)
   - Maaku/CMark (0.9.2):
     - libcmark_gfm (~> 0.29.3)
   - Maaku/Core (0.9.2):
@@ -113,6 +114,7 @@ PODS:
     - DeviceGuru
     - GzipSwift
     - libsignal-protocol-c
+    - lottie-ios
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
@@ -207,6 +209,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
+  - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/the0neyouseek/PhoneNumberKit`)
   - R.swift
@@ -265,6 +268,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
+  lottie-ios:
+    :branch: lottie/objectiveC
+    :git: https://github.com/airbnb/lottie-ios.git
   MixinServices:
     :path: "./MixinServices"
   PhoneNumberKit:
@@ -288,6 +294,9 @@ CHECKOUT OPTIONS:
   libsignal-protocol-c:
     :commit: 1f83b6fc6d151e8c525b2296feb87e5555d9d611
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
+  lottie-ios:
+    :commit: 415a2d1113eca4936ef17961798b5eccfd58e5b0
+    :git: https://github.com/airbnb/lottie-ios.git
   PhoneNumberKit:
     :commit: 26e182eaee775caf0e67c00449c44cda7e92d582
     :git: https://github.com/the0neyouseek/PhoneNumberKit
@@ -327,8 +336,9 @@ SPEC CHECKSUMS:
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
   libcmark_gfm: cbf2fe0fd3983202f00b40d4742d82cd173ff7c3
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
+  lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinServices: fe6f31cfb652a079fe9dd327800ccb612b4d47c4
+  MixinServices: 3191728e0ed910a4fc3ba511dddc8722539dd6db
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PINCache: 7cb9ae068c8f655717f7c644ef1dff9fd573e979
@@ -352,6 +362,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 5c04c95b6abf2923032b575e0fe9d06ef8e70257
+PODFILE CHECKSUM: 8f957a7ff50ec7dc0b10d9df245aac5142615dc5
 
 COCOAPODS: 1.9.3

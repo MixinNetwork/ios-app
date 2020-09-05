@@ -40,6 +40,14 @@ public struct StickerItem: TableCodable, BaseCodable {
     
 }
 
+extension StickerItem {
+    
+    public var assetTypeIsJSON: Bool {
+        assetType.uppercased() == "JSON"
+    }
+    
+}
+
 @inlinable public func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
     if let category = category {
         return !category.isEmpty

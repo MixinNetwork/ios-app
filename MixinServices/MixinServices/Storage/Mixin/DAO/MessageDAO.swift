@@ -39,7 +39,7 @@ public final class MessageDAO {
         m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
-               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, alb.category as assetCategory,
+               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
         mm.mentions, mm.has_read as hasMentionRead
     FROM messages m

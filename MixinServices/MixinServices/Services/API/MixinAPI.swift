@@ -87,8 +87,15 @@ extension MixinAPI {
         let host = MixinHost.http
         
         func handleDeauthorization(response: HTTPURLResponse?) {
-            let xServerTime = response?.allHeaderFields["x-server-time"] as? String ?? "0"
-            let serverTimeIntervalSince1970 = (TimeInterval(xServerTime) ?? 0) / TimeInterval(NSEC_PER_SEC)
+            let xServerTimeKeyPair = response?.allHeaderFields.first(where: { (key, value) -> Bool in
+                if let key = key as? String {
+                    return key.lowercased() == "x-server-time"
+                } else {
+                    return false
+                }
+            })
+            let xServerTime = TimeInterval(xServerTimeKeyPair?.value as? String ?? "0") ?? 0
+            let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
                 request(makeRequest: makeRequest, requiresLogin: requiresLogin, completion: completion)

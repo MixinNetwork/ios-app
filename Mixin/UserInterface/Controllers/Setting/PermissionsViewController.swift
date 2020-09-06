@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 import MixinServices
 
 final class PermissionsViewController: UIViewController {
@@ -54,12 +55,23 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func removeAuthozationAction() {
+        let appHomeUri = authorization.app.homeUri
         let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(authorization.app.name), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
             AuthorizeAPI.cancel(clientId: self.authorization.app.appId) { [weak self](result) in
                 switch result {
                 case .success:
+                    if let appHost = URL(string: appHomeUri)?.host {
+                        let types = Set<String>([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage])
+                        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: types) { (records) in
+                            for record in records {
+                                if appHost.hasSuffix(record.displayName) {
+                                    WKWebsiteDataStore.default().removeData(ofTypes: types, for: [record], completionHandler: { })
+                                }
+                            }
+                        }
+                    }
                     self?.navigationController?.popViewController(animated: true)
                 case let .failure(error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)

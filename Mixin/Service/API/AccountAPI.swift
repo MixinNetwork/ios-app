@@ -13,6 +13,7 @@ final class AccountAPI: MixinAPI {
         static let preferences = "/me/preferences"
         
         static let session = "/session"
+        static let sessionSecret = "/session/secret"
         
         static let verifyPin = "/pin/verify"
         static let updatePin = "/pin/update"
@@ -94,6 +95,13 @@ final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
             
         }
+    }
+    
+    static func update(sessionSecret: String) -> MixinAPI.Result<SessionSecretUpdateResponse> {
+        let param = ["session_secret": sessionSecret]
+        return request(method: .post,
+                       path: Path.sessionSecret,
+                       parameters: param)
     }
     
     static func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {

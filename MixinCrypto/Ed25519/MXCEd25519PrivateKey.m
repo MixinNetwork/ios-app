@@ -12,6 +12,16 @@ static const int seedLength = 32;
     uint8_t _privateKey[ED25519_PRIVATE_KEY_LEN];
 }
 
+- (instancetype)initWithRFC8032Representation:(NSData *)seed {
+    self = [super init];
+    if (self) {
+        NSAssert(seed.length == seedLength, @"Invalid seed");
+        memcpy(_seed, seed.bytes, seedLength);
+        ED25519_keypair_from_seed(_publicKey, _privateKey, _seed);
+    }
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -19,6 +29,15 @@ static const int seedLength = 32;
         ED25519_keypair_from_seed(_publicKey, _privateKey, _seed);
     }
     return self;
+}
+
+- (NSString *)description {
+    NSMutableString *desc = [@"MXCEd25519PrivateKey <seed: " mutableCopy];
+    [desc appendString:[self.rfc8032Representation base64EncodedStringWithOptions:0]];
+    [desc appendString:@", public key: "];
+    [desc appendString:[self.publicKey.rawRepresentation base64EncodedStringWithOptions:0]];
+    [desc appendString:@">\n"];
+    return [desc copy];
 }
 
 - (MXCEd25519PublicKey *)publicKey {

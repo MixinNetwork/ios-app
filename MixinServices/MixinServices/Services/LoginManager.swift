@@ -36,10 +36,20 @@ public final class LoginManager {
         return account
     }
     
+    private var hasValidSessionSecret: Bool {
+        if let secret = AppGroupUserDefaults.Account.sessionSecret {
+            return !secret.isEmpty
+        } else if let secret = AppGroupKeychain.sessionSecret {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     private init() {
         pthread_rwlock_init(&lock, nil)
         _account = LoginManager.getAccountFromUserDefaults()
-        _isLoggedIn = _account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
+        _isLoggedIn = _account != nil && hasValidSessionSecret
     }
 
     fileprivate static func getAccountFromUserDefaults() -> Account? {
@@ -53,14 +63,14 @@ public final class LoginManager {
     public func reloadAccountFromUserDefaults() {
         pthread_rwlock_wrlock(&lock)
         _account = LoginManager.getAccountFromUserDefaults()
-        _isLoggedIn = _account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
+        _isLoggedIn = _account != nil && hasValidSessionSecret
         pthread_rwlock_unlock(&lock)
     }
     
     public func setAccount(_ account: Account?, updateUserTable: Bool = true) {
         pthread_rwlock_wrlock(&lock)
         _account = account
-        _isLoggedIn = _account != nil && !(AppGroupUserDefaults.Account.sessionSecret?.isEmpty ?? true)
+        _isLoggedIn = _account != nil && hasValidSessionSecret
         pthread_rwlock_unlock(&lock)
 
         if let account = account {
@@ -99,6 +109,8 @@ public final class LoginManager {
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()
+                AppGroupKeychain.removeAllItems()
+                RequestSigning.removeCachedKey()
                 SignalDatabase.shared.logout()
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }

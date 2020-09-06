@@ -91,6 +91,7 @@
 		7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BA922B9EAFE00C16652 /* IntroTextView.swift */; };
 		7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */; };
 		7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B31E565236181C9004F891A /* BubbleImageSet.swift */; };
+		7B32F0A42503EBE9002FE9BA /* SessionSecretUpdateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B32F0A32503EBE9002FE9BA /* SessionSecretUpdateResponse.swift */; };
 		7B33000C223A8CB900A1016E /* LoneBackButtonNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */; };
 		7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */; };
 		7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */; };
@@ -373,6 +374,7 @@
 		7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB06F44228EA7720048C2D6 /* NotificationView.xib */; };
 		7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F46228EA78F0048C2D6 /* NotificationController.swift */; };
 		7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F48228ED8650048C2D6 /* NotificationView.swift */; };
+		7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */; };
 		7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */; };
 		7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */; };
 		7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */; };
@@ -428,6 +430,7 @@
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
 		7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */; };
 		7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */; };
+		7BCA81C02501633F0019351F /* MXMAgreementCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */; };
 		7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */; };
 		7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */; };
 		7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE296521AC132E00B1A507 /* SnapshotCell.xib */; };
@@ -951,6 +954,7 @@
 		7B311BA922B9EAFE00C16652 /* IntroTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroTextView.swift; sourceTree = "<group>"; };
 		7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
 		7B31E565236181C9004F891A /* BubbleImageSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleImageSet.swift; sourceTree = "<group>"; };
+		7B32F0A32503EBE9002FE9BA /* SessionSecretUpdateResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSecretUpdateResponse.swift; sourceTree = "<group>"; };
 		7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoneBackButtonNavigationController.swift; sourceTree = "<group>"; };
 		7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreSnapshotsJob.swift; sourceTree = "<group>"; };
 		7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionFromMessageCellView.swift; sourceTree = "<group>"; };
@@ -1228,6 +1232,7 @@
 		7BB06F44228EA7720048C2D6 /* NotificationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
 		7BB06F46228EA78F0048C2D6 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7BB06F48228ED8650048C2D6 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdDSAMigration+Migrate.swift"; sourceTree = "<group>"; };
 		7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditorViewController.swift; sourceTree = "<group>"; };
 		7BB0F9112434ADBA00BEDA97 /* CircleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAPI.swift; sourceTree = "<group>"; };
 		7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPeerCell.swift; sourceTree = "<group>"; };
@@ -1288,6 +1293,8 @@
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutTableHeaderView.xib; sourceTree = "<group>"; };
 		7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransactionExtension.swift; sourceTree = "<group>"; };
+		7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAgreementCalculator.h; sourceTree = "<group>"; };
+		7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXMAgreementCalculator.m; sourceTree = "<group>"; };
 		7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAndStorageSettingsViewController.swift; sourceTree = "<group>"; };
 		7BCE296521AC132E00B1A507 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
@@ -2136,6 +2143,8 @@
 				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
 				7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */,
 				E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */,
+				7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */,
+				7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -2484,6 +2493,7 @@
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
 				7BFCB8A7241CF1B800E7BC43 /* LocationExtensions.swift */,
+				7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2931,6 +2941,7 @@
 				DFC0ECDE23BB60DE0091E7AC /* QRCodeResponse.swift */,
 				DFC0ECDA23BB60DD0091E7AC /* VerificationResponse.swift */,
 				DF3D191724E971DE000BFE53 /* PaymentResponse.swift */,
+				7B32F0A32503EBE9002FE9BA /* SessionSecretUpdateResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -3792,6 +3803,7 @@
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
 				E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */,
+				7B32F0A42503EBE9002FE9BA /* SessionSecretUpdateResponse.swift in Sources */,
 				7B4BE55F243E0FEC00198EE9 /* HomeApp.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				7BB78728245136850057B4ED /* SettingsRadioSection.swift in Sources */,
@@ -3844,10 +3856,12 @@
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
+				7BCA81C02501633F0019351F /* MXMAgreementCalculator.m in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
+				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,

@@ -9,6 +9,7 @@ public enum MixinAPIError: Error {
     
     case prerequistesNotFulfilled
     case invalidJSON(Error)
+    case invalidServerPinToken
     case httpTransport(AFError)
     case webSocketTimeOut
     case clockSkewDetected

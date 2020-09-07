@@ -423,8 +423,6 @@ public class SendMessageService: MixinService {
 
                     var userInfo = [String: Any]()
                     userInfo["errorCode"] = error.errorCode
-                    userInfo["errorCodeLineNumber"] = "\(#line)"
-                    userInfo["errorFunction"] = "\(#function)"
                     userInfo["errorDescription"] = error.localizedDescription
                     userInfo["JobAction"] = job.action
                     userInfo["conversationId"] = conversationId

@@ -3,31 +3,29 @@ import WCDBSwift
 import MixinServices
 
 extension MessageDAO {
-    
-    static let sqlQueryGalleryItem = """
-    SELECT m.conversation_id, m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
-           m.media_height, m.media_status, m.media_duration, m.thumb_image, m.thumb_url, m.created_at
-    FROM messages m
-    WHERE conversation_id = ?
-        AND ((category LIKE '%_IMAGE' OR category LIKE '%_VIDEO') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
-             OR category LIKE '%_LIVE')
+
+    fileprivate static let sqlQueryGalleryItem = """
+    SELECT conversation_id, id, category, media_url, media_mime_type, media_width,
+           media_height, media_status, media_duration, thumb_image, thumb_url, created_at
+    FROM messages
+    WHERE %@ conversation_id = ? AND category in ('SIGNAL_IMAGE','PLAIN_IMAGE', 'SIGNAL_VIDEO', 'PLAIN_VIDEO', 'SIGNAL_LIVE', 'PLAIN_LIVE') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
     """
     
     func getGalleryItems(conversationId: String, location: GalleryItem?, count: Int) -> [GalleryItem] {
         assert(count != 0)
         var items = [GalleryItem]()
-        var sql = MessageDAO.sqlQueryGalleryItem
+        let sql: String
         if let location = location {
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location.messageId)
             if count > 0 {
-                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+                sql = String(format: Self.sqlQueryGalleryItem, "ROWID > \(rowId) AND ") + " ORDER BY created_at ASC LIMIT \(count)"
             } else {
-                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+                sql = String(format: Self.sqlQueryGalleryItem, "ROWID < \(rowId) AND ") + " ORDER BY created_at DESC LIMIT \(-count)"
             }
         } else {
             assert(count > 0)
-            sql += " ORDER BY created_at DESC LIMIT \(count)"
+            sql = String(format: Self.sqlQueryGalleryItem, "") + " ORDER BY created_at DESC LIMIT \(count)"
         }
         
         do {

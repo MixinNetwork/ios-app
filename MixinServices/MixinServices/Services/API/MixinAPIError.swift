@@ -13,6 +13,7 @@ public enum MixinAPIError: Error {
     case httpTransport(AFError)
     case webSocketTimeOut
     case clockSkewDetected
+    case pinEncryption(Error)
     case unknown(status: Int, code: Int, description: String)
     
     case invalidRequestBody

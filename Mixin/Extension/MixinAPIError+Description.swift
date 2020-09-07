@@ -24,6 +24,8 @@ extension MixinAPIError {
             }
         case .webSocketTimeOut, .clockSkewDetected:
             return R.string.localizable.error_connection_timeout()
+        case let .pinEncryption:
+            return R.string.localizable.error_internal("\(self)")
         case let .unknown(_, code, description):
             return R.string.localizable.error_two_parts("\(code)", description)
             

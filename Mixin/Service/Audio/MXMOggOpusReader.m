@@ -1,16 +1,15 @@
-
-#import "MXNOggOpusReader.h"
-#import "MXNOggOpusError.h"
+#import "MXMOggOpusReader.h"
+#import "MXMOggOpusError.h"
 #import "opusfile.h"
 
-@implementation MXNOggOpusReader {
+@implementation MXMOggOpusReader {
     NSString *_path;
     OggOpusFile *_file;
     NSMutableData *_outputBuffer;
 }
 
 + (nullable instancetype)readerWithFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
-    return [[MXNOggOpusReader alloc] initWithFileAtPath:path error:outError];
+    return [[MXMOggOpusReader alloc] initWithFileAtPath:path error:outError];
 }
 
 - (nullable instancetype)initWithFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
@@ -21,7 +20,7 @@
         _file = op_open_file([_path UTF8String], &result);
         if (result != OPUS_OK) {
             if (outError) {
-                *outError = ErrorWithCodeAndOpusErrorCode(MXNOggOpusErrorCodeOpenFile, result);
+                *outError = ErrorWithCodeAndOpusErrorCode(MXMOggOpusErrorCodeOpenFile, result);
             }
             return nil;
         }
@@ -51,7 +50,7 @@
         int result = op_read(_file, buf, remainingCapacity, NULL);
         if (result < 0) {
             if (outError) {
-                *outError = ErrorWithCodeAndOpusErrorCode(MXNOggOpusErrorCodeRead, result);
+                *outError = ErrorWithCodeAndOpusErrorCode(MXMOggOpusErrorCodeRead, result);
             }
             return nil;
         } else if (result == 0) {

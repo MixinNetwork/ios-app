@@ -5,21 +5,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXTERN const NSErrorDomain MXMAudioRecorderErrorDomain;
 
-typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
-    MXNAudioRecorderErrorCodeAudioQueueNewInput,
-    MXNAudioRecorderErrorCodeAudioQueueGetStreamDescription,
-    MXNAudioRecorderErrorCodeAudioQueueAllocateBuffer,
-    MXNAudioRecorderErrorCodeAudioQueueEnqueueBuffer,
-    MXNAudioRecorderErrorCodeAudioQueueStart,
-    MXNAudioRecorderErrorCodeAudioQueueGetMaximumOutputPacketSize,
-    MXNAudioRecorderErrorCodeCreateAudioFile,
-    MXNAudioRecorderErrorCodeWriteAudioFile,
-    MXNAudioRecorderErrorCodeMediaServiceWereReset
-};
+typedef NS_CLOSED_ENUM(NSUInteger, MXMAudioRecorderErrorCode) {
+    MXMAudioRecorderErrorCodeAudioQueueNewInput,
+    MXMAudioRecorderErrorCodeAudioQueueGetStreamDescription,
+    MXMAudioRecorderErrorCodeAudioQueueAllocateBuffer,
+    MXMAudioRecorderErrorCodeAudioQueueEnqueueBuffer,
+    MXMAudioRecorderErrorCodeAudioQueueStart,
+    MXMAudioRecorderErrorCodeAudioQueueGetMaximumOutputPacketSize,
+    MXMAudioRecorderErrorCodeCreateAudioFile,
+    MXMAudioRecorderErrorCodeWriteAudioFile,
+    MXMAudioRecorderErrorCodeMediaServiceWereReset
+} NS_SWIFT_NAME(AudioRecorderErrorCode);
 
 
 @class MXMAudioRecorder;
 
+NS_SWIFT_NAME(AudioRecorderDelegate)
 @protocol MXMAudioRecorderDelegate <NSObject>
 
 - (void)audioRecorderIsWaitingForActivation:(MXMAudioRecorder *)recorder NS_SWIFT_NAME(audioRecorderIsWaitingForActivation(_:));
@@ -31,6 +32,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
 @end
 
 
+NS_SWIFT_NAME(AudioRecorder)
 @interface MXMAudioRecorder : NSObject
 
 @property (nonatomic, copy, readonly) NSString *path;

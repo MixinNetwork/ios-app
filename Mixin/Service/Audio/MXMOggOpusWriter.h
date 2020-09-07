@@ -1,9 +1,9 @@
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MXNOggOpusWriter : NSObject
+NS_SWIFT_NAME(OggOpusWriter)
+@interface MXMOggOpusWriter : NSObject
 
 + (instancetype)writerWithPath:(NSString *)path
                inputSampleRate:(int32_t)inputSampleRate

@@ -71,7 +71,7 @@
 		7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116022C20F5F00AD029C /* PlayerView.swift */; };
 		7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */; };
 		7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */; };
-		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
+		7B2AFEE220FE022C00C747BB /* MXMFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */; };
 		7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */; };
 		7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */; };
 		7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */; };
@@ -421,11 +421,11 @@
 		7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */; };
 		7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */; };
 		7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */; };
-		7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */; };
-		7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */; };
-		7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */; };
-		7BC8503320CBA69B00A57B83 /* MXNAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */; };
-		7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */; };
+		7BC8503020CBA69B00A57B83 /* MXMOggOpusReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502320CBA69900A57B83 /* MXMOggOpusReader.m */; };
+		7BC8503120CBA69B00A57B83 /* MXMOggOpusError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502420CBA69900A57B83 /* MXMOggOpusError.m */; };
+		7BC8503220CBA69B00A57B83 /* MXMOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */; };
+		7BC8503320CBA69B00A57B83 /* MXMAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */; };
+		7BC8503520CBA69B00A57B83 /* MXMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
@@ -632,7 +632,7 @@
 		DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */; };
 		DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
-		DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */; };
+		DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF68CD71244EC1970059A678 /* Mixin-Keys.plist */; };
 		DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* AddressWindow.xib */; };
@@ -936,8 +936,8 @@
 		7B2A116022C20F5F00AD029C /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactViewController.swift; sourceTree = "<group>"; };
 		7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEmergencyContactViewController.swift; sourceTree = "<group>"; };
-		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
-		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
+		7B2AFEE020FE022C00C747BB /* MXMFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXMFastURLDetector.h; sourceTree = "<group>"; };
+		7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXMFastURLDetector.m; sourceTree = "<group>"; };
 		7B2C4B102436FF5E00D2EB99 /* CircleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CircleCell.xib; sourceTree = "<group>"; };
 		7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactIdVerificationViewController.swift; sourceTree = "<group>"; };
 		7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInfoInputViewController.swift; sourceTree = "<group>"; };
@@ -1280,16 +1280,16 @@
 		7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDismissResponder.swift; sourceTree = "<group>"; };
 		7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
 		7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetTableHeaderView.swift; sourceTree = "<group>"; };
-		7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusReader.m; sourceTree = "<group>"; };
-		7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusError.m; sourceTree = "<group>"; };
-		7BC8502520CBA69900A57B83 /* MXNOggOpusWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusWriter.h; sourceTree = "<group>"; };
-		7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusWriter.m; sourceTree = "<group>"; };
-		7BC8502720CBA69A00A57B83 /* MXNOggOpusReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusReader.h; sourceTree = "<group>"; };
-		7BC8502920CBA69A00A57B83 /* MXNAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioRecorder.h; sourceTree = "<group>"; };
-		7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioMetadata.m; sourceTree = "<group>"; };
-		7BC8502C20CBA69A00A57B83 /* MXNAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioMetadata.h; sourceTree = "<group>"; };
-		7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioRecorder.m; sourceTree = "<group>"; };
-		7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusError.h; sourceTree = "<group>"; };
+		7BC8502320CBA69900A57B83 /* MXMOggOpusReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMOggOpusReader.m; sourceTree = "<group>"; };
+		7BC8502420CBA69900A57B83 /* MXMOggOpusError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMOggOpusError.m; sourceTree = "<group>"; };
+		7BC8502520CBA69900A57B83 /* MXMOggOpusWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusWriter.h; sourceTree = "<group>"; };
+		7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMOggOpusWriter.m; sourceTree = "<group>"; };
+		7BC8502720CBA69A00A57B83 /* MXMOggOpusReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusReader.h; sourceTree = "<group>"; };
+		7BC8502920CBA69A00A57B83 /* MXMAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAudioRecorder.h; sourceTree = "<group>"; };
+		7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMAudioMetadata.m; sourceTree = "<group>"; };
+		7BC8502C20CBA69A00A57B83 /* MXMAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAudioMetadata.h; sourceTree = "<group>"; };
+		7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMAudioRecorder.m; sourceTree = "<group>"; };
+		7BC8502F20CBA69B00A57B83 /* MXMOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusError.h; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -1510,8 +1510,8 @@
 		DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryCode.xcassets; sourceTree = "<group>"; };
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
-		DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNProvisionCryptor.h; sourceTree = "<group>"; };
-		DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNProvisionCryptor.m; sourceTree = "<group>"; };
+		DF6175BB2223985B00624609 /* MXMProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMProvisionCryptor.h; sourceTree = "<group>"; };
+		DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMProvisionCryptor.m; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
@@ -2042,8 +2042,8 @@
 			isa = PBXGroup;
 			children = (
 				7B72651B209C5F9300F234BE /* Link.swift */,
-				7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */,
-				7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */,
+				7B2AFEE020FE022C00C747BB /* MXMFastURLDetector.h */,
+				7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */,
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
@@ -2056,8 +2056,8 @@
 		7B88719C25060C76001FB418 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */,
-				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
+				DF6175BB2223985B00624609 /* MXMProvisionCryptor.h */,
+				DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */,
 				7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */,
 				7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */,
 				7B88719F25061577001FB418 /* PINEncryptor.swift */,
@@ -2203,16 +2203,16 @@
 				7BE6C957245680690038645C /* opus */,
 				7BE6C963245680690038645C /* opusenc */,
 				7BE6C95F245680690038645C /* opusfile */,
-				7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */,
-				7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */,
-				7BC8502520CBA69900A57B83 /* MXNOggOpusWriter.h */,
-				7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */,
-				7BC8502720CBA69A00A57B83 /* MXNOggOpusReader.h */,
-				7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */,
-				7BC8502C20CBA69A00A57B83 /* MXNAudioMetadata.h */,
-				7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */,
-				7BC8502920CBA69A00A57B83 /* MXNAudioRecorder.h */,
-				7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */,
+				7BC8502F20CBA69B00A57B83 /* MXMOggOpusError.h */,
+				7BC8502420CBA69900A57B83 /* MXMOggOpusError.m */,
+				7BC8502520CBA69900A57B83 /* MXMOggOpusWriter.h */,
+				7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */,
+				7BC8502720CBA69A00A57B83 /* MXMOggOpusReader.h */,
+				7BC8502320CBA69900A57B83 /* MXMOggOpusReader.m */,
+				7BC8502C20CBA69A00A57B83 /* MXMAudioMetadata.h */,
+				7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */,
+				7BC8502920CBA69A00A57B83 /* MXMAudioRecorder.h */,
+				7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */,
 				7B21782022C4E70B00C08106 /* AudioPlayer.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
@@ -3780,7 +3780,7 @@
 				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
-				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
+				7BC8503120CBA69B00A57B83 /* MXMOggOpusError.m in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
 				7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */,
@@ -3821,12 +3821,12 @@
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */,
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
-				7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */,
+				7BC8503520CBA69B00A57B83 /* MXMAudioRecorder.m in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
-				7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */,
+				7BC8503020CBA69B00A57B83 /* MXMOggOpusReader.m in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
@@ -3856,7 +3856,7 @@
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
-				7BC8503320CBA69B00A57B83 /* MXNAudioMetadata.m in Sources */,
+				7BC8503320CBA69B00A57B83 /* MXMAudioMetadata.m in Sources */,
 				DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
@@ -3882,7 +3882,7 @@
 				7BEED890246D0C3D00387EAE /* CallInterface.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
-				DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */,
+				DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */,
 				DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,
 				DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */,
@@ -4246,7 +4246,7 @@
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */,
-				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
+				7B2AFEE220FE022C00C747BB /* MXMFastURLDetector.m in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
@@ -4326,7 +4326,7 @@
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
-				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
+				7BC8503220CBA69B00A57B83 /* MXMOggOpusWriter.m in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				7BC3EBF72497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift in Sources */,

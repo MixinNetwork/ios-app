@@ -1,10 +1,9 @@
+#import "MXMAudioMetadata.h"
 
-#import "MXNAudioMetadata.h"
-
-@implementation MXNAudioMetadata
+@implementation MXMAudioMetadata
 
 + (instancetype)metadataWithDuration:(NSUInteger)duration waveform:(NSData *)waveform {
-    return [[MXNAudioMetadata alloc] initWithDuration:duration waveform:waveform];
+    return [[MXMAudioMetadata alloc] initWithDuration:duration waveform:waveform];
 }
 
 - (instancetype)initWithDuration:(NSUInteger)duration waveform:(NSData *)waveform {

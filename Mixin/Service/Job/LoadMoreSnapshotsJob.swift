@@ -3,8 +3,8 @@ import MixinServices
 
 class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
     
-    static let didLoadEarliestSnapshotUserInfoKey = "MXNDidLoadEarliestSnapshotUserInfoKey"
-    static let jobIdUserInfoKey = "MXNJobIdUserInfoKey"
+    static let didLoadEarliestSnapshotUserInfoKey = "MXMDidLoadEarliestSnapshotUserInfoKey"
+    static let jobIdUserInfoKey = "MXMJobIdUserInfoKey"
     
     override func getJobId() -> String {
         let offset = RefreshSnapshotsJob.offset(for: category) ?? ""

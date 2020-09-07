@@ -42,7 +42,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private var recordGestureBeganPoint = CGPoint.zero
     private var recordDurationTimer: Timer?
     private var recordDuration: TimeInterval = 0
-    private var recorder: MXNAudioRecorder?
+    private var recorder: AudioRecorder?
     private var isShowingLockView = false
     private var isLocked = false {
         didSet {
@@ -179,13 +179,13 @@ extension AudioInputViewController: UIGestureRecognizerDelegate {
     
 }
 
-extension AudioInputViewController: MXNAudioRecorderDelegate {
+extension AudioInputViewController: AudioRecorderDelegate {
     
-    func audioRecorderIsWaitingForActivation(_ recorder: MXNAudioRecorder) {
+    func audioRecorderIsWaitingForActivation(_ recorder: AudioRecorder) {
         
     }
     
-    func audioRecorderDidStartRecording(_ recorder: MXNAudioRecorder) {
+    func audioRecorderDidStartRecording(_ recorder: AudioRecorder) {
         let timer = Timer(timeInterval: updateTimeLabelInterval,
                           target: self,
                           selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
@@ -196,19 +196,19 @@ extension AudioInputViewController: MXNAudioRecorderDelegate {
         startRedDotAnimation()
     }
     
-    func audioRecorderDidCancelRecording(_ recorder: MXNAudioRecorder) {
+    func audioRecorderDidCancelRecording(_ recorder: AudioRecorder) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
     }
     
-    func audioRecorder(_ recorder: MXNAudioRecorder, didFailRecordingWithError error: Error) {
+    func audioRecorder(_ recorder: AudioRecorder, didFailRecordingWithError error: Error) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
     }
     
-    func audioRecorder(_ recorder: MXNAudioRecorder, didFinishRecordingWithMetadata metadata: MXNAudioMetadata) {
+    func audioRecorder(_ recorder: AudioRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
@@ -248,7 +248,7 @@ extension AudioInputViewController {
         setTimeLabelValue(0)
         let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
-            let recorder = try MXNAudioRecorder(path: tempUrl.path)
+            let recorder = try AudioRecorder(path: tempUrl.path)
             UIApplication.shared.isIdleTimerDisabled = true
             recorder.delegate = self
             recorder.record(for: AudioInputViewController.maxRecordDuration)

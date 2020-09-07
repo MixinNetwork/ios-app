@@ -18,8 +18,8 @@ extension LoginManager {
                 guard let account = LoginManager.shared.account else {
                     return
                 }
-                let cryptor = MXNProvisionCryptor(signalContext: globalSignalContext,
-                                                  base64EncodedPublicKey: base64EncodedPublicKey)
+                let cryptor = ProvisionCryptor(signalContext: globalSignalContext,
+                                               base64EncodedPublicKey: base64EncodedPublicKey)
                 let message = ProvisionMessage(identityKeyPublic: identityKeyPair.publicKey,
                                                identityKeyPrivate: identityKeyPair.privateKey,
                                                userId: account.user_id,

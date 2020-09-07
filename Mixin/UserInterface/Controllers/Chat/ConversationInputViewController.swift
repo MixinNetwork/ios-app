@@ -431,7 +431,7 @@ class ConversationInputViewController: UIViewController {
         quote = nil
     }
     
-    func sendAudio(url: URL, metadata: MXNAudioMetadata) {
+    func sendAudio(url: URL, metadata: AudioMetadata) {
         dataSource.sendMessage(type: .SIGNAL_AUDIO, quoteMessageId: quote?.message.messageId, value: (url, metadata))
         quote = nil
     }

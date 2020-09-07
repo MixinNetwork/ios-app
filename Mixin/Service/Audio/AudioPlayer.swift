@@ -36,7 +36,7 @@ class AudioPlayer {
         }
     }
     
-    fileprivate let reader: MXNOggOpusReader
+    fileprivate let reader: OggOpusReader
     fileprivate let sampleRate: Float64 = 48000
     fileprivate let numberOfBuffers = 3
     fileprivate let audioQueueBufferSize: UInt32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
@@ -64,7 +64,7 @@ class AudioPlayer {
     }()
     
     init(path: String) throws {
-        reader = try MXNOggOpusReader(fileAtPath: path)
+        reader = try OggOpusReader(fileAtPath: path)
         
         var status: OSStatus = noErr
         

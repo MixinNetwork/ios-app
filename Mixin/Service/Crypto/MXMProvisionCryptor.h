@@ -6,7 +6,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class ProvisionMessage;
 
-@interface MXNProvisionCryptor : NSObject
+NS_SWIFT_NAME(ProvisionCryptor)
+@interface MXMProvisionCryptor : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithSignalContext:(signal_context *)context

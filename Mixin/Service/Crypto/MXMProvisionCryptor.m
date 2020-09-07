@@ -1,4 +1,4 @@
-#import "MXNProvisionCryptor.h"
+#import "MXMProvisionCryptor.h"
 #import "Mixin-Swift.h"
 #import <libsignal_protocol_c/signal_protocol.h>
 #import <CommonCrypto/CommonCrypto.h>
@@ -9,7 +9,7 @@ const size_t hmacKeyLength = 32;
 const size_t versionLength = sizeof(uint8_t);
 const uint8_t version = 1;
 
-@implementation MXNProvisionCryptor {
+@implementation MXMProvisionCryptor {
     signal_context *_context;
     ec_public_key *_remotePublicKey;
 }

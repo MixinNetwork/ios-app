@@ -1,6 +1,5 @@
-
-#import "MXNAudioRecorder.h"
-#import "MXNOggOpusWriter.h"
+#import "MXMAudioRecorder.h"
+#import "MXMOggOpusWriter.h"
 #import <AVFoundation/AVFoundation.h>
 
 #define ReturnNoIfOSStautsError(result, code) if (result != noErr) { \
@@ -10,7 +9,7 @@
                                                 return NO; \
                                               } \
 
-const NSErrorDomain MXNAudioRecorderErrorDomain = @"MXNAudioRecorderErrorDomain";
+const NSErrorDomain MXMAudioRecorderErrorDomain = @"MXMAudioRecorderErrorDomain";
 
 static const float bufferDuration = 0.5;
 static const int numberOfAudioQueueBuffers = 3;
@@ -19,15 +18,15 @@ static const int millisecondsPerSecond = 1000;
 static const int waveformPeakSampleScope = 100;
 static const int numberOfWaveformIntensities = 63;
 
-NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXNAudioRecorderErrorCode code, OSStatus status);
+NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXMAudioRecorderErrorCode code, OSStatus status);
 NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 
-@implementation MXNAudioRecorder {
+@implementation MXMAudioRecorder {
     dispatch_queue_t _processingQueue;
     AudioQueueRef _audioQueue;
     AudioQueueBufferRef buffers[numberOfAudioQueueBuffers];
     NSTimeInterval _duration;
-    MXNOggOpusWriter *_writer;
+    MXMOggOpusWriter *_writer;
     NSTimer *_timer;
     NSMutableData *_waveformSamples;
     int16_t _waveformPeak;
@@ -42,7 +41,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         _vibratesAtBeginning = YES;
         _processingQueue = dispatch_queue_create("one.mixin.queue.audio_recorder", DISPATCH_QUEUE_SERIAL);
         _audioQueue = NULL;
-        _writer = [MXNOggOpusWriter writerWithPath:path
+        _writer = [MXMOggOpusWriter writerWithPath:path
                                    inputSampleRate:recordingSampleRate
                                              error:outError];
         if (!_writer) {
@@ -62,12 +61,12 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             [self->_delegate audioRecorderIsWaitingForActivation:self];
         });
     }
-    __weak MXNAudioRecorder *weakSelf = self;
+    __weak MXMAudioRecorder *weakSelf = self;
     dispatch_async(_processingQueue, ^{
         if (!weakSelf) {
             return;
         }
-        MXNAudioRecorder *strongSelf = weakSelf;
+        MXMAudioRecorder *strongSelf = weakSelf;
         
         NSError *error = nil;
         AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -130,7 +129,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         }
         NSData *waveform = [self waveform];
         NSUInteger duration = self->_numberOfEncodedSamples * millisecondsPerSecond / recordingSampleRate;
-        MXNAudioMetadata *metadata = [MXNAudioMetadata metadataWithDuration:duration waveform:waveform];
+        MXMAudioMetadata *metadata = [MXMAudioMetadata metadataWithDuration:duration waveform:waveform];
         [self cleanUp];
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self->_delegate audioRecorder:self didFinishRecordingWithMetadata:metadata];
@@ -166,8 +165,8 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 }
 
 - (void)audioSessionMediaServicesWereReset:(NSNotification *)notification {
-    NSError *error = [NSError errorWithDomain:MXNAudioRecorderErrorDomain
-                                         code:MXNAudioRecorderErrorCodeMediaServiceWereReset
+    NSError *error = [NSError errorWithDomain:MXMAudioRecorderErrorDomain
+                                         code:MXMAudioRecorderErrorCodeMediaServiceWereReset
                                      userInfo:nil];
     _recording = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -182,11 +181,11 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     OSStatus result = noErr;
 
     result = AudioQueueNewInput(&format, inputBufferhandler, (__bridge void *)(self), NULL, NULL, 8, &_audioQueue);
-    ReturnNoIfOSStautsError(result, MXNAudioRecorderErrorCodeAudioQueueNewInput);
+    ReturnNoIfOSStautsError(result, MXMAudioRecorderErrorCodeAudioQueueNewInput);
     
     UInt32 size = sizeof(format);
     result = AudioQueueGetProperty(_audioQueue, kAudioQueueProperty_StreamDescription, &format, &size);
-    ReturnNoIfOSStautsError(result, MXNAudioRecorderErrorCodeAudioQueueGetStreamDescription);
+    ReturnNoIfOSStautsError(result, MXMAudioRecorderErrorCodeAudioQueueGetStreamDescription);
     
     int bufferSize = [self bufferSizeWithFormat:&format seconds:bufferDuration error:outError];
     if (bufferSize == -1) {
@@ -195,13 +194,13 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     
     for (int i = 0; i < numberOfAudioQueueBuffers; ++i) {
         result = AudioQueueAllocateBuffer(_audioQueue, bufferSize, &buffers[i]);
-        ReturnNoIfOSStautsError(result, MXNAudioRecorderErrorCodeAudioQueueAllocateBuffer);
+        ReturnNoIfOSStautsError(result, MXMAudioRecorderErrorCodeAudioQueueAllocateBuffer);
         result = AudioQueueEnqueueBuffer(_audioQueue, buffers[i], 0, NULL);
-        ReturnNoIfOSStautsError(result, MXNAudioRecorderErrorCodeAudioQueueEnqueueBuffer);
+        ReturnNoIfOSStautsError(result, MXMAudioRecorderErrorCodeAudioQueueEnqueueBuffer);
     }
     
     result = AudioQueueStart(_audioQueue, NULL);
-    ReturnNoIfOSStautsError(result, MXNAudioRecorderErrorCodeAudioQueueStart)
+    ReturnNoIfOSStautsError(result, MXMAudioRecorderErrorCodeAudioQueueStart)
     
     _timer = [NSTimer timerWithTimeInterval:_duration repeats:NO block:^(NSTimer * _Nonnull timer) {
         [self stop];
@@ -281,7 +280,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             OSStatus result = AudioQueueGetProperty(_audioQueue, kAudioQueueProperty_MaximumOutputPacketSize, &maxPacketSize, &propertySize);
             if (result != noErr) {
                 if (outError) {
-                    *outError = ErrorWithCodeAndOSStatus(MXNAudioRecorderErrorCodeAudioQueueGetMaximumOutputPacketSize, result);
+                    *outError = ErrorWithCodeAndOSStatus(MXMAudioRecorderErrorCodeAudioQueueGetMaximumOutputPacketSize, result);
                 }
                 return -1;
             }
@@ -300,13 +299,13 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 }
 
 void inputBufferhandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer, const AudioTimeStamp *inStartTime, UInt32 inNumberPacketDescriptions, const AudioStreamPacketDescription *inPacketDescs) {
-    MXNAudioRecorder *recorder = (__bridge MXNAudioRecorder *)inUserData;
+    MXMAudioRecorder *recorder = (__bridge MXMAudioRecorder *)inUserData;
     OSStatus result = noErr;
     if (inNumberPacketDescriptions > 0) {
         NSData *pcmData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
-        __weak MXNAudioRecorder *weakRecorder = recorder;
+        __weak MXMAudioRecorder *weakRecorder = recorder;
         dispatch_async(recorder->_processingQueue, ^{
-            MXNAudioRecorder *strongRecorder = weakRecorder;
+            MXMAudioRecorder *strongRecorder = weakRecorder;
             if (!strongRecorder || !strongRecorder->_recording) {
                 return;
             }
@@ -326,9 +325,9 @@ void inputBufferhandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
 
 @end
 
-NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXNAudioRecorderErrorCode code, OSStatus status) {
+NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXMAudioRecorderErrorCode code, OSStatus status) {
     NSDictionary *userInfo = @{@"os_status" : @(status)};
-    return [NSError errorWithDomain:MXNAudioRecorderErrorDomain
+    return [NSError errorWithDomain:MXMAudioRecorderErrorDomain
                                code:code
                            userInfo:userInfo];
 }

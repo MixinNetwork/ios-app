@@ -1,6 +1,6 @@
-#import "MXNFastURLDetector.h"
+#import "MXMFastURLDetector.h"
 
-@implementation MXNFastURLDetector
+@implementation MXMFastURLDetector
 
 + (NSDataDetector *)detector {
     static NSDataDetector *detector;
@@ -41,7 +41,7 @@
     }
     if (maybeContainsURL) {
         NSRange range = NSMakeRange(0, string.length);
-        [[MXNFastURLDetector detector] enumerateMatchesInString:string options:options range:range usingBlock:block];
+        [[MXMFastURLDetector detector] enumerateMatchesInString:string options:options range:range usingBlock:block];
     }
 }
 

@@ -1,9 +1,9 @@
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MXNAudioMetadata : NSObject
+NS_SWIFT_NAME(AudioMetadata)
+@interface MXMAudioMetadata : NSObject
 
 @property (nonatomic, assign, readonly) NSUInteger duration; // in milliseconds
 @property (nonatomic, copy, readonly) NSData *waveform;

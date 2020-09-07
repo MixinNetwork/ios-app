@@ -2051,6 +2051,17 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		7B88719C25060C76001FB418 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */,
+				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
+				7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */,
+				7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
 		7B9553322243757400CE95E6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2139,12 +2150,8 @@
 		7BB3854C21E74B2B0070FF8F /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				DF6175BB2223985B00624609 /* MXNProvisionCryptor.h */,
-				DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */,
 				7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */,
 				E01BCE2723ACFA66005D3FF3 /* LoginManager+Provision.swift */,
-				7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */,
-				7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -3135,6 +3142,7 @@
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				DFB6CE1F23C4859300FB6615 /* Message */,
 				DFC0EB5723BB3CD60091E7AC /* API */,
+				7B88719C25060C76001FB418 /* Crypto */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 				7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */,

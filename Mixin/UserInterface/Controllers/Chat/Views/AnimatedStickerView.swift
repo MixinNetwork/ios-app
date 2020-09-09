@@ -12,12 +12,18 @@ class AnimatedStickerView: UIView {
         }
     }
     
+    var autoPlayAnimatedImage = false {
+        didSet {
+            imageViewIfLoaded?.autoPlayAnimatedImage = autoPlayAnimatedImage
+        }
+    }
+    
     private(set) weak var imageViewIfLoaded: YYAnimatedImageView?
     private(set) weak var animationViewIfLoaded: LOTAnimationView?
     
     private lazy var imageView: YYAnimatedImageView = {
         let view = YYAnimatedImageView()
-        view.autoPlayAnimatedImage = false
+        view.autoPlayAnimatedImage = autoPlayAnimatedImage
         view.contentMode = contentMode
         addSubview(view)
         view.snp.makeConstraints { (make) in
@@ -131,8 +137,10 @@ class AnimatedStickerView: UIView {
                 return
             }
             self.animationView.sceneModel = composition
-            self.animationView.loopAnimation = true
-            self.animationView.play()
+            if self.autoPlayAnimatedImage {
+                self.animationView.loopAnimation = true
+                self.animationView.play()
+            }
         })
     }
     

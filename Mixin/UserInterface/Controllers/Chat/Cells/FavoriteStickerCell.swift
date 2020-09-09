@@ -10,6 +10,7 @@ class FavoriteStickerCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectedBackgroundView = UIView()
+        stickerView.autoPlayAnimatedImage = true
     }
     
     override func prepareForReuse() {
@@ -32,7 +33,6 @@ class FavoriteStickerCell: UICollectionViewCell {
     func render(sticker: StickerItem, isDeleteStickers: Bool) {
         selectionImageView.isHidden = !isDeleteStickers
         stickerView.load(sticker: sticker)
-        stickerView.startAnimating()
     }
     
 }

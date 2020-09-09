@@ -16,6 +16,6 @@ protocol CallInterface: NSObjectProtocol {
     func reportCall(uuid: UUID, endedByReason reason: CXCallEndedReason)
     func reportOutgoingCallStartedConnecting(uuid: UUID)
     func reportOutgoingCall(uuid: UUID, connectedAtDate date: Date)
-    func reportIncomingCall(uuid: UUID, connectedAtDate date: Date)
+    func reportIncomingCall(_ call: Call, connectedAtDate date: Date)
     
 }

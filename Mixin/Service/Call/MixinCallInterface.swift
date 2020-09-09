@@ -153,7 +153,7 @@ extension MixinCallInterface: CallInterface {
         
     }
     
-    func reportIncomingCall(uuid: UUID, connectedAtDate date: Date) {
+    func reportIncomingCall(_ call: Call, connectedAtDate date: Date) {
         DispatchQueue.main.async {
             UIApplication.shared.isIdleTimerDisabled = false
         }

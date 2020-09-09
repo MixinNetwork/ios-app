@@ -1074,13 +1074,13 @@ extension CallService: WebRTCClientDelegate {
         if call.connectedDate == nil {
             let date = Date()
             call.connectedDate = date
+            call.status = .connected
             if call.isOutgoing {
                 callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
             } else {
-                callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
+                callInterface.reportIncomingCall(call, connectedAtDate: date)
             }
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            call.status = .connected
             if !isUsingCallKit {
                 RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                     RTCAudioSession.sharedInstance().isAudioEnabled = true

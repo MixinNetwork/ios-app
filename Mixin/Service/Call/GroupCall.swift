@@ -17,12 +17,16 @@ class GroupCall: Call {
     // invite after group call is connected
     private var pendingInvitingMembers: [UserItem]?
     
+    private var hasBegunConnecting: Bool {
+        status != .incoming && status != .outgoing
+    }
+    
     override var description: String {
         "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), inviters: \(inviters.map(\.fullName)), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
     var localizedName: String {
-        if inviters.isEmpty {
+        if inviters.isEmpty || hasBegunConnecting {
             return conversationName
         } else {
             return inviters.map(\.fullName).joined(separator: ", ")

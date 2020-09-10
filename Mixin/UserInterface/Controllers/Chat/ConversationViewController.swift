@@ -2136,7 +2136,7 @@ extension ConversationViewController {
                 }
             }
 
-            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(ReachabilityManger.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
+            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(ReachabilityManger.shared.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
 
             if let message = message {
                 var log = "[Report][Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"

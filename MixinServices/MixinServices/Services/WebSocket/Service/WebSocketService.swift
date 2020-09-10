@@ -48,7 +48,7 @@ public class WebSocketService {
             guard canProcessMessages else {
                 return
             }
-            guard ReachabilityManger.isReachable else {
+            guard ReachabilityManger.shared.isReachable else {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
@@ -113,7 +113,7 @@ public class WebSocketService {
             guard canProcessMessages else {
                 return
             }
-            guard ReachabilityManger.isReachable else {
+            guard ReachabilityManger.shared.isReachable else {
                 NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
                 return
             }
@@ -301,7 +301,7 @@ extension WebSocketService {
             }
             self.status = .disconnected
 
-            if ReachabilityManger.isReachable {
+            if ReachabilityManger.shared.isReachable {
                 if -self.lastConnectionDate.timeIntervalSinceNow >= 2 {
                     self.connect()
                 } else {

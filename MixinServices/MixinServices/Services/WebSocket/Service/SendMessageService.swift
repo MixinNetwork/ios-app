@@ -334,7 +334,7 @@ public class SendMessageService: MixinService {
                 reporter.report(error: error)
             }
             
-            while LoginManager.shared.isLoggedIn && (!ReachabilityManger.isReachable || !WebSocketService.shared.isConnected) {
+            while LoginManager.shared.isLoggedIn && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected) {
                 Thread.sleep(forTimeInterval: 2)
             }
             return false

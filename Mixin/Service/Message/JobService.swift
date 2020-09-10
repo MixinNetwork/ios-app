@@ -74,7 +74,7 @@ class JobService {
     }
     
     private func recoverMediaJobs() {
-        guard ReachabilityManger.isReachableOnEthernetOrWiFi else {
+        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
             return
         }
         let limit = 5

@@ -50,11 +50,11 @@ open class BaseJob: Operation {
         if requireNetwork() && requireWebSocket() {
             repeat {
                 Thread.sleep(forTimeInterval: 2)
-            } while LoginManager.shared.isLoggedIn && (!ReachabilityManger.isReachable || !WebSocketService.shared.isConnected)
+            } while LoginManager.shared.isLoggedIn && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected)
         } else if requireNetwork() {
             repeat {
                 Thread.sleep(forTimeInterval: 2)
-            } while LoginManager.shared.isLoggedIn && !ReachabilityManger.isReachable
+            } while LoginManager.shared.isLoggedIn && !ReachabilityManger.shared.isReachable
         } else if requireWebSocket() {
             repeat {
                 Thread.sleep(forTimeInterval: 2)

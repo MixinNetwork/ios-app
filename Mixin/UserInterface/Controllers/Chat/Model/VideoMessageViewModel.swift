@@ -18,7 +18,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         case .never:
             return false
         case .wifi:
-            return ReachabilityManger.isReachableOnEthernetOrWiFi
+            return ReachabilityManger.shared.isReachableOnEthernetOrWiFi
         case .wifiAndCellular:
             return true
         }

@@ -33,7 +33,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     }()
     
     private var isNetworkPermissionRestricted: Bool {
-        return cellularData.restrictedState == .restricted && !ReachabilityManger.isReachable
+        return cellularData.restrictedState == .restricted && !ReachabilityManger.shared.isReachable
     }
     
     deinit {

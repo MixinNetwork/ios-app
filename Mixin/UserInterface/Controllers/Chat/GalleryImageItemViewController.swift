@@ -34,7 +34,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         case .wifiAndCellular:
             return true
         case .wifi:
-            return ReachabilityManger.isReachableOnEthernetOrWiFi
+            return ReachabilityManger.shared.isReachableOnEthernetOrWiFi
         case .never:
             return false
         }

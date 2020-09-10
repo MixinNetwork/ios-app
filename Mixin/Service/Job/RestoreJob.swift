@@ -11,7 +11,7 @@ class RestoreJob: BaseJob {
     private var downloadedSize: Int64 = 0
     private var isStoppedQuery = false
     private var isContinueRestore: Bool {
-        return !isCancelled && ReachabilityManger.isReachableOnEthernetOrWiFi
+        return !isCancelled && ReachabilityManger.shared.isReachableOnEthernetOrWiFi
     }
     private var isRestoredAllFiles: Bool {
         return monitors.values.first(where: { !$0.isRestored }) == nil

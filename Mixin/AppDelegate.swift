@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reporterClass = CrashlyticalReporter.self
         AppGroupUserDefaults.migrateIfNeeded()
         updateSharedImageCacheConfig()
-        ReachabilityManger.startListening()
+        _ = ReachabilityManger.shared
         _ = DarwinNotificationManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
@@ -187,7 +187,7 @@ extension AppDelegate {
             return
         }
 
-        if ReachabilityManger.isReachableOnEthernetOrWiFi {
+        if ReachabilityManger.shared.isReachableOnEthernetOrWiFi {
             if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
                 BackupJobQueue.shared.addJob(job: BackupJob())
             }

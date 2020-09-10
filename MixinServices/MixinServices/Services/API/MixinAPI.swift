@@ -141,7 +141,7 @@ extension MixinAPI {
                     Logger.write(error: error)
                     
                     let shouldToggleServer: Bool = {
-                        guard ReachabilityManger.isReachable else {
+                        guard ReachabilityManger.shared.isReachable else {
                             return false
                         }
                         if case .responseValidationFailed(.unacceptableStatusCode) = error {

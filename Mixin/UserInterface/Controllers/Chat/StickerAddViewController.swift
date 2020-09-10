@@ -113,7 +113,7 @@ extension StickerAddViewController {
     
     private func showFailureAlert() {
         container?.rightButton.isBusy = false
-        showAutoHiddenHud(style: .error, text: R.string.localizable.toast_operation_failed())
+        showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
     }
     
     private func scaledSize(for size: CGSize) -> CGSize {

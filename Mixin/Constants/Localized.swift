@@ -60,25 +60,9 @@ public class Localized {
     public static let LANDING_PHONE_DIALOG_BUTTON_CANCEL = LocalizedString("landing_phone_dialog_button_cancel", comment: "Cancel")
 
     // Error
-    public static let TOAST_SERVER_ERROR = LocalizedString("toast_server_error", comment: "Server is under maintenance")
-    public static let TOAST_API_ERROR_FORBIDDEN = LocalizedString("toast_api_error_forbidden", comment: "Access denied")
-    public static let TOAST_API_ERROR_NO_CONNECTION = LocalizedString("toast_api_error_no_connection", comment: "No network connection")
-    public static let TOAST_API_ERROR_NETWORK_CONNECTION_LOST = LocalizedString("toast_api_error_network_connection_lost", comment: "The network connection was lost, please check your network and try again later")
-    public static let TOAST_API_ERROR_SERVER_5XX = LocalizedString("toast_api_error_server_5xx", comment: "Minewave server encounters errors")
-    public static let TOAST_API_ERROR_NOT_FOUND = LocalizedString("toast_api_error_not_found", comment: "Not found")
-    public static let TOAST_API_ERROR_SERVER_DATA_ERROR = LocalizedString("toast_api_error_server_data_error", comment: "Data parsing error")
-    public static let TOAST_API_ERROR_TOO_MANY_REQUESTS = LocalizedString("toast_api_error_too_many_requests", comment: "Rate limit exceeded")
-    public static func TOAST_API_ERROR_PHONE_SMS_DELIVERY(phoneNumber: String) -> String {
-        return String(format: LocalizedString("toast_api_error_phone_sms_delivery", comment: "Failed to deliver SMS to %@"), phoneNumber)
-    }
-    public static let TOAST_API_ERROR_PHONE_VERIFICATION_INVALID = LocalizedString("toast_api_error_phone_verification_invalid", comment: "Invalid verification code")
-    public static let TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER = LocalizedString("toast_api_error_unavailable_phone_number", comment: "This phone number is already associated with another account")
     public static let PERMISSION_DENIED_CAMERA = LocalizedString("permission_denied_camera", comment: "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
-    public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
-        return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
-    }
     public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Copied")
     public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
     public static let TOAST_SAVED = LocalizedString("toast_saved", comment: "Saved")
@@ -108,8 +92,7 @@ public class Localized {
     public static let HEADER_TITLE_CURRENT_SELECTED = LocalizedString("header_title_current_selected", comment: "Current Selected")
     public static let HEADER_TITLE_CURRENT_LOCATION = LocalizedString("header_title_current_location", comment: "Current Location")
     public static let TOAST_RECAPTCHA_TIMED_OUT = LocalizedString("toast_recaptcha_timed_out", comment: "Validation timed out")
-    public static let TOAST_RECAPTCHA_INVALID = LocalizedString("toast_recaptcha_invalid", comment: "Recaptcha is invalid.")
-
+    
     // Contacts
     public static let CONTACT_TITLE_CHANGE_NAME = LocalizedString("contact_title_change_name", comment: "Change name")
     public static let CONTACT_NEW_GROUP_TITLE = LocalizedString("contact_new_group_title", comment: "New Group Chat")
@@ -201,7 +184,6 @@ public class Localized {
     public static let STICKER_ADD_FAILED = LocalizedString("sticker_add_failed", comment: "Failed to add sticker")
     public static let STICKER_REMOVE_FAILED = LocalizedString("sticker_remove_failed", comment: "Failed to delete stickers")
     public static let STICKER_ADD_REQUIRED = LocalizedString("sticker_add_required", comment: "Requires stickers file size larger than 1KB and less than 1MB, aspect ratio between 16:9 and 9:16.")
-    public static let STICKER_ADD_LIMIT = LocalizedString("sticker_add_limit", comment: "Too many stickers.")
 
     // Camera
     public static let CAMERA_SAVE_PHOTO_SUCCESS = LocalizedString("camera_save_photo_success", comment: "Photo saved.")
@@ -238,7 +220,6 @@ public class Localized {
     public static let GROUP_JOIN_FAIL_SUMMARY = LocalizedString("group_join_fail_summary", comment: "This invite link doesn't match any Mixin groups.")
     public static let CODE_RECOGNITION_FAIL_TITLE = LocalizedString("code_recognition_fail_title", comment: "Unrecognized codes")
     public static let CODE_RECOGNITION_FAIL_SUMMARY = LocalizedString("code_recognition_fail_summary", comment: "This codes doesn't match any Mixin groups or users.")
-    public static let GROUP_JOIN_FAIL_FULL = LocalizedString("group_join_fail_full", comment: "The group chat is full.")
     public static let GROUP_LINK_CHECKING = LocalizedString("group_link_checking", comment: "Checking invite link")
     public static let GROUP_REMOVE_TITLE = LocalizedString("group_remove_title", comment: "you were removed from the group")
     public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
@@ -316,10 +297,6 @@ public class Localized {
     public static let WALLET_TITLE_ADD_ASSET = LocalizedString("wallet_title_add_asset", comment: "Add asset")
     public static let WALLET_ALREADY_HAD_THE_ASSET = LocalizedString("wallet_already_had_the_asset", comment: "Already had")
     public static let WALLET_TRANSFER_OUT = LocalizedString("wallet_transfer_out", comment: "Transfer Out")
-    public static let TRANSFER_ERROR_BALANCE_INSUFFICIENT = LocalizedString("transfer_error_balance_insufficient", comment: "Insufficient balance")
-    public static let TRANSFER_ERROR_FEE_INSUFFICIENT = LocalizedString("transfer_error_fee_insufficient", comment: "Insufficient transaction fee")
-    public static let TRANSFER_ERROR_AMOUNT_TOO_SMALL = LocalizedString("transfer_error_amount_too_small", comment: "Transfer amount too small")
-    public static let TRANSFER_ERROR_PIN_INCORRECT = LocalizedString("transfer_error_pin_incorrect", comment: "PIN incorrect")
     public static let WALLET_SYMBOL_OTHER = LocalizedString("wallet_symbol_other", comment: "Other")
     public static let WALLET_TRANSFER_BALANCE_INSUFFICIENT = LocalizedString("wallet_transfer_balance_insufficient", comment: "Insufficient balance")
     public static let WALLET_CHANGE_PASSWORD = LocalizedString("wallet_change_password", comment: "Change PIN")
@@ -346,7 +323,6 @@ public class Localized {
     public static func WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: String, name: String) -> String {
         return String(format: LocalizedString("wallet_withdrawal_reserve", comment: " %@ has a minimum %@ reserve requirement."), name, reserveRepresentation)
     }
-    public static let WALLET_BLOCKCHIAN_NOT_IN_SYNC = LocalizedString("wallet_blockchian_not_in_sync", comment: "Blockchain not in sync.")
     public static let WALLET_NO_PRICE = LocalizedString("wallet_no_price", comment: "N/A")
     public static let WALLET_PIN_CREATE_TITLE = LocalizedString("wallet_pin_create_title", comment: "Set a 6 digit PIN to create your first digital wallet")
     public static let WALLET_PIN_CONFIRM_TITLE = LocalizedString("wallet_pin_confirm_title", comment: "Please confirm the 6 digit PIN and remember it")
@@ -392,7 +368,6 @@ public class Localized {
     }
     public static let WALLET_PIN_PAY_INTERVAL_CONFIRM = LocalizedString("wallet_pin_pay_interval_confirm", comment: "Confirm PIN to protect your settings security.")
     public static let WALLET_PIN_PAY_INTERVAL_TIPS = LocalizedString("wallet_pin_pay_interval_tips", comment: "For the security of your assets, you will still need to pay the PIN when you transfer again when you have entered the payment PIN for more than the specified time")
-    public static let WITHDRAWAL_AMOUNT_TOO_SMALL = LocalizedString("withdrawal_amount_too_small", comment: "Withdraw amount too small")
     public static let TRANSACTIONS_FILTER_SORT_BY = LocalizedString("transactions_filter_sort_by", comment: "Sort by")
     public static let TRANSACTIONS_FILTER_SORT_BY_TIME = LocalizedString("transactions_filter_sort_by_time", comment: "Time")
     public static let TRANSACTIONS_FILTER_SORT_BY_AMOUNT = LocalizedString("transactions_filter_sort_by_amount", comment: "Amount")
@@ -435,7 +410,6 @@ public class Localized {
     public static func ADDRESS_DELETE_TITLE(symbol: String) -> String {
         return String(format: LocalizedString("address_delete_title", comment: "Delete %@ Address"), symbol)
     }
-    public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     
     // Transfer
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")

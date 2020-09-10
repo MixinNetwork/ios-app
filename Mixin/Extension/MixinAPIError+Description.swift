@@ -7,8 +7,6 @@ extension MixinAPIError {
         switch self {
         case .prerequistesNotFulfilled:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
-        case .invalidHTTPStatusCode:
-            return Localized.TOAST_API_ERROR_SERVER_5XX
         case .invalidJSON:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case let .httpTransport(error):
@@ -23,6 +21,8 @@ extension MixinAPIError {
                 default:
                     return MixinServices.Localized.TOAST_OPERATION_FAILED
                 }
+            } else if case .responseValidationFailed(reason: .unacceptableStatusCode) = error {
+                return Localized.TOAST_API_ERROR_SERVER_5XX
             } else {
                 return MixinServices.Localized.TOAST_OPERATION_FAILED
             }

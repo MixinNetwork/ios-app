@@ -4,7 +4,6 @@ import Alamofire
 public enum MixinAPIError: Error {
     
     case prerequistesNotFulfilled
-    case invalidHTTPStatusCode(Int)
     case invalidJSON(Error)
     case httpTransport(AFError)
     case webSocketTimeOut
@@ -210,7 +209,7 @@ extension MixinAPIError {
         switch self {
         case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
             return true
-        case let .invalidHTTPStatusCode(code):
+        case .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(let code))):
             return code >= 500
         case let .unknown(status, _):
             return status >= 500

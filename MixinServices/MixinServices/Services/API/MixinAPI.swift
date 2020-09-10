@@ -166,12 +166,7 @@ extension MixinAPI {
                         MixinHost.toggle(currentHttpHost: host)
                     }
                     
-                    switch error {
-                    case let .responseValidationFailed(.unacceptableStatusCode(code)):
-                        completion(.failure(.invalidHTTPStatusCode(code)))
-                    default:
-                        completion(.failure(.httpTransport(error)))
-                    }
+                    completion(.failure(.httpTransport(error)))
                 }
             })
     }

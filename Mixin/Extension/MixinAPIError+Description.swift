@@ -10,8 +10,8 @@ extension MixinAPIError {
         case .invalidJSON:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case let .httpTransport(error):
-            if let underlying = error.underlyingError, (underlying as NSError).domain == NSURLErrorDomain {
-                switch (underlying as NSError).code {
+            if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
+                switch underlying.code {
                 case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
                     return Localized.TOAST_API_ERROR_NO_CONNECTION
                 case NSURLErrorTimedOut:

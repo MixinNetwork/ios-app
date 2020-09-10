@@ -198,7 +198,10 @@ extension MixinAPIError {
         switch self {
         case .webSocketTimeOut:
             return true
-        case let .httpTransport(underlying as NSError):
+        case let .httpTransport(error):
+            guard let underlying = (error.underlyingError as NSError?) else {
+                return false
+            }
             return underlying.domain == NSURLErrorDomain && underlying.code == NSURLErrorTimedOut
         default:
             return false

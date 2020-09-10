@@ -88,7 +88,10 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                             self?.continueButton.isBusy = false
                         }
                     })
-                case let .httpTransport(underlying as NSError) where underlying.domain == NSURLErrorDomain:
+                case let .httpTransport(error):
+                    guard let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain else {
+                        fallthrough
+                    }
                     if underlying.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
                         weakSelf.alertSettings(R.string.localizable.permission_denied_network())
                         weakSelf.continueButton.isBusy = false

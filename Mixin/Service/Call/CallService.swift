@@ -1489,7 +1489,19 @@ extension CallService {
                     return
                 }
                 self.activeCall = nil
+                if let call = call as? GroupCall {
+                    self.groupCallUUIDs[call.conversationId] = nil
+                }
                 if let error = error as? CallError {
+                    DispatchQueue.main.async {
+                        guard let viewController = self.window?.rootViewController else {
+                            return
+                        }
+                        guard viewController is GroupCallConfirmationViewController else {
+                            return
+                        }
+                        self.dismissCallingInterface()
+                    }
                     self.alert(error: error)
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())

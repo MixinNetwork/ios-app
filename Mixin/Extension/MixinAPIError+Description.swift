@@ -19,7 +19,7 @@ extension MixinAPIError {
                 case NSURLErrorNetworkConnectionLost:
                     return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
                 default:
-                    return MixinServices.Localized.TOAST_OPERATION_FAILED
+                    return underlying.localizedDescription
                 }
             } else if case .responseValidationFailed(reason: .unacceptableStatusCode) = error {
                 return Localized.TOAST_API_ERROR_SERVER_5XX
@@ -54,7 +54,7 @@ extension MixinAPIError {
         case .requiresReCaptcha:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .requiresUpdate:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return R.string.localizable.app_update_short_tips()
         case .invalidPhoneNumber:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .insufficientIdentityNumber:

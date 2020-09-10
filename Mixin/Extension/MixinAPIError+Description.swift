@@ -5,6 +5,9 @@ extension MixinAPIError {
     
     var localizedDescription: String {
         switch self {
+        case .foundNilResult:
+            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            
         case .prerequistesNotFulfilled:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .invalidJSON:

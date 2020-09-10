@@ -3,6 +3,10 @@ import Alamofire
 
 public enum MixinAPIError: Error {
     
+    // The nil result error below should not appear in normal cases
+    // Debug to reduce it once happended
+    case foundNilResult
+    
     case prerequistesNotFulfilled
     case invalidJSON(Error)
     case httpTransport(AFError)

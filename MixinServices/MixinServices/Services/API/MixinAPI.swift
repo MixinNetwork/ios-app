@@ -11,14 +11,28 @@ open class MixinAPI {
     public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
             session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, completion: { (result: MixinAPI.Result<Response>) in
+            switch result {
+            case .failure(.unauthorized):
+                break
+            default:
+                completion(result)
+            }
+        })
     }
     
     @discardableResult
     public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
             session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default)
-        }, requiresLogin: requiresLogin, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, completion: { (result: MixinAPI.Result<Response>) in
+            switch result {
+            case .failure(.unauthorized):
+                break
+            default:
+                completion(result)
+            }
+        })
     }
     
     @discardableResult
@@ -63,13 +77,15 @@ extension MixinAPI {
     
     private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, debugDescription: String) -> MixinAPI.Result<Response> {
         let semaphore = DispatchSemaphore(value: 0)
-        var result: MixinAPI.Result<Response>!
+        var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
         
-        request(makeRequest: makeRequest) { (theResult: MixinAPI.Result<Response>) in
+        let request = Self.request(makeRequest: makeRequest, isAsync: false) { (theResult: MixinAPI.Result<Response>) in
             result = theResult
             semaphore.signal()
         }
-        semaphore.wait()
+        if request != nil {
+            semaphore.wait()
+        }
         
         if case let .failure(error) = result, error.isTransportTimedOut {
             Logger.write(log: "[MixinAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(debugDescription)")
@@ -79,7 +95,7 @@ extension MixinAPI {
     }
     
     @discardableResult
-    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, requiresLogin: Bool = true, isAsync: Bool, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         if requiresLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -98,16 +114,19 @@ extension MixinAPI {
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
-                request(makeRequest: makeRequest, requiresLogin: requiresLogin, completion: completion)
+                request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
                 AppGroupUserDefaults.Account.isClockSkewed = true
                 DispatchQueue.main.async {
                     WebSocketService.shared.disconnect()
                     NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                 }
+                completion(.failure(.unauthorized))
             } else {
+                completion(.failure(.unauthorized))
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
-                LoginManager.shared.logout(from: "AsyncRequest")
+                let reason = isAsync ? "AsyncRequest" : "SyncRequest"
+                LoginManager.shared.logout(from: reason)
             }
         }
         

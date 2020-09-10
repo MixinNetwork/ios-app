@@ -744,6 +744,7 @@ extension PayWindow {
                     break
                 case let .failure(error):
                     completion(false, error.localizedDescription)
+                    return
                 }
             }
         }

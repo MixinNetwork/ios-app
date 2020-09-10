@@ -85,10 +85,10 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                 removeJob()
                 finishJob()
                 return false
-            case let .failure(error) where !error.worthRetrying:
-                return false
-            case let .failure(error):
+            case let .failure(error) where error.worthRetrying:
                 checkNetworkAndWebSocket()
+            case let .failure(error):
+                return false
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false

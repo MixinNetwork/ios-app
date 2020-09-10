@@ -443,7 +443,7 @@ public class SendMessageService: MixinService {
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
 
-                if case let MixinAPIError.invalidRequestData = error {
+                if case MixinAPIError.invalidRequestData = error {
                     return true
                 }
             }
@@ -592,7 +592,9 @@ extension SendMessageService {
         do {
             try deliver(blazeMessage: blazeMessage)
         } catch MixinAPIError.forbidden {
+            #if DEBUG
             print("\(MixinAPIError.forbidden)")
+            #endif
         } catch {
             #if DEBUG
             print(error)

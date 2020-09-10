@@ -28,7 +28,7 @@ extension MixinAPIError {
             }
         case .webSocketTimeOut:
             return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
-        case let .unknown(code, status):
+        case .unknown:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
             
         case .invalidRequestBody:

@@ -35,8 +35,7 @@ final class AccountAPI: MixinAPI {
             }
             return path
         }
-        
-        static let sessions = "/sessions/fetch"
+
     }
     
     static func me(completion: @escaping (MixinAPI.Result<Account>) -> Void) {
@@ -95,10 +94,6 @@ final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
             
         }
-    }
-    
-    static func getSessions(userIds: [String], completion: @escaping (MixinAPI.Result<[UserSession]>) -> Void) {
-        request(method: .post, path: Path.sessions, parameters: userIds, completion: completion)
     }
     
     static func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {

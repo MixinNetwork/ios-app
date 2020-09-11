@@ -12,7 +12,6 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
-		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
 		7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015F48241F60BC0004A563 /* LocationTableView.swift */; };
@@ -532,6 +531,8 @@
 		7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
+		7BFC0C2F250BA3B500A983D6 /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
+		7BFC0C30250BA3B500A983D6 /* Pods_MixinNotificationService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */; };
 		7BFCB8A8241CF1B800E7BC43 /* LocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFCB8A7241CF1B800E7BC43 /* LocationExtensions.swift */; };
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
@@ -835,6 +836,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				7B4203FA24A3901200490347 /* WebRTC.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BFC0C31250BA3B500A983D6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7BFC0C30250BA3B500A983D6 /* Pods_MixinNotificationService.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1720,7 +1732,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */,
+				7BFC0C2F250BA3B500A983D6 /* Pods_MixinNotificationService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3218,6 +3230,7 @@
 				E090B9F323B3957E0088355B /* Sources */,
 				E090B9F423B3957E0088355B /* Frameworks */,
 				E090B9F523B3957E0088355B /* Resources */,
+				7BFC0C31250BA3B500A983D6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

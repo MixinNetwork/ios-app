@@ -31,8 +31,8 @@ extension MixinAPIError {
             }
         case .webSocketTimeOut, .clockSkewDetected:
             return R.string.localizable.error_connection_timeout()
-        case let .unknown(status, code):
-            return R.string.localizable.error_two_parts("\(status)", "\(code)")
+        case let .unknown(_, code, description):
+            return R.string.localizable.error_two_parts("\(code)", description)
             
         case .invalidRequestBody:
             return R.string.localizable.error_invalid_request_body()

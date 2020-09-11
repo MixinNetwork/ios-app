@@ -12,7 +12,7 @@ public enum MixinAPIError: Error {
     case httpTransport(AFError)
     case webSocketTimeOut
     case clockSkewDetected
-    case unknown(status: Int, code: Int)
+    case unknown(status: Int, code: Int, description: String)
     
     case invalidRequestBody
     case unauthorized
@@ -68,7 +68,7 @@ public enum MixinAPIError: Error {
 
 extension MixinAPIError {
     
-    init(status: Int, code: Int) {
+    init(status: Int, code: Int, description: String) {
         switch (status, code) {
         case (202, 400):
             self = .invalidRequestBody
@@ -160,7 +160,7 @@ extension MixinAPIError {
             self = .trackNotFound
             
         default:
-            self = .unknown(status: status, code: code)
+            self = .unknown(status: status, code: code, description: description)
         }
     }
     
@@ -171,6 +171,7 @@ extension MixinAPIError: Decodable {
     enum CodingKeys: CodingKey {
         case code
         case status
+        case description
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -181,7 +182,8 @@ extension MixinAPIError: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let status = try container.decode(Int.self, forKey: .status)
         let code = try container.decode(Int.self, forKey: .code)
-        self.init(status: status, code: code)
+        let description = try container.decode(String.self, forKey: .description)
+        self.init(status: status, code: code, description: description)
     }
     
 }
@@ -208,7 +210,7 @@ extension MixinAPIError {
             return true
         case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(code))):
             return code >= 400 && code < 500
-        case let .unknown(status, _):
+        case let .unknown(status, _, _):
             return status >= 400 && status < 500
         default:
             return false
@@ -221,7 +223,7 @@ extension MixinAPIError {
             return true
         case .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(let code))):
             return code >= 500
-        case let .unknown(status, _):
+        case let .unknown(status, _, _):
             return status >= 500
         default:
             return false

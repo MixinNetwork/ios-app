@@ -65,7 +65,7 @@ extension MixinAPIError {
         case .invalidInvitationCode:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .invalidPhoneVerificationCode:
-            return MixinServices.Localized.TOAST_OPERATION_FAILED
+            return Localized.TEXT_INVALID_VERIFICATION_CODE
         case .expiredPhoneVerificationCode:
             return MixinServices.Localized.TOAST_OPERATION_FAILED
         case .invalidQrCode:

@@ -773,6 +773,8 @@ public class ReceiveMessageService: MixinService {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true
+            case .failure(.unauthorized):
+                return false
             case .failure(.notFound):
                 return false
             case .failure:

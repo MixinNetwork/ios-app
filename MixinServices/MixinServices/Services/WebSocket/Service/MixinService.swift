@@ -177,13 +177,13 @@ public class MixinService {
                 }
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
                 return true
+            case .failure(.unauthorized):
+                return false
             case let .failure(error):
-                if !retry {
-                    return false
-                } else if case .unauthorized = error {
-                    return false
-                } else {
+                if retry {
                     checkNetworkAndWebSocket()
+                } else {
+                    return false
                 }
             }
         } while true

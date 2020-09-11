@@ -144,7 +144,7 @@ extension MixinAPI {
                             case .unauthorized:
                                 handleDeauthorization(response: response.response)
                             default:
-                                if error.isServerSideError {
+                                if error.isServerError {
                                     MixinHost.toggle(currentHttpHost: host)
                                 }
                                 completion(.failure(error))

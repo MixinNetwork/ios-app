@@ -261,12 +261,13 @@ public class MixinService {
                         syncConversation(conversationId: conversationId)
                     }
                     throw error
-                case .httpTransport, .webSocketTimeOut:
-                    checkNetworkAndWebSocket()
-                    continue
                 default:
                     checkNetworkAndWebSocket()
-                    throw error
+                    if error.isClientError {
+                        continue
+                    } else {
+                        throw error
+                    }
                 }
             } catch {
                 #if DEBUG

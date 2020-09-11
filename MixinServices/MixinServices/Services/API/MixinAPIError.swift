@@ -212,7 +212,20 @@ extension MixinAPIError {
         }
     }
     
-    public var isServerSideError: Bool {
+    public var isClientError: Bool {
+        switch self {
+        case .invalidRequestBody, .unauthorized, .forbidden, .notFound, .tooManyRequests:
+            return true
+        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(code))):
+            return code >= 400 && code < 500
+        case let .unknown(status, _):
+            return status >= 400 && status < 500
+        default:
+            return false
+        }
+    }
+    
+    public var isServerError: Bool {
         switch self {
         case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
             return true
@@ -226,11 +239,24 @@ extension MixinAPIError {
     }
     
     public var worthRetrying: Bool {
+        if isClientError || isServerError {
+            return true
+        }
         switch self {
-        case .httpTransport, .webSocketTimeOut:
+        case .httpTransport(let error):
+            guard let underlying = error.underlyingError as NSError?, underlying.domain == NSURLErrorDomain else {
+                return false
+            }
+            let codes = [
+                NSURLErrorNotConnectedToInternet,
+                NSURLErrorTimedOut,
+                NSURLErrorNetworkConnectionLost
+            ]
+            return codes.contains(underlying.code)
+        case .webSocketTimeOut:
             return true
         default:
-            return isServerSideError
+            return false
         }
     }
     

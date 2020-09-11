@@ -327,10 +327,9 @@ public class SendMessageService: MixinService {
         } catch MixinAPIError.forbidden {
             return true
         } catch {
-            switch error {
-            case MixinAPIError.httpTransport, MixinAPIError.webSocketTimeOut:
+            if let error = error as? MixinAPIError, error.isClientError {
                 Thread.sleep(forTimeInterval: 2)
-            default:
+            } else {
                 reporter.report(error: error)
             }
             

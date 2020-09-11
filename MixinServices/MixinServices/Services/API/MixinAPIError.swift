@@ -30,7 +30,6 @@ public enum MixinAPIError: Error {
     case requiresReCaptcha
     case requiresUpdate
     case invalidPhoneNumber
-    case insufficientIdentityNumber
     case invalidInvitationCode
     case invalidPhoneVerificationCode
     case expiredPhoneVerificationCode
@@ -42,7 +41,6 @@ public enum MixinAPIError: Error {
     case transferAmountTooSmall
     case expiredAuthorizationCode
     case phoneNumberInUse
-    case tooManyAppsCreated
     case insufficientFee
     case transferIsAlreadyPaid
     case tooManyStickers
@@ -56,9 +54,7 @@ public enum MixinAPIError: Error {
     case invalidConversationChecksum
     
     case chainNotInSync
-    case missingPrivateKey
     case malformedAddress
-    case insufficientPool
     
     case invalidParameters
     case invalidSDP
@@ -104,8 +100,6 @@ extension MixinAPIError {
             self = .requiresUpdate
         case (202, 20110):
             self = .invalidPhoneNumber
-        case (202, 20111):
-            self = .insufficientIdentityNumber
         case (202, 20112):
             self = .invalidInvitationCode
         case (202, 20113):
@@ -128,8 +122,6 @@ extension MixinAPIError {
             self = .expiredAuthorizationCode
         case (202, 20122):
             self = .phoneNumberInUse
-        case (202, 20123):
-            self = .tooManyAppsCreated
         case (202, 20124):
             self = .insufficientFee
         case (202, 20125):
@@ -152,14 +144,11 @@ extension MixinAPIError {
             self = .circleConversationReachLimit
         case (202, 20140):
             self = .invalidConversationChecksum
+            
         case (202, 30100):
             self = .chainNotInSync
-        case (202, 30101):
-            self = .missingPrivateKey
         case (202, 30102):
             self = .malformedAddress
-        case (202, 30103):
-            self = .insufficientPool
             
         case (202, 5002000):
             self = .roomFull

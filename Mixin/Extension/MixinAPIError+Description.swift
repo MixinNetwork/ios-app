@@ -60,8 +60,6 @@ extension MixinAPIError {
             return R.string.localizable.app_update_short_tips()
         case .invalidPhoneNumber:
             return R.string.localizable.error_invalid_phone_number()
-        case .insufficientIdentityNumber:
-            return R.string.localizable.error_insufficient_identity_number()
         case .invalidInvitationCode:
             return R.string.localizable.error_invalid_invitation_code()
         case .invalidPhoneVerificationCode:
@@ -82,8 +80,6 @@ extension MixinAPIError {
             return R.string.localizable.error_expired_authorization_code()
         case .phoneNumberInUse:
             return R.string.localizable.error_unavailable_phone_number()
-        case .tooManyAppsCreated:
-            return R.string.localizable.error_too_many_apps_created()
         case .insufficientFee:
             return R.string.localizable.error_fee_insufficient()
         case .transferIsAlreadyPaid:
@@ -109,12 +105,8 @@ extension MixinAPIError {
             
         case .chainNotInSync:
             return R.string.localizable.error_blockchian_not_in_sync()
-        case .missingPrivateKey:
-            return R.string.localizable.error_missing_private_key()
         case .malformedAddress:
             return R.string.localizable.error_malformed_address()
-        case .insufficientPool:
-            return R.string.localizable.error_insufficient_pool()
             
         case .invalidParameters:
             return R.string.localizable.error_invalid_parameters()

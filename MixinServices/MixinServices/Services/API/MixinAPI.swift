@@ -125,16 +125,10 @@ extension MixinAPI {
                         let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
                         if let data = responseObject.data {
                             completion(.success(data))
+                        } else if case .unauthorized = responseObject.error {
+                            handleDeauthorization(response: response.response)
                         } else if let error = responseObject.error {
-                            switch error {
-                            case .unauthorized:
-                                handleDeauthorization(response: response.response)
-                            default:
-                                if error.isServerError {
-                                    MixinHost.toggle(currentHttpHost: host)
-                                }
-                                completion(.failure(error))
-                            }
+                            completion(.failure(error))
                         } else {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
@@ -144,36 +138,34 @@ extension MixinAPI {
                     }
                 case let .failure(error):
                     Logger.write(error: error)
-                    
-                    let shouldToggleServer: Bool = {
-                        guard ReachabilityManger.shared.isReachable else {
-                            return false
-                        }
-                        if case .responseValidationFailed(.unacceptableStatusCode) = error {
-                            return true
-                        } else if let underlying = error.underlyingError {
-                            let nsError = underlying as NSError
-                            let codes = [
-                                NSURLErrorTimedOut,
-                                NSURLErrorCannotConnectToHost,
-                                NSURLErrorCannotFindHost,
-                                NSURLErrorDNSLookupFailed,
-                                NSURLErrorResourceUnavailable
-                            ]
-                            return nsError.domain == NSURLErrorDomain
-                                && codes.contains(nsError.code)
-                        } else {
-                            return false
-                        }
-                    }()
-                    
-                    if shouldToggleServer {
+                    if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)
                     }
-                    
                     completion(.failure(.httpTransport(error)))
                 }
             })
+    }
+    
+    private static func shouldToggleServer(for error: AFError) -> Bool {
+        guard ReachabilityManger.shared.isReachable else {
+            return false
+        }
+        if case .responseValidationFailed(.unacceptableStatusCode) = error {
+            return true
+        } else if let underlying = error.underlyingError {
+            let nsError = underlying as NSError
+            let codes = [
+                NSURLErrorTimedOut,
+                NSURLErrorCannotConnectToHost,
+                NSURLErrorCannotFindHost,
+                NSURLErrorDNSLookupFailed,
+                NSURLErrorResourceUnavailable
+            ]
+            return nsError.domain == NSURLErrorDomain
+                && codes.contains(nsError.code)
+        } else {
+            return false
+        }
     }
     
 }

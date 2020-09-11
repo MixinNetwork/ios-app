@@ -80,17 +80,15 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                     return false
                 }
                 return true
-            case let .failure(error):
-                guard error.code != 404 else {
-                    downloadExpired()
-                    removeJob()
-                    finishJob()
-                    return false
-                }
-                guard error.isClientError || error.isServerError else {
-                    return false
-                }
+            case .failure(.notFound):
+                downloadExpired()
+                removeJob()
+                finishJob()
+                return false
+            case let .failure(error) where error.worthRetrying:
                 checkNetworkAndWebSocket()
+            case let .failure(error):
+                return false
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false

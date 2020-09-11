@@ -1,12 +1,12 @@
 import Foundation
 
-struct BlazeMessage: Encodable {
+struct BlazeMessage {
     
     var id: String
     var action: String
     var params: BlazeMessageParam?
     let data: String?
-    let error: APIError?
+    let error: MixinAPIError?
     
     var fromPush: Bool? = nil
     
@@ -18,6 +18,19 @@ struct BlazeMessage: Encodable {
             .acknowledgeMessageReceipt
         ]
         return actions.map(\.rawValue).contains(action)
+    }
+    
+}
+
+extension BlazeMessage: Encodable {
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(action, forKey: .action)
+        try container.encode(params, forKey: .params)
+        try container.encode(data, forKey: .data)
+        // ⚠️ This func doesn't encode error since this is only used for message sending
     }
     
 }
@@ -127,6 +140,14 @@ extension BlazeMessage {
 
 extension BlazeMessage: Decodable {
     
+    enum CodingKeys: CodingKey {
+        case id
+        case action
+        case params
+        case data
+        case error
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
@@ -156,7 +177,7 @@ extension BlazeMessage: Decodable {
         }
         
         params = try container.decodeIfPresent(BlazeMessageParam.self, forKey: .params)
-        error = try container.decodeIfPresent(APIError.self, forKey: .error)
+        error = try container.decodeIfPresent(MixinAPIError.self, forKey: .error)
     }
     
 }

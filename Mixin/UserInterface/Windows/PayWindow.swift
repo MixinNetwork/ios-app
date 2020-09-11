@@ -454,18 +454,18 @@ extension PayWindow: PinFieldDelegate {
         transferAction(pin: pin)
     }
 
-    private func failedHandler(error: APIError) {
-        error.pinErrorHandler { [weak self](errorMsg) in
+    private func failedHandler(error: MixinAPIError) {
+        PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
             guard let self = self else {
                 return
             }
-            switch error.code {
-            case 20118, 20119:
+            switch error {
+            case .malformedPin, .incorrectPin:
                 self.errorContinueAction = .retryPin
             default:
                 self.errorContinueAction = .close
             }
-            self.failedHandler(errorMsg: errorMsg)
+            self.failedHandler(errorMsg: description)
         }
     }
 
@@ -540,8 +540,13 @@ extension PayWindow: PinFieldDelegate {
                 SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
                 weakSelf.successHandler()
             case let .failure(error):
-                if let trace = trace, [20117, 20118, 20119, 20120, 20124, 30100].contains(error.code) {
-                    TraceDAO.shared.deleteTrace(traceId: trace.traceId)
+                switch error {
+                case .insufficientBalance, .malformedPin, .incorrectPin, .transferAmountTooSmall, .insufficientFee, .chainNotInSync:
+                    if let trace = trace {
+                        TraceDAO.shared.deleteTrace(traceId: trace.traceId)
+                    }
+                default:
+                    break
                 }
                 weakSelf.failedHandler(error: error)
             }
@@ -735,11 +740,11 @@ extension PayWindow {
                         }.presentPopupControllerAnimated()
                     }
                     return
+                case .failure(.notFound):
+                    break
                 case let .failure(error):
-                    if error.code != 404 {
-                        completion(false, error.localizedDescription)
-                        return
-                    }
+                    completion(false, error.localizedDescription)
+                    return
                 }
             }
         }

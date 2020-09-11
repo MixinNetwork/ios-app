@@ -5,182 +5,168 @@ import UIKit
 
 open class MixinAPI {
     
-    public typealias Result<Response: Decodable> = Swift.Result<Response, APIError>
+    public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
-    private struct ResponseObject<ResultType: Decodable>: Decodable {
-        let data: ResultType?
-        let error: APIError?
-    }
-    private static let session: Alamofire.Session = {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 10
-        let tokenInterceptor = AccessTokenInterceptor()
-        let session = Alamofire.Session(configuration: configuration,
-                                        interceptor: tokenInterceptor)
-        return session
-    }()
-
-    private static func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
-        do {
-            return MixinAPI.session.request(try MixinRequest(url: MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding))
-        } catch {
-            reporter.report(error: error)
-            return MixinAPI.session.request(MixinServer.httpUrl + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
-        }
-    }
-
     @discardableResult
-    public static func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (MixinAPI.Result<ResultType>) -> Void) -> Request? {
-        if checkLogin && !LoginManager.shared.isLoggedIn {
-            return nil
-        }
-        let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
-        let requestTime = Date()
-        let rootURLString = MixinServer.httpUrl
-        return request.validate(statusCode: 200...299)
-            .responseData(completionHandler: { (response) in
-                let httpStatusCode = response.response?.statusCode ?? -1
-                let handerError = { (error: APIError) in
-                    switch error.code {
-                    case 401:
-                        if let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String, let serverTime = Double(responseServerTime), serverTime > 0 {
-                            let clientTime = Date().timeIntervalSince1970
-                            if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                                self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, retry: true, completion: completion)
-                                return
-                            } else {
-                                if abs(serverTime / 1000000000 - clientTime) > 300 {
-                                    AppGroupUserDefaults.Account.isClockSkewed = true
-                                    DispatchQueue.main.async {
-                                        WebSocketService.shared.disconnect()
-                                        NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
-                                    }
-                                    return
-                                }
-                            }
-                        }
-                        reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
-                        LoginManager.shared.logout(from: "AsyncRequest")
-                        return
-                    default:
-                        break
-                    }
-                    completion(.failure(error))
-                }
-                switch response.result {
-                case .success(let data):
-                    do {
-                        let responseObject = try JSONDecoder.default.decode(ResponseObject<ResultType>.self, from: data)
-                        if let data = responseObject.data {
-                            completion(.success(data))
-                        } else if let error = responseObject.error {
-                            handerError(error)
-                        } else {
-                            completion(.success(try JSONDecoder.default.decode(ResultType.self, from: data)))
-                        }
-                    } catch {
-                        Logger.write(error: error, extra: "data decode failed.")
-                        MixinServer.toggle(currentHttpUrl: rootURLString)
-                        handerError(APIError.createError(error: error, status: httpStatusCode))
-                    }
-                case let .failure(error):
-                    Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
-                    if NetworkManager.shared.isReachable {
-                        switch error._code {
-                        case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
-                            MixinServer.toggle(currentHttpUrl: rootURLString)
-                        case 501...:
-                            MixinServer.toggle(currentHttpUrl: rootURLString)
-                        default:
-                            break
-                        }
-                    }
-                    handerError(APIError.createError(error: error, status: httpStatusCode))
-                }
-            })
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
     }
-
+    
+    @discardableResult
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default)
+        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
+    }
+    
+    @discardableResult
+    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters) -> MixinAPI.Result<Response> {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default) { (request) in
+                request.timeoutInterval = requestTimeout
+            }
+        }, debugDescription: path)
+    }
+    
+    @discardableResult
+    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
+        request(makeRequest: { (session) -> DataRequest in
+            session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default) { (request) in
+                request.timeoutInterval = requestTimeout
+            }
+        }, debugDescription: path)
+    }
+    
 }
 
 extension MixinAPI {
     
-    @discardableResult
-    public static func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> MixinAPI.Result<T> {
-        return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+    private struct ResponseObject<Response: Decodable>: Decodable {
+        let data: Response?
+        let error: MixinAPIError?
     }
-
-    private static func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = JSONEncoding.default, retry: Bool = false) -> MixinAPI.Result<T> {
-        var result: MixinAPI.Result<T> = .failure(APIError.createTimeoutError())
-        var responseServerTime = ""
-        let requestTime = Date()
-        let rootURLString = MixinServer.httpUrl
-        if LoginManager.shared.isLoggedIn {
-            let semaphore = DispatchSemaphore(value: 0)
-            getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
-                .validate(statusCode: 200...299)
-                .responseData(completionHandler: { (response) in
-                    let httpStatusCode = response.response?.statusCode ?? -1
-                    responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String ?? ""
-                    switch response.result {
-                    case let .success(data):
-                        do {
-                            let responseObject = try JSONDecoder.default.decode(ResponseObject<T>.self, from: data)
-                            if let data = responseObject.data {
-                                result = .success(data)
-                            } else if let error = responseObject.error {
-                                result = .failure(error)
-                            } else {
-                                let model = try JSONDecoder.default.decode(T.self, from: data)
-                                result = .success(model)
-                            }
-                        } catch {
-                            Logger.write(error: error, extra: "data decode failed.")
-                            MixinServer.toggle(currentHttpUrl: rootURLString)
-                            result = .failure(APIError.createError(error: error, status: httpStatusCode))
-                        }
-                    case let .failure(error):
-                        Logger.write(error: error, extra: "[URL]\(url)...[HttpStatusCode]\(httpStatusCode)...isReachable:\(NetworkManager.shared.isReachable)..._code:\(error._code)")
-                        if NetworkManager.shared.isReachable {
-                            switch error._code {
-                            case NSURLErrorTimedOut, NSURLErrorCannotConnectToHost, NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed, NSURLErrorResourceUnavailable:
-                                MixinServer.toggle(currentHttpUrl: rootURLString)
-                            case 501...:
-                                MixinServer.toggle(currentHttpUrl: rootURLString)
-                            default:
-                                break
-                            }
-                        }
-                        result = .failure(APIError.createError(error: error, status: httpStatusCode))
-                    }
-                    semaphore.signal()
-                })
-
-            if semaphore.wait(timeout: .now() + .seconds(requestTimeout)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= Double(requestTimeout) {
-                Logger.write(log: "[BaseAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(url)")
-                result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
-            }
+    
+    private static let session: Alamofire.Session = {
+        let config = URLSessionConfiguration.default.copy() as! URLSessionConfiguration
+        config.timeoutIntervalForRequest = 10
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        let tokenInterceptor = AccessTokenInterceptor()
+        let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor)
+        return session
+    }()
+    
+    private static func url(with path: String) -> URL {
+        let string = "https://" + MixinHost.http + path
+        return URL(string: string)!
+    }
+    
+    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, debugDescription: String) -> MixinAPI.Result<Response> {
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
+        
+        let request = Self.request(makeRequest: makeRequest, isAsync: false) { (theResult: MixinAPI.Result<Response>) in
+            result = theResult
+            semaphore.signal()
         }
-
-        if case let .failure(error) = result, error.code == 401 {
-            if let serverTime = Double(responseServerTime), serverTime > 0 {
-                let clientTime = Date().timeIntervalSince1970
-                if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                    return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
-                } else {
-                    if abs(serverTime / 1000000000 - clientTime) > 300 {
-                        AppGroupUserDefaults.Account.isClockSkewed = true
-                        DispatchQueue.main.async {
-                            WebSocketService.shared.disconnect()
-                            NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
-                        }
-                        return result
-                    }
-                }
-            }
-            reporter.report(error: MixinServicesError.logout(isAsyncRequest: false))
-            LoginManager.shared.logout(from: "SyncRequest")
+        if request != nil {
+            semaphore.wait()
+        }
+        
+        if case let .failure(error) = result, error.isTransportTimedOut {
+            Logger.write(log: "[MixinAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(debugDescription)")
         }
         
         return result
     }
+    
+    @discardableResult
+    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, requiresLogin: Bool = true, isAsync: Bool, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+        if requiresLogin && !LoginManager.shared.isLoggedIn {
+            return nil
+        }
+        let requestTime = Date()
+        let host = MixinHost.http
+        
+        func handleDeauthorization(response: HTTPURLResponse?) {
+            let xServerTimeKeyPair = response?.allHeaderFields.first(where: { (key, value) -> Bool in
+                if let key = key as? String {
+                    return key.lowercased() == "x-server-time"
+                } else {
+                    return false
+                }
+            })
+            let xServerTime = TimeInterval(xServerTimeKeyPair?.value as? String ?? "0") ?? 0
+            let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
+            let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
+            if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
+                request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+            } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
+                AppGroupUserDefaults.Account.isClockSkewed = true
+                DispatchQueue.main.async {
+                    WebSocketService.shared.disconnect()
+                    NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
+                }
+                completion(.failure(.clockSkewDetected))
+            } else {
+                completion(.failure(.unauthorized))
+                reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
+                let reason = isAsync ? "AsyncRequest" : "SyncRequest"
+                LoginManager.shared.logout(from: reason)
+            }
+        }
+        
+        return makeRequest(session)
+            .validate(statusCode: 200...299)
+            .responseData(completionHandler: { (response) in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
+                        if let data = responseObject.data {
+                            completion(.success(data))
+                        } else if case .unauthorized = responseObject.error {
+                            handleDeauthorization(response: response.response)
+                        } else if let error = responseObject.error {
+                            completion(.failure(error))
+                        } else {
+                            completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
+                        }
+                    } catch {
+                        Logger.write(error: error, extra: "data decode failed.")
+                        completion(.failure(.invalidJSON(error)))
+                    }
+                case let .failure(error):
+                    Logger.write(error: error)
+                    if shouldToggleServer(for: error) {
+                        MixinHost.toggle(currentHttpHost: host)
+                    }
+                    completion(.failure(.httpTransport(error)))
+                }
+            })
+    }
+    
+    private static func shouldToggleServer(for error: AFError) -> Bool {
+        guard ReachabilityManger.shared.isReachable else {
+            return false
+        }
+        if case .responseValidationFailed(.unacceptableStatusCode) = error {
+            return true
+        } else if let underlying = error.underlyingError {
+            let nsError = underlying as NSError
+            let codes = [
+                NSURLErrorTimedOut,
+                NSURLErrorCannotConnectToHost,
+                NSURLErrorCannotFindHost,
+                NSURLErrorDNSLookupFailed,
+                NSURLErrorResourceUnavailable
+            ]
+            return nsError.domain == NSURLErrorDomain
+                && codes.contains(nsError.code)
+        } else {
+            return false
+        }
+    }
+    
 }

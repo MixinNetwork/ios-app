@@ -678,10 +678,9 @@ public class ReceiveMessageService: MixinService {
                         StickerPrefetcher.prefetch(stickers: [sticker])
                     }
                     return transferStickerData
+                case .failure(.notFound):
+                    return nil
                 case let .failure(error):
-                    guard error.code != 404 else {
-                        return nil
-                    }
                     checkNetworkAndWebSocket()
                 }
             } while LoginManager.shared.isLoggedIn
@@ -751,11 +750,13 @@ public class ReceiveMessageService: MixinService {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
-        case let .failure(error):
-            if tryAgain && error.code != 404 {
+        case .failure(.notFound):
+            return .ERROR
+        case .failure:
+            if tryAgain {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
             }
-            return error.code == 404 ? .ERROR : .START
+            return .START
         }
     }
 
@@ -772,10 +773,11 @@ public class ReceiveMessageService: MixinService {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true
-            case let .failure(error):
-                guard error.code != 404 else {
-                    return false
-                }
+            case .failure(.unauthorized):
+                return false
+            case .failure(.notFound):
+                return false
+            case .failure:
                 checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn

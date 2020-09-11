@@ -38,10 +38,11 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 }
                 return true
             case let .failure(error):
-                guard error.isClientError || error.isServerError else {
+                if error.worthRetrying {
+                    checkNetworkAndWebSocket()
+                } else {
                     return false
                 }
-                checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn && !isCancelled
         return false

@@ -49,7 +49,7 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
     @IBAction func saveAction(_ sender: Any) {
     }
 
-    func saveFailedAction(error: APIError) {
+    func saveFailedAction(error: MixinAPIError) {
         showAutoHiddenHud(style: .error, text: error.localizedDescription)
         saveButton.isBusy = false
         textView.isUserInteractionEnabled = true

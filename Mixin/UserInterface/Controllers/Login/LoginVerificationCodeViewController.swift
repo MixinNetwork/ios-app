@@ -39,21 +39,19 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 weakSelf.context.hasEmergencyContact = verification.hasEmergencyContact
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
-            case let .failure(error):
-                if error.code == 10005 {
-                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
-                        switch result {
-                        case .success(let token):
-                            self?.requestVerificationCode(reCaptchaToken: token)
-                        default:
-                            self?.resendButton.isBusy = false
-                        }
+            case .failure(.requiresReCaptcha):
+                ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                    switch result {
+                    case .success(let token):
+                        self?.requestVerificationCode(reCaptchaToken: token)
+                    default:
+                        self?.resendButton.isBusy = false
                     }
-                } else {
-                    reporter.report(error: error)
-                    weakSelf.alert(error.localizedDescription)
-                    weakSelf.resendButton.isBusy = false
                 }
+            case let .failure(error):
+                reporter.report(error: error)
+                weakSelf.alert(error.localizedDescription)
+                weakSelf.resendButton.isBusy = false
             }
         }
     }

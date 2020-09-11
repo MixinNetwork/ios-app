@@ -57,7 +57,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             case let .success(response):
                 weakSelf.saveConversation(response: response)
             case let .failure(error):
-                if !NetworkManager.shared.isReachable {
+                if !ReachabilityManger.shared.isReachable {
                     weakSelf.saveOfflineConversation()
                 } else {
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)

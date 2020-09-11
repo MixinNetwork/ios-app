@@ -30,9 +30,10 @@ public class RefreshConversationJob: BaseJob {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [response.creatorId]))
             }
         case let .failure(error):
-            if error.code == 404 || error.code == 403 {
+            switch error {
+            case .forbidden, .notFound:
                 ConversationDAO.shared.exitGroup(conversationId: conversationId)
-            } else {
+            default:
                 throw error
             }
         }

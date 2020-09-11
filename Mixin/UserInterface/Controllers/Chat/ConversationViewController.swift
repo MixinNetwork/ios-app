@@ -725,7 +725,7 @@ class ConversationViewController: UIViewController {
         }
         
         let conversationId = self.conversationId
-        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinServer.httpUrl, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinHost.http, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
             self?.report(conversationId: conversationId, shareFile: false)
         }))
@@ -2136,7 +2136,7 @@ extension ConversationViewController {
                 }
             }
 
-            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(NetworkManager.shared.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
+            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(ReachabilityManger.shared.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
 
             if let message = message {
                 var log = "[Report][Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"

@@ -65,13 +65,14 @@ class VerificationCodeViewController: ContinueButtonViewController {
         
     }
     
-    func handleVerificationCodeError(_ error: APIError) {
+    func handleVerificationCodeError(_ error: MixinAPIError) {
         isBusy = false
-        if error.code == 20113 {
+        switch error {
+        case .invalidPhoneVerificationCode:
             verificationCodeField.clear()
             verificationCodeField.showError()
             alert(Localized.TEXT_INVALID_VERIFICATION_CODE)
-        } else {
+        default:
             reporter.report(error: error)
             alert(error.localizedDescription)
         }

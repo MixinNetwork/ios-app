@@ -33,7 +33,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     }()
     
     private var isNetworkPermissionRestricted: Bool {
-        return cellularData.restrictedState == .restricted && !NetworkManager.shared.isReachable
+        return cellularData.restrictedState == .restricted && !ReachabilityManger.shared.isReachable
     }
     
     deinit {
@@ -78,7 +78,8 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):
-                if error.code == 10005 {
+                switch error {
+                case .requiresReCaptcha:
                     ReCaptchaManager.shared.validate(onViewController: weakSelf, completion: { (result) in
                         switch result {
                         case .success(let token):
@@ -87,14 +88,20 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                             self?.continueButton.isBusy = false
                         }
                     })
-                } else if error.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
-                    weakSelf.alertSettings(R.string.localizable.permission_denied_network())
-                    weakSelf.continueButton.isBusy = false
-                } else {
-                    if error.status != NSURLErrorTimedOut {
+                case let .httpTransport(error):
+                    guard let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain else {
+                        fallthrough
+                    }
+                    if underlying.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
+                        weakSelf.alertSettings(R.string.localizable.permission_denied_network())
+                        weakSelf.continueButton.isBusy = false
+                    } else {
+                        fallthrough
+                    }
+                default:
+                    if !error.isTransportTimedOut {
                         var userInfo = [String: Any]()
-                        userInfo["errorCode"] = error.code
-                        userInfo["errorDescription"] = error.description
+                        userInfo["error"] = "\(error)"
                         if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
                             userInfo["requestId"] = requestId
                         }

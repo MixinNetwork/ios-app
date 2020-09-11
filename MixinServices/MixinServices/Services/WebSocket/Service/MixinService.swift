@@ -105,10 +105,9 @@ public class MixinService {
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
                 CircleConversationDAO.shared.update(conversation: response)
                 return
+            case .failure(.unauthorized):
+                return
             case let .failure(error):
-                if error.code == 401 {
-                    return
-                }
                 checkNetworkAndWebSocket()
             }
         } while true
@@ -178,14 +177,14 @@ public class MixinService {
                 }
                 MixinDatabase.shared.insertOrReplace(objects: participantSessions)
                 return true
+            case .failure(.unauthorized):
+                return false
             case let .failure(error):
-                guard retry else {
+                if retry {
+                    checkNetworkAndWebSocket()
+                } else {
                     return false
                 }
-                guard error.code != 401 else {
-                    return false
-                }
-                checkNetworkAndWebSocket()
             }
         } while true
     }
@@ -200,17 +199,12 @@ public class MixinService {
         repeat {
             do {
                 return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
+            } catch MixinAPIError.unauthorized {
+                return nil
+            } catch MixinAPIError.forbidden {
+                return nil
             } catch {
-                if let err = error as? APIError {
-                    if err.code == 401 {
-                        return nil
-                    } else if err.code == 403 {
-                        return nil
-                    }
-                }
-
                 checkNetworkAndWebSocket()
-
                 Thread.sleep(forTimeInterval: 2)
             }
         } while true
@@ -222,19 +216,16 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage, false)
-            } catch {
-                if let err = error as? APIError {
-                    if err.code == 403 {
-                        return (true, nil, false)
-                    } else if err.code == 401 {
-                        return (false, nil, false)
-                    } else if err.code == 20140 {
-                        if let conversationId = blazeMessage.params?.conversationId {
-                            syncConversation(conversationId: conversationId)
-                        }
-                        return (false, nil, true)
-                    }
+            } catch MixinAPIError.unauthorized {
+                return (false, nil, false)
+            } catch MixinAPIError.forbidden {
+                return (true, nil, false)
+            } catch MixinAPIError.invalidConversationChecksum {
+                if let conversationId = blazeMessage.params?.conversationId {
+                    syncConversation(conversationId: conversationId)
                 }
+                return (false, nil, true)
+            } catch {
                 checkNetworkAndWebSocket()
                 Thread.sleep(forTimeInterval: 2)
             }
@@ -256,34 +247,35 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage)
-            } catch {
+            } catch let error as MixinAPIError {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif
-
-                guard let err = error as? APIError else {
-                    reporter.report(error: error)
-                    Thread.sleep(forTimeInterval: 2)
+                switch error {
+                case .unauthorized:
                     return (false, nil)
-                }
-
-                if err.code == 403 {
+                case .forbidden:
                     return (true, nil)
-                } else if err.code == 401 {
-                    return (false, nil)
-                } else if err.code == 20140 {
+                case .invalidConversationChecksum:
                     if let conversationId = blazeMessage.params?.conversationId {
                         syncConversation(conversationId: conversationId)
                     }
                     throw error
+                default:
+                    checkNetworkAndWebSocket()
+                    if error.isClientError {
+                        continue
+                    } else {
+                        throw error
+                    }
                 }
-
-                checkNetworkAndWebSocket()
-
-                if err.isClientError {
-                    continue
-                }
-                throw error
+            } catch {
+                #if DEBUG
+                print("======SendMessaegService...deliver...error:\(error)")
+                #endif
+                reporter.report(error: error)
+                Thread.sleep(forTimeInterval: 2)
+                return (false, nil)
             }
         } while true
     }
@@ -291,13 +283,13 @@ public class MixinService {
     internal func checkNetworkAndWebSocket() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!NetworkManager.shared.isReachable || !WebSocketService.shared.isConnected)
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected)
     }
 
     internal func checkNetwork() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !NetworkManager.shared.isReachable
+        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.shared.isReachable
     }
     
     public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {

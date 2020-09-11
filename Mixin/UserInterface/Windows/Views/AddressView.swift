@@ -107,8 +107,8 @@ extension AddressView: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
-                    error.pinErrorHandler { (errorMsg) in
-                        self?.superView?.alert(errorMsg)
+                    PINVerificationFailureHandler.handle(error: error) { (description) in
+                        self?.superView?.alert(description)
                         self?.superView?.dismissPopupControllerAnimated()
                     }
                 }
@@ -127,8 +127,8 @@ extension AddressView: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case let .failure(error):
-                    error.pinErrorHandler { (errorMsg) in
-                        self?.superView?.alert(errorMsg)
+                    PINVerificationFailureHandler.handle(error: error) { (description) in
+                        self?.superView?.alert(description)
                         self?.superView?.dismissPopupControllerAnimated()
                     }
                 }

@@ -11,28 +11,14 @@ open class MixinAPI {
     public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
             session.request(url(with: path), method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, completion: { (result: MixinAPI.Result<Response>) in
-            switch result {
-            case .failure(.unauthorized):
-                break
-            default:
-                completion(result)
-            }
-        })
+        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
     }
     
     @discardableResult
     public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
         request(makeRequest: { (session) -> DataRequest in
             session.request(url(with: path), method: method, parameters: parameters, encoding: JSONEncoding.default)
-        }, requiresLogin: requiresLogin, isAsync: true, completion: { (result: MixinAPI.Result<Response>) in
-            switch result {
-            case .failure(.unauthorized):
-                break
-            default:
-                completion(result)
-            }
-        })
+        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
     }
     
     @discardableResult
@@ -121,7 +107,7 @@ extension MixinAPI {
                     WebSocketService.shared.disconnect()
                     NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)
                 }
-                completion(.failure(.unauthorized))
+                completion(.failure(.clockSkewDetected))
             } else {
                 completion(.failure(.unauthorized))
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))

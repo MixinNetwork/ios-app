@@ -11,6 +11,7 @@ public enum MixinAPIError: Error {
     case invalidJSON(Error)
     case httpTransport(AFError)
     case webSocketTimeOut
+    case clockSkewDetected
     case unknown(status: Int, code: Int)
     
     case invalidRequestBody
@@ -200,7 +201,7 @@ extension MixinAPIError {
     
     public var isTransportTimedOut: Bool {
         switch self {
-        case .webSocketTimeOut:
+        case .webSocketTimeOut, .clockSkewDetected:
             return true
         case let .httpTransport(error):
             guard let underlying = (error.underlyingError as NSError?) else {
@@ -253,7 +254,7 @@ extension MixinAPIError {
                 NSURLErrorNetworkConnectionLost
             ]
             return codes.contains(underlying.code)
-        case .webSocketTimeOut:
+        case .webSocketTimeOut, .clockSkewDetected:
             return true
         default:
             return false

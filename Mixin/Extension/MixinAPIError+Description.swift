@@ -29,7 +29,7 @@ extension MixinAPIError {
             } else {
                 return MixinServices.Localized.TOAST_OPERATION_FAILED
             }
-        case .webSocketTimeOut:
+        case .webSocketTimeOut, .clockSkewDetected:
             return MixinServices.Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
         case .unknown:
             return MixinServices.Localized.TOAST_OPERATION_FAILED

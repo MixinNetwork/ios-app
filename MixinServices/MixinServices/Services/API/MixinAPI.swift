@@ -51,6 +51,7 @@ extension MixinAPI {
     private static let session: Alamofire.Session = {
         let config = URLSessionConfiguration.default.copy() as! URLSessionConfiguration
         config.timeoutIntervalForRequest = 10
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
         let tokenInterceptor = AccessTokenInterceptor()
         let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor)
         return session

@@ -5,13 +5,6 @@ extension MixinAPIError {
     
     var localizedDescription: String {
         switch self {
-        case .foundNilResult:
-            return R.string.localizable.error_internal("\(self)")
-            
-        case .prerequistesNotFulfilled:
-            return R.string.localizable.error_internal("\(self)")
-        case .invalidJSON:
-            return R.string.localizable.error_internal("\(self)")
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
                 switch underlying.code {
@@ -31,8 +24,8 @@ extension MixinAPIError {
             }
         case .webSocketTimeOut, .clockSkewDetected:
             return R.string.localizable.error_connection_timeout()
-        case let .unknown(status, code):
-            return R.string.localizable.error_two_parts("\(status)", "\(code)")
+        case let .unknown(_, code, description):
+            return R.string.localizable.error_two_parts("\(code)", description)
             
         case .invalidRequestBody:
             return R.string.localizable.error_invalid_request_body()
@@ -60,10 +53,6 @@ extension MixinAPIError {
             return R.string.localizable.app_update_short_tips()
         case .invalidPhoneNumber:
             return R.string.localizable.error_invalid_phone_number()
-        case .insufficientIdentityNumber:
-            return R.string.localizable.error_insufficient_identity_number()
-        case .invalidInvitationCode:
-            return R.string.localizable.error_invalid_invitation_code()
         case .invalidPhoneVerificationCode:
             return R.string.localizable.error_invalid_phone_verification_code()
         case .expiredPhoneVerificationCode:
@@ -82,8 +71,6 @@ extension MixinAPIError {
             return R.string.localizable.error_expired_authorization_code()
         case .phoneNumberInUse:
             return R.string.localizable.error_unavailable_phone_number()
-        case .tooManyAppsCreated:
-            return R.string.localizable.error_too_many_apps_created()
         case .insufficientFee:
             return R.string.localizable.error_fee_insufficient()
         case .transferIsAlreadyPaid:
@@ -104,17 +91,11 @@ extension MixinAPIError {
             return R.string.localizable.profile_shared_app_reach_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.circle_conversation_add_reach_limit()
-        case .invalidConversationChecksum:
-            return R.string.localizable.error_invalid_conversation_checksum()
-            
+
         case .chainNotInSync:
             return R.string.localizable.error_blockchian_not_in_sync()
-        case .missingPrivateKey:
-            return R.string.localizable.error_missing_private_key()
         case .malformedAddress:
             return R.string.localizable.error_malformed_address()
-        case .insufficientPool:
-            return R.string.localizable.error_insufficient_pool()
             
         case .invalidParameters:
             return R.string.localizable.error_invalid_parameters()
@@ -130,6 +111,9 @@ extension MixinAPIError {
             return R.string.localizable.error_peer_closed()
         case .trackNotFound:
             return R.string.localizable.error_track_not_found()
+
+        default:
+            return R.string.localizable.error_internal("\(self)")
         }
     }
     

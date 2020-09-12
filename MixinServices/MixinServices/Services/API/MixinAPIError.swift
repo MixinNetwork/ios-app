@@ -12,7 +12,7 @@ public enum MixinAPIError: Error {
     case httpTransport(AFError)
     case webSocketTimeOut
     case clockSkewDetected
-    case unknown(status: Int, code: Int)
+    case unknown(status: Int, code: Int, description: String)
     
     case invalidRequestBody
     case unauthorized
@@ -30,8 +30,6 @@ public enum MixinAPIError: Error {
     case requiresReCaptcha
     case requiresUpdate
     case invalidPhoneNumber
-    case insufficientIdentityNumber
-    case invalidInvitationCode
     case invalidPhoneVerificationCode
     case expiredPhoneVerificationCode
     case invalidQrCode
@@ -42,7 +40,6 @@ public enum MixinAPIError: Error {
     case transferAmountTooSmall
     case expiredAuthorizationCode
     case phoneNumberInUse
-    case tooManyAppsCreated
     case insufficientFee
     case transferIsAlreadyPaid
     case tooManyStickers
@@ -56,9 +53,7 @@ public enum MixinAPIError: Error {
     case invalidConversationChecksum
     
     case chainNotInSync
-    case missingPrivateKey
     case malformedAddress
-    case insufficientPool
     
     case invalidParameters
     case invalidSDP
@@ -72,7 +67,7 @@ public enum MixinAPIError: Error {
 
 extension MixinAPIError {
     
-    init(status: Int, code: Int) {
+    init(status: Int, code: Int, description: String) {
         switch (status, code) {
         case (202, 400):
             self = .invalidRequestBody
@@ -104,10 +99,6 @@ extension MixinAPIError {
             self = .requiresUpdate
         case (202, 20110):
             self = .invalidPhoneNumber
-        case (202, 20111):
-            self = .insufficientIdentityNumber
-        case (202, 20112):
-            self = .invalidInvitationCode
         case (202, 20113):
             self = .invalidPhoneVerificationCode
         case (202, 20114):
@@ -128,8 +119,6 @@ extension MixinAPIError {
             self = .expiredAuthorizationCode
         case (202, 20122):
             self = .phoneNumberInUse
-        case (202, 20123):
-            self = .tooManyAppsCreated
         case (202, 20124):
             self = .insufficientFee
         case (202, 20125):
@@ -152,14 +141,11 @@ extension MixinAPIError {
             self = .circleConversationReachLimit
         case (202, 20140):
             self = .invalidConversationChecksum
+            
         case (202, 30100):
             self = .chainNotInSync
-        case (202, 30101):
-            self = .missingPrivateKey
         case (202, 30102):
             self = .malformedAddress
-        case (202, 30103):
-            self = .insufficientPool
             
         case (202, 5002000):
             self = .roomFull
@@ -171,7 +157,7 @@ extension MixinAPIError {
             self = .trackNotFound
             
         default:
-            self = .unknown(status: status, code: code)
+            self = .unknown(status: status, code: code, description: description)
         }
     }
     
@@ -182,6 +168,7 @@ extension MixinAPIError: Decodable {
     enum CodingKeys: CodingKey {
         case code
         case status
+        case description
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -192,7 +179,8 @@ extension MixinAPIError: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let status = try container.decode(Int.self, forKey: .status)
         let code = try container.decode(Int.self, forKey: .code)
-        self.init(status: status, code: code)
+        let description = try container.decode(String.self, forKey: .description)
+        self.init(status: status, code: code, description: description)
     }
     
 }
@@ -219,7 +207,7 @@ extension MixinAPIError {
             return true
         case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(code))):
             return code >= 400 && code < 500
-        case let .unknown(status, _):
+        case let .unknown(status, _, _):
             return status >= 400 && status < 500
         default:
             return false
@@ -232,7 +220,7 @@ extension MixinAPIError {
             return true
         case .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(let code))):
             return code >= 500
-        case let .unknown(status, _):
+        case let .unknown(status, _, _):
             return status >= 500
         default:
             return false

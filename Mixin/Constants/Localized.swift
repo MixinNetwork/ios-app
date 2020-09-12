@@ -453,11 +453,6 @@ public class Localized {
         return String(format: LocalizedString("setting_restore_progress", comment: "Restoring %@"), progress)
     }
     
-    // About
-    public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")
-    public static let ABOUT_LOGOUT_MESSAGE = LocalizedString("about_logout_message", comment: "All messages sent to you during the withdrawal will be discarded and can not be retrieved!")
-    public static let ABOUT_LOGOUT_BUTTON = LocalizedString("about_logout_button", comment: "Log Out")
-
     public static let REPORT_TITLE = LocalizedString("report_title", comment: "Send the conversation log to developers?")
     public static let REPORT_BUTTON = LocalizedString("report_button", comment: "Send")
 }

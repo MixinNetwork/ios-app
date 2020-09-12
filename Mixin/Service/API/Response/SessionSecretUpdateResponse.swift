@@ -2,10 +2,10 @@ import UIKit
 
 struct SessionSecretUpdateResponse: Decodable {
     
-    let serverPublicKey: String
+    let pinToken: String
     
     enum CodingKeys: String, CodingKey {
-        case serverPublicKey = "server_public_key"
+        case pinToken = "pin_token"
     }
     
 }

@@ -11,7 +11,7 @@ extension EdDSAMigration {
         let result = AccountAPI.update(sessionSecret: sessionSecret)
         switch result {
         case .success(let response):
-            guard let remotePublicKey = Data(base64Encoded: response.serverPublicKey), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
+            guard let remotePublicKey = Data(base64Encoded: response.pinToken), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
                 waitAndRetry()
                 return
             }
